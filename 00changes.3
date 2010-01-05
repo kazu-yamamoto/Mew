@@ -1,0 +1,656 @@
+			     <Change Log>
+
+Mew 3.2 release (2003/02/25)
+
+Mew 3.2 release candidate 1 (2003/02/18)
+
+* Net debugging now records strings to be sent.
+* A bug fix for "y" when mew-use-samba-encoding is 't'.
+* Hiding the Face: field.
+	NINOMIYA Hideyuki <nin>
+* Learn aliases after no error occurred
+	Hideyuki SHIRAI <shirai>
+
+Mew 3.1.53 (2003/02/05)
+
+* Supporting non-UIDL POP server.
+* mew-hscroll() uses auto-hscroll-mode if bound.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-delete-other-window().
+	Hideyuki SHIRAI <shirai>	
+* Assigning a dummy buffer to a process due to Window's PTY bug.
+	Hideyuki SHIRAI <shirai>
+* Adding the "TMPDIR" environment variable.
+	Tatsuya Kinoshita <tats>
+* A bug fix for mew-smtp-queue again.
+	KOIE Hidetaka <hide>
+* mew-summary-mark-call-command -> mew-summary-cmd-msgs. And
+  "m\" -> "M-\".
+* A bug fix for the support of non UIDL POP servers.
+* A bug fix for mew-input-folder-prefix when called by
+  mew-input-refile-folders.
+
+Mew 3.1.52 (2003/01/23)
+
+* A bug fix for DOC handling.
+* info updates.
+* Hacking SSL/SSH notification.
+	Hideyuki SHIRAI <shirai>
+* Displaying the lock XPM on XEmacs.
+	Hideyuki SHIRAI <shirai>
+* Deleting .mdi/.mqi files when 'D','X', and 'o' are executed.
+* Fixing en-bugged SMTP/NNTP.
+	Tatsuya Kinoshita <tats>
+* Don't decode encoded-word in addr-spec.
+* Defining mew-use-highlight-x-face-inversion.
+* Unmarking in Summray mode when "m/".
+* Defining mew-ask-charset.
+* Making mew-encode-make-multi simpler.
+* A bug fix for mew-draft-header.
+
+Mew 3.1.51 (2003/01/20)
+
+* A typo fix for "m\".
+	KOIE Hidetaka <hide>
+* Integrating X-Face: features.
+* Visualizing X-Face: on Emacs 21.
+* "\" for  mew-summary-call-command and 
+  "m\" for mew-summary-mark-call-command.
+* "m/" for mew-summary-mark-virtual.
+* Obsoleting the following variables:
+	mew-noreplyto-to-list
+	mew-noreplyto-cc-list
+	mew-replyto-to-list
+	mew-replyto-cc-list
+	mew-fromme-to-list
+	mew-fromme-cc-list
+  And defining the following variables:
+	mew-reply-all-alist
+	mew-reply-sender-alist
+	mew-reply-fromme-alist
+  This change enables support for NetNews and non-standard fields
+  such as Mail-Folloup-To:.
+* Setting mew-summary-buffer-secure-process to nil in
+  mew-summary-unlock.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-field-for-printing.
+* A bug fix for C-cC-e in the case where cover page does not exist
+  and only one text attachment exists.
+* Defining mew-ssl-verify-level.
+	Koga Youichirou <y-koga>
+* "stunnel" is supported instead of "openssl s_client" for SSL.
+  Now server certificates can be verified.
+* If SSL/SSH is used for POP/IMAP/NNTP, a lock image is displayed
+  in a mode line on Emacs 21.
+* mew-real-send-hook is not called when "n" is typed for
+  "Really send this message?".
+* 'binary for "C-uy" is obsoleted. Use raw-text-foo on Emacs or
+   no-conversion-foo on XEmacs.
+* A bug fix for mew-smtp-log.
+	HAYASHI Chifumi <chifumi>
+* mew-vinfo-set-flds for thread.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-smtp-queue.
+	KOIE Hidetaka <hide>
+
+Mew 3.1.50 (2002/12/24)
+
+* Supporting Emacs 21.3.50's UTF-8.
+* Supporting Emacs 21.3.50's tool-bar.
+* A bug fix of "key" for C-u/.
+* Logging SSH server in Smtplog and Nntplog.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-use-spc-padding.
+	Hideyuki SHIRAI <shirai>
+	KOIE Hidetaka <hide>
+* Translation between Latin 0 and Latin 1.
+* Universal argument for mew-summary-jump-message. e.g "12j"
+	KOIE Hidetaka <hide>
+* Adding regexp-quote to mew-path-to-folder.
+	Hideyuki SHIRAI <shirai>
+* mew-summary-goto-folder now selects a default folder according to
+  mew-case-input if in a local folder.
+	Tatsuya Kinoshita <tats>
+* Defining mew-nntp-msgid-user and mew-nntp-msgid-domain.
+* C-g can be used when typing a password.
+* mew-folder-spec removes case from folder if exists.
+	Hideyuki SHIRAI <shirai>
+* Quotation for IMAP's SELECT.
+* Loose the case format.
+	Hideyuki SHIRAI <shirai>
+* Double quotation for IMAP commands.
+	Kazuhiko Izawa <kai>
+
+
+Mew 3.1 release (2002/12/02)
+
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-proto-to-body.
+	Hideyuki SHIRAI <shirai>
+* Inheriting case from a remote folder to its thread folder.
+* Touching %queue folder.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-nmz.el.
+	HAYASHI Chifumi <chifumi>
+
+Mew 3.1 release candidate 2 (2002/11/20)
+
+* info/doc updates.
+* A warning patch for bin/mewencode.c.
+	KIMURA Yasuhiro <yasu>
+* Deleting case: in mew-input-folder-prefix.
+	Hideyuki SHIRAI <shirai>
+* mew-input-folder-prefix inserts mew-case-input dynamically.
+* Defining mew-ask-cc.
+	KOIE Hidetaka <hide>
+* The data structure of folders changed for
+  mew-assoc-folder-fast. Type "1Z" and "3Z" for local and IMAP
+  respectively. If you don't use capital letters for your folders, set
+  mew-use-fast-refile to t. This make marking for refile much faster.
+* Implementing "lX".
+	Hideyuki SHIRAI <shirai>
+* Making mew-folder-input* clearer.
+* Prompt style change.
+	Tatsuya Kinoshita <tats>
+* "B" and "lc" ask a user if the directory does not exist.
+* Defining mew-ask-to.
+	KOIE Hidetaka <hide>
+* "?" caused an error when it was executed on the fancy separator.
+  This bug has been fixed.
+* "i" is now a command to copy messages from a server to a local
+  inbox.
+* "g" does not refer mew-case-input anymore.
+* Defining mew-draft-set-completion-ignore-case.
+* mew-input-folder-prefix() allows users to input "-" in the middle
+  if it is used for mew-complete-local-folder.
+* A buf fix for marking thread. The sort function has side-effect.
+* A bug fix for mew-input-folder-search-setup.
+	Hideyuki SHIRAI <shirai>
+* Setting file mode when bursting.
+	Tatsuya Kinoshita <tats>
+* If mew-charset-m17n is "utf-8" and Mule-UCS is not available, 
+  mew-charset-m17n falls back to "iso-2022-jp-2".
+* Adding CPPFLAGS to bin/Makefile.
+	Hiroshi Fujishima <pooh>
+
+Mew 3.1 release candidate 1 (2002/11/01)
+
+* Yet another bug fix for "A".
+
+Mew 3.0.73 (2002/10/31)
+
+* C-u y + binary does not convert charset.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-time-ctz-to-sortkey-invalid.
+	NINOMIYA Hideyuki <nin>
+* Adding CVS hack to Makefile.
+	KOIE Hidetaka <hide>
+* Creating mew-darwin.el.
+* Deleting a temporary file when a synchronous process is finished.
+* A patch for bin/w32/config.h.
+	Shuichi KITAGUCHI <ki>
+
+Mew 3.0.72 (2002/10/29)
+
+* "lc" now calls mew-local-folder-check.
+* mew-local-folder-insert now recurses to register parents
+  directories.
+* Removing mew-local-folder<.
+* Implementing mew-assoc-folder so that mew-local-folder-alist can be
+  the alphabetical order.
+* Preserving case of draft for re-editing.
+* A bug fix of citation when mew-use-other-frame-for-draft is t.
+* Using bcopy if memmove does not exist.
+	SAKAI Kiyotaka <ksakai>
+	Shun-ichi TAHARA <jado>
+* A patch for mew-highlight-folder-comp-search-window.
+	Hideyuki SHIRAI <shirai>
+
+Mew 3.0.71 (2002/10/21)
+
+* Displaying candicates on folder search mode by SPC.
+	Hideyuki SHIRAI <shirai>
+* Using PIPE instead of PTY on Darwin since Darwin's PTY is buggy.
+* read-only property on folder search mode.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for C-s/C-r (again).
+	Hideyuki SHIRAI <shirai>
+* Supporting SSH on Solaris 9.
+	Kenichiro MATOBA <Kenichiro.Matoba>
+* "mlc".
+	Hideyuki SHIRAI <shirai>
+* Letting folder search mode work on Meadow.
+	Hideyuki SHIRAI <shirai>
+
+Mew 3.0.70 (2002/10/19)
+
+* Letting folder search mode work on XEmacs.
+* Folder search mode for multiple folder input.
+* C-p and C-n enter folder search mode.
+	Hideyuki SHIRAI <shirai>
+* Binding C-cC-i to mew-circular-complete-case for folder input.
+
+Mew 3.0.69 (2002/10/17)
+
+* Several fixes for folder search mode.
+	Hideyuki SHIRAI <shirai>
+* info updates.
+* Folder search (C-s and C-r) is now available.
+* Defining mew-net-status-percent-size, mew-local-status-unit,
+  mew-local-status-threshold.
+* Excluding "*" in mew-input-folder-prefix. 
+	Hideyuki SHIRAI <shirai>
+* mew-circular-complete-case moves the cursor backward if necessary.
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-minibuf-point-min.
+* C-cC-i for mew-circular-complete-case.
+* A patch for prefix replacement.
+	Hideyuki SHIRAI <shirai>
+* "+", "%", "$", "*", "-" replace the previous prefix in minibuffer.
+* mew-queue-insert-file removes an old message buffer if exists.
+
+Mew 3.0.68 (2002/10/09)
+
+* "zc" is bound to mew-summary-cache-clean-up.
+* "zd" is bound to mew-summary-toggle-debug.
+* "zp" is bound to mew-summary-toggle-policy.
+* "zw" is bound to mew-summary-toggle-warning.
+	Hideyuki SHIRAI <shirai>
+* Catching up new warning messages of GnuPG 1.2.0.
+	KOIE Hidetaka <hide>
+* mew-complete-local-folder now completes an absolute path.
+	Hideyuki SHIRAI <shirai>
+* mew-link uses copy-file if add-name-to-file failed.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-ask-virtual-folder-name.
+* A patch for mewls to prevent an infinite loop.
+	Hideyuki SHIRAI <shirai>
+* The name of thread folder corresponding to "case:folder" is now
+  "*case:fodlder", not "case:*folder".
+* mew-buffer-list hack.
+	Hideyuki SHIRAI <shirai>
+* nreverse for "mI"
+* LDFLAGS for bin/Makefile.
+	SAKAI Kiyotaka <ksakai>
+* Taking care of mode-line-position in mew-summary-setup-mode-line.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-scan-max-field-length.
+* Making use of time as well as date if Date: is broken.
+	Murata Takashi <Takashi.Murata>
+* In-Reply-To: is now unstruct.
+	Murata Takashi <Takashi.Murata>
+* "/" does not ask a virtual folder name now. A name "*+fld1,+fld2*"
+  is used instead.
+* Resolving the "munyumunyu" problem when "x".
+
+Mew 3.0.67 (2002/09/24)
+
+* A bug fix for mew-summary-auto-refile.
+	Tatsuya Kinoshita <tats>
+* The default value of max field length of mewls is now 5.
+* Removing mew-mode-line-magic-number.
+* Defining mew-range-list.
+* The entry of "$" in mew-proto-spec is now '("$" "+" nil "$" "+").
+* If Text/* is specified when C-uC-cC-e, the attachment is not
+  decoded. This bug has been fixed.
+	Tatsuya Kinoshita <tats>
+* Prohibiting "d"/"md"/"td" in "-news.groups".
+* Defining mew-face-spec-set due to a bug of face-spec-set on Emacs
+  20.7.
+	Tatsuya Kinoshita <tats>
+* Prohibiting "o" in $inbox. Use "lc" instead.
+* Defining mew-summary-local-copy. ("lc")
+* Defining mew-complete-local-folder.
+* Binding check of default-file-name-coding-system for XEmacs 21.1.14.
+* Some commands are not operational for invalid messages.
+
+Mew 3.0.66 (2002/09/02)
+
+* SMTP/NNTP sentinel hack.
+* Removing the quoting "function".
+* Defining mew-imap-trash-folder.
+* A bug fix for S/MIME's temporary file.
+* A bug fix for mew-summary-folder-cache-save.
+* Modifying mew-regex-url.
+	SAKAI Kiyotaka <ksakai>
+
+Mew 3.0.65 (2002/08/23)
+
+* C-cC-c on %queue now processes the jobs.
+* Using the native md5 on Emacs 21.
+* A patch for the old Summary format.
+	SAKAI Kiyotaka <ksakai>
+* IMAP jobs are now stored in %queue.
+* A bug fix for mew-imap-queue-folder.
+	Tatsuya Kinoshita <tats>
+* A bug fix for mew-dir-messages.
+
+Mew 3.0.64 (2002/08/21)
+
+* A bug fix for mew-imap-skip-uidl.
+* A bug fix for IMAP CREATE.
+* C-u can be specified to mew-summary-isearch-{forward,backward} for
+  regexp.
+	KOIE Hidetaka <hide>
+* mew-summary-exec-offline is bound to "l".
+* mew-dir-messages is accelerated.
+* custom-set-faces -> face-spec-set.
+	Tatsuya Kinoshita <tats>
+* mew-input-range returns a list of range and erase.
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Rejecting illegal range for local folders.
+* Defining mew-range-update.
+* A regex bug fix for mew-summary-cook-region.
+	Shun-ichi TAHARA <jado>
+
+Mew 3.0.63 (2002/08/16)
+
+* Preserving refile info when killing an IMAP process.
+* Since highlight-summary is buggy, it has been removed.
+
+Mew 3.0.62 (2002/08/15)
+
+* A bug fix for the number of messages to be scanned.
+* highlight-summary is merged. To use this feature, set
+  mew-use-highlight-summary to t.
+	Shun-ichi TAHARA <jado>
+
+Mew 3.0.61 (2002/08/14)
+
+* mewls now tells the number of messages to be scanned.
+* A bug fix of Virutal mode for remote folders.
+* Accelerating IMAP refile.
+* Defining mew-summary-mark-duplicated. Binding it to "M".
+	Shun-ichi TAHARA <jado>
+	KOIE Hidetaka <hide>
+* A patch for contrib/mew-fancy-summary.el
+
+Mew 3.0.60 (2002/08/01)
+
+* A bug fix for NNTP reply.
+* Making NNTP2 code more readable.
+* Removing delete-process.
+* A bug fix of IMAP end-of-message.
+* A bug fix for the cursor position on "s" + "all".
+* Making SMTP code more readable.
+* A bug fix for SMTP over SSL.
+
+Mew 3.0.59 (2002/07/30)
+
+* A bug fix for mew-net-status2.
+* Defining mew-imap-skip-uidl to make 'exec and 'get much faster.
+* Enhancing the state machine of IMAP.
+* Removing mew-pop-tear-down.
+* Adjusting the cursor position for mI.
+* SSH process name now includes a server name.
+* Savin POP UIDL only when "QUIT" was sent.
+
+Mew 3.0.58 (2002/07/26)
+
+* Bug fixes of net-status.
+* SSL support.
+
+Mew 3.0.57 (2002/07/24)
+
+* A bug fix for mew-net-status1.
+* Defining mew-file-mode-mask instead of mew-file-mode.
+* Rotating NNTP log files.
+* The Model primary content type.
+* Removing X-Mew when forwarding.
+* Removing $ and - from refile candidates.
+* Preventing using bitmap in a character terminal.
+	KIMURA Yasuhiro <yasu>
+
+Mew 3.0.56 (2002/07/22)
+
+* The default value of mew-ssh-keep-connection is t for IMAP.
+* Fixing IMAP end-of-mail bug.
+* A bug fix for mew-summary-folder-dir-newp.
+	Hideyuki SHIRAI <shirai>
+* Putting mew-use-nfs-hack onto mew-local-retrieve.
+* NFS hack.
+	Tatsuya Kinoshita <tats>
+* You can specify a target folder to clean up by C-u D.
+* M-x mew creates directories for %inbox at boot time.
+* Supporting SSH 3.
+	Tomoharu Suzuki <suzuki>
+* A patch for bin/Makefile.w32
+	Shuichi KITAGUCHI <kit>
+
+Mew 3.0.55 (2002/07/02)
+
+* mew-smtp-auth is obsoleted. SMTP AUTH is used when mew-smtp-user is
+  set like mew-nntp-user.
+* Year range check for encode-time.
+* Using free software only.
+	Tatsuya Kinoshita <tats>
+* New value for mew-highlight-body-regex-cite.
+	Tatsuya Kinoshita <tats>
+* X-Face: hack.
+	Tatsuya Kinoshita <tats>
+* Supporting Oasys.
+* A bug fix for mew-input-folder.
+	Tatsuya Kinoshita <tats>
+* Taking care of the second part of time zone.
+* mew-highlight-body-regex-cite hack.
+	Tatsuya Kinoshita <tats>
+* A patch for contrib/mew-fancy-summary.el.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for Text/Rfc-Headers.
+* mew-summary-kill kills a Message buffer.
+* A bug fix for mew-imap-folder-alist.
+* Defining mew-summary-not-in-nntp.
+* mew-{pop,imap,nntp}-folder are auto-generated with
+  the user%port format. Take care!
+* Defining mew-summary-kill to kill a frame.
+* Delete a frame when C-cC-c/C-cC-m if mew-use-other-frame-for-draft is t.
+* Obsoleting mew-use-other-frame. Defining mew-use-other-frame-for-draft
+  and mew-use-other-frame-for-summary.
+* Making burst generic.
+	Tatsuya Kinoshita <tats>
+* Resolving the "g" vs "s" problem.
+	Tatsuya Kinoshita <tats>
+* Defining mew-message-last-buffer.
+* Moving mew-minfo-set-summary to a right place.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-summary-prepare-draft.
+	Hideyuki SHIRAI <shirai>
+* A patch for POP sentinel.
+	NINOMIYA Hideyuki <nin>
+* Adding windows-125x.
+	Tatsuya Kinoshita <tats>
+* A patch for mew-summary-send-message.
+	Tatsuya Kinoshita <tats>
+* Yet another patch for mew-input-folders.
+	Tatsuya Kinoshita <tats>
+* A bug fix for mew-input-folders.
+	Tatsuya Kinoshita <tats>
+* A patch for mew-refile-ctrl-multi.
+	Tatsuya Kinoshita <tats>
+* A patch for thread regex.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-input-folder.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-nmz.el
+	Hideyuki SHIRAI <shirai>
+* A patch for config guess.
+	Tatsuya Kinoshita <tats>
+* Supporting Text/Rfc822-Headers.
+* Defining mew-use-autoconv-when-unknown.
+	Tatsuya Kinoshita <tats>
+* A patch for contrib/mew-fancy-summary.el.
+	Hideyuki SHIRAI <shirai>
+* after-change-functions goes to mew-elet.
+* "mc"
+	NOGUCHI Yusuke <y-noguchi>
+* "tc"
+	Hideyuki SHIRAI <shirai>
+* Patches for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-net-status.
+	Hideyuki SHIRAI <shirai>
+* Supporting POP servers which do not support APOP.
+* More specific regex to extract APOP key.
+	Tatsuya Kinoshita <tats>
+* Defining mew-nntp-process-send-string().
+* Defining mew-smtp-process-send-string().
+* Defining mew-imap-process-send-string().
+* IMAP support. Scanning %inbox only at this moment.
+* A bug fix for collecting groups.
+	SAITO Takuya <reed>
+
+Mew 3.0.54 (2002/02/20)
+
+* mew-input-folder now uses mew-case-input.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-folder-remotep.
+* Defining mew-syntax-treat-filename-default-function.
+* Yet another bug fix for "t*".
+* A bug fix for thread of case:-news.group.
+* Binding auto-image-file-mode to nil in mew-flet and mew-frwlet.
+* Supporting NNTP servers which do not support mode reader.
+* Defining mew-use-other-frame.
+* mode reader and etc for NNTP.
+	Kenichi OKADA <kokada>
+* mew-newsgroups-save creates a directory if not present.
+
+Mew 3.0.53 (2002/02/13)
+
+* Yet another bug fix for "t*".
+* A bug fix for mew-summary-join.
+	Tatsuya Kinoshita <tats>
+* Seeing if incm exists or not.
+* Fixing the "foo: ;" problem.
+	HAYASHI Chifumi <chifumi>
+* m17n hack for Summary mode of +draft.
+	Tatsuya Kinoshita <tats>
+* Window-config hack for composing mails.
+	Tatsuya Kinoshita <tats>
+* A bug fix for "t*".
+	KOIE Hidetaka <hide>
+* Prefix for mew-draft-insert-signature.
+	Tatsuya Kinoshita <tats>
+* Patches for incm.
+	KOIE Hidetaka <hide>
+	Masami Kobayashi <masami>
+	Yasunari Momoi <momo>
+* A bug fix of mew-summary-save for the NAME parameter.
+	KOIE Hidetaka <hide>
+* Creating folders specified by Fcc: when composing.
+	Tatsuya Kinoshita <tats>
+* Debug hack.
+	Hideyuki SHIRAI <shirai>
+* sleep-for 1 for mew-touch-folder-check.
+	Tatsuya Kinoshita <tats>
+* LANG: "en" -> "C" 
+	Tatsuya Kinoshita <tats>
+* A bug fix for mew-buffer-message.
+	"[ODDS] ogawa, takanori" <ogawa>
+* Defining mew-encode-singlepart-hook.
+	KOIE Hidetaka <hide>
+* Null body hack for incm.
+	Masafumi Matsumura <mmatsu>
+	Yasunari Momoi <momo>
+* A bug fix for mew-insert-message.
+* Workaround for messages whose size is 0.
+	SAKAI Kiyotaka <ksakai>
+* Defining mew-expand-folder2.
+* make clean hack.
+	Koga Youichirou <y-koga>
+* A bug fix for mew-delete-file.
+	Hideyuki SHIRAI <shirai>
+* Displaying the number of marked messages.
+	KOIE Hidetaka <hide>
+* Followup-To:
+	Hiroshi Fujishima <dizzy>
+* incm hack.
+	Yasunari Momoi <momo>
+* TIS 620 hack.
+	Hideyuki SHIRAI <shirai>
+* GCC hack for configure.in.
+	Tatsuya Kinoshita <tats>
+* A patch for configure.in.
+	Tatsuya Kinoshita <tats>
+
+Mew 3.0.52 (2002/01/09)
+
+* A patch for mew-summary-kill-subprocess.
+	Hideyuki SHIRAI <shirai>
+* Digit-argument for "0"-"9". mew-summary-toggle-8bit -> "z8".
+	SAKAI Kiyotaka <ksakai>
+* NNTP bug fixes.
+	Tatsuya Kinoshita <tats>
+* Supporting ".tif".
+	Shinji UEDA <ueda>
+* A patch for incm.
+	Yasunari Momoi <momo>
+* Defining mew-folder-folder.
+* "nntp" service entry.
+	Makoto Kohno <kohno>
+* incm is merged.
+* no-fold option for mew-header-insert.
+	Tatsuya Kinoshita <tats>
+
+Mew 3.0.51 (2001/12/20)
+
+* Saving and loading newsgroup list.
+* Supporting case for $inbox and newsgroups.
+* mew-complete-folder hack.
+* A patch for contrib/mew-nmz.el.
+* A bug fix of C-cC-z for multple PGP data.
+	Tatsuya Kinoshita <tats>
+* Case-sensitive search for marks.
+	Hideyuki SHIRAI <shirai>
+
+Mew 3.0.50 (2001/12/13)
+
+* AUTHINFO for NNTP.
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for w3m.
+	Kan Sasaki <sasaki>
+	Hideyuki SHIRAI <shirai>
+* Refile hack and auto-refile hack.
+	Hideyuki SHIRAI <shirai>
+* Sort key hack: "ml2" -> "mlnum"
+	Tatsuya Kinoshita <tats>
+* Copying minibuffer-local-map to mew-input-map.
+	Tak Ota <Takaaki.Ota>
+* A bug fix for mew-input-file-name.
+	KUSAWAKE Hisasi <kusa>
+	Hideyuki SHIRAI <shirai>
+* wvHtml hack.
+	SAKAI Kiyotaka <ksakai>
+* A patch for contrib/mew-refile-view.el.
+	KOIE Hidetaka <hide>
+* m17n hack.
+	Tatsuya Kinoshita <tats>
+* Defining mew-prog-audio{,2} for Win32.
+* Illegal field hack.
+* A workaround for reediting ctext.
+	Tatsuya Kinoshita <tats>
+* A bug fix for mewls's null pattern.
+	Koga Youichirou <y-koga>
+* Removing ".CRLF" instead of "CRLF.CRLF" in a POP session.
+	Tatsuya Kinoshita <tats>
+* A bug fix for md5 on XEmacs.
+* 'no-line-break for base64-encode-string.
+	HOSONO Hidetomo <h>
+* A bug fix for mew-start-process-disp.
+	Hideyuki SHIRAI <shirai>
+	Kazumasa Utashiro <utashiro>
+* A patch for contrib/mew-nmz{,-fixer}.el
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-replace-white-space.
+	Hideyuki SHIRAI <shirai>
+* +mdrop is renamed to $inbox.
+* NNTP support.
+* A bug fix for mew-summary-virtual-with-grep.
+	Kidzu Takashi <kizu>
+* Adding ISO-8859-15
+	rivo nurges <rix>
+
+--End of file

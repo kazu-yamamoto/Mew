@@ -1,0 +1,124 @@
+.\" Copyright (C) 2001-2003 Mew developing team.
+.\" All rights reserved.
+.\" 
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 3. Neither the name of the team nor the names of its contributors
+.\"    may be used to endorse or promote products derived from this software
+.\"    without specific prior written permission.
+.\" 
+.\" THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+.\" PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+.\" LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+.\" CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+.\" SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+.\" BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+.\" WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+.\" OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+.\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+.TH MEWL 1 "March 5, 2003"
+.SH NAME
+mewl - Message scanner for Mew 4 or later
+.\"
+.SH SYNOPSIS
+mewl
+.RI [ options ]
+.RI [ folder
+.RI [ range ]]
+.\"
+.SH DESCRIPTION
+The
+.B mewl
+utility extracts necessary fields from messages stored in folders.
+This command is necessary for Mew to implement the asynchronous feature.
+.PP
+The options are as follows:
+.TP 8
+.B \-a
+Print all necessary fields when picking.
+.TP 8
+.BI \-b " dir"
+Set the Mail home to
+.IR dir .
+.TP 8
+.BI \-c " bodylen"
+Set the max body length to be extracted to
+.IR bodylen .
+.TP 8
+.BI \-d " field"
+Set the field to be extracted to
+.IR field .
+.TP 8
+.BI \-e " command"
+Specify an external
+.I command
+to fetch mailbox.
+.TP 8
+.BI \-m " options"
+Specify 
+.I options
+for
+.IR command .
+.TP 8
+.BI \-f " fields"
+Specify 
+.I fields
+to display.
+.TP 8
+.B \-h
+Display this help message.
+.TP 8
+.BI \-i " file"
+Set the input stream to
+.IR file .
+.TP 8
+.BI \-l " length"
+Set the max field length to be extracted to
+.IR length .
+The default value is 3. 0 means no limit.
+.TP 8
+.B \-n
+Don't use fstat().
+.TP 8
+.BI \-p " pattern"
+Specify the pick
+.IR pattern .
+.TP 8
+.BI \-s " src"
+Set message source to
+.I src
+: '+folder range'.
+.TP 8
+.B \-w
+Wait for stdio input to synchronize.
+.TP 8
+.B \-v
+Display the version.
+.TP 8
+.BI \-x " suffix"
+Use this 
+.IR suffix .
+
+Definitions of the symbols above are as follows:
+.TP 8
+.I range
+N | [start]-[end] | last:N
+.TP 8
+.I pattern
+\'key=val' | 'key!=val' | '!<pattern>' | '(<pattern>)'
+| '<pattern>&<pattern>' | '<pattern>|<pattern>' 
+
+.\"
+.SH BUGS
+If a field is long, only the beginning three lines are extracted 
+by default.
+.\"

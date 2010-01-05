@@ -1,0 +1,43 @@
+/* XPM */
+/*
+ * Copyright (C) 1997 Yoshiaki Kasahara <kasahara@nc.kyushu-u.ac.jp>
+ * Copyright (C) 1997 Kazu Yamamoto <kazu@Mew.org>
+ * Copyright notice is the same as Mew's one.
+ */
+static char * mew_Rfc822_xpm[] = {
+"28 28 7 1",
+" 	s backgroundToolBarColor	c None",
+".	c black",
+"X	c lightcyan",
+"o	c gray50",
+"O	c white",
+"+	c brown",
+"@	c gray25",
+"                            ",
+" ........................   ",
+" .XXXXXXXXXXXXXXXXXXXXXX.   ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" o.....................X... ",
+" o.OOOOOOOOOOOOOOOOOOO.X... ",
+" o.OOOOOOOOOOOOOOO+++O.o@.. ",
+" o.OOOOOOOOOOOOOOO.++O.o@.. ",
+" o.OO...........OO.@+O.o@.. ",
+" o.OOOOOOOOOOOOOOOOOOO.o@.. ",
+" o.OO.........OOOOOOOO.o@.. ",
+" o.OOOOOOOOOOOOOOOOOOO.o@.. ",
+" o.OOOOOOOOOOOOOOOOOOO.o@.. ",
+" o.OO......O....OOOOOO.o@.. ",
+" o.OOOOOOOOOOOOOOOOOOO.o@.. ",
+" o.OOOOOOOOOOOOOOOOOOO.o@.. ",
+" o.....................o@.. ",
+" .XXoooooooooooooooooooo@.. ",
+" .XXoooooooooooooooooooo@.. ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .......................... ",
+"   ........................ ",
+"   ........................ ",
+"                            "};

@@ -1,0 +1,99 @@
+Mew 5.2 stable release (2007/01/10)
+
+* A bug fix for "I" on NetNews.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for "mlc".
+
+Mew 5.2 release candidate 3 (2007/01/04)
+
+* Using the "--output" option of "gpgsm".
+* The same logic for Spotlight/Google.
+* WDS bug fix and hack.
+	INOUE Tomohiro <ml>
+* mewest makes indexes for [0-9]* or [0-9]*.mew only.
+	Tatsuya Kinoshita <tats>
+
+Mew 5.2 release candidate 2 (2006/12/21)
+
+* case-fold-search fix for mew-refile.el.
+
+Mew 5.2 release candidate 1 (2006/12/19)
+
+* Win32 patch for mewest.
+	KIMURA Yasuhiro <yasu>
+
+Mew 5.1.52 (2006/12/11)
+
+* A bug fix for Addrbook.
+	Unknown.
+* Let mewest work on Solaris.
+	Takashi Masuda <masutaka>
+* A bug fix for M-p.
+	Takashi Masuda <masutaka>
+* A bug fix for "/".
+	Tsutomu OKADA <tsutomu.okada>
+* A patch for mark vs case-sensitive.
+	Hideyuki SHIRAI <shirai>
+* Using shift_jis for EST on Windows.
+* A bug fix for "join".
+	Hideyuki SHIRAI <shirai>
+* Allowing an empty pattern for EST pattern of "k/".
+	Tatsuya Kinoshita <tats>
+* Allowing an empty pattern for EST pattern of "k?".
+* Allowing "to,cc" for EST filter.
+* Fixing the problem of Smtplog vs message-id.
+* Error handling of EST filter.
+
+Mew 5.1.51 (2006/10/24)
+
+* Enchanting the filter of Hyper Estraier.
+	Tatsuya Kinoshita <tats>
+* Implementing filter of Hyper Estraier.
+* Enhancing body filter.
+	Tatsuya Kinoshita <tats>
+* bin/mew-pinentry will be removed with "make distclean" 
+  instead of "make clean".
+	MLB33828
+* Bug fix of "Resent-Fcc:" in the Header mode.
+* Killing subprocess when typing "D".
+	Hideyuki SHIRAI <shirai>
+* Asking master password only when it is required.
+	Hideyuki SHIRAI <shirai>
+* Adding bin/mew-pinentry.1.
+	Tatsuya Kinoshita <tats>
+* mew-pinentry works on Solaris and Linux.
+* A bug fix for mew-summary-clean-trash.
+* Obsoleting the support of Emacs 20.7.
+* Supporting the content types of OpenOffice.org 2.0.
+* mew-prog-msword-ext etc can be set in ".mew".
+* Adding IMAP proxy.
+	Tatsuya Kinoshita <tats>
+* Fixing the problem of "i" on threads.
+	KOIE Hidetaka <hide>
+* Loosing the mark restriction for POP.
+	Hideyuki SHIRAI <shirai>
+* Making image scaling faster on Emacs 21.
+* A patch for mew-mime-image.
+	Hideyuki SHIRAI <shirai>
+* A patch for Namazu.
+	Hideyuki SHIRAI <shirai>
+
+Mew 5.1.50 (2006/08/16)
+
+* Resizing hack.
+	Tetsuya Toda <toda>
+* Resizing PNG images with "netpbm" if too large.
+* Supporting smime-type=signed-data.
+* Preventing redundant MIME encoding for encryption/signature.
+* Resizing JPEG images with "netpbm" if too large.
+* Workaround for anti-virus softwares.
+* "C-n" and "C-p" keeps the current column.
+	Hideyuki SHIRAI <shirai>
+* Obsoleting pack ("O"). If you really want to use pack, type "C-uO".
+  You should understand that pack breaks indexes of Hyper Estraier.
+* A bug fix for mewl.
+* A bug fix for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Yet another bug fix for SSL.
+* S/MIME support can ask passphrase now!
+* Supporting Hyper Estraier.

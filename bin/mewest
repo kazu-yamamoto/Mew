@@ -1,0 +1,203 @@
+#!/bin/sh
+#
+# mewest: Updating indexes of Hyper Estraier
+#
+# Author:  Mitsuo Kuroishi <kuroishi@iij.ad.jp>
+# Author:  Kazu Yamamoto <Kazu@Mew.org>
+# Created: Jul 20, 2006
+# Revised: Jul 25, 2006
+
+ESTCMD=estcmd
+FIND=find
+RM=rm
+MKDIR=mkdir
+BASEDIR=${HOME}/Mail
+INDEXDIR_ORG=casket
+INDEXDIR_REPLICA=casket_replica
+INDEXDIR=${INDEXDIR_ORG}
+OUTPUT=${OUTPUT:-/dev/null}
+LOCK=${BASEDIR}/.mewest.lock
+CYGWINENV=no
+SUFFIX=${SUFFIX:-.mew}
+
+usage () {
+    PROG=`basename $0`
+    cat <<__HDT__
+USAGE: ${PROG} [directory]
+  -s specify suffix
+  -h help
+  -v verbose mode
+__HDT__
+    exit 1
+}
+
+cleanup () {
+    ${RM} -fr "${LOCK}"
+    clean_up_replica
+}
+
+cleanup_trap () {
+    cleanup
+    exit 4
+}
+
+cleanup_exit () {
+    echo $1
+    cleanup
+    exit 4
+}
+
+clean_up_replica () {
+    if [ -d "${BASEDIR}/${INDEXDIR_REPLICA}" ]; then
+	rm -fr "${BASEDIR}/${INDEXDIR_REPLICA}"
+    fi
+}
+
+# Check if environment is Cygwin.
+check_cygwin () {
+    if type uname > /dev/null
+    then
+        true
+    else
+        return -1
+    fi
+    case `uname -s` in
+    CYGWIN*)
+        if type cygpath > /dev/null
+        then
+            return 1
+        else
+            return -1
+        fi
+        ;;
+    *)
+        return 0
+        ;;
+    esac
+}
+
+# Convert path style from Unix to Windows if environment is Cygwin.
+# Otherwise same path is simply echoed.
+path_conv() {
+    if [ $CYGWINENV = "yes" ];
+    then
+        cygpath -w "$1"
+    else
+        echo "$1"
+    fi
+}
+
+check_cygwin
+case $? in
+0)
+    CYGWINENV=no
+    ;;
+1)
+    CYGWINENV=yes
+    # There is native find.exe in Windows but it is incompatible
+    # with Unix's one. So make sure Cygwin's find.exe is used.
+    PATH=/usr/bin:/bin:$PATH
+    ;;
+*)
+    echo Environment check failed
+    exit -1
+    ;;
+esac
+
+while getopts "hvs:" OPTION
+do
+    case ${OPTION} in
+      h)
+        usage
+        ;;
+      v)
+        OUTPUT=/dev/stdout
+        ;;
+      s)
+        SUFFIX=${OPTARG}
+        ;;
+      *)
+        usage
+        ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+TGTDIR=${1:-${HOME}/Mail}
+
+trap cleanup_trap 1 2 3 9 15
+
+# create and check lock
+if ${MKDIR} "${LOCK}" > /dev/null 2>&1 ; then
+	true
+else
+    echo "${LOCK} exists"
+    exit 5
+fi
+
+# Directory exist?
+if [ ! -d "${TGTDIR}" ]; then
+    cleanup_exit "${TGTDIR} not found"
+fi
+
+if [ -d "${BASEDIR}/${INDEXDIR}" ]; then
+    echo "Replicating index..."
+    clean_up_replica
+    cp -R "${BASEDIR}/${INDEXDIR}" "${BASEDIR}/${INDEXDIR_REPLICA}"
+    INDEXDIR=${INDEXDIR_REPLICA}
+    echo "Replicating index...done"
+    echo "Purging old messages..."
+    ${ESTCMD} purge "`path_conv \"${BASEDIR}/${INDEXDIR}\"`" "`path_conv \"${TGTDIR}\"`" > ${OUTPUT} ||\
+      cleanup_exit "Purging old messages...failed"
+    echo "Purging old messages...done"
+fi
+
+echo "Indexing new messages..."
+# "find"'s regular expression is NOT portable, sigh...
+# "[0-9]*" matches both "123" and "234.mew".
+
+${FIND} "`path_conv \"${TGTDIR}\"`" \
+  -type d -name "trash" -prune -o \
+  -type d -name ${INDEXDIR_ORG} -prune -o \
+  -type d -name ${INDEXDIR_REPLICA} -prune -o \
+  -type f \( -name "[0-9]" -o -name "[0-9]*[0-9]" -o -name "[0-9]*${SUFFIX}" \) -print |\
+  ${ESTCMD} gather -cl -fm -cm -sd -xh "`path_conv \"${BASEDIR}/${INDEXDIR}\"`" - > ${OUTPUT} ||\
+    cleanup_exit "Indexing new messages...failed"
+
+echo "Indexing new messages...done"
+if [ "${BASEDIR}/${INDEXDIR}" = "${BASEDIR}/${INDEXDIR_REPLICA}" ]; then
+    echo "Replacing old index with new one..."
+    rm -fr "${BASEDIR}/${INDEXDIR_ORG}"
+    mv "${BASEDIR}/${INDEXDIR_REPLICA}" "${BASEDIR}/${INDEXDIR_ORG}"
+    echo "Replacing old index with new one...done"
+fi
+
+cleanup
+exit 0
+
+# Copyright (C) 2006-2007 Mew developing team.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 3. Neither the name of the team nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+#    without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

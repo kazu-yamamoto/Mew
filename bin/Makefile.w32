@@ -1,0 +1,62 @@
+# -*- Mode: makefile; -*-
+
+#
+# Makefile for mewl.exe/mewencode.exe
+#                             for Visual C++ / Borland C++ Compiler
+#
+
+# Note:
+# 1. If you want to use Cygwin, read ../00readme and follow its
+#    instructionx.
+# 2. You need pre-compiled and original zlib packages.
+#    Please download original tarball from
+#      http://www.gzip.org/zlib/,
+#    and put
+#      zconf.h, zlib.h, zlib.lib
+#    to suitable directory.
+# 2. If you want to use Borland C++ Compiler, you need import library.
+#    > implib -a <filename_of_import_library> <filename_of_zlib.dll>
+
+# **** Please modify ****
+ZLIBINC = C:/usr/local/zlib
+ZLIBLIB = C:/usr/local/zlib/zlib.lib
+
+# for Visual C++
+CC      = cl
+CFLAGS  = -nologo -O2 -W3 -MT -Iw32 -I$(ZLIBINC) \
+	-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS
+EXEFLAG = -Fe
+
+# for Borland C++
+#CC      = bcc32
+#CFLAGS  = -O2 -w -Iw32 -I$(ZLIBINC)
+#EXEFLAG = -e
+
+
+################################################################
+
+TARGET = mewencode.exe mewl.exe
+
+MEWENCODEOBJS = mewencode.obj utils.obj
+MEWLOBJS      = mewl.obj utils.obj pattern.obj dirent.obj
+
+all : $(TARGET)
+
+config.h : w32\config.h
+	copy w32\config.h config.h
+
+mewencode.exe : $(MEWENCODEOBJS)
+	$(CC) $(CFLAGS) $(EXEFLAG)mewencode.exe $(MEWENCODEOBJS) $(ZLIBLIB)
+mewl.exe : $(MEWLOBJS)
+	$(CC) $(CFLAGS) $(EXEFLAG)mewl.exe $(MEWLOBJS)
+
+mewencode.obj : mewencode.c mew.h config.h
+	$(CC) $(CFLAGS) -c mewencode.c
+mewl.obj : mewl.c mew.h config.h
+	$(CC) $(CFLAGS) -c mewl.c
+utils.obj : utils.c mew.h config.h
+	$(CC) $(CFLAGS) -c utils.c
+pattern.obj : pattern.c mew.h config.h
+	$(CC) $(CFLAGS) -c pattern.c
+dirent.obj : w32\dirent.c w32\dirent.h w32\w32.h
+	$(CC) $(CFLAGS) -c w32\dirent.c

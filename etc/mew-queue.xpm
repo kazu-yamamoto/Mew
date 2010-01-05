@@ -1,0 +1,36 @@
+/* XPM */
+/*
+ * Copyright (C) 1997 Yuuichi Teranishi <teranisi@isl.ntt.co.jp> 
+ * Copyright (C) 1997 Kazu Yamamoto <kazu@Mew.org>
+ * Copyright notice is the same as Mew's one.
+ */
+static char * mew_comp_xpm[] = {
+"24 24 4 1",
+" 	s backgroundToolBarColor	c None",
+".	c black",
+"X	c white",
+"o	c Gray60",
+"                        ",
+"                        ",
+"                .       ",
+"               .X.o     ",
+"              .XXX.o    ",
+"             .XXXXX.o   ",
+"            .XXXoXXX.o  ",
+"           .XXXoXX XX.  ",
+"         ..XXXoXXoXX.oo ",
+"       ...XXXoXXoXX.oo  ",
+"     ..X.XXXoXXoXX.oo   ",
+"   ..XX.XXXoXXoXX..o    ",
+"  ..XXXX.XXXXoXX. ..    ",
+"  .X.XXXX.XX XX. .X.o   ",
+"  .XX..XXX.XXX...XX.o   ",
+"  .XXXX..XX.X..XXXX.o   ",
+"  .XXXXXX....XXXXXX.o   ",
+"  .XXXXX  XX  XXXXX.o   ",
+"  .XXX  XXXXXX  XXX.o   ",
+"  .X  XXXXXXXXXX  X.o   ",
+"   ................oo   ",
+"    oooooooooooooooo    ",
+"                        ",
+"                        "};

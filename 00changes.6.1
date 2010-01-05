@@ -1,0 +1,263 @@
+Mew 6.1 release (2008/06/06)
+
+* No subject bug fix for "V".
+	Shigeru Yasuda <yasuda>
+* Suffix bug fix for "=".
+* Using AES for S/MIME.
+* mew-face-make-spec retains the parameter order.
+* const patch for bin/d/Sqlite3DB.d
+	Masamichi HOSODA <trueroad>
+
+Mew 6.1 release candidate 1 (2008/5/28)
+
+* Guarding broken UTF-7.
+* Bug fixes for mew-use-x-mailer.
+* Structuring mew-addrstr-parse-syntax-list.
+* Changing the order of smew's options.
+* Defining mew-disable-alternative-regex-list.
+
+
+Mew 6.0.51 (2008/05/13)
+
+* Defining mew-use-x-mailer.
+* Defining mew-header-color-bold.
+  Kuroishi Mitsuo <kuroishi.mitsuo>
+* Defining mew-setface and mew-header-color.
+* A bug fix for mew-header-alist.
+	Takashi SATOH <satoh>
+* Brushing up the S/MIME code.
+* "&" now makes use of "smew".
+	KOIE Hidetaka <hide>
+* IMAP folder completion for Fcc:.
+* stunnel 4.23 does not retry all addresses associated with localhost.
+  So, the "localhost" server should be 127.0.0.1.
+* Hacking cmew's get_parid.
+	KOIE Hidetaka <hide>
+* Now type's mark in Summary mode can be customized.
+	Hideyuki SHIRAI <shirai>
+* File existence check in mew-attach-duplicate.
+* Checking update-coding-systems-internal for Emacs 23.
+	Tatsuya Kinoshita <tats>
+* Using "--status-fd" for S/MIME.
+
+
+Mew 6.0.50 (2008/04/14)
+
+* A bug fix for X-Mew:
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-refile-guess-alist.
+	IDE Kazumi <kazu>
+* Now numeric port can be specified as integer.
+* A bug fix for cmew.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-protect-privacy-encrypted of S/MIME.
+* cmew now can take a target folder.
+* "kI" updates ID database for all folders.
+* "ki" updates ID database for this folder.
+* "1Z", "2Z", "3Z" were obsoleted. Use "C-uZ" instead to 
+  collect folders of the current world.
+* New mew-config-alist scheme.
+* A bug fix for mew-use-submission vs "E".
+* Checking "not cross-certified" for GnuPG.
+* Deleting X-Face: on "E".
+	Takashi Masuda <masutaka>
+
+Mew 5.2.55 (2008/03/31)
+
+* "E" inserts .xface.
+	Takashi Masuda <masutaka>
+* C-uw now takes an address from To: if From: is mine.
+* Two bug fixes for mew-folder-path-to-folder.
+* A patch for bin/w32/w32.h.
+	Shuichi KITAGUCHI <ki>
+* Binding mew-draft-set-privacy-method to C-cC-pC-m in Draft mode.
+* Adding ID error to S/MIME.
+* "kj" jumps the original message in Summary mode from
+  Virtual mode.
+* Portable patch to mewest.
+	Takashi Masuda <masutaka>
+* Bug fixes for "k/".
+* Broken UAs quote extended-value of RFC2231, sigh. A workaround for
+  that.
+* A bug fix for "=".
+* Using (put 'foo 'lisp-indent-function num) instead of declare
+  due to Emacs 21.
+	Hideyuki SHIRAI <shirai>
+* Merging jumbo patch: mew-defstruct for POP/IMAP/NNTP.
+* Merging jumbo patch: dolist and dotimes.
+
+Mew 5.2.54 (2008/03/18)
+
+* set-file-times hack.
+	Hideyuki SHIRAI <shirai>
+* Backporting mw32script-init.
+	Hideyuki SHIRAI <shirai>
+* Define mew-set-file-times only for Mac.
+* Defining mew-refile-guess-by-from-learn-hook.
+* A bug fix for "I" in Selection.
+* A bug fix for "g" in Selection.
+* A bug fix for mew-folder-func.
+	Hideyuki SHIRAI <shirai>
+* Local folder hack for mew-summary-parent-global.
+	Hideyuki SHIRAI <shirai>
+* Incremental update for "cmew".
+	Tomoyuki Murakami <tomoyuki>
+* "^" now makes use of "smew".
+* "?" marks well in Selection.
+* Merging mew-defstruct finally!
+* Defining mew-ntake.
+* Defining mew-pgp-signer and mew-smime-signer.
+* Generation search algorithm for smew.
+	KOIE Hidetaka <hide>
+* Date bug fix for cmew.
+	Tomoyuki Murakami <tomoyuki>
+* cmew creates id.db.new instated of id.db.old
+	Hideyuki SHIRAI <shirai>
+* Defining mew-status-update-hook.
+	Hideyuki SHIRAI <shirai>
+* A bug fix where "J" cannot handle the message suffix.
+* "smew.rb" -> "smew".
+	KOIE Hidetaka <hide>
+* Adding cmew.1 and smew.1.
+	Tatsuya Kinoshita <tats>
+* cmew.rb & smew.rb were renamed to cmew & smew.
+* A bug fix for M-s (sort).
+
+Mew 5.2.53 (2008/02/13)
+
+* A bug fix for mew-inbox-action-alist in the case where
+  CT: is text/plain but its body is HTML.
+* Preventing that Emacs uses CPU 100% when typing a password.
+	Hideyuki SHIRAI <shirai>
+* "M-s" is now real sorting instead of unshar. 
+  "S" is now mew-summary-selection-by-sort instead of real sorting.
+* Fixing a bug of sort.
+* Implementing mew-summary-selection-by-sort.
+* Refactoring the sort code.
+* A bug fix for "Rr".
+	Hayashi Masahiro <hayashi-masa>
+* A bug fix for "c".
+	Hayashi Masahiro <hayashi-masa>
+* Setting cache time for Virtual mode.
+* Adding some hooks.
+	Hideyuki SHIRAI <shirai>
+* Using process-kill-without-query for Emacs 21.4.
+* A bug fix of mew-ct-setup.
+	Takanori Ogawa <ogawa>
+* Introducing selection and thread.
+* Fixing the problem of image vs scroll.
+	Naohiro Aota <nao.aota>
+* Backporting make-string hack.
+	Koga Youichirou <y-koga>
+* unix-sync only when mew-use-async-write is t.
+* Removing XEmacs code from the contrib files.
+	KOIE Hidetaka <hide>
+* Obsoleting obsoleted Elisp functions.
+* Obsoleting mozilla and lynx. The default value is firefox.
+* Obsoleting w3.el.
+* Obsoleting the Namazu code.
+* Obsoleting the MD5 code.
+* Obsoleting Emacs 20.7 support.
+* Obsoleting XEmacs support.
+* defsubst => defun.
+* Using mapcar as much as possible.
+* cmew/smew hack.
+	KOIE Hidetaka <hide>
+* Preventing fsync for cmew.rb.
+	OHARA Shigeki <os>
+* Prototype implementation of "V".
+
+Mew 5.2.52 (2007/12/03)
+
+* Allowing SPCs in folder names specified with Fcc:
+* mew-wrap-lines hack for Zaurus.
+	Hideyuki SHIRAI <shirai>	
+* Making mew-complete-insert-folder-function sophisticated.
+	Hideyuki SHIRAI <shirai>
+* Async write for message retrieval on POP/IMAP/NNTP.
+	KOIE Hidetaka <hide>
+* Clicking a candidate of folders works well.
+* Workaround for Emacs's bug, goto-char vs underline.
+* A bug fix for thread in case where my-id and prnt-id is the same.
+* A bug fix for allowing SPC.
+	Hideyuki SHIRAI <shirai>
+* Allowing SPC in folder names. \007 is a separator for mewl if
+  a folder is specified in arguments. (No separator escape for
+  "CD:")
+* Fixing a bug of "M->".
+* Fixing a bug of format=flowed.
+* Fixing a bug of quoted double-quote.
+* Unknown encoding is displayed "?" instead of "X" to avoid
+  mark conflict.
+* A bug fix for key binding.
+	KOIE Hidetaka <hide>
+* '<' and '>' scrolls the Message buffer horizontally.
+	Hideyuki SHIRAI <shirai>
+* Keybinding changes:
+	- Moving to the top: '<' => 'M-<'
+	- Moving to the top: '>' => 'M->'
+* Supporting image/pjpeg.
+	Hideyuki SHIRAI <shirai>
+
+Mew 5.2.51 (2007/08/20)
+
+* Implementing mew-imap-inbox-folder().
+* The Authentication-Results: field is visible only when
+  fail or softfail.
+* A bug fix for mew-q-decode-string.
+* Applying fill-column to "_".
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mxo etc on IMAP.
+* Implementing the format=flowed decoding defined in RFC 3676.
+* "_" toggles normally wrapped lines, softly wrapped lines, and single
+  lines.
+* Guard for join againt broken messages.
+	Hideyuki SHIRAI <shirai>
+* A suffix can be specified to mewest.
+	"MIYOKAWA, Nobuyoshi" <n-miyo>
+* A patch for VS2005 of Windows.
+	Shuichi KITAGUCHI <ki>
+* Logging the port for SMTP.
+
+
+Mew 5.2.50 (2007/07/27)
+
+* Allowing "<>" for boundaries.
+* C-umxo for IMAP.
+* save-excursion for the filters and sentinels.
+* Workaround for the case where "smime-type" is omitted.
+	Wada Keiji <keiji>
+* Adding the MODI MIME type.
+* Implementing the unofficial NAME parameter to pass non-ASCII
+  file names to poor OEs.
+* configure was re-created by autoconf v2.61 so that manuals/info
+  can be installed into ${prefix}/share. Emacs 22.1 requires this.
+* Preventing APOP attack.
+	Tatsuya Kinoshita <tats>
+* mew-regex-url for IDN again.
+	Hideyuki SHIRAI <shirai>
+* mew-message-goto-next-url and mew-browse-url-at-point.
+	KOIE Hidetaka <hide>
+* mew-regex-url for IDN.
+	eamcs <emacs>
+* Supporting punycode decoding.
+* My address should not be deleted if specified with
+  mew-ask-{to,cc}.
+	Takashi Masuda <masutaka>
+* mew-ask-{to,cc} for mew-user-agent-compose.
+	KOIE Hidetaka <hide>
+* Thread bug fix. Some broken messages refer themselves.
+	KOIE Hidetaka <hide>
+* Fixing the passphrase prompot in mew-pinentry.
+	KOIE Hidetaka <hide>
+* Filename hack for Hyper Estraier on Zaurus.
+	Hideyuki SHIRAI <shirai>
+* mew-draft-privacy-method now can take case.
+* Explicitly specify sslVersion=TLSv1.
+	Tetsuya Toda <toda>
+* A patch for image scaling.
+	Tatsuya Kinoshita <tats>
+* A patch for ";".
+	KOIE Hidetaka <hide>
+
+

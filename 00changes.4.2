@@ -1,0 +1,153 @@
+			     <Change Log>
+
+Mew 4.2 release (2005/02/11)
+
+Mew 4.2 release candidate 3 (2005/02/03)
+
+* A bug fix for mew-summary-exchange-marks.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-win32.el.
+	Takashi Masuda <masutaka>
+* mew-which-exec hack and a fix for mew-namazu.el.
+	Hideyuki SHIRAI <shirai>
+
+Mew 4.2 release candidate 2 (2005/01/27)
+
+* Fixes for defcustom.
+	Hideyuki SHIRAI <shirai>
+* Bug fixes for "Rr".
+	Hideyuki SHIRAI <shirai>
+* The suffixes of OpenOffice are supported.
+* A bug fix for mark exchange.
+
+Mew 4.2 release candidate 1 (2005/01/13)
+
+* Wording check for minibuffer messages.
+	Tatsuya Kinoshita <tats>
+* A patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for Application/Rtf.
+	Hideyuki SHIRAI <shirai>
+
+Mew 4.1.55 (2005/01/08)
+
+* The "-p" option is specified only for "incm".
+* The lang augment for mknmz.
+* Supporting Application/Rtf.
+	SAKAI Kiyotaka <ksakai>
+* Yet another patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+
+Mew 4.1.54 (2005/01/07)
+
+* snprintf() patch for incm.
+	Yasunari Momoi <momo>
+* A patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Using the same toolbar and menu as much as possible.
+	SAKAI Kiyotaka <ksakai>
+* A wrapper for snprintf().
+	Murata Takashi <Takashi.Murata>
+* A patch to bin/w32/config.h.
+	Shuichi KITAGUCHI <ki>
+
+Mew 4.1.53 (2004/12/28)
+
+* Marks on invalid messages are preserved when scanning.
+* A bug fix for mew-addrbook-clean-up.
+* mew-summary-cache-prefetch checks marks.
+* ";" now can handle an attached message.
+* "C-uw" now can handle an attached message.
+* Yet another patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Hacking mew-cs-utf-16be.
+	Hideyuki SHIRAI <shirai>
+* :type fixes.
+	Hideyuki SHIRAI <shirai>
+* --info-dir for install-info.
+	KIMURA Yasuhiro <yasu>
+* A patch for mew-summary-folder-dir-newp.
+	Hideyuki SHIRAI <shirai>
+* Using null-device.
+	Shuichi KITAGUCHI <ki>
+* Yet another patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+
+Mew 4.1.52 (2004/12/22)
+
+* Yet another patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Yet another patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Introducing configure.
+	KOIE Hidetaka <hide>
+* A patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Importing mew-nmz.el. The key prefix is "k".
+	Hideyuki SHIRAI <shirai>
+* The etc directory is now "/usr/local/share/emacs/site-lisp/mew/etc"
+  and it is automatically set.
+* Implementing mew-summary-write ("C-uw").
+* Defining mew-summary-physical-folder.
+* "zi" toggles search-invisible.
+* A bug fix for mew-imap-expand-folder.
+* A bug fix for mew-convert-to-home-dir.
+* A bug fix for the mark recover.
+* Mew now makes use of the "-p" option for "incm".
+* The "-p" option for incm.
+	Yasunari Momoi <momo>
+* Lock check for mew-{smtp,nntp2}-flush-queue.
+* A bug fix for refile override on scanning.
+* A bug fix for refile log.
+* Supporting POP PLAIN.
+* The invisible area is hidden when C-uC-cC-k.
+* Invalid cache messages of IMAP is first changed into invisible.
+  Then the sentinel removes then invisible ones. 
+* Security fix: a bug of format string on incm has been fixed.
+	Ulf Harnhammar <Ulf.Harnhammar.9485>
+* Making line-move-ignore-invisible buffer-local.
+
+Mew 4.1.51 (2004/11/25)
+
+* "e" can be used in Virtual mode.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-in-decode-syntax-p().
+	SAITO Takuya <tabmore>
+* S/MIME support with gpgsm.
+* C-g works for mew-temp-minibuffer-message().
+	SAITO Takuya <tabmore>
+* A buf fix for mew-summary-goto-folder().
+* NNTP hack for mew-summary-goto-folder().
+	Hideyuki SHIRAI <shirai>
+* Replace the value of mew-sp for XEmacs: 32 => "?\ ".
+* Removing an unintended variable from mew-summary-goto-folder().
+	SAITO Takuya <tabmore>
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-browse.el.
+	Hideyuki SHIRAI <shirai>
+* A new command "e" in Summary to exchange marks.
+* Removing a refile log entry when undo.
+* A bug fix for the problem of toggle-msg vs refile.
+
+Mew 4.1.50 (2004/10/29)
+
+* Removing CRs in mew-imap-debug().
+* Removing mew-timing() from the SSL code.
+* Defining mew-cs-utf-16be.
+	Hideyuki SHIRAI <shirai>
+* Implementing IMAP UTF-7.
+* Yet another error handling for base64.
+	Murata Takashi <Takashi.Murata>
+* Kill the buffer inserted with C-cC-i when quiting.
+	KOIE Hidetaka <hide>
+* TLS support with stunnel.
+* Taking care of 'move on DnD.
+	Hideyuki SHIRAI <shirai>
+* Supporting Drag & Drop in Draft mode.
+* mew-set-file-modes for "lc".
+	Nobuhiro IMAI <nov>
+* A bug fix for NNTP error handling.
+* A bug fix for SMTP error handling.
+* Hacking contrib/mew-browse.el.
+	Hideyuki SHIRAI <shirai>

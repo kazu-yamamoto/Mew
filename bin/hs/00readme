@@ -1,0 +1,26 @@
+			   smew in Haskell
+
+* Installation
+
+- Install GHC (Glasgow Haskell Compiler)
+	http://haskell.org/ghc/
+
+- Install the "cabal" command whose package name is cabal-install
+	http://hackage.haskell.org/trac/hackage/wiki/CabalInstall
+
+- Install HDBC-sqlite3
+
+  Note that cabal refers to the HTTP_PROXY environment variable.
+  % sudo env HTTP_PROXY=$(YOUR_PROXY) cabal $(COMMAND)
+
+	% cabal update
+	% cabal list
+	% cabal list --installed
+
+	% cabal install HDBC-sqlite3 --dry-run
+	% cabal install HDBC-sqlite3
+
+- Compile smew
+	% make
+
+  Note that this may displays warnings. Please ignore them.

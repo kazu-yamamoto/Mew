@@ -1,0 +1,169 @@
+#!/usr/bin/env ruby
+#
+# smew.rb: Lookuping Message-ID: DB with Sqlite3
+#
+
+begin
+  require 'rubygems'
+  gem 'sqlite3-ruby'
+rescue LoadError
+end
+require 'sqlite3'
+
+################################################################
+##
+## DB search
+##
+
+def select_by_id(hash, db, id, mydir)
+  ret = nil
+  db.execute("SELECT * FROM mew WHERE (mew.id = ?);", id) do |ent|
+    if push_results(hash, ent, mydir)
+      ret = ent
+    end
+  end
+  return ret
+end
+
+def select_by_parid(hash, db, id, mydir)
+  ret = []
+  db.execute("SELECT * FROM mew WHERE (mew.parid = ?);", id) do |ent|
+    if push_results(hash, ent, mydir)
+      ret.push(ent)
+    end
+  end
+  return ret
+end
+
+################################################################
+##
+## Results
+##
+
+def push_results(hash, ent, mydir)
+  if hash.key?(ent['id'])
+    if File.dirname(ent['path']) == mydir
+      hash.delete(ent['id'])
+      hash[ent['id']] = ent
+    end
+    return nil
+  else
+    hash[ent['id']] = ent
+    return true
+  end
+end
+
+def print_results(hash)
+  fin = hash.to_a.sort!{|a,b| a[1]['date'] <=> b[1]['date']}
+  fin.each do |a|
+    puts a[1]['path']
+  end
+end
+
+################################################################
+##
+## Search
+##
+
+def search_me(hash, db, myid, mydir)
+  ent = select_by_id(hash, db, myid, mydir)
+  exit unless ent
+  return ent
+end
+
+def search_ancestors(hash, db, parid, mydir)
+  until parid == ''
+    ent = select_by_id(hash, db, parid, mydir)
+    break unless ent
+    parid = ent['parid']
+  end
+end
+
+def search_descendants(hash, db, myid, mydir)
+  parents = select_by_parid(hash, db, myid, mydir)
+  while parents != []
+    children = []
+    parents.each do |ent|
+      children += select_by_parid(hash, db, ent['id'], mydir)
+    end
+    parents = children
+  end
+end
+
+def search_child(hash, db, myid, mydir)
+  parents = select_by_parid(hash, db, [myid], mydir)
+  exit unless parents != []
+  return parents[0]
+end
+
+################################################################
+##
+## Main
+##
+
+require 'optparse'
+
+opts = {}
+OptionParser.new {|opt|
+  begin
+    opt.on('-p', 'search a parent message only') {|v| opts[:p] = v }
+    opt.on('-c', 'search a child message only') {|v| opts[:c] = v }
+    opt.parse!(ARGV)
+  rescue OptionParser::ParseError => e
+    puts opt
+    exit
+  end
+}
+
+myid = ARGV[0]
+mydb = ARGV[1] || File.expand_path('~/Mail/id.db')
+mydir = ARGV[2]
+db = SQLite3::Database.new(mydb)
+db.results_as_hash = true
+
+hash = {}
+
+begin
+  if opts[:p]
+    my = search_me(hash, db, myid, mydir)
+    puts my['path'];
+  elsif opts[:c]
+    my = search_child(hash, db, myid, mydir)
+    puts my['path'];
+  else
+    my = search_me(hash, db, myid, mydir)
+    search_ancestors(hash, db, my['parid'], mydir)
+    search_descendants(hash, db, myid, mydir)
+    print_results(hash)
+  end
+ensure
+  db.close
+end
+
+# Copyright (C) 2008 Mew developing team.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 3. Neither the name of the team nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+#    without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

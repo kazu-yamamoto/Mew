@@ -1,0 +1,41 @@
+/* XPM */
+/*
+ * Copyright (C) 1997 Yoshiaki Kasahara <kasahara@nc.kyushu-u.ac.jp>
+ * Copyright (C) 1997 Kazu Yamamoto <kazu@Mew.org>
+ * Copyright notice is the same as Mew's one.
+ */
+static char * mew_Unknown_xpm[] = {
+"28 28 5 1",
+" 	s backgroundToolBarColor	c None",
+".	c black",
+"X	c lightcyan",
+"o	c gray50",
+"O	c gray90",
+"                            ",
+" ........................   ",
+" .XXXXXXXXXXXXXXXXXXXXXX.   ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXX ....o XXXXXXX... ",
+" .XXXXoXXo.OXXO .oXXooXX... ",
+" .XXXXXXo.OXXXXXo. XXXXX... ",
+" .XXooXX..XXoooXX.oXooXX... ",
+" .XXXXXX..oXXXXXX.oXXXXX... ",
+" .XXoooXo.oXoXoX . XoXXX... ",
+" .XXXXXXXoXXXXXXooXXXXXX... ",
+" .XXoXoXXXXooXXo. XXXXXX... ",
+" .XXXXXXXXXXXX .OXXXXXXX... ",
+" .XXXXooooXoXO.OXXoXXXXX... ",
+" .XXXXXXXXXXXooXXXXXXXXX... ",
+" .XXoooXooooX.XXooooXoXX... ",
+" .XXXXXXXXXXX XXXXXXXXXX... ",
+" .XXooooXoXoXXXoooXoooXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXooooXoX . XoooXXXXX... ",
+" .XXXXXXXXXX...XXXXXXXXX... ",
+" .XXooXoooXX . XoooooXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .......................... ",
+"   ........................ ",
+"   ........................ ",
+"                            "};

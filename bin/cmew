@@ -1,0 +1,270 @@
+#!/usr/bin/env ruby
+#
+# cmew.rb: Creating Message-ID: DB with Sqlite3
+#
+
+begin
+  require 'rubygems'
+  gem 'sqlite3-ruby'
+rescue LoadError
+end
+require 'sqlite3'
+
+require 'time'
+require 'fileutils'
+require 'find'
+require 'mailread'
+
+################################################################
+##
+## DB
+##
+
+def open_db(db_file, fullupdate)
+  db_new_file = db_file + '.new'
+
+  if FileTest.exist?(db_new_file)
+    STDERR.print "Error: another cmew running.\n"
+    exit 1
+  end
+
+  if fullupdate == false
+    FileUtils.copy_file(db_file, db_new_file) if FileTest.exist?(db_file)
+  end
+
+  db = SQLite3::Database.new(db_new_file)
+  db.results_as_hash = true
+  sql = 'CREATE TABLE IF NOT EXISTS mew(id TEXT, path TEXT, parid TEXT, date TEXT);'
+  db.execute(sql)
+  db.transaction
+  return db
+end
+
+def close_db(db_file, db)
+  db.close
+  db_new_file = db_file + '.new'
+  if FileTest.exist?(db_new_file)
+    File.rename(db_new_file, db_file)
+  end
+end
+
+def get_ctime(db)
+  ent = db.get_first_row('SELECT * FROM mew WHERE id = ?;', '<mew-ctime>')
+  if ent
+    db.execute('DELETE FROM mew WHERE id = ?;', '<mew-ctime>' )
+    return ent['date'].to_i;
+  else
+    return 0
+  end
+end
+
+def set_ctime (db, ctime)
+  sctime = ctime.to_s
+  db.execute('INSERT INTO mew VALUES(:id, :path, :parid, :date);', 
+             'id' => '<mew-ctime>', 'date' => sctime)
+end
+
+################################################################
+##
+## Fields
+##
+
+def check_id(id)
+   return nil if id == nil
+   if id =~ /\A<[-a-zA-Z0-9!#\$%&\'\*\+\/=\?\^_`{}|~\.@]+>\z/
+     return id
+   else
+     return nil
+   end
+end
+
+def get_id(msg)
+  return check_id(msg['Message-Id'])
+end
+
+def get_parid(msg)
+  # (1) The In-Reply-To contains one ID, use it.
+  # (2) The References contains one or more IDs, use the last one.
+  # (3) The In-Reply-To contains two or more IDs, use the first one.
+  irt = []
+  irt = msg['In-Reply-To'].split(/[ \t\n]+/) if msg['In-Reply-To']
+  irt.delete_if {|id| !check_id(id) }
+  return irt[0] if irt.size == 1
+  ref = []
+  ref = msg['References'].split(/[ \t\n]+/) if msg['References']
+  ref.delete_if {|id| !check_id(id) }
+  return ref.pop if ref.size > 0
+  return irt[0] if irt.size > 1
+  return nil
+end
+
+def get_date(msg)
+  begin
+    date = Time.rfc2822(msg['Date']).getutc().strftime('%Y%m%d%H%M%S')
+  rescue
+    date = '19700101000000'
+  end
+  return date
+end
+
+def get_path(file)
+  # removing './'
+  return file[2..-1]
+end
+
+################################################################
+##
+##
+##
+
+def register(db, maildir, ignore_regex, target, last_mod)
+  Dir.chdir(maildir)
+  add_entry = db.prepare('INSERT INTO mew VALUES(:id, :path, :parid, :date);')
+  get_entry = db.prepare('SELECT * FROM mew WHERE id = ?;')
+  del_entry = db.prepare('DELETE FROM mew WHERE id = ? AND path = ?;')
+  db.results_as_hash = true
+  registred = 0
+  deleted = 0
+  skipdir = ''
+
+  Find.find(target) do |fpath|
+    if fpath =~ ignore_regex
+      if FileTest.directory?(fpath)
+        print fpath, " (ignored)\n"
+        Find.prune # includes next
+      end
+      # next
+    else
+      st = File.lstat(fpath)
+      if st.symlink?
+        if FileTest.directory?(fpath)
+          print fpath, " (ignored)\n"
+          Find.prune # includes next
+        end
+        # next      
+      elsif st.directory?
+        print fpath
+        mtime_file = File.expand_path('.mew-mtime', fpath)
+        if FileTest.file?(mtime_file) and last_mod > File.mtime(mtime_file).tv_sec
+          print " (skipped)\n"
+          skipdir = fpath
+          if st.nlink == 2
+            Find.prune # includes next          
+          end
+        else
+          print "\n"
+        end
+	STDOUT.flush
+        # next
+      elsif st.file? and fpath =~ /\/[0-9]+(\.mew)?$/
+        next if File.dirname(fpath) == skipdir
+        next if last_mod > st.ctime.tv_sec
+        m = Mail.new(fpath)
+        id = get_id(m)
+        parid = get_parid(m)
+        date = get_date(m)
+        path = get_path(fpath)
+        newpath = true
+        if last_mod > 0
+          get_entry.execute!(id) do |row|
+            past_path = row['path']
+            unless File.exist?(past_path)
+              del_entry.execute(id, past_path)
+              deleted = deleted + 1
+            end
+            newpath = false if path == past_path
+          end
+        end
+        if newpath == true
+          add_entry.execute('id' => id, 'path' => path, 'parid' => parid, 'date' => date)
+          registred = registred + 1
+        end
+        # next
+      end
+    end
+  end
+  add_entry.close
+  get_entry.close
+  del_entry.close
+  print 'Registered: ',  registred, ', deleted: ', deleted, "\n"
+end
+
+################################################################
+##
+## Main
+##
+
+require 'optparse'
+
+opts = {}
+OptionParser.new {|opt|
+  begin
+    opt.on('-f', 'full building') {|v| opts[:f] = v }
+    opt.parse!(ARGV)
+  rescue OptionParser::ParseError => e
+    STDERR.puts opt
+    exit 1
+  end
+}
+
+db_file = ARGV[0] || File.expand_path('~/Mail/id.db')
+maildir = ARGV[1] || File.expand_path('~/Mail')
+ignore_regex = Regexp.new(ARGV[2] || '^\./casket$|^\./casket/|/\.')
+target = if ARGV[3]; './' + ARGV[3] else '.' end
+have_target = if ARGV[3]; true else false end
+fullupdate = opts[:f] == true
+
+if fullupdate == true and have_target == true
+    STDERR.print "Error: -f and target_folder cannot be specified at the same time.\n"
+    exit 1
+end
+
+db = open_db(db_file, fullupdate)
+
+curr_mod = Time.now.tv_sec
+last_mod = get_ctime(db)
+comp_mod = if fullupdate == true; 0 else last_mod end
+
+begin
+  register(db, maildir, ignore_regex, target, comp_mod)
+  db.commit
+  db.execute('CREATE INDEX IF NOT EXISTS mew_id ON mew (id);')
+  db.execute('REINDEX mew_id;')
+  db.execute('CREATE INDEX IF NOT EXISTS mew_parid ON mew (parid);')
+  db.execute('REINDEX mew_parid;')
+ensure
+  if have_target == true
+    set_ctime(db, last_mod)
+  else
+    set_ctime(db, curr_mod)
+  end
+  close_db(db_file, db)
+end
+
+# Copyright (C) 2008 Mew developing team.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 3. Neither the name of the team nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+#    without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

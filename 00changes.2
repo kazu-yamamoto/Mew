@@ -1,0 +1,2008 @@
+			     <Change Log>
+
+Mew 2.1 (2001/11/01)
+
+Mew 2.1 release candidate 3 (2001/10/30)
+
+* Setting 0.05 instead of 0.01 for mew-smtp-command-content.
+  This maybe rescue XEmacs.
+	Tatsuya Kinoshita <tats>
+* Biding buffer-file-coding-system to prevent the side effect.
+* Adding the "-l" option for mew-prog-vgrep.
+* Ensuring that richtech-mode is disabled.
+* Setting max-mini-window-height to 1 in mew-summary-pipe-message.
+* Taking care of EXPIRED PGP keys.
+* Using mew-mule3.el even if Emacs is executed with the --unibyte
+  option.
+
+Mew 2.1 release candidate 2 (2001/10/26)
+
+* gifsicle support to prevent XEmacs from dying.
+	Hideyuki SHIRAI <shirai>
+* Text/Xml support for mew-summary-execute-base.
+	Hideyuki SHIRAI <shirai>
+* Handling 'quit in sort and pack.
+* A patch for refile learning.
+  Yoshinari Nomura <nom>
+* Fixing a bug that XEmacs dies when encoding GIF.
+	Hideyuki SHIRAI <shirai>
+* Edit again for qmail.
+	Fumio Kaiyama <akmac>
+* Bug fixes for privacy services in drafts.
+* Limit for re-search-foward in mew-text/xml-detect-cs etc.
+	Hideyuki SHIRAI <shirai>
+
+Mew 2.1 release candidate 1 (2001/10/24)
+
+* mew-auto-flush-queue works for mbox.
+* Workaround for mew-image-inline-p on Emacs 21.1.
+* Implementing mew-text/html-detect-cs and mew-text/xml-detect-cs.
+	Hideyuki SHIRAI <shirai>
+* Process status is well displayed on the mode line.
+* A bug fix for mew-demo-picture.
+	NABEYA Kenichi <nabeken>
+* Defining mew-use-charset-sanity-check.
+* A patch for refile.
+	Tatsuya Kinoshita <tats>
+* mew-input-folders hack.
+	Tatsuya Kinoshita <tats>
+* Defining mew-syntax-treat-filename-function.
+	Tatsuya Kinoshita <tats>
+* Defining mew-input-draft-buffer.
+	Hideyuki SHIRAI <shirai>
+* No sanity check if charset is specified.
+	Hideyuki SHIRAI <shirai>
+* C-cC-i for mew-summary-find-file.
+
+Mew 2.0.60 (2001/10/15) mew-dist release
+
+* Enhancing mew-param-analyze-broken to remove white spaces between
+  encoded-words.
+* recenter for mew-summary-down.
+* "c" for mew-summary-copy.
+* Allowing the 'X' mark for +mdrop.
+* A bug fix for 'invisible.
+* "?" for mew-input-map.
+	Tak Ota <Takaaki.Ota>
+* Allowing multiple SPCs on POP sessions.
+	Tatsuya Kinoshita <tats>
+
+Mew 2.0.59 (2001/10/12) mew-dist release
+
+* A bug fix for Multipart/Alternative.
+* Removing mew-summary-display-raw-header.
+* Use the "--decrypt" option instead of "--verify" for GnuPG.
+* Some "mew-pop-to-buffer" patches.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-regex-ignore-folders.
+* Removing mew-sort-debug and mew-pack-debug. Using (mew-debug 'sort)
+  and (mew-debug 'pack) instead.
+* A bug fix for folded quoted strings.
+* Defining mew-summary-message-number2.
+* A bug fix for PGP encryption.
+* Integrating "," and "C-cC-u". Use "," only. 
+* Removing mew-pop-to-buffer.
+* Using mew-current-get-* as little as possible.
+
+Mew 2.0.58 (2001/10/10) mew-dist release
+
+* The "Type 'T'" message displayed only when the top level is
+  truncated.
+* ".txt" suffix for dummy file names.
+* 't' in attach to toggle text/binary.
+* Defining mew-ask-fcc.
+* "Y" for mew-summary-cite.
+
+Mew 2.0.57 (2001/10/04) mew-dist release
+
+* XML support.
+* mew-mime-content-type hack.
+* A patch for contrib/mew-caesar.el.
+	Hideyuki SHIRAI <shirai>
+* mew-summary-kill-subprocess() now calls mew-pop-tear-down().
+	Hideyuki SHIRAI <shirai>
+* Supporting .htm as well as .html.
+	Hideaki MORINAKA <Hideaki.Morinaka>
+
+Mew 2.0.56 (2001/10/03) mew-dist release
+
+* mew-summary-folder-cache-save() now includes mew-touch-folder().
+* A bug fix for non-UIDL POP servers.
+* Unlimiting mew-header-max-depth for mew-scan-form-mark().
+* Touching folders when 'mdrop.
+* mew-set-environment() moved after loading mew-rc-file.
+	Kyotaro HORIGUCHI <horiguchi.kyotaro>
+
+Mew 2.0.55 (2001/10/01) mew-dist release
+
+* A bug fix for file mode of manuals.
+* Code clean up for refile.
+* A bug fix for mew-regex-id.
+* Removing mew-folder-remotep.
+* +mdrop finally.
+* mew-time-diff.
+	KOIE Hidetaka <hide>
+* If a number N is set to mew-pop-delete, it means to keep message
+  on the POP server for N days.
+	INOUE Tomohiro <tinoue>
+	Hideyuki SHIRAI <shirai> 
+* A bug fix for mew-folder-check.
+	Hideyuki SHIRAI <shirai> 
+* A bug fix for mew-substring.
+* A bug fix for mew-summary-sort.
+* A bug fix for mark handling of mew-summary-refile.
+* Fixing the problem of ":" vs "y" and/or "C-cC-l".
+
+Mew 2.0.54 (2001/09/17) mew-dist release
+
+* Defining mew-warning-field-level.
+* Bug fixes for mew-pop-info-name and mew-smtp-info-name.
+* completion-ignore-case hack in draft for mouse clicking.
+	Hideyuki SHIRAI <shirai> 
+* Highlighting a body when reediting.
+* Re-writing mew-summary-sort.
+* C-u# now asks a printer name.
+* A bug fix for mew-header-fold-region.
+* Removing the last "," of enum in pattern.c.
+	Wataru Saito <wataru>
+* The "-f" option for "test" instead of the "-e" otpion in Makefile.
+	kuwa
+
+Mew 2.0.53 (2001/09/10) mew-dist release
+
+* mewls bug fix for sort.
+	KAMEI Ken-ichi <mule>
+* Sort and pack doesn't call mew-scan. Just arrange Summary cache.
+* Preserving all marks when scanning.
+* Enhancing thread architecture.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-input-language-name.
+* A bug fix for mew-input-address.
+* Removing unnecessary code from mew-summary-sort.
+	Tatsuya Kinoshita <tats>
+
+Mew 2.0.52 (2001/09/05) mew-dist release
+
+* "I" inserted a line in a underline overlay. So, underline was put
+  onto two lines. This bug has been fixed.
+* A bug fix for mew-alias-expand-addrs.
+* A bug fix for mew-input-address.
+* Bug fixes for "(" and ")" again.
+	NINOMIYA Hideyuki <nin>
+* The "-a" option for contrib/incdir.
+        Yasunari Momoi <momo>
+	"YAMAZAKI Noriyuki" <zaki>
+* A patch for contrib/mew-fancy-summary.el.
+	Hideyuki SHIRAI <shirai>
+* Some defcustom hack.
+	Hideyuki SHIRAI <shirai>
+
+Mew 2.0.51 (2001/08/31) mew-dist release
+
+* Info updates.
+* Some defcustom hack.
+	Hideyuki SHIRAI <shirai>
+* Binary parts of a truncated message should not be decoded.
+* Now "Too large, truncated" message is displayed in the minibuffer.
+* Check the size from X-Mew-Uidl: carefully.
+* Addrbook now can contain group:; notation. It can be expand unless
+  it recurses.
+* mew-summary-ls calles mew-mark-clean only when called interactively.
+* C-cC-o inserts X-Mailer: in the last.
+	Tatsuya Kinoshita <tats>
+* Ask Subject: before "Really send this message? ".
+	Koga Youichirou <y-koga>
+* 't' in mew-scan-form now means the position of thread indentation.
+	"Takashi P.KATOH" <p-katoh>
+* X-Mailer: now locates just above mew-header-separator.
+* insert-file-contents changes buffer-file-coding-system. ","
+  is sacrificed and lpr-buffer goes wrong. mew-insert-message
+  now preserves buffer-file-coding-system.
+* Workaround for a broken POP server which doesn't display UID after
+  a message number.
+* X-Mailer: for Bcc:.
+* Bug fixes for mew-case-guess-when-composed.
+	Tatsuya Kinoshita <tats>
+* Bug fixes for "(" and ")".
+	NINOMIYA Hideyuki <nin>
+
+Mew 2.0.50 (2001/08/14) mew-dist release
+
+* info and doc updates.
+* mew-summary-sort: some bugs related to region are fixed.
+	Tatsuya Kinoshita <tats>
+* mew-substring in mew-mule3.el: length of mew-error-broken-string to
+  width.
+	SAITO Atsunori <sai>
+* Defining mew-ask-mark-process. The default is nil.
+* Supporting sort region. (C-uS)
+	"Takashi P.KATOH" <p-katoh>
+* mew-encode-remove-illegal-fields has a bug which removes
+  Subject: whose first line is null and whose second one
+  has a value. This bug was fixed.
+* Setting mode of files under ~/Mail to mew-file-mode.
+* A bug fix for mew-case-guess-when-composed.
+	Tatsuya Kinoshita <tats>
+* The "-l" option for "grep".
+	"David A. Panariti" <davep>
+* Inserting X-Mew-UIDL: at the beginning of a mail.
+* mew-multibyte-string-p and multibyte hack.
+	Hideyuki SHIRAI <shirai>
+
+Mew 2.0 stable (2001/07/26) mew-release release
+
+* info updates.
+* Defining mew-set-language-environment-coding-systems to avoid
+  the side effect of set-language-environment-coding-systems.
+* A bug fix form mew-mime-text/html.
+* A bug fix for mew-summary-auto-refile.
+* Rescue the SMTP sentinel.
+* mew-thread-only for "to".
+* the -man style of bin/{mewencode,mewls}.1.
+	Shun-ichi GOTO <gotoh>
+
+Mew 2.0 pre4 (2001/07/22) mew-dist release
+
+* mew-refile-guess-by-folder prefers the entire folder to ml name.
+* save-excursion hack for mew-mime.el.
+* Unifying a region of Summary mode.
+  See mew-summary-region-include-cursor-line.
+	Hideyuki SHIRAI <shirai>
+* "postnum" for x-sequence:
+* A bug fix for mew-sort-number.
+	Hideyuki SHIRAI <shirai>
+* "n" works for mew-summary-ls in the case that the scan form is old.
+* Defining mew-input-grep-pattern.
+* Adding key-bindings for [delete].
+* A bug fix for mew-addrbook-clean-up.
+	Tak Ota <Takaaki.Ota>
+* PWD for Makefiles to same Emacsen on Windows.
+	Motohiko Minakuchi <zxcv>
+
+Mew 2.0 pre3 (2001/07/16) mew-dist release
+
+* info updates.
+* Defining mew-mime-text/plain-ext. And charset hack.
+
+Mew 2.0 pre2 (2001/07/13) mew-dist release
+
+* info updates.
+* Forcing re-scan if the format of summary cache is old.
+* "tu" for mew-thread-unmark.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-addrbook-override-by-newone.
+	NABEYA Kenichi <nabeken>.
+* contrib/mew-fancy-summary.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* highlight-body for mew-summary-convert-local-cs.
+
+Mew 2.0 pre1 (2001/07/08) mew-dist release
+
+* info updates.
+* A patch for Makefile.w32.
+	Shuichi KITAGUCHI <kit>
+* save-match-data for mew-draft-dynamic-highlight.
+	Hideyuki SHIRAI <shirai>
+* CDP: bug fixes.
+* A bug fix of CDP: for S/MIME
+	Ryutaroh Matsumoto <ryutaroh>
+* A bug fix for "h" on Summary.
+* "to"!
+
+1.95b126 (2001/06/21) mew-dist release
+
+* Enhancing mew-reply-regex.
+	Tatsuya Kinoshita <tats>
+* Setting scan form for "I" and Biff.
+* A users now can do MIIME stuff for the body!
+* A bug fix for mew-header-p(). This enbuged on
+  mew-draft-dynamic-highlight().
+* A bug fix for reediting multipart on +draft.
+	Tatsuya Kinoshita <tats>
+* A bug fix for mew-draft-dynamic-highlight.
+	Hideyuki SHIRAI <shirai>
+* Removing mew-color-p.
+	Shun-ichi TAHARA <jado>
+* A patch for bin/w32/dirent.c.
+	Shuichi KITAGUCHI <ki>
+* bin/w32/*
+	Shuichi KITAGUCHI <ki>
+* Defining mew-cite-strings-function.
+	Tatsuya Kinoshita <tats>
+* Adding ":" to mew-regex-url.
+	NINOMIYA Hideyuki <nin>
+* A bug fix for mew-summary-mark-region.
+	Tatsuya Kinoshita <tats>
+	Hideyuki SHIRAI <shirai>
+* In-Reply-To is preferred for thread only if it contains one value.
+* mew-addrstr-parse-syntax-list ignores empty address "<>".
+	Tatsuya Kinoshita <tats>
+* A bug fix for mew-encode-remove-illegal-fields.
+	Shun-ichi GOTO <gotoh>
+* mew-ask-flush-case.
+	KOIE Hidetaka <hide>
+* A bug fix for undo on drafts.
+* A bug fix for mew-pgp-verify.
+* Saving .mew-folder-{list,alist} when new folder is created.
+* set-buffer the original buffer in mew-summary-display.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for the problem of "," vs raw-header.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-header-combine-field.
+* after-change-functions for dynamic header highlight
+	KAMEI Ken-ichi <mule>
+
+1.95b125 (2001/05/31) mew-dist release
+
+* PGP key fetch!
+* SMTP bug fix for locking.
+* New mew-from.
+	Tatsuya Kinoshita <tats>
+* RFC 2822 compliance.
+* add-hook for local-write-file-hooks.
+	Shun-ichi TAHARA <jado>
+
+1.95b124 (2001/05/29) mew-dist release
+
+* "S" and "O" can't be used in +draft.
+* Defining mew-user, mew-name, mew-mail-domain.
+* Multipart can revive in +draft.
+* "case" can revive in +draft and +queue.
+* mew-addrbook-alias-add does not register alias for a null user.
+* "make" makes in the bin directory.
+* Some mew-config-* -> mew-case-*.
+* Guessing case when reediting normal messages.
+	Tatsuya Kinoshita <tats>
+* Defining mew-content-type.
+* Making cases unique.
+	Tatsuya Kinoshita <tats>
+* jit-lock for thread.
+	Hideyuki SHIRAI <shirai>
+
+1.95b123 (2001/05/24) mew-dist release
+
+* Defining mew-draft-mode-reedit-queue-hook.
+	Tatsuya Kinoshita <tats>
+* Inputting RET for C-uP and C-uN changes the mark to the default.
+	NINOMIYA Hideyuki <nin>
+* Defining mew-config-guess-addition.
+	Tatsuya Kinoshita <tats>
+* signature is selectives by cases.
+	KOSUGE Takuya <kosuge>
+* A bug fix for NetNews folders.
+* Using jit-lock on Emacs 21.
+* Defining mew-face-eof-{message,part}.
+* Defining mew-insert-final-newline due to the bug of narrow-to-region
+  on Emacs 20 and XEmacs. ^L can't be broken.
+* "E" works for RFC822 messages.
+* mew-news-path is passed to mewls.
+* mew-cc and mew-dcc uses mew-mail-address() if it is 'me.
+	SUGIMORI <taro>
+* A patch for mew-summary-retrieve-message().
+	Makoto Kohno <kohno>
+* A patch for contrib/mew-browse.el.
+	Shuichi KITAGUCHI <ki>
+* Lovely hack for mew-config-guess-when-composed. Now a user can
+  watch a header when modified.
+	Tatsuya Kinoshita <tats>
+* Thread key-bindings are now reset. They all have the prefix "t".
+* C-uP and C-uN set mew-mark-walk.
+* Adding .dll.
+	Tak Ota <Takaaki.Ota>
+* A bug fix for mew-config-guess-when-replied.
+	Tatsuya Kinoshita <tats>
+
+1.95b122 (2001/05/09) mew-dist release
+
+* Big5 for XEmacs.
+* Fixing infinite loop of mew-summary-setup-mode-line().
+* Defining mew-config-guess-when-{replied,prepared,composed}
+* Keep modified for mew-draft-rehighlight().
+	Hideyuki SHIRAI <shirai>
+* Bug fix of reedit for a message whose first part is not text.
+* Clarify "case" for reedit.
+* Removing sit-for.
+* Getting mew-param-analyze-broken() back to the old logic.
+* mew-theme-file hack.
+	FUKANO Akihiro <fukano>
+* C-uC-cC-e now prepares a default value for CT:.
+* Fixing the last range for mewls.
+	Yoshiaki Kasahara <kasahara>
+* MS Office patch.
+	Hideyuki SHIRAI <shirai>
+
+1.95b121 (2001/04/24) mew-dist release
+
+* Merging wvHtml for WORD files.
+* Making execute-external safer.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-win32.el.
+	Hideyuki SHIRAI <shirai>
+
+1.95b120 (2001/04/24) mew-dist release
+
+* C-cC-e is now executable on a message.
+* A bug fix for ".".
+	 Tatsuya Kinoshita <tatsuyak>
+* A bug fix for "h" in Message mode.
+	Hideyuki SHIRAI <shirai>
+* A patch for text/html2.
+	Hideyuki SHIRAI <shirai>
+* Supporting ks_c_5601-1987.
+* C-uC-cC-y asks you arguments of the specified commands.
+* New API for mime-content-type.
+* mew-{front,rear}-{,non}sticky handle only text.
+* Defining mew-mime-external-body-list.
+* Singlepart body with unknown CTE: is now treated as a multipart.
+* The number of buffer local variables is now as small as possible.
+* ":" displays the syntax of a body.
+* Defining mew-ct-*p.
+* Defining mew-insert-manual.
+* mew-summary-execute-command can take args.
+	Hideyuki SHIRAI <shirai>	
+* mew-summary-set-config can be used in thread.
+	SUGIMORI <taro>
+* Singleparts in Multipart/Alternative are marked with "*".
+* Defining mew-find-longest-match().
+* Separating warning and info.
+
+1.95b119 (2001/04/09) mew-dist release
+
+* Raw text strings in parameters are decoded before splited with ";".
+* ":" for mew-summary-analyze-again-alternative.
+* Defining mew-use-alternative.
+* mew-face-header-date.
+	Takashi SATOH <satoh>
+* C-cC-y for mew-summary-execute-command.
+* "ml2" for sorting.
+	Kentaro Inagaki <inagaki>
+
+1.95b118 (2001/04/03) mew-dist release
+
+* Load mew-theme-file if non-nil.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-syntax-get-entry-by-cid for mew-w3m.el.
+* Supporting Multipart/Alternative. See mew-mime-multipart-alternative-list.
+* Putting face except line delimiters.
+	Hideyuki SHIRAI <shirai>
+* s/cite3/cite5/ in mew-theme.el.
+	Takashi SATOH <satoh>
+
+1.95b117 (2001/04/01) mew-dist release
+
+* Try to send a message even if smtp-auth is t and a server does not
+  support SMTP AUTH.
+* Defining mew-mime-content-disposition. Obsoleting
+  mew-content-disposition-inline-list and mew-mime-content-type-ignore-cdp.
+* Creating mew-theme.el.
+* Try to decode even if a message is truncated.
+
+1.95b116 (2001/03/29) mew-dist release
+
+* last:N is supported for range.
+* Setting mew-addrbook-orig-alist with unquoted strings when
+  C-uC-cC-a.
+	SUGIMORI <taro>
+* A bug fix for Bcc: vs +backup.
+* Sender: is now decided when the message is sent.
+* A patch for contrib/mew-summary-hl.el.
+	Hideyuki SHIRAI <shirai>
+* Using delete-windows-on so that scrambled drafts are not displayed.
+* Removing bold from the comment face.
+	Shun-ichi TAHARA <jado>
+* defface -> faces group.
+	Ryutaroh Matsumoto <ryutaroh>
+
+1.95b115 (2001/03/20) mew-dist release
+
+* Using defface. Now three kinds of colors, TTY, bright-background,
+  dark-background can be defined.
+* A bug fix for X-Face:.
+* A bug fix for "." of end-of-*
+* Overriding smtp-auth, smtp-auth-list, smtp-user, smtp-helo-domain
+  when sending a message in +queue.
+
+
+1.95b114 (2001/03/18) mew-dist release
+
+* mewencode.1 and mewls.1
+* Ensuring downcase of shortname in Addrbook.
+* contrib/mew-nmz-fixer.el.
+	Hideyuki SHIRAI <shirai>
+* CID: hack.
+	Hideyuki SHIRAI <shirai>
+* A color patch for Emacs 21.
+
+1.95b113 (2001/03/13) mew-dist release
+
+* Colors are available on Emacs21/XEmacs with the -nw option.
+* M-a -> mew-summary-addrbook-edit.
+* Fixing duplicated entries buf of mew-summary-addrbook-add.
+* SMTP bug fix.
+* SAMBA support.
+
+1.95b112 (2001/03/04) mew-dist release
+
+* Defining mew-touch-folder-check-enabled-p.
+	 Tatsuya Kinoshita <tatsuyak>
+* A bug fix of mouse-face.
+* defcustom hack.
+	 Ryutaroh Matsumoto <ryutaroh>
+* S/MIME patches.
+	 Ryutaroh Matsumoto <ryutaroh>
+
+1.95b111 (2001/03/03) mew-dist release
+
+* Enabling case for mew-summary-send-message.
+	Tatsuya Kinoshita <tatsuyak>
+* mew-blinfo.
+* Fixing Bcc: bugs.
+* mew-mark-{put,delete}-here use insert-and-inherit() instead of
+  insert() to inherit highlight.
+* mew-scan-insert-line checks mew-use-highlight-mark.
+* Removing mew-range-{auto,interactive}-alist.
+* Hack for queue folders.
+* Patches for contrib/mew-summary-hl.el.
+	Hideyuki SHIRAI <shirai>
+	Shun-ichi TAHARA <jado>
+* A patch for mew-fancy-highlight-body-setup.
+	Hideyuki SHIRAI <shirai>
+
+1.95b110 (2001/03/01) mew-dist release
+
+* A patch for body property.
+	KAMEI Ken-ichi <mule>
+* Enabling C-cC-e on Emacs 21.
+	Hideyuki SHIRAI <shirai>
+* You can now specifies "queue-folder" in mew-config-alist.
+* C-cC-c in Summary mode flushes messages in this queue folder or
+  the default queue folder.
+* A patch for mew-thread-indent-propery.
+	Hideyuki SHIRAI <shirai>
+* New contrib/mew-summary-hl.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for fancy highlight.
+	Hideyuki SHIRAI <shirai>
+
+1.95b109 (2001/02/25 Happy Birthday!) mew-dist release
+
+* Defining mew-highlight-body-max-size.
+* Highlighting non-MIME messages.
+* Integrating fancy highlight body. Set mew-use-fancy-highlight-body.
+	Hideyuki SHIRAI <shirai>
+* See if current-language-environment is bound.
+
+1.95b108 (2001/02/22) mew-dist release
+
+* Supporting OpenSSH 2.5.
+	Shun-ichi GOTO <gotoh>
+* mew-lang-jp.el hack.
+	Shun-ichi TAHARA <jado>
+* paragraph-start hack for Draft mode.
+	Shun-ichi GOTO <gotoh>
+	SUGIMORI <taro>
+* mew-use-highlight-{body,url}.
+	Tatsuya Kinoshita <tatsuyak>
+
+1.95b107 (2001/02/21) mew-dist release
+
+* Flushing caches when 'x'.
+* Fixing the bug of X-Mew:.
+* when/unless are now allowed.
+* Highlighting text/plain in message caches for Message mode.
+* Highlighting citation only in Draft mode.
+* Fixing the +++inbox problem.
+	Hideyuki SHIRAI <shirai>
+* Fixing the problem of auto-refile in the case
+  mew-use-thread-separator is used.
+	Hideyuki SHIRAI <shirai>
+* S/MIME patch.
+	Ryutaroh Matsumoto <ryutaroh>
+* defcustom patch
+	Ryutaroh Matsumoto <ryutaroh>
+* mew-buffer-message for gnuclient
+	Yoshiaki Kasahara <kasahara>
+
+1.95b106 (2001/02/17) mew-dist release
+
+* Don't window-scroll-functions to highlight Message/Draft.
+* Defining mew-use-highlight-{header,body,mark,url}
+* A bug fix for deleting multipart in the attachments.
+
+1.95b105 (2001/02/15) mew-dist release
+
+* Fixing a fatal bug of mew-highlight-body-region.
+* No highlighting if window-system is nil.
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+
+1.95b104 (2001/02/15) mew-dist release
+
+* Preemptive SMTP sending.
+	KOIE Hidetaka <hide>
+* Defining mew-summary-cook-function.
+	Hideyuki SHIRAI <shirai>
+* Enabling auto-refile in thread folders.
+	Hideyuki SHIRAI <shirai>
+* xemacs-codename hack.
+	Hiromichi Kawachi <kawachi>
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for mew-summary-up.
+	Hideyuki SHIRAI <shirai>
+* A patch for mew-was-regex.
+	Tatsuya Kinoshita <tatsuyak>
+* Sophisticating buffer management.
+* Obsoleting mew-set-buffer-tmp. (But it is left.)
+
+1.95b103 (2001/02/10) mew-dist release
+
+* Concatenating folders gussed by C-uo with ",".
+	KOIE Hidetaka <hide>
+* Defining mew-summary-mark-undo-all again.
+	Hideyuki SHIRAI <shirai>
+* mew-dir-messages to make directory-files faster.
+* A bug fix for mew-summary-search-mark.
+	Hideyuki SHIRAI <shirai>
+* A patch for mew-draft-header.
+	Tatsuya Kinoshita <tatsuyak>
+* contrib/mew-gnus.el.
+	SAKAI Kiyotaka <ksakai>
+
+1.95b102 (2001/02/06) mew-dist release
+
+* "k" to delete sub-thread.
+* A patch for mew-refile-view-unmark.
+	Hideyuki SHIRAI <shirai>
+* A bug fixing of Fcc (after SMTP).
+* Improving consistency of marks between Summary and Virtual.
+  i.e. "U", "ma", "mr"
+* Obsoleting "mu". This is trade-off for thread(Virtual).
+* Removing mew-remote-folder-cache-delete. (This was not used.)
+* A bug fix for burst.
+* Removing mew-folder-member. Now mew-folder-insert uses member()
+  which is much faster.
+* delete -> delq.
+* mew-mime-text/plain uses buffer-substring instead of
+  buffer-substring-no-properties because Emacs 21 implements
+  composite characters as a property.
+* Organization: patch.
+	Tatsuya Kinoshita <tatsuyak>
+* Error handling for Q-encoding.
+* "?" for thread folder and "/" for Virtual mode.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-pop-biff-setup.
+	NINOMIYA Hideyuki <nin>
+
+
+1.95b101 (2001/01/29) mew-dist release
+
+* E on +draft configures the window.
+* Defining mew-pop-sentinel-non-biff-hook.
+* mew-summary-search-mark hack.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-summary-exchange-mark in Virtual mode.
+* A bug fix for mew-attach-next.
+* condition-case for write-region in POP sessions.
+* mew-pop-check.
+	NINOMIYA Hideyuki <nin>
+* mew-pop-biff-function.
+	Tak Ota <Takaaki.Ota>
+* mew-pop-biff-setup disables the timer if mew-use-biff is nil.
+* Cleaning up mew-env.el.
+
+1.95b100 (2001/01/25) mew-dist release
+
+* Biff can bark for POP servers which don't support UIDL.
+* E on +draft switches a buffer of +draft/n if exists.
+* buffer-disable-undo to save resources.
+	Hideyuki SHIRAI <shirai>
+* A minor fix for defcustom.
+	OHARA Shigeki <os>
+* Adding mew-thread-display-hook.
+	Hideyuki SHIRAI <shirai>
+* Workaround for the "biff vs password" problem.
+* Some enhancements for invisibility.
+* SMTP status hack. (RFC 1893)
+	Tatsuya Kinoshita <tatsuyak>
+
+1.95b99 (2001/01/18) mew-dist release
+
+* Don't override {Resent-,}Sender: if exists.
+* Using run-at-time and cancel-timer even on XEmacs.
+* mew-summary-make-invisible checks existence of buffers and
+  input-pending.
+* copy-list -> copy-sequence.
+
+1.95b98 (2001/01/18) mew-dist release
+
+* C-cC-l now converts MIME-decoded-but-not-charset-converted text.
+* Mode line for Summary/Virtual displays "[n more]*" if thread information
+  is still visible. When the thread information becomes invisible
+  over the entire buffer, mode line displays "[n more]"
+  (asterisk disappears).
+* A bug fix for "y". A text/plain body was not decoded.
+* mew-virtual-cache-valid-p -> mew-thread-cache-valid-p
+	Hideyuki SHIRAI <shirai>
+* Using idle timer for invisible.
+* mew-eoh is set by mew-regex-setup.
+* C-u i now doesn't flush +queue.
+* Sender: hack. Defining mew-use-sender.
+* Defining mew-header-mode-hook.
+* mew-summary-scan-sentinel-hook -> mew-scan-sentinel-hook.
+* mew-summary-inc-sentinel-hook -> mew-pop-sentinel-hook.
+* Defining mew-smtp-sentinel-hook.
+* Now now we have:
+	mew-{pop,scan,smtp}-sentinel-hook.
+* Biff doesn't put the lifetime of POP password longer.
+* Biff doesn't flush +queue.
+* Removing mew-sublist.
+* "I" now takes care of the current folder.
+* New mew-summary-hl.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Handing the case where an SSH server refuses a connection.
+	KOIE Hidetaka <hide>
+	HAYASHI Chifumi <chifumi>
+
+1.95b97 (2001/01/11) mew-dist release
+
+* Workaround of mew-make-postfix-invisible for Emacs 21.
+* Detection for POP lock.
+* Modeline hack for biff.
+
+1.95b96 (2001/01/10) mew-dist release
+
+* SASL for POP had a side-effect. When receiving a big message, Mew
+  created a very long string. This bug has been fixed.
+* Implementing POP biff. See mew-use-biff and mew-use-biff-bell.
+* Flexible mechanism for get/set functions.
+* Defining mew-scan-form-size-huge.
+	Tatsuya Kinoshita <tatsuyak>
+	Tak Ota <Takaaki.Ota>
+
+1.95b95 (2001/01/06) mew-dist release
+
+* SASL for POP.
+* O(N) algorithm for mew-uniq-alist.
+* choice for defcustom.
+	NINOMIYA Hideyuki <nin>
+* A fix for mew-win32.el.
+	Hideyuki SHIRAI <shirai>
+
+1.95b94 (2001/01/04) mew-dist release
+
+* No thread separator on the first line.
+	NINOMIYA Hideyuki <nin>
+* Bug fixes for mew-summary-thread-{up,down}.
+* Extending mew-count-lines for mew-use-thread-separator.
+* Correct handling for wrong passwords of SMTP AUTH.
+* A bug fix for 55-characters-boundary problem of MD 5.
+* A bug fix for mew-summary-thread-move-cursor.
+	Hideyuki SHIRAI <shirai>
+* mew-prog-ms*.
+	Shuichi KITAGUCHI <ki>
+
+1.95b93 (2000/12/28) mew-dist release
+
+* Defining mew-summary-ls-no-scan-hook.
+* C-u I and C-u m I are case-ready.
+* C-u I and C-u m I now reverse mew-pop-delete.
+* Fixing the unsigned char bug of mewls.
+* Removing mew-time-cts-*.
+* Make mew-pop-body-lines configurable.
+* A patch for 'wrap' citation.
+	Tatsuya Kinoshita <tatsuyak>
+* Removing mc-flag.
+* Using new macro style for defvar.
+* Removing post-conv.
+
+1.95b92 (2000/12/25) mew-dist release
+
+* Workaround for Mew bombs.
+* A bug fix for mew-use-8bit.
+* base64 stuff for XEmacs 21.1.
+	NINOMIYA Hideyuki <nin>
+* A bug fix for mew-pop-clean-up.
+* Fixes for careless mistakes.
+	NINOMIYA Hideyuki <nin>
+	HAYASHI Chifumi <chifumi>
+
+1.95b91 (2000/12/23) mew-dist release
+
+* Stopping support for Emacs 19/Mule 2.3.
+* Using defalias instead of fset.
+* Using replace-match as much as possible.
+* Using invisible instead of selective-display.
+* Defining mew-scan-form-extract-rule.
+  mew-scan-form-from-name-only and mew-scan-form-from-addr-only
+  are now obsoleted.
+	Shun-ichi TAHARA <jado>
+* Defining mew-summary-thread-move-cursor.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-summary-mark-select-thread.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-use-thread-separator.
+	NINOMIYA Hideyuki <nin>
+* Removing defmacro as many as possible.
+* Enhancing mew-sort.el.
+	Hideyuki SHIRAI <shirai>
+* Fixing mew-icon-directory.
+	NINOMIYA Hideyuki <nin>
+* Unsigned char fixes for mewencode -g.
+	Tatsuya Kinoshita <tatsuyak>
+* A bug fix for mewencode -g.
+	Shun-ichi GOTO <gotoh>
+
+1.95b90 (2000/12/15) mew-dist release
+
+* utf-7.
+	Hideyuki SHIRAI <shirai>
+* Implementing "I" and "i".
+
+1.95b89 (2000/12/13) mew-dist release
+
+* Bug fixing and enhancing thread commands.
+	Hideyuki SHIRAI <shirai>
+* mew-mark-tmp -> ?\0.
+* Mark soft-coding patch.
+	Hideyuki SHIRAI <shirai>
+	Shun-ichi GOTO <gotoh>
+* Visualizing thread without recursive function call.
+	Shun-ichi TAHARA <jado>
+* Deleting mew-summary-convert-local-cs2.
+* mew-smtp-auth-list can be used in config.
+* Ensuring POP's end of session.
+* Allowing the case where one boundary is a substring of another
+  boundary.
+* Yet another bug fix for mew-draft-auto-fill.
+* Yet another patch for subject-simplify.
+	Tatsuya Kinoshita <tatsuyak>
+
+1.95b88 (2000/12/12) mew-dist release
+
+* Defining mew-cite-ignore-mouse-region.
+* Fixing the mouse-region vs citation problem.
+	SAKAI Kiyotaka <ksakai>.
+* Soft coding mode-name.
+	KOIE Hidetaka <hide>
+* Supporting SASL(PLAIN,LOGIN) as well as CRAM-MD5.
+* Defining mew-summary-display-raw-header.
+* A patch for subject-simplify.
+	Tatsuya Kinoshita <tatsuyak>
+* A bug fix for mew-draft-auto-fill.
+	Kenichi Nabeya <nabeken>
+* A bug fix for highlight-url.
+	HAYASAKA Hiromu <hrm>
+* mew-thread-only
+	NINOMIYA Hideyuki <nin>
+
+1.95b87 (2000/12/08) mew-dist release
+
+* Toolbar hack for refile in Virtual mode.
+	NINOMIYA Hideyuki <nin>
+* Making "g" and "C-cC-b" thread-friendly.
+* Ignoring marks in Virtual mode when quitting.
+	KOIE Hidetaka <hide>
+* Enabling mew-summary-thread-{parent,child,brother-up,brother-down}
+  in Summary mode.
+	Hideyuki SHIRAI <shirai>
+
+1.95b86 (2000/12/08) mew-dist release
+
+* Virtual folders are highlighted by default.
+  See mew-highlight-mark-folder-type for more information.
+* mew-summary-thread-{parent,child,brother-up,brother-down}.
+	Hideyuki SHIRAI <shirai>
+* Fancy threading.
+	Shun-ichi TAHARA <jado>
+* Fixing mew-refile-init. kill-emacs-hook now calls
+  mew-refile-clean-up.
+* Now you can use "o", "!", "mo" in Virtual mode.
+
+1.95b85 (2000/12/06) mew-dist release
+
+* A bug fix for mew-complete.
+	SAKAI Kiyotaka <ksakai>.
+* Catching a error signal in base64-decode-string.
+	Takuro Horikawa <takuroho>
+* mew-scan-get-line extracts the last id from References:.
+* "C-cC-g" -> "C-cC-z".
+* "," displays a message in the echo area if too large.
+	KOIE Hidetaka <hide>
+* "t" checks mew-summary-buffer-folder-cache-time.
+* Disabling mew-mark-afterstep in "mt".
+* Exclusive check for mew-summary-thread-region.
+* A bug fix for mew-mime-image.
+
+1.95b84 (2000/11/30) mew-dist release
+
+* Thread fixes and profile.
+* A patch for mewls.
+	Tatsuya Kinoshita <tatsuyak>
+* A patch for mew-icon-p.
+	KIM Hyeong Cheol <hkimu-tky>
+* Hash size patch.
+	Shun-ichi GOTO <gotoh>
+
+1.95b83 (2000/11/29) mew-dist release
+
+* regexp-quote for addresses.
+	Tatsuya Kinoshita <tatsuyak>
+* A bug fix for the "-nw" option of Emacs 21.
+* mew-{,insert-}buffer-substring.
+* Making "t" more convenient.
+* A patch for mew-win32.el.
+	Shuichi KITAGUCHI <ki>
+* Summary/Virtual menu patch.
+	NINOMIYA Hideyuki <nin>
+* mewls can display the last line of References:.
+* HAVE_POOL for mew.h.
+	Hideyuki SHIRAI <shirai>
+	Atsushi Onoe <onoe>
+* A patch for mew-cite-strings.
+	Tatsuya Kinoshita <tatsuyak>
+* Removing goto-line.
+* Cite label hack. See mew-draft-cite-fill-mode for more information.
+	KOIE Hidetaka <hide>
+	Tatsuya Kinoshita <tatsuyak>
+* A bug fix for mew-input-comma.
+* Defining "h" in Summary mode, debugging "h" in Message mode.
+* Backup status files.
+
+1.95b82 (2000/11/27) mew-dist release
+
+* mew-summary-{msg,part} hack.
+	Hideyuki SHIRAI <shirai>
+* Displaying the current message when "t".
+	KOIE Hidetaka <hide>
+* A fix for serious bug of mew-scan-form-from.
+* In Summary mode, "** no subject **" is displayed if Subject: is
+  empty. This is just for threads.
+* bin/w32.
+	Shuichi KITAGUCHI <ki>
+* "mt" is for putting the '*' mark on the current thread.
+* "mm" is for making thread.
+* "^", C-cC-p, C-cC-n to walk thread.
+* mew-summary-decode-pgp: C-cC-p -> C-c\C-g.
+* mew-folder-clean-up removes virtual folders before saving.
+* A patch to mew-refile-view.el.
+	sen_ml
+* "t" in Virtual goes to corresponding physical folder and moves to
+  the message.
+* C-uC-cC-c in Summary flushes the current buffer only.
+	Tatsuya Kinoshita <tatsuyak>
+
+1.95b81 (2000/11/25) mew-dist release
+
+* Defining mew-thread-column. This value can be set in
+  mew-scan-form-list, too.
+* A bug fix of mew-check-config in Emacs 21.
+	KIM Hyeong Cheol <hkimu-tky>
+	Hideyuki SHIRAI <shirai>
+* mew-refile-clean-up to avoid saving every time when "x".
+* Defining mew-count-lines which counts \n only.
+* mew-addrbook-alias-add doesn't overwrite if a target already
+  exists in Addrbook.
+* Setting mew-cs-m17n to ctext-unix to save ^M.
+* Removing highlight at unmarking even if the folder is matched to
+  (mew-highlight-this-folder-p).
+* Adding virtual folder to mew-folders-ignore-p.
+* A bug fix for deleting comments in Addrbook.
+
+1.95b80 (2000/11/24) mew-dist release
+
+* "t", "C-u t" and "mt" for thread.
+
+1.95b79 (2000/11/22) mew-dist release
+
+* Toolbar hack for Emacs 21.
+* mew-exit-minibuffer-function and mew-input-comma-function.
+	KOIE Hidetaka <hide>
+* Extending C-u C-c C-o.
+	Tatsuya Kinoshita <tatsuyak>
+
+1.95b78 (2000/11/20) mew-dist release
+
+* "." vs count-lines.
+	Hideyuki SHIRAI <shirai>
+* Info update.
+* "==" and "!==" for mewls.
+	SAKAI Kiyotaka <ksakai>	
+* Right reassemble procedure.
+* Patches for join.
+	Hideyuki SHIRAI <shirai>
+* Binding system-time-locale to "C" when using
+  format-time-string in Emacs 21.
+	SAKAI Kiyotaka <ksakai>	
+	Hideyuki SHIRAI <shirai>
+* Sort variety.
+* Using pp instead of prin1 in mew-save-lisp.
+
+1.95b77 (2000/11/17) mew-dist release
+
+* Join for message/partial.
+	Hideyuki SHIRAI <shirai>
+* Pick macro.
+* Warning for "X" if executed on the bottom.
+	Hideyuki SHIRAI <shirai>
+* Updating info.
+* Defining mew-scan-form-from-addr-only.
+* Case fold search for pick
+	SAKAI Kiyotaka <ksakai>
+* "g" chooses a inbox folder according to mew-config-input.
+	Toru YANO <toru>
+	sen_ml
+* (mew-mark-clean) for sort.
+* s/mew-config-syncronize/mew-config-synchronize/g
+	INOUE Tomohiro <tinoue>
+	sen_ml
+* A patch for Makefile.
+	KOIE Hidetaka <hide>
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+
+1.95b76 (2000/11/07) mew-dist release
+
+* A bug fix for mew-cache-message.
+	Tatsuya Kinoshita <tatsuyak>
+* Ensuring final newline for uudecode.
+* A bug fix for TIS-620.
+* Error message hack for mewencode.
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+
+1.95b75 (2000/11/01) mew-dist release
+
+* Defining mew-serv-to-port so that .mew-uidl uses service names.
+* Sanity-check of '\n'.
+* Highlighting Summary mode for POP and scan.
+* Fixing mewdecode so that it doesn't exit but warn when illegal
+  characters are found.
+* Adding copyright to contrib/*.
+	Hideyuki SHIRAI <shirai>
+* X-Mailer hack for XEmacs.
+	Shun-ichi TAHARA <jado>
+* contrib/mew-nmz.el again.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mewinc.
+	Shun-ichi TAHARA <jado>
+* Supporting "Re> " for i-mode.
+	Tatsuya Kinoshita <tatsuyak>
+* Cast for isdigit() in mewls.
+* A bug fix for mew-decode-warning-body.
+* prototypes for C source files.
+* bin/Makefile hack.
+	SAKAI Kiyotaka <ksakai>
+
+1.95b74 (2000/10/23) mew-dist release
+
+* Fixing the queue vs cache problem.
+	Tatsuya Kinoshita <tatsuyak>
+* mew-msgid-{user,domain} -> mew-smtp-msgid-{user,domain}.
+* Defining mew-prog-ssh-arg.
+  e.g. (setq mew-prog-ssh-arg '("sleep 10"))
+* Some patches for bin/
+	SAKAI Kiyotaka <ksakai>	
+* A patch for SMTP debug log.
+	OHARA Shigeki <os>
+* "quit" -> "QUIT"
+	OHARA Shigeki <os>
+* contrib/incmbox.
+	Yasunari Momoi <momo>
+* contrib/mewinc.
+	Shun-ichi TAHARA <jado>
+
+1.95b73 (2000/10/17) mew-dist release
+
+* contrib/incdir for Maildir(qmail).
+	Yasunari Momoi <momo>
+* Too big vs "a".
+	Tatsuya Kinoshita <tatsuyak>
+* case-fold-search for mew-scan-form-type
+	SAKAI Kiyotaka <ksakai>
+* Yet another fixes for Virtual mode.
+	Hideyuki SHIRAI <shirai>
+* A patch for X-Mew-UIDL:.
+	Ninomiya Hideyuki <nin>
+* Pick pattern for mewls.
+
+1.95b72 (2000/10/16) mew-dist release
+
+* mew-summary-virtual-with-grep.
+	Hideyuki SHIRAI <shirai>
+* Ad hoc mechanism to detect a broken string has been removed because
+  it doesn't work on XEmacs and Emacs 20.7 with --unibyte.
+* Set mc-flag to t function-locally in mew-header-encode-region so that
+  Emacs 19.x works. mc-flag must be nil buffer-locally in the 
+  draft at encoding so that re-search-forward works especially for
+  GB2312. Sigh...
+* Solving cache-sort problem.
+	Tatsuya Kinoshita <tatsuyak>
+* A patch for mew-time-rfc-to-sortkey.
+	Ninomiya Hideyuki <nin>
+
+1.95b71 (2000/10/15) mew-dist release
+
+* Decode multipart even if CTE: is not composite-type.
+* -i option for mewls.
+* match_pattern matches even if multiple lines for key exist.
+* Bug fixes for mew-cache-message.
+* mew-mail-path can be passed to mewls.
+* "C-u/" in Summary mode.
+
+1.95b70 (2000/10/12) mew-dist release
+
+* A patch for mewls to fix a long line from stdio.
+	Konuma Masaki <masaki>
+* A patch for mewls's pick.
+	SAITO Tetsuya <tetsuya>
+* Fixing toolbar syntax for XEmacs.
+* Fixing a toolbar problem in Virtual mode.
+* All variables for path are now downcased.
+* bindir patch.
+	Yoichi NAKAYAMA <yoichi>
+* mew-conf-path is now set to mew-mail-path.
+	INOUE Tomohiro <tinoue>
+* A patch for the position of mew-folder-make-alist.
+	Hideyuki SHIRAI <shirai>
+
+1.95b69 (2000/10/11) mew-dist release
+
+* Defining mew-config-synchronize.
+	Shun-ichi TAHARA <jado>
+* Some #ifdef for mewls.
+	Takuro Horikawa <takuroho>
+* mewls -a -p pattern sleeps only when it prints fields.
+* Patches for strlen in mewls.
+	Tatsuya Kinoshita <tatsuyak>
+* Analysis of multipart is now conformant to RFC 2046.
+	Tatsuya Kinoshita <tatsuyak>
+
+1.95b68 (2000/10/10) mew-dist release
+
+* Some #ifdef for mewls.
+	Hideyuki SHIRAI <shirai>
+* Virtual mode is back.
+
+1.95b67 (2000/10/09) mew-dist release
+
+* mew-scan-fields is now customizable.
+* mew-content-disposition-inline-list instead of 
+  mew-content-disposition-type.
+* C-uC-cC-e asks Content-Type:.
+* mew-mailbox-type to select either 'pop or 'mbox.
+* Many files, which kazu can't support, have been deleted.
+* A bug fix for mew-debug for MIME decoding.
+* Customizable argument encoding scheme.
+	Hideyuki SHIRAI <shirai>
+* Bug fixes for mew-param-sanity-check.
+
+1.95b66 (2000/10/05) mew-dist release
+
+* mew-header-encode-string chooses a charset for the entire string,
+  not each charset of substrings.
+* "inline" is now default for CDP:. Set mew-content-disposition-type
+  to customize it.
+* Generic sanity-check for parameters.
+* (Re: ...) is the same of (was ...).
+	Tatsuya Kinoshita <tatsuyak>
+* Fixing refile vs scroll problem when too big.
+
+1.95b65 (2000/10/03) mew-dist release
+
+* Prohibiting refiling messages to +draft.
+* Supporting NetBSD SSH.
+	Haruhisa Minami <hal>
+* mew-header-decode-region calles mew-header-sanity-check-region last.
+* mew-summary-search-mark always clears mew-summary-buffer-find-keyword.
+* Coding style changes for mewls and mewencode.
+* README has been deleted. 00api has been created.
+* Some bug fixes on argment coding-system for pick.
+* Saving .mew-uidl when POP is finished.
+* mew-summary-find-keyword-{down,up} centerize if a match found.
+  Otherwise, they display the end/beginning of the buffer at most.
+* M-p for mew-summary-find-keyword-up
+* A buf fix for mew-kill-buffer.
+	Ninomiya Hideyuki <nin>
+
+1.95b64 (2000/09/29) mew-dist release
+
+* mxo is for mew-summary-exec-refile.
+* mxd is for mew-summary-exec-delete.
+* Fixing mew-kill-buffer so that it kills a process as well.
+* mew-scan-form-mark-delete is now default to nil.
+* Error recovery for mew-substring.
+* mew-smtp-mail-from.
+* mew-prog-grep* hack.
+	Hideyuki SHIRAI <shirai>
+* Ensuring that mew-coding-system-p returns t when the argument is nil.
+* M-n in Summary mode is now bound to mew-summary-find-keyword-down.
+
+1.95b63 (2000/09/27) mew-dist release
+
+* A patch for mew-scan-form-friendly-addr.
+	Hideyuki SHIRAI <shirai>
+* Several bug fixes for the --unibyte.
+* mew-charset-m17n is defined and default to "utf-8".
+* A patch for mew-scan-form-friendly-addr to remove recursive
+  comments.
+* Defining mew-scan-form-list-{string,list}-type to let a user choose
+  'regex, 'string, 'recursive.
+* A string is not truncated if the width exceeds abs(minus-integer)
+  in scan-from.
+
+1.95b62 (2000/09/24) mew-dist release
+
+* Several fixes for mew-scan-form-func.
+* Several functions for mew-scan-form.
+	Hideyuki SHIRAI <shirai>
+* Fixing mew-summary-scan-form for Windows.
+	Takashi SATOH <satoh>
+
+1.95b61 (2000/09/21) mew-dist release
+
+* X-Mew-UIDL: is put onto messages if truncated.
+* Defining mew-scan-form-list.
+* Configurable mew-scan-form.
+* Content-type hack.
+	Shuichi KITAGUCHI <ki>
+
+1.95b60 (2000/09/19) mew-dist release
+
+* mew-summary-display-raw doesn't call mew-message-hook.
+* Coding style hack for replace-match.
+* Setting multibyte stuff for encoding to prevent re-search-forward's
+  failures.
+* mew-addrstr-parse-syntax-list hack.
+* A bug fix for mew-summary-refile. Getting information from the
+  top level header.
+* Auto configuration of mew-touch-folder.
+	Shuichi KITAGUCHI <kit>
+
+1.95b59 (2000/09/15) mew-dist release
+
+* A fix for X-Mew:.
+* Fixes for mew-summary-display.
+* "8" to toggle mew-use-8bit.
+* mew-addrstr-parse-address parses just one address.
+* mew-summary-msg-or-part for save.
+* Quiting bold face for demo on XEmacs because center-line sucks.
+* New coding style for mew-{c,d}info-set.
+* mew-regex-nonascii to make it independent on the internal expression.
+* A patch for mew-insert-message.
+	Shun-ichi GOTO <gotoh>
+
+1.95b58 (2000/09/11) mew-dist release
+
+* "C-u SPC" now re-display a message or a part only. To remove limitations
+   for decoding, use ".".
+* Drastic internal changes, including message caches.
+* Change buffer-name to mew-summary-folder-name.
+* Deleting the meaningless argment of mew-window-configure.
+
+1.95b57 (2000/09/04) mew-dist release
+
+* Defining mew-port-sanity-check.
+* mew-encrypt-to-myself is defined.
+* Don't insert SPC between 'phrase' and ':;'. If 'phrase' ends with
+  an 'encoded-word', this violates RFC 2047. But the spec itself is
+  broken.
+* Toolbar for message.
+	Ninomiya Hideyuki <nin>
+* A patch for POP communication.
+	Tatsuya Kinoshita <tatsuyak>
+* The -wait option for mewls.
+	Hideyuki SHIRAI <shirai>
+* Choosing correct micalg when GnuPG is used.
+* Supporting SSH v2.3.0.
+	Chifumi Hayashi <chifumi>
+
+1.95b56 (2000/08/30) mew-dist release
+
+* Hiding the Status: field.
+* Sanity check for strings in the scan form.
+* Subfolders of +attach and +draft are removed from mew-folder-list.
+* Deleting all Mew's buffers when quit.
+* Removing all queue folders when refile.
+	KOIE Hidetaka <hide>
+* Condition check for menu.
+	Ninomiya Hideyuki <nin>
+* mewls opt patch.
+	KOIE Hidetaka <hide>
+
+1.95b55 (2000/08/27) mew-dist release
+
+* Defining mew-dir-list-with-link-count and mew-dir-list-without-link-count.
+* Obsoleted mew-folder-list-skip-pattern.
+* Some command can't be use in +draft and +queue.
+* mew-make-temp-name ensures to use ASCII only.
+* A fix for C-cC-k.
+* A fix for usage of w32-get-true-file-link-count.
+	Hideyuki SHIRAI <shirai>
+* A fix for mew-dir-list2
+	NAKAGAWA Takayuki <tknakaga>
+
+1.95b54 (2000/08/18) mew-dist release
+
+* Workaround when base64-decode-string fails.
+* Extending mew-header-replace-value.
+	Shun-ichi GOTO <gotoh>
+* Postfix support for edit-again.
+* Similar coding style for SSH/POP/Scan/SMTP.
+* Timezone fix for sorting.
+	Ninomiya Hideyuki <nin>
+* Using PTY for mewls.
+* A bug fix for MIME composing.
+* Using delete-process for network processes.
+
+1.95b53 (2000/08/16) mew-dist release
+
+* Dividing mew-cs-database into mew-cs-database-for-{encoding,decoding}
+* Obsolete "~/Mail/.folders". Use ".mew-folder-list" and 
+  ".mew-folder-alist" instead. Now, creating a new folder became
+  MUCH faster than before.
+* Complete bug fix for SSH password cache.
+* Removing headers for uumerge.
+	Tatsuya Kinoshita <tatsuyak>
+* A patch for XEmacs on Windows.
+	Shuichi KITAGUCHI <kit>
+* mew-cs-m17n for lisp saving/loading.
+* Use mew-header-encode-addr for mailbox even if ASCII only to
+  check syntax.
+* A bug fix for broken Date:.
+* Cleaning up mew-cs-*.
+
+1.95b52 (2000/08/07) mew-dist release
+
+* A bug fix for sort (ie time zone). 
+* Displaying file time stamp if Date: is not present.
+* Taking care of Date: which doesn't contain time zone.
+* Getting back uumerge.
+* POP password caching with user/host/port.
+	Takashi SATOH <satoh>
+* touch-folder after scanning.
+	Shuichi KITAGUCHI <kit>
+
+1.95b51 (2000/08/03) mew-dist release
+
+* Making scan safer against broken strings.
+* The --field option for mewls.
+* Getting back mew-sort.el. Date: only.
+* Cleaning up unibyte and multibyte.
+* Support for Emacs 20 with the "--unibyte" option.
+
+1.95b50 (2000/07/31) mew-dist release
+
+* Hacking time stuff.
+* Error avoiding for saving, bursting, converting 8bit to 7bit.
+
+1.95b49 (2000/07/27) mew-dist release
+
+* Saving UIDLs when POP is quitting.
+* Defining mew-msg-user.
+	Kenichi Niioka <ken>
+* Defining mew-hello-text.
+* Getting. mew-auto-flush-queue back.
+* Fixes for POP getting.
+* Distinguish continuous SPCs and meaningless TAB in Subject:.
+* Checking SSH process before sending strings.
+* Checking the existence of mewls in mew-summary-scan-body.
+* Made mew-scan-format safer From: is nil.
+* Made mew-pop-tear-down safer in the case where inbox is nil.
+* Setenv LANGUAGE for gnupg.
+* nostat for mewls.
+	SAKAI Kiyotaka <ksakai>
+
+1.95b48 (2000/07/19) mew-dist release
+
+* Cleaning up mode line after POP.
+	Ninomiya Hideyuki <nin>
+* Binding coding system for write in drafts.
+* So many bug fixes for USER/PASS.
+
+1.95b47 (2000/07/13) mew-dist release
+
+* A bug fix for mew-pop-filter.
+* USER/PASS support. Set mew-pop-auth.
+	Kyotaro HORIGUCHI <horiguchi.kyotaro>
+* PGP 6.5.1i support.
+	Ninomiya Hideyuki <nin>
+	Shigeki Fujii <fujii>
+
+1.95b46 (2000/07/12) mew-dist release
+
+* Don't put the D mark if Msg-Id: doesn't exist.
+	Masaki KONUMA <konuma>
+* Making Mew safer against unsupported charset.
+* Replacing TABs to a SPC on Subject:
+	SAKAI Kiyotaka <ksakai>
+* mew-summary-toggle-disp-msg-hook
+	Ninomiya Hideyuki <nin>
+* Displaying percentage of receiving messages.
+	Shun-ichi GOTO <gotoh>
+* mew-pop-get-next instead of mew-folder-new-message.
+	Shun-ichi GOTO <gotoh>
+* stat() hack.
+	Kyotaro HORIGUCHI <horiguchi.kyotaro>
+	KOIE Hidetaka <hide>
+* Option and argument hack for imls
+	SAKAI Kiyotaka <ksakai>
+* if -> ifdef in mewls
+	Shuichi KITAGUCHI <kit>
+* Limit check for mewls.
+	KOIE Hidetaka <hide>
+
+1.95b45 (2000/07/08) mew-dist release
+
+* Fixing a type of mew-mode-line-id.
+	Ninomiya Hideyuki <nin>
+* "D" mark for duplicated messages.
+* Bug fixes for mewls.
+	KOIE Hidetaka <hide>
+* Packing.
+	Masaki KONUMA <konuma>
+
+1.95b44 (2000/07/07) mew-dist release
+
+* Defining mew-decode-set-environment for burst.
+* mew-summary-inbox-position hack.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-coding-system-p for non-Mule.
+* eq -> = if comparing numbers.
+* POP hack.
+
+1.95b43 (2000/07/01) mew-dist release
+
+* mew-summary-inbox-position is set only if "i" is called in 
+  Summary/Virtual mode.
+* Obsoleting mew-cs-rfc822-trans.
+* Using string= wherever appropriate.
+* Using eq wherever appropriate.
+* POP hacking.
+* A bug fix for Bcc:.
+
+1.95b42 (2000/06/29) mew-dist release
+
+* Binding print-length and print-level for Emacs 21's prin1.
+* A bug fix for mew-summary-display.
+* SSH password can be cached.
+* Now, mew-use-cached-passwd controls all password cache.
+  e.g. mew-use-pgp-cached-passphrase is obsoleted.
+
+1.95b41 (2000/06/28) mew-dist release
+
+* case is guessed when To:, Cc:, and Newsgroup: are inserted into a draft.
+* The old "." now became "C-u SPC". That is,
+  mew-summary-{show,display} have been integrated. "." is an analysis
+  command removing its cache. "C-u ." analyzes the message with 
+  mew-decode-broken reversed.
+* Enhancing mew-summary-exchange-point.
+	KOIE Hidetaka <hide>
+
+1.95b40 (2000/06/27) mew-dist release
+
+* Defining mew-regex-virtual.
+* Defining mew-summary-edit-header-for-{message,draft,queue}.
+* install-info opts and args in info/Makefile.
+* Supporting Emacs 21.
+* Defining mew-smtp-auth. And for mew-config-alist.
+* mew-fcc is default to +backup.
+* Getting back mew-config-guess-alist.
+* mew-decode-tag-fields -> mew-decode-ws-fields.
+* Canonicalizing aliases on Bcc:.
+	Takashi SATOH <satoh>
+* OpenSSH 2 support.
+	Hidetomo Hosono <h>
+* Decode unknown coding-system if mew-decode-broken.
+	shirai
+
+1.95b39 (2000/06/05) mew-dist release
+
+* Both "." and "C-u ." flush its cache.
+* Updating X-Mailer: when "E".
+* Adding Content-Length to mew-field-delete-for-reediting.
+	Murata Takashi <Takashi.Murata>
+* Fixing infinite loop of mew-param-analyze-broken.
+	Ryota HIROSE <hirose>
+* The perfect regular expression for quoted strings.
+* Fixing infinite warning of ",".
+* mew-header-sanity-check-string retains SPC even if all-ctls.
+* Fixing a warning message for parameter.
+
+1.95b38 (2000/06/01) mew-dist release
+
+* "C-u ." now displays a message with mew-decode-illegal reversed.
+* Defining mew-no-warning-{fields,params}
+* Defining mew-decode-illegal-subject-tab, 
+	mew-decode-tab-fields, mew-use-name-parameter.
+* Defining mew-param-analyze-broken.
+* Sort then uniq mew-decode-illegal.
+* A bug fix for mew-header-decode-region. "\000"s remained.
+* Defined the missing mew-mime-image/tiff.
+	Hayato Ishibashi <ishibashi>
+* Property for X-Mew:
+	Shuichi KITAGUCHI <kit>
+
+1.95b37 (2000/05/28) mew-dist release
+
+* Be liberal for broken messages.
+	mew-decode-illegal-{quoted-phrase,raw-subject,mime-parameter,text-body}
+* "Config:" is saved for "E".
+* "E" in +queue used an improper cache. This bug has been fixed.
+
+1.95b36 (2000/05/24) mew-dist release
+
+* Bug fix to handle multiple drafts. Encoded messages don't appear
+  to users anymore.
+* Bug fixes for SMTP.
+* Appropriate Bcc, Dcc, Fcc when "E" on messages in +queue.
+* Get mew-{,real-}send-hook back.
+* A patch for mew-virtual-thread.el
+	Hideyuki SHIRAI <shirai>
+* Defining mew-smtp-flush-hook.
+	Shuichi KITAGUCHI <kit>
+* Creating mew-md5.el.
+* A patch for mew-subject-simplify.
+	KOIE Hidetaka <hide>
+
+1.95b35 (2000/05/19) mew-dist release
+
+* Password cache for SSH/SMTP Auth.
+  See mew-use-{ssh,smtp}-cached-passphrase.
+* Retaining Dcc: in .mqi.
+* mew-header-{en,de}code-{base64,qp} ->
+  mew-{base64,q}-{en,de}code-string.
+* SMTP Auth. Currently, on XEmacs only.
+* mew-smtp-user for SMTP Auth.
+* UTF-8. (require 'un-define) by yourself.
+* mew-summary-convert-local-cs2 for header. (C-cC-d)
+* CTE: x-uuencode decoding. (Implemented in mewencode.)
+* mew-start-process.
+	KOIE Hidetaka <hide>
+
+1.95b34 (2000/04/20) mew-dist release
+
+* Try EHLO first, and try HELO if failed.
+* Binding case-fold-search in mew-subject-simplify.
+	Shun-ichi GOTO <gotoh>
+* Binding mark-active in the cite functions.
+	KAMEI Ken-ichi <mule>
+* Dynamically check capability of image on a frame.
+	Daiki Ueno <ueno>
+* Simplify mew-icon-p.
+	Daiki Ueno <ueno>
+
+1.95b33 (2000/04/18) mew-dist release
+
+* Mode menu pops up in each mode on XEmacs by 3 button.
+* Creating mew-auth.el. (just a toy)
+* Some XEmacs hacks.
+	Yoshiki Hayashi <t90553>
+* Subject: hack function.
+	KAMEI Ken-ichi <mule>
+	Shun-ichi GOTO <gotoh>
+* Patches for contrib/mew-nmz.el
+	Hideyuki SHIRAI <shirai>
+* assoc -> assq if appropriate.
+
+1.95b32 (2000/04/13) mew-dist release
+
+* immknmz hack.
+	Hideyuki SHIRAI <shirai>
+* Catching format-decode-buffer's error.
+* RFC 2017 support. access-type=url.
+	Ninomiya Hideyuki <nin>
+* Resent-From: is passed to MAIL FROM.
+* Displaying a message when "!".
+	utashiro
+
+1.95b31 (2000/04/11) mew-dist release
+
+* Checking existence of a buffer in mew-summary-set-config.
+	Hideyuki SHIRAI <shirai>
+* C-u X processes all marked messages before the cursor.
+* C-u x processes marked messages in the region.
+* If mew-use-burst-folder-history is non-nil, mew-burst-last-folder
+  is used as a candidate of a burst folder.
+* Fixed the bare LF problem for non-Mule Emacs.
+* Deleting old X-Mew: for C-cC-p.
+* See if a coding-system exists on decoding. (hack for ISO-2022-JP-3)
+* "smtp-hello-domain" for mew-config-alist.
+
+1.95b30 (2000/04/09) mew-dist release
+
+* ISO-2022-JP-3 test support for Emacs 20.x.
+* Info updates.
+* Deleted mew-addrbook-unexpand-regex.
+* "header-alist" can be used in mew-config-alist.
+* Removing unnecessary newline of Smtp log in the case of errors.
+	KOIE Hidetaka <hide>
+
+1.95b29 (2000/03/09) mew-dist release
+
+* C-cC-s and C-cC-r in Summary mode now can breaks page delimiters.
+* Explanation for GNUPG is now displayed when PGP key is added.
+* A fix for C-cC-e in Draft mode.
+* Returning "" if read-passwd causes an error.
+	Hideyuki SHIRAI <shirai>
+* comment-region now works for citation in Draft mode.
+* A fix for IMAP resend.
+	Hideyuki SHIRAI <shirai>
+* A fix for re-edit.
+	Hideyuki SHIRAI <shirai>
+* touch-folder for queues.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-encode-learn-aliases.
+* contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+
+1.95b28 (2000/02/21) mew-dist release
+
+* A fix for PGP vs undo.
+* If you type "C-u" for PGP signature function, you can specify
+  PGP user id (usually an e-mail address) instead of From:.
+* A bug fix for PGP unsupported signature.
+* contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+
+1.95b27 (2000/02/16) mew-dist release
+
+* PGP unsupported signature(2).
+* Removing mqi files when messages in +queue are marked with 'D'
+	Shuichi KITAGUCHI <kit>
+* Supporting OpenSSH.
+	Shuichi KITAGUCHI <kit>
+
+1.95b26 (2000/02/08) mew-dist release
+
+* Supporting multiple SMTP servers.
+
+1.95b25 (2000/02/03) mew-dist release
+
+* A patch for loading order.
+	Hideyuki SHIRAI <shirai>
+* Toolbar hack for XEmacs
+
+1.95b24 (2000/02/03) mew-dist release
+
+* The decoding mechanism is sophisticated for re-edit.
+* Creating mew-const.el, mew-blvs.el and mew-vars2.el.
+* Creating mew-nntp.el. (Just a toy now)
+
+1.95b23 (2000/01/31) mew-dist release
+
+* When reedit, "charset" is cleared so that the charset of the file
+  can be guessed.
+* "E" in +draft now recovers attachments.
+* Getting edit-again (M-e) back.
+* A bug fix for C-cC-o vs header problem.
+* Customizing patches again.
+	SAKAI Kiyotaka <ksakai>
+
+1.95b22 (2000/01/28) mew-dist release
+
+* mew-queue-backup.
+* 'no-err -> t for re-search-{forward,backward}.
+* A bug fix for mew-encode-save-draft.
+* defcustom for Emacs 19.28.
+	Hideyuki SHIRAI <shirai>
+
+1.95b21 (2000/01/27) mew-dist release
+
+* defcustom for Emacs 19.28.
+	Hideyuki SHIRAI <shirai>
+* Some hacks for resending.
+* Supporting Bcc: and Resend-Bcc:.
+* Read-only for a body of Header mode.
+* Bug fixes for PGP.
+* C-cC-o replaces From: if exists.
+* Defining mew-header-replace-value.
+* mew-draft-undo hack (for resend).
+* C-cC-o for Header mode.
+* Mode name in Header mode.
+* Patches for contrib/mew-summary-hl.
+	Hideyuki SHIRAI <shirai>
+
+1.95b20 (2000/01/26) mew-dist release
+
+* A bug fix for mew-summary-switch-to-folder.
+* t -> 'no-err for re-search-{forward,backward}.
+* Header mode is now ready! You can resend and send a massage to
+  other receivers.
+	"r" for resending.
+	"W" for sending to other receivers.
+* A bug fix for "error in process filter: Selecting deleted buffer".
+* Customizing patches.
+	SAKAI Kiyotaka <ksakai>
+* Warning against illegal ranges.
+	SAKAI Kiyotaka <ksakai>
+
+1.95b19 (2000/01/24) mew-dist release
+
+* mew-folder-new-message see if whether or not a buffer exists
+  corresponding to a new file.
+* mew-summary-reply prohibits to be executed in +draft.
+	ksakai
+* mew-config-init.
+	Shuichi KITAGUCHI <kit>
+* mew-draft-set-config set mew-draft-buffer-config only.
+* Date: fix.
+	Masaki KONUMA <konuma>
+	Hideaki YOSHIFUJI <yoshfuji>
+	Kenji Sato <ken>
+* Header encoding fix for Mule 2.3.
+	SAKAI Kiyotaka <ksakai>
+* Defining mew-mail-address again for backward compatibility.
+
+1.95b18 (2000/01/20) mew-dist release
+
+* SMTP fixes.
+* Config fixes.
+* Friendly messages for config input.
+	Shuichi KITAGUCHI <kit>
+* A patch for contrib/mew-summary-hl.el.
+	Hideyuki SHIRAI <shirai>
+
+1.95b17 (2000/01/13) mew-dist release
+
+* Touch folder hack.
+	Shuichi KITAGUCHI <kit>
+* Fixing mew-substring.
+	Masaki KONUMA <konuma>
+* "." for parts.
+* Checking null string for Addrbook.
+* PGPv5 fixes for "not encrypted" with invalid key of ANY kinds.
+	Michael Steiner <steiner>
+* Adding the "X" mark for mark existence check.
+	Masaki KONUMA <konuma>
+* No sorting for directory-files.
+	Masaki KONUMA <konuma>
+* SPC doesn't scroll message buffers if not displayed.
+* Syncing the return value of base64-decode-string and
+  that of mew-header-decode-base64.
+	Masaki KONUMA <konuma>
+
+1.95b16 (99/12/28) 
+
+* mew-generate-{mail-address,mail-domain,from}-list.
+* Supporting SSHv2.
+* Functions for buffers and folders have been re-written.
+* The config feature has been drastically re-written.
+  Now, the Config: field is obsoleted.
+* mew-touch-folder for SMTP.
+	Hideyuki SHIRAI <shirai>
+* selected-window instead of mew-pop-to-buffer, again.
+	Hideyuki SHIRAI <shirai>
+
+1.95b15 (99/12/22) mew-dist release 
+
+* Checking the existence of ssh.
+* Making filters and sentinels safer.
+* Killing drafts became safer.
+* Loading "~/.mew" when initialized.
+* Rotating Smtplog.
+* selected-window instead of mew-pop-to-buffer.
+	kyota (Kyotaro HORIGUCHI)
+* A mechanism to locate log files.
+* Defining mew-conf-path.
+
+1.95b14 (99/12/16) mew-dist release
+
+* SSH is now available! Set mew-smtp-ssh-server.
+
+1.95b13 (99/12/14) mew-dist release
+
+* A patch for contrib/mew-browse.el.
+	Hideyuki SHIRAI <shirai>
+* Config comes back. See mew-config-alist. Currently, inbox-folder,
+  from, and msgid-domain are supported.
+* mew-use-full-window is default to nil.
+* A patch for reply fragments of SMTP.
+	SUGIMORI <taro>
+* Typo fixes.
+	Masaki KONUMA <konuma>
+* Macro fix.
+	Shun-ichi GOTO <gotoh>
+
+1.95b12 (99/12/13) mew-dist release
+
+* mew-window-use-full -> mew-use-full-window. (Should be obsoleted)
+* mew-stmp.el has benn brushed up. Logging, recovering, and 
+  message fragment-safe.
+* mew-random has been defined to avoid the same sequence.
+* Both mew-date and mew-message-id use format-time-string.
+* Addrbook is now assumed to be under ~/Mail.
+* A mew-pioalet patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-pioalet.
+	Shun-ichi GOTO <gotoh>
+* English is blushed up.
+	Masaki KONUMA <konuma>
+
+1.95b11 (99/12/10) mew-dist release
+
+* A bug fix for the case where Addrbook doesn't exist.
+* A coding-system bug fix for "y".
+* Fixing the Draft mode vs window-configuration problem.
+* A bug fix for Fcc:.
+* Message-ID: is added by Mew.
+* A bug fix for the Draft mode vs auto-save problem.
+* A bug fix for the Draft that starts with null lines.
+* A bug fix for draft undo.
+* A bug fix for SMTP sentinel.
+* Set mew-init-p to nil when quitting.
+* Deleting decode-syntax when "E" in +queue.
+
+1.95b10 (99/12/08) mew-dist release
+
+* Saving non-saved buffers for multipart composing.
+	kyota (Kyotaro HORIGUCHI)
+* mew-smtp-keep-connection.
+* Dummy timer functions for Mule for Win32.
+	Hideyuki SHIRAI <shirai>
+* Undo if no recipient in Draft.
+
+1.95b9 (99/12/07) mew-dist release
+
+* CRLF bug fixes for SMTP.
+* Environment hacks.
+* "." transparency for SMTP.
+
+1.95b8 (99/12/06) mew-dist release
+
+* Header remains unmodified for "E" in +draft.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-capitalize.
+* Defining mew-timer-reset.
+* Mew now speaks SMTP. Queuing is processed by Mew.
+* Using the third argument of rename-file.
+* Thraw imput, impath, Petname, Aliases away.
+* More friendly message for "I" and "C".
+	Shuichi KITAGUCHI <kit>
+* A bug fix of window configurations for C-cC-c and C-cC-m.
+
+1.95b7 (99/11/29) mew-dist release
+
+* A bug fix for duplicate privacy marks.
+* A bug fix for the multipart vs C-cC-s problem.
+* Preventing refiling messages to +queue.
+* "E" move msg to #msg when executed in +queue.
+* Flushing +queue asynchronously.
+* A bug fix for mo.
+* A bug fix for the case encryption fails.
+* Defining mew-attach-folder.
+* Defining mew-remove-entry.
+* Updating contrib/*.el
+	Chifumi Hayashi <chifumi>
+	Hideyuki SHIRAI <shirai>
+
+1.95b6 (99/11/23) mew-dist release
+
+* mew-auto-flush-queue is t by default.
+* Defining mew-regex-*.
+* Right use of directory-files.
+* A new mark "X"(M-d) to be really removed anyway.
+* Brushing mew-mark.el up. 
+* C-cC-c flushes +queue only in +queue with Summary mode.
+* C-cC-m queues the composed message to +queue.
+* List modification functions. 
+  mew-add-first, mew-insert-after, mew-replace-with.
+* mew-which-exec.
+	Shuichi KITAGUCHI <kit>
+* A patch for contrib/mew-browse.el.
+	Hideyuki SHIRAI <shirai>
+* mew-complete-*-ignore-case.
+	Hideyuki SHIRAI <shirai>
+* Patches for contrib/mew-gnus.el.
+	Toshio HORI <toshi>
+* C-cC-c in Draft asks whether or not you really want to send the draft
+  if mew-ask-send is non-nil.
+* Bug fixes for function definitions in mew-addrbook.el.
+	SAKAI Kiyotaka <ksakai>
+
+1.95b5 (99/11/15) mew-dist release
+
+* Sophisticated some features of b4.
+* Many comments and documents are added.
+* Some parts of Summary-to-Draft functions are integrated.
+* Enabling encoding marks for attachments.
+* Bug fixes for C-u y in Summary mode.
+* Many functions which assume database structures are abstracted.
+* In attachments, "C" specifies an output "charset" parameter.
+  "I" specifies an input file-coding-system for a text file.
+* A buf fix for mew-draft-auto-fill.
+* A bug fix for mew-highlight-header-region.
+* mew-input-config requires matching.
+
+1.95b4 (99/11/10) mew-dist release
+
+* mew-use-8bit enables CTE: 8bit for 8bit charset.
+* Multipart-oriented reediting.
+* 8bit-to-7bit converter.
+* A bug fix for the mark vs update problem.
+* Defining mew-charset-input-method-alist. E.g.
+	(setq mew-charset-input-method-alist
+	      '(("iso-8859-1" . "latin-1-postfix")
+		("iso-8859-2" . "latin-2-postfix")))
+* A patch for mew-highlight.el.
+	"Takashi P.KATOH" <p-katoh>
+* Cursor position hack for message prefetching.
+* Set mew-cache-prefetch-remote to t. 
+* Defining mew-pgp-verify-addr.
+	Chifumi Hayashi <chifumi>
+* A tiny patch for mew-bq.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Brush up mew-{en,de}code.el so as to use 
+  base64-{en,de}code-{region,string}.
+* Size hack.
+	SAKAI Kiyotaka <ksakai>
+* C-u mew-summary-addrbook-add targets the first address on To:.
+	Hideyuki SHIRAI <shirai>
+* Checking redraw-frame for BOW.
+* A patch for mew-refile-view.el.
+	"Takashi P.KATOH" <p-katoh>
+* mew-ask-flush-queue
+	"Takashi P.KATOH" <p-katoh>
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* IMAP fixes.
+	Hideyuki SHIRAI <shirai>
+* Preventing infinite loop of PGPv5.
+* Making mew-header-{en,de}code-base64 faster.
+	Masaki KONUMA <konuma>
+
+1.95b3 (99/10/15) mew-dist release
+
+* Validity check for Fcc:.
+	Tomoya Ida <tomoya.ida>
+* C-cC-a in Summary mode registers To: and Cc: if From: is mine.
+* "p" and "n" in attachments move line by line if mew-attach-move-by-line
+  is non-nil.
+* Defining mew-summary-jump-{message,top,bottom}-then-display.
+* A tiny patch for mew-scan.el.
+	Hideyuki SHIRAI <shirai>
+
+1.95b2 (99/10/14) mew-dist release
+
+* Fcc: vs folder hack.
+* Removing mew-attach-dummy.
+* XEmacs compiled with --with-scrollbars=no doesn't have
+ scrollbar-height. 
+	Daiki Ueno <ueno>
+* mew-header-clear removes the read-only property from the entire
+  buffer.
+* s/find-mew-file/find-new-file/
+	SUGAI Norihiko <sugai>
+* contrib/mew-refile-misc.el.
+	sen_ml
+* A patch for contrib/mew-summary-hl.el.diff.
+	Hideyuki SHIRAI <shirai>
+
+1.95b1 (99/09/27) mew-dist release
+
+* Check contents of a directory before removing it. (NFS)
+* contrib/mew-summary-hl.el.
+	Hideyuki SHIRAI <shirai>
+* Ensuring that mew-summary-*-sentinel-hook runs in Summary mode.
+	Hideyuki SHIRAI <shirai>
+* Completion hack for Config:.
+	SAKAI Kiyotaka <ksakai>
+* A patch for mew-win32.el.
+	Shuichi KITAGUCHI <kit>
+* A patch for mew-nmz.el syncing with mew-fake-imap.el.
+	Hideyuki SHIRAI <shirai>
+* contrib/mew-fake-imap.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-virtual-thread.el.
+	Hideyuki SHIRAI <shirai>
+* If mew-refile-guess-from-me-is-special is t, mew-refile-guess-by-default
+  produces folders according to To: and Cc:.
+
+--End of file

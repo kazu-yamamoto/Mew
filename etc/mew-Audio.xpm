@@ -1,0 +1,42 @@
+/* XPM */
+/*
+ * Copyright (C) 1997 Yoshiaki Kasahara <kasahara@nc.kyushu-u.ac.jp>
+ * Copyright (C) 1997 Kazu Yamamoto <kazu@Mew.org>
+ * Copyright notice is the same as Mew's one.
+ */
+static char * mew_Audio_xpm[] = {
+"28 28 6 1",
+" 	s backgroundToolBarColor	c None",
+".	c black",
+"X	c lightcyan",
+"o	c gray90",
+"O	c gray25",
+"+	c gray50",
+"                            ",
+" ........................   ",
+" .XXXXXXXXXXXXXXXXXXXXXX.   ",
+" .XXXXooooooooooooooXXXX... ",
+" .XXXXo            OXXXX... ",
+" .XXXXo            OXXXX... ",
+" .XXXXo   +.  +.+  OXXXX... ",
+" .XXXXo   ..  .+.  OXXXX... ",
+" .XXXXo       +.+  OXXXX... ",
+" XXXXXo            OXXXXX+. ",
+"o.OXXXo            OXXXO.X. ",
+" X .XXo    ...     OXX. X+. ",
+" .XX.Xo   .....    OX.XX... ",
+" .XXXXo  .......   OXXXX... ",
+" .XXXXo ....+..+.  OXXXXX+. ",
+" XXXXXo ...+O..O.  OX....X. ",
+"o....Xo ......O+.  OXXXXX+. ",
+" XXXXXo  ....O+.   OXXXX... ",
+" .XXXXo   .+O+.    OXXXX... ",
+" .XX.Xo    ...     OX.XX... ",
+" X .XXo            OXX. X+. ",
+"o.OXXXo            OXXXO.X. ",
+" XXXXXoOOOOOOOOOOOOOXXXXX+. ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .......................... ",
+"   ........................ ",
+"   ........................ ",
+"                            "};

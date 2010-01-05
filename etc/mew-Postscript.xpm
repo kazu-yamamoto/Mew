@@ -1,0 +1,42 @@
+/* XPM */
+/*
+ * Copyright (C) 1997 Yoshiaki Kasahara <kasahara@nc.kyushu-u.ac.jp>
+ * Copyright (C) 1997 Kazu Yamamoto <kazu@Mew.org>
+ * Copyright notice is the same as Mew's one.
+ */
+static char * mew_Postscript_xpm[] = {
+"28 28 6 1",
+" 	s backgroundToolBarColor	c None",
+".	c black",
+"X	c lightcyan",
+"o	c pink",
+"O	c gray50",
+"+	c red",
+"                            ",
+" ........................   ",
+" .XXXXXXXXXXXXXXXXXXXXXX.   ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XX... X .. XXXXXXXXXXX... ",
+" .XX.XX.X.XX.XXXXXXXXXXX... ",
+" .XX.XX.X.XXXXXXXXXXXXXX... ",
+" .XX... X .. XXXXXXXXXXX... ",
+" .XX.XXXXXXX.XXXXXXXXXXX... ",
+" .XX.XXXX.XX.XXXXXXXXXXX... ",
+" .XX.XXXX .. XXXXXXXXoooOOO ",
+" .XXXXXXXXXXXXXXXo+++++++++ ",
+" .XXXXXXXXXXXXXo++oooXXXOOO+",
+" .XXXXXXXXXXXo++oXXXXXXX... ",
+" .XXXXXXXXXXo+oXXXXX  OO... ",
+" .XXXXXXXXXX+oXXXX OOO  ... ",
+" .XXXXXXXXXo+XXX OO XXXX...O",
+" .XXXXXXXXX+oXX O XXXXXX... ",
+" .XXXXXXXXo+XXXO XXXXXXX... ",
+" .XXXXXXXX+oXX OXXXXXXXX... ",
+" .XXXXXXXX+oXXO XXXXXXXX... ",
+" .XXXXXXXX+oX OXXXXXXXXX... ",
+" .XXXXXXXo+XX OXXXXXXXXX... ",
+" .XXXXXXXo+XXO XXXXXXXXX... ",
+" ........O+O............... ",
+"   ......O+O............... ",
+"   ......O+O............... ",
+"          +    O            "};

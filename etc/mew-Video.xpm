@@ -1,0 +1,44 @@
+/* XPM */
+/*
+ * Copyright (C) 1997 Yoshiaki Kasahara <kasahara@nc.kyushu-u.ac.jp>
+ * Copyright (C) 1997 Kazu Yamamoto <kazu@Mew.org>
+ * Copyright notice is the same as Mew's one.
+ */
+static char * mew_Video_xpm[] = {
+"28 28 8 1",
+" 	s backgroundToolBarColor	c None",
+".	c black",
+"X	c lightcyan",
+"o	c brown",
+"O	c gray50",
+"+	c white",
+"@	c gray25",
+"#	c lightblue",
+"                            ",
+" ........................   ",
+" .XXXXXXXXXXXXXXXXXXXXXX.   ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XooooooooooooooooooXXX... ",
+" .Xo................oXXX... ",
+" .X..................OOX... ",
+" .X..+@..######..@+..OOX... ",
+" .X.+@.O.######.O.@+.OOX... ",
+" .X.+@.O.######.O.@+.OOX... ",
+" .X..+@..######..@+..OOX... ",
+" .X..................OOX... ",
+" .X..................OOX... ",
+" .X..................OOX... ",
+" .XXXOOOOOOOOOOOOOOOOOOX... ",
+" .XXXOOOOOOOOOOOOOOOOOOX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .XXXXXXXXXXXXXXXXXXXXXX... ",
+" .......................... ",
+"   ........................ ",
+"   ........................ ",
+"                            "};

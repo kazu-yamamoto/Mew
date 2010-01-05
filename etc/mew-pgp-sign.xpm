@@ -1,0 +1,36 @@
+/* XPM */
+/*
+ * Copyright (C) 1997 Yuuichi Teranishi <teranisi@isl.ntt.co.jp> 
+ * Copyright (C) 1997 Kazu Yamamoto <kazu@Mew.org>
+ * Copyright notice is the same as Mew's one.
+ */
+static char * mew_pgp_sign_xpm[] = {
+"24 24 4 1",
+" 	s backgroundToolBarColor	c None",
+".	c black",
+"X	c white",
+"o	c Gray60",
+"                        ",
+"...............        .",
+".XXXXXXXXXXXXX.        .",
+".X...X...X...X.       ..",
+".X.X.X.X.X.X.X.      .X.",
+".X...X...X...X.     .XX.",
+".X.XXXXX.X.XXX......XXX.",
+".X.XXX...X.XXX.XXX.XXX. ",
+".XXXXXXXXXXXXX.XX.XXXX. ",
+"...............X.XX. .  ",
+" .XXXXXXXXXXXXXX.X. X.  ",
+" .XXXXXXXXXXXXXX.. X.o  ",
+" .XXXXXXXXXXXXXX.....o  ",
+" .XXXXXXXXXXXXX.    .o  ",
+" .XX..XXXXXXXXX     .ooo",
+" .X.X....XX..X.XX X..ooo",
+" ..XX.X.X.....X.X..X.o  ",
+" .XX.X.X.X.XX.X..X.X.o  ",
+" .XX.X.X.X...XX.X.XX.o  ",
+" .XXXXXXXXXXXXXXXXXX.o  ",
+" ....................o  ",
+"  oooooooooooooooooooo  ",
+"                        ",
+"                        "};

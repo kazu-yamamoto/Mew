@@ -1,0 +1,547 @@
+			     <Change Log>
+
+Mew 4.1 release (2004/10/18)
+
+Mew 4.1 release candidate 3 (2004/10/12)
+
+* A bug fix for mew-summary-set-walk-mark().
+	sai
+* UTF-8 support for contrib/mew-browse.el.
+	Hideyuki SHIRAI <shirai>
+
+Mew 4.1 release candidate 3 (2004/10/12)
+
+* "mM-u" converts the '*' mark to the 'U' mark.
+
+Mew 4.1 release candidate 2 (2004/10/06)
+
+* A bug fix for mew-physical-folder().
+	Hideyuki SHIRAI <shirai>
+
+Mew 4.1 release candidate 1 (2004/10/05)
+
+* Defining mew-protect-privacy-with-old-pgp-signature.
+* mew-summary-{un,}mark-in-physical preserve the cursor position.
+* Avoiding overriding files in queue.
+	Tatsuya Kinoshita <tats>
+* Making "tt" and "x" friendly to Virtual folder made of one physical
+  folder.
+* Fixing bugs of the new mark scheme.
+* IMAP bug fixes.
+* sinfo is now passed with Summary cache as well.
+* Defining mew-imap-spam-folder.
+* You can create a thread for Virtual folder which is made of
+  just one Summary folder.
+
+Mew 4.0.69 (2004/09/30)
+
+* Defining mew-delete-unread-mark-by-mark.
+* Set comment-start-skip in Draft mode.
+* Fixing a bug of EOL for the SEARCH command.
+* A bug fix for mew-decode-syntax-buffer().
+	Hideyuki SHIRAI <shirai>
+* A bug fix for biff.
+* "C-um/" asks you a target mark. Now you can create Virtual mode
+  for unread messages.
+* "m/" does not unmark the * mark in its physical folder.
+* Patches for contrib.
+	Hideyuki SHIRAI <shirai>
+* Don't put the unread mark if scanning all.
+* Face for the unread mark.
+* You can pick in Virtual mode if it is created from one folder.
+
+Mew 4.0.68 (2004/08/30)
+
+* Defining mew-summary-markable().
+* "Md" puts the delete/unlink mark onto the unread mark.
+* The unread mark 'U' is implemented. Set mew-use-unread-mark to t.
+  See also mew-unread-mark-list.
+* A fixing bug of SMTP/NNTP queuing.
+* DNS error check for SSL.
+	Shuichi KITAGUCHI <ki>
+* ":" works for text messages as well as MIME messages.
+
+Mew 4.0.67 (2004/08/23)
+
+* One more bug fix for IMAP.
+* Fixing a bug for IMAP's "3Z".
+
+Mew 4.0.66 (2004/08/23)
+
+* A patch for reedit in +queue.
+	Tatsuya Kinoshita <tats>
+* Defining mew-queue-check-new-message to avoid race condition of +queue.
+* "mI" now retrieves truncated messages only.
+* IMAP fetch now uses the byte of a literal to detect the tail
+  of a message.
+* Making execute-external and excute-internal more elegant.
+* Introducing the mew-set function.
+* Obsoleting mew-mime-image-alist. Using mew-mime-content-type instead.
+* Supporting Ms-Tnef. Type C-cC-e to extract files.
+* C-cC-t to mew-summary-execute-internal.
+* The "-f" option for "incm" to preserve UNIX From.
+	Yasunari Momoi <momo>
+	Jonathan <rise>
+* PGP 6 key handling.
+	TAKANO Yuji <takachan>
+* Supporting "-ERR [IN-USE]" (RFC2449).
+	Shun-ichi TAHARA <jado>
+* You can quit Mew without processing marks. All marks will appears
+  when you run Mew again.
+* Making message search faster.
+	KOIE Hidetaka <hide>
+* Checking windows-1251 instead of windows-1252.
+* "M*" for mew-summary-redo.
+* Sort now uses a right range.
+* A bug fix for mew-summary-kill-subprocess.
+* A patch for contrib/mew-refile-view.el.
+	KOIE Hidetaka <hide>
+* New mark "$" is introduced. This mark should be used to backup
+  the current "*" marks.
+* The "@" mark is obsoleted. All commands which targeted the "@" mark,
+  including the "F" command, now work for the "*" mark. 
+* A bug fix for "tg" on XEmacs.
+	Shigeru Yasuda <yasuda>
+* A bug fix for mew-refile-guess-by-alist2.
+	Kyotaro HORIGUCHI <horiguti>
+
+Mew 4.0.65 (2004/06/01)
+
+* Workaround for mew-addrstr-parse-syntax-list against Emacs 20.7's
+  bug.
+* Decoding Subject: for auto refile.
+	Tatsuya Kinoshita <tats>
+* Registering ISO-8859-8-I for Hebrew as a temporary solution. Numbers
+  are displayed in the reverse order but better than nothing.
+* "mu" work for pruned threads.
+	Hideyuki SHIRAI <shirai>
+* Marks work on pruned threads.
+	Hideyuki SHIRAI <shirai>
+* "t(" and "t)".
+	Hideyuki SHIRAI <shirai>
+* A bug fix for "p" and "n" on toggled threads.
+	Hideyuki SHIRAI <shirai>
+* ";" displays trace paths.
+* mew-old-pgp-decode() checks "charset".
+	Tatsuya Kinoshita <tats>
+* Check mew-use-header-veil in "zv".
+	Tatsuya Kinoshita <tats>
+* Now "." on a part displayed with ":" can parse HTML.
+* "Too large" for remote folders.
+* Disabling "S" in IMAP folders.
+* A patch for mewl.
+	Shigeya Suzuki <shigeya>
+* PuTTY (SSH) support.
+	Shuichi KITAGUCHI <ki>
+* Defining mew-use-node-folder.
+* Charset can be specified for mew-use-old-pgp.
+* Removing \r from message-id.
+* Defining mew-draft-append-domain-p.
+* Defining mew-use-full-alias.
+* Defining mew-use-text/html-list.
+* Defining mew-use-text/xml.
+* Defining mew-imap-prefix-list().
+	Shigeru Yasuda <yasuda>
+* A patch for mew-use-old-pgp().
+	Tatsuya Kinoshita <tats>
+* Defining mew-imap-prefix-list.
+* Displaying account name when asking a password.
+	KOIE Hidetaka <hide>
+* Visio support.
+	TAKANO Yuji <takachan>
+* C-cC-z now treats MIME-encoded body.
+* '*', '@', 'd', 'u' now handles a visual region.
+	Ryota Hirose <hirose>
+* Adding ".tbz".
+	TAKANO Yuji <takachan>
+* A bug fix for mew-summary-goto-folder().
+	Shigeru Yasuda <yasuda>
+* Defining mew-use-old-pgp.
+* A bug fix for SSL.
+	Shigeru Yasuda <yasuda>
+* Checking expired public key for GnuPG.
+
+Mew 4.0.64 (2004/03/08)
+
+* NOTE: YOU MUST RE-INSTALL THE "BIN" DIRECTORY.
+* info updates.
+* SSL now checks verification failure.
+* Fcc: %backup is now cached.
+* Fixing a bug of mew-regex-part.
+	Shigeru Yasuda <yasuda>
+* incm now touches ".mew-mtime" by default. Mew calls incm with the
+  "-u" option to suppress this.
+	Yasunari Momoi <momo>
+* Obsoleting mew-msg-rm-policy and mew-msg-rm-folder-list.
+  Use mew-trash-folder and mew-trash-folder-list for local folders.
+  Use mew-imap-trash-folder and mew-imap-trash-folder-list for 
+  IMAP folders. Read info for more information.
+* Removing 'no-ls from mew().
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-summary-from-local-to-imap.
+* Removing unnecessary fields when resending.
+* Command and pattern should be specified at the same time for '"'.
+	Hideyuki SHIRAI <shirai>
+* History for '"'.
+	KOIE Hidetaka <hide>
+* Circular completion now works for pick pattern.
+  'mew-pick-default-field' is obsoleted.
+  Use 'mew-pick-pattern-list' instead.
+* Circular completion now works for "C".
+* '"' calls a command through a shell.
+* Don't use "error" in mew-smtp-queue and mew-nntp2-queue.
+* A patch to fix face problems on XEmacs.
+	Shun-ichi TAHARA <jado>
+* A patch for mew-mark-active-p().
+	Hideyuki SHIRAI <shirai>
+* Defining mew-visit-inbox-after-setting-case. After setting a case
+  with "C", you can visit an inbox determined with the case and its
+  "proto".
+* "?", "tt", "'", '"', "x", "lx", "ma", "Md", "S", "mlc" are now
+  friendly for the visible region (transient mark mode for Emacs and
+  zmacs region for XEmacs). You don't need to type "C-u" to specify
+  the visible region.
+* "?" for pick. "C-u?" for pick in the region.
+* "'" for grep. "C-u'" for grep in the region.
+* '"' for a specified command. 'C-u"' for the one in the region.
+* mew-connection-type-for-scan is now obsoleted. Pipe is good for
+  mewl.
+* Header mode also takes care of mew-visit-queue-after-sending.
+* mew-visit-queue-after-sending is default to nil. If non-nil,
+  visiting a queue folder C-cC-m in a draft.
+* mew-imap-trash-folder is now default to "%trash".
+* The patch version of Emacs is removed for X-Mailer:.
+	Hiroshi Fujishima <pooh>
+	Tatsuya Kinoshita <tats>
+* mew-summary-folder-name() hack.
+	Hideyuki SHIRAI <shirai>
+* "mr" and "tr" now ignore invisible strings.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+
+Mew 4.0.63 (2004/01/15)
+
+* If IMAP path separator is ".", "/" is not allowed for a folder name.
+* IMAP response code hack.
+* New mew-summary-next-line and mew-summary-previous-line.
+	Hideyuki SHIRAI <shirai>
+* Removing mew-timing from mew-local-filter for Emacs.
+	Hideyuki SHIRAI <shirai>
+* mew-use-thread-cursor hack.
+	Hideyuki SHIRAI <shirai>
+* mew-summary-refile-remove-body hack.
+	Hideyuki SHIRAI <shirai>
+* Another patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Another patch for contrib/mew-refile-view.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-refile-view.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-nmz.el.
+	hasi
+* A bug fix for mew-scan-header().
+	hasi
+	KOIE Hidetaka <hide>
+
+Mew 4.0.62 (2003/12/25)
+
+* mew-refile-guess-alist can be set in mew-config-alist.
+* mew-scan-header decodes encoded fields according to 
+  mew-scan-max-field-length.
+* incm handles a read-only file system.
+	Yousuke HARADA <harada>
+* PGP PKS servers are selectable for C-cC-f.
+* "Rd" deletes the local folder or the IMAP folder.
+* "Rr" renames the local folder or the IMAP folder.
+* Implementing mew-imap-directory-file-name and
+  mew-imap-file-name-as-directory.
+* Appropriate arguments for bogofilter.
+	Walter Truitt <walter.truitt>
+* IMAP spam filter.
+	(setq mew-imap-spam-field "X-Bogosity") ;; Do NOT append ":" 
+	(setq mew-imap-spam-word "Yes")
+	(setq mew-imap-trash-folder "%trash") ;; nil means really delete
+* "tr" for mew-summary-regexp-make-thread.
+	KOIE Hidetaka <hide>
+* Setting buffer-read-only to nil for C-cC-q in Draft (just in case).
+* Defining mew-use-retrieve.
+* A bug fix for "D".
+
+Mew 4.0.61 (2003/11/18)
+
+* A bug fix for mew-decode-rfc822-header().
+* Using delete-overlay() in mew-header-veil-make() so as to detach the
+  overlay from its buffer.
+* If a specified folder contains SPC, Mew warns.
+* Fixing a bug of IMAP's # character.
+* Supporting IMAP servers which does not implement NAMESPACE.
+* Defining mew-input-case-hist.
+	KOIE Hidetaka <hide>
+* mew-connection-type-for-scan hack for Darwin.
+	Hideyuki SHIRAI <shirai>
+
+Mew 4.0.60 (2003/10/29)
+
+* Allowing mew-folder-case handle multiple cases.
+	KOIE Hidetaka <hide>
+* Supporting the windows-125x coding system on Emacs current.
+* mew-inbox-action-alist bug fix on XEmacs.
+* A bug fix for "A". (a side effect of mew-push-mark).
+* "lh" for learning as ham.
+* "ls" for learning as spam.
+* If mew-highlight-body-max-size is set to 0, it means unlimited.
+	Kazumi HARA <hara>
+* Using find-file-hook instead of find-file-hooks on Emacs 21.4.
+* Using write-file-functions instead of local-write-file-hooks on Emacs 21.4.
+* Supporting transient-mark-mode on Emacs 20/21.
+* Fixing a bug that the "X" mark is not highlighted.
+* A buf fix for "zv" on XEmacs.
+
+Mew 4.0.59 (2003/10/06)
+
+* "zv" toggles the header veil for To:/Cc:.
+* s/illegal/invalid/g.
+* A bug fix for C-cC-c in +postq.
+* mode-line-format hack for Emacs 21.3.50.
+	Kan Sasaki <sasaki>
+* X-Mailer contains the third number of emacs-version.
+* A bug fix for mew-region-bytes().
+	Hideyuki SHIRAI <shirai>
+* Fixing mew-header-arrange() for X-Face:.
+* Removing string-bytes().
+* Replace ":" with "_" in boundary strings.
+
+Mew 4.0.58 (2003/09/26)
+
+* A bug fix for "o" in Virtual.
+* A bug fix for "U".
+	Kan Sasaki <sasaki>
+* C-uC-cC-k now kills all SSH processes.
+* mew-substring now checks the composition property of Emacs 21.
+* A bug fix for mew-summary-goto-part.
+* Implementing "make check".
+* The xlt suffix for Excel.
+	Munechika Sumikawa <sumikawa>
+* set-window-start in mew-header-arrange for Emacs 21.3.50.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-summary-convert-local-cs.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-use-push-mark.
+	Hiroshi Fujishima <pooh>
+* Process filters now check existence their buffers when erasing.
+* Another fix for "m/".
+* mew-summary-kill-subprocess now calls the sentinel of each process.
+* A bug fix "ms" in Virtual mode.
+* Replacing length() with string-width() in mew-scan-get-piece()
+  for composite strings.
+
+Mew 4.0.57 (2003/07/31)
+
+* Defining mew-ask-folder-after-join and mew-ask-folder-after-burst.
+* mew-scan-header decodes three lines instead of two (for Subject:).
+* Implementing mew-insert-file-contents2 so that mew-thread-save-xref
+  can set correct coding-system.
+* mew-imap-cache-refile-online is now default to 't'.
+* Bug fixes of SMTP queue.
+* Bug fixes for "m/".
+* Bug fixes for mew-canonicalize-case-folder().
+
+Mew 4.0.56 (2003/07/24)
+
+* mew-canonicalize-case-folder removes unnecessary last separator.
+* New "#" mark for invalid cache messages.
+* A patch for Fcc: %mailbox.
+	sai
+* Defining mew-window-magic.
+* A bug fix for mew-imap-fcc-to-mailbox().
+* Recovering marks for POP/IMAP/NNTP.
+* Defining mew-imap-exec-recover().
+* Local cache refile even when online.
+* Implementing APPEND {num+} (LITERAL+) for IMAP.
+* A bug fix for C-xC-s in Draft mode.
+* Fcc: %mailbox is supported!
+* A bug fix for "/".
+* If an attachment is prepared by "f", the read-only property
+  disappears. This bug has been fixed.
+* A bug fix for mew-summary-refile-log.
+* Removing the message of "queue is empty" from the SMTP/NNTP2
+  sentinel.
+
+Mew 4.0.55 (2003/07/16)
+
+* The sentinel of SMTP/IMAP2 can keep a message to its queue
+  when its connection is lost.
+* Set mew-icon-p to t on Emacs 21 when tool-bar is available.
+	KOSEKI Yoshinori <kose>
+* Tuning up mew-summary-scan.
+* "y" now chooses file name correctly.
+* Defining mew-highlight-x-face-function.
+	Tatsuya Kinoshita <tats>
+* mew-input-refile-folders sets inhibit-quit to nil to avoid
+  Emacs 21.3's bug.
+* The sentinel of POP/IMAP/NNTP safely stores information about
+  retrieved messages when the connection is lost.
+* Implementing mew-nntp-skip-uidl to make 'get faster.
+
+Mew 4.0.54 (2003/07/08)
+
+* The quality of IMAP folder management is now as same as that of
+  local folder one.
+* A bug fix for the region of "tt".
+* Security fix: stunnel now allows access from localhost only.
+	Koga Youichirou <y-koga>
+* Fixing a fatal bug of mew-idstr-to-id-list().
+* Clearing IMAP/SMTP password if its connection times out.
+* The problem of IMAP namespace has been fixed.
+	Your space           : %foo  (inbox is not necessary)
+	Another user's space : ~user/foo
+	Shared space         : #foo
+* Implementing mew-find-file-noselect2.
+* A bug fix for "Uo" in Virtual mode.
+* (mew-set-buffer-cs mew-cs-m17n) for Summary/Message mode so that
+  "1" is displayed in their modeline.
+* Security fix: Implementing mew-find-file-noselect to prevent
+  file-local variable attack.
+* mew-summary-msg for "=".
+* A bug fix for "mr" in Virtual mode.
+* A bug fix for "mo".
+* Replacing white spaces in msg-id to "_".
+* Fixing a buf of mew-imap-friend-regex().
+* A patch for contrib/mew-nmz.el.
+	hasi
+* Clearing POP password if its connection times out.
+* IMPORTANT NEWS.
+
+  Information part of .mew-summary (after \r) changed. That is,
+  folder-name is removed. This makes .mew-summary independent on its
+  directory path.
+
+  If you want to re-use current .mew-summary, try the "alpha/fix-sum"
+  command.
+
+* IMPORTANT NEWS OF IMAP:
+
+  There are two kinds of IMAP servers. One allows folders under the
+  root like "foo". The other allows folders under the "inbox" folder
+  only. An example is "inbox.foo". So far, Mew has treated a folder
+  name as is. So, with the server of the latter type, you had to
+  specify a folder like "%inbox.foo". 
+
+  This was very inconvenient.
+
+  Mew now automatically checks the type of servers when typing "3 Z",
+  which updates a list of folders. For the latter type, Mew now
+  automatically expands, for example, "%foo" (a user view) to
+  "inbox.foo" (IMAP level).
+
+  So, you need to type '3 Z' once. When Mew find a list of folders is
+  in the old format, Mew displays "type '3 Z'". So, take it easy.
+
+  An old cache directory located in, for example, 
+	~/Mail/.imap/user%port/inbox.foo
+  and currently does in 
+	~/Mail/.imap/user%port/foo
+  for the latter type.
+
+  If you want to reuse the old cache directories, "mv" them by
+  yourselves. Try the "alpha/fix-imap" command.
+
+  Remove "inbox." from 'mew-refile-guess-alist' and
+  'mew-imap-trash-folder' in ".mew" if any.
+
+  You may need to remove the following two files:
+	~/Mail/.mew-refile-msgid-alist
+	~/Mail/.mew-refile-from-alist
+
+Mew 4.0.53 (2003/05/22)
+
+* A bug fix for mew-smtp-queue again.
+* Copying decrypters when the body part is empty.
+* mew-summary-visit-folder calls mew-summary-cook-window if necessary.
+* mew-summary-mark-duplicated is now bound to "Md" from "M".
+* If mew-summary-form-mark-delete is a character, use it as a mark
+  when duplicated. If mew-summary-form-mark-review is a character, 
+  use it as a mark when destined to me.
+* A bug fix for mew-summary-display-asis.
+* Using "%s" for message() just in case.
+	Tatsuya Kinoshita <tats>
+* A patch for contrib/mew-nmz.el.
+	hasi
+* Using temp-directory or temporary-file-directory.
+	Tatsuya Kinoshita <tats>
+* A patch for mew-regex-ignore-scan-body-list.
+	Tatsuya Kinoshita <tats>
+* mew-inbox-action-alist now effects to %inbox.
+* C-umxo refiles messages whose destination is the same as that of
+  the current message.
+* (mew-window-configure 'summary) for mew-summary-reset.
+	Kazumi HARA <hara>
+* Bug fixes for sort and pack.
+
+Mew 4.0.52 (2003/04/07)
+
+* A bug fix for "mI" on XEmacs.
+* Enhancing mew-scan-body. If charset is not specified, mew-cs-autoconv
+  is used. Skipping the body if it is encoded with base64.
+* A bug fix for 7bit vs mew-convert-singlepart.
+* If a user rename a folder on a command line, Mew will fix the folder
+  part of .mew-summary automatically.
+* mew-lang-kr.el.
+	CHOI Junho <cjh>
+* Adding examples of StarSuite/OpenOffice.org to mew.dot.mew.
+* Defining mew-regex-ignore-scan-body-list.
+	Tatsuya Kinoshita <tats>
+* Making line-number-mode buffer-local.
+	Kan Sasaki <sasaki>
+* Saving msids without limitations.
+* Back-porting the "string" header separator because the overlay one
+  has too many side effects. Instead, C-xC-s now removes the string
+  header separator.
+* A bug fix for "tp".
+	Kan Sasaki <sasaki>
+* The filename parameter for CDP:inline of CT: Message/.
+* A patch for contrib/mew-fancy-summary.el.
+	ogawa
+
+Mew 4.0.51 (2003/03/20)
+
+* A patch for contrib/mew-fancy-summary.el.
+	Masahiro NANASHIMA <nana>
+* mew-summary-form-mark-review now takes care of Cc: in addition to
+  To:.
+* Defining mew-inbox-action-alist. This enables spam filtering and
+  auto refiling while retrieving messages. See the document of this
+  variable for more information.
+* Defining mew-addrbook-alias-not-learn-list. Mew does not learn
+  addresses on this list when replying.
+* The separator between a header and a body in Draft mode is now overlay.
+  If supercite causes an error when citing due to this change, configure
+  as follows:
+	(setq sc-blank-lines-after-headers nil)
+* Sophisticated regex for body scan.
+	Tatsuya Kinoshita <tats>
+
+Mew 4.0.50 (2003/03/14)
+
+* Fancy thread style is now the default.
+* "=" is bound to mew-summary-info.
+* NetNews articles are now gained access by article numbers.
+* Initial implementation to visualize refile folders.
+* Implementing refile log.
+* A bug fix for marking in a physical folder.
+* Bug fixes for thread commands.
+* "j" is now goto-line().
+* A patch for mewl on Windows.
+	Hideyuki SHIRAI <shirai>
+* "mewls" is now called "mewl" so that both "mewls" or Mew 2/3 and
+  "mewl" for Mew 4 co-exist.
+* Scan form changed. Body can be displayed. Message number is hidden.
+* Moving the position of mew-make-message-hook so that ispell-message
+  works.
+* Scanning local messages now synchronize 'mewls'. mew-scan-wait-for
+  is obsoleted. PLEASE RE-INSTALL MEWLS.
+
+--End of file

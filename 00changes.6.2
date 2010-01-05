@@ -1,0 +1,100 @@
+Mew 6.2 release (2008/12/24)
+
+* Brushing up defcustom.
+	Tatsuya Kinoshita <tats>
+* Defining mew-cite-default-prefix.
+
+Mew 6.2 release candidate 2 (2008/12/18)
+
+* Defining mew-flowed-broken-list.
+* Workaround for infinite loop of regexp.
+* A patch for "_".
+	Hideyuki SHIRAI <shirai>
+* C-cC-o sets use-flowed in a draft.
+* C-uC-cC-f toggles whether or not a body will be encoded with 
+  format=flowed.
+* Status of lines is displayed in mode-line of Message mode.
+* Implementing mew-flowed-auto-wrap.
+* A patch for incm.
+	Yasunari Momoi <momo>
+* mew-use-format-flowed defaults to nil. Use C-cC-f in Draft mode.
+* Defining mew-flowed-unfold-regex.
+* Bug fixes for mew-encode-flowed and mew-decode-flowed.
+
+Mew 6.2 release candidate 1 (2008/12/02)
+
+* Catching up Authentication-Results: ID 17.
+* A bug fix of "E" vs flowed.
+* A bug fix for mew-encode-flowed-line.
+* A bug fix of IMAP mark sync.
+* Refactoring mew-decode-multipart.
+
+Mew 6.1.52 (2008/11/27)
+
+* Recovering duplicate boundary.
+* Turning off longlines-mode on the encoding of format=flowed.
+	Harald Hanche-Olsen <hanche>
+* Implementing encoding of format=flowed.
+* Brushing up mew-decode-flowed.
+* "lx" supports IMAP mark sync.
+* A bug fix for format=flowed.
+* A bug fix for mew-refile-guess-by-alist.
+	Hideyuki SHIRAI <shirai>
+* Removing different "proto" candidates on refile.
+* A bug fix of "I" for IMAP in the case where the message
+  does not exist.
+* Supporting Application/Zip.
+* Supporting MS Office 2007.
+	Tomoharu Suzuki <suzuki>
+* The Seen and Flagged flag of IMAP is now supported.
+* A bug fix for "E" and "M-e" in the case where text/html is directly
+  embedded in the body.
+* Implementing Edit mode (M-e).
+* A bug fix for mew-smime-encrypt.
+	Christian Gerhardt <gerhardt>
+
+Mew 6.1.51 (2008/10/15)
+
+* Backporting of "A bug fix of quote for smew" and
+  "Generation search algorithm for smew" since searching by parid
+  is quite fast.
+	KOIE Hidetaka <hide>
+* An important bug fix on indices of "cmew".
+  You MUST re-create the DB with "cmew -f".
+* mewest replicates casket when updating.
+	HORIE Tetsuya <t_horie>
+* Emacs 22.2 on Windows has a bug on "%Z" of format-time-string. So,
+  Mew does not append symbolic timezone on it.
+	Yu-ji Hosokawa <yu-ji>
+* Pacifying a worning of incm.
+	KOIE Hidetaka <hide>
+* A bug fix of quote for smew.
+	KOIE Hidetaka <hide>
+* A bug fix for "C-n".
+
+Mew 6.1.50 (2008/08/29)
+
+* Removing the key biding of "M-<" and "M->".
+* Supporting Text/X-Patch. "C-cC-e" opens a new frame and displays it
+  with diff-mode.
+* A bug fix for static literal list.
+* mew-header-parse-address-list2 allows SPCs in folder names but
+  removes preceding SPCs.
+* Defining "Text/Calendar" and "Text/X-Patch".
+* A bug fix for error recovery of message composing.
+* S/MIME filter now uses the result of status-fd.
+* Separating mew-inherit-encode-signer to
+  mew-inherit-encode-pgp-signer and mew-inherit-encode-smime-signer.
+* No warnings hack for Emacs 23.
+* No warnings hack for unix-sync and mac-set-file-type.
+* No warnings hack when compiling.
+* Bug fix for mew-face-make-spec.
+* Bug fix for mew-header-color-base.
+* Bug fix the new alist format for nil.
+* Broken MIME messages without the MIME-Version: header are treated
+  as MIME messages if the Content-* fields exist.
+* Excluding ",.:" at the end of URL.
+	Christophe TROESTLER <Christophe.Troestler>
+* syslog=no for stunnel.
+	Yu-ji Hosokawa <yu-ji>
+

@@ -1,0 +1,1630 @@
+Info file: mew.ja.info,    -*-Text-*-
+produced by `texinfo-format-buffer'
+from file `mew.texi'
+using `texinfmt.el' version 2.42 of  7 Jul 2006.
+
+INFO-DIR-SECTION Message User Agent
+START-INFO-DIR-ENTRY
+* Mew-J: (mew.ja.info).      Messaging in the Emacs World.
+* Mew: (mew.info).           Messaging in the Emacs World.
+END-INFO-DIR-ENTRY
+
+
+
+
+
+
+File: mew.ja.info, Node: config, Next: config2, Prev: smtp, Up: Customize
+
+送受信の動作変化
+================
+
+Changing receiving/sending behavior
+===================================
+
+`mew-config-alist' を使うと、メッセージの送受信に関する動作に変化をつけ
+られます。以下の設定例を使って説明します。With `mew-config-alist', you
+can differ actions of sending/receiving messages. Let's look at the
+following example:
+
+     (setq mew-config-alist
+           '((home
+              (inbox-folder   "+inbox-home")
+              (pop-server     "pop.iij4u.or.jp"))
+             (ext
+              (pop-ssh-server "ssh.example.org"))
+             (default
+              (proto          "%")
+              (imap-server    "imap.example.org")
+              (pop-server     "pop.example.org"))))
+
+この例では、"home"、"ext"、"default" という 3 つのケースを定めています。
+それぞれのケースに対して、いくつかのキーと値の対が設定されています。
+This example defines three "cases": "home", "ext", and "default". For
+each case, some pair of key and value are defined.
+
+この例を使って、`mew-config-alist' の意味を説明します。ケースを
+"home" にして "pop-server" を索くと、"pop.iij4u.or.jp" が得られます。ケー
+スを "ext" にして "pop-server" を索くと、"ext" には該当するキーがな
+いので、"default" を見て、"pop.example.org" が得られます。ケースを
+"default" にして "pop-server" を索くと、"pop.example.org" が得られます。
+We explain the semantics of `mew-config-alist' with this example.
+If the "case" is "home", looking up "pop-server" results in
+"pop.iij4u.or.jp". If the "case" is "ext", looking up "pop-server"
+results in "pop.example.org" since there is no specified key for the
+"case" and the "default" is used. If the "case" is "default",
+looking up "pop-server" results in "pop.example.org".
+
+ケースを "home" にして "inbox-folder" を索くと、"+inbox-home" が得られ
+ます。ケースを "ext" にして "inbox-folder" を索くと、"ext" には該当する
+キーがなく、さらに "default" にもないので、`mew-inbox-folder' という変
+数の値が得られます。ケースを "default" にして "inbox-folder" を索いた場
+合も、`mew-inbox-folder' の値が得られます。
+If the "case" is "home", looking up "inbox-folder" results in
+"+inbox-home". If the "case" is "ext", looking up "inbox-folder"
+results in the value of `mew-inbox-folder' since there is no
+specified key for both "ext" and "default". If the "case" is
+"default", looking up "inbox-folder" also results in the value of
+`mew-inbox-folder'.
+
+"proto" (`mew-proto')は、`M-x mew' と入力された際に、どのフォルダに移動
+するか指定するために使います。(Mew を起動するために`M-x mew' と入力する
+場合、"default" ケースの "proto" が利用されます。Mew が起動している際に、
+`M-x mew' と入力するとケースに従って、"proto" が選ばれます。) "proto"
+(`mew-proto') is used to specify a folder which is selected when you
+type `M-x mew'. (If you input `M-x mew' when Mew is not executed,
+proto" for the "default" "case" is used. If you type `M-x mew' when
+Mew is running, "proto" is chosen according to the value of the
+case".
+
+値の候補は、"+"、"$"、"%"、"-" です。これらは標準では、"+inbox"、
+"$inbox"、"%inbox"、"-fj.mail.reader.mew" を意味します。
+Candidates of the value are "+", "$", "%", and "-". These means
+"+inbox", "$inbox", "%inbox", and "-fj.mail.reader.mew" without
+any special configuration.
+
+`mew-config-alist' で設定できるキーは、`mew-"キー"' という変数に対応し
+ています。以下に設定できる項目を列挙します。Each key which can be
+specified in `mew-config-alist' corresponds to the variable
+`mew-"key"'. The following list enumerates such keys.
+
+     name, user, mail-domain,
+     cc, fcc, dcc, reply-to, organization, header-alist, proto,
+     smtp-server, smtp-port, smtp-ssh-server, smtp-ssl, smtp-ssl-port,
+     smtp-user, smtp-auth-list,
+     smtp-msgid-user, smtp-msgid-domain, smtp-helo-domain, smtp-mail-from,
+     pop-server, pop-port, pop-ssh-server, pop-ssl, pop-ssl-port,
+     pop-user, pop-auth, pop-auth-list,
+     pop-size, pop-header-only, pop-delete, pop-body-lines,
+     pop-proxy-server, pop-proxy-port,
+     imap-server, imap-port, imap-ssh-server, imap-ssl, imap-ssl-port,
+     imap-user, imap-auth, imap-auth-list,
+     imap-size, imap-header-only, imap-delete,
+     imap-trash-folder, imap-queue-folder, imap-spam-field, imap-spam-word,
+     imap-proxy-server, imap-proxy-port,
+     nntp-server, nntp-port, nntp-ssh-server, nntp-ssl, nntp-ssl-port,
+     nntp-user, nntp-size, nntp-header-only,
+     nntp-msgid-user, nntp-msgid-domain,
+     ssl-cert-directory, ssl-verify-level,
+     inbox-folder, queue-folder, postq-folder,
+     mailbox-type, mbox-command, mbox-command-arg,
+     signature-file, content-type, refile-guess-alist,
+     spam-prog, spam-prog-args, ham-prog, ham-prog-args,
+     use-old-pgp, pgp-signer, smime-signer, privacy-method,
+     protect-privacy-always, protect-privacy-always-type,
+     protect-privacy-encrypted, protect-privacy-encrypted-type,
+     protect-privacy-with-old-pgp-signature,
+     use-format-flowed
+
+name、user、mail-domain は以下の規則にしたがって、From: の値になります。
+A value for From: is made of 'name', 'user', and 'mail-domain'
+according to the following rule:
+
+     from = name <user@mail-domain>
+
+自分で `mew-from-list' を設定していない場合は、上記のルールに従い各ケー
+スの from を集めて、`mew-from-list' が自動的に設定されます。*Note
+cheader:: を参照のこと。Unless you set `mew-from-list' by yourself,
+`mew-from-list' is automatically set collecting 'from' for each "case"
+according to the rule above. See *Note cheader::.
+
+`mew-config-alist' に設定したケース名をケースに指定できます。Mew の起動
+時のケースは、"default" になっています。
+Cases configured in `mew-config-alist' can be specified to the
+"case". When Mew boots up, both the "case" is "default".
+
+Summary モードにおいて、ケースを変更するには `C' を利用します。ケースに
+は、`TAB' で補完、`C-cTAB' で循環的な補完が効きます。If you want to
+change the "case", type `C'. You can use completion by `TAB' and
+circular completion by `C-cTAB'.
+
+ケースが "default" 以外の値をとった場合は、Summary モードのモードライン
+に表示されます。以下はケースが "home" となっている場合の例です。If the
+case" is not "default", they are displayed in the mode line of Summary
+mode. The following is an example where the "case" is "home".
+
+     (Summary home)
+
+
+Draft モードでは、ケースが "default" でない場合、モードラインにその値が
+表示されます。以下は、ケースが "home" である場合の例です。In Draft
+mode, if the "case" is not "default", the value is displayed in mode
+line. The following is an example that the "case" is "home".
+
+     (Draft home)
+
+Draft モードにおいて、その草稿のケースを変更するには、`C-cC-o' を用いま
+す。mail-domain キーや header-alist キーに対応する値に応じて、ヘッダが
+動的に変更されます。なお、このケースは、その Draft モードに固有になりま
+す。To change the "case" of a draft in Draft mode, use `C-cC-o'. Its
+header is dynamically modified according to the value of the
+'mail-domain' key and the 'header-alist' key. Note that the "case" is
+a local variable of the Draft mode.
+
+Draft モードでは、ケースを自動的に設定することもできます。You can
+automatically set the "case" in Draft mode.
+
+`mew-case-guess-when-prepared'
+     この変数が `t' の場合、草稿が用意されたときに、
+     `mew-case-guess-alist' に従ってケースが設定される。初期値は
+     `t'。
+`mew-case-guess-when-composed'
+     この変数が `t' の場合、メッセージが作成されたときに、
+     `mew-case-guess-alist' に従ってケースが設定される。初期値は
+     `nil'
+`mew-case-guess-when-replied'
+     この変数が `t' の場合、返答によって草稿が用意されたときに、
+     `mew-case-guess-when-replied-alist' に従ってケースが設定される。初
+     期値は `t'。
+`mew-case-guess-when-prepared'
+     If this variable is `t', the "case" is automatically guessed
+     according `mew-case-guess-alist' when a draft is prepared. The
+     default is `t'.
+`mew-case-guess-when-composed'
+     If this variable is `t', the "case" is automatically guessed
+     according `mew-case-guess-alist' when a message is composed. The
+     default is `nil'. The default is `nil'
+`mew-case-guess-when-replied'
+     If this variable is `t', the "case" is automatically guessed
+     according `mew-case-guess-alist' when a draft is prepared by
+     replying. The default is `t'.
+
+`mew-case-guess-alist' と `mew-case-guess-when-replied-alist'
+の書式は、`mew-refile-guess-alist' と同じです。詳しくは、
+*Note by-alist:: を参照して下さい。
+The syntax of `mew-case-guess-alist' and
+`mew-case-guess-when-replied-alist' is the same as
+`mew-refile-guess-alist'. For more information, please refer to
+*Note by-alist::.
+
+Draft モードで草稿を送信するために `C-cC-c' を使うと、Draft モードのケー
+スが SMTP/NNTP サーバなどを決定するために利用されます。Summary モードで
++queue/+postq のメッセージを送り出すために `C-cC-c' を利用すると、
+Summary モードのケースが利用されます。たとえ、そのケースが Draft モード
+で指定されていたケースと違ってもです。Summary モードで`C-uC-cC-c' を使
+うと、+queue/+postq のメッセージを送り出すためのケースが指定できます。
+When typing `C-cC-c' in Draft mode to send a draft, the "case" in
+Draft mode is used to determine an SMTP/NNTP server, etc. When typing
+`C-cC-c' in Summary mode to flush messages in +queue/+postq, the
+"case" in Summary mode is used even if it is different from the
+one which was used in Draft mode. `C-uC-cC-c' in Summary mode let
+you specify the "case" to flush messages in +queue/postq.
+
+
+以下にケースに関するコマンドをまとめます。The following is a summary
+of commands concerned with the "case".
+
+`C'
+     Summary モードにおいて、ケースを設定する。
+`C-cC-o'
+     Draft モードにおいて、その草稿のケースを設定する。
+`C'
+     In Summary mode, set the "case".
+`C-cC-o'
+     In Draft mode, set the "case" of a draft.
+
+
+
+File: mew.ja.info, Node: config2, Next: custom-misc, Prev: config, Up: Customize
+
+設定の書式
+==========
+
+The format of configuration
+===========================
+
+Mew 6.1 から ".mew.el" の設定方法が改善されました。古い書式も有効ですが、
+より簡単な新しい書式も利用できます。In Mew 6.1, configuration format
+of "mew.el" is improved. You can use a new format as well as the old
+format.
+
+   - 古い書式ではリストの中に "." が現れる場合がありました。新しい書式
+     では、"." はまったく使われません。たとえば、("foo" . "bar") と書い
+     ていたところは、("foo" "bar") と書けます。
+   - 古い書式では、ポート番号は文字列で書いていました。たとえば、"25"
+     です。新しい書式では、数値で書いてもよくなりました。たとえば、25
+     です。文字列も有効です。たとえば、"smtp" です。
+   - 古い書式では、`mew-config-alist' のケースやキーを文字列で書いてい
+     ました。新しい書式では、シンボルで書けます。
+   - In the old format, sometime "." appears. In the new fomat, no "."
+     appears at all. For instance, you can write ("foo" "bar") instead
+     of ("foo" . "bar").
+   - In the old format, a numeric port is specified as string. An
+     example is "25". In the new format, you can write it as
+     integer. An example is 25. The string is still valid. An example
+     is "smtp".
+   - In the old format, the cases and the keys of `mew-config-alist'
+     are written as string. In the new format, you can specify them as
+     symbol.
+
+以下に mew-config-alist を新しい書式で書いた例を示します。Here is an
+example of the new format:
+
+     (setq mew-config-alist
+           '((home
+              (imap-server       "imap.example.org")
+              (imap-ssl          t)
+              (imap-ssl-port     993)
+              (smtp-server       "smtp.example.org")
+              (smtp-port         "submission"))))
+
+以下の古い書式と見比べて下さい。Compare this with the following old
+one:
+
+     (setq mew-config-alist
+           '(("home"
+              ("imap-server"   . "imap.example.org")
+              ("imap-ssl"      . t)
+              ("imap-ssl-port" . "993")
+              ("smtp-server"   . "smtp.example.org")
+              ("smtp-port"     . "submission"))))
+
+繰り返しますが、Mew 6.1 では古い書式も有効です。古い書式と新しい書式を
+混ぜて書いても構いません。Again, the old format is still valid. You
+can also mix the new format and the old format.
+
+
+
+File: mew.ja.info, Node: custom-misc, Next: Tips, Prev: config2, Up: Customize
+
+その他
+======
+
+Miscellaneous
+=============
+
+環境によっては、添付ファイルをセーブする際に、ファイル名を SAMBA 形式に
+すると便利なことがあります。この場合、`mew-use-samba-encoding' を
+`t' にして下さい。ファイル名として、どの文字コードを利用するかは、
+`mew-cs-samba' で指定できます。初期値は `shift_jis' です。
+In a certain environment, it would be useful to encode a file with SAMBA
+encoding when saving an attached file. For this, set
+`mew-use-samba-encoding' to `t'. You can set
+`mew-cs-samba' to a character set for the file name. The default is
+`shift_jis'.
+
+Summary モードで `#' と押すと、現在のメッセージを印刷できます。印刷に利
+用する関数は `mew-print-function' で定義します。初期値は、
+`ps-print-buffer' ですから、PostScript に変換されて印刷されます。自分の
+作成した関数を利用するには、以下のように設定します。You can print the
+current message by typing `#' in Summary mode.  A function for
+printing can be set to `mew-print-function'.  Since its default value
+is `ps-print-buffer', a message is converted into a PostScript file
+before sent to a printer. You can set your own print function as
+follows:
+
+     (setq mew-print-function 'my-print-function)
+
+ヘッダ中のどのフィールドを印刷するかは、`mew-field-for-printing' で指定
+できます。初期値は、以下のようになっています。
+You can set fields in a header to be printed to
+`mew-field-for-printing'. Its default value is as follows:
+
+     '("Subject:" "From:" "To:" "Cc:" "Date:")
+
+たとえば、Subject:、From:、Date: のみを印刷するには、以下のように設定し
+ましょう。For instance, if you want to print Subject:, From:, and
+Date: only, configure as follows:
+
+     (setq mew-field-for-printing '("Subject:" "From:" "Date:"))
+
+
+
+
+File: mew.ja.info, Node: Tips, Next: region, Prev: custom-misc, Up: Top
+
+さらなる一歩
+************
+
+Advanced usage
+**************
+
+* Menu:
+
+* region::                      リージョン
+* visiting::                    移動
+* SSH::                         Secure SHell
+* SSL::                         Secure Socket Layer
+* TLS::                         Transport Layer Security
+* spam::                        スパム
+* spam2::                       スパム(2)
+* addr-warn::                   アドレスの警告
+* biff::                        Biff
+* edit::                        Edit モード
+* region::                      Region
+* visiting::                    Visiting another buffer
+* SSH::                         Secure SHell
+* SSL::                         Secure Socket Layer
+* TLS::                         Transport Layer Security
+* spam::                        Spam messages
+* spam2::                       Spam messages (2)
+* addr-warn::                   Warning addresses
+* biff::                        Biff
+* edit::                        Edit mode
+
+
+
+File: mew.ja.info, Node: region, Next: visiting, Prev: Tips, Up: Tips
+
+リージョン
+==========
+
+Region
+======
+
+Summary モードには、`C-u' 付きで呼び出すと、リージョンに作用するコマン
+ドがあります。これらのコマンドは、ビジブルなリージョンが指定されている
+場合は、`C-u' なしでもそのリージョンに作用します。In Summary mode,
+there are commands which work for a region if called with `C-u'. If a
+visible region is specified, these commands work for the region
+without `C-u'.
+
+Emacs では、以下の設定を "~/.emacs" に入れると、ビジブルなリージョンが
+利用できるようになります。For Emacs, you can use the visible region
+feature by putting the following into your "~/.emacs".
+
+     (transient-mark-mode 1)
+
+以下に、該当するコマンドを列挙しておきます。Here is a summary of such
+commands.
+
+     `?', `/', `tt', `x', `lx', `ma', `Md', `S', `mlc', `mli', `*', `$', `d', `u'
+
+`*', `$', `d', `u' は、直前に数字を入力することで、繰り返しの回数を指定
+することもできます。たとえば、`3*' は 3 つのメールに `*' マークを付けま
+す。数字の前に `C-u' は不要です。Also you can specify a repeat count
+before you call `*', `$', `d', and `u'. For example, typing `3d' puts
+the `*' mark onto three messages. You don't have to type `C-u' before
+the number.
+
+
+
+File: mew.ja.info, Node: visiting, Next: SSH, Prev: region, Up: Tips
+
+移動
+====
+
+Visiting another buffer
+=======================
+
+Draft モードにおいて、`C-cC-m' でメッセージを作成し送信キューに入
+れた後、+queue に移動したい場合は、
+`mew-visit-queue-after-sending' を `t' に設定して下さい。
+If you want to move to +queue after making a message and putting it to
++queue with `C-cC-m' in Draft mode, set
+`mew-visit-queue-after-sending' to `t'.
+
+Summary モードにおいて、`C' でケースを設定した後に、各 inbox に移動した
+い場合は、`mew-visit-inbox-after-setting-case' を `t' に設定しましょう。
+If you want to visit to an appropriate inbox after setting the "case"
+with `C' in Summary mode, set
+`mew-visit-inbox-after-setting-case' to `t'.
+
+Summary モードから、一番数字の小さい草稿(Draft モード)に移動するには、
+`C-cC-o' が利用できます。If you want to move from Summary mode to a
+draft (Draft mode) whose name is the smallest number, type `C-cC-o'.
+
+
+
+File: mew.ja.info, Node: SSH, Next: SSL, Prev: visiting, Up: Tips
+
+Secure SHell
+============
+
+Secure SHell
+============
+
+Mew は SSH として、SSH バージョン 1、2 および OpenSSH をサポートしてい
+ます。Mew から SSH を利用する前に、必ずコマンド・ラインで "ssh" を実行
+し、SSH サーバの公開鍵を取得して下さい。すなわち、ユーザのパスワードか、
+ローカルのマシンの秘密鍵を復号化するためのパスワードを入力すれば、サー
+バにログインできる状態にして下さい。なお、"ssh-agent" を利用すれば、秘
+密鍵を復号化するためのパスワードの入力を省略できます。Mew supports SSH
+version 1 and version 2 and OpenSSH for SSH. You must execute "ssh" on
+the command and obtain server's public key before you use Mew with
+SSH. That is, you should set up so that you can login the server with
+your user password or with the password to decrypt the secret key of
+the local machine. Of source, you can omit the password to decrypt the
+secret key if you use "ssh-agent".
+
+後は、各プロトコルの SSH に関する変数を設定して下さい。たとえば、POP
+over SSH を利用する場合は、`mew-pop-ssh-server' に SSH サーバの名前を設
+定しましょう。
+After that, you should configure SSH variables relating to each
+protocol. For example, if you want to use POP over SSH, set
+`mew-pop-ssh-server' to your SSH server name.
+
+SSH で通信が保護されている場合、モードラインに錠前の絵が表示されます。
+While a connection is protected by SSH, a picture of a lock is shown
+in the mode line.
+
+Mew の実装では、SSH と SSL/TLS を同時には使えません。SSH トンネルの中で
+SSL/TLS を使う必要がある場合、Mew では SSL/TLS だけを設定し、SSH トンネ
+ルはコマンドラインから張るようにして下さい。The implementation of Mew
+does not allow to use both SSH and SSL/TLS at the same time. If you
+need to use SSL/TLS over an SSH tunnel, please configure SSL/TLS only
+with Mew and set up an SSH tunnel on a command line.
+
+
+
+File: mew.ja.info, Node: SSL, Next: TLS, Prev: SSH, Up: Tips
+
+Secure Socket Layer
+===================
+
+Secure Socket Layer
+===================
+
+SSL を使うには、認証局方式の信用モデルを理解している必要があります。現
+在、Mew は SSL のために "stunnel" バージョン 3 とバージョン 4 をサポー
+トしています。Before you use SSL, you should understand the trust
+model of certificate authorities (CA). Currently, Mew supports
+stunnel" version 3 and version 4 for SSL.
+
+Mew で利用する前に、SSL サーバに対して "stunnel" で SSL のコネクション
+が張れるか確かめて下さい。"stunnel" は、"openssl" のライブラリをリンク
+しているので、"openssl" の知識が必要です。Before you use Mew with SSL,
+you must be sure that an SSL connection can be established to your SSL
+server. Since "stunnel" is linked to the "openssl" library, you should
+understand "openssl".
+
+信用する証明書を保存しておくディレクトリを "~/.certs" だとしましょう。
+ここに "openssl" の "certs" ディレクトリに付いてくる PEM 形式の証明書を
+<ハッシュ>.0" という名前でコピーします。
+Suppose we use "~/.certs" as a directory where certificates of trusted
+CAs are contained. You need to copy PEM-format certificates embedded
+in the source of "openssl" to this director. Each name should be
+"<hash>.0".
+
+ここでは、PEM 形式の証明書のファイル名を "ca.pem" だとしましょう。「<ハッ
+シュ>」は以下のように計算できます。Here we call a sample CA
+certificate "ca.pem". You can calculate <hash> as follows:
+
+     % openssl x509 -hash -noout -in ca.pem
+
+"~/.certs/" へコピーするには、以下のようにします。To copy the
+certificate, do as follows:
+
+     % cp ca.pem ~/.certs/`openssl x509 -hash -noout -in ca.pem`.0
+
+"openssl" に付いてくる証明書は、世の中で使われている CA すべてを網羅で
+きていません。あなたが利用するサーバの証明書が、他の CA から発行された
+場合、その CA の証明書を同様にコピーしておく必要があります。以下のペー
+ジに CA の証明書がたくさん置いてあります。The certificates in the
+source of "openssl" do not cover all CAs. If the certificate of your
+SSL server is signed by another CA, you must copy the certificate of
+the CA to the directory. You may be able to find appropriate
+certificate from the following page:
+
+     http://www.columbia.edu/~ariel/good-certs/ns45/
+
+Mew で "stunnel" を制御する重要な変数は 2 つです。
+`mew-ssl-cert-directory' は、信用する CA の証明書を置いておくディレクト
+リであり、初期値は "~/.certs" です。また、`mew-ssl-verify-level' で、証
+明書を検証するレベルを指定できます。レベルの初期値は 1 です。この意味は、
+以下の通りです。さい。There are two important Mew variables to control
+stunnel".  `mew-ssl-cert-directory' is the directory where you install
+certificates of trusted CAs. It's default value if "~/.certs". Also,
+you can set the verification level with `mew-ssl-verify-level'.  It's
+default to 1. The meanings of the values are as follows:
+
+0
+     検証しない
+1
+     サーバの証明書があれば検証する。検証結果が失敗なら、SSL/TSL コネク
+     ションは作られない。証明書がなければ、SSL/TLS コネクションを作成す
+     る。
+2
+     サーバの証明書を検証する。検証結果が失敗なら、SSL/TSL コネクション
+     は作られない。証明書がなければ、SSL/TLS コネクションを作成しない。
+3
+     サーバが送ってきたものではなく、ローカルにインストールされている証
+     明書で検証する。
+0
+     No verification.
+1
+     Verify server's certificate if present. If verification failed,
+     an SSL/TLS connection is not created. If not present, an SSL/TLS
+     connection is created.
+2
+     Verify server's certificate. If verification failed, an SSL/TLS
+     connection is not created. If not present, an SSL/TLS connection
+     is not created.
+3
+     Verify server's certificate which locally installed (not one from
+     the server).
+
+後は各プロトコルの SSL に関する変数を設定して下しさい。たとえば、POP
+over SSL を利用するには、`mew-pop-ssl' を `t' にします。また、ポート番
+号が標準と異なる場合には、`mew-pop-ssl-port' を設定して下さい。
+Then configure SSL-related variables of each protocol. For example, if
+you want to use POP over SSL, set `mew-pop-ssl' to `t'.
+Also, if its port is not a standard one, configure
+`mew-pop-ssl-port'.
+
+     (setq mew-pop-ssl t)
+
+SMTP で SSL を利用する場合は、以下のようにします。To use SSL for SMTP,
+configure as follows:
+
+     (setq mew-smtp-ssl t)
+
+SSL で通信が保護されている場合、モードラインに錠前の絵が表示されます。
+While a connection is protected by SSL, a picture of a lock is shown
+in the mode line.
+
+
+
+File: mew.ja.info, Node: TLS, Next: spam, Prev: SSL, Up: Tips
+
+Transport Layer Security
+========================
+
+Transport Layer Security
+========================
+
+Mew では SSL の代りに TLS を利用することもできます。TLS の実現は、SSL
+と同様 "stunnel" に頼っています。ですので、TLS を利用する際には、
+*Note SSL:: の説明に従って設定して下さい。
+Mew can use TLS instead of SSL. To enable TLS, Mew relies on
+"stunnel", too. So, before using TLS, you should configure
+according to the explanations in *Note SSL::.
+
+次に、SSL のポート番号を守りたいプロトコルと同じポート番号に設定します。
+たとえば、POP では以下のようにします。Then, set the SSL port to the
+same one of the protocol to be protected. For instance, configure as
+follows for POP:
+
+     ;; mew-pop-port is default to "pop3" (110)
+     (setq mew-pop-ssl t)
+     (setq mew-pop-ssl-port mew-pop-port) ;; The default is "pop3s" (995)
+
+すなわち、SSL のポート番号と保護したいプロトコルのポートが同じであれば
+TLS、異なれば SSL が利用されます。That is, if the SSL port is the same
+as the port of the protocol to be protected, TLS is used. Otherwise,
+SSL is used.
+
+以下は、Message Submission を TLS で守るための設定例です。The
+following is an example to protect Message Submission with TLS.
+
+     (setq mew-smtp-port "submission") ;; The default is "smtp" (25)
+     (setq mew-smtp-ssl t)
+     (setq mew-smtp-ssl-port mew-smtp-port) ;; The default is 465
+
+
+
+File: mew.ja.info, Node: spam, Next: spam2, Prev: TLS, Up: Tips
+
+スパム
+======
+
+Spam messages
+=============
+
+(1) スパムのフィルタが POP サーバや IMAP サーバ側で動いている場合：
+
+POP で +inbox にメッセージを取得したり、$inbox や %inbox でメッセージの
+一覧を取ったりする場合に、スパムに自動的に `D' マークを付けることができ
+ます。(1) In the case where a spam filter is running on your POP
+server or your IMAP server.
+
+You can put the `D' mark to spam messages while you are retrieving
+messages in +inbox or you are scanning messages in $inbox/%inbox.
+
+Bogofilter を利用している場合は、以下の設定を "~/.mew.el" に入れて下さ
+い。If you use "bogofilter", put the following to your "~/.mew.el".
+
+     (defun mew-spam-bogofilter (val)
+       (let ((case-fold-search t))
+         (if (string-match "yes" val) ?D)))
+
+     (setq mew-inbox-action-alist
+           '(("X-Bogosity:" mew-spam-bogofilter)))
+
+`D' マークを付ける代わりに、+spam フォルダへリファイルするように `o' マー
+クを付けるようにするには、関数を以下のように記述します。If you want to
+put the `o' mark so as to be refiled to the +spam folder, instead of
+putting to th `D' mark, you should program the function as follows:
+
+     (defun mew-spam-bogofilter (val)
+       (let ((case-fold-search t))
+         (if (string-match "yes" val) "+spam")))
+
+Spamassassin の場合は、以下の設定を "~/.mew.el" に入れて下さい。If you
+use "spamassassin", put the following to your "~/.mew.el".
+
+     (setq mew-spam: "X-Spam-Flag:")
+     (defun mew-spam-assassin (val)
+       (let ((case-fold-search t))
+         (if (string-match "yes" val) ?D)))
+
+     (setq mew-inbox-action-alist
+           '(("X-Spam-Flag:" mew-spam-assassin)))
+
+bsfilter を使う場合は、bsfilter に含まれているマニュアルを参照して下さ
+い。In the case where you want to use bsfilter, see a document in the
+bsfilter package.
+
+
+(2) スパムのフィルタが IMAP サーバ側で動いている場合：
+
+%inbox でメッセージの一覧を取る際に、IMAP サーバの中でスパムを消去、ま
+たは、他のフォルダへ移動させることができます。Bogofilter を利用している
+場合は、以下のような設定を "~/.mew.el" に加えて下さい。(2) In the case
+where a spam filter is running in your IMAP server.
+
+You can delete or move spam messages while you are scanning %inbox.
+If you use "bogofilter", put the following to your "~/.mew.el".
+
+     (setq mew-imap-spam-field "X-Bogosity")
+     (setq mew-imap-spam-word "Yes")
+
+`mew-imap-spam-folder' あるいは `mew-imap-trash-folder' が定義されてい
+れば、そのフォルダへスパムが移動します。そうでなければ、スパムは消去さ
+れます。If `mew-imap-spam-folder' or `mew-imap-trash-folder' is
+defined, spam messages are moved to the folder. Otherwise, they are
+removed.
+
+(3) ローカルで bogofilter を動かして、一括して `*' マークを付ける方法も
+あります。まず、以下のスクリプトをインストールして下さい。(3) In the
+case where you installed "bogofilter" in your local machine, you can
+put the `*' mark to spam messages. First you need to install the
+following script, say "bogo":
+
+     #!/bin/sh
+
+     bogofilter -v -T -B $* | grep S
+
+このスクリプト名を "bogo" だとしましょう。Summary モードで `?' を実行し、
+`RET' を入力し、コマンド名に "bogo" を指定すれば、スパムに`*' マークが
+付きます。あとは、`md' + `x' などで処理するといいでしょう。Type `?'
+and `RET', then specify "bogo", and spam messages are marked with
+`*'. After that, you may want to process them with `md' + `x'.
+
+(4) POP サーバを利用しており、サーバ側ではスパムのフィルタを動かせない
+が、メッセージの取得時にマークを付けたい場合：(4) In the case where
+you use POP and a spam filter does not run on the POP server but you
+want to mark spam messages when retrieving
+
+bsfilter は、POP の代理サーバとなる機能があるので、これを実現できます。
+詳しくは bsfilter に含まれているマニュアルを参照して下さい。Since
+bsfilter can be a POP proxy server, you can implement your policy. See
+a document in the bsfilter package.
+
+
+
+File: mew.ja.info, Node: spam2, Next: addr-warn, Prev: spam, Up: Tips
+
+スパム(2)
+=========
+
+Spam messages(2)
+================
+
+Summary モードで読んでいる現在のメッセージを、フィルターにスパムとして
+学習させるには `ls' を使います。同様に、ハム(スパムでないメッセージ)と
+して学習させるには `lh' を利用して下さい。If you want to let your
+filter learn the current message in Summary as a spam, type
+`ls'. Likewise type `lh' to let your filter learn it as a ham
+(non-spam).
+
+両者のコマンドを使用するためには、4 つの変数を設定しておく必要がありま
+す。ここでは bogofilter を例題にとり、3 つの場合について説明します。To
+use these commands, you need to configure four variables in advance.
+We consider bogofilter as an example and see three cases.
+
+(1) ローカルのフィルターに学習させる場合：(2) To let your local filter
+learn:
+
+     (setq mew-spam-prog "bogofilter")
+     (setq mew-spam-prog-args '("-s" "-N" "-v"))
+     (setq mew-ham-prog "bogofilter")
+     (setq mew-ham-prog-args '("-n" "-S" "-v")))
+
+(2) サーバ(<server>)側のフィルターに SSH 経由で学習させる場合：(2) To
+let your filter on your <server> learn via SSH:
+
+     (setq mew-spam-prog "ssh")
+     (setq mew-spam-prog-args '("<server>" "bogofilter" "-s" "-N" "-v"))
+     (setq mew-ham-prog "ssh")
+     (setq mew-ham-prog-args '("<server>" "bogofilter" "-n" "-S" "-v")))
+
+(3) ファイアウォール(<firewall>)の先のサーバ(<server>)のフィルターに多
+段の SSH 経由で学習させる場合：(3) To pass through your <firewall>
+with SSH and to let your filter on your <server> learn via SSH:
+
+     (setq mew-spam-prog "ssh")
+     (setq mew-spam-prog-args '("-A" "<firewall>" "ssh" "<server>" "bogofilter" "-s" "-N" "-v"))
+     (setq mew-ham-prog "ssh")
+     (setq mew-ham-prog-args '("-A" "<firewall>" "ssh" "<server>" "bogofilter" "-n" "-S" "-v")))
+
+なお SSH を利用する場合、関連するホストには、パスワードなしでログインで
+きるように設定しておく必要があります。If you use SSH, you need to
+configure related hosts so that you can login them without passwords.
+
+
+
+File: mew.ja.info, Node: addr-warn, Next: biff, Prev: spam2, Up: Tips
+
+アドレスの警告
+==============
+
+Warning addresses
+=================
+
+社内で閉じるべきメッセージの宛先に、うっかり社外の人のアドレスを書いて
+しまうことがあります。Mew では、たとえば社内のドメイン名を列挙しておく
+と、社外のアドレスを赤色にして警告してくれます。Suppose you are
+writing a message which must be closed in your company. You might
+write an non-employee's address by mistake. If you tells your
+company's domains, for instance, to Mew, it turns non-employee's
+addresses to red.
+
+どのアドレスを警告するのかを決定する変数は 4 つあり、すべて文字列のリス
+トになります。Mew は以下のルールに従って、警告するアドレスを決めます。
+There are four variables to decide which address should trun red.
+They are all a list of strings. Mew takes the following rules:
+
+  1. アドレスが `mew-safe-addresses' で指定されていれば警告しない。
+  2. アドレスが `mew-warn-addresses' で指定されていれば警告する。
+  3. ドメインが `mew-safe-domains' で指定されていれば警告しない。
+  4. ドメインが `mew-warn-domains' で指定されていれば警告する。
+  5. `mew-warn-addresses' か `mew-safe-domains' が定義されていれば警告
+     する。
+  6. 警告しない。
+  7. If an address is specified in `mew-safe-addresses', no warning.
+  8. If the address is specified in `mew-warn-addresses', warning.
+  9. If its domain is specified in `mew-safe-domains', no warning.
+ 10. If its domain is specified in `mew-warn-domains', warning.
+ 11. If either `mew-warn-addresses' or `mew-safe-domains' defined,
+     warning.
+ 12. No warning.
+
+以下に "@example.org" 以外のドメインを持つアドレスを警告する例を示しま
+す。Here is an example that an address whose domain is not
+@example.org" turns red.
+
+     (setq mew-safe-domains '("example.org"))
+
+ドメインは "@example.org" ですが、"customers@example.org" は警告したい
+場合は、さらに以下のように設定します。
+If you want "customers@example.org" to turn red even its domain is
+"@example.org", add the following line.
+
+     (setq mew-warn-addresses '("customers@example.org"))
+
+
+
+File: mew.ja.info, Node: biff, Next: edit, Prev: addr-warn, Up: Tips
+
+Biff
+====
+
+Biff
+====
+
+メッセージが到着したか定期的に調べる機能を biff といいます。Mew では、
+以下の設定をすると、5 分ごとに新規メッセージが何個あるか調べるようにな
+ります。The functionality to check new messages is called biff. With
+the following configuration Mew sees how many new messages have
+arrived every 5 minutes.
+
+     (setq mew-use-biff t)
+
+新規メッセージがあれば、その数がモードラインに表示されます。If one or
+more new messages exist, the total number is displayed in the mode
+line.
+
+Biff の対象となるサーバとプロトコルは、Mew の起動時に `mew-proto' とケー
+ス(`mew-case')から決定されます。The server and the protocol, which Mew
+checks, are decided according to `mew-proto' and the "case"
+(`mew-case') on boot time.
+
+以下の設定をすると、新規メッセージがない状態からある状態に変った際に、
+ビープ音が鳴ります。With the following configuration, Mew beeps when
+the number of new messages changes from zero to one or more.
+
+     (setq mew-use-biff-bell t)
+
+メッセージの到着を調べる間隔を変えるには、`mew-biff-interval' を設定し
+て下さい。以下は、10 分にする例です。To change the interval time of
+biff, set `mew-biff-interval'.  Below is an example to set it to 10
+minutes.
+
+     (setq mew-biff-interval 10)
+
+
+
+File: mew.ja.info, Node: edit, Next: Convention, Prev: biff, Up: Tips
+
+Edit モード
+===========
+
+Edit
+====
+
+Edit モードは、既存のメッセージを編集し、新しいメッセージを作成するため
+のモードです。用途の典型例を以下に示します。Edit mode is a mode to
+edit a message to generate another new message.  The followings are
+typical examples:
+
+   - 大きな添付ファイルを削除して保存する
+   - PGP/MIME や S/MIME で暗号化されたメッセージを復号化した状態で保存
+     する
+   - Saving a new message with big attachments removed
+   - Saving a decrypted message whose original one is encrypted with
+     PGP/MIME or S/MIME
+
+現在のメッセージを Edit モードで編集するには、`M-e'を押します。すると、
+Draft モードに似た形で草稿が用意されます。Edit モードでは、Draft モード
+と同様の操作で、メッセージを編集できます。To edit a current message in
+Edit mode, type `M-e'. Then, a new draft is prepared like Draft
+mode. In Edit mode, you can edit a message as if you were in Draft
+mode.
+
+編集したメッセージを新しいメッセージとして保存するには、`C-cC-c'か
+`C-cC-m'を使います。両者は、まったく同じコマンドです。これらのコマンド
+を実行すると、どのフォルダに保存するかを訊いてきます。To save edited
+message to a new message, type `C-cC-c' or `C-cC-m'. They are the
+exactly same command. To execute one of them, you are asked a folder
+to save the new message.
+
+なお、この機能は再編集(*Note sum-write::)と混同しやすいので注意して下さ
+い。再編集は編集後に送信するのに対し、Edit モードでは編集の後に保存しま
+す。Please take care that you may confuse this command as retry
+sending(*Note sum-write::). Retry seinding is to send a message after
+editing while Edit mode is to save a message after modifying.
+
+以下に Edit モードのまとめを示します。Summary モードから Edit モードに
+入るには以下のコマンドを使います。The following is summary of commands
+relating to Edit mode. To enter Edit mode from Summary mode, use the
+following command.
+
+`M-e'
+     現在のメッセージを元に Edit モードに入る。
+`M-e'
+     Entering Edit mode with the current message.
+
+Edit モードでのコマンドをまとめます。The following is a summary of
+commands in Edit mode.
+
+`C-cC-c'
+     編集したメッセージを新しいメッセージに保存。
+`C-cC-m'
+     `C-cC-c'に同じ。
+`その他'
+     Draft モードと同じ。
+`C-cC-c'
+     Saving the edited message to a new message.
+`C-cC-m'
+     The same as `C-cC-c'
+`Other commands'
+     The same as the other commands in Edit mode
+
+
+
+
+File: mew.ja.info, Node: Convention, Next: Implementation, Prev: edit, Up: Top
+
+メッセージの作法
+****************
+
+E-mail convention
+*****************
+
+メッセージをやりとりする際には、最低限のマナーがあります。マナーを守っ
+ていないメッセージは読みにくいため、大変損します。簡潔かつ適切な文章を
+書き、なるべく相手に理解してもらえるよう努力しましょう。When you
+exchange messages with other people, you should obey minimum
+manner. It gives a bad impression to the people if you violate the
+manner since such messages are hard to read. We always should try to
+write concise yet comprehensive explanations and make an effort to
+make receivers well-understood.
+
+メッセージを書く際に気を付けるべき項目を以下に示します。We should take
+good care of the following items.
+
+To: と Cc: を正しく書く
+     To: が目的の人で、Cc: は参考までに送り付ける人です。自分のアドレス
+     が Cc: の場合は、読み飛ばす人がいますから注意して下さい。また、不
+     必要なアドレスを To: や Cc: に書いて、相手に迷惑をかけてしまうこと
+     がないようにしましょう。
+
+To: と Cc: に書くアドレスの数は少なくする
+     アドレスをたくさん To: や Cc: に書くのはよくないことです。面倒でも
+     メーリングリストを作りましょう。あるいは、必要に応じて宛先を匿名に
+     しましょう(*Note anonymous::)。
+
+Subject: には本文の内容を的確に短く書く
+     Subject: を見て読むか決める人がいますから、不適切な Subject: だと
+     読んでもらえないかもしれません。長い Subject: は読みにくいので止め
+     ましょう。
+
+必要な部分だけを引用する
+     面倒でも不要な部分は削りましょう。Mew を使っていれば、引用は楽勝の
+     はずです。
+
+シグニチャは簡素にする
+     長いシグニチャは単なる自己満足です。
+
+いたずらメッセージを送らない
+     こんなことは注意したくありませんが、それでも不幸のメッセージなどを
+     送ってくる人がいます。人格を疑われることを理解すべきです。
+
+相手の読めるデータのみを添付する
+     なんの合意もなしに送ってよいデータはテキストのみです。それ以外のデー
+     タを送る場合は、あらかじめ相手に送ってよいか確認をとりましょう。メー
+     リングリストには、テキストのみを投稿するのが無難でしょう。
+Fill To: and Cc: fields precisely
+     To: is for target receivers and Cc: is for those who are received
+     for their information. If his address is not on To:, he might
+     skip to read the message. We should take care not to deliver to
+     wrong people by mistaking the addresses.
+
+The number of addresses To: and Cc: should be small
+     It is discouraged to specify a lot of mail addresses on To: and
+     Cc:. You should create a mailing-list instead. Or, if necessary,
+     you should make the destination anonymous (*Note anonymous::).
+
+Write a short and clear summary of body in Subject:
+     There are people who decide to read contents from their
+     Subject:. So, they might skip messages with improper Subject:. We
+     should not write a long subject since it is hard to read.
+
+Cite only necessary sentences
+     You should not bother to remove unnecessary sentences. With Mew,
+     citation must be a piece of cake.
+
+Make your signature simple
+     A long signature is just self-satisfaction.
+
+Do not send prank messages
+     I do not want to warn this kind of stuff. Nonetheless, someone
+     sends Happy or Unhappy messages to others. You should understand
+     that people doubt your character.
+
+Attach data files that the receivers can read
+     It is text only that you can send without any agreement with the
+     receivers. If you want to send data files other than text, you
+     should make an agreement with the receivers. To mailing-list, you
+     should send text only.
+
+また、インターネットのマナーは RFC1855 を読むといいでしょう。If you
+wish to learn manner on the Internet more comprehensively, please
+refer to RFC1855.
+
+
+
+
+File: mew.ja.info, Node: Implementation, Next: Avail, Prev: Convention, Up: Top
+
+実装について
+************
+
+Implementation Issues
+*********************
+
+"mewl" と "mewencode" が必要なのはなぜ？
+     Mew では、Summary mode でメッセージを取得している間や、一覧を再表
+     示している間に、メッセージを読み進めることができます。これは、プロ
+     グラムの制御の流れが複数必要であることを意味しています。Emacs で制
+     御の流れを複数にするには、サブプロセスを作るか、TCP コネクションを
+     張るしか方法がありません(Emacs Lisp には light weight process があ
+     りません)。POP や SMTP には、TCP コネクションを使うので問題ありま
+     せん。しかし、Summary mode の一覧を再表示するためには、何かコマン
+     ドを起動しないといけません。これが、"mewl" が存在する理由です。
+     mewencode" が存在する理由は、単に速度のためです。MIME の符号化を
+     Emacs Lisp で実装したところ、使い物にならないぐらい遅かったので、
+     mewencode" を使い続けています。(ただし、Base64 が Emacs で実装され
+     ていれば、そちらを使います。)
+
+文字列検索(`C-s'、`C-r')すると、行末にカーソルが飛ぶのはなぜ？
+     Summary mode において、スレッド情報は表示されません。これは、
+     Summary mode で表示されている行に関しては、表示する瞬間にスレッド
+     情報に非表示の属性を付けるからです。非表示の属性がついている部分は
+     文字列検索の対象にはなりません。しかし、Summary mode に表示されて
+     いない行のスレッド情報は、非表示の属性がついていないため、検索の対
+     象となります。そして、合致した行が表示される際に非表示の属性がつい
+     て、あたかも行末に合致したかのような錯覚を受けます。Summary mode
+     全体の行のスレッド情報には、キーの入力がない時間に非表示の属性が付
+     きます。全体に非表示の属性が付くと、Summary mode のモードラインの
+     右端にある `*' マークが消えます。この状態では、文字列検索が直感通
+     りに働きます。
+
+Mew 4.3 でファイルを添付すると MS のメールリーダでファイル名が認識できるようになりました
+     MS のメールリーダは、ファイル名を符号化する際に、標準化されてない
+     独自の方法を使います。MS のメールリーダが、標準化されている符号化
+     方式に移行すればいいのですが、何度お願いしても無理でした。そこで、
+     Mew では以下のような方法で、この問題を解決しました。すなわち、Mew
+     は基本的には標準化されている方法で、ファイル名を符号化します。それ
+     に加えて、MS のメールリーダが参照する標準化されてないパラメータに
+     対して、ファイル名を MS 独自の方法で符号化し、付加します。
+
+Why are "mewl" and "mewencode" necessary?
+     With Mew, you can read throw messages in Summary mode while you
+     are retrieving messages or listing the messages again. This means
+     that multiple control flows of program are necessary. To make
+     multiple control flows by Emacs, the only way is to make a TCP
+     connection or to execute sub-process (Emacs Lisp does NOT provide
+     a feature of light weight process). For POP and SMTP, Mew makes a
+     TCP connection, so they are not a problem. However, to list the
+     messages in Summary mode again, we have to execute a
+     command. This is why "mewl" exists. The reason why "mewencode"
+     exists is just for speed. When I programmed MIME encoding by
+     Emacs Lisp in several ways, they are too slow to use. So, I
+     decided to continue to use "mewencode". (If Base64 is implemented
+     by Emacs, Mew uses the native function.)
+
+Why does the cursor jump onto the end of line when searching(`C-s', `C-r')?
+     Thread informations are not displayed in Summary mode. This is
+     because the "invisible" property is dynamically put onto them
+     when displayed. Strings with this property is not a target of the
+     string search. But, thread informations of undisplayed lines do
+     not have this property, so the string search targets them. Then a
+     matched line is displayed and the "invisible" property is
+     put. So, it seems to you that the string search matches the end
+     of the line. Mew puts the "invisible" property for all lines in
+     Summary mode in background while there are no user key
+     inputs. When this word is finished, the `*' mark in the right
+     side of the mode line in Summary mode disappears. In this
+     situation, string search works exactly as you expect.
+
+MS's mailers can handle file names well if I attach files with Mew 4.3
+     MS's mailers use "non-standard MS original" encoding to encode
+     file names.  MS mailers should migrate to the standard
+     encoding. I repeatedly asked MS to do so, but they did not. So,
+     Mew took the following workaround: Mew basically uses the
+     standard encoding. In addition, Mew add "MS original parameter"
+     with file names encoded with "MS original" encoding.
+
+
+
+
+
+File: mew.ja.info, Node: Avail, Next: obtain, Prev: Implementation, Up: Top
+
+入手方法とメーリングリスト
+**************************
+
+Availability and mailing-list
+*****************************
+
+ここでは、Mew の入手方法とメーリングリストについて触れます。This
+chapter describes how to get Mew and related mailing-lists.
+
+* Menu:
+
+* obtain::                      Mew の入手方法
+* ml::                          メーリングリスト
+* obtain::                      How to get Mew?
+* ml::                          Mailing list
+
+
+
+File: mew.ja.info, Node: obtain, Next: ml, Prev: Avail, Up: Avail
+
+Mew の入手方法
+==============
+
+How to get Mew?
+===============
+
+Mew の最新バージョンは以下から入手できます。The latest Mew is
+available from the following repository.
+
+     http://www.Mew.org/Release/
+
+Mew の CVS 版について知りたければ、以下を参照して下さい。If you want
+to know about CVS versions of Mew, please refer to:
+
+     http://www.mew.org/anoncvs/
+
+
+
+File: mew.ja.info, Node: ml, Next: Copyright, Prev: obtain, Up: Avail
+
+メーリングリスト
+================
+
+Mailing list
+============
+
+Mew に関するメーリングリストについては、以下を参照して下さい。
+
+     http://www.mew.org/mailman/listinfo
+
+If you want to receive release announcement, please subscribe yourself
+to mew-release.
+
+     http://www.mew.org/mailman/listinfo/mew-release
+
+If you want to ask questions and/or discuss features in English,
+please subscribe yourself to mew-int.
+
+     http://www.mew.org/mailman/listinfo/mew-int
+
+
+
+
+File: mew.ja.info, Node: Copyright, Next: Variable Index, Prev: ml, Up: Top
+
+著作権について
+**************
+
+Copyright
+*********
+
+Mew は以下の著作権に従います。
+
+Copyright (C) 1994-2009 Mew developing team.
+All rights reserved.
+
+変更の有無にかかわらず、ソースおよびバイナリ形式の再配布および利用は、
+以下の条件を満たしていれば、これを許可する。
+
+  1. ソース・コードの再配布は、上記の著作権表示、この条件項目、および、
+     以下の免責事項を保存しなければならない。
+  2. バイナリ形式の再配布は、上記の著作権表示、この条件項目、および、以
+     下の免責事項を、その配布に付随する説明書、あるいはその他の資料のい
+     ずれかに明記しなければならない。
+  3. 前もって特別に許諾を得ない限り、このソフトウェアから派生した製品の
+     推奨や販売促進のために、このチーム名と貢献者達の名前を利用してはな
+     らない。
+
+このソフトウェアは「このままの形で」提供され、明示的あるいは言外の保証
+は、商用利用および特定目的への適合に対する言外の保証も含み、またこれら
+だけに限らず、存在しない。たとえ以下のような損害の可能性を示唆されてい
+たとしても、どのような形にしろこのソフトウェアの利用から発生した問題に
+おいて、このチームと貢献者達は、(代替製品やサービスの調達; 利用権、デー
+タ、あるいは利益の損失; あるいは営業の中断を含む、またこれらだけに限ら
+ず)直接的に、間接的に、偶然に、特別に、懲罰上、あるいは、必然的に生じて
+しまった損害に対し責任はなく、いかなる責任理論上でも契約の有無に係わら
+ず厳密な責任はなく、また(過失あるいはその他を含む)不法行為に対しても責
+任はない。Mew conforms the following copyright.
+
+Copyright (C) 1994-2009 Mew developing team.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+  1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in
+     the documentation and/or other materials provided with the
+     distribution.
+  3. Neither the name of the team nor the names of its contributors
+     may be used to endorse or promote products derived from this
+     software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS "AS IS" AND ANY
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+CD ROM に入れて配布したいという方は、できるだけ教えて下さい。教えてくれ
+なくても怒りませんが、教えて頂けるとありがたいです。配布を断ったことは
+ありません。If you wish to distribute Mew in CD or something, please
+let me know. I do not go mad even if you do not tell me but I'm very
+glad if you do so.  I never have declined requirements.
+
+このマニュアルの著作権は、著者に属します。複製、改変、再配布は自由です
+が、無保証です。また、このマニュアルから発生した被害に対し、著者は一切
+責任を負いません。The copyright of this manual belongs to the
+author. Permission is granted to copy, modify, redistribute this
+manual but no warranty.
+
+
+
+
+File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Copyright, Up: Top
+
+変数索引
+********
+
+Variable Index
+**************
+
+
+* Menu:
+
+* mail-user-agent:              Composing.              (line   8)
+* mail-user-agent:              configuration.          (line   8)
+* mail-user-agent:              start.                  (line   8)
+* mew-addrbook-for-cite-label:  draft-mode.             (line   8)
+* mew-addrbook-for-cite-prefix: draft-mode.             (line   8)
+* mew-addrbook-mode-hook:       hooks.
+* mew-addrbook-mode-hook:       hooks.
+* mew-addrbook-override-by-newone: auto-alias.          (line   8)
+* mew-ask-charset:              charset.                (line   8)
+* mew-ask-fcc:                  send.                   (line   8)
+* mew-ask-subject:              send.                   (line   8)
+* mew-auto-flush-queue:         retrieving.             (line   8)
+* mew-auto-get:                 start.                  (line   8)
+* mew-before-cite-hook:         hooks.
+* mew-before-cite-hook:         hooks.
+* mew-biff-interval:            biff.                   (line   8)
+* mew-case-guess-alist:         config.                 (line   8)
+* mew-case-guess-when-composed: config.
+* mew-case-guess-when-composed: config.
+* mew-case-guess-when-prepared: config.
+* mew-case-guess-when-prepared: config.
+* mew-case-guess-when-replied:  config.
+* mew-case-guess-when-replied:  config.
+* mew-case-guess-when-replied-alist: config.            (line   8)
+* mew-cc:                       draft-mode.             (line   8)
+* mew-charset-latin:            charset.                (line   8)
+* mew-charset-m17n:             charset.                (line   8)
+* mew-cite-fields:              draft-mode.             (line   8)
+* mew-cite-format:              draft-mode.             (line   8)
+* mew-cite-hook:                hooks.
+* mew-cite-hook:                hooks.
+* mew-cite-prefix:              draft-mode.             (line   8)
+* mew-cite-prefix-function:     draft-mode.             (line   8)
+* mew-config-alist:             config.                 (line   8)
+* mew-config-alist:             config2.                (line   8)
+* mew-cs-samba:                 custom-misc.            (line   8)
+* mew-cursor-mark:              highlight.              (line   8)
+* mew-dcc:                      draft-mode.             (line   8)
+* mew-debug:                    status-update.          (line   8)
+* mew-decode-broken:            analysis.
+* mew-decode-broken:            analysis.
+* mew-decode-broken:            status-update.          (line   8)
+* mew-decode-quoted:            invalid.                (line   8)
+* mew-delete-unread-mark-by-mark: unread mark.          (line   8)
+* mew-draft-mode-edit-again-hook: hooks.
+* mew-draft-mode-edit-again-hook: hooks.
+* mew-draft-mode-hook:          hooks.
+* mew-draft-mode-hook:          hooks.
+* mew-draft-mode-newdraft-hook: hooks.
+* mew-draft-mode-newdraft-hook: hooks.
+* mew-draft-mode-reedit-draft-hook: hooks.
+* mew-draft-mode-reedit-draft-hook: hooks.
+* mew-draft-mode-reedit-hook:   hooks.
+* mew-draft-mode-reedit-hook:   hooks.
+* mew-draft-mode-reedit-queue-hook: hooks.
+* mew-draft-mode-reedit-queue-hook: hooks.
+* mew-draft-privacy-method:     shortcut.               (line   8)
+* mew-end-of-message-string:    multipart.              (line   8)
+* mew-end-of-part-string:       multipart.              (line   8)
+* mew-env-hook:                 hooks.
+* mew-env-hook:                 hooks.
+* mew-field-delete-for-forwarding: forward.             (line   8)
+* mew-field-for-printing:       custom-misc.            (line   8)
+* mew-fields:                   header.                 (line   8)
+* mew-file-max-size:            analysis.
+* mew-file-max-size:            analysis.
+* mew-flowed-auto-wrap:         longline.               (line   8)
+* mew-flowed-fold-length:       longline.               (line   8)
+* mew-flowed-fold-threshold:    longline.               (line   8)
+* mew-from:                     draft-mode.             (line   8)
+* mew-from-list:                cheader.                (line   8)
+* mew-ham-prog:                 spam2.                  (line   8)
+* mew-ham-prog-args:            spam2.                  (line   8)
+* mew-header-alist:             draft-mode.             (line   8)
+* mew-header-max-length:        analysis.
+* mew-header-max-length:        analysis.
+* mew-header-mode-hook:         hooks.
+* mew-header-mode-hook:         hooks.
+* mew-header-veil-count:        features.               (line   8)
+* mew-highlight-body-max-size:  highlight.              (line   8)
+* mew-imap-auth:                imap.
+* mew-imap-auth:                imap.
+* mew-imap-auth-list:           imap.
+* mew-imap-auth-list:           imap.
+* mew-imap-delete:              imap.
+* mew-imap-delete:              imap.
+* mew-imap-delete:              retrieving.             (line   8)
+* mew-imap-header-only:         imap.
+* mew-imap-header-only:         imap.
+* mew-imap-header-only:         retrieving.             (line   8)
+* mew-imap-sentinel-hook:       hooks.
+* mew-imap-sentinel-hook:       hooks.
+* mew-imap-sentinel-hook:       hooks.
+* mew-imap-sentinel-non-biff-hook: hooks.
+* mew-imap-sentinel-non-biff-hook: hooks.
+* mew-imap-server:              configuration.          (line   8)
+* mew-imap-server:              imap.
+* mew-imap-server:              imap.
+* mew-imap-size:                imap.
+* mew-imap-size:                imap.
+* mew-imap-spam-field:          spam.                   (line   8)
+* mew-imap-spam-folder:         spam.                   (line   8)
+* mew-imap-spam-word:           spam.                   (line   8)
+* mew-imap-ssh-server:          imap.
+* mew-imap-ssh-server:          imap.
+* mew-imap-ssl:                 imap.
+* mew-imap-ssl:                 imap.
+* mew-imap-ssl-port:            imap.
+* mew-imap-ssl-port:            imap.
+* mew-imap-trash-folder:        delete mark.            (line   8)
+* mew-imap-trash-folder-list:   delete mark.            (line   8)
+* mew-imap-user:                imap.
+* mew-imap-user:                imap.
+* mew-inbox-action-alist:       spam.                   (line   8)
+* mew-init-hook:                hooks.
+* mew-init-hook:                hooks.
+* mew-lisp-max-length:          auto-alias.             (line   8)
+* mew-lisp-max-length:          by-from.                (line   8)
+* mew-lisp-max-length:          by-thread.              (line   8)
+* mew-mail-address-list:        reply.                  (line   8)
+* mew-mailbox-type:             config.                 (line   8)
+* mew-mailbox-type:             configuration.          (line   8)
+* mew-mailbox-type:             retrieving.             (line   8)
+* mew-mailbox-type:             start.                  (line   8)
+* mew-mail-domain-list:         cheader.                (line   8)
+* mew-make-message-hook:        hooks.
+* mew-make-message-hook:        hooks.
+* mew-mbox-command:             configuration.          (line   8)
+* mew-mbox-command-arg:         configuration.          (line   8)
+* mew-message-hook:             hooks.
+* mew-message-hook:             hooks.
+* mew-message-mode-hook:        hooks.
+* mew-message-mode-hook:        hooks.
+* mew-mime-multipart-alternative-list: message-mode.    (line   8)
+* mew-name:                     configuration.          (line   8)
+* mew-nntp2-flush-hook:         hooks.
+* mew-nntp2-flush-hook:         hooks.
+* mew-nntp2-sentinel-hook:      hooks.
+* mew-nntp2-sentinel-hook:      hooks.
+* mew-nntp-header-only:         nntp.
+* mew-nntp-header-only:         nntp.
+* mew-nntp-header-only:         retrieving.             (line   8)
+* mew-nntp-msgid-domain:        nntp.
+* mew-nntp-msgid-domain:        nntp.
+* mew-nntp-msgid-user:          nntp.
+* mew-nntp-msgid-user:          nntp.
+* mew-nntp-newsgroup:           nntp.
+* mew-nntp-newsgroup:           nntp.
+* mew-nntp-sentinel-hook:       hooks.
+* mew-nntp-sentinel-hook:       hooks.
+* mew-nntp-server:              configuration.          (line   8)
+* mew-nntp-server:              nntp.
+* mew-nntp-server:              nntp.
+* mew-nntp-size:                nntp.
+* mew-nntp-size:                nntp.
+* mew-nntp-ssh-server:          nntp.
+* mew-nntp-ssh-server:          nntp.
+* mew-nntp-ssl:                 nntp.
+* mew-nntp-ssl:                 nntp.
+* mew-nntp-ssl-port:            nntp.
+* mew-nntp-ssl-port:            nntp.
+* mew-nntp-user:                nntp.
+* mew-nntp-user:                nntp.
+* mew-pack-hook:                hooks.
+* mew-pack-hook:                hooks.
+* mew-pick-pattern-list:        condition.              (line   8)
+* mew-pop-auth:                 pop.
+* mew-pop-auth:                 pop.
+* mew-pop-auth-list:            pop.
+* mew-pop-auth-list:            pop.
+* mew-pop-body-lines:           pop.
+* mew-pop-body-lines:           pop.
+* mew-pop-delete:               pop.
+* mew-pop-delete:               pop.
+* mew-pop-delete:               retrieving.             (line   8)
+* mew-pop-header-only:          pop.
+* mew-pop-header-only:          pop.
+* mew-pop-header-only:          retrieving.             (line   8)
+* mew-pop-sentinel-hook:        hooks.
+* mew-pop-sentinel-hook:        hooks.
+* mew-pop-sentinel-non-biff-hook: hooks.
+* mew-pop-sentinel-non-biff-hook: hooks.
+* mew-pop-server:               pop.
+* mew-pop-server:               pop.
+* mew-pop-size:                 pop.
+* mew-pop-size:                 pop.
+* mew-pop-ssh-server:           pop.
+* mew-pop-ssh-server:           pop.
+* mew-pop-ssh-server:           SSH.                    (line   8)
+* mew-pop-ssl:                  pop.
+* mew-pop-ssl:                  pop.
+* mew-pop-ssl:                  SSL.                    (line   8)
+* mew-pop-ssl-port:             pop.
+* mew-pop-ssl-port:             pop.
+* mew-pop-ssl-port:             SSL.                    (line   8)
+* mew-pop-user:                 configuration.          (line   8)
+* mew-pop-user:                 pop.
+* mew-pop-user:                 pop.
+* mew-post-hook:                hooks.
+* mew-post-hook:                hooks.
+* mew-print-function:           custom-misc.            (line   8)
+* mew-print-function:           features.               (line   8)
+* mew-prog-gpg:                 cipher-viewing.         (line   8)
+* mew-prog-grep:                condition.              (line   8)
+* mew-prog-grep-opts:           condition.              (line   8)
+* mew-prog-msexcel:             message-mode.           (line   8)
+* mew-prog-msexcel-ext:         message-mode.           (line   8)
+* mew-prog-mspowerpoint:        message-mode.           (line   8)
+* mew-prog-mspowerpoint-ext:    message-mode.           (line   8)
+* mew-prog-msword:              message-mode.           (line   8)
+* mew-prog-msword-ext:          message-mode.           (line   8)
+* mew-prog-pgp:                 cipher-viewing.         (line   8)
+* mew-prog-pgp2:                cipher-viewing.         (line   8)
+* mew-prog-pgp5:                cipher-viewing.         (line   8)
+* mew-prog-text/html-ext:       message-mode.           (line   8)
+* mew-protect-privacy-always:   shortcut.               (line   8)
+* mew-protect-privacy-always-type: shortcut.            (line   8)
+* mew-protect-privacy-encrypted: shortcut.              (line   8)
+* mew-protect-privacy-encrypted-type: shortcut.         (line   8)
+* mew-protect-privacy-with-old-pgp-signature: shortcut.  (line   8)
+* mew-proto:                    config.                 (line   8)
+* mew-proto:                    configuration.          (line   8)
+* mew-proto:                    start.                  (line   8)
+* mew-quit-hook:                hooks.
+* mew-quit-hook:                hooks.
+* mew-real-post-hook:           hooks.
+* mew-real-post-hook:           hooks.
+* mew-real-send-hook:           hooks.
+* mew-real-send-hook:           hooks.
+* mew-refile-auto-refile-skip-any-mark: auto-refile.    (line   8)
+* mew-refile-ctrl-multi:        guess-rule.             (line   8)
+* mew-refile-guess-alist:       by-alist.               (line   8)
+* mew-refile-guess-by-from-learn-hook: hooks.
+* mew-refile-guess-by-from-learn-hook: hooks.
+* mew-refile-guess-control:     guess-rule.             (line   8)
+* mew-refile-guess-from-me-is-special: by-from.         (line   8)
+* mew-refile-guess-from-me-is-special: by-from-folder.  (line   8)
+* mew-refile-guess-strip-domainpart: by-default.        (line   8)
+* mew-reply-all-alist:          reply.                  (line   8)
+* mew-reply-fromme-alist:       reply.                  (line   8)
+* mew-reply-sender-alist:       reply.                  (line   8)
+* mew-safe-addresses:           addr-warn.              (line   8)
+* mew-safe-domains:             addr-warn.              (line   8)
+* mew-scan-sentinel-hook:       hooks.
+* mew-scan-sentinel-hook:       hooks.
+* mew-search-method:            dbsearch.               (line   8)
+* mew-send-hook:                hooks.
+* mew-send-hook:                hooks.
+* mew-signature-as-lastpart:    cite.                   (line   8)
+* mew-signature-file:           cite.                   (line   8)
+* mew-signature-insert-last:    cite.                   (line   8)
+* mew-smtp-auth-list:           smtp.
+* mew-smtp-auth-list:           smtp.
+* mew-smtp-flush-hook:          hooks.
+* mew-smtp-flush-hook:          hooks.
+* mew-smtp-helo-domain:         smtp.
+* mew-smtp-helo-domain:         smtp.
+* mew-smtp-mail-from:           smtp.
+* mew-smtp-mail-from:           smtp.
+* mew-smtp-msgid-domain:        smtp.
+* mew-smtp-msgid-domain:        smtp.
+* mew-smtp-msgid-user:          smtp.
+* mew-smtp-msgid-user:          smtp.
+* mew-smtp-port:                smtp.
+* mew-smtp-port:                smtp.
+* mew-smtp-sentinel-hook:       hooks.
+* mew-smtp-sentinel-hook:       hooks.
+* mew-smtp-server:              configuration.          (line   8)
+* mew-smtp-server:              smtp.
+* mew-smtp-server:              smtp.
+* mew-smtp-ssh-server:          smtp.
+* mew-smtp-ssh-server:          smtp.
+* mew-smtp-ssl:                 smtp.
+* mew-smtp-ssl:                 smtp.
+* mew-smtp-ssl:                 SSL.                    (line   8)
+* mew-smtp-ssl-port:            smtp.
+* mew-smtp-ssl-port:            smtp.
+* mew-smtp-user:                smtp.
+* mew-smtp-user:                smtp.
+* mew-sort-default-key:         sorting.                (line   8)
+* mew-sort-default-key-alist:   sorting.                (line   8)
+* mew-sort-hook:                hooks.
+* mew-sort-hook:                hooks.
+* mew-sort-key-alist:           sorting.                (line   8)
+* mew-spam:                     spam.                   (line   8)
+* mew-spam-prog:                spam2.                  (line   8)
+* mew-spam-prog-args:           spam2.                  (line   8)
+* mew-ssl-cert-directory:       SSL.                    (line   8)
+* mew-ssl-verify-level:         SSL.                    (line   8)
+* mew-status-update-hook:       hooks.
+* mew-status-update-hook:       hooks.
+* mew-summary-delete-folder-hook: hooks.
+* mew-summary-delete-folder-hook: hooks.
+* mew-summary-exec-hook:        hooks.
+* mew-summary-exec-hook:        hooks.
+* mew-summary-form:             summary-mode.           (line   8)
+* mew-summary-form-extract-rule: summary-mode.          (line   8)
+* mew-summary-form-from-me-prefix: summary-mode.        (line   8)
+* mew-summary-form-mark-delete: summary-mode.           (line   8)
+* mew-summary-form-mark-review: summary-mode.           (line   8)
+* mew-summary-form-mark-spam:   summary-mode.           (line   8)
+* mew-summary-ls-no-scan-hook:  hooks.
+* mew-summary-ls-no-scan-hook:  hooks.
+* mew-summary-mark-direction:   summary-mode.           (line   8)
+* mew-summary-mode-hook:        hooks.
+* mew-summary-mode-hook:        hooks.
+* mew-summary-rename-folder-hook: hooks.
+* mew-summary-rename-folder-hook: hooks.
+* mew-summary-show-direction:   summary-mode.           (line   8)
+* mew-summary-toggle-disp-msg-hook: hooks.
+* mew-summary-toggle-disp-msg-hook: hooks.
+* mew-suspend-hook:             hooks.
+* mew-suspend-hook:             hooks.
+* mew-syntax-format-hook:       hooks.
+* mew-syntax-format-hook:       hooks.
+* mew-theme-file:               highlight.              (line   8)
+* mew-thread-display-hook:      hooks.
+* mew-thread-display-hook:      hooks.
+* mew-thread-separator:         thread.                 (line   8)
+* mew-trash-folder:             delete mark.            (line   8)
+* mew-trash-folder-list:        delete mark.            (line   8)
+* mew-use-8bit:                 smtp.
+* mew-use-8bit:                 smtp.
+* mew-use-8bit:                 status-update.          (line   8)
+* mew-use-alternative:          analysis.
+* mew-use-alternative:          analysis.
+* mew-use-biff:                 biff.                   (line   8)
+* mew-use-biff-bell:            biff.                   (line   8)
+* mew-use-cached-passwd:        password.               (line   8)
+* mew-use-cursor-mark:          highlight.              (line   8)
+* mew-use-fast-refile:          by-folder.              (line   8)
+* mew-use-format-flowed:        longline.               (line   8)
+* mew-use-full-window:          summary-mode.           (line   8)
+* mew-use-header-veil:          features.               (line   8)
+* mew-use-header-veil:          status-update.          (line   8)
+* mew-use-highlight-body:       highlight.              (line   8)
+* mew-use-highlight-cursor-line: highlight.             (line   8)
+* mew-use-highlight-header:     highlight.              (line   8)
+* mew-use-highlight-mark:       highlight.              (line   8)
+* mew-use-highlight-mouse-line: highlight.              (line   8)
+* mew-use-highlight-url:        highlight.              (line   8)
+* mew-use-highlight-x-face:     highlight.              (line   8)
+* mew-use-master-passwd:        password.               (line   8)
+* mew-use-node-folder:          by-folder.              (line   8)
+* mew-use-old-pgp:              shortcut.               (line   8)
+* mew-use-old-pgp:              status-update.          (line   8)
+* mew-user:                     configuration.          (line   8)
+* mew-use-samba-encoding:       custom-misc.            (line   8)
+* mew-use-smtp-auth:            smtp.
+* mew-use-smtp-auth:            smtp.
+* mew-use-text-body:            analysis.
+* mew-use-text-body:            analysis.
+* mew-use-text/html:            analysis.
+* mew-use-text/html:            analysis.
+* mew-use-text/xml:             analysis.
+* mew-use-text/xml:             analysis.
+* mew-use-thread-separator:     thread.                 (line   8)
+* mew-use-unread-mark:          unread mark.            (line   8)
+* mew-virtual-mode-hook:        hooks.
+* mew-virtual-mode-hook:        hooks.
+* mew-visit-inbox-after-setting-case: visiting.         (line   8)
+* mew-visit-queue-after-sending: visiting.              (line   8)
+* mew-warn-addresses:           addr-warn.              (line   8)
+* mew-warn-domains:             addr-warn.              (line   8)
+* mew-warning-field-level:      status-update.          (line   8)
+* mew-x-pgp-key-list:           cipher-viewing.         (line   8)
+* read-mail-command:            configuration.          (line   8)
+
+
+
+

@@ -1,0 +1,37 @@
+.\" Unlimited permission is granted to use, copy, distribute and/or modify
+.\" this file.  There is NO WARRANTY.
+.TH CMEW 1 "February 17, 2008"
+.SH NAME
+cmew - create Mew's database file
+.\"
+.SH SYNOPSIS
+cmew
+.RI [ -f ]
+.RI [ db_file
+.RI [ maildir
+.RI [ ignore_regex
+.RI [ target_folder ]]]]
+.\"
+.SH DESCRIPTION
+The
+.B cmew
+utility creates a Message-ID database file with SQLite 3 for Mew.
+.PP
+.I db_file
+is a database file name.  (default: "~/Mail/id.db")
+.PP
+.I maildir
+is a mail directory name.  (default: "~/Mail")
+.PP
+.I ignore_regex
+is a regular expression for the mail directory names to not create the database.  (default: "^\\./casket$|^\\./casket/|/\\.")
+.PP
+.I target_folder
+is a target folder. Information about messages contained in this
+folder only are updated.
+.\"
+.PP
+The options are as follows:
+.TP 8
+.B \-f
+Full update. Unless this option is specified, incremental update is used.

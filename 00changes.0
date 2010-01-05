@@ -1,0 +1,1103 @@
+			     <Change Log>
+
+0.99 (10/08/95) mew-release release
+
+* Typo of mew-draft-multipart-end.
+* Never display MIME syntax when mew-summary-toggle-disp-msg is on.
+* I have misunderstand RFC1522 for a long time that its heder encoding
+requires MIME-Version: field. But Keith kindly told me that it's not
+the case. Thanks to this flexibility of RFC1522, we can safely exchange 
+non-ascii header fields with non-MIME interface.
+* Typo of update in mew-summary-rescan.
+* mew-field-get-{value, line} now uses mew-loop-depth to prevent long
+loop that happens with thousands of same field in a message.
+* mew-prog-pick-default-arg is defined.
+* edit-again and reedit inserts mew-from and mew-reply-to.
+	Satoshi Nakagawa <nakagawa>
+* mew-cite-format is *field free*! See the documentation of 
+mew-cite-fields.
+* mew-refile is version up to stop using
+mew-summary-buffer-disp-msg-current.
+* Many code contributions that make Mew slightly faster preventing
+consumption of cells. Thanks!
+	UMEMURA Akihiro <akihiro>
+* Define mew-cite-prefix-function and mew-cite-prefix-username.
+* Define mew-cite-prefix-confirmp.
+* On Xemacs, use (mark t) instead of (marker-position (mark-marker)).
+	Niclas Andersson <nican>
+* mew-prog-audio bug fix (Sorry for late, Dave!).
+	Shiro IKEDA <shiro>
+	dcw (David Worenklein)
+* mew-summary-reply prepares Cc: from From: field. This may be useful
+in the case that To: is a user, From: is the sender, and Reply-To: is
+a ML.
+* Define mew-header-max-length to prevent long loop for processing
+loooong header.
+* mewencode hack.
+  (1) "\n.\n" including "post soft break" is QP-encoded to "\n.=\n\n".
+      (suggested by Richard Levitte <levitte>)
+  (2) If we meet illegal encoded words such as "=XX" at PQ-decoding,
+      we just warn, never exit.
+      (suggested by Niclas Andersson <nican>)
+* mew-header-extract-addr hack.
+	Mine Sakurai <m-sakura>
+* mew-mark-process-all-folders bug fix.
+	Shiro IKEDA <shiro>
+* "insert" rather than insert-after-markers which is obsolete in Emacs 19.
+	Jarle Fredrik Greipsland <jarle>
+* Draft menu enhancement.
+	dcw (David Worenklein)
+* mew-ask-cc hack for forward, multiforward, and resent.
+	dcw (David Worenklein)
+* Define message-mode functions and menu.
+	dcw (David Worenklein)
+* Use buffer-substring-no-properties instead of buffer-substring for 
+mew-delete-backward-char[-at] on Emacs 19 for font-lock-mode.
+	Jarle Fredrik Greipsland <Jarle.Greipsland>
+* C-u C-c C-c on draft buffer leaves the draft as it is.
+	Tomoharu Suzuki <suzuki>	
+
+
+0.98 (08/01/95) mew-release release
+
+* mew-pgp.el support the cases of lack of public key and keyring itself.
+* mew-part-make hack.
+* A bug fix for X-Mew:.
+* defvar of mew-x-mew to allow users to defined an appropriate strings
+for security. 
+* "mo" bug fix.
+	Hirotaka Yokokawa <Hirotaka.Yokokawa>
+
+
+0.97 (07/28/95) mew-release release
+
+* mew-draft-check-whom uses mew-header-address-collect instead of 
+mew-header-user-collect. 
+	Tetsuro Muranaga <Tetsuro_Muranaga>
+* Defined mew-temp-file to get rid of the security hole which makes
+eavesdroppers possible to watch contents of mail on
+/tmp. mew-temp-file must be a file which nobody but you can
+access. The default value is ~/Mail/drafts.
+* localform decoder and syntax analyzer now handle CT: in
+Message/digest.  Message/Mixed and Message/Digest is syntactically
+identical but the semantics are different. The default CT: for
+Message/Digest is "message/rfc822" whereas the default CT: for
+Message/Mixed is "text/plain". We don't assume null line after
+boundary anymore.
+* mew-pgp-decode-sentinel and mew-pgp-decode-sentinel-mime is merged to 
+handle PGP message.
+	
+
+0.96 (06/28/95) gnu.emacs.sources release
+
+* mew-draft-cite sets buffer to (mew-buffer-message) when non-analysis
+mode.
+* Some warning preventions.
+	SAKAI Kiyotaka <ksakai>
+* Dummy message "" for mew-draft-cite to prevent echo. I don't know
+why this echo occurs.
+* mew-summary-{reedit, edit-again} inserts mew-fcc and mew-dcc.
+* mew-draft-undo deletes backup files.
+* Tiny bug fix for mew-draft-undo.
+* Tiny bug fix of CD: for PGP/MIME
+* Double quotations in the description of mew-cache are escaped with "\".
+This makes Mew workable on Emacs 19.29.
+* Further English improvement
+	Mikitomo Ushijima <c92205mu>
+* mew-mime-{call,start}-process warns a message if program doesn't exist.
+
+
+0.95 (06/26/95) mew-dist release
+
+* mew-fib-flush-input -> "C-cu"
+* mew-draft-undo -> "C-cC-u"
+* mew-header-user-collect never warn when exceeds mew-loop-depth. 
+mew-apply-before-refile-function
+	SAKAI Kiyotaka <ksakai>
+* Check existence of PGP before decoding the region.
+* English improvement
+	Mikitomo Ushijima <c92205mu>
+* mew-summary-rmm and mew-summary-undo can take number prefix.
+	SAKAI Kiyotaka <ksakai>
+* MIME syntax analyzer takes care of CTE:, CI: and CD: for
+message/rfc822.
+* Message/External-body can contain CD:
+* An entry of mew-multi-syntax consists of 
+	(filename type description encoding param).
+PGP encryption uses param instead of descrition. So, MIME object 
+which is encoded by PGP can include CD:.
+* All command in multipart of draft mode keep the position.
+* The key binding of mew-multi-pgp-sign-enc changes from "B" to "P" 
+due to mew-multi-base64.
+* mew-multi-base64, mew-multi-quoted-printable.
+* mew-multi-gzip -> mew-multi-gzip64.
+* mew-summary-edit-again for old fashion error mail that an original
+message is encapsulated after "----- Original message follows -----".
+This is binded to "\ee" in summary mode.
+* mew-header-alist
+* Bug fix of code transform error in PGP/MIME. I forgot to specifiy
+boundary. 
+* In draft mode, C-cC-c + "n" caused an error. This is fixed.
+* Comment out mew-draft-anno in mew-summary-reply.
+
+
+0.94 (06/21/95) mew-dist release
+
+* PGP/MIME !! \^^/
+* Bug fixs for mew-summary-forward[-multi]
+* mew-summary-{inc,scan}-sentinel-hook
+* typo
+	kawato
+* Two warning reduction
+	SAKAI Kiyotaka <ksakai>
+
+
+0.93 (06/20/95) mew-dist release
+
+* "Z" for mew-status-update in summary mode.
+* Scan cache is not used in +draft.
+	SAKAI Kiyotaka <ksakai>
+* Mark based composer at last!!
+* Mew doesn't scan mime directory at entring multipart mode.
+* draft's mark is integrated into encoding. So, mew-insert-file became
+much simle and beautiful.
+* We can handle ISO-8859-1 on Mule correctly.
+* mew-summary-reedit now can handle rfc822 part.
+* Many functions become virtual-mode ready.
+* mew-quit-hook
+
+
+0.92 (06/18/95) mew release
+
+* User-customizable valuable mew-field-delete, mew-field-resent.
+* mew-part-get-params-member to avoid depending the order of
+parameters.  This can survive even if "boundary" is not the first
+parameter of multipart.
+* Virtual mode is provided. Since buffer-name is not equal to folder
+name. (mew-summary-folder-name) is defined. Many functions are
+rewrited with it.
+* mew-summary-mark-collect2 for virtual mode.
+* mew-summary-{inc, scan}-filter deletes only "+".
+* When number of address reaches to mew-loop-depth, warning message is
+displayed to tell users the truncation of addresses.
+* Fcc: allows multiple values.
+* mew-header-{user, address}-collect became case-sensitive. I don't
+know any side effect occurs.
+* User options of mew-auto-add-content-type and mew-ask-cc.
+	David C. Worenklein <dcw>
+* Better value of mew-window-configuration to make lines of summary
+window odd
+* We should allow aliases that contain ".".
+  "^\\([-\\+a-z0-9_]+\\):\\s-+\\(.*\\)$" -> "^\\([^:]+\\):\\s-+\\(.*\\)$"
+
+
+0.91 (05/21/95) gnu.emacs.sources release
+
+* mew-summary-forward causes an error due to modification of
+mew-summary-display. set-buffer-modified is moved before return value
+to fix this problem.  
+* regex of mew-summary-{inc,scan}-filter is changed from 
+"^ *[0-9]+\\([ +]\\).*\n" into "^ *[0-9]+\\(.\\).*\n".
+* mark enhancement.
+	Hiroshi ENOMOTO <enomoto>
+* mew-read is obsolete.
+
+
+0.90 (05/08/95) mew-dist release
+
+* buffer-modified hack.
+* make mew-summary-save general for binary CT:.
+* mew-summary-multipart-delete for mew-summary-toggle-disp-msg.
+
+
+0.89  (03/07/95) gnu.emacs.sources release
+
+* Menu bar enchancement
+	SAKAI Kiyotaka <ksakai>
+* PEM functions are named as mew-pem-xxx.
+* Set terminal-more-break-insertion nil.
+* Patch to delete blank for .xface.
+	YAMAMOTO Akishige <yamamoto>
+* Set mail-header-separator "----" for ispell-message.
+* Position is changed that call mew-send-hook for ispell-message.
+* (split-window-vertically sumheight) -> (split-window nil sumheight)
+in mew-window-configure.
+	SAKAI Kiyotaka <ksakai>
+* +language=en for PGP decode.
+	Hiroshi ENOMOTO <enomoto>
+
+
+0.88 (03/03/95) mew-dist release
+
+* +clearsig=on, +language=en for mew-pgp-encode-switch.
+* (featurep 'hilit19) for hilit-rehighlight-buffer.
+* If you make three mistakes for pass phrase, body isn't deleted and
+CT: is not inserted.
+* mew-alias-update.
+	SAKAI Kiyotaka <ksakai>
+* mew-pgp-add-key and mew-terminal-emulater. 
+* mew-refile is updated to 0.19 including mew-alist-max-length.
+	Yoshinari NOMURA <nomsun>
+* mew-from-alist patch to avoid the name of nil.
+	Keith Waclena <keith>
+* mew-mime-start-process checks the existence of program.
+* Add ^G to exit condition to mew-read-passwd to prevent everending
+loop.
+* PGP temrinology: "encode" == encrypt, sign, sign then verify
+* PGP temrinology: "decode" == decrypt, verify, decrypt then verify
+* Error handle for {pub,sec}ring.pgp not exist and userid not found.
+* mew-draft-check-whom
+	Tetsuro Muranaga <Tetsuro_Muranaga>
+* "~/.xface"
+* mew-summary-reply-with-citation -> "A"
+* mew-summary-toggle-analysis -> "ESC a"
+* Special case support for mew-mime-localform-singlepart
+	null CT: and CTE: 7bit!
+
+
+0.87 (02/26/95) mew-dist release
+
+* X-Face: support.
+* Burst support.
+* hilit-rehighlight-buffer rather than redraw-display in mew-draft-mode
+to cease to left garbage.
+* erase-buffer before MIME analysis for PGP pass phase input.
+* Define mew-which to cease full path notation. (e.g. mew-prog-pgp = "pgp")
+* Call PGP asynchronously to send a pass phrase safely to prevent the
+ps or sps snoop. 
+* Pretty Good Support for PGP. Now you can sign(C-cs), encrypt(C-ce),
+sign and encrypt(C-eb). You can re-enter your pass phrase.
+* mew-pgp-insert-public-key(C-cp).
+* Define mew-pgp-decrypt-letter(C-cd) to decrypt the message without
+CT: app/pgp.
+
+
+0.86 (02/09/95) gnu.emacs.sources release
+
+* mew-command-key-sequence is defined to support C-u on draft mode.
+	SAKAI Kiyotaka <ksakai>
+* set-marker at mew-summary-reedit
+	SAKAI Kiyotaka <ksakai>
+* mew-draft-delete-content-type is defined.
+* condition-case for mew-summary-{inc, scan}
+
+
+0.85 (02/08/95) mew release
+
+* Region hack for mew-summary-convert-local-charset and
+mew-pem-decrypt-letter.
+* Bug fix for auto-fill-{hook & function} again.
+* MIME composer hack to throw away swap CT:.
+* mew-draft-send-letter never undo now to corrent C-cC-c & n bug.
+* Add (mew-summary-multipart-delete) to mew-input-range for the case
+when parts is expanded in the bottom of the folder. 
+* mew-summary-reply doesn't use full window if current Mew's windows have
+enough height.
+* mew-draft-header-domain switch the current candidate to the next one
+if the current one is conpleted.
+* mew-minibuffer-domain is defined.
+* mew-draft-header-{domain,alias} saves the window configuration.
+* Hacking mew-mime-syntax-singlepart to handle multipart/digest correctly.
+* Hacking mew-mime-localform-singlepart to handle multipart/digest correctly.
+* Add ".*" entry to mew-mime-content-type.
+* Reply address hack for ":;"
+	Motonori NAKAMURA <motonori>
+* A setmaker bug in mew-mime-decode is fixed.
+* mew-summary-convert-local-charset checks mew-message-citation.
+* "C-cC-h" in summary mode is mew-summary-convert-header.
+* "C-cC-d" -> "C-cC-h" in draft buffer.
+* mew[en|de]code's gzip64 bug fix. (Three processes are necessary.)
+* X-Gzip64 decode support.
+* mew-summary-reply never causes an error when From: doesn't exist. 
+* Parameter of mew-draft-cite can be nil. 
+	Yoshinari NOMURA <nomsun>
+* mew-send-hook is defined.
+* mew-draft-auto-fill hack.
+	Yoshinari NOMURA <nomsun>
+* Decription for message mode.
+* "q" of mew-message-mode-map -> "o", "h".
+* mew-file-append-p is defined.
+* Remote file completion support for composing annon-ftp of external-body.
+* mew-temp-minibuffer-message is defined.
+
+
+0.84 (01/11/95) mew-dist release
+
+* a tiny patch to support mew-refile version 0.14.
+	Yoshinari NOMURA <nomsun>
+* mew-mail-domain is taken from (car mew-mail-domain-list)
+	Sakai Kiyotaka <ksakai>
+* Key binding change for mew-draft-header-domain into C-cC-i.
+* C-cC-l for mew-summary-convert-local-charset
+* C-cC-d for mew-pem-decrypt-letter
+* Minimum width is 80 for scan and inc.
+
+
+0.83 (01/12/95) mew release
+
+* goto-char (point-max) when goto-folder.
+* Draft mode documentation hack for fill blanks.
+* mew-highlight-lines-use
+	Maybe TABOO <y-koga>
+* mew-mime-content-type-multipart-list is defined to limit the range
+for the content-type of directory.
+* (this-command-keys) instead of last-command-char for
+mew-draft-keyswitch to support more than 2 key strokes.
+* mew-header-insert-from-file bug fix.
+	Tomoharu Suzuki <suzuki>
+* Bug fix for insertion of messages in +drafts.
+	Tomoharu Suzuki <suzuki>
+* mew-mail-domain-list and mew-draft-header-domain are defined.
+You can complete your domain after by "M-TAB" in draft header.
+* Bug of auto-fill-{hook & function} in mew-draft-mode is fixed.
+
+
+0.82 (01/05/95) gnu.emacs.sources release
+
+* mew-mime-syntax adopts vector instead of list.
+* Speed hack for mew-fields-get-as-list .
+* Set end multipart in mew-mime-syntax for mew-summary-save.
+* Coding systam bug of mew-summary-save is fixed.
+* mew-summary-save bug that mishandles message/rfc822 is fixed.
+* mew-part-make regex bug fix for Emacs 19.
+
+
+0.81 (12/23/94) gnu.emacs.sources release
+
+* mew-summary-[message-]-{up,down} goes to * mark, too.
+* When ((oldmsg = newmsg) & (oldpart != newpart) 
+mew-summary-show displays the message.
+* mew-draft-insert-signature, at last! (Set mew-signature-file.)
+This function will be improved to handle multiple signature files.
+* Highlite patch. mew-xemacs.el is removed.
+	Sakai Kiyotaka <ksakai>
+* File existence check in mew-summary-{show, display}
+	Yoshinari NOMURA <nomsun>
+* Set mew-summary-buffer-disp-msg-current in mew-message-next-msg.
+	Sakai Kiyotaka <ksakai>
+* mew-summary-reply takes care of Apparently-To:.
+* name change: canform -> localform.
+* Bug fix that CD: of CT: message is not displaied.
+* CD: decode bug fix.
+
+
+0.80 (12/14/94) mew-dist release
+
+* Never ask "process marks?" if range is update at rescan.
+* The save hack to goto-folder.
+* Regex for mew-mail-address-list.
+	Yoshinari NOMURA <nomsun>
+* Bug fix for mew-summary-{refile, display-{top,bottom}}.
+	Yoshinari NOMURA <nomsun>
+* Bug fix for mew-alist-load concerned with null readable file.
+	Yoshinari NOMURA <nomsun>
+* (call-interactively mew-summary-recenter) bug fix.
+	Yoshinari NOMURA <nomsun>
+* Bug fix for mew-multi-{type,description} that cause an error if it is 
+called on the bottom boundary.
+* mewencode, mewdecode, and mewcat are implemented.
+
+
+0.79 (12/08/94) mew-dist release
+
+* mew-header-split is re-written with aref instead of string-match to
+fix a bug.
+* application/x-graph.
+	Youki Kadobayashi <youki-k>
+* AF support.
+* Variable name change: mew-mule-charset-spool -> mew-mule-charset-local.
+
+
+0.78 (12/08/94) mew relase
+
+* Mew MIME canonical form is changed to handle recuresive MIME
+message. So, MIME syntax analyzer is also drastically changed.
+* truncate-lines for summary-mode.
+* When mew-summary-cache-file is inserted, mew-summary-mode is always
+called.
+* MIME boundary includes preceding CRLF(yes, LF on UNIX). 
+mew-summary-save and analyzer obey this spec.
+
+
+0.77 (11/30/94) mew-dist release
+
+* Introduction of cache based scan.
+* mew-fib.el is created. 
+* Tiny bug of mew-summary-quite is fixed.
+
+
+0.76 (11/25/94) mew-dist release
+
+* mew-content-attr rather than mew-file-attr for encoding in 
+mew-draft-make-multi[part]
+* C-cC-q (mew-kill-buffer) for 
+	watch buffer, 
+	summary mode, 
+	and
+	mew-multi-find-file.
+	mew-multi-find-new-file.
+* Refine mew-multi-find-file.
+* Refine mew-multi-external-body.
+* Define mew-multi-find-new-file.
+* mew-multi-remove and mew-multi-delete.
+
+
+
+0.75 (11/22/94) mew release
+
+* run-hooks instead of funcall for mew-cite-hook.
+* Stop inserting "\n" after mew-cite-format. "\n" is appended to
+mew-cite-format instead.
+* The arguments of mew-summary-scan are changed for update.
+* Update bug fix in mew-summary-scan.
+* Mime multipart composing method is changed. It become
+statefull(mew-multi-syntax) to support Content-Description: (and Mark
+based composing in the near future).
+	c, l, m, r are done.
+	a, d, e, f are not yet.
+	T, D are added.
+
+
+0.74 (11/17/94) mew release
+
+* Demo strings are always centerized.
+* mew-eof-string display bug fix.
+* mew-cite-format is defined.
+* Exclusive control for inc, scan, exec, pack, and sort.
+* Introduce the concept of "update".
+* "?" searches on range of displayed messages.
+* Correct typos in mew-draft-mode-map. 
+	Sakai Kiyotaka <ksakai>
+* kill-buffer *mew-watch* at mew-summary-quit.
+
+
+0.73 (10/19/94) gnu.emacs.sources release
+
+* Add mew-emacs19-p to mew-window-pop.
+	Yoshiaki KASAHARA <kasahara>
+* defvar instead of setq for mew-path.
+	Sakai Kiyotaka <ksakai>
+* Add bufferp to mew-mark-process-all-folders.
+	Ishikawa Ichiro <ichiro>
+
+
+0.72 (10/18/94) mew-dist release
+
+* mew-summary-cite will cite whole message including header if prefix is
+given(i.e. C-uC-cC-y).
+* mew-header-extract-addr extract a string from last <> pair.
+* mew-mark-process-all-folders is defined for kill-emacs-hook.
+* mew-loop-depth is defined for long field safety.
+* mew-summary-scroll-up's bug fix.
+	Sakai Kiyotaka <ksakai>
+* mew-mime-decode-region's *critical* loop error is fixed to introduce
+mew-decode-marker.
+* CTE: quoted-printable for 8bit charset.
+* Bug fixes for XEmacs code.
+	Sakai Kiyotaka <ksakai>
+* p/n on message buffer goes to previous/next part.
+	Sakai Kiyotaka <ksakai>
+
+Following are contributed by
+	 Motonori NAKAMURA <motonori>.
+
+* toggle summary only and summary & message when p/n on top/bottom.
+* "^-*$" instead of "^$" to show draft.
+* When replys your own message, never change To: and Cc:.
+* Never insert list:; into To: from To: list:;.
+* If body is empty on draft, ignore this body creating multipart.
+* Now we can find-file any file on drafts/mime/1/.
+
+
+0.71 (10/15/94) mew-dist release
+
+* ISO-8859-1 support for Emacs 19.
+* mew-draft-charset-guess-letter guess charset only inbody excluding
+header.
+* Stops to user " " for boundary. " " is replaced by "_".
+* Some bugs of mew-summary-save are fixed.
+* Tiny bug of mew-multi-part-directory is fixed.
+	KIZU takashi <kizu>
+* Improvement of mew-summary-scroll-up.
+	Sakai Kiyotaka <ksakai>
+* -f option is added when execute gzip or compress with "-d" to avoid
+uncompression failer due to a existence "basename" file.
+* Remove string-to-char-list from mew-base64-[en,de]code-string.
+* Define mew-y-or-n-p.
+* Non MIME analysis mode now clenas up message header.
+* Default value of mew-fcc is now nil.
+* XEmacs(Lucid Emacs) support.
+	"Matthew Liggett" <mliggett>
+* Make fcc folder if not exist.
+* X-Mailer.
+
+
+0.70 (10/04/94) mew-dist release
+
+* Support hilight in draft mode. See mew.dot.emacs.
+* mew-eof-string
+	Sakai Kiyotaka <ksakai>
+* *IMPORTANT CHANGE* mew-summary-print  "!" -> "#"
+* *IMPORTANT CHANGE* mew-summary-refile-again -> "!"
+* *IMPORTANT CHANGE* mew-summary-toggle-disp-msg  "t" -> "v"
+	to reserve to *t*hread
+* auto decryption for PGP's signed message.
+* Multipart composing in draft mode is depeloped to make flat multipart.
+  This intends to support mark based PEM & PGP composing.
+* Comment out (kill-all-local-variables) in mew-draft-mode to avoid
+  killing mew-draft-buffer-header
+
+
+0.69 (09/27/94) mew release
+
+* Non MIME analysis mode is added.
+
+
+0.68 (09/25/94) mew-dist release
+
+* Typo :: image/mpeg -> video/mpeg
+* mew-summary-search-mark never ask folder.
+* Support long alias whose lines are separated by comma.
+	Sakai Kiyotaka <ksakai>
+* Delete recursive paretheses(comment) in header field.
+	Sakai Kiyotaka <ksakai>
+* mew-mime-decode takes care of charset to convert codeset.
+* Ignore error that no content-* exists after boundary.
+* mhc by nomsun.
+
+
+0.67 (08/30/94) gnu.emacs.sources release
+
+* Empty body mail bug is fixed.
+* Mule 1.1 PL04 byte-compile problem is fixed.
+* make-variable-buffer-local -> make-local-variable in mew-draft-mode.
+* mew-mime-reply is removed.
+
+
+0.66 (08/26/94) mew-dist release
+
+* Header sort/insertion algorithm is improved.
+* kill-buffer on watch sentinel's bug is fixed.
+* Many patches are merged.
+* never quire japanese.el or european.el.
+
+
+0.65 (08/25/94) mew-dist release
+
+* Many functions are refined to use while instead of recursion to speed up.
+* Make mew-summary-exec much faster. :)
+* mew-multi-find-file's bug fix.
+* mew-message-[mode-]hook are defined.
+* Mew menu is defined for Emacs 19.
+* mew-summary-{rescan, pack, sort} ask you to process mark when messages 
+are marked.
+* mew-summary-scroll-{up, down} and mew-summary-prev-page check if cursol
+is on message or part.
+* run-hooks refine in mew-draft-mode.
+
+
+0.64 (08/23/94) gnu.emacs.sources release
+
+* mew-base64-char256 now expects nil.
+* mew-draft-cite sets mark for C-xC-x.
+* Byte-compile check on Mule2.
+* mew-summary-show action for multipart on the end of summary buffer is
+refined.
+
+
+0.63 (08/22/94) mew-dist release
+
+* mew-file-suffix and mew-mime-switch -> mew-mime-content-type
+* mew-mule-charset-alist and mew-charset-coding -> mew-mule-character-set
+* Whereas mew-assoc-match is obsolated, mew-assoc is defined.
+* mew-mule-charset-{spool, integrity} are defined.
+
+
+0.62 (08/20/94) 
+
+* Mode line of summary mode now contains how many mails are left.
+* Support 2 styles of dist.
+* mew-header-delete-at supports %.
+* mew-draft-kill may rm mimefolder.
+* mew-mime-start-process now uses temporary file rather than pipe to
+speed up.
+* Get elisp whois back to command whois for mew-whois.
+
+
+0.61 (08/19/94) internal release
+
+* mew-field-visible and mew-field-invisible are defined.
+* quoted-printable decoding of header support.
+* gnus linking.
+
+
+0.60 (08/18/94) internal release
+
+* one more mew-summary-multipart-delete's bug fix.
+
+
+0.59 (08/17/94) internal release
+
+* mew-summary-redist is defined.
+* Initial PGP implementation.
+* A bug that cursol moves to the end of buffer when
+mew-summary-recenter-p is nil is fixed.
+* Coding system in draft mode is refined.
+
+
+0.58 (08/17/94) internal release
+
+* mew-header-delete-ws[2]'s regex is fixed to support multi () pairs.
+* new mew-header-insert-from-cache supports multi header fields.
+* mew-watch-sentinel timing bug is slightly fixed.
+
+
+0.57 (08/16/94) internal release
+
+* mew-draft-mode-map refine.
+* mew-draft-character-code-mule is defined.
+* backgroud sending is supported.
+* fields other than mew-message-visible-fields hides over the top. 
+Type DEL to see them.
+
+
+0.56 (08/15/94) internal release
+
+* auto-fill-function's typo is fixed.
+* Make mew independ on tiny-mime. Now original code for base64
+decoding is merged.
+* Support for Nemacs is completely quited.
+* Define file-coding-system-for-read in mew-draft-mode.
+* Support multi-value of Reply-To:
+* mew-mail-address-list is defined.
+* condition-case for mew-mime-canform & mew-mime-syntax to read *all* 
+messages including error format mail.
+* mew-summary-save now support message copy.
+
+
+0.55 (07/19/94) gnu.emacs.sources release
+
+* mew-summary-refile moves to mew-refile.el so that nomsun can maitain.
+* Redisplay bug of mew-summary-refile is fixed.
+* auto-fill-hook for 18, auto-fill-function for 19.
+* Set -list for the first argument of pick to overwirte -sequence
+by shutton
+* "<" and ">" for summary mode.
+* mew-summary-recenter always keep the line center to avoid hidden
+mulipart problem.
+* Minor change for mew-set-environment to avoid calling
+mew-header-delete-ws with nil.
+* "t" of mew-summary-mode-map for mew-summary-toggle-disp-msg.
+
+
+0.54 (07/15/94) gnu.emacs.sources release
+
+* (marker-position (mark-marker)) instead of (mark) in mew-draft-cite. 
+(mark) causes error on Emacs 19 if no mark exists. (mark t) also
+causes error on Emacs 18;(
+* mew-draft-auto-fill is defined.
+* mew-input-address is refined.
+* EUC support for mew-insert-file.
+* (sit-for 0) for mew-summary-show.
+
+
+0.53 (07/15/94) internal release
+
+* mew-url refine.
+* (and (boundp 'MULE) *noconv*)) for non-Mule in mew-insert-file
+* Quoted string that contains separotor can be splited correctly now.
+
+
+0.52 (07/12/94) ip-connection release
+
+* Documentation for mew-summary-mode and mew-dtaft-mode.
+
+
+0.51 (07/11/94)
+
+* define mew-delete-line
+* mew-minibuffer-alias bug fix
+* mew-insert-file cares kanji-flag or something.
+
+
+0.50 (07/11/94) internal release
+
+* This version or later is called beta.
+* mew-summary-reply can hangle part.
+* N on last part goes to next message.
+* Alias is expaned when string ends "@".
+* Structure of mew-mime-syntax is changed to support content-* family.
+* kanji flag reset for mime decode.
+* regexp-quote for boundary
+
+
+0.49 (07/07/94) mew-dist release
+
+* "|" for mew-summary-pipe-message
+* "y" for mew-summary-save.
+* mew-summary-refile supports part.
+* mew-summary-print supports part.
+* mew-summary-rmm supports part.
+* mew-summary-undo-all is defined.
+* mew-summary-refile reports when the message is marked as refile.
+* mew-summary-search-mark is defined.
+* mew-summary-search can handle complicated pick syntax.
+* last-command-char instead of last-input-char for emacs 19.
+* Reduce warning at batch-byte-compile.
+* native check for message :)
+* MIME canonical form creactor's case-sensitive bug fix.
+* mew-summary-goto-folder uses mew-window-configure when folder exists.
+
+
+0.48 (07/04/94) internal release
+
+* concat rather than expand-file-name because its spec was changed on 19.
+* mew-message-citation bug fix.
+* mew-summary-show-direction is defined; 'up 'down 'next 'stop
+* N and P go to next message in part semantics.
+* Prefix argument support for mew, mew-read.
+* Optional argument *notforce* for mew-summary-display for 
+mew-summary-display as a command and mew-summary-refile.
+* mew-summary-{inc, refile, rmm} call mew-summary-multipart-delete.
+* mew-draft-make-mime kill mark of mew-draft-buffer-multipart.
+* mew-draft-mode-map redefine.
+* mew-[summary-]send refine.
+
+
+0.47 (07/01/94) mew-dist release
+
+* alias expantion support.
+* comment of header field (i.e. (.*)) is now to be deleted.
+* multipart remain at mew-summary-exec bug fix.
+* mew-summary-message-{up, down} are defined.
+* many functions are translated into macros.
+* keep-lines for inc and scan.
+* mew-draft-keyswitch is made to be general with mew-draft-null-function
+
+
+0.46 (07/01/94) internal release
+
+* Multi mode is integrated into Draft mode. So, many functions are
+drastically changed. mew-draft-keyswicth is defined.
+
+
+0.45 (06/30/94) internal release
+
+* Mime mode is integrated into Summary mode. So, many functions are
+drastically changed.
+* Current message mark "+" is deleted on inc and scan.  *
+* mew-summary-buffer-direction is defined.
+
+
+0.44 (06/28/94) mew-dist release
+
+* mew-summary-forward uses multi mode. So, mew-draft-forward and
+mew-default-charset are obsolated.
+* Refile support folders that contains subfolders.
+* mew-insert-file cares kanji-fileio-code for Nemacs.
+* mew-summary-untar into mew-summary-uudecode.
+* mew-summary-edit into mew-summary-reedit.
+* Some messages are changed.
+* mew-draft-cite widen message buffer with save-restriction.
+* Super cite support.
+* "f" of mew-multi-mode-map double booking bug fix.
+* mew-summary-mode-hook is defined. mew-{mime,multi}-mode-hook are not
+defined 'cause mime and multi mode will be integrated to summary and
+draft mode.
+
+
+0.43 (06/24/94) mew-dist release
+
+* mew-field-get-{line,value} contains "^-*"-don't-care and return nil
+bugs in certain cases. They are fixed.
+
+
+0.42 (06/24/94) mew-dist release
+
+* RET of summary mode for mew-summary-scroll-up
+* ESC RET of summary mode for mew-summary-scroll-down
+* M-l instead of C-l of summary mode for mew-summary-recenter 
+
+
+0.41 (06/23/94) internal release
+
+* mew-field-get-{line,value} support multiple fields.
+* mime decode for header of message/rfc822 
+* mew-multi-mode-map "f" for mew-multi-find-file 
+* mew-multi-mode-map "q" for mew-multi-goto-draft
+* mew-multi-mode-map "\C-c\C-m" for mew-multi-make-multi
+* mew-window-{stack,push,pop} are defined.
+* unwind-protect and save-buffer bug at forward and etc is fixed.
+* mew-header-extract-addr can now extract address that doesn't contain
+@ mark.
+* mew-refile-pair bug fix.
+* mew-draft-kill's in multi buffer kill bug fix.
+* mew-summary-exec moves point to the nearest message.
+
+
+0.40 (06/20/94) internal release
+
+* multi mode refine.
+
+
+0.39 (06/20/94) internal release
+
+* confirmation for mew-summary-{sort, untar, unshar, quit}
+* M-t for mew-summary-untar
+* M-s for mew-summary-unshar
+* O   for mew-summary-pack
+* initial version of multi mode.
+* C-l for mew-summary-recenter
+* mew-draft-to-mime
+* C-u M-x mew execute mew-summary-rescan
+* mew-refile-pair downcases folders.
+* mew-mime-display-part kills mark for citation.
+
+
+0.38 (06/17/94) internal release
+
+* mew-summary-print widens the message and ask.
+* mew-mime-print
+
+
+0.38 (06/17/94) internal release
+
+* MIME canonical form creator refine.
+* mew-mime-decode[-region]
+
+
+0.37 (06/17/94) 
+
+* mew-summary-{unshar,untar}
+* mew-mime-store(still buggy)
+* mew-mime-save
+* mew-mime-reply
+* mew-summary-quit
+
+
+0.36 (06/15/94) internal release
+
+* mew-mime-switch macro make type downcase.
+* mew-mime-show calls mew-mime-display next?
+	Do you like recuresive like mew-mime-show-next?
+* mew-window-configure bug fix.
+* mew-summary-search now take care of date completion.
+* mew-mime-display[-next,-prev]
+* mew-mime-{call,start}-process
+
+
+0.35 (06/15/94) internal release
+
+* j for mew-summary-jump-message
+* reply and forward make sure whether message exists.
+* multi-forward makes sure whether mark exists.
+* mew-input-* are defined.
+* function names are drastically changed.
+* kill-region is replaced with delete-region for no side effect.
+* MIME decode and enjoy-part display messages.
+* no content-type's region was started with null line. Now after null line.
+* draft-send-letter's undo bug fix
+* draft-make-mime force goto-char to content-type
+* no subject, no more bug.
+
+
+0.34 (06/13/94) internal release
+
+* mime mode functions are drastically modified.
+* mew-summary-print
+* mew.el is splited into mew.el, mew-refile.el, mew-ftp.el, and mew-pem.el.
+* exclusive process excuting for sort and pack.
+* mew-mule-charset-alist, mew-default-charset are defined.
+* mew-draft-forward's boundary is refined.
+* mew-current-* function is simplified.
+* yet another collecting folder list algorithm refine.
+
+
+0.33 (06/13/94) internal release
+
+* process I/O charset for inc, scan, send, pick
+* Even if mew-buffer-mime is killed, it is now setted to mime mode.
+* mew-summary-searh
+
+
+0.32 (06/09/94) internal release 
+
+* collecting folder list algorithm refine.
+* VM like refile rule is supported(nomsun).
+* cache attribute change (nomsun)
+* ange-ftp linking (m-sakura)
+* kanji code setting for inc & scan
+
+
+0.31 (06/09/94) mew-dist release
+
+* point move to bottom of buffer on "x".
+* string-match instead of string= for mime version.
+
+
+0.30 (06/07/94) internal release
+
+* mew-summary-edit never choose new draft in +drafts.
+* inc and scan refine. Fix scan: no messages.
+* scan now takes ranges
+* can undo citation 
+* (unwind-protect save-buffer) so that draft never already exists
+* reply header refine. i.e. Reply-To:, From:, To:, Cc:.
+
+
+0.29 (06/07/94) internal release
+
+* (run-hooks 'text-mode-hook) in draft mode.
+* mew-summary-sort, mew-summary-edit, mew-summary-pack
+* refile ordering bug fix
+
+
+0.28 (06/07/94) internal release
+
+* mew-summary-show recenter bug fix.
+* mew-mail-domain is now "" instead of nil.
+* yet another mew-reply-to setting bug fix.
+* "w" of mew-summary-mode-map is now mew-summary-send instead of mew-send.
+* If mew-visit-next-message is nil, never move to next message even at 
+the end of buffer.
+* "*", N, P for mew-mark-back. I'll be back!
+* default-directory change in draft mode.
+* text-mode-syntax-table in draft mode.
+* mew-from is defined.
+* exec message.
+
+
+0.27 (06/06/94) internal release
+
+* mew-reply-to setting bug fix.
+* draft-mode paragraph arrange for M-q.
+* citation tag is cited from cache. This enables a single part citation.
+* mew-summary-re is defined for xxxxx message number.
+* bug that message scrolls at refile is fixed.
+
+
+0.26 (06/06/94) internal release
+
+* mew-match is defined.
+* forwarding adopts multipart/digest instead of message/rfc822 to support
+multi message forwarding.
+* multi message forwarding.
+
+0.25 (06/03/94)
+
+* mew-summary-display is defined. So, reply, forward, refile, n, and p
+use this function.	
+* current-window-configuration bug fix.
+* page-delimiter works now(default is ^^L).
+* rmm and refile call mew-summary-display-next.
+* mew-draft-header is defined. Fcc: and Reply-To: are ignored if 
+corresponding valuable is nil.	
+* "w" for mew-send in summary mode.
+* syntax of "Draft-Folder: +drafts" in mh_profile is allowed.
+* undo calls mew-window-configure.
+
+
+0.24 (06/01/94) 
+
+* reply header setting bug fix (space is needed)
+* define mew-draft-mode-hook
+* bootstrap error function refine
+* boundary is now case sensitive
+* multi-lingual charset guess for Mule
+
+
+0.23 (05/31/94) internal release
+
+* mew-send & mew-read check whether mew is already executing.
+* execulusive marking and undo.
+* draft buffer name looks like +drafts/num.
+* demo becomes user option
+* reply-to created from mew-mail-domain
+* simple describe mode
+
+
+0.22 (05/30/94)
+
+* current window configuration save for reply and send
+* save draft when buffer is created for execusive draft creation
+* side effect of previous mark for citation is fixed
+* mew-path is used to distinguish whether mew is running.
+* initial forward function (of course MIME encapsulation)
+
+
+0.21 (05/26/94) internal release
+
+* citation is modified to copy from message buffer
+* rmm bug fix
+
+
+0.20 (05/24/94)
+
+* initial composer and draft mode functions
+	sign, encryption, make mime, send letter, citation, and kill draft
+* mime decoder refine
+
+
+0.19 (05/23/94) internal release
+
+* set part nil when mime quit (to read same part when get back from
+summary mode)
+* define default from directory for refile folder guess
+
+
+0.18 (05/19/94) internal release
+
+* Mew means to "Message interface to Emacs Window" for NetNews
+support in the future
+* MIME subprocess support for Nemacs
+
+
+0.17 (05/18/94) internal release
+
+* Mail/.folders for quick start
+* ignore folders prefix list support
+* recursive folders is now default
+
+
+0.16 (05/17/94) internal release
+
+* 1 message deleting bug fix
+
+
+0.15 (05/09/94) internal release
+
+* refile (not exclusive marking yet)
+* delete
+* mark exec
+* cache validation
+
+
+0.10 (05/05/94) internal release
+
+* perfect MIME viewer
+* asynchronous inc
+* good refile guess algorithm form folders list
+
+** draft-ietf-pem-mime-alternative-00.txt is obsolete but mew
+continue to support because mew needs tag in mail header to check old
+style PEM message.
+** draft-ietf-pem-mime-04.txt support someday.
+
+
+0.03 (04/27/94) internal release
+
+* asynchronous scan (not inc yet)
+* dynamic window configuration
+* press SPC to select and scroll message
+* PEM decription (not merged encryption from mhpem yet)
+* LRU cache message algorithm (not validation yet)
+* sorted header fields
+* Mew means "Mail interface to Emacs Window"
+
+0.00 (03/22/94)
+
+* initial version 
+* boot strap
+* Mew means "MH interface to Emacs from WIDE"
+
+--End of file

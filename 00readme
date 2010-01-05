@@ -1,0 +1,53 @@
+			 <Readme for Mew 6.4>
+			    Kazu Yamamoto
+			   December 2, 2009
+
+This is one of beta releases of Mew 6.4.
+
+			     <Platforms>
+
+Mew now supports Emacs 21.4 or later only. Mew doesn't support earlier
+versions nor XEmacs.
+
+Please use Emacs 22.x unless you have a particular reason. Mew does
+support Emacs 23.x.
+
+			      <Web Site>
+
+Useful information may be found from the following web page:
+
+	http://www.Mew.org/
+
+			    <Installation>
+
+(1) Type './configure'.
+
+(2) Type 'make'.
+
+(2.1) Mew's info is formatted by Emacs 22.x. So, the info could not be
+visible with other Emacsen. In this case, type 'make info' to format
+the info.
+
+(2.2) If you want to format the Japanese info, type 'make jinfo'.
+
+(3) Type 'make install'.
+
+If you have the "install-info" command, the following line will be
+automatically added to the "dir" file.  Otherwise, add it by yourself.
+
+---
+* Mew: (mew.info).      Messaging in the Emacs World
+---
+
+(3.1) If you want the Japanese info, type 'make install-jinfo'. If you
+have the "install-info" command, the following line will be
+automatically added to the "dir" file.  Otherwise, add it by yourself.
+
+---
+* Mew-J: (mew.ja.info).  Messaging in the Emacs World
+---
+
+(4) See info for configuring a site file/.emacs/.mew.el.
+    See also "mew.dot.emacs" and "mew.dot.mew".
+
+--End of file

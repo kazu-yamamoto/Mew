@@ -1,0 +1,39 @@
+.\" Unlimited permission is granted to use, copy, distribute and/or modify
+.\" this file.  There is NO WARRANTY.
+.TH SMEW 1 "February 17, 2008"
+.SH NAME
+smew - search related messages from Mew's database file
+.\"
+.SH SYNOPSIS
+smew
+.RI myid
+.RI [ mydb
+.RI [ mydir ]]
+.\"
+.SH DESCRIPTION
+The
+.B smew
+utility searches related messages from a Message-ID database file with SQLite 3 for Mew.
+.PP
+.I myid
+is a Message-ID of the message to search.
+.PP
+.I mydb
+is a database file name.  (default: "~/Mail/id.db")
+.PP
+.I mydir
+is a directory part of the message in the database. Note that messages are contained as a relative path from "~/Mail". If multiple messages are found by
+.I myid
+, the first found one is preferred. However, the message whose directory is
+.I mydir
+is preferred to the first one.
+.\"
+.PP
+The options are as follows:
+.TP 8
+.B \-c
+Search a parent message only.
+.TP 8
+.B \-p
+Search a child message only.
+

@@ -1,0 +1,164 @@
+.\" Copyright (C) 2001-2003 Mew developing team.
+.\" All rights reserved.
+.\" 
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 3. Neither the name of the team nor the names of its contributors
+.\"    may be used to endorse or promote products derived from this software
+.\"    without specific prior written permission.
+.\" 
+.\" THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+.\" PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+.\" LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+.\" CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+.\" SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+.\" BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+.\" WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+.\" OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+.\" IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+.TH INCM 1 "December 25, 2001"
+.SH NAME
+incm - Incorporating new mails for Mew
+.\"
+.SH SYNOPSIS
+incm
+.RI [ options ]
+.\"
+.SH DESCRIPTION
+The
+.B incm
+utility incorporates new mails from the mbox or the maildir to
+Mew's inbox folder.
+.PP
+The options are as follows:
+.TP 8
+.B \-a
+Retrieve all mails from maildir/{cur,new} for maildir.
+.TP 8
+.B \-b
+Backup mails.
+mbox: No truncate mbox file.
+maildir: To maildir/cur directory.
+.TP 8
+.BI \-c
+Use the Content-Length: field, instead of the "From " line, 
+as a mail separator for mbox.
+.TP 8
+.BI \-d " path"
+Path to mbox/maildir.
+If
+.IR path
+is a file, mbox is assumed. If
+.IR path
+is a directory, maildir is assumed.
+.TP 8
+.BI \-m " path"
+The same as the
+.B \-d
+option.
+.TP 8
+.BI \-s
+Read one mail from stdin instead of mbox/maildir.
+.TP 8
+.BI \-i " inboxdir"
+A path to the inbox directory.
+.TP 8
+.B \-u
+Don't touch ".mew-mtime".
+.TP 8
+.B \-f
+Preserve Unix From (Envelope Sender) line in mbox case.
+.TP 8
+.BI \-p " mode"
+Specify file mode that creates in mbox case.
+.TP 8
+.B \-o
+Use the suffix when creating messages.
+.TP 8
+.BI \-x " suffix"
+Use this 
+.IR suffix .
+.TP 8
+.B \-h
+Display this help message.
+.TP 8
+.B \-v
+Display the version.
+.PP
+.SS mbox
+For mbox, the mail separator is "From " in the beginning of lines.
+The
+.B incm
+utility does not convert ">From " to "From " in the beginning of lines
+in the body.
+On Solaris, Content-Length: should be used with the 
+.BI \-c
+option to tell the end of mail.
+.PP
+To lock mbox, a lock file("<user>.lock"), 
+flock() or lockf(), and open(O_EXLOCK) are used.
+.PP
+.SS maildir
+For maildir, no lock and no separator are necessary.
+.PP
+Consider the following situation:
+.nf
+        cur/{1,2}
+        new/{3,4}
+.fi
+.PP
+Executing
+.B incm
+without the options results in:
+.nf
+        cur/{1,2}
+        new/{}
+        to inbox: {3,4}
+.fi
+.PP
+Executing
+.B incm
+with the
+.B \-a
+option results in:
+.nf
+        cur/{}
+        new/{}
+        to inbox: {1,2,3,4}
+.fi
+.PP
+Executing
+.B incm
+with the
+.B \-b
+option results in:
+.nf
+        cur/{1,2,3,4}
+        new/{}
+        to inbox: {3,4}
+.fi
+.PP
+Executing
+.B incm
+with the
+.B \-a
+option and the 
+.B \-b
+option results in:
+.nf
+        cur/{1,2,3,4}
+        new/{}
+        to inbox: {1,2,3,4}
+.fi
+So, if both options are specified, 
+messages are retrieved multiple times.
+.\"

@@ -1,0 +1,254 @@
+Mew 5.1 (2006/07/14)
+
+Mew 5.1 release candidate 3 (2006/07/12)
+
+* Fixing "Virtual mode vs 'i'" problem.
+* mew-summary-form-mark-spam works only in the inboxes.
+* C-cC-m for mew-passwd-change.
+
+Mew 5.1 release candidate 2 (2006/07/05)
+
+* Workaround for PGP hang up.
+* ${emacsbin} hack for configure.in.
+	Tatsuya Kinoshita <tats>
+* A bug fix for suffix.
+* A bug fix for mew-max-draft-buffer().
+	Tatsuya Kinoshita <tats>
+* Using "RFC822" to fetch an entire message to turn the Seen flag
+  "on". (But keep it "off" when fetching a header only)
+
+Mew 5.1 release candidate 1 (2006/06/19)
+
+* Fixing the SSL/TLS problem.
+* RFC 2822 allows "'" for local-part but Mew removed it. This bug
+  has been fixed.
+
+Mew 5.0.53 (2006/06/06)
+
+* "C-uB" decomposes any files in the current message.
+* "B" is now a part sensitive. It decomposes messages embedded in the
+  current message. If executed on a part, only the message part is
+  saved to a folder.
+* Using BODY.PEEK[] instead of RFC822 not to set the SEEN Flag.
+	NAKAMURA Motonori <motonori>
+* "ta" toggles all threads.
+* Fixing "md5" vs "k/" problem.
+* "I" now automatically displays the current message.
+* "i" is inc in +folder and is "s" + "update" in a remote folder.
+
+Mew 5.0.52 (2006/05/25)
+
+* Bug fixes for mew-use-master-passwd.
+	Kan Sasaki <sasaki>
+* Non-blocking connect() is not used for SMTP/TLS.
+* Implementing the master password.
+* ";" also displays IP addresses.
+* Defining mew-summary-form-mark-spam.
+* Defining mew-smtp-auth-plain-authorize-id to enabling to specify
+  the optional "authorize-id". 
+
+Mew 5.0.51 (2006/05/15)
+
+* A workaround for mew-addrstr-parse-syntax-list().
+* A patch for Google Desktop.
+	Shuichi KITAGUCHI <ki>
+* A temporary workaround for SSL timing problem.
+* A bug fix for mew-summary-info on mew-suffix.
+* Speed up for NNTP in the case of last:n.
+* All variables can be defined in ".mew.el", not in ".emacs".
+* The "-x" option to "mewl".
+
+Mew 5.0.50 (2006/04/28)
+
+* A patch for mew-highlight-header-address-region.
+	Tsutomu OKADA <tsutomu.okada>
+* Making mew-max-draft-buffer friendly to mew-suffix.
+	INOUE Tomohiro <ml>
+* A patch for the problem of Spotlight vs mew-suffix.
+	Nobuya WATANABE <nobuya>
+* If mew-use-suffix is non-nil, Mew does not set file type.
+* A patch for WDS.
+	INOUE Tomohiro <ml>
+* Functions for WDS.
+* Spotlight key is "mew" and the file type is "MewX".
+* getline() -> Getline() for Windows.
+	INOUE Tomohiro <ml>
+* Defining mew-suffix. Please don't set it t at this moment.
+  This is not tested well.
+* mew-max-draft-buffer() can now treats numbers larger than 9.
+* Back port of PLAIN of SMTP AUTH.
+* PLAIN/LOGIN of SMTP AUTH changed to the more popular scheme.
+	kanaoka
+* Fixing the "invisible vs remote folders" problem!
+* Defining mew-smtp-submission-family.
+* Defining mew-summary-show-pause.
+	KOIE Hidetaka <hide>
+* Supporting DKIM-Signature:.
+* A patch for contrib/mew-browse.el.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-header-decode-error().
+* When make-network-process with :nowait t returns nil,
+  Mew falls back explicitly.
+* A bug fix for a failed SMTP process.
+* Defining mew-use-smtp-auth to disable SMTP AUTH
+  of a broken server.
+* If an SMTP server returns the AUTH capability, 
+  Mew tries authentication automatically.
+* A fallback mechanism from the Submission port (587) to 
+  the SMTP port (25). Set mew-use-submission to use this mechanism.
+  If mew-use-submission is t AND mew-smtp-port is "smtp" AND
+  Mew is running on Emacs 22, this mechanism does work.
+  Non-blocking connect() is used for this purpose.
+* "C-uk/" asks a user to input folders.
+* "k?" for Google Desktop. (testing)
+* A bug fix for mew-mode-input-file-name()
+	Hideyuki SHIRAI <shirai>
+* A bug fix for mew-net-status-clear().
+* A small fix for "?" and "/".
+* Check close() status for incm.
+	Yasunari Momoi <momo>
+* Setting completion-ignored-extensions to nil in mew-attach-duplicate.
+* A bug fix for mew-pick-parse-open/close.
+* Spotlight hack.
+	Shuichi KITAGUCHI <ki>
+* EMACS => emacsbin in configure.in.
+	Shun-ichi TAHARA <jado>
+* Obsoleting mew-my-domains and mew-my-address-no-warning.
+  Defining mew-safe-addresses, mew-warn-domains, and
+  mew-safe-domains instead.
+
+Mew 4.2.53 (2005/09/07)
+
+* A mewl expression is converted to an expression native to 
+  each search engine when you use "k?" and "k/".
+* Changing mew-warn-my-address to mew-my-address-no-warning.
+* Defining mew-warn-addresses.
+	Ryota Hirose <hirose>
+* --with-elispdir and --with-etcdir for configure.
+	Shun-ichi TAHARA <jado>
+* mew-prog-vgrep was obsoleted. "/" also uses mew-prog-grep.
+* M-p and M-n can work in Virtual mode, too.
+* Google Desktop support.
+* Defining mew-warn-my-address.
+* "kc" now can select search method.
+  Currently Spotlight and Namazu are supported.
+* Disabling '"' temporally.
+* Merging "/" and "C-u/" to "/". And "C-u/" targets a region. 
+* Merging "?" and "'" to "?". "'" was obsoleted.
+* Byte-compiling all files.
+* A patch for mew-my-domains.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-my-domains. If addresses on To:/Cc:/Bcc: in a draft
+  are not matched to this domain lists, they turns red.
+* Binding case-sensitive for char-equal.
+	Hideyuki SHIRAI <shirai>
+* Defining mew-bcc.
+* Removing an initial value from mew-input-grep-pattern().
+* Using mac-set-file-type().
+* A bug fix for mew-addrstr-parse-syntax-list().
+* Fixing IMAP LIST.
+* "tr" retains the "*" mark.
+	KOIE Hidetaka <hide>
+* Fixing mew-transit-folder-alist.
+	Hideyuki SHIRAI <shirai>
+* Spotlight support. ("kM", "km", "k/")
+* Undo if "C-g" is typed when charset is asked in a draft.
+	Hideyuki SHIRAI <shirai>
+* "[Apple Key] + click" executes Safari.
+* Supporting system-type 'cygwin'.
+	Tomoyuki Murakami <tomoyuki>
+	Hideyuki SHIRAI <shirai>
+
+Mew 4.2.52 (2005/06/03)
+
+* Implementing "mli".
+* Displaying status of "I" in Thread mode.
+* mew-summary-input-file-name appends a default file name
+  if a user specified a directory only.
+	Hideyuki SHIRAI <shirai>
+* "I" now works in Thread mode.
+* "li" copies a message to an IMAP folder.
+* DnD for Meadow.
+	INOUE Tomohiro <ml>
+	Hideyuki SHIRAI <shirai>
+* Fixing a problem of "i" vs mew-imap-delete.
+* A patch to contrib/mew-browse.el.
+	Hideyuki SHIRAI <shirai>
+* Displaying Bcc:/Fcc:/Dcc: with X-Mew: in +queue.
+	Hideyuki SHIRAI <shirai>
+* Obsoleting mew-use-retrieve. "i" is now equivalent to "s" + "update"
+  in remote folders.
+* Message to be deleted by sync are unlinked, not moved to +trash.
+	Shun-ichi TAHARA <jado>
+* A patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+
+Mew 4.2.51 (2005/05/26)
+
+* Obsoleting mew-prog-image/*-ext-arg.
+* Obsoleting mew-prog-*/*ml-ext-arg.
+* A patch for C-cC-e.
+	Hideyuki SHIRAI <shirai>
+* A bug fix for "o" and "C-uo"
+* A bug fix for ";"
+* A patch for contrib/mew-browse.el.
+	Tsutomu OKADA <tsutomu.okada>
+* Merging mew-browse-url-at-mouse().
+* A new implementation of "C-cC-e". See its manual.
+* "C-cC-y" in Summary was obsoleted. Use "C-uC-cC-e" instead.
+* "C-cC-t" in Summary was obsoleted.
+* A patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* A patch for contrib/mew-browse.el.
+	Shun-ichi TAHARA <jado>
+* Fixing a problem of "message buffer vs cache buffer".
+* mew-inbox-action-alist can be set in mew-config-alist.
+* Obsoleting both mew-case-input and mew-case-output. mew-case is
+  now introduced.
+
+Mew 4.2.50 (2005/05/16)
+
+* Setting overlay-arrow-string even if it is initialized.
+* Removing trailing white spaces for PGP/MIME signatures to catch up
+  to RFC 3156.
+* A patch for mew-syntax-format().
+	Hideyuki SHIRAI <shirai>
+* Allow 'D' and 'X' only in $inbox when mew-inbox-action-alist is
+  used.
+* A patch for mark undo.
+	KOIE Hidetaka <hide>
+* C-xC-s in Draft mode was moved to the share map.
+* A DnD patch to catch up to Emacs current.
+	Kenichi Niioka <niioka>
+* "C-cC-k" calls mew-summary-visible-buffer() anyway.
+* "mewdecode -q" treats =CRLF.
+* A patch for mew-nmz.el.
+	Hideyuki SHIRAI <shirai>
+* Visualizing field relating domain authentications effectively.
+* Bug fixes for "C-cC-f".
+* mew-summary-reset() removes a Message buffer.
+* Loading the theme file before .mew.el.
+* Handling GnuPG's marginal keys.
+	Koyama Mituru <mew>
+* DESTDIR in Makefile.in.
+	Shun-ichi TAHARA <jado>
+* Defining mew-ask-encoding.
+* Truncated messages retain case in X-Mew-UIDL:. "I" uses this case.
+	Hideyuki SHIRAI <shirai>
+* A patch for Makefile and configure.
+	KOIE Hidetaka <hide>
+* A patch for Makefile.
+	Eisaku YAMAGUCHI <eisaku>
+* "v" displays line numbers when off.
+* Defining mew-imap-spam-pattern. See its doc.
+* "C-cC-b" now can work in any folders.
+* A bug fix for "C-uj".
+	Shigeru Yasuda <yasuda>
+* "C-uj" jumps to the message whose message number is specified.
+* Defining mew-use-cut-file-name. If non-nil, 
+  the file path is pushed to the cut buffer of your window system
+  when typing "=".
+* Binding inhibit-eol-conversion to nil in mew-filter.
+
+
+
