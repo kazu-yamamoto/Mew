@@ -6847,7 +6847,7 @@ messages excluding one for each.
 クは、@samp{M-d} で付けることができます。
 @end ifset
 @ifset en
-There is also another mark, @samp{X}, which is like the mark @samp{X}.
+There is also another mark, @samp{X}, which is like the mark @samp{D}.
 Messages marked with @samp{X} are deleted when @samp{x} is typed. The
 @samp{X} mark can be put by @samp{M-d}.
 @end ifset

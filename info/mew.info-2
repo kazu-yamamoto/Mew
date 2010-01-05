@@ -1387,7 +1387,7 @@ you can put many the `D' marks at once. To achieve this, use `md'.
 Also, typing `Md' put the `D' mark to all duplicated messages
 excluding one for each.
 
-There is also another mark, `X', which is like the mark `X'.
+There is also another mark, `X', which is like the mark `D'.
 Messages marked with `X' are deleted when `x' is typed. The
 `X' mark can be put by `M-d'.
 
