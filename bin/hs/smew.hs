@@ -3,6 +3,7 @@
 -- smew.hs
 --
 
+import Control.Monad
 import Data.List
 import Data.Map (Map)
 import qualified Data.Map as Map
@@ -21,9 +22,7 @@ helpMessage :: String
 helpMessage = "[-p|-c] id [db [dir]]"
 
 help :: IO ()
-help = do
-    prog <- getProgName
-    hPutStrLn stderr $ prog ++ " " ++ helpMessage
+help = getProgName >>= hPutStrLn stderr . (++ " " ++ helpMessage)
 
 ----------------------------------------------------------------
 -- smew '<20081014.105255.216914257.kazu@iij.ad.jp>' ~/Mail/id.db #imap/kazu@localhost#imap/backup
@@ -41,9 +40,7 @@ nomalizePath mid db dir = do
     return $ Just (mid,db',dir')
 
 expandHome :: FilePath -> IO FilePath
-expandHome ('~':cs) = do
-    home <- getHomeDirectory
-    return $ home ++ cs
+expandHome ('~':cs) = getHomeDirectory >>= return . (++ cs)
 expandHome dir      = return dir
 
 noTrailingPathSeparator :: FilePath -> FilePath
@@ -59,8 +56,7 @@ main = do
     let opts = filter isOption args
         keys = filter (not.isOption) args
         cmd  = parseOpts opts
-    param <- parseKeys keys
-    maybe help (>>= printResults) (exec cmd param)
+    exec cmd `liftM` parseKeys keys >>= maybe help (>>= printResults)
   where
     isOption "" = False
     isOption (c:_) = c == '-'
@@ -149,29 +145,25 @@ dispatch func (mid,db,dir) = do
 ----------------------------------------------------------------
 
 searchPerant :: Search
-searchPerant conn mid dir = do
-    msgs <- selectById conn mid 
-    return $ map path $ chooseOne dir msgs
+searchPerant conn mid dir =
+    selectById conn mid >>= return . map path . chooseOne dir
 
 ----------------------------------------------------------------
 
 searchChild :: Search
-searchChild conn mid dir = do
-    msgs <- selectByParid conn [mid]
-    return $ map path $ chooseOne dir msgs
+searchChild conn mid dir =
+    selectByParid conn [mid] >>= return . map path . chooseOne dir
 
 ----------------------------------------------------------------
 
 searchFamily :: Search
-searchFamily conn mid dir = do
-    rtid <- findRoot conn mid
-    msgs <- findDescendants conn rtid dir
-    return $ map path $ sortBy (comparing date) msgs
+searchFamily conn mid dir =
+    findRoot conn mid        >>=
+    findDescendants conn dir >>=
+    return . map path . sortBy (comparing date)
 
 getParid :: Connection -> Id -> IO (Maybe Id)
-getParid conn mid = do
-    msgs <- selectById conn mid
-    return $ getPid msgs
+getParid conn mid = selectById conn mid >>= return . getPid
   where
     getPid [] = Nothing
     getPid (e:_) = let pid = parid e
@@ -184,8 +176,8 @@ findRoot conn mid = getParid conn mid >>= maybe (return mid) (findRoot conn)
 
 type Hash = Map Id Message
 
-findDescendants :: Connection -> Id -> FilePath -> IO [Message]
-findDescendants conn rtid dir = do
+findDescendants :: Connection -> FilePath -> Id -> IO [Message]
+findDescendants conn dir rtid = do
     roots <- selectById conn rtid
     let root = head $ chooseOne dir roots
         mmap = Map.insert rtid root Map.empty
