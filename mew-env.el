@@ -185,7 +185,7 @@ requires PTY.")
   (defalias 'mew-match-string 'match-string))
 
 (defun mew-insert-buffer-substring (buf beg end)
-  (insert (save-excursion (set-buffer buf) (mew-buffer-substring beg end))))
+  (insert (with-current-buffer buf (mew-buffer-substring beg end))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

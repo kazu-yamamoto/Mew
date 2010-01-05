@@ -712,8 +712,7 @@ with a search method."
 	 (cache (mew-cache-hit fld msg))
 	 subj)
     (if (and cache (get-buffer cache))
-	(save-excursion
-	  (set-buffer cache)
+	(with-current-buffer cache
 	  (setq subj (mew-header-get-value mew-subj:)))
       (with-temp-buffer
 	(mew-insert-message
@@ -772,8 +771,7 @@ from scratch."
 
 (defun mew-summary-make-id-index-sentinel (process event)
   (let ((buf (process-buffer process)))
-    (save-excursion
-      (set-buffer buf)
+    (with-current-buffer buf
       (goto-char (point-max))
       (forward-line -1)
       (let ((str (mew-buffer-substring (line-beginning-position)

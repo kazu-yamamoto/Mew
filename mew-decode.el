@@ -42,8 +42,7 @@
 
 (defun mew-cache-dinfo-get-use-alt (buf)
   (when buf
-    (save-excursion
-      (set-buffer buf)
+    (with-current-buffer buf
       (mew-dinfo-get-use-alt))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -122,8 +121,7 @@ This commands toggles visibility of these lines."
   (interactive)
   (when (and mew-use-header-veil (get-buffer (mew-buffer-message)))
     (mew-summary-msg-or-part
-     (save-excursion
-       (set-buffer (mew-buffer-message))
+     (with-current-buffer (mew-buffer-message)
        (when (mew-msghdr-p)
 	 (let* ((win (get-buffer-window (current-buffer)))
 		(pos (window-start win)))

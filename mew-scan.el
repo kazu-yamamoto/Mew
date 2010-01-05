@@ -375,8 +375,7 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 ;; See also mew-summary-cook-region
 (defun mew-scan-insert-line (folder vec width lmsg &optional mark-or-dst)
   (when (get-buffer folder)
-    (save-excursion
-      (set-buffer folder)
+    (with-current-buffer folder
       (let* ((line (mew-scan-get-line vec width))
 	     (opos (point))
 	     (omax (point-max))
@@ -825,8 +824,7 @@ non-nil, only headers of messages are cached. If executed with
 (defun mew-summary-folder-cache-clean (folder)
   "Erase Summary mode then remove and touch the cache file."
   (if (get-buffer folder)
-      (save-excursion
-	(set-buffer folder)
+      (with-current-buffer folder
 	(mew-erase-buffer)
 	(set-buffer-modified-p nil)))
   (let ((cfile (mew-expand-file folder mew-summary-cache-file)))

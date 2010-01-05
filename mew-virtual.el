@@ -191,8 +191,7 @@ If called with '\\[universal-argument]', you can specify a target mark."
 	(forward-line)
 	;; This must be buffer-substring
 	(setq line (buffer-substring beg (point)))
-	(save-excursion
-	  (set-buffer vfolder)
+	(with-current-buffer vfolder
 	  (mew-elet
 	   (insert line)
 	   (save-excursion

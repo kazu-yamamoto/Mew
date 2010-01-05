@@ -86,8 +86,7 @@
   (if (and (get-buffer-window mew-buffer-completions)
 	   (equal mew-complete-candidates all))
       (let ((win (get-buffer-window mew-buffer-completions)))
-	(save-excursion
-	  (set-buffer mew-buffer-completions)
+	(with-current-buffer mew-buffer-completions
 	  (if (pos-visible-in-window-p (point-max) win)
 	      (set-window-start win 1)
 	    (scroll-other-window))))
@@ -267,8 +266,7 @@ is inserted before the cursor, the short name is expanded to its address."
 (defun mew-input-folder-search-complete ()
   (let ((mew-inherit-complete-folder t)
 	keys)
-    (save-excursion
-      (set-buffer mew-input-folder-search-buf)
+    (with-current-buffer mew-input-folder-search-buf
       (save-excursion
 	(goto-char (point-min))
 	(while (search-forward (or mew-input-folder-search-key "\n") nil t)

@@ -574,8 +574,7 @@
     (if (and (stringp file)
 	     (setq buffer (get-file-buffer file))
 	     (buffer-modified-p buffer))
-	(save-excursion
-	  (set-buffer buffer)
+	(with-current-buffer buffer
 	  (save-buffer)))
     (when textp
       (when (and (stringp file) (file-readable-p file))

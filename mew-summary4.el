@@ -148,7 +148,7 @@ the message is then displayed."
 	      (mew-summary-display))))
     (let ((line (string-to-number (read-string "Line No.: " ""))))
       (when (/= line 0)
-	(goto-line line)
+	(goto-char (point-min)) (forward-line (1- line))
 	(if mew-summary-goto-line-then-display
 	    (mew-summary-display))))))
 
@@ -176,8 +176,7 @@ the message is then displayed."
   "Go to Header mode."
   (interactive)
   (let (msgp)
-    (save-excursion
-      (set-buffer (window-buffer (next-window)))
+    (with-current-buffer (window-buffer (next-window))
       (if (mew-message-p) (setq msgp t)))
     (if msgp
 	(other-window 1)
@@ -302,8 +301,7 @@ If called with '\\[universal-argument]', the body of the message
   (mew-summary-display 'redisplay)
   (when (or (not mew-ask-pipe)
             (y-or-n-p "Send this message to pipe? "))
-    (save-excursion
-      (set-buffer (mew-buffer-message))
+    (with-current-buffer (mew-buffer-message)
       (save-restriction
 	(widen)
 	(if (string= command "") (setq command mew-last-shell-command))
@@ -327,8 +325,7 @@ If called with '\\[universal-argument]', you can specify a printer name."
 			  (read-string "Printer name: ")
 			printer-name))
 	have-header str)
-    (save-excursion
-      (set-buffer (mew-buffer-message))
+    (with-current-buffer (mew-buffer-message)
       (save-restriction
 	(widen)
 	(setq have-header (mew-msghdr-p))
@@ -350,8 +347,7 @@ If called with '\\[universal-argument]', you can specify a printer name."
   (interactive)
   (mew-summary-msg
    (let ((file (mew-make-temp-name)) xface)
-     (save-excursion
-       (set-buffer (mew-buffer-message))
+     (with-current-buffer (mew-buffer-message)
        (setq xface (mew-header-get-value mew-x-face:)))
      (when xface
        (with-temp-buffer
@@ -406,8 +402,7 @@ marked with '*' as arguments."
 	(message "No draft buffer exists!")
       (setq buf (mew-input-draft-buffer draft))
       (if (get-buffer buf)
-	  (save-excursion
-	    (set-buffer buf)
+	  (with-current-buffer buf
 	    (mew-draft-cite arg))
 	(message "No such draft buffer!")))))
 
@@ -725,8 +720,7 @@ message."
 	  (if (string= folder trash) (mew-summary-reset))
 	  (message "Removing all messages in %s..." case:trash)
 	  (when (get-buffer case:trash)
-	    (save-excursion
-	      (set-buffer case:trash)
+	    (with-current-buffer case:trash
 	      (mew-summary-kill-subprocess)))
 	  (mew-summary-unlink-msgs case:trash msgs)
 	  (mew-summary-folder-cache-clean case:trash)
@@ -799,8 +793,7 @@ the region are handled."
 	 (setq dstmsg (mew-folder-new-message dstfld 'numonly)))
        (setq msgs (mew-summary-mark-collect mew-mark-review beg end))
        (when (get-buffer dstfld)
-	 (save-excursion
-	   (set-buffer dstfld)
+	 (with-current-buffer dstfld
 	   (setq exclusivep (mew-summary-exclusive-p))))
        (cond
 	((null msgs)

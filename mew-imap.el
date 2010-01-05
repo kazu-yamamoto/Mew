@@ -1325,8 +1325,7 @@
 	  (setq virtual (mew-net-virtual-info-get-virtual virtual-info))
 	  (when virtual
 	    (mew-imap-set-status-buf pnm virtual)
-	    (save-excursion
-	      (set-buffer virtual)
+	    (with-current-buffer virtual
 	      (mew-summary-lock process "IMAPing" (or sshpro sslpro)))))
 	 ((eq directive 'scan)
 	  (mew-imap-set-range pnm (nth 0 args))
@@ -1384,8 +1383,7 @@
 
 (defun mew-imap-debug (label string)
   (when (mew-debug 'net)
-    (save-excursion
-      (set-buffer (get-buffer-create mew-buffer-debug))
+    (with-current-buffer (get-buffer-create mew-buffer-debug)
       (goto-char (point-max))
       (let ((start (point)))
 	(insert (format "\n<%s>\n%s\n" label string))
@@ -1661,8 +1659,7 @@
 	 (tag (mew-imap-passtag2 case))
 	 passwd)
     (when (get-buffer case:inbox)
-      (save-excursion
-	(set-buffer case:inbox)
+      (with-current-buffer case:inbox
 	(when (and (mew-summary-exclusive-p 'no-msg)
 		   (and (or mew-use-cached-passwd mew-use-master-passwd)
 			(setq passwd (mew-passwd-get-passwd tag))))
@@ -1675,8 +1672,7 @@
 	 (inbox (mew-proto-inbox-folder nil case))
 	 (case:inbox (mew-case-folder case inbox)))
     (when (get-buffer case:inbox)
-      (save-excursion
-	(set-buffer case:inbox)
+      (with-current-buffer case:inbox
 	(when (mew-summary-exclusive-p)
 	  (mew-imap-retrieve case 'biff case:inbox))))))
 

@@ -447,8 +447,7 @@ a decrypted/verified body is displayed."
 		   (mew-cache-dinfo-get-use-alt cbuf)
 		 mew-use-alternative))
 	  syntax ct begin end)
-     (save-excursion
-       (set-buffer buf)
+     (with-current-buffer buf
        (mew-erase-buffer)
        (mew-insert-message fld msg mew-cs-text-for-read nil)
        (mew-dinfo-set nil t nil alt)

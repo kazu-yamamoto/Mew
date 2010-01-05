@@ -278,8 +278,7 @@
 	 (beg (or BEG (window-start win)))
 	 (end (window-end win t))
 	 (buf (window-buffer win)))
-    (save-excursion
-      (set-buffer buf)
+    (with-current-buffer buf
       (funcall mew-summary-cook-function beg end))))
 
 ;; See also mew-scan-insert-line

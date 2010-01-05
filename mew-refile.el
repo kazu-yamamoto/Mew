@@ -397,8 +397,7 @@ values."
 (defun mew-refile-guess-learn (buf result)
   (let ((chosen (car result))  ;; (folder1 folder2 ...)
 	(info (cdr result))) ;; (guess-func-name guess1 guess2...)
-    (save-excursion
-      (set-buffer buf)
+    (with-current-buffer buf
       (if (member 'mew-refile-guess-by-from mew-refile-guess-control)
 	  (mew-refile-guess-by-from-learn chosen info))
       (if (member 'mew-refile-guess-by-thread mew-refile-guess-control)
@@ -534,8 +533,7 @@ Return t if exists or created. Otherwise, return nil."
   (let ((proto mew-inherit-refile-proto)
 	(case mew-inherit-refile-case)
 	learn-info folders ret cands singlep lst-lst)
-    (save-excursion
-      (set-buffer buf)
+    (with-current-buffer buf
       (setq learn-info (mew-refile-guess auto)))
     (if auto
 	;; if auto is set, simply use the guess.
@@ -708,8 +706,7 @@ with '\\[universal-argument]', it displays how the refile rules work in Message 
 	     fld msg mew-cs-text-for-read mew-header-reasonable-size)
 	    (mew-refile-decode-subject)))
 	(when (and (eq mew-mark-refile mark) (get-buffer fld))
-	  (save-excursion
-	    (set-buffer fld)
+	  (with-current-buffer fld
 	    (setq cur-folders (cdr (mew-refile-get msg)))))
 	(condition-case nil
 	    (setq learn-info (mew-refile-decide-folders
@@ -729,8 +726,7 @@ with '\\[universal-argument]', it displays how the refile rules work in Message 
 	  (setq folders-str (mew-join "," folders))
 	  (cond
 	   ((mew-virtual-p)
-	    (save-excursion
-	      (set-buffer fld)
+	    (with-current-buffer fld
 	      (save-excursion
 		(when (mew-summary-search-msg msg)
 		  (mew-refile-reset msg)

@@ -99,8 +99,7 @@
 
 (defun mew-smime-debug (label string)
   (when (mew-debug 'smime)
-    (save-excursion
-      (set-buffer (get-buffer-create mew-buffer-debug))
+    (with-current-buffer (get-buffer-create mew-buffer-debug)
       (goto-char (point-max))
       (insert (format "\n<%s>\n%s\n" label string)))))
 

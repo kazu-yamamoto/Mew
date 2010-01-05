@@ -592,8 +592,7 @@ system."
 
 (defun mew-decode-syntax-print (sumbuf syntax form icon)
   (let* ((stx (mew-syntax-get-part syntax)))
-    (save-excursion
-      (set-buffer sumbuf)
+    (with-current-buffer sumbuf
       (when (mew-syntax-multipart-p stx)
 	(forward-line)
 	(mew-elet
@@ -798,8 +797,7 @@ system."
 
 (defun mew-decode-syntax-delete ()
   (when (mew-decode-syntax-p)
-    (save-excursion
-      (set-buffer (mew-decode-syntax-buffer))
+    (with-current-buffer (mew-decode-syntax-buffer)
       (mew-xinfo-set-icon-spec nil)
       (mew-summary-toolbar-update)
       (save-excursion
@@ -934,8 +932,7 @@ system."
 
 (defun mew-summary-end-of-message-p ()
   (let (pos beg end)
-    (save-excursion
-      (set-buffer (mew-decode-syntax-buffer))
+    (with-current-buffer (mew-decode-syntax-buffer)
       (save-excursion
 	(setq pos (point))
 	(setq end (mew-decode-syntax-end))

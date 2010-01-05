@@ -241,8 +241,7 @@
 	  ;; We need to keep composite properties of charset.
 	  ;; This must be "insert-buffer-substring".
 	  (insert-buffer-substring cache begin end)
-	  (save-excursion
-	    (set-buffer cache)
+	  (with-current-buffer cache
 	    (setq folder (mew-cinfo-get-fld)))
 	  (if (or mew-use-text/html
 		  (and mew-use-text/html-list
@@ -295,9 +294,8 @@
 	   (prog (mew-progspec-get-prog program))
 	   (args (mew-progsec-args-convert (mew-progspec-get-args program) file))
 	   wcs)
-      (save-excursion
+      (with-current-buffer cache
 	(message "Displaying %s..." tag)
-	(set-buffer cache)
 	;; charset check
 	(setq wcs (mew-text/html-detect-cs begin end))
 	;; note that application/xml may have the charset parameter
@@ -417,8 +415,7 @@
 
 (defun mew-mime-image/*-ext (cache begin end &optional params fname ct cte)
   (let ((file (mew-make-temp-name fname)))
-    (save-excursion
-      (set-buffer cache)
+    (with-current-buffer cache
       (mew-flet
        (write-region begin end file nil 'no-msg)))
     (mew-mime-image-ext file)))
@@ -542,8 +539,7 @@
       (message "Displaying an MS document...")
       (mew-erase-buffer)
       (setq file1 (mew-make-temp-name))
-      (save-excursion
-	(set-buffer cache)
+      (with-current-buffer cache
 	(mew-flet
 	 (write-region begin end file1 nil 'no-msg)))
       (setq file2 (mew-make-temp-name))
@@ -596,8 +592,7 @@
 	(dir (mew-input-directory-name mew-home)))
     (if (not (mew-which-exec mew-prog-tnef))
 	(message "'%s' not found" mew-prog-tnef)
-      (save-excursion
-	(set-buffer cache)
+      (with-current-buffer cache
 	(mew-plet
 	 (write-region begin end file nil 'no-msg)))
       (mew-erase-buffer)
@@ -759,8 +754,7 @@ See 'mew-mime-content-type' to know how actions can be defined."
       (message "%s does not exist" program)
     (let ((file (mew-make-temp-name fname))
 	  wcs)
-      (save-excursion
-	(set-buffer cache)
+      (with-current-buffer cache
 	;; NEVER use call-process-region for privacy reasons
 	(cond
 	 ((not (mew-ct-linebasep ct))
