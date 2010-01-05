@@ -1,16 +1,12 @@
-			 <Readme for Mew 6.4>
+			 <Readme for Mew 7.1>
 			    Kazu Yamamoto
-			   December 2, 2009
+			   January 5, 2010
 
-This is one of beta releases of Mew 6.4.
+This is one of beta releases of Mew 7..
 
 			     <Platforms>
 
-Mew now supports Emacs 21.4 or later only. Mew doesn't support earlier
-versions nor XEmacs.
-
-Please use Emacs 22.x unless you have a particular reason. Mew does
-support Emacs 23.x.
+Mew now supports Emacs 22.3 or later only.
 
 			      <Web Site>
 
