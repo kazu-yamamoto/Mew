@@ -1,0 +1,14 @@
+*.elc
+*.o
+*.log
+config.h
+config.status
+temp.el
+/Makefile
+/bin/Makefile
+/bin/incm
+/bin/mew-pinentry
+/bin/mewcat
+/bin/mewdecode
+/bin/mewencode
+/bin/mewl
