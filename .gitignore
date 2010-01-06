@@ -12,3 +12,5 @@ temp.el
 /bin/mewdecode
 /bin/mewencode
 /bin/mewl
+/bin/hs/smew
+/bin/hs/smew.hi
