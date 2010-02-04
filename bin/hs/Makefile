@@ -1,12 +1,11 @@
-BASE = smew
-SRC = $(BASE).hs
-CLN = $(BASE).hi $(BASE).o $(BASE)
+#OPT=--preference='parsec > 3'
 
-all: $(BASE)
+all:
+	cabal configure
+	cabal build
 
-$(BASE): $(SRC)
-	ghc --make -Wall $(SRC)
-	strip $(BASE)
+install:
+	cabal install $(OPT)
 
 clean: 
-	rm -rf $(CLN)
+	rm -rf dist

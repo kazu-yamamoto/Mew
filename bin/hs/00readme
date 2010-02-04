@@ -8,19 +8,10 @@
 - Install the "cabal" command whose package name is cabal-install
 	http://hackage.haskell.org/trac/hackage/wiki/CabalInstall
 
-- Install HDBC-sqlite3
+- Compile
 
-  Note that cabal refers to the HTTP_PROXY environment variable.
-  % sudo env HTTP_PROXY=$(YOUR_PROXY) cabal $(COMMAND)
+    % cabal configure
+    % cabal install
 
-	% cabal update
-	% cabal list
-	% cabal list --installed
-
-	% cabal install HDBC-sqlite3 --dry-run
-	% cabal install HDBC-sqlite3
-
-- Compile smew
-	% make
-
+  "smew" will be installed to "~/.cabal/bin".
   Note that this may displays warnings. Please ignore them.

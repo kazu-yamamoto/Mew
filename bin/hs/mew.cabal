@@ -1,0 +1,23 @@
+Name:                   mew
+Version:                0.1
+Author:                 Kazu Yamamoto <kazu@Mew.org>
+Maintainer:             Kazu Yamamoto <kazu@Mew.org>
+License:                BSD3
+Homepage:               http://www.mew.org/
+Synopsis:               Sub-commands for Mew
+Description:            "smew" and "cmew"
+Category:               Mail
+Cabal-Version:          >= 1.2
+Build-Type:             Simple
+Executable smew
+    Main-Is:            smew.hs
+    GHC-Options:        -Wall -O2
+    Build-Depends:      base, haskell98, filepath, directory,
+                        containers, parsec, hsemail-ns, HDBC, HDBC-sqlite3
+    Other-Modules:      Message, Param, Search, Util, Sql
+-- Executable cmew
+--     Main-Is:            cmew.hs
+--     GHC-Options:        -Wall -O2
+--     Build-Depends:      base, haskell98, filepath, directory,
+--                         containers, parsec, hsemail-ns, HDBC, HDBC-sqlite3
+--     Other-Modules:      Message, Param, Search, Util, Sql
