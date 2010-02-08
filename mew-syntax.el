@@ -386,7 +386,7 @@ system."
   (let ((fn (mew-match-string 1))
 	(bn (buffer-name)))
     (cond
-     ((not (string= fn "")) fn)
+     ((not (string= fn "")) (mew-sumsym-decode-folder fn))
      ((mew-virtual-for-one-summary)
       (mew-vinfo-get-physical-folder))
      (t bn))))

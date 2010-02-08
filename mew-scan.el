@@ -336,6 +336,12 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 		str) ;; width may exceed.
 	    (mew-substring str width nil nopad)))))))
 
+(defun mew-sumsym-encode-folder (fld)
+  (mew-replace-character fld ?  ?\t))
+
+(defun mew-sumsym-decode-folder (fld)
+  (mew-replace-character fld ?\t ? ))
+
 (defun mew-scan-get-line (mew-vec mew-inherit-width)
   (let* ((mew-inherit-total 0) (fld "")
 	 (line (mapconcat 'mew-scan-get-piece (mew-sinfo-get-summary-form) ""))
@@ -362,10 +368,11 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 			 (car irt-list)
 			 ""))))
     (when (mew-virtual-p)
-      (setq fld (or (cdr (assoc (mew-scan-get-folder mew-vec)
-				(mew-vinfo-get-lra)))
-		    ;; Spotlight
-		    (MEW-FLD)))) ;; xxx
+      (setq fld (mew-sumsym-encode-folder
+		 (or (cdr (assoc (mew-scan-get-folder mew-vec)
+				 (mew-vinfo-get-lra)))
+		     ;; Spotlight
+		     (MEW-FLD))))) ;; xxx
     (setq msg (mew-scan-get-message mew-vec))
     (setq uid (or (mew-scan-uid-uid (MEW-UID)) ""))
     (setq siz (or (mew-scan-uid-size (MEW-UID)) ""))
