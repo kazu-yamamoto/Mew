@@ -447,7 +447,7 @@ on '.' in attachments."
 	(with-temp-buffer
 	  (condition-case nil
 	      (progn
-		(if (not (y-or-n-p "Are you ready? "))
+		(if (not (y-or-n-p "Are you ready to record audio? "))
 		    (message "Nothing is recoded")
 		  (mew-message-for-attach
 		   "Type '\\[keyboard-quit]' to finish recording...")
