@@ -1550,7 +1550,7 @@
 	      (when leftp
 		(mew-imap-message
 		 pnm
-		 "%d message retrieved. %d messages are left due to an error"
+		 "%d messages retrieved. %d messages are left due to an error"
 		 (- rttl lefts) lefts)
 		(mew-summary-folder-cache-save))))
 	(if virtual-info (mew-summary-retrieve-message-for-virtual virtual-info))
