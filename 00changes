@@ -1,5 +1,7 @@
 Mew 7.0.50 (2010/01/xx)
 
+* Define mew-sumsym-encode-folder and mew-sumsym-decode-folder.
+* set-buffer -> with-current-buffer.
 * Making mew-mime-image() safer.
 	Hideyuki SHIRAI <shirai>
 
