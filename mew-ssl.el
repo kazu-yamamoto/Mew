@@ -90,7 +90,7 @@ A file name of a certificate should be 'cert-hash.0'.
 		"-d" ,(format "%s:%d" mew-ssl-localhost localport)
 		"-v" ,(number-to-string (mew-ssl-verify-level case))
 		"-D" "debug"
-		"-P" "none"
+		"-P" ""
 		"-r" ,(format "%s:%d" server remoteport)
 		,@mew-prog-ssl-arg))
 	(if tls (setq args (cons "-n" (cons tls args))))
