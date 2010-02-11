@@ -12529,7 +12529,6 @@ Mew で "stunnel" を制御する重要な変数は 2 つです。
 レクトリであり、初期値は "~/.certs" です。また、
 @samp{mew-ssl-verify-level} で、証明書を検証するレベルを指定できます。
 レベルの初期値は 1 です。この意味は、以下の通りです。
-さい。
 @end ifset
 @ifset en
 There are two important Mew variables to control "stunnel".
