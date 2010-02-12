@@ -31,7 +31,7 @@ help = getProgName >>= hPutStrLn stderr . (++ " " ++ helpMessage)
 parseOpts :: [[Char]] -> Maybe Search
 parseOpts opts
     | opts == []       = Just searchFamily
-    | "-p" `elem` opts = Just searchParent
+    | "-p" `elem` opts = Just searchMe     -- to find a parent, specify pid
     | "-c" `elem` opts = Just searchChild
     | otherwise        = Nothing
 

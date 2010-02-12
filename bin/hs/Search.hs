@@ -1,4 +1,4 @@
-module Search (Triple, Search, dispatch, searchParent, searchChild, searchFamily) where
+module Search (Triple, Search, dispatch, searchMe, searchChild, searchFamily) where
 
 import Control.Applicative
 import Data.List
@@ -27,8 +27,8 @@ dispatch func (mid,db,dir) = handleSqlError $ do
 
 ----------------------------------------------------------------
 
-searchParent :: Search
-searchParent conn mid dir = chooseOne dir <$> selectById conn mid
+searchMe :: Search
+searchMe conn mid dir = chooseOne dir <$> selectById conn mid
 
 ----------------------------------------------------------------
 
@@ -43,13 +43,14 @@ searchFamily conn mid dir = sortBy (comparing date) <$> findFamily
     findFamily = findRoot conn mid >>= findDescendants conn dir
 
 getParid :: Connection -> Id -> IO (Maybe Id)
-getParid conn mid = selectById conn mid >>= return . getPid
+getParid conn mid = getPid <$> selectById conn mid
   where
-    getPid [] = Nothing
-    getPid (e:_) = let pid = parid e
-                   in if pid == ""
-                      then Nothing
-                      else Just pid
+    getPid []     = Nothing
+    getPid (e:_)
+      | pid == "" = Nothing
+      | otherwise = Just pid
+      where
+        pid = parid e
 
 findRoot :: Connection -> Id -> IO Id
 findRoot conn mid = getParid conn mid >>= maybe (return mid) (findRoot conn)
@@ -86,10 +87,9 @@ findDescendants conn dir rtid = do
 chooseOne :: FilePath -> [Message] -> [Message]
 chooseOne _ [] = [] -- failure
 chooseOne "" (m:_) = [m]
-chooseOne dir msgs@(m:_) =
-    let sames = filter sameDir msgs
-    in if sames /= []
-       then [head sames]
-       else [m]
+chooseOne dir msgs@(m:_)
+  | null sames = [m]
+  | otherwise  = [head sames]
   where
+    sames = filter sameDir msgs
     sameDir x = (takeDirectory.path) x == dir
