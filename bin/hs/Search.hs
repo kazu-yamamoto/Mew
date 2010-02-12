@@ -65,26 +65,26 @@ type Hash = Map Id Message
 
 findDescendants :: Connection -> FilePath -> Id -> IO [Message]
 findDescendants conn dir rtid = do
-    roots <- selectById conn rtid
-    let root = head $ chooseOne dir roots
-        mmap = Map.insert rtid root Map.empty
+    root <- head . chooseOne dir <$> selectById conn rtid
+    let mmap = Map.insert rtid root Map.empty
     findChildren ([rtid],mmap)
   where
     findChildren :: ([Id],Hash) -> IO [Message]
-    findChildren (ids,hash) = do
-        msgs <- selectByParid conn ids
-        if msgs == [] then return (Map.elems hash)
-                      else findChildren $ pushChildren hash msgs []
+    findChildren (ids,hash) = selectByParid conn ids >>= findChildren'
+      where
+        findChildren' []    = return (Map.elems hash)
+        findChildren' msgs  = findChildren $ pushChildren hash msgs []
+
     pushChildren :: Hash -> [Message] -> [Id] -> ([Id],Hash)
     pushChildren hash [] ids = (ids, hash)
     pushChildren hash (m:ms) ids
-        | Map.member mid hash = if (takeDirectory.path) m == dir
-                                then let hash'  = Map.delete mid hash
-                                         hash'' = Map.insert mid m hash'
-                                     in pushChildren hash'' ms ids
-                                else pushChildren hash ms ids
-        | otherwise         = pushChildren (Map.insert mid m hash) ms (mid:ids)
+        | Map.notMember mid hash = pushChildren hash' ms (mid:ids)
+        | mdir == dir            = pushChildren hash' ms ids
+                                   -- insert overwrites the value
+        | otherwise              = pushChildren hash  ms ids
       where
+        hash' = Map.insert mid m hash
+        mdir = (takeDirectory.path) m
         mid = myid m
 
 ----------------------------------------------------------------
