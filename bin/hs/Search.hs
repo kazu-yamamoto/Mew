@@ -40,20 +40,26 @@ searchChild conn mid dir = chooseOne dir <$> selectByParid conn [mid]
 searchFamily :: Search
 searchFamily conn mid dir = sortBy (comparing date) <$> findFamily
   where
-    findFamily = findRoot conn mid >>= findDescendants conn dir
+    findFamily = findRoot conn mid mid >>= findDescendants conn dir
 
-getParid :: Connection -> Id -> IO (Maybe Id)
+data ParentError = NoEntry | NoPid
+
+getParid :: Connection -> Id -> IO (Either ParentError Id)
 getParid conn mid = getPid <$> selectById conn mid
   where
-    getPid []     = Nothing
+    getPid []     = Left NoEntry
     getPid (e:_)
-      | pid == "" = Nothing
-      | otherwise = Just pid
+      | pid == "" = Left NoPid
+      | otherwise = Right pid
       where
         pid = parid e
 
-findRoot :: Connection -> Id -> IO Id
-findRoot conn mid = getParid conn mid >>= maybe (return mid) (findRoot conn)
+findRoot :: Connection -> Id -> Id -> IO Id
+findRoot conn previd mid =
+    getParid conn mid >>= either terminate (findRoot conn mid)
+  where
+    terminate NoEntry = return previd
+    terminate NoPid   = return mid
 
 type Hash = Map Id Message
 
