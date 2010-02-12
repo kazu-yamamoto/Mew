@@ -187,7 +187,7 @@
     (unless (member ent global-mode-string)
       (if global-mode-string
 	  (setq global-mode-string
-		(append global-mode-string (list " " ent)))
+		(append global-mode-string (list "" ent)))
 	(setq global-mode-string (list ent))))))
 
 (defun mew-biff-clean-up ()

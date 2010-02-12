@@ -1,5 +1,7 @@
 Mew 7.0.50 (2010/01/xx)
 
+* Deleting " " from global-mode-string.
+	Christophe TROESTLER <Christophe.Troestler>
 * Correcting the -P option of stunnel3.
 	Kendall Shaw <kshaw>
 * Define mew-sumsym-encode-folder and mew-sumsym-decode-folder.
