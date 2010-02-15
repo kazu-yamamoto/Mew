@@ -11049,10 +11049,11 @@ To know what kind of symbols are prepared, see the "dot.mew".
 
 @ifset ja
 上記の方法では、ヘッダのすべてのフィールド名やフィールド値に対してシン
-ボルが定義されていません。そこで、すべてのフィールドの色を簡単に変更す
-るために、@samp{mew-header-color} と @samp{mew-header-color-bold} とい
-う関数が用意されています。後者を使うと太字に、前者を使うと普通の文字に
-なります。たとえば、以下のように使います。
+ボルが定義されている訳ではありません。そこで、どんなフィールドの色でも
+簡単に変更できるように、@samp{mew-header-color} と
+@samp{mew-header-color-bold} という関数が用意されています。後者を使うと
+太字に、前者を使うと普通の文字になります。たとえば、以下のように使いま
+す。
 @end ifset
 @ifset en
 The method above does not prepare symbols for all field names and
