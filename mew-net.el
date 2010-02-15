@@ -543,11 +543,14 @@ In remote folders, visit an inbox folder and scan with 'update."
 	 ((eq mailbox 'mbox)
 	  (mew-mbox-retrieve case 'inc inbox))))
        ((mew-folder-popp inbox)
-	(mew-pop-retrieve case 'scan case:inbox nil 'get-body))
+	(let ((get-body (if (mew-pop-header-only case) nil t)))
+	  (mew-pop-retrieve case 'scan case:inbox nil get-body)))
        ((mew-folder-imapp inbox)
-	(mew-imap-retrieve case 'scan case:inbox nil 'get-body))
+	(let ((get-body (if (mew-imap-header-only case) nil t)))
+	  (mew-imap-retrieve case 'scan case:inbox nil get-body)))
        ((mew-folder-nntpp inbox)
-	(mew-nntp-retrieve case 'scan case:inbox nil 'get-body))))))
+	(let ((get-body (if (mew-nntp-header-only case) nil t)))
+	  (mew-nntp-retrieve case 'scan case:inbox nil get-body)))))))
 
 (defun mew-mbox-retrieve (case directive inbox &optional flush)
   ;; directive is 'inc
