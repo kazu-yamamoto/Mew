@@ -609,16 +609,18 @@ present, mew-face-header-marginal is used."
 (mew-defstruct header-color field key val)
 (defvar mew-header-color-alist nil)
 
+;; See also mew-face-make-spec.
+
 (defun mew-header-color-base (field key-color val-color bold)
   (unless val-color (setq val-color key-color))
   (let ((face-key (intern (concat "mew-face-color-" key-color (if bold "-bold"))))
 	(face-val (intern (concat "mew-face-color-" val-color (if bold "-bold")))))
     (unless (facep face-key)
       (make-empty-face face-key)
-      (face-spec-set face-key `((t (:foreground ,key-color :bold ,bold)))))
+      (face-spec-set face-key (list (mew-face-spec-func t (mew-face-spec-primitive key-color bold)))))
     (unless (facep face-val)
       (make-empty-face face-val)
-      (face-spec-set face-val `((t (:foreground ,val-color :bold ,bold)))))
+      (face-spec-set face-val (list (mew-face-spec-func t (mew-face-spec-primitive val-color bold)))))
     (setq mew-header-color-alist
 	  (cons (list (capitalize field) face-key face-val) mew-header-color-alist))))
 

@@ -229,6 +229,33 @@ requires PTY.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; Face
+;;;
+
+(cond
+ ((fboundp 'face-all-attributes) ;; Emacs 23
+  (defalias 'mew-face-spec-func 'cons)
+  (defun mew-face-spec-primitive (col bold)
+    (if col
+	(if bold
+	    (list :foreground col :weight 'bold)
+	  (list :foreground col :weight 'normal))
+      (if bold
+	  (list :weight 'bold)
+	(list :weight 'normal)))))
+ (t
+  (defalias 'mew-face-spec-func 'list)
+  (defun mew-face-spec-primitive (col bold)
+    (if col
+	(if bold
+	    (list :foreground col :bold t)
+	  (list :foreground col))
+      (if bold
+	  (list :bold t)
+	nil)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; Misc
 ;;;
 
