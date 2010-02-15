@@ -663,7 +663,7 @@ Return a part syntax after moving the beginning of the content body."
      (t
       (if (and (eq parent 'message)
 	       (or (not (mew-xinfo-get-text-body))
-		   (if (mew-dinfo-get-encap-html) 
+		   (if (mew-dinfo-get-encap-html)
 		       (not (string= ct mew-ct-txt))
 		     (not textp))))
 	  (setq encap t))
@@ -740,7 +740,7 @@ Return a part syntax after moving the beginning of the content body."
 	(cond
 	 ((and (= prev-level level) softbreak)
 	  (mew-decode-flowed-remove-quoted-stuffed softbreak))
-	 (t 
+	 (t
 	  (if (= level 0) (mew-decode-flowed-remove-stuffed))))
 	(setq softbreak (mew-decode-flowed-soft-breakp delsp))))))
 
@@ -765,7 +765,7 @@ Return a part syntax after moving the beginning of the content body."
 	(if (and (char-before) (char-equal (char-before) mew-flowed-break))
 	    (if delsp (1- (point)) (point))
 	  nil)))))
-    
+
 ;;;
 ;;; Decoding multipart
 ;;;
@@ -783,7 +783,7 @@ Return a part syntax after moving the beginning of the content body."
     (concat "^--" (regexp-quote mboundary) "\\(--\\|\\)[ \t]*$")))
 
 (defun mew-decode-multipart-end-boundary-regex (boundary)
-  (let ((mboundary (mew-set-string-multibyte boundary)))  
+  (let ((mboundary (mew-set-string-multibyte boundary)))
     (concat "^--" (regexp-quote mboundary) "--[ \t]*$")))
 
 (defun mew-decode-multipart-boundary-cont ()

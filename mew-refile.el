@@ -222,7 +222,7 @@ RULE is as follows:
     <alist>   ::= (<value> <folder>|<rule>) (<value> <folder>|<rule>) ...
     <special> ::= (t <folder>) | (nil <folder>)
 
-There are two special <key>s: nil and t. 
+There are two special <key>s: nil and t.
 
 nil is used to specify <folder> to be returned when nothing is
 guessed.

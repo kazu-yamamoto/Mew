@@ -38,7 +38,7 @@
   (run-hooks 'mew-message-mode-hook))
 
 (defun mew-message-mode-line (fld message)
-  (let* ((msg (or message 
+  (let* ((msg (or message
 		  (mew-current-get-msg (mew-frame-id))))
 	 (status (mew-message-line-status))
 	 (flag (nth status '("N" "W" "L"))))

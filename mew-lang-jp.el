@@ -118,7 +118,7 @@
   (let* ((str (char-to-string ch))
 	 (ent (rassoc str mew-katakana-alist)))
     (if ent (car ent))))
-  
+
 (defun mew-zenkaku-katakana-region (beg end)
   (let (ch wk)
     (save-restriction

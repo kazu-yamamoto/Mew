@@ -747,7 +747,7 @@ with a search method."
 
 (defun mew-summary-make-id-index-all (&optional full-update)
   "Make ID database for all folders.
-If called with '\\[universal-argument]', the database is created 
+If called with '\\[universal-argument]', the database is created
 from scratch."
   (interactive "P")
   (if (not (mew-which-exec mew-prog-cmew))

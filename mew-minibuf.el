@@ -511,7 +511,7 @@ it is deleted automatically."
 	 (new-folder))
     (when (or (string= ret "") (string= ret init))
       (setq ret default))
-    ;; mew-input-folder-check requires an IMAP separator, 
+    ;; mew-input-folder-check requires an IMAP separator,
     ;; which requires C-uZ. C-uZ needs "g". So, chicken and egg.
     ;; Skip the check for inbox to avoid the problem.
     (setq new-folder (mew-case:folder-folder ret))

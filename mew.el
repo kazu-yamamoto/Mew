@@ -215,7 +215,7 @@ CONTINUE, YANK-ACTION and SEND-ACTIONS are ignored."
 
 (defun mew-status-update (&optional arg)
   "Read Addrbook and update its information.
-If executed with '\\[universal-argument]', information about folders 
+If executed with '\\[universal-argument]', information about folders
 of the current world is also updated."
   (interactive "P")
   (cond

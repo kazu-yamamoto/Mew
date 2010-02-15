@@ -365,7 +365,7 @@
     (dolist (pri priority)
       (set (car rest-ctgs) pri)
       (setq rest-ctgs (cdr rest-ctgs)))
-    (if (fboundp 'update-coding-systems-internal) 
+    (if (fboundp 'update-coding-systems-internal)
 	(update-coding-systems-internal))
     (mew-set-coding-priority categories)))
 
