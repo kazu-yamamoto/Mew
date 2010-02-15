@@ -1,5 +1,6 @@
 Mew 7.0.50 (2010/01/xx)
 
+* "b" in Summary saves the buffer of Message mode to a file.
 * header-only now can work for M-x mew.
 * Bold of font can be specified on Emacs 23.
 * Deleting " " from global-mode-string.

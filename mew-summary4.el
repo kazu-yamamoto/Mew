@@ -339,6 +339,32 @@ If called with '\\[universal-argument]', you can specify a printer name."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; Saving a message to a file with header decoded
+;;;
+
+(defun mew-summary-store (&optional askcs)
+  "Saving a buffer of Message mode to a file.
+If executed with '\\[universal-argument]', coding-system is asked."
+  (interactive "P")
+  (mew-summary-display 'redisplay)
+  (let* ((file (mew-summary-input-file-name))
+	 (doit (if (file-exists-p file)
+		   (if (y-or-n-p (format "File exists. Override it? "))
+		       t
+		     nil)
+		 t)))
+    (if (not doit)
+	(message "Not saved")
+      (let ((writecs (if askcs
+			 (read-coding-system "Coding-system: ")
+		       default-buffer-file-coding-system)))
+	(with-current-buffer (mew-buffer-message)
+	  (mew-frwlet mew-cs-dummy writecs
+	    ;; do not specify 'no-msg
+	    (write-region (point-min) (point-max) file)))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; X-Face:
 ;;;
 

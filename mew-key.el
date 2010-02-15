@@ -71,6 +71,7 @@
   (define-key mew-summary-mode-map "*"    'mew-summary-review)
   (define-key mew-summary-mode-map "\eu"  'mew-summary-unread)
   (define-key mew-summary-mode-map "y"    'mew-summary-save)
+  (define-key mew-summary-mode-map "b"    'mew-summary-store)
   (define-key mew-summary-mode-map "Y"    'mew-summary-cite)
   (define-key mew-summary-mode-map "u"    'mew-summary-undo)
   (define-key mew-summary-mode-map "U"    'mew-summary-undo-all)
