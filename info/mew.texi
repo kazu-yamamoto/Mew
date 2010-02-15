@@ -10983,13 +10983,13 @@ feature, install the "netpbm" package and the "compface" package.
 @end ifset
 
 @ifset ja
-色を変更するには、Mew のソースと一緒に配布されている "mew.dot.theme" を
+色を変更するには、Mew のソースと一緒に配布されている "dot.theme" を
 適当な名前でコピーし内容を変更します。ここでは、そのファイル名を
 "~/.mew-theme.el" としましょう。まず、この名前を ".mew.el" で
 @samp{mew-theme-file} に指定して下さい。
 @end ifset
 @ifset en
-To modify colors, copy "mew.dot.theme" contained Mew's source file to
+To modify colors, copy "dot.theme" contained Mew's source file to
 an appropriate place, say "~/.mew-theme.el". First, set
 @samp{mew-theme-file} to this file name in ".mew.el" as follows:
 @end ifset
@@ -11041,10 +11041,10 @@ configuration as follows:
 @end lisp
 
 @ifset ja
-シンボルに何があるのかは、"mew.dot.mew" を見て下さい。
+シンボルに何があるのかは、"dot.mew" を見て下さい。
 @end ifset
 @ifset en
-To know what kind of symbols are prepared, see the "mew.dot.mew".
+To know what kind of symbols are prepared, see the "dot.mew".
 @end ifset
 
 @ifset ja
