@@ -7,18 +7,18 @@ import qualified Data.Map as Map hiding (Map)
 import Data.Ord
 import Database.HDBC
 import Database.HDBC.Sqlite3
-import Message
+import Msg
 import Sql
 import System.FilePath
 
 ----------------------------------------------------------------
 
-type Triple = (Id,FilePath,FilePath)
-type Search = Connection -> Id -> FilePath -> IO [Message]
+type Triple = (ID,FilePath,FilePath)
+type Search = Connection -> ID -> FilePath -> IO [Msg]
 
 ----------------------------------------------------------------
 
-dispatch :: Search -> Triple -> IO [Message]
+dispatch :: Search -> Triple -> IO [Msg]
 dispatch func (mid,db,dir) = handleSqlError $ do
     conn <- connectSqlite3 db
     msgs <- func conn mid dir
@@ -28,12 +28,12 @@ dispatch func (mid,db,dir) = handleSqlError $ do
 ----------------------------------------------------------------
 
 searchMe :: Search
-searchMe conn mid dir = chooseOne dir <$> selectById conn mid
+searchMe conn mid dir = chooseOne dir <$> selectByID conn mid
 
 ----------------------------------------------------------------
 
 searchChild :: Search
-searchChild conn mid dir = chooseOne dir <$> selectByParid conn [mid]
+searchChild conn mid dir = chooseOne dir <$> selectByPaID conn [mid]
 
 ----------------------------------------------------------------
 
@@ -44,38 +44,38 @@ searchFamily conn mid dir = sortBy (comparing date) <$> findFamily
 
 data ParentError = NoEntry | NoPid
 
-getParid :: Connection -> Id -> IO (Either ParentError Id)
-getParid conn mid = getPid <$> selectById conn mid
+getPaid :: Connection -> ID -> IO (Either ParentError ID)
+getPaid conn mid = getPid <$> selectByID conn mid
   where
     getPid []     = Left NoEntry
     getPid (e:_)
       | pid == "" = Left NoPid
       | otherwise = Right pid
       where
-        pid = parid e
+        pid = paid e
 
-findRoot :: Connection -> Id -> Id -> IO Id
+findRoot :: Connection -> ID -> ID -> IO ID
 findRoot conn previd mid =
-    getParid conn mid >>= either terminate (findRoot conn mid)
+    getPaid conn mid >>= either terminate (findRoot conn mid)
   where
     terminate NoEntry = return previd
     terminate NoPid   = return mid
 
-type Hash = Map Id Message
+type Hash = Map ID Msg
 
-findDescendants :: Connection -> FilePath -> Id -> IO [Message]
+findDescendants :: Connection -> FilePath -> ID -> IO [Msg]
 findDescendants conn dir rtid = do
-    root <- head . chooseOne dir <$> selectById conn rtid
+    root <- head . chooseOne dir <$> selectByID conn rtid
     let mmap = Map.insert rtid root Map.empty
     findChildren ([rtid],mmap)
   where
-    findChildren :: ([Id],Hash) -> IO [Message]
-    findChildren (ids,hash) = selectByParid conn ids >>= findChildren'
+    findChildren :: ([ID],Hash) -> IO [Msg]
+    findChildren (ids,hash) = selectByPaID conn ids >>= findChildren'
       where
         findChildren' []    = return (Map.elems hash)
         findChildren' msgs  = findChildren $ pushChildren hash msgs []
 
-    pushChildren :: Hash -> [Message] -> [Id] -> ([Id],Hash)
+    pushChildren :: Hash -> [Msg] -> [ID] -> ([ID],Hash)
     pushChildren hash [] ids = (ids, hash)
     pushChildren hash (m:ms) ids
         | Map.notMember mid hash = pushChildren hash' ms (mid:ids)
@@ -90,7 +90,7 @@ findDescendants conn dir rtid = do
 ----------------------------------------------------------------
 -- to express failure, the empty list is used
 
-chooseOne :: FilePath -> [Message] -> [Message]
+chooseOne :: FilePath -> [Msg] -> [Msg]
 chooseOne _ [] = [] -- failure
 chooseOne "" (m:_) = [m]
 chooseOne dir msgs@(m:_)

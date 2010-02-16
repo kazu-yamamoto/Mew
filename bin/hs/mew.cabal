@@ -13,11 +13,12 @@ Executable smew
     Main-Is:            smew.hs
     GHC-Options:        -Wall -O2
     Build-Depends:      base, haskell98, filepath, directory,
-                        containers, parsec, hsemail-ns, HDBC, HDBC-sqlite3
-    Other-Modules:      Message, Param, Search, Util, Sql
--- Executable cmew
---     Main-Is:            cmew.hs
---     GHC-Options:        -Wall -O2
---     Build-Depends:      base, haskell98, filepath, directory,
---                         containers, parsec, hsemail-ns, HDBC, HDBC-sqlite3
---     Other-Modules:      Message, Param, Search, Util, Sql
+                        containers, parsec > 3, hsemail-ns, HDBC, HDBC-sqlite3
+    Other-Modules:      Msg, Param, Search, Util, Sql
+Executable cmew
+    Main-Is:            cmew.hs
+    GHC-Options:        -Wall -O2
+    Build-Depends:      base, haskell98, filepath, directory,
+                        containers, parsec > 3, hsemail-ns, HDBC, HDBC-sqlite3,
+                        old-time
+    Other-Modules:      Msg, Mail

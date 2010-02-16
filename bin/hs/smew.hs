@@ -8,7 +8,7 @@ module Main where
 import Control.Applicative
 import Control.Monad
 import Data.List
-import Message
+import Msg
 import Param
 import Search
 import System
@@ -42,7 +42,7 @@ parseKeys [mid,db]     = toTriple mid db ""
 parseKeys [mid,db,dir] = toTriple mid db dir
 parseKeys _            = return Nothing
 
-toTriple :: Id -> FilePath -> FilePath -> IO (Maybe Triple)
+toTriple :: ID -> FilePath -> FilePath -> IO (Maybe Triple)
 toTriple mid db dir = do
     db'  <- nomalizePath db
     let dir' = dropTrailingPathSeparator dir
