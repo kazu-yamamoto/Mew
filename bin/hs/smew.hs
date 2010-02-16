@@ -44,7 +44,7 @@ parseKeys _            = return Nothing
 
 toTriple :: ID -> FilePath -> FilePath -> IO (Maybe Triple)
 toTriple mid db dir = do
-    db'  <- nomalizePath db
+    db'  <- normalizePath db
     let dir' = dropTrailingPathSeparator dir
     return $ Just (mid,db',dir')
 

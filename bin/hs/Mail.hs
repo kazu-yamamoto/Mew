@@ -9,8 +9,8 @@ import Msg
 
 ----------------------------------------------------------------
 
-parseMail :: [Char] -> FilePath -> Maybe Msg
-parseMail cs file = case parse M.message "" cs of
+parseMail :: FilePath -> [Char] -> Maybe Msg
+parseMail file cs = case parse M.message "" cs of
   Left  _       -> Nothing
   Right message -> makeMsg message file
 
