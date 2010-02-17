@@ -1,11 +1,10 @@
-module Search (Triple, Search, dispatch, searchMe, searchChild, searchFamily) where
+module Search (Search, withDB, searchMe, searchChild, searchFamily) where
 
 import Control.Applicative
 import Data.List
 import Data.Map (Map)
 import qualified Data.Map as Map hiding (Map)
 import Data.Ord
-import Database.HDBC
 import Database.HDBC.Sqlite3
 import Msg
 import Sql
@@ -13,32 +12,22 @@ import System.FilePath
 
 ----------------------------------------------------------------
 
-type Triple = (ID,FilePath,FilePath)
-type Search = Connection -> ID -> FilePath -> IO [Msg]
+type Search a = ID -> FilePath -> Connection -> IO a
 
 ----------------------------------------------------------------
 
-dispatch :: Search -> Triple -> IO [Msg]
-dispatch func (mid,db,dir) = handleSqlError $ do
-    conn <- connectSqlite3 db
-    msgs <- func conn mid dir
-    disconnect conn
-    return msgs
+searchMe :: Search [Msg]
+searchMe mid dir conn = chooseOne dir <$> selectByID conn mid
 
 ----------------------------------------------------------------
 
-searchMe :: Search
-searchMe conn mid dir = chooseOne dir <$> selectByID conn mid
+searchChild :: Search [Msg]
+searchChild mid dir conn = chooseOne dir <$> selectByPaID conn [mid]
 
 ----------------------------------------------------------------
 
-searchChild :: Search
-searchChild conn mid dir = chooseOne dir <$> selectByPaID conn [mid]
-
-----------------------------------------------------------------
-
-searchFamily :: Search
-searchFamily conn mid dir = sortBy (comparing date) <$> findFamily
+searchFamily :: Search [Msg]
+searchFamily mid dir conn = sortBy (comparing date) <$> findFamily
   where
     findFamily = findRoot conn mid mid >>= findDescendants conn dir
 

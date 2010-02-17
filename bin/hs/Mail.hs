@@ -36,7 +36,7 @@ messageID = messageField xMessageID getMessageID
 messagePaID :: Message -> ID
 messagePaID message
   | ilen == 1 = head is
-  | rlen /= 0 = last is
+  | rlen /= 0 = last rs
   | ilen /= 0 = head is
   | otherwise = ""
   where

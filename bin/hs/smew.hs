@@ -11,8 +11,7 @@ import Data.List
 import Msg
 import Param
 import Search
-import System
-import System.FilePath
+import System.Environment
 import System.IO
 import Util
 
@@ -23,43 +22,34 @@ import Util
 helpMessage :: String
 helpMessage = "[-p|-c] id [db [dir]]"
 
-help :: IO ()
-help = getProgName >>= hPutStrLn stderr . (++ " " ++ helpMessage)
-
 ----------------------------------------------------------------
 
-parseOpts :: [[Char]] -> Maybe Search
+parseOpts :: [String] -> Maybe (Search [Msg])
 parseOpts opts
     | opts == []       = Just searchFamily
     | "-p" `elem` opts = Just searchMe     -- to find a parent, specify pid
     | "-c" `elem` opts = Just searchChild
     | otherwise        = Nothing
 
-parseKeys :: [String] -> IO (Maybe Triple)
-parseKeys []           = return Nothing
-parseKeys [mid]        = toTriple mid defaultDB ""
-parseKeys [mid,db]     = toTriple mid db ""
-parseKeys [mid,db,dir] = toTriple mid db dir
-parseKeys _            = return Nothing
-
-toTriple :: ID -> FilePath -> FilePath -> IO (Maybe Triple)
-toTriple mid db dir = do
-    db'  <- normalizePath db
-    let dir' = dropTrailingPathSeparator dir
-    return $ Just (mid,db',dir')
+parseArgs :: [String] -> Maybe (ID,FilePath,FilePath)
+parseArgs []           = Nothing
+parseArgs [mid]        = Just (mid, defaultDB, "")
+parseArgs [mid,db]     = Just (mid, db, "")
+parseArgs [mid,db,dir] = Just (mid, db, dir)
+parseArgs _            = Nothing
 
 ----------------------------------------------------------------
 
 main :: IO ()
 main = do
-    args <- getArgs
-    let opts = filter isOption args
-        keys = filter (not.isOption) args
-        cmd  = parseOpts opts
-    exec cmd <$> parseKeys keys >>=
-      maybe help (>>= printResults)
+    (args,opts) <- splitArgOpt <$> getArgs
+    let mtri = parseArgs args
+        mcmd = parseOpts opts
+    exec mcmd mtri
   where
-    isOption = ("-" `isPrefixOf`)
-    exec (Just func) (Just ckey) = Just (dispatch func ckey)
-    exec _           _           = Nothing
+    exec (Just cmd) (Just (mid,db,dir)) = do
+      db'  <- normalizePath db
+      dir' <- normalizePath dir
+      withDB db' (cmd mid dir') >>= printResults
+    exec _ _ = help helpMessage
     printResults = mapM_ (putStrLn . path)
