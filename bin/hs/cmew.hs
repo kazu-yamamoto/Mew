@@ -24,9 +24,9 @@ parseOpts opts = let dryRun     = "-n" `elem` opts
                  in (dryRun, fullUpdate)
 
 parseArgs :: [String] -> Maybe (FilePath,FilePath,String)
-parseArgs []          = Just (defaultDB,defaultMailDir,defaultMessageRegex)
-parseArgs [db]        = Just (db,defaultMailDir,defaultMessageRegex)
-parseArgs [db,dir]    = Just (db,dir,defaultMessageRegex)
+parseArgs []          = Just (defaultDB,defaultMailDir,defaultIgnoreRegex)
+parseArgs [db]        = Just (db,defaultMailDir,defaultIgnoreRegex)
+parseArgs [db,dir]    = Just (db,dir,defaultIgnoreRegex)
 parseArgs [db,dir,re] = Just (db,dir,re)
 parseArgs _           = Nothing
 

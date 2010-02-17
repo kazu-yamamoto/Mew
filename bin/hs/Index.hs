@@ -91,7 +91,7 @@ walkDirectory dir ctl = do
 handleDirectory :: FilePath -> Control -> IO ()
 handleDirectory dir ctl
   | dir =~ ignoreRegex ctl = ignore dir
-  | otherwise        = do
+  | otherwise = do
     modified <- isModified
     if modified
        then do
