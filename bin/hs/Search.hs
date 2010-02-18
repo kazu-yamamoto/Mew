@@ -17,12 +17,12 @@ type Search a = ID -> FilePath -> Connection -> IO a
 ----------------------------------------------------------------
 
 searchMe :: Search [Msg]
-searchMe mid dir conn = chooseOne dir <$> selectByID conn mid
+searchMe mid dir conn = chooseOne dir <$> getByID conn mid
 
 ----------------------------------------------------------------
 
 searchChild :: Search [Msg]
-searchChild mid dir conn = chooseOne dir <$> selectByPaID conn [mid]
+searchChild mid dir conn = chooseOne dir <$> getByPaID conn [mid]
 
 ----------------------------------------------------------------
 
@@ -34,7 +34,7 @@ searchFamily mid dir conn = sortBy (comparing date) <$> findFamily
 data ParentError = NoEntry | NoPid
 
 getPaid :: Connection -> ID -> IO (Either ParentError ID)
-getPaid conn mid = getPid <$> selectByID conn mid
+getPaid conn mid = getPid <$> getByID conn mid
   where
     getPid []     = Left NoEntry
     getPid (e:_)
@@ -54,12 +54,12 @@ type Hash = Map ID Msg
 
 findDescendants :: Connection -> FilePath -> ID -> IO [Msg]
 findDescendants conn dir rtid = do
-    root <- head . chooseOne dir <$> selectByID conn rtid
+    root <- head . chooseOne dir <$> getByID conn rtid
     let mmap = Map.insert rtid root Map.empty
     findChildren ([rtid],mmap)
   where
     findChildren :: ([ID],Hash) -> IO [Msg]
-    findChildren (ids,hash) = selectByPaID conn ids >>= findChildren'
+    findChildren (ids,hash) = getByPaID conn ids >>= findChildren'
       where
         findChildren' []    = return (Map.elems hash)
         findChildren' msgs  = findChildren $ pushChildren hash msgs []

@@ -1,8 +1,9 @@
 module Mail (parseMail) where
 
 import Text.Parsec
-import qualified Text.ParserCombinators.Parsec.Rfc2822NS as M (message)
-import Text.ParserCombinators.Parsec.Rfc2822NS (Message(..), Field(..))
+import Text.Parsec.String
+import Text.ParserCombinators.Parsec.Rfc2234NS (crlf)
+import Text.ParserCombinators.Parsec.Rfc2822NS (Field(..), fields)
 import System.Time
 import Locale
 import Msg
@@ -10,11 +11,11 @@ import Msg
 ----------------------------------------------------------------
 
 parseMail :: FilePath -> [Char] -> Maybe Msg
-parseMail file cs = case parse M.message "" cs of
+parseMail file cs = case parse header "" cs of
   Left  _       -> Nothing
-  Right message -> makeMsg message file
+  Right fs -> makeMsg fs file
 
-makeMsg :: Message -> FilePath -> Maybe Msg
+makeMsg :: [Field] -> FilePath -> Maybe Msg
 makeMsg message file = messageID message >>= \vmyid ->
   Just Msg { myid = vmyid
            , path = file
@@ -22,9 +23,14 @@ makeMsg message file = messageID message >>= \vmyid ->
            , date = messageDate message
            }
 
+header :: GenParser Char () [Field]
+header = do f <- fields
+            option [] crlf
+            return f
+
 ----------------------------------------------------------------
 
-messageID :: Message -> Maybe ID
+messageID :: [Field] -> Maybe ID
 messageID = messageField xMessageID getMessageID
 
 {-
@@ -33,8 +39,8 @@ messageID = messageField xMessageID getMessageID
   (3) The In-Reply-To contains two or more IDs, use the first one.
 -}
 
-messagePaID :: Message -> ID
-messagePaID message
+messagePaID :: [Field] -> ID
+messagePaID fs
   | ilen == 1 = head is
   | rlen /= 0 = last rs
   | ilen /= 0 = head is
@@ -42,19 +48,18 @@ messagePaID message
   where
     ilen = length is
     rlen = length rs
-    is = maybe [] id (messageField xInReplyTo getInReplyTo message)
-    rs = maybe [] id (messageField xReferences getReferences message)
+    is = maybe [] id (messageField xInReplyTo getInReplyTo fs)
+    rs = maybe [] id (messageField xReferences getReferences fs)
 
-messageDate :: Message -> String
+messageDate :: [Field] -> String
 messageDate message = maybe "9700101000000" (formatCalendarTime defaultTimeLocale "%Y%m%d%H%M%S") (messageField xdate getDate message)
 
-messageField :: (Field -> Bool) -> (Field -> a) -> Message -> Maybe a
-messageField p extract message
+messageField :: (Field -> Bool) -> (Field -> a) -> [Field] -> Maybe a
+messageField p extract fs
   | null rs   = Nothing
   | otherwise = Just (head rs)
   where
-    getFields (Message fs _) = fs
-    rs = map extract $ filter p $ getFields message
+    rs = map extract $ filter p fs
 
 ----------------------------------------------------------------
 

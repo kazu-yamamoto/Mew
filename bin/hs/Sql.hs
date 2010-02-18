@@ -11,26 +11,67 @@ import Msg
 withDB :: FilePath -> (Connection -> IO a) -> IO a
 withDB db cmd = handleSqlError $ do
     conn <- connectSqlite3 db
-    res <- cmd conn
+    createDB conn
+    res  <- withTransaction conn cmd
     disconnect conn
     return res
 
 ----------------------------------------------------------------
 
-selectByID :: Connection -> ID -> IO [Msg]
-selectByID conn mid = map toMsg <$> quickQuery' conn format params
+createDB :: Connection -> IO ()
+createDB conn = () <$ run conn format []
   where
-    format = "SELECT * FROM mew WHERE (mew.id = ?);"
+    format = "CREATE TABLE IF NOT EXISTS mew (id TEXT, path TEXT, parid TEXT, date TEXT);"
+
+getByID :: Connection -> ID -> IO [Msg]
+getByID conn mid = map toMsg <$> quickQuery' conn format params
+  where
+    format = "SELECT * FROM mew WHERE (id = ?);"
     params = [toSql mid]
 
-selectByPaID :: Connection -> [ID] -> IO [Msg]
-selectByPaID conn ids = map toMsg <$> quickQuery' conn format params
+getByPaID :: Connection -> [ID] -> IO [Msg]
+getByPaID conn ids = map toMsg <$> quickQuery' conn format params
   where
-    fmt    = replicate (length ids) "mew.parid = ?"
+    fmt    = replicate (length ids) "parid = ?"
     fmt'   = intersperse " OR " fmt
     fmt''  = concat fmt'
     format = "SELECT * FROM mew WHERE (" ++ fmt'' ++ ");"
     params = map toSql ids
+
+delByID :: Connection -> ID -> IO ()
+delByID conn mid = () <$ run conn format params
+  where
+    format = "DELETE FROM mew WHERE (id = ?);"
+    params = [toSql mid]
+
+addByID :: Connection -> ID -> String -> IO ()
+addByID conn mid dat = () <$ run conn format params
+  where
+    format = "INSERT INTO mew VALUES (?, ?, ?, ?);"
+    params = [toSql mid, toSql "", toSql "", toSql dat]
+
+----------------------------------------------------------------
+
+idForModtime :: String
+idForModtime = "<mew-ctime>"
+
+dbModtime :: Connection -> IO (Maybe Integer)
+dbModtime conn = do
+    msgs <- getByID conn idForModtime
+    if null msgs
+       then return Nothing
+       else return $ toI msgs
+  where
+    toI = Just . read . date . head
+
+setDBModtime :: Connection -> Integer -> IO ()
+setDBModtime conn mt = do
+     let mts = show mt
+     mint <- dbModtime conn
+     case mint of
+       Nothing  -> return ()
+       Just _   -> delByID conn idForModtime
+     addByID conn idForModtime mts
 
 ----------------------------------------------------------------
 
@@ -44,7 +85,7 @@ prepareAdd :: Connection -> IO Statement
 prepareAdd conn = prepare conn "INSERT INTO mew VALUES (?, ?, ?, ?);"
 
 getMsg :: Statement -> Msg -> IO [Msg]
-getMsg stmt msg = map toMsg <$> (execute stmt params *> fetchAllRows stmt)
+getMsg stmt msg = map toMsg <$> (execute stmt params *> fetchAllRows' stmt)
   where
     params = [toSql (myid msg)]
 
@@ -57,12 +98,3 @@ addMsg :: Statement -> Msg -> IO ()
 addMsg stmt msg = () <$ execute stmt params
   where
     params = fromMsg msg
-
-----------------------------------------------------------------
-
-dbModtime :: Connection -> IO Integer
-dbModtime conn = toI <$> quickQuery' conn format params
-  where
-   toI = read . date . toMsg . head
-   format = "SELECT * FROM mew WHERE (id = ?);"
-   params = [toSql "<mew-ctime>"]
