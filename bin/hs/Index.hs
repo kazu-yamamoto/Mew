@@ -17,7 +17,8 @@ import Text.Regex.Posix
 
 ----------------------------------------------------------------
 
-data Control = Control { toFolder    :: FilePath -> FilePath
+data Control = Control { toFolder    :: FilePath -> String
+                       , fromFolder  :: String -> FilePath
                        , ignoreRegex :: String
                        , msgRegex    :: String
                        , dirModFile  :: String
@@ -34,6 +35,7 @@ data Control = Control { toFolder    :: FilePath -> FilePath
 
 defaultCtl :: Control
 defaultCtl = Control { toFolder    = undefined
+                     , fromFolder  = undefined
                      , ignoreRegex = defaultIgnoreRegex
                      , msgRegex    = defaultMessageRegex
                      , dirModFile  = defaultDirModFile
@@ -68,19 +70,34 @@ toBeAdded msg = putStrLn $ "  " ++ path msg ++ " (to be added)"
 ----------------------------------------------------------------
 
 makeIndex :: Bool -> Bool -> FilePath -> FilePath -> String -> IO (Int, Int)
-makeIndex dryRun fullUpdate db dir re = withDB db $ \conn -> do
+makeIndex dryRun fullUpdate db dir re =
+  withNewDB db (not fullUpdate) $ \conn -> do
     createDB conn
     stime <- modtimeToInteger <$> getClockTime
-    let ctl0 = defaultCtl
-    ctl1 <- makeControl1 ctl0 dir re
-    ctl2 <- makeControl2 ctl1 fullUpdate conn
-    ctl3 <- makeControl3 ctl2 dryRun conn
-    walkDirectory dir ctl3
+    ctl <- makeControl conn
+    walkDirectory dir ctl
     indexDB conn
     unless dryRun $ setDBModtime conn stime
-    registered <- readIORef (refReg ctl3)
-    deleted    <- readIORef (refDel ctl3)
-    return (registered,deleted)
+    results ctl
+  where
+    makeControl conn = do
+      let ctl0 = defaultCtl
+      ctl1 <- makeControl1 ctl0 dir re
+      ctl2 <- makeControl2 ctl1 fullUpdate conn
+      makeControl3 ctl2 dryRun conn
+    results ctl = do
+      registered <- readIORef (refReg ctl)
+      deleted    <- readIORef (refDel ctl)
+      return (registered,deleted)
+
+withNewDB :: FilePath -> Bool -> (Connection -> IO a) -> IO a
+withNewDB db repl action = do
+    when repl $ copyFile db newdb
+    ret <- withDB newdb action
+    renameFile newdb db
+    return ret
+  where
+    newdb = db ++ ".new"
 
 makeControl1 :: Control -> FilePath -> String -> IO Control
 makeControl1 ctl dir re = do
@@ -88,6 +105,7 @@ makeControl1 ctl dir re = do
     refd <- newIORef 0
     refr <- newIORef 0
     return ctl { toFolder    = drop dlen
+               , fromFolder  = (dir </>)
                , ignoreRegex = re
                , refDel      = refd
                , refReg      = refr
@@ -159,22 +177,23 @@ handleFile file ctl
         case mmsg of
           Nothing  -> return ()
           Just msg -> do
-            register <- deleteMsgifMoved msg
+            register <- deleteMsgIfMoved msg
             when register (registerMsg msg)
   where
     isModified = case dbModTime ctl of
       Nothing   -> return True
       Just dbmt -> (dbmt <) <$> getModTime file
-    deleteMsgifMoved msg = case dbModTime ctl of
+    deleteMsgIfMoved msg = case dbModTime ctl of
       Nothing   -> return True
       Just _    -> do
         msgs <- getmsg ctl msg
         msgs' <- filterM doesExist msgs
         let msgsToDel = msgs \\ msgs'
         mapM_ (delmsg ctl) msgsToDel
+        modifyIORef (refDel ctl) (+ length msgsToDel)
         let exist = any (\m -> path m == path msg) msgs'
         return (not exist)
-    doesExist m = doesFileExist (path m)
+    doesExist m = doesFileExist $ fromFolder ctl $ path m
     registerMsg msg = do
       addmsg ctl msg
       modifyIORef (refReg ctl) (+1)
