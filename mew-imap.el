@@ -1262,12 +1262,12 @@
 	    (setq process (mew-imap-open pnm "localhost" lport no-msg)))))
        (sslp
 	(if (mew-port-equal port sslport) (setq tls mew-tls-imap))
- 	(setq sslpro (mew-open-ssl-stream case server sslport tls))
- 	(when sslpro
- 	  (setq sslname (process-name sslpro))
+	(setq sslpro (mew-open-ssl-stream case server sslport tls))
+	(when sslpro
+	  (setq sslname (process-name sslpro))
 	  (setq lport (mew-ssl-pnm-to-lport sslname))
- 	  (when lport
- 	    (setq process (mew-imap-open pnm mew-ssl-localhost lport no-msg)))))
+	  (when lport
+	    (setq process (mew-imap-open pnm mew-ssl-localhost lport no-msg)))))
        (proxysrv
 	(setq process (mew-imap-open pnm proxysrv proxyport no-msg)))
        (t

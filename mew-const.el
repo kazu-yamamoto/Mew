@@ -277,7 +277,7 @@
 
 ;; Can skip \n. Match the first id. For example:
 ;; In-Reply-To: Your message of "Mon, 5 Oct 1998 13:33:14 +0900"
-;; 	<19981005133317N.kazu@example.org>
+;;	<19981005133317N.kazu@example.org>
 (defconst mew-regex-id "<[^>\n\t]+>")
 
 (defconst mew-regex-case "^\\([^-+$%*,:][^,:]+\\):\\(.*\\)")

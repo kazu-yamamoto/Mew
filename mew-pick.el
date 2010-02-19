@@ -671,7 +671,7 @@ If you want to change the stored keyword, execute this command with '\\[universa
   (unless (and (listp kyvl) (= (length kyvl) 3))
     (error "Filter %s is invalid" kyvl))
   (let ((op (nth 0 kyvl))
- 	(ky (nth 1 kyvl))
+	(ky (nth 1 kyvl))
 	(vl (nth 2 kyvl)))
     (if (string= ky "head")
 	(setq ky mew-pick-filter-est-head-fields))

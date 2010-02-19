@@ -544,7 +544,7 @@
 	 (write-region begin end file1 nil 'no-msg)))
       (setq file2 (mew-make-temp-name))
       (if (eq prog mew-prog-application/msword)
- 	  (mew-frwlet 'utf-8 mew-cs-dummy
+	  (mew-frwlet 'utf-8 mew-cs-dummy
 	    (if mew-use-old-wvhtml
 		(call-process prog nil nil nil file1 file2)
 	      (call-process prog nil nil nil

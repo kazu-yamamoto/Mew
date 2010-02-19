@@ -1098,8 +1098,8 @@ public keyring."
 	   (insert "\"pgp -ke\" and \"pgp -ks\" to change them.\n"))
 	  ((eq mew-pgp-ver mew-pgp-ver5)
 	   (insert "\"pgpk -e\" and \"pgpk -s\" to change them.\n"))
- 	  ((eq mew-pgp-ver mew-pgp-ver6)
- 	   (insert "\"pgp -ke\" and \"pgp -ks\" to change them.\n"))
+	  ((eq mew-pgp-ver mew-pgp-ver6)
+	   (insert "\"pgp -ke\" and \"pgp -ks\" to change them.\n"))
 	  ((eq mew-pgp-ver mew-pgp-verg)
 	   (insert "\"gpg --edit-key\" to change them.\n")))
 	 (insert "If you do not know what TRUST and VALIDITY is,\n"
@@ -1196,11 +1196,11 @@ according to a URL in a field specified by 'mew-x-pgp-key-list'."
 ;; You do not have the secret key needed to decrypt this file.
 ;;
 ;;    <Verify> <2>
-;; 	Keyring file 'pubring.pgp' does not exist.
-;; 	Enter public key filename:
+;;	Keyring file 'pubring.pgp' does not exist.
+;;	Enter public key filename:
 ;;
-;; 	Key matching expected Key ID 1B8BF431 not found in file 'pubring.pgp'.
-;; 	Enter public key filename:
+;;	Key matching expected Key ID 1B8BF431 not found in file 'pubring.pgp'.
+;;	Enter public key filename:
 ;;
 ;; <Sign> <1>
 ;;

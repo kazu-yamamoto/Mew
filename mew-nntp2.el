@@ -76,7 +76,7 @@
 (defun mew-nntp2-command-next (pro pnm)
   (let ((msgs (mew-nntp2-get-messages pnm))
 	(qfld (mew-nntp2-get-qfld pnm))
- 	(case (mew-nntp2-get-case pnm))
+	(case (mew-nntp2-get-case pnm))
 	msg)
     (if msgs
 	(progn
@@ -85,7 +85,7 @@
 	  (mew-queue-insert-file pnm mew-nntp2-info-list-save-length qfld msg)
 	  (mew-set-buffer-multibyte nil)
 	  (mew-info-clean-up pnm mew-nntp2-info-list-clean-length)
- 	  (mew-nntp2-set-case pnm case) ;; override
+	  (mew-nntp2-set-case pnm case) ;; override
 	  (mew-nntp2-set-messages pnm msgs)
 	  (set-process-buffer pro (current-buffer))
 	  (mew-nntp2-set-status pnm "post")

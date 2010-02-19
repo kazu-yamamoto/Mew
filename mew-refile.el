@@ -148,12 +148,12 @@ mew-refile-guess-from-me-is-special."
 	name ret first)
     (catch 'loop
       (dolist (al alist)
- 	(setq ret al)
- 	(setq name (cdr ret))
- 	(when (and (stringp name) (string= (downcase name) skey))
+	(setq ret al)
+	(setq name (cdr ret))
+	(when (and (stringp name) (string= (downcase name) skey))
 	  (unless first
 	    (setq first ret))
- 	  (unless (string-match node-regex (car ret))
+	  (unless (string-match node-regex (car ret))
 	    (throw 'loop nil)))
 	(setq ret nil)))
     (if mew-use-node-folder

@@ -312,14 +312,14 @@
 
 ;; (defun mew-smtp-command-pwd-plain (pro pnm)
 ;;   (let* ((case (mew-smtp-get-case pnm))
-;; 	 (user (mew-smtp-get-auth-user pnm))
-;; 	 (authorize-id (mew-smtp-auth-plain-authorize-id case))
-;; 	 (prompt (format "SMTP PLAIN password (%s): " user))
-;;          (passwd (mew-smtp-input-passwd prompt pnm))
-;; 	 (plain (mew-base64-encode-string
-;; 		 (if authorize-id
-;; 		     (format "%s\0%s\0%s" user user passwd)
-;; 		   (format "\0%s\0%s" user passwd)))))
+;;	 (user (mew-smtp-get-auth-user pnm))
+;;	 (authorize-id (mew-smtp-auth-plain-authorize-id case))
+;;	 (prompt (format "SMTP PLAIN password (%s): " user))
+;;	 (passwd (mew-smtp-input-passwd prompt pnm))
+;;	 (plain (mew-base64-encode-string
+;;		 (if authorize-id
+;;		     (format "%s\0%s\0%s" user user passwd)
+;;		   (format "\0%s\0%s" user passwd)))))
 ;;     (mew-smtp-process-send-string pro "%s" plain)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -393,7 +393,7 @@
 	(setq pro (make-network-process :name name :buffer buf
 					:host server :service port
 					:family family :nowait nowait))
- 	(if nowait
+	(if nowait
 	    (run-at-time mew-smtp-submission-timeout nil 'mew-smtp-submission-timeout pro))
 	pro))
   (defalias 'mew-open-network-stream 'open-network-stream))

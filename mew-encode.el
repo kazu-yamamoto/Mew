@@ -559,8 +559,8 @@
 (defun mew-encode-mime-body (ctl cte file no-encoding)
   ;; If file is 't', target is buffered.
   ;; text should be buffered
-  ;; 	- specified charset is a rare case
-  ;; 	- copy overhead may be small
+  ;;	- specified charset is a rare case
+  ;;	- copy overhead may be small
   (let* ((ct (mew-syntax-get-value ctl 'cap))
          (textp (mew-ct-textp ct))
 	 (charset (if textp (mew-syntax-get-param ctl "charset")))

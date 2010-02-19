@@ -120,13 +120,13 @@
 ;; mew-from is really strange to maintain backword compatibility.
 (defun mew-from (&optional case)
   (or (unless mew-config-alist
- 	(if mew-generate-from-list
- 	    mew-from
- 	  (car mew-from-list)))
+	(if mew-generate-from-list
+	    mew-from
+	  (car mew-from-list)))
       (let ((name (mew-name case))
- 	    (addr (mew-mail-address case)))
+	    (addr (mew-mail-address case)))
 	(if (and name (string-match "[^ \t]" name))
- 	    (format "%s <%s>" name addr)
+	    (format "%s <%s>" name addr)
 	  addr))))
 
 (defun mew-cc (&optional case)

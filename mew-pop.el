@@ -815,7 +815,7 @@
 	 (hlds (mew-pop-get-hlds pnm))
 	 (uidl (mew-pop-get-uidl pnm))
 	 (done (mew-pop-get-done pnm))
- 	 (error (mew-pop-get-error pnm))
+	 (error (mew-pop-get-error pnm))
 	 (file (mew-expand-file bnm mew-pop-msgid-file))
 	 (buf (process-buffer process))
 	 (virtual-info (mew-pop-get-virtual-info pnm))

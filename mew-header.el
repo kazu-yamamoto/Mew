@@ -196,7 +196,7 @@
 	  (setq params (cdr value))
 	  (setq value (car value)))
 	(insert key)
-  	(insert " ")
+	(insert " ")
 	(setq med (point))
 	(if (string-match "^[\t -~]*$" value)
 	    (insert value)

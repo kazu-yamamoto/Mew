@@ -1080,7 +1080,7 @@ That is, each line may be more than 75."
 (defun mew-puny-encode (input)
   (when mew-cs-utf-16be
     (condition-case nil
- 	(concat "xn--" (mew-puny-encode1 (mew-cs-encode-string input mew-cs-utf-16be)))
+	(concat "xn--" (mew-puny-encode1 (mew-cs-encode-string input mew-cs-utf-16be)))
       (error nil))))
 
 (defun mew-puny-encode1 (input)

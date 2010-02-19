@@ -444,7 +444,7 @@
    '("Privacy"
      ["All messages"               mew-draft-toggle-privacy-always    t]
      ["Msgs replying to encrypted" mew-draft-toggle-privacy-encrypted t]
-     ["This message"   		   mew-draft-set-privacy-type         t])
+     ["This message"		   mew-draft-set-privacy-type         t])
    '("FIB"
      ["FIB next item"     mew-fib-next-item     (not (mew-attach-p))]
      ["FIB previous item" mew-fib-previous-item (not (mew-attach-p))]

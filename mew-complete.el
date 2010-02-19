@@ -166,7 +166,7 @@ is inserted before the cursor, the short name is expanded to its address."
   (interactive)
   (mew-draft-set-completion-ignore-case mew-complete-address-ignore-case)
   (let ((word (mew-delete-backward-char))
-    	(completion-ignore-case mew-complete-address-ignore-case))
+	(completion-ignore-case mew-complete-address-ignore-case))
     (if (null word)
 	(tab-to-tab-stop)
       (if mew-use-full-alias
@@ -185,7 +185,7 @@ is inserted before the cursor, the short name is expanded to its address."
   (interactive)
   (mew-draft-set-completion-ignore-case mew-complete-address-ignore-case)
   (let ((word (mew-delete-backward-char))
-    	(completion-ignore-case mew-complete-address-ignore-case)
+	(completion-ignore-case mew-complete-address-ignore-case)
 	try)
     (if (null word)
 	(message "No expand key")
@@ -334,7 +334,7 @@ is inserted before the cursor, the short name is expanded to its address."
   "Complete function for cases."
   (interactive)
   (let ((word (or (mew-delete-backward-char) ""))
-    	(completion-ignore-case mew-complete-case-ignore-case))
+	(completion-ignore-case mew-complete-case-ignore-case))
     (mew-complete
      word
      (mapcar 'list mew-config-cases)
@@ -619,7 +619,7 @@ the name exists."
 	  (message
 	   "To expand '%s', type '%c' then '%s'"
 	   cmp EXPAND-CHAR
- 	   (substitute-command-keys
+	   (substitute-command-keys
 	    "\\<mew-draft-header-map>\\[mew-draft-header-comp]"))))
      ;; no candidate
      (t
