@@ -20,5 +20,5 @@ Executable cmew
     GHC-Options:        -Wall -O2
     Build-Depends:      base, haskell98, filepath, directory,
                         containers, parsec > 3, hsemail-ns, HDBC, HDBC-sqlite3,
-                        old-time, regex-posix, unix, bytestring
+                        old-time, regex-posix, unix, bytestring, time
     Other-Modules:      Msg, Mail

@@ -1,37 +1,55 @@
-module Mail (parseMail) where
+module Mail (fileMsg) where
 
 import Text.Parsec
 import Text.Parsec.String
-import Text.ParserCombinators.Parsec.Rfc2234NS (crlf)
-import Text.ParserCombinators.Parsec.Rfc2822NS (Field(..), fields)
-import System.Time
+import Control.Applicative
+import Data.Char
 import Locale
 import Msg
+import Data.Time
 
 ----------------------------------------------------------------
 
-parseMail :: FilePath -> [Char] -> Maybe Msg
-parseMail file cs = case parse header "" cs of
-  Left  _       -> Nothing
-  Right fs -> makeMsg fs file
+type Key = String
+newtype Value = Value { foldedLines :: [String] } deriving Show
+type Header = [(Key,Value)]
 
-makeMsg :: [Field] -> FilePath -> Maybe Msg
-makeMsg message file = messageID message >>= \vmyid ->
+getValue :: Key -> [(Key,Value)] -> Maybe String
+getValue key fs = lookup key fs >>= return . concat . foldedLines
+
+----------------------------------------------------------------
+
+fileMsg :: FilePath -> String -> IO (Maybe Msg)
+-- fileMsg file folder = makeMsg folder . header <$> readFile file
+fileMsg file folder = makeMsg folder . header <$> readFile file
+
+header :: [Char] -> Header
+header = unfold . takeWhile (/= "") . lines
+
+unfold :: [String] -> Header
+unfold [] = []
+unfold (l:ls) = unfold' $ break (== ':') l
+  where
+    unfold' (_,[])   = unfold ls'
+    unfold' (k,_:v') = (key, Value (v:vs)) : unfold ls'
+      where
+        key = map toLower k
+        v   = dropWhile isSpace v'
+    vs  = takeWhile (\(c:_) -> isSpace c) ls
+    ls' = dropWhile (\(c:_) -> isSpace c) ls
+
+makeMsg :: FilePath -> Header -> Maybe Msg
+makeMsg folder hdr = messageID hdr >>= \vmyid ->
   Just Msg { myid = vmyid
-           , path = file
-           , paid = messagePaID message
-           , date = messageDate message
+           , path = folder
+           , paid = messagePaID hdr
+           , date = messageDate hdr
            }
 
-header :: GenParser Char () [Field]
-header = do f <- fields
-            option [] crlf
-            return f
-
 ----------------------------------------------------------------
 
-messageID :: [Field] -> Maybe ID
-messageID = messageField xMessageID getMessageID
+messageID :: Header -> Maybe ID
+messageID hdr = getValue "message-id" hdr >>= parseMaybe msgid
 
 {-
   (1) The In-Reply-To contains one ID, use it.
@@ -39,8 +57,8 @@ messageID = messageField xMessageID getMessageID
   (3) The In-Reply-To contains two or more IDs, use the first one.
 -}
 
-messagePaID :: [Field] -> ID
-messagePaID fs
+messagePaID :: Header -> ID
+messagePaID hdr
   | ilen == 1 = head is
   | rlen /= 0 = last rs
   | ilen /= 0 = head is
@@ -48,53 +66,41 @@ messagePaID fs
   where
     ilen = length is
     rlen = length rs
-    is = maybe [] id (messageField xInReplyTo getInReplyTo fs)
-    rs = maybe [] id (messageField xReferences getReferences fs)
+    is = maybe [] id inReplyTo
+    rs = maybe [] id references
+    inReplyTo  = getValue "in-reply-to" hdr >>= parseMaybe msgids
+    references = getValue "references"  hdr >>= parseMaybe msgids
 
-messageDate :: [Field] -> String
-messageDate message = maybe "9700101000000" (formatCalendarTime defaultTimeLocale "%Y%m%d%H%M%S") (messageField xdate getDate message)
-
-messageField :: (Field -> Bool) -> (Field -> a) -> [Field] -> Maybe a
-messageField p extract fs
-  | null rs   = Nothing
-  | otherwise = Just (head rs)
+messageDate :: Header -> String
+messageDate hdr = maybe "19700101000000" toStr (getValue "date" hdr >>= parseDate)
   where
-    rs = map extract $ filter p fs
+    toStr :: UTCTime -> String
+    toStr  = formatTime defaultTimeLocale "%Y%m%d%H%M%S"
+
+parseDate :: String -> Maybe UTCTime
+parseDate cs = parseTime defaultTimeLocale "%a, %e %b %Y %T %z" xs
+  where
+    (xs,_) = break (=='(') cs
 
 ----------------------------------------------------------------
 
-{-
- Design of hsemail-ns sucks. What boilerplates are!
--}
+parseMaybe :: Parser a -> [Char] -> Maybe a
+parseMaybe p cs = either (const Nothing) (Just) (parse p "" cs)
 
-xMessageID :: Field -> Bool
-xMessageID (MessageID _) = True
-xMessageID _             = False
+----------------------------------------------------------------
 
-getMessageID :: Field -> String
-getMessageID (MessageID x) = x
-getMessageID _             = error "getMessageID"
+msgid :: Parser String
+msgid = do
+    char '<'
+    left  <- many1 (oneOf dotAtom)
+    char '@'
+    right <- many1 (oneOf dotAtom)
+    char '>'
+    spaces
+    return $ "<" ++ left ++ "@" ++ right ++ ">"
+  where
+    dotAtom = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9']
+           ++ "!#$%&'*+-/=?^_`{|}~."
 
-xInReplyTo :: Field -> Bool
-xInReplyTo (InReplyTo _) = True
-xInReplyTo _             = False
-
-getInReplyTo :: Field -> [String]
-getInReplyTo (InReplyTo x) = x
-getInReplyTo _             = error "getInReplyTo"
-
-xReferences :: Field -> Bool
-xReferences (References _) = True
-xReferences _              = False
-
-getReferences :: Field -> [String]
-getReferences (References x) = x
-getReferences _              = error "getReferences"
-
-xdate :: Field -> Bool
-xdate (Date _) = True
-xdate _        = False
-
-getDate :: Field -> CalendarTime
-getDate (Date x) = x
-getDate _        = error "getDate"
+msgids :: Parser [String]
+msgids = many1 msgid

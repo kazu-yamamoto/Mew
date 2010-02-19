@@ -11,7 +11,6 @@ import Msg
 withDB :: FilePath -> (Connection -> IO a) -> IO a
 withDB db cmd = handleSqlError $ do
     conn <- connectSqlite3 db
-    createDB conn
     res  <- withTransaction conn cmd
     disconnect conn
     return res
@@ -22,6 +21,16 @@ createDB :: Connection -> IO ()
 createDB conn = () <$ run conn format []
   where
     format = "CREATE TABLE IF NOT EXISTS mew (id TEXT, path TEXT, parid TEXT, date TEXT);"
+
+indexDB :: Connection -> IO ()
+indexDB conn = do
+   run conn "CREATE INDEX IF NOT EXISTS mew_id ON mew (id);" []
+   run conn "REINDEX mew_id;" []
+   run conn "CREATE INDEX IF NOT EXISTS mew_parid ON mew (parid);" []
+   run conn "REINDEX mew_parid;" []
+   return ()
+
+----------------------------------------------------------------
 
 getByID :: Connection -> ID -> IO [Msg]
 getByID conn mid = map toMsg <$> quickQuery' conn format params

@@ -1,8 +1,4 @@
-{-# LANGUAGE BangPatterns #-}
-
 module Index (makeIndex) where
-
--- import Data.ByteString.Lazy.Char8 (unpack, hGet)
 
 import Control.Applicative
 import Control.Monad
@@ -73,12 +69,14 @@ toBeAdded msg = putStrLn $ "  " ++ path msg ++ " (to be added)"
 
 makeIndex :: Bool -> Bool -> FilePath -> FilePath -> String -> IO (Int, Int)
 makeIndex dryRun fullUpdate db dir re = withDB db $ \conn -> do
+    createDB conn
     stime <- modtimeToInteger <$> getClockTime
     let ctl0 = defaultCtl
     ctl1 <- makeControl1 ctl0 dir re
     ctl2 <- makeControl2 ctl1 fullUpdate conn
     ctl3 <- makeControl3 ctl2 dryRun conn
     walkDirectory dir ctl3
+    indexDB conn
     unless dryRun $ setDBModtime conn stime
     registered <- readIORef (refReg ctl3)
     deleted    <- readIORef (refDel ctl3)
@@ -130,15 +128,15 @@ walkDirectory dir ctl = do
 
 handleDirectory :: FilePath -> Control -> IO ()
 handleDirectory dir ctl
-  | dir =~ ignoreRegex ctl = ignoreDir ctl dir
+  | dir =~ ignoreRegex ctl = ignoreDir ctl (toFolder ctl dir)
   | otherwise = do
     modified <- isModified
     if modified
        then do
-         processDir ctl dir
+         processDir ctl (toFolder ctl dir)
          walkDirectory dir ctl
        else do
-         skipDir ctl dir
+         skipDir ctl (toFolder ctl dir)
          -- xxx check link count
          walkDirectory dir ctl
   where
@@ -157,24 +155,12 @@ handleFile file ctl
   | otherwise = do
       modified <- isModified
       when modified $ do
-        -- HERE HERE HERE
-{-
-        mmsg <- withBinaryFile file ReadMode $ \h -> do
-          cs <- unpack <$> hGet h 4096
-          let !fs = parseMail (toFolder ctl file) cs
-          return fs
--}
-        mmsg <- withBinaryFile file ReadMode $ \h -> do
-          !fs <- parseMail (toFolder ctl file) <$> hGetContents h
-          return fs
+        mmsg <- fileMsg file (toFolder ctl file)
         case mmsg of
           Nothing  -> return ()
           Just msg -> do
-            {- xxx dbModTime == Nothing ->  don't delete process!!!!
             register <- deleteMsgifMoved msg
             when register (registerMsg msg)
-            -}
-            registerMsg msg
   where
     isModified = case dbModTime ctl of
       Nothing   -> return True
