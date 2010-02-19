@@ -15,12 +15,10 @@ normalizePath path = expandHome path >>= canonicalizePath >>= return . dropTrail
     expandHome dir      = return dir
 
 help :: String -> IO ()
-help message = getProgName >>= hPutStrLn stderr . (++ " " ++ message)
+help message = getProgName >>= hPutStrLn stderr . (\prog -> "Usage: " ++ prog ++ " " ++ message)
 
 splitArgOpt :: [String] -> ([String],[String])
 splitArgOpt as = (filter isArg as, filter isOpt as)
   where
     isArg = not . isOpt
     isOpt = ("-" `isPrefixOf`)
-
-

@@ -22,14 +22,20 @@ import Util
 helpMessage :: String
 helpMessage = "[-p|-c] id [db [dir]]"
 
+options :: [String]
+options = ["-p","-c"]
+
 ----------------------------------------------------------------
 
 parseOpts :: [String] -> Maybe (Search [Msg])
 parseOpts opts
-    | opts == []       = Just searchFamily
-    | "-p" `elem` opts = Just searchMe     -- to find a parent, specify pid
-    | "-c" `elem` opts = Just searchChild
-    | otherwise        = Nothing
+  | opts == []       = Just searchFamily
+  | unknown          = Nothing
+  | "-p" `elem` opts = Just searchMe     -- to find a parent, specify pid
+  | "-c" `elem` opts = Just searchChild
+  | otherwise        = Nothing
+  where
+    unknown = (opts `union` options) \\ options /= []
 
 parseArgs :: [String] -> Maybe (ID,FilePath,FilePath)
 parseArgs []           = Nothing

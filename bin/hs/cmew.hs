@@ -16,12 +16,19 @@ import Util
 ----------------------------------------------------------------
 
 helpMessage :: String
-helpMessage = "[-n] [-f] [db [dir [dignore_regex [target_folder]]]]"
+helpMessage = "[-n] [-f] [db [dir [dignore_regex]]]"
 
-parseOpts :: [String] -> (Bool,Bool)
-parseOpts opts = let dryRun     = "-n" `elem` opts
-                     fullUpdate = "-f" `elem` opts
-                 in (dryRun, fullUpdate)
+options :: [String]
+options = ["-n","-f"]
+
+parseOpts :: [String] -> Maybe (Bool,Bool)
+parseOpts opts
+  | unknown   = Nothing
+  | otherwise = Just (dryRun, fullUpdate)
+  where
+    unknown = (opts `union` options) \\ options /= []
+    dryRun     = "-n" `elem` opts
+    fullUpdate = "-f" `elem` opts
 
 parseArgs :: [String] -> Maybe (FilePath,FilePath,String)
 parseArgs []          = Just (defaultDB,defaultMailDir,defaultIgnoreRegex)
@@ -39,7 +46,7 @@ main = do
         mopt = parseOpts opts
     exec mopt mtri
   where
-    exec (dryRun,fullUpdate) (Just (db,dir,re)) = do
+    exec (Just (dryRun,fullUpdate)) (Just (db,dir,re)) = do
       db' <- normalizePath db
       dir' <- normalizePath dir
       makeIndex dryRun fullUpdate db' dir' re >>= printResults
