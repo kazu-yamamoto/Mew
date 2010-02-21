@@ -14,6 +14,9 @@ import System.FilePath ((</>))
 import System.IO
 import System.Time
 import Text.Regex.Posix
+-- #ifdef
+import System.Posix.Files
+-- #endif
 
 ----------------------------------------------------------------
 
@@ -139,10 +142,17 @@ walkDirectory dir ctl = do
     forM_ files $ \file -> do
       let file' = dir </> file
       isDir <- doesDirectoryExist file'
-      -- xxx ignore symlink
-      if isDir
-         then handleDirectory file' ctl
-         else handleFile      file' ctl
+      -- #ifdef
+      isSym <- isSymbolicLink <$> getSymbolicLinkStatus file'
+      -- #else
+      -- let isSym = False
+      -- #endif
+      switch isDir isSym file'
+  where
+    switch isDir isSym file
+      | isDir && isSym = ignoreDir ctl (toFolder ctl file)
+      | isDir          = handleDirectory file ctl
+      | otherwise      = handleFile      file ctl
 
 handleDirectory :: FilePath -> Control -> IO ()
 handleDirectory dir ctl
@@ -155,8 +165,12 @@ handleDirectory dir ctl
          walkDirectory dir ctl
        else do
          skipDir ctl (toFolder ctl dir)
-         -- xxx check link count
-         walkDirectory dir ctl
+         -- #ifdef
+         nlink <- linkCount <$> getFileStatus dir
+         when (nlink > 2) $ walkDirectory dir ctl
+         -- #else
+         -- walkDirectory dir ctl
+         -- #endif
   where
     isModified = case dbModTime ctl of
       Nothing   -> return True
