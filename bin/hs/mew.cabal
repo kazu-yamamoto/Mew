@@ -8,7 +8,7 @@ Synopsis:               Sub-commands for Mew
 Description:            "smew" and "cmew"
 Category:               Mail
 Cabal-Version:          >= 1.2
-Build-Type:             Simple
+Build-Type:             Configure
 Executable smew
     Main-Is:            smew.hs
     GHC-Options:        -Wall -O2
@@ -21,4 +21,8 @@ Executable cmew
     Build-Depends:      base, haskell98, filepath, directory,
                         containers, parsec > 3, hsemail-ns, HDBC, HDBC-sqlite3,
                         old-time, regex-posix, unix, bytestring, time
-    Other-Modules:      Msg, Mail
+    Other-Modules:      Msg, Mail, Sql, Param, Index, Util
+    extensions:         CPP
+    includes:           config.h
+    install-includes:   config.h
+

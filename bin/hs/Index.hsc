@@ -1,4 +1,8 @@
+{-# LANGUAGE CPP #-}
+
 module Index (makeIndex) where
+
+#include <config.h>
 
 import Control.Applicative
 import Control.Monad
@@ -14,9 +18,9 @@ import System.FilePath ((</>))
 import System.IO
 import System.Time
 import Text.Regex.Posix
--- #ifdef
+#ifndef HAVE_WINDOWS_H
 import System.Posix.Files
--- #endif
+#endif
 
 ----------------------------------------------------------------
 
@@ -142,11 +146,11 @@ walkDirectory dir ctl = do
     forM_ files $ \file -> do
       let file' = dir </> file
       isDir <- doesDirectoryExist file'
-      -- #ifdef
+#ifdef HAVE_WINDOWS_H
+      let isSym = False
+#else
       isSym <- isSymbolicLink <$> getSymbolicLinkStatus file'
-      -- #else
-      -- let isSym = False
-      -- #endif
+#endif
       switch isDir isSym file'
   where
     switch isDir isSym file
@@ -165,12 +169,12 @@ handleDirectory dir ctl
          walkDirectory dir ctl
        else do
          skipDir ctl (toFolder ctl dir)
-         -- #ifdef
+#ifdef HAVE_WINDOWS_H
+         walkDirectory dir ctl
+#else
          nlink <- linkCount <$> getFileStatus dir
          when (nlink > 2) $ walkDirectory dir ctl
-         -- #else
-         -- walkDirectory dir ctl
-         -- #endif
+#endif
   where
     isModified = case dbModTime ctl of
       Nothing   -> return True

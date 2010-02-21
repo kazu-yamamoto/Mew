@@ -8,4 +8,4 @@ install:
 	cabal install $(OPT)
 
 clean: 
-	rm -rf dist
+	rm -rf dist config.log config.h config.status
