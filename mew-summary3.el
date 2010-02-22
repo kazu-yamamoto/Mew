@@ -301,6 +301,7 @@ You may want to set 'mew-reply-all-alist' to:
     (let ((owin (selected-window))
 	  (fld (mew-summary-folder-name))
 	  (msg (mew-summary-message-number2))
+	  (split-width-threshold nil)
 	  cwin cbuf draft case
 	  subject to cc newsgroups in-reply-to references
 	  encrypted fromme ret)
