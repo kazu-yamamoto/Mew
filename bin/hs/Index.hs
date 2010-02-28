@@ -1,8 +1,4 @@
-{-# LANGUAGE CPP #-}
-
 module Index (makeIndex) where
-
-#include <config.h>
 
 import Control.Applicative
 import Control.Monad
@@ -13,14 +9,12 @@ import Mail
 import Msg
 import Param
 import Sql
+import Stat
 import System.Directory
 import System.FilePath ((</>))
 import System.IO
 import System.Time
 import Text.Regex.Posix
-#ifndef HAVE_WINDOWS_H
-import System.Posix.Files
-#endif
 
 ----------------------------------------------------------------
 
@@ -146,11 +140,7 @@ walkDirectory dir ctl = do
     forM_ files $ \file -> do
       let file' = dir </> file
       isDir <- doesDirectoryExist file'
-#ifdef HAVE_WINDOWS_H
-      let isSym = False
-#else
-      isSym <- isSymbolicLink <$> getSymbolicLinkStatus file'
-#endif
+      isSym <- isSymlink file'
       switch isDir isSym file'
   where
     switch isDir isSym file
@@ -169,12 +159,10 @@ handleDirectory dir ctl
          walkDirectory dir ctl
        else do
          skipDir ctl (toFolder ctl dir)
-#ifdef HAVE_WINDOWS_H
-         walkDirectory dir ctl
-#else
-         nlink <- linkCount <$> getFileStatus dir
-         when (nlink > 2) $ walkDirectory dir ctl
-#endif
+         mn <- getLinkCount dir
+         case mn of
+           Nothing -> walkDirectory dir ctl
+           Just n  -> when (n > 2) $ walkDirectory dir ctl
   where
     isModified = case dbModTime ctl of
       Nothing   -> return True
@@ -200,7 +188,7 @@ handleFile file ctl
   where
     isModified = case dbModTime ctl of
       Nothing   -> return True
-      Just dbmt -> (dbmt <) <$> getModTime file
+      Just dbmt -> (dbmt <) <$> getStatusChangeTime file
     deleteMsgIfMoved msg = case dbModTime ctl of
       Nothing   -> return True
       Just _    -> do

@@ -20,8 +20,12 @@ Executable cmew
     GHC-Options:        -Wall -O2
     Build-Depends:      base, haskell98, filepath, directory,
                         containers, parsec > 3, hsemail-ns, HDBC, HDBC-sqlite3,
-                        old-time, regex-posix, unix, bytestring, time
-    Other-Modules:      Msg, Mail, Sql, Param, Index, Util
+                        old-time, regex-posix, bytestring, time
+    if os(windows)
+      Build-Depends:    Win32
+    else
+      Build-Depends:    unix
+    Other-Modules:      Msg, Mail, Sql, Param, Index, Stat, Util
     extensions:         CPP
     includes:           config.h
     install-includes:   config.h
