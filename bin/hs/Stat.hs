@@ -6,6 +6,7 @@ import Control.Applicative
 
 #ifdef HAVE_WINDOWS_H
 import System.Win32.File
+import System.Win32.Time
 #else
 import System.Posix.Files
 #endif
@@ -28,12 +29,15 @@ getStatusChangeTime :: FilePath -> IO Integer
 #ifdef HAVE_WINDOWS_H
 getStatusChangeTime file = do
     fh <- createFile file gENERIC_READ fILE_SHARE_READ Nothing oPEN_EXISTING fILE_ATTRIBUTE_NORMAL Nothing
-    fi <- getFileInformationByHandle fh
+    (ctime,_,_) <- getFileTime fh
     closeHandle fh
-    return . xxx $ bhfiCreationTime Fi
+    return . fileTimeToUnixTime $ ctime
   where
-    -- FILETIME == DDWORD == Word64
-    xxx = undefined
+    -- http://support.microsoft.com/kb/167296/en-us
+    -- 100 nano seconds since 1 Jan 1601
+    -- MS: _FILETIME = {DWORD,DWORD} = {Word32,Word32}
+    -- Haskell: FILETIME == DDWORD == Word64
+    fileTimeToUnixTime x = (fromIntegral x - 116444736000000000) `div` 10000000
 #else
 getStatusChangeTime file = realToInteger . statusChangeTime <$> getFileStatus file
   where
