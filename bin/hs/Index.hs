@@ -140,13 +140,13 @@ walkDirectory dir ctl = do
     forM_ files $ \file -> do
       let file' = dir </> file
       isDir <- doesDirectoryExist file'
-      isSym <- isSymlink file'
-      switch isDir isSym file'
-  where
-    switch isDir isSym file
-      | isDir && isSym = ignoreDir ctl (toFolder ctl file)
-      | isDir          = handleDirectory file ctl
-      | otherwise      = handleFile      file ctl
+      if isDir
+         then do
+           isSym <- isSymlink file'
+           if isSym
+              then ignoreDir ctl (toFolder ctl file')
+              else handleDirectory file' ctl
+         else      handleFile      file' ctl
 
 handleDirectory :: FilePath -> Control -> IO ()
 handleDirectory dir ctl
@@ -187,8 +187,12 @@ handleFile file ctl
             when register (registerMsg msg)
   where
     isModified = case dbModTime ctl of
-      Nothing   -> return True
-      Just dbmt -> (dbmt <) <$> getStatusChangeTime file
+      Nothing   -> doesFileExist file
+      Just dbmt -> do
+        exist <- doesFileExist file
+        if exist
+           then (dbmt <) <$> getStatusChangeTime file
+           else return False
     deleteMsgIfMoved msg = case dbModTime ctl of
       Nothing   -> return True
       Just _    -> do
