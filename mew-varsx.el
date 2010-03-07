@@ -132,6 +132,12 @@
     mew-prog-postscript             mew-icon-application/postscript)
    ("application/pdf"               "\\.pdf$"  mew-b64
     mew-prog-pdf                    mew-icon-application/postscript)
+   ("application/octet-stream"      "\\.pages$"  mew-b64
+    mew-darwin-exec                 mew-icon-application/octet-stream)
+   ("application/octet-stream"      "\\.key$"  mew-b64
+    mew-darwin-exec                 mew-icon-application/octet-stream)
+   ("application/octet-stream"      "\\.numbers$"  mew-b64
+    mew-darwin-exec                 mew-icon-application/octet-stream)
    ("application/msword"            "\\.doc$"  mew-b64
     mew-prog-msword                 mew-icon-text)
    ("application/vnd.ms-excel"      "\\.xl[st]$" mew-b64
