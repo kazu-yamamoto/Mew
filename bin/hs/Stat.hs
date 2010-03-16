@@ -43,6 +43,6 @@ getStatusChangeTime file = realToInteger . statusChangeTime <$> getFileStatus fi
   where
     -- EpochTime is not Integral, sigh
     realToInteger :: Real a => a -> Integer
-    realToInteger x = let y = realToFrac x :: Double -- preventing warning
-                      in round y
+    realToInteger (FILETIME x) = let y = realToFrac x :: Double -- preventing warning
+                                 in round y
 #endif
