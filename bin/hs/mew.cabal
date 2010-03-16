@@ -7,25 +7,25 @@ Homepage:               http://www.mew.org/
 Synopsis:               Sub-commands for Mew
 Description:            "smew" and "cmew"
 Category:               Mail
-Cabal-Version:          >= 1.2
+Cabal-Version:          >= 1.6
 Build-Type:             Configure
 Executable smew
     Main-Is:            smew.hs
     GHC-Options:        -Wall -O2
-    Build-Depends:      base, haskell98, filepath, directory,
+    Build-Depends:      base >= 4 && < 5, haskell98, filepath, directory,
                         containers, parsec > 3, hsemail-ns, HDBC, HDBC-sqlite3
-    Other-Modules:      Msg, Param, Search, Util, Sql
+    Other-Modules:      Msg Param Search Util Sql
 Executable cmew
     Main-Is:            cmew.hs
     GHC-Options:        -Wall -O2
-    Build-Depends:      base, haskell98, filepath, directory,
+    Build-Depends:      base >= 4 && < 5, haskell98, filepath, directory,
                         containers, parsec > 3, hsemail-ns, HDBC, HDBC-sqlite3,
                         old-time, regex-posix, bytestring, time
     if os(windows)
       Build-Depends:    Win32
     else
       Build-Depends:    unix
-    Other-Modules:      Msg, Mail, Sql, Param, Index, Stat, Util
+    Other-Modules:      Msg Mail Sql Param Index Stat Util
     extensions:         CPP
     includes:           config.h
     install-includes:   config.h
