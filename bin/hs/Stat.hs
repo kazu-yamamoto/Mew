@@ -37,12 +37,12 @@ getStatusChangeTime file = do
     -- 100 nano seconds since 1 Jan 1601
     -- MS: _FILETIME = {DWORD,DWORD} = {Word32,Word32}
     -- Haskell: FILETIME == DDWORD == Word64
-    fileTimeToUnixTime x = (fromIntegral x - 116444736000000000) `div` 10000000
+    fileTimeToUnixTime (FILETIME x) = (fromIntegral x - 116444736000000000) `div` 10000000
 #else
 getStatusChangeTime file = realToInteger . statusChangeTime <$> getFileStatus file
   where
     -- EpochTime is not Integral, sigh
     realToInteger :: Real a => a -> Integer
-    realToInteger (FILETIME x) = let y = realToFrac x :: Double -- preventing warning
-                                 in round y
+    realToInteger x = let y = realToFrac x :: Double -- preventing warning
+                      in round y
 #endif
