@@ -1,5 +1,7 @@
 Mew 7.0.50 (2010/01/xx)
 
+* A bug fix of mew-mime-content-type.
+	Yu-ji Hosokawa <yu-ji>
 * Setting split-width-threshold to nil in mew-summary-reply.
 * "b" in Summary saves the buffer of Message mode to a file.
 * header-only now can work for M-x mew.
