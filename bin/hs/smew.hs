@@ -6,13 +6,11 @@
 module Main where
 
 import Control.Applicative
-import Control.Monad
 import Data.List
 import Msg
 import Param
 import Search
 import System.Environment
-import System.IO
 import Util
 
 -- ./smew '<20100105.154842.110627375.kazu@iij.ad.jp>' ~/Mail/id.db #imap/kazu@localhost#imap/work.mew-dist

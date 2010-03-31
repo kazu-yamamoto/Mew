@@ -1,12 +1,13 @@
 module Mail (fileMsg) where
 
-import Text.Parsec
-import Text.Parsec.String
 import Control.Applicative
 import Data.Char
+import Data.Time
 import Locale
 import Msg
-import Data.Time
+import System.IO
+import Text.Parsec
+import Text.Parsec.String
 
 ----------------------------------------------------------------
 
@@ -20,8 +21,12 @@ getValue key fs = lookup key fs >>= return . concat . foldedLines
 ----------------------------------------------------------------
 
 fileMsg :: FilePath -> String -> IO (Maybe Msg)
--- fileMsg file folder = makeMsg folder . header <$> readFile file
-fileMsg file folder = makeMsg folder . header <$> readFile file
+fileMsg file folder = makeMsg folder . header <$> readFileU8 file
+  where
+    readFileU8 fl = do
+        h <- openFile fl ReadMode
+        hSetEncoding h latin1
+        hGetContents h
 
 header :: [Char] -> Header
 header = unfold . takeWhile (/= "") . lines

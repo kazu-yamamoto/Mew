@@ -12,7 +12,6 @@ import Sql
 import Stat
 import System.Directory
 import System.FilePath ((</>))
-import System.IO
 import System.Time
 import Text.Regex.Posix
 

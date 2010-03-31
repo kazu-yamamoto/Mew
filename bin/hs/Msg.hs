@@ -1,6 +1,5 @@
 module Msg where
 
-import System.FilePath
 import Database.HDBC
 
 type ID = String

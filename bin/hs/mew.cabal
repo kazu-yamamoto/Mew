@@ -11,13 +11,13 @@ Cabal-Version:          >= 1.6
 Build-Type:             Configure
 Executable smew
     Main-Is:            smew.hs
-    GHC-Options:        -Wall -O2
+    GHC-Options:        -Wall -O2 -fno-warn-unused-do-bind
     Build-Depends:      base >= 4 && < 5, haskell98, filepath, directory,
                         containers, parsec > 3, HDBC, HDBC-sqlite3
     Other-Modules:      Msg Param Search Util Sql
 Executable cmew
     Main-Is:            cmew.hs
-    GHC-Options:        -Wall -O2
+    GHC-Options:        -Wall -O2 -fno-warn-unused-do-bind
     Build-Depends:      base >= 4 && < 5, haskell98, filepath, directory,
                         containers, parsec > 3, HDBC, HDBC-sqlite3,
                         old-time, regex-posix, bytestring, time
