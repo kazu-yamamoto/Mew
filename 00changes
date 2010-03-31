@@ -1,5 +1,7 @@
 Mew 7.0.50 (2010/01/xx)
 
+* Guarding mew-addrbook-clean-up.
+	Hideyuki SHIRAI <shirai>
 * A bug fix of mew-mime-content-type.
 	Yu-ji Hosokawa <yu-ji>
 * Setting split-width-threshold to nil in mew-summary-reply.

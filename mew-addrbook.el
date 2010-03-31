@@ -122,7 +122,7 @@
 
 (defun mew-addrbook-clean-up ()
   (remove-hook 'kill-emacs-hook 'mew-addrbook-clean-up)
-  (when mew-alias-auto-alist
+  (when (and mew-alias-auto-file mew-alias-auto-alist)
     (mew-lisp-save mew-alias-auto-file mew-alias-auto-alist))
   (setq mew-alias-auto-alist nil))
 
