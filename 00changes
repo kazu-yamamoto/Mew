@@ -1,5 +1,7 @@
 Mew 7.0.50 (2010/01/xx)
 
+* Fixing info/Makefile.
+	Yasuhiro KIMURA <yasu>
 * Guarding mew-addrbook-clean-up.
 	Hideyuki SHIRAI <shirai>
 * A bug fix of mew-mime-content-type.

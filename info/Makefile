@@ -47,7 +47,7 @@ DESTDIR =
 all: info
 info:
 	sed -e 's/@setfilename mew.ja.info/@setfilename mew.info/' \
-	    -e 's/@set jp/@set us/' mew.texi > tmp.texi
+	    -e 's/@set ja/@set en/' mew.texi > tmp.texi
 	mv tmp.texi mew.texi
 	$(RM) mew.info*
 	$(TOUCH) mew.info
@@ -56,7 +56,7 @@ info:
 
 jinfo:
 	sed -e 's/@setfilename mew.info/@setfilename mew.ja.info/' \
-	    -e 's/@set us/@set jp/' mew.texi > tmp.texi
+	    -e 's/@set en/@set ja/' mew.texi > tmp.texi
 	mv tmp.texi mew.texi
 	$(RM) mew.ja.info*
 	$(TOUCH) mew.ja.info
