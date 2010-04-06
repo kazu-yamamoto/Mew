@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP #-}
+
 module Stat where
 
 #include "config.h"
