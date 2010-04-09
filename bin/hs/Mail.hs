@@ -18,7 +18,7 @@ newtype Value = Value { foldedLines :: [String] } deriving Show
 type Header = [(Key,Value)]
 
 getValue :: Key -> [(Key,Value)] -> Maybe String
-getValue key fs = lookup key fs >>= return . concat . foldedLines
+getValue key fs = concat . foldedLines <$> lookup key fs
 
 ----------------------------------------------------------------
 
