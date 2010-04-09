@@ -1,2 +1,6 @@
+module Main (main) where
+
 import Distribution.Simple
-main = defaultMain
+
+main :: IO ()
+main = defaultMainWithHooks defaultUserHooks
