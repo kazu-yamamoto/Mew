@@ -27,7 +27,7 @@ fileMsg file folder = makeMsg folder . header <$> readFileU8 file
   where
     readFileU8 fl = do
         h <- openFile fl ReadMode
-#if __GLASGOW_HASKELL__ == 612
+#if __GLASGOW_HASKELL__ >= 611
         hSetEncoding h latin1
         hGetContents h
 #endif
