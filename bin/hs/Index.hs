@@ -11,7 +11,7 @@ import Param
 import Sql
 import Stat
 import System.Directory
-import System.FilePath ((</>))
+import System.FilePath (takeFileName, (</>))
 import System.Time
 import Text.Regex.Posix
 
@@ -174,7 +174,7 @@ handleDirectory dir ctl
 
 handleFile :: FilePath -> Control -> IO ()
 handleFile file ctl
-  | not (file =~ msgRegex ctl) = return ()
+  | not (takeFileName file =~ msgRegex ctl) = return ()
   | otherwise = do
       modified <- isModified
       when modified $ do
