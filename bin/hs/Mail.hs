@@ -29,8 +29,8 @@ fileMsg file folder = makeMsg folder . header <$> readFileU8 file
         h <- openFile fl ReadMode
 #if __GLASGOW_HASKELL__ >= 611
         hSetEncoding h latin1
-        hGetContents h
 #endif
+        hGetContents h
 
 header :: [Char] -> Header
 header = unfold . takeWhile (/= "") . lines

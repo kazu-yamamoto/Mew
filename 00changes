@@ -1,5 +1,7 @@
 Mew 7.0.50 (2010/01/xx)
 
+* Both cmew and smew in Haskell works well finally!
+	Shuichi KITAGUCHI <kit>
 * Fixing info/Makefile.
 	Yasuhiro KIMURA <yasu>
 * Guarding mew-addrbook-clean-up.
