@@ -5,7 +5,6 @@ using `texinfmt.el' version 2.42 of  7 Jul 2006.
 
 INFO-DIR-SECTION Message User Agent
 START-INFO-DIR-ENTRY
-* Mew-J: (mew.ja.info).      Messaging in the Emacs World.
 * Mew: (mew.info).           Messaging in the Emacs World.
 END-INFO-DIR-ENTRY
 
@@ -14,1523 +13,259 @@ END-INFO-DIR-ENTRY
 
 
 
-File: mew.ja.info, Node: thread, Next: thread-op, Prev: keyword, Up: Virtual
+File: mew.ja.info, Node: Key Index, Prev: Variable Index, Up: Top
 
-スレッド
-========
+Key Index
+*********
 
-Thread
-======
-
-メッセージをやりとりしていると、対話の流れは木構造になります。これを行
-頭揃えにより可視化したものをスレッドと呼びます。以下にスレッドの例を示
-します。When in the process of exchanging messages, the relationship
-of the messages is presented in a tree structure. Visualization of the
-structure with indentation is called thread. Here is an example:
-
-       03/12 Hidenori Ohta  今週末                    |日曜にストーンマジック
-       03/13 かずくん       ┣Re: 今週末              |雨なので、中にしますか
-       03/15 Hidenori Ohta  ┃┗Re: 今週末            |それでは、12:00 に集合
-       03/14 おだちゃん     ┗Re: 今週末              |いいねぇ。次はあれを落
-       03/12 Hidenori Ohta  This weekend              |Let's go to StoneMagic
-       03/13 Kazu-kun        +Re: This weekend        |Since it'll be rainy,
-       03/15 Hidenori Ohta   | +Re: This weekend      |OK. Get together at 12
-       03/14 Oda-chan        +Re: This weekend        |Sounds lovely. I'd lik
-
-スレッドは仮想フォルダとして実現されています。たとえば、+inbox に対しス
-レッドを作ると、*+inbox* というバッファが用意されます。The thread
-feature is implemented as virtual folder. For instance, if you make
-threads for +inbox, a buffer *+inbox* is prepared.
-
-スレッドを作るために、以下のコマンドが用意されています。To make
-thread, the following commands exist.
-
-`tt'
-     Summary モード、あるは、セレクションからスレッドを作る。そして、カー
-     ソルを現在のメッセージに移動する。もし、対応するスレッドがすでに存
-     在しているなら、スレッドに表示を切り替える。スレッドで使用された際
-     は、元のフォルダへ移り、カーソルを現在のメッセージへ移動する。
-`C-utt'
-     リージョンに対し、スレッドを作る。
-`mt'
-     `*' マークの付いているメッセージに対し、スレッドを作る。
-`tr'
-     正規表現に合致したメッセージに対し、スレッドを作る。
-`tt'
-     Make threads from Summary mode or selection and move the cursor
-     to the current message. If corresponding threads already exist,
-     switch to the Virtual mode. When this command is executed on
-     threads, switch to the original folder and move the cursor to the
-     current message.
-`C-utt'
-     Make threads for messages in the region.
-`mt'
-     Make threads for messages marked with `*'.
-`tr'
-     Make threads for messages matched to a regular expression.
-
-
-
-File: mew.ja.info, Node: thread-op, Next: Quit, Prev: thread, Up: Virtual
-
-スレッドの操作
-==============
-
-Thread operations
-=================
-
-スレッドに特化した移動コマンドを以下に示します。Here are the commands
-used for moving to thread presentation.
-
-`tp'
-     現在のスレッドの頭に移動する。もし、あるスレッドの頭にカーソルがあ
-     る場合は、前のスレッドの頭に移動する。
-`tn'
-     次のスレッドの頭に移動する。
-`^'
-     親のメッセージに移動する。(スレッドでなくても利用可能)
-`&'
-     長男のメッセージに移動する。(スレッドでなくても利用可能)
-`('
-     兄のメッセージに移動する。
-`)'
-     弟のメッセージに移動する。
-`tp'
-     Move to the top of the current thread. If the current message is
-     a top node, move to the top of the next thread.
-`tn'
-     Move to the top of the next thread.
-`^'
-     Move to the parent message of the current message. (Available in
-     both Summary and Virtual)
-`&'
-     Move to the child message of the current message. (Available in
-     both Summary and Virtual)
-`('
-     Search backward by one sibling message of the current message.
-`)'
-     Search forward by one sibling message of the current message.
-
-
-スレッドにマークを付けるコマンドを以下に示します。Here are commands to
-mark messages in a thread.
-
-`t*'
-     現在のメッセージを頭とする部分木に属するメッセージすべてに `*' マー
-     クを付ける。詳しくは *Note target mark:: を参照のこと。
-`t$'
-     現在のメッセージを頭とする部分木に属するメッセージすべてに `$' マー
-     クを付ける。詳しくは *Note escape mark:: を参照のこと。
-`td'
-     現在のメッセージを頭とする部分木に属するメッセージすべてに `D' マー
-     クを付ける。詳しくは *Note delete mark:: を参照のこと。
-`tM-d'
-     現在のメッセージを頭とする部分木に属するメッセージすべてに `X' マー
-     クを付ける。詳しくは *Note delete mark:: を参照のこと。
-`to'
-     現在のメッセージを頭とする部分木に属するメッセージすべてに `o' マー
-     クを付ける。詳しくは *Note refile mark:: を参照のこと。
-`t*'
-     Put the `*' mark all messages of the current sub-thread. Please
-     refer to *Note target mark:: for more information.
-`t$'
-     Put the `$' mark all messages of the current sub-thread. Please
-     refer to *Note escape mark:: for more information.
-`td'
-     Put the `D' mark all messages of the current sub-thread. Please
-     refer to *Note delete mark:: for more information.
-`tM-d'
-     Put the `X' mark all messages of the current sub-thread. Please
-     refer to *Note delete mark:: for more information.
-`to'
-     Put the `o' mark all messages of the current sub-thread. Please
-     refer to *Note refile mark:: for more information.
-
-スレッドからマークを消すコマンドは、`tu' です。A command to unmark all
-messages of the current sub-thread is `tu'.
-
-
-以下に、スレッドを加工するコマンドを示します。Here are commands to
-manipulate a thread:
-
-`tSPC'
-     子供以下を隠して親だけにする。子供以下が隠れている親メッセージには、
-     +" が付く。また、子供以下が隠れている親メッセージでこのコマンドを
-     実行すると、子供以下が現れる。
-`ta'
-     すべてのスレッドに対し、子供の表示を反転させる。
-`tg'
-     あるスレッドをあるメッセージに接ぎ木する。接ぎ木するスレッドは、
-     `C-SPC' で指定する。目的のスレッドの一番上のメッセージで、`C-SPC'
-     を押すと、そのスレッドが選択されたことになる。そして目的のメッセー
-     ジへ移動し、`tg' を押すと、スレッドがこのメッセージの子供として接
-     ぎ木される。
-`tSPC'
-     Hide children and leave the parent only. If its children are
-     hidden, "+" is displayed on the parent. Also, if this command is
-     executed on a message whose children are hidden, they appear.
-`ta'
-     Toggle appearance of children for all threads.
-`tg'
-     Graft a thread to a message. To specify which thread is grafted,
-     type `C-SPC' on the root of the thread. Then move onto your
-     target message, and typing `tg' grafts the thread to the target
-     message as children.
-
-
-なお、`mew-use-thread-separator' を `t' にすると、スレッド間に境界文字
-列として `mew-thread-separator' (初期値は "--") が挿入されます。
-If `mew-use-thread-separator' is `t', threads are
-distinguished by a separator defined by `mew-thread-separator'
-(its default value is "--").
-
-
-
-
-File: mew.ja.info, Node: Quit, Next: Customize, Prev: thread-op, Up: Top
-
-一休み
-******
-
-Give me a break
-***************
-
-Mew を終了させたり、一時中断させたり、そのモード(正確にはバッファ)を消
-去する方法を以下に示します。Here are how to quit and suspend Mew and
-how to erase a mode (buffer).
-
-<Summary モードと Virtual モード> <Summary mode and Virtual mode>
-
-`q'
-     Mew を一時中断し、他のバッファに切り替える。Mew 用のバッファはすべ
-     て残っているので、バッファ操作で選べば再開できる。
-`Q'
-     Mew を終了。Mew が使ったすべてのバッファを消去する。
-`C-cC-q'
-     そのモード(正確にはバッファ)を消去する。
-`q'
-     Suspend Mew then switch to another buffer. All buffers of Mew
-     remain, so you can resume with buffer operations.
-`Q'
-     Quit Mew. All buffers of Mew are erased.
-`C-cC-q'
-     Erase the current mode (buffer).
-
-<Draft モードと Header モード> <Draft mode and Header mode>
-
-`C-cC-q'
-     その草稿を消去する。
-`C-cC-q'
-     Erase the draft.
-
-<Addrbook モード> <Addrbook mode>
-
-`C-cC-q'
-     そのバッファを消去する。
-`C-cC-q'
-     Erase the buffer.
-
-
-
-
-File: mew.ja.info, Node: Customize, Next: summary-mode, Prev: Quit, Up: Top
-
-カスタマイズ
-************
-
-Customizing Mew
-***************
-
-ここでは、Mew のデフォルトの動作を変更し、自分好みの Mew にする方法を説
-明します。主に "~/.mew.el" で設定して下さい。Here are explained how to
-change default setting of Mew and make Mew your favorite. Edit
-~/.mew.el" to do it!
 
 * Menu:
 
-* summary-mode::                Summary mode
-* message-mode::                Message mode
-* draft-mode::                  Draft mode
-* charset::                     文字コード
-* highlight::                   色付け
-* hooks::                       フック
-* pop::                         POP
-* imap::                        IMAP
-* nntp::                        NNTP
-* smtp::                        SMTP
-* config::                      送受信の動作変化
-* config2::                     設定の書式
-* custom-misc::                 その他
-* summary-mode::                Summary mode
-* message-mode::                Message mode
-* draft-mode::                  Draft mode
-* charset::                     Character set
-* highlight::                   Highlighting
-* hooks::                       Hooks
-* pop::                         POP
-* imap::                        IMAP
-* nntp::                        NNTP
-* smtp::                        SMTP
-* config::                      Changing receiving/sending behavior
-* config2::                     The format of configuration
-* custom-misc::                 Miscellaneous
-
-
-
-File: mew.ja.info, Node: summary-mode, Next: message-mode, Prev: Customize, Up: Customize
-
-Summary mode
-============
-
-Summary mode
-============
-
-Summary モードの書式は、`mew-summary-form' で指定できます。以下に初期値
-を示します。You can specify the format of Summary mode by
-`mew-summary-form'.  The default value is as follows:
-
-     (setq mew-summary-form '(type (5 date) " " (14 from) " " t (30 subj) "|" (0 body)))
-
-このように、`mew-summary-form' は、リスト、シンボル、文字列のリストです。
-Like this, `mew-summary-form' is a list of list, symbol, and string.
-
-  1. 文字列はそのまま出力される
-  2. リストは、整数とシンボルから構成される。シンボルは、呼び出す関数を
-     意味する。関数名は、"mew-summary-form-" とシンボル名を連結すること
-     で作られる。(例： 'date というシンボルは、`mew-summary-form-date'
-     という関数名になる) あらかじめ定義されているシンボルに
-     は、'type、'time、'date、'year、'size、'from、'subj、'body がある。
-     詳細は、`mew-summary-form-<symbol>' という名を持つ関数の説明を参照
-     のこと。整数は、関数が返す文字列が埋めるフィールドの幅を指定する。
-     正の数は、左詰めを意味する。負の数は、右詰めを意味する。もし、負の
-     数を指定する場合、対応する関数は ASCII 文字列を返す必要がある。0
-     は、行の残りを意味し、左詰めとなる。
-  3. `t' 以外のシンボルは、(1 シンボル) に等しい。
-  4. `mew-summary-form' は、利用される際に先頭に (mark) が付け加えられる。
-  5. `t' は、スレッドの際に段付けする位置を意味する。
-  6. A string is printed as it is.
-  7. A list consists of an integer and a symbol. The symbol specifies
-     a function to be called. The name of the function is produced by
-     concatenating "mew-summary-form-" and the symbol name.
-     (e.g. `mew-summary-form-date' for the symbol 'date'). Pre-defined
-     symbols are 'type, 'time, 'date, 'year, 'size, 'from, 'subj and
-     'body. For more details, see the explanation of the functions
-     called `mew-summary-form-<symbol>'. The integer specifies the
-     width of field which will be filled with a return string of the
-     function. A positive value means padding SPCs on the right if
-     necessary. A negative value means padding SPCs on the left if
-     necessary. If a negative value is specified, the corresponding
-     function must return an ASCII string. 0 means the remaining width
-     of the line and is treated as a positive value.
-  8. A symbol is equivalent to (1 symbol).
-  9. '(mark) is appended to `mew-summary-form' when used.
- 10. `t' means the position of thread indentation.
-
-例を以下に示します。An example is as follows:
-
-     (setq mew-summary-form
-           '(type (5 date) " " (-4 size) " " (14 from) " " t (30 subj) "|" (0 body)))
-
-`mew-summary-form-from-me-prefix' は、自分から送信されたメッセージの宛
-先の先頭に加えられる文字列です。初期値は "To:" です。
-`mew-summary-form-from-me-prefix' is the prefix to be prepend to an
-destination address if the message is originated by me. The default is
-"To:".
-
-`mew-summary-form-extract-rule' は、From: フィールドからどの部分を切り
-出すか指定するためのリストです。要素
-は、'name、'comment、'address、'nickname、あるいは正規表現である必要が
-あります。初期値は '(nickname) です。
-
-`mew-summary-form-extract-rule' is a list to specify what part to
-extract from the From: field. Each element must be 'name, 'comment,
-'address, 'nickname, or appropriate "regex". The default value is
-'(nickname).
-
-次の例を考えて下さい。Consider the following examples:
-
-     A: Kazu Yamamoto <kazu@example.org>
-     B: kazu@example.org (Kazu Yamamoto)
-     C: Kazuhiko Yamamoto (Kazu) <kazu@example.org>
-
-それぞの要素は、以下のような意味を持ちます。Each element returns the
-following value:
-
-  1. 'name:: 名前の部分
-          A. Kazu Yamamoto
-          B. (No match)
-          C. Kazuhiko Yamamoto (Kazu)
-  2. 'comment:: コメントの部分
-          A: (No match)
-          B: Kazu Yamamoto
-          C: (Kazu)
-  3. 'address:: アドレスの部分
-          A: kazu@example.org
-          B: kazu@example.org
-          C: kazu@example.org
-  4. 'nickname:: `mew-addrbook-for-summary' の値に応じたアドレス帳の個
-     人情報のある要素。`mew-addrbook-for-summary' の初期値は
-     `'nickname' なので、通常はニックネームに変換される。何が指定できる
-     かは、*Note draft-mode:: を参照のこと。
-  5. (regex):: 最初に合致した文字列
-  6. 'name:: Name part, if any
-          A. Kazu Yamamoto
-          B. (No match)
-          C. Kazuhiko Yamamoto (Kazu)
-  7. 'comment:: Comment part, if any
-          A: (No match)
-          B: Kazu Yamamoto
-          C: (Kazu)
-  8. 'address:: Address part
-          A: kazu@example.org
-          B: kazu@example.org
-          C: kazu@example.org
-  9. 'nickname:: one element of personal information in Addrbook
-     according to `mew-addrbook-for-summary'. The default value of
-     `mew-addrbook-for-summary' is `'nickname'. So, From: is converted
-     a nickname by default. To know what kind of value can be used,
-     refer to *Note draft-mode::.
- 10. (regex):: The substring first matched.
-
-ある要素が合致しない場合、次の要素が評価されます。どの要素も From: フィー
-ルドに合致しない場合か、この値が `nil' の場合、From: フィールド全体が利
-用されます。If a element does not match, the next element is
-applied. If no element matches to the From: field, or this value is
-`nil', the whole of the From: field is used.
-
-
-`mew-summary-form-mark-delete' が `t' の場合、重複しているメッセージに
-自動的に `D' マークが付きます。初期値は `nil' です。
-If `mew-summary-form-mark-delete' is `t', the `D' mark
-automatically is put onto duplicated messages. The default is
-`nil'.
-
-
-`mew-summary-form-mark-spam' が `t' の場合、本文の一部に対する MD5 チェッ
-クサムが一致しているメッセージに自動的に `D' マークが付きます。初期値は
-`nil' です。If `mew-summary-form-mark-spam' is `t', the `D' mark
-automatically is put onto SPAM messages. A message is considered a
-SPAM message if the MD5 checksum of its body is duplicated in a
-scan. The default is `nil'.
-
-`mew-summary-form-mark-review' が `t' の場合、自分宛てのメッセージに自
-動的に `*' マークが付きます。初期値は `nil' です。
-If `mew-summary-form-mark-review' is `t', the `*' mark
-automatically is put onto messages destined to me. The default is
-`nil'.
-
-
-いつも Emacs のフレーム全体で Mew を使いたい人は、以下の設定をして下さ
-い。If you want to use Mew with full Emacs frame, set like this.
-
-     (setq mew-use-full-window t)
-
-
-Summary モードの `SPC' は、`mew-summary-show-direction' によって、次の
-メッセージの表示の仕方が変わります。また同様に、強いマークを付けた後カー
-ソルが動く方向は `mew-summary-mark-direction' により指定できます。以下
-の値を設定できます。`SPC' in Summary mode decide the next action to
-view a message according to `mew-summary-show-direction'. Likewise,
-you can specify the cursor direction after putting a strong mark by
-`mew-summary-mark-direction'. You can select one from the following
-candidates.
-
-`up'
-     上のメッセージを表示する。
-`down'
-     下のメッセージを表示する。
-`next'
-     読み進めている方向の次のメッセージを表示する。
-`stop'
-     次は表示しない。
-`up'
-     Display the message above.
-`down'
-     Display the message below.
-`next'
-     Display the next message in the direction.
-`stop'
-     Do not display the next message.
-
-両方とも初期値は `next' です。いつもメッセージを下から読む人は、以下の
-ようにすればよいでしょう。The default value for both is `next'. If you
-read messages from the bottom, set as follows:
-
-     (setq mew-summary-show-direction 'up)
-
-
-
-File: mew.ja.info, Node: message-mode, Next: draft-mode, Prev: summary-mode, Up: Customize
-
-Message mode
-============
-
-Message mode
-============
-
-Emacs がサポートしてないデータ型のファイルは、Message バッファに直接表
-示できません。そのデータをテキストに整形する外部コマンドをインストール
-すれば、Message バッファに表示可能になります。It is impossible to
-display a file to the Message buffer if its data type is not supported
-by Emacs. Install an external program which converts the data to text
-and you can display the file to the Message buffer.
-
-"w3m" と "emacs-w3m" をインストールすると、Text/Html を Message バッ
-ファに表示できるようになります。(以下で説明する "wvHtml"、"xlhtml"、
-"ppthtml" は、単なる "w3m" ではなく、国際化された "w3m-m17n" が必要で
-す。) 両者をインストールしたら、"~/.mew.el" に以下の設定を加えて下さい。
-If you install "w3m" and "emacs-w3m", Text/Html can be displayed in
-Message mode. (Please note that multilingualized "w3m", not pure
-"w3m", is necessary for "wvHtml", "xlhtml", and "ppthtml"
-described below.)  When you install both of them, add the following to
-"~/.mew.el'.
-
-     (condition-case nil
-         (require 'mew-w3m)
-       (file-error nil))
-
-これで、あたかも Text/Plain であるかのように、Text/Html を Message バッ
-ファに表示できるようになります。この際も、以下で説明する `C-cC-e' の操
-作は有効です。With this, Text/Html can be displayed in Message mode as
-if it were Text/Plain. Even in this situation, `C-cC-e' described
-below is a valid operation.
-
-"wvHtml"、"xlhtml"、"ppthtml" というコマンドをインストールすれば、それ
-ぞれ WORD、Excel、PowerPoint ファイルのテキスト部分を、Message バッファ
-に表示可能です。これらのコマンドは、HTML を利用するので、上記の
-Text/Html の設定を完了させて下さい。また、UTF-8 (Unicode) を利用します
-ので、Emacs 21.4 には、Mule-UCS もインストールして下さい。これで、たと
-えば WORD ファイルをあたかもテキストのように、Message バッファに表示可
-能になります。If you install "wvHtml", "xlhtml", and "ppthtml", you
-can display text parts of WORD, Excel, and PowerPoint file in Message,
-respectively. Since these commands uses HTML, the configuration of
-Text/Html above is required. Also, you need to install Mule-UCS for
-Emacs 21.4 because UTF-8 (Unicode) is required. With this, a WORD
-file, for example, can be displayed in Message mode as if it were
-text.
-
-外部のプログラムの整形結果を Message バッファに表示する代わりに、外部の
-プログラム自身にそのデータを表示させることもできます。これには`C-cC-e'
-を使います。You can display the file with an external application
-itself instead of displaying it in the Message buffer. For this, type
-`C-cC-e'.
-
-Message バッファに画像を表示することもできます。また `C-cC-e' を使い、
-外部のプログラムに表示させることも可能です。You can visualize an image
-file into the Message buffer. Also, you can display it with an
-external application by typing `C-cC-e', of course.
-
-HTML は `C-cC-e' を使って外部のブラウザに表示できます。Windows やMac で
-はデフォルトのブラウザが利用されます。Unix では、以下のように"mozilla"
-が初期値となっています。You can display an HTML file to a browser with
-`C-cC-e'. A default browser is used on Windows and Mac. On Unix,
-mozilla" is set to a default browser as follows:
-
-     (defvar mew-prog-text/html-ext '("mozilla" ("-remote" "openFile(%s)") t))
-
-たとえば、これを "firefox" に変更するには以下のようにします。If you
-want to set it to "firefox", for example, configure like this:
-
-     (setq mew-prog-text/html-ext
-           '("firefox" ("-a" "firefox" "-remote" "openFile(%s)") t))
-
-Office 関連のファイルも、`C-cC-e' を使えば、それぞれのアプリケーション
-で表示可能です。Windows や Mac では、文字通り Office のアプリケーション
-が起動されます。Unix では、以下のように "ooffice" が初期値となっていま
-す。You can visualize an Office-family file to each application by
-typing `C-cC-e'. On Windows and Mac, an Office-family application is
-executed. On Unix, "ooffice" is set to the default application as
-follows:
-
-     (defvar mew-prog-msword-ext "ooffice")
-     (defvar mew-prog-msexcel-ext "ooffice")
-     (defvar mew-prog-mspowerpoint-ext "ooffice")
-
-これを "soffice" に変更するには以下のようにします。If you want to set
-it to "soffice", for instace, do like this:
-
-     (setq mew-prog-msword-ext "soffice")
-     (setq mew-prog-msexcel-ext "soffice")
-     (setq mew-prog-mspowerpoint-ext "soffice")
-
-また Office 関連のアプリケーションに対し、`SPC' などでは内容を表示せず、
-`C-cC-e' では "wvHtml" などを使って Message バッファに表示するには、以
-下のように設定します。If you want to not visualize an Office-family
-file into the Message buffer, but want to display it with "wvHtml",
-configure as follows:
-
-     (setq mew-prog-msword  '(nil mew-mime-application/msword))
-     (setq mew-prog-msexcel '(nil mew-mime-application/msexcel))
-     (setq mew-prog-mspowerpoint '(nil mew-mime-application/mspowerpoint))
-
-あらかじめ定められているコマンドではなく、任意の外部コマンドを呼び出し
-たい場合は、`C-uC-cC-e' と入力して下さい。If you want to specify an
-application instead of the pre-defined application, type `C-uC-cC-e'.
-
-最近、Multipart/Alternative の中に Text/Plain と Text/Html の両方が入っ
-ており、どちらかを選ぶようになっているメッセージを多く見掛けます。Mew
-は、標準では Text/Plain の方を優先して表示します。"emacs-w3m" をインス
-トールすれば、Text/Html の方を優先したくなるかもしれません。その場合、
-以下の設定を "~/.mew.el" に加えて下さい。(ここで *Note multipart:: を読
-み、`:' の使い方も思い出しておきましょう。)
-Recently there are many message whose have Multipart/Alternative,
-which consists of Text/Plain and Text/Html. By default, Mew selects
-Text/Plain. When you install "emacs-w3m", you may want to choose
-Text/Html. In this case, add the following to "~/.mew.el". (Now, it's
-good idea to get back to *Note multipart:: to review how to use
-`:'.)
-
-     (setq mew-mime-multipart-alternative-list
-           '("Text/Html" "Text/Plain" ".*"))
-
-
-
-File: mew.ja.info, Node: draft-mode, Next: charset, Prev: message-mode, Up: Customize
-
-Draft mode
-==========
-
-Draft mode
-==========
-
-自分へ Cc: したい人は `mew-cc' を設定して下さい。返答の際には、対象のメッ
-セージから、別途 Cc: が用意される場合があります。複数の Cc: がある場合、
-送信時に 1 つにまとめられます。Define `mew-cc' to use Cc:. When
-replying, another Cc: field may be prepared from the target
-message. If there are multiple Cc: fields, they are combined to one
-field on sending.
-
-バックアップのため、自分が送るメッセージを受け取りたいと考え、しかもヘッ
-ダに自分のアドレスを残したくないなら、Dcc: を使って下さい。`mew-dcc' に
-自分のアドレスを設定しましょう。If you want to receive your
-originating messages for backup without specifying your address, use
-Dcc:. Set your address to `mew-dcc'.
-
-いつも入れて欲しいヘッダは、`mew-header-alist' に連想リスト形式で定義し
-て下さい。以下に例を示します。Set header fields that you want to
-insert every time when you write messages to `mew-header-alist' as an
-associate list. The following is an example.
-
-     (setq mew-header-alist
-           '(("X-fingerprint:" "6B 63 38 88 67 5E 96 8E  CE A4 62 73 3F 11 64 94")
-             ("X-URL:" "http://www.example.org/~kazu/")))
-
-引用ラベルは、引用するフィールドを `mew-cite-fields'、ラベルの書式を
-`mew-cite-format' に定義します。引用記号は`mew-cite-prefix' に指定しま
-す。初期値は、以下のようになっています。To customize citation label,
-define field to cite in `mew-cite-fields' and format in
-`mew-cite-format'. Define citation prefix to `mew-cite-prefix'. The
-default declaration is as follows:
-
-     (defvar mew-cite-fields '("From:" "Subject:" "Date:"))
-     (defvar mew-cite-format "From: %s\nSubject: %s\nDate: %s\n\n")
-     (defvar mew-cite-prefix "> ")
-
-引用ラベルに Message-ID: を加えるには以下のようにします。To add
-Message-ID: to citation label, take this way.
-
-     (setq mew-cite-fields '("From:" "Subject:" "Date:" "Message-ID:"))
-     (setq mew-cite-format "From: %s\nSubject: %s\nDate: %s\nMessage-ID: %s\n\n")
-
-引用記号にアドレスのユーザ部分が付くようにするには以下のようにします。
-To add a user part of an address to the citation prefix, configure as
-follows:
-
-     (setq mew-cite-prefix-function (function mew-cite-prefix-username))
-
-これで引用記号は以下のようになります。With this, the citation prefix
-becomes like this:
-
-     From: SUMIKAWA Munechika <sumikawa@ebina.hitachi.co.jp>
-     Subject: Wine
-     Date: Wed, 23 Jul 1997 11:40:50 +0900
-
-     sumikawa> おはようからおやすみまでニートでおなじみの角川です。
-     sumikawa>
-     sumikawa> さて、とろけるワイン作戦ですが、定石通り '89 のボルドーの
-     sumikawa> カベルネ・ソービニョンを狙いたいと思います。
-     From: SUMIKAWA Munechika <sumikawa@ebina.hitachi.co.jp>
-     Subject: Wine
-     Date: Wed, 23 Jul 1997 11:40:50 +0900
-
-     sumikawa> Hi, it's Sumikawa, the guy who's neat from good morning
-     sumikawa> to good night.
-     sumikawa>
-     sumikawa> Talking about the wonderful wine party, I would propose
-     sumikawa> Cabernet Sauvignon, Bordeaux, '90.
-
-引用ラベルの From: の部分と、引用記号は、アドレス帳の個人情報の要素に変
-換できます。それぞれ、`mew-addrbook-for-cite-label'、
-`mew-addrbook-for-cite-prefix' で指定できます。初期値はそれぞれ `nil'
-と `'username' です。以下のような値が設定できます。Both an address in
-the citation label and the citation prefix can be converted to an
-element of a personal information in Addrbook. They can be configured
-by `mew-addrbook-for-cite-label' and `mew-addrbook-for-cite-prefix',
-respectively. The default values are `nil' and `'username',
-respectively. You can set out of the following values.
-
-
-'shortname
-     短縮名
-'address
-     アドレス
-'username
-     アドレスのユーザ部分
-'nickname
-     ニックネーム
-'name
-     正式な氏名
-'shortname
-     Short name
-'address
-     Address
-'username
-     User part of address
-'nickname
-     Nickname
-'name
-     Full name
-
-例として以下のような設定を考えてみましょう。Let's consider the
-following example.
-
-     (setq mew-addrbook-for-cite-label 'nickname)
-     (setq mew-addrbook-for-cite-prefix 'nickname)
-
-最初の設定でラベルの中のアドレスがニックネームに変わります。また、次の
-設定で引用記号もニックネームに置き換わります。With the first line, an
-address in the citation label is replaced with its nickname. The
-second line indicates that the cite prefix is replaced with its
-nickname.
-
-     From: すみっち
-     Subject: Wine
-     Date: Wed, 23 Jul 1997 11:40:50 +0900
-
-     すみっち> おはようからおやすみまでニートでおなじみの角川です。
-     すみっち>
-     すみっち> さて、とろけるワイン作戦ですが、定石通り '89 のボルドーの
-     すみっち> カベルネ・ソービニョンを狙いたいと思います。
-     From: sumitch
-     Subject: Wine
-     Date: Wed, 23 Jul 1997 11:40:50 +0900
-
-     sumitch> Hi, it's Sumikawa, the guy who's neat from good morning
-     sumitch> to good night.
-     sumitch>
-     sumitch> Talking about the wonderful wine party, I would propose
-     sumitch> Cabernet Sauvignon, Bordeaux, '90.
-
-
-
-File: mew.ja.info, Node: charset, Next: highlight, Prev: draft-mode, Up: Customize
-
-文字コード
-==========
-
-Character set
-=============
-
-*Note charset-guess:: で説明したように、Mew ではメッセージを作成する際
-に適切な文字コードを自動的に選択します。As described in *Note
-charset-guess::, Mew automatically chooses an appropriate charset for
-the message when composing.
-
-もし複数の言語の文字が混在しており、国際化された文字コードを選択する必
-要がある場合は、`mew-charset-m17n' の値を利用します。初期値は、"utf-8"
-(Unicode と理解してよい)です。"iso-2022-jp-2" にしたい人は、以下のよう
-に設定するとよいでしょう。
-If characters of multiple languages exist, and if it is necessary to use
-an international charset, `mew-charset-m17n' is used. Its default
-value is "utf-8" (equivalent to Unicode). If you want to set it to
-"iso-2022-jp-2", configure like this:
-
-     (setq mew-charset-m17n "iso-2022-jp-2")
-
-メッセージを作成した際に、推測された文字コードを確認したい場合は、
-`mew-ask-charset' を設定して下さい。
-If you want to check a chosen charset when composing, configure
-`mew-ask-charset'.
-
-`nil'
-     どのような文字コードが利用されても確認なし
-`文字コードのリスト'
-     このリストに存在しない文字コードが利用された場合に確認
-`t'
-     `mew-charset-m17n' が利用された場合に確認
-`nil'
-     Not ask.
-`A list of charset'
-     Ask if the charset is not a member of the list.
-`t'
-     Ask if `mew-charset-m17n' is used.
-
-たとえば、US-ASCII と ISO-2022-JP 以外の文字コードが選ばれた場合確認し
-たいのであれば、以下のように設定して下さい。
-
-     (setq mew-ask-charset '("us-ascii" "iso-2022-jp")) For instance,
-if you want to check when charset other than US-ASCII, ISO-8859-1, and
-ISO-8859-15, configure like this:
-
-     (setq mew-ask-charset '("us-ascii" "iso-8859-1" "iso-8859-15"))
-
-
-こう設定しているとき、たとえば "utf-8" が選択されると、以下のように訊か
-れます。For example, when "utf-8" is chosen for a message with this
-configuration, you are asked like this:
-
-     utf-8 is used. OK? (y or n)
-
-`y' を押すと、メッセージが送信されます(あるいは、キューに溜ります)。
-`n' を押すと、草稿が元の状態に戻ります。
-Typing `y' makes the composed message sent (or queued). If you type
-`n', you will go back to the original draft.
-
-ヨーロッパでは、Latin 1 (ISO-8859-1) の代りに、ユーロ記号を含む Latin
-9 (ISO-8859-15、通称 Latin 0) が使われ始めています。草稿に、Latin 1 の
-文字と Latin 9 の文字が混在していると、以下の手順によって、文字コードが
-決定されます。In Europe Latin 9 (ISO-8859-15 or Latin 0), which
-includes the euro sign, is getting more and more popular instead of
-Latin 1 (ISO-8859-1). If characters of both Latin 1 and Lain 9 exist
-in a draft, Mew takes the following step to decide a charset.
-
-  1. `unify-8859-on-decoding-mode' を利用している場合：
-       1. ISO-8859-1 に収まるなら "iso-8859-1" を利用
-       2. そうでないなら "utf-8" を利用
-  2. `unify-8859-on-decoding-mode' を利用していない場合：
-       1. ISO-8859-1 と ISO-8859-15 のどちらにも収まる場合、Emacs 21 と 22 であれ
-          ば `mew-charset-latin' を利用、Emacs 23 であれば "ISO-8859-1"
-       2. ISO-8859-1 に収まるなら "iso-8859-1" を利用
-       3. ISO-8859-15 に収まるなら "iso-8859-15" を利用
-       4. そうでないなら、"utf-8" を利用
-  3. If `unify-8859-on-decoding-mode' is used:
-       1. Use "iso-8859-1" if no loss.
-       2. Otherwise, use "utf-8".
-  4. If `unify-8859-on-decoding-mode' is not used:
-       1. If both ISO-8859-1 and ISO-8859-15 can be used with no loss,
-          `mew-charset-latin' is used for Emacs 21 and 22, and "ISO-8859-1"
-          is used for Emacs 23.
-       2. Use "iso-8859-1" if no loss.
-       3. Use "iso-8859-15" if no loss.
-       4. Otherwise, use "utf-8".
-
-`mew-charset-latin' の初期値は、"iso-8859-15" です。"iso-8859-1" にした
-い場合は、以下のように設定します。The default value of
-`mew-charset-latin' is "iso-8859-15". If you want to set it to
-iso-8859-1", configure like this:
-
-     (setq mew-charset-latin "iso-8859-1")
-
-もし、US-ASCII 以外の文字に対し、必ず UTF-8 を使いたいなら、以下のよう
-に設定して下さい。If you want to always use UTF-8 for any characters
-other than US-ASCII, configure as follows:
-
-     (setq mew-cs-database-for-encoding
-           `(((ascii) nil "7bit" "7bit")
-             (nil utf-8 "base64" "B")))
-
-
-
-File: mew.ja.info, Node: highlight, Next: hooks, Prev: charset, Up: Customize
-
-色付け
-======
-
-Highlighting
-============
-
-`mew-use-highlight-mark' が `t' の場合、マークの付いたメッセージに色が
-付きます。初期値は `t' です。If `mew-use-highlight-mark' is `t',
-marked message are highlighted. The default is `t'.
-
-`mew-use-highlight-header' が `t' の場合、メッセージのヘッダに色が付き
-ます。初期値は `t' です。If `mew-use-highlight-header' is `t', the
-header of a message is highlighted. The default is `t'.
-
-`mew-use-highlight-body' が `t' の場合、メッセージの本文に色が付きます。
-初期値は `t' です。色を付ける上限は、`mew-highlight-body-max-size' で指
-定できます。初期値は 10000 バイトです。If `mew-use-highlight-body' is
-`t', the body of a message is highlighted. The default is `t'. The
-limit to be highlighted can be set by
-`mew-highlight-body-max-size'. The default is 10000 bytes.
-
-`mew-use-highlight-url' が `t' の場合、メッセージ中の URL に仕掛けが施
-されて、マウスを持っていくと光るようになります。初期値は `t' です。If
-`mew-use-highlight-url' is `t', a spell is cast to URL strings in a
-message. So, when you move the cursor onto the URL, it is
-highlighted. The default is `t'.
-
-`mew-use-cursor-mark' が `t' の場合、Summary モードにおいて、現在表示し
-ているメッセージの行頭に、`mew-cursor-mark' で指定された目印が付きます。
-初期値は `nil' です。`mew-cursor-mark' の初期値は ">" です。If
-`mew-use-cursor-mark' is `t', the mark specified `mew-cursor-mark' is
-putted to the beginning of the current line.  The default is
-`nil'. The default of `mew-cursor-mark' is ">".
-
-`mew-use-highlight-cursor-line' が `t' の場合、Summary モードでカーソル
-のある行に下線が引かれます。初期値は `t' です。If
-`mew-use-highlight-cursor-line' is `t', underline is put on the cursor
-line in Summary mode. The default is `t'.
-
-`mew-use-highlight-mouse-line' が `t' の場合、Emacs がマウスの色付けを
-サポートしていれば、Summary モードでマウスのある行に色がつきます。真中
-のボタンをクリックしながら、マウスだけでメッセージを読む際にはとても便
-利です。初期値は `nil' になっています。If
-`mew-use-highlight-mouse-line' is `t' on Emacs which supports mouse
-highlight, the mouse line is painted in Summary mode. This is very
-convenient to read messages clicking the middle button of the
-mouse. The default value is `nil'.
-
-`mew-use-highlight-x-face' が `t' で、ヘッダ中の X-Face: がMessage モー
-ドでアイコン化されます。初期値は `t' です。この機能を利用するには、
-netpbm" と "compface" パッケージをインストールして下さい。If
-`mew-use-highlight-x-face' is `t', X-Face: in a header is iconified in
-Message mode. The default value is `t'. To use this feature, install
-the "netpbm" package and the "compface" package.
-
-色を変更するには、Mew のソースと一緒に配布されている "mew.dot.theme" を
-適当な名前でコピーし内容を変更します。ここでは、そのファイル名を
-"~/.mew-theme.el" としましょう。まず、この名前を ".mew.el" で
-`mew-theme-file' に指定して下さい。
-To modify colors, copy "mew.dot.theme" contained Mew's source file to
-an appropriate place, say "~/.mew-theme.el". First, set
-`mew-theme-file' to this file name in ".mew.el" as follows:
-
-     (setq mew-theme-file "~/.mew-theme.el")
-
-次に中身を変更します。たとえば、以下のような設定が見つかります。Then,
-change the contents. For instance, you can find the following
-configuration.
-
-     (mew-setface-bold header-subject
-       :tty "red" :light "Firebrick" :dark "OrangeRed")
-
-シンボル `header-subject' は、ヘッダの "Subject:" の値を意味していま
-す。:tty は Emacs をカラーの端末で起動した場合、:light と :dark は、そ
-れぞれ Emacs をウインドウで起動したときの背景が白と黒の場合を意味してい
-ます。The symbol `header-subject' means the value of the "Subject:"
-field in a header. :tty is the case where Emacs is executed on a
-terminal while :light and :dark indicates the case where the
-background of Emacs executed with a window is white and black,
-respectively.
-
-端末では green 、背景が白なら ForestGreen、背景が黒なら LimeGreen と設
-定するには、以下のようにします。If you wish green for a terminal,
-ForestGreen for the white background, and LimeGreen for the black
-background, modify the configuration as follows:
-
-     (mew-setface-bold header-subject
-       :tty "green" :light "ForestGreen" :dark "LimeGreen")
-
-シンボルに何があるのかは、"mew.dot.mew" を見て下さい。To know what
-kind of symbols are prepared, see the "mew.dot.mew".
-
-上記の方法では、ヘッダのすべてのフィールド名やフィールド値に対してシン
-ボルが定義されていません。そこで、すべてのフィールドの色を簡単に変更す
-るために、`mew-header-color' と `mew-header-color-bold' という関数が用
-意されています。後者を使うと太字に、前者を使うと普通の文字になります。
-たとえば、以下のように使います。The method above does not prepare
-symbols for all field names and field value. So, `mew-header-color'
-and `mew-header-color-bold' exist to change colors easily. If you use
-the latter, characters become bold. The former results in normal.  The
-following is a typical usage:
-
-     (mew-header-color-bold "Subject:" "LimeGreen" "OrangeRed")
-
-この設定では、"Subject:" が LimeGreen の太字に、その値が OrangeRed の太
-字になります。With this configuration, "Subject:" becomes bold
-LimeGreen and its value turns into bold OrangeRed.
-
-この方法では、端末や背景の色を考慮した設定はできません。また、フィール
-ド値の色を省略すると、フィールド名と同じ色が使用されます。The second
-method cannot specify the cases of terminal or background.  If you
-omit the field value color, the field name color is used for the field
-value.
-
-
-
-File: mew.ja.info, Node: hooks, Next: pop, Prev: highlight, Up: Customize
-
-フック
-======
-
-Hooks
-=====
-
-Mew で用意されているフックをまとめます。Here is a summary of hooks
-used in Mew.
-
-`mew-env-hook'
-     Mew の起動時の環境が設定される前に評価される。
-`mew-init-hook'
-     Mew の起動時に評価される。
-`mew-status-update-hook'
-     状態の更新(`Z')のときに評価される。
-`mew-summary-mode-hook'
-     Summary モードに入るときに評価される。
-`mew-virtual-mode-hook'
-     Virtual モードに入るときに評価される。
-`mew-thread-display-hook'
-     スレッドが表示された後に評価される。
-`mew-header-mode-hook'
-     Header モードに入るときに評価される。
-`mew-draft-mode-hook'
-     Draft モードに入るときに評価される。
-`mew-draft-mode-newdraft-hook'
-     新しい草稿が用意された際に、Draft モードにおいて評価される。
-`mew-draft-mode-reedit-hook'
-     +draft でないフォルダにある古い草稿を再編集した際に、Draft モード
-     において評価される。
-`mew-draft-mode-reedit-draft-hook'
-     +draft でないフォルダにある草稿を再編集した際に、Draft モードにお
-     いて評価される。
-`mew-draft-mode-reedit-queue-hook'
-     +queue または +postq フォルダにあるメッセージを再編集した際に、
-     Draft モードにおいて評価される。
-`mew-draft-mode-edit-again-hook'
-     古い形式で戻ってきたメッセージを再編集した際に、Draft モードにおい
-     て評価される。
-`mew-message-mode-hook'
-     Message モードに入るときに評価される。
-`mew-message-hook'
-     メッセージが Message モードで表示される度に評価される。
-`mew-make-message-hook'
-     Draft モードで MIME メッセージを作る前、つまり `C-cC-m' の際の最初
-     に評価される。例：(add-hook 'mew-make-message-hook
-     'ispell-message)
-`mew-send-hook'
-     メッセージを SMTP で送信/キューイングする前に評価される。メッセー
-     ジの最終形が作られる前に評価されることに注意。
-`mew-post-hook'
-     メッセージを NNTP で投稿/キューイングする前に評価される。メッセー
-     ジの最終形が作られる前に評価されることに注意。
-`mew-real-send-hook'
-     メッセージを SMTP で送信/キューイングする前に評価される。メッセー
-     ジの最終形が作られた後に評価されることに注意。
-`mew-real-post-hook'
-     メッセージを NNTP で送信/キューイングする前に評価される。メッセー
-     ジの最終形が作られた後に評価されることに注意。
-`mew-smtp-flush-hook'
-     +queue フォルダにメッセージがある場合に、SMTP が起動される前に評価
-     される。
-`mew-nntp2-flush-hook'
-     +postq フォルダにメッセージがある場合に、NNTP が起動される前に評価
-     される。
-`mew-smtp-sentinel-hook'
-     SMTP が終了する際に評価される。
-`mew-nntp-sentinel-hook'
-     受信用の NNTP が終了する際に評価される。
-`mew-nntp2-sentinel-hook'
-     送信用の NNTP が終了する際に評価される。
-`mew-pop-sentinel-hook'
-     POP が終了する際に評価される。
-`mew-pop-sentinel-non-biff-hook'
-     Biff ではない POP が終了する際に評価される。
-`mew-imap-sentinel-hook'
-     IMAP が終了する際に評価される。
-`mew-imap-sentinel-non-biff-hook'
-     Biff ではない IMAP が終了する際に評価される。
-`mew-scan-sentinel-hook'
-     Summary モードの `s' が終了する際に評価される。
-`mew-summary-ls-no-scan-hook'
-     Summary モードの `s' がフォルダの一覧を取らなかった場合に評価され
-     る。
-`mew-summary-exec-hook'
-     Summary モードの `x' の実行が終了する際に評価される。
-`mew-refile-guess-by-from-learn-hook'
-     mew-refile-guess-by-from-learn が実行される際に評価される。
-`mew-sort-hook'
-     Summary モードの `M-s' の実行が終了する際に評価される。
-`mew-pack-hook'
-     Summary モードの `O' の実行が終了する際に評価される。
-`mew-summary-delete-folder-hook'
-     フォルダが削除されるときに評価される。
-`mew-summary-rename-folder-hook'
-     フォルダ名が変更されるときに評価される。
-`mew-summary-toggle-disp-msg-hook'
-     Summary モードの `v' の実行が終了する際に評価される。
-`mew-syntax-format-hook'
-     マルチパートの書式を作成する関数 `mew-syntax-format' が呼ばれた際
-     に評価される。
-`mew-addrbook-mode-hook'
-     アドレス帳の登録モードに入るときに評価される。
-`mew-cite-hook'
-     Draft モードで引用する際に呼ばれる。通常 supercite を設定するため
-     に使う。
-`mew-before-cite-hook'
-     Draft モードでメッセージを引用する直前に呼ばれる。
-`mew-suspend-hook'
-     Mew を一時中断した際に評価される。
-`mew-quit-hook'
-     Mew の終了時に評価される。
-`mew-env-hook'
-     Hook called at initialize time before setting environment.
-`mew-init-hook'
-     Hook called at initialize time.
-`mew-status-update-hook'
-     Hook called at status update(`Z').
-`mew-summary-mode-hook'
-     Hook called in Summary mode.
-`mew-virtual-mode-hook'
-     Hook called in Virtual mode.
-`mew-thread-display-hook'
-     Hook called after new threads are displayed.
-`mew-header-mode-hook'
-     Hook called in Header mode.
-`mew-draft-mode-hook'
-     Hook called in Draft mode.
-`mew-draft-mode-newdraft-hook'
-     Hook called in Draft mode only when new draft is prepared.
-`mew-draft-mode-reedit-hook'
-     Hook called in Draft mode when a message not in +draft is
-     re-edited.
-`mew-draft-mode-reedit-draft-hook'
-     Hook called in Draft mode when a message in +draft is re-edited.
-`mew-draft-mode-reedit-queue-hook'
-     Hook called in Draft mode when a message in +queue or +postq is
-     re-edited.
-`mew-draft-mode-edit-again-hook'
-     Hook called in Draft mode when a message returned with the old
-     style is edited again.
-`mew-message-mode-hook'
-     Hook called in Message mode.
-`mew-message-hook'
-     Hook called whenever message displayed.
-`mew-make-message-hook'
-     Hook called before making a message in Draft mode. A good example
-     is as follows: (add-hook 'mew-make-message-hook 'ispell-message)
-`mew-send-hook'
-     Hook called before sending/queuing an e-mail message in Draft
-     mode.  Note that this hook is called before composition of the
-     message
-`mew-post-hook'
-     Hook called before posting/queuing a NetNews message in Draft
-     mode.  Note that this hook is called before composition of the
-     message.
-`mew-real-send-hook'
-     Hook called before sending/queuing an e-mail message in Draft
-     mode.  Note that this hook is called after composition of the
-     message.
-`mew-real-post-hook'
-     Hook called before sending/queuing a NetNews message in Draft
-     mode.  Note that this hook is called after composition of the
-     message.
-`mew-smtp-flush-hook'
-     Hook called before SMTP runs if messages exist in +queue.
-`mew-nntp2-flush-hook'
-     Hook called before NNTP runs if messages exist in +postq.
-`mew-smtp-sentinel-hook'
-     Hook called when a SMTP process finished.
-`mew-nntp-sentinel-hook'
-     Hook called when a NNTP process to receive messages finished.
-`mew-nntp2-sentinel-hook'
-     Hook called when a NNTP process to post messages finished.
-`mew-pop-sentinel-hook'
-     Hook called when a POP process finished.
-`mew-pop-sentinel-non-biff-hook'
-     Hook called when a non-Biff POP process finished.
-`mew-imap-sentinel-hook'
-     Hook called when a NNTP process to post messages finished.
-`mew-imap-sentinel-hook'
-     Hook called when an IMAP process finished.
-`mew-imap-sentinel-non-biff-hook'
-     Hook called when a non-Biff IMAP process finished.
-`mew-scan-sentinel-hook'
-     Hook called when scan finished.
-`mew-summary-ls-no-scan-hook'
-     Hook called when mew-summary-ls does not scan a folder.
-`mew-summary-exec-hook'
-     Hook called when `x' in Summary mode finished.
-`mew-refile-guess-by-from-learn-hook'
-     Hook called in mew-refile-guess-by-from-learn.
-`mew-sort-hook'
-     Hook called when `M-s' in Summary mode finished.
-`mew-pack-hook'
-     Hook called when `O' in Summary mode finished.
-`mew-summary-delete-folder-hook'
-     Hook called when a folder deleted.
-`mew-summary-rename-folder-hook'
-     Hook called when a folder renamed.
-`mew-summary-toggle-disp-msg-hook'
-     Hook called when `v' in Summary finished.
-`mew-syntax-format-hook'
-     Hook called when mew-syntax-format is called.
-`mew-addrbook-mode-hook'
-     Hook called in Addrbook mode.
-`mew-cite-hook'
-     Hook for an external cite mechanism. If you want to use
-     super-cite, (setq mew-cite-hook 'sc-cite-original).
-`mew-before-cite-hook'
-     Called in mew-summary-reply-with-citation before citation.
-`mew-suspend-hook'
-     Hook called on suspend.
-`mew-quit-hook'
-     Hook called on quit.
-
-以下にフックの設定例を示します。Here are some example configurations
-of hook
-
-Draft モードでは、フックを `text-mode-hook'、`mew-draft-mode-hook' の順
-で評価します。`text-mode-hook' で `auto-fill-mode' を設定していない人は、
-`mew-draft-mode-hook' を以下のように設定するのがよいかもしれません。
-Draft mode evaluates `text-mode-hook' and `mew-draft-mode-hook' in
-order. If you do not set `auto-fill-mode' to `text-mode-hook', It
-would be useful to define `mew-draft-mode-hook' as follows:
-
-     (add-hook 'mew-draft-mode-hook
-               (lambda ()
-                 (auto-fill-mode 1)
-                 (set-fill-column 70)))
-
-この例では、折り返しのカラム数を70に設定しています。In this example,
-the number of fill column is also set to 70.
-
-
-
-File: mew.ja.info, Node: pop, Next: imap, Prev: hooks, Up: Customize
-
-POP
-===
-
-POP
-===
-
-Mew では、メッセージを受信する際に POP を利用できます。ここでは、POP を
-制御するための以下の変数についてまとめます。Mew can POP to retrieve
-messages. This section describes following variables to control POP.
-
-`mew-pop-server'
-     POP サーバの名前。
-`mew-pop-ssh-server'
-     POP を SSH 経由で取得する場合の SSH サーバの名前。
-`mew-pop-ssl'
-     POP over SSL を使うか否か。
-`mew-pop-ssl-port'
-     POP over SSL のポート番号。
-`mew-pop-user'
-     POP のアカウント名。初期値はログイン名。
-`mew-pop-auth'
-     POP の認証方式。`'pass' は USER/PASS (生パスワード)、`'apop' は
-     APOP、`t' は `mew-pop-auth-list' に従った SASL を意味する。初期値
-     は `'apop'。
-`mew-pop-auth-list'
-     SASL で利用する認証方式のリスト。優先順位の高い順に並べる。現在、
-     CRAM-MD5" が利用可能。
-`mew-pop-delete'
-     POP サーバからメッセージを取得後、POP サーバにあるメッセージを削除
-     するか否か。`t' なら削除。`nil' なら削除しない。数値 N なら、最初
-     のアクセスから N 日後に削除する。初期値は `t'。
-`mew-pop-size'
-     POP サーバから取得するメッセージの大きさの上限。初期値は 55296 バ
-     イト。0 に設定すると、上限なしの意味になり、すべてのメッセージを取
-     得する。上限に引っ掛かったメッセージの全体を取得する方法については、
-     *Note retrieving:: を参照のこと。
-`mew-pop-body-lines'
-     大きさの上限にひっかかったメッセージの本文を何行取得するかという値。
-     初期値は 40。
-`mew-pop-header-only'
-     POP でメッセージを取得する際に、ヘッダのみにするか、本文も取得するか。
-     `nil' でなければ、ヘッダのみを取得。初期値は `nil'。
-`mew-pop-server'
-     The name of your POP server.
-`mew-pop-ssh-server'
-     The name of SSH server which forwards the POP3 port.
-`mew-pop-ssl'
-     If non-nil, POP connections are made over SSL.
-`mew-pop-ssl-port'
-     The port for POP over SSL.
-`mew-pop-user'
-     The user name on your POP server. The default is your login name.
-`mew-pop-auth'
-     The authentication method for POP3. 'pass means the
-     authentication with USER/PASS (i.e. plain password). 'apop means
-     the authentication with APOP. `t' means SASL according to
-     `mew-pop-auth-list'. The default is 'apop.
-`mew-pop-auth-list'
-     A list of SASL methods in the preferred order. Currently,
-     CRAM-MD5" can be used.
-`mew-pop-delete'
-     Whether or not delete messages on a POP server after retrieval by
-     POP.  If `t', delete the messages. If `nil', retain the messages.
-     If number N, delete the messages N days after the first
-     access. The default is `t'.
-`mew-pop-size'
-     The limit size of messages to be retrieved by POP. The default is
-     55296 byte. 0 means unlimited, so you can get all messages from
-     the POP server. To know how to retrieve the rest of a truncated
-     message, please refer to *Note retrieving::.
-`mew-pop-body-lines'
-     *The limit of body lines to get when the size of message exceeds
-     `mew-pop-size'. The default is 40.
-`mew-pop-header-only'
-     Whether or not the body of a message is retrieved by POP. If
-     non-nil, only header is retrieved. The default is `nil'
-
-
-
-File: mew.ja.info, Node: imap, Next: nntp, Prev: pop, Up: Customize
-
-IMAP
-====
-
-IMAP
-====
-
-Mew では、メッセージを受信する際に IMAP を利用できます。ここでは、IMAP
-を制御するための以下の変数についてまとめます。Mew can use IMAP to
-retrieve messages. This section describes following variables to
-control IMAP.
-
-`mew-imap-server'
-     IMAP サーバの名前。
-`mew-imap-ssh-server'
-     IMAP を SSH 経由で取得する場合の SSH サーバの名前。
-`mew-imap-ssl'
-     IMAP over SSL を使うか否か。
-`mew-imap-ssl-port'
-     IMAP over SSL のポート番号。
-`mew-imap-user'
-     IMAP のアカウント名。初期値はログイン名。
-`mew-imap-auth'
-     IMAP の認証方式。`nil' は LOGIN (生パスワード)、`t' は
-     `mew-imap-auth-list' に基づいた SASL を意味する。初期値は `t'。
-`mew-imap-auth-list'
-     SASL で利用する認証方式のリスト。優先順位の高い順に並べる。現在、
-     CRAM-MD5" と "LOGIN" が利用可能。
-`mew-imap-delete'
-     IMAP サーバからメッセージを取得後、IMAP サーバにあるメッセージを削
-     除するか否か。`t' なら削除。`nil' なら削除しない。数値 N なら、最
-     初のアクセスから N 日後に削除する。初期値は `t'。
-`mew-imap-size'
-     IMAP サーバから取得するメッセージの大きさの上限。初期値は 55296 バイト。
-     0 に設定すると、上限なしの意味になり、すべてのメッセージを取得する。上限
-     に引っ掛かったメッセージの全体を取得する方法については、
-     *Note retrieving:: を参照のこと。
-`mew-imap-header-only'
-     IMAP でメッセージを取得する際に、ヘッダのみにするか、本文も取得するか。
-     `nil' でなければ、ヘッダのみを取得。初期値は `nil'。
-`mew-imap-server'
-     The name of your IMAP server.
-`mew-imap-ssh-server'
-     The name of SSH server which forwards the IMAP4 port.
-`mew-imap-ssl'
-     If non-nil, IMAP connections are made over SSL.
-`mew-imap-ssl-port'
-     The port for IMAP over SSL.
-`mew-imap-user'
-     The user name on the IMAP server. The default is your login name.
-`mew-imap-auth'
-     The authentication method for IMAP4. `nil' means the authentication with
-     LOGIN (i.e. plain password). `t' means SASL according to
-     `mew-imap-auth-list'. The default is `t'.
-`mew-imap-auth-list'
-     A list of SASL methods in the preferred order.  Currently,
-     CRAM-MD5" and "LOGIN" can be used.
-`mew-imap-delete'
-     Whether or not delete messages on an IMAP server after retrieval
-     by IMAP. If `t', delete the messages. If `nil', retain the
-     messages. If number N, delete the messages N days after the first
-     access. Otherwise they are not deleted. The default is `t'.
-`mew-imap-size'
-     The limit size of messages to be retrieved by IMAP. The default
-     is 55296 byte. 0 means unlimited, so you can get all messages
-     from the IMAP server. To know how to retrieve the rest of a
-     truncated message, please refer to *Note retrieving::.
-`mew-imap-header-only'
-     Whether or not the body of a message is retrieved by IMAP. If
-     non-nil, only header is retrieved. The default is `nil'
-
-
-
-File: mew.ja.info, Node: nntp, Next: smtp, Prev: imap, Up: Customize
-
-NNTP
-====
-
-NNTP
-====
-
-Mew では、ニュースを読み書きする際に NNTP を利用します。ここでは、NNTP
-を制御するための以下の変数についてまとめます。Mew uses NNTP to
-read/write News articles. This section describes following variables
-to control NNTP.
-
-`mew-nntp-server'
-     NNTP サーバの名前。
-`mew-nntp-ssh-server'
-     NNTP を SSH 経由で取得する場合の SSH サーバの名前。
-`mew-nntp-ssl'
-     NNTP over SSL を使うか否か。
-`mew-nntp-ssl-port'
-     NNTP over SSL のポート番号。
-`mew-nntp-user'
-     NNTP のアカウント名。もし `nil' でなければ、認証の手続きが実行され
-     る。(mew-nntp-auth という変数はないことに注意。)
-`mew-nntp-newsgroup'
-     ニュースグループ名の初期値。
-`mew-nntp-size'
-     NNTP サーバから取得するメッセージの大きさの上限。初期値は 55296 バイト。
-     0 に設定すると、上限なしの意味になり、すべてのメッセージを取得する。上限
-     に引っ掛かったメッセージの全体を取得する方法については、
-     *Note retrieving:: を参照のこと。
-`mew-nntp-header-only'
-     NNTP でメッセージを取得する際に、ヘッダのみにするか、本文も取得するか。
-     `nil' でなければ、ヘッダのみを取得。初期値は `nil'。
-`mew-nntp-msgid-user'
-     Message-Id: を作成するためのユーザ名。`nil' であれば `mew-user' の
-     値が利用される。初期値は `nil'。Message-Id: の書式は以下を参照。
-`mew-nntp-msgid-domain'
-     Message-Id: を作成するためのドメイン名。`nil' であれば
-     `mew-mail-domain' の値が利用される。初期値は `nil'。Message-Id: の
-     書式は以下を参照。
-`mew-nntp-server'
-     The name of your NNTP server.
-`mew-nntp-ssh-server'
-     The name of SSH server which forwards the NNTP port.
-`mew-nntp-ssl'
-     If non-nil, NNTP connections are made over SSL.
-`mew-nntp-ssl-port'
-     The port for NNTP over SSL.
-`mew-nntp-user'
-     The user name on the NNTP server. If non-nil, authentication is
-     used.  (Note that mew-nntp-auth does not exist.)
-`mew-nntp-newsgroup'
-     The name of default Newsgroup.
-`mew-nntp-size'
-     The limit size of messages to be retrieved by NNTP. The default
-     is 55296 byte. 0 means unlimited, so you can get all messages
-     from the NNTP server.
-`mew-nntp-header-only'
-     Whether or not the body of a message is retrieved by NNTP. If
-     non-nil, only header is retrieved.
-`mew-nntp-msgid-user'
-     A user name for creation of Message-Id:. If `nil', the value of
-     `mew-user' is used. The default is `nil'.
-`mew-nntp-msgid-domain'
-     A domain name for creation of Message-Id:. If `nil', the value of
-     `mew-mail-domain' is used. The default is `nil'.
-
-なお、NNTP 用の Message-Id: の値は以下のように作成されます。A value of
-Message-Id: for NNTP is created by the following rule:
-
-     message-id = *random*.nntp-msgid-user@nntp-msgid-domain
-
-
-
-File: mew.ja.info, Node: smtp, Next: config, Prev: nntp, Up: Customize
-
-SMTP
-====
-
-SMTP
-====
-
-Mew では、メッセージを送信する際に SMTP を利用します。SMTP サーバが認証
-を要求した場合、Mew は自動的にユーザにバスワードの入力を求めます。ここ
-では、SMTP を制御するための以下の変数についてまとめます。Mew uses SMTP
-to send messages. If an SMTP server requires authentication, Mew
-automatically asks you to input your password. This section describes
-following variables to control SMTP.
-
-`mew-smtp-server'
-     SMTP サーバの名前。
-`mew-smtp-port'
-     SMTP ポート番号。
-`mew-smtp-ssh-server'
-     SSH 経由でメッセージを送る際の SSH サーバの名前。
-`mew-smtp-ssl'
-     SMTP over SSL を使うか否か。
-`mew-smtp-ssl-port'
-     SMTP over SSL のポート番号。
-`mew-smtp-user'
-     SMTP AUTH で利用されるアカウント名。設定されない場合は、自動的にメー
-     ルアドレスに設定される。
-`mew-smtp-auth-list'
-     SMTP AUTH で利用する認証方式のリスト。優先順位の高い順に並べる。初
-     期値は、'("CRAM-MD5" "PLAIN" "LOGIN")。
-`mew-smtp-helo-domain'
-     SMTP HELO コマンドで使われるサーバ名。初期値は "localhost"。
-`mew-smtp-mail-from'
-     SMTP MAIL FROM コマンドで指定されるアドレス。`nil' の場合は、
-     From: フィールドのアドレスが指定される。初期値は `nil'。
-`mew-smtp-msgid-user'
-     Message-Id: を作成するためのユーザ名。`nil' であれば `mew-user' の
-     値が利用される。初期値は `nil'。Message-Id: の書式は以下を参照。
-`mew-smtp-msgid-domain'
-     Message-Id: を作成するためのドメイン名。`nil' であれば
-     `mew-mail-domain' の値が利用される。初期値は `nil'。Message-Id: の
-     書式は以下を参照。
-`mew-use-8bit'
-     8 ビットテキストを符号化せずにそのまま送るか否か。`nil' の場合は、
-     適切な MIME 符号化が施される。初期値は `nil'。
-`mew-smtp-server'
-     The name of your SMTP server.
-`mew-smtp-port'
-     The port for SMTP.
-`mew-smtp-ssh-server'
-     The name of SSH server which forwards the SMTP port.
-`mew-smtp-ssl'
-     If non-nil, SMTP connections are made over SSL.
-`mew-smtp-ssl-port'
-     The port for SMTP over SSL.
-`mew-smtp-user'
-     The user name on your SMTP server. If not configured, your e-mail
-     address is automatically set.
-`mew-smtp-auth-list'
-     A list of SMTP AUTH methods in the preferred order.  Currently,
-     CRAM-MD5", "PLAIN", and "LOGIN" can be used.
-`mew-smtp-helo-domain'
-     An e-mail domain to tell a SMTP server with HELO/EHLO. The
-     default is "localhost".
-`mew-smtp-mail-from'
-     The default is `nil'. An e-mail address to tell a SMTP server
-     with MAIL FROM:. If `nil', an address specified by the From:
-     field is used.
-`mew-smtp-msgid-user'
-     A user name for creation of Message-Id:. If `nil', the value of
-     `mew-user' is used. The default is `nil'.
-`mew-smtp-msgid-domain'
-     A domain name for creation of Message-Id:. If `nil', the value of
-     `mew-mail-domain' is used. The default is `nil'.
-`mew-use-8bit'
-     Whether or not send 8bit text without MIME encoding. If `nil', an
-     appropriate MIME encoding is applied. The default is `nil'.
-
-なお、SMTP 用の Message-Id: の値は以下のように作成されます。A value of
-Message-Id: for SMTP is created by the following rule:
-
-     message-id = *random*.smtp-msgid-user@smtp-msgid-domain
-
-Message Submission (ポート番号が 587 である送信用の SMTP)を使いたい場合
-は、以下のように設定して下さい。If you want to use Message Submission
-(SMTP for submission whose port number is 587), configure as follows:
-
-     (setq mew-smtp-port "submission")
-
-SSL (*Note SSL::)や TLS (*Note TLS::) の章も参考にして下さい。Please
-refer also to SSL (*Note SSL::) and TLS (*Note TLS::).
-
-SMTP サーバの中には、認証なし、つまりパスワードを送られるとエラーと見な
-す設定であるにも関わらず、認証を要求してくるものがあります。Mew は、
-SMTP サーバが認証を要求すると、ユーザにパスワードを尋ねて、入力されたパ
-スワードをサーバへ送ります。上記のようなおかしな SMTP サーバに対処する
-には、以下のように設定し、認証を要求されてもパスワードを送らなくすれば
-よいでしょう。Some SMTP servers are mis-configured. They requests
-authentication though errors occur if passwords are received. Mew
-automatically ask a user to input user's password and send it to an
-SMTP server if it requires authentication. To get along with such SMTP
-servers above, configure as follows:
-
-     (setq mew-use-smtp-auth nil)
-
-`mew-use-smtp-auth'
-     SMTP サーバが認証を要求したとき、パスワードを送るかどうか。デフォルトは
-     `t'。`nil' にすると、SMTP サーバが認証を要求しても無視する。
-`mew-use-smtp-auth'
-     If non-nil, Mew send user's password if an SMTP server requests
-     authentication. The default value is `t'.  If `nil', Mew does not
-     send user's password even if the (mis-configured) SMTP server
-     requests authentication.
-
-
+* , (Summary):                  analysis.               (line   5)
+* . (Summary):                  analysis.               (line   5)
+* : (Summary):                  analysis.               (line   5)
+* # (Summary):                  features.               (line   5)
+* ; (Summary):                  features.               (line   5)
+* = (Summary):                  features.               (line   5)
+* _ (Summary):                  features.               (line   5)
+* | (Summary):                  features.               (line   5)
+* _ (Summary):                  longline.               (line   5)
+* / (Summary):                  search.                 (line   5)
+* ? (Summary):                  search.                 (line   5)
+* - (Summary):                  singlepart.             (line   5)
+* * (Summary):                  target mark.            (line   5)
+* & (Virtual):                  thread.                 (line   5)
+* ( (Virtual):                  thread.                 (line   5)
+* ) (Virtual):                  thread.                 (line   5)
+* ^ (Virtual):                  thread.                 (line   5)
+* a (Attach):                   mime-comp.              (line   5)
+* A (Summary):                  Composing.              (line   5)
+* a (Summary):                  Composing.              (line   5)
+* A (Summary):                  reply.                  (line   5)
+* a (Summary):                  reply.                  (line   5)
+* A (Summary):                  sum-write.              (line   5)
+* a (Summary):                  sum-write.              (line   5)
+* B (Attach):                   mark-b-comp.            (line   5)
+* B (Summary):                  features.               (line   5)
+* C (Attach):                   charset-guess.          (line   5)
+* C (Attach):                   mime-comp.              (line   5)
+* c (Attach):                   mime-comp.              (line   5)
+* C (Summary):                  features.               (line   5)
+* C-b (Attach):                 mime-comp.              (line   5)
+* C-cC-a (Draft):               mime-comp.              (line   5)
+* C-cC-a (Summary):             addrbook.               (line   5)
+* C-cC-a (Summary):             features.               (line   5)
+* C-cC-b (Draft):               shortcut.               (line   5)
+* C-cC-c (Addrbook):            addrbook.               (line   5)
+* C-cC-c (Draft):               send.                   (line   5)
+* C-cC-c (Edit):                edit.                   (line   5)
+* C-cC-c (Header):              resend.                 (line   5)
+* C-cC-c (Summary):             off-line.               (line   5)
+* C-cC-c (Summary):             send.                   (line   5)
+* C-cC-e (Draft):               shortcut.               (line   5)
+* C-cC-e (Summary):             message-mode.           (line   5)
+* C-cC-f (Draft):               longline.               (line   5)
+* C-cC-f (Summary):             cipher-viewing.         (line   5)
+* C-cC-l (Draft):               cite.                   (line   5)
+* C-cC-l (Summary):             invalid.                (line   5)
+* C-cC-m (Draft):               send.                   (line   5)
+* C-cC-m (Edit):                edit.                   (line   5)
+* C-cC-m (Header):              resend.                 (line   5)
+* C-cC-o (Draft):               config.                 (line   5)
+* C-cC-o (Summary):             visiting.               (line   5)
+* C-cC-pC-a (Draft):            shortcut.               (line   5)
+* C-cC-pC-e (Draft):            shortcut.               (line   5)
+* C-cC-pC-m (Draft):            shortcut.               (line   5)
+* C-cC-q (Addrbook):            addrbook.               (line   5)
+* C-cC-q (Addrbook):            Quit.                   (line   5)
+* C-cC-q (Draft):               Quit.                   (line   5)
+* C-cC-q (Header):              Quit.                   (line   5)
+* C-cC-q (Summary):             Quit.                   (line   5)
+* C-cC-r (Draft):               shortcut.               (line   5)
+* C-cC-r (Summary):             features.               (line   5)
+* C-cC-s (Draft):               shortcut.               (line   5)
+* C-cC-s (Summary):             features.               (line   5)
+* C-cC-t (Draft):               cite.                   (line   5)
+* C-cC-v (Summary):             cipher-viewing.         (line   5)
+* C-cC-v (Summary):             features.               (line   5)
+* C-cC-y (Draft):               cite.                   (line   5)
+* C-cC-z (Summary):             cipher-viewing.         (line   5)
+* C-cC-z (Summary):             features.               (line   5)
+* C-cTAB (Draft):               cheader.                (line   5)
+* C-cTAB (Draft):               cite.                   (line   5)
+* C-cTAB (Summary):             analysis.               (line   5)
+* C-f (Attach):                 mime-comp.              (line   5)
+* C-n (Attach):                 mime-comp.              (line   5)
+* C-n (Summary):                singlepart.             (line   5)
+* C-p (Attach):                 mime-comp.              (line   5)
+* C-p (Summary):                singlepart.             (line   5)
+* C-u. (Summary):               analysis.               (line   5)
+* C-u: (Summary):               analysis.               (line   5)
+* C-u. (Summary):               invalid.                (line   5)
+* C-u/ (Summary):               search.                 (line   5)
+* C-u? (Summary):               search.                 (line   5)
+* C-uA (Summary):               reply.                  (line   5)
+* C-ua (Summary):               reply.                  (line   5)
+* C-uC-cC-a (Summary):          addrbook.               (line   5)
+* C-uC-cC-e (Summary):          message-mode.           (line   5)
+* C-uC-cC-f (Summary):          cipher-viewing.         (line   5)
+* C-uC-cC-l (Summary):          invalid.                (line   5)
+* C-uD (Summary):               delete mark.            (line   5)
+* C-uD (Summary):               features.               (line   5)
+* C-uj (Summary):               singlepart.             (line   5)
+* C-uk/ (Summary):              search.                 (line   5)
+* C-ukI (Summary):              dialog.                 (line   5)
+* C-umI (Summary):              target mark.            (line   5)
+* C-uM-n (Summary):             keyword.                (line   5)
+* C-uM-o (Summary):             auto-refile.            (line   5)
+* C-uM-p (Summary):             keyword.                (line   5)
+* C-uM-x mew:                   start.                  (line   5)
+* C-un (Summary):               singlepart.             (line   5)
+* C-up (Summary):               singlepart.             (line   5)
+* C-us (Summary):               retrieving.             (line   5)
+* C-uSPC (Summary):             singlepart.             (line   5)
+* C-utt (Summary):              thread.                 (line   5)
+* C-uw (Summary):               sum-write.              (line   5)
+* C-uZ (Summary):               status-update.          (line   5)
+* C-x RET l:                    charset-guess.          (line   5)
+* C-xm:                         Composing.              (line   5)
+* C-xm:                         start.                  (line   5)
+* D (Attach):                   mime-comp.              (line   5)
+* d (Attach):                   mime-comp.              (line   5)
+* D (Summary):                  delete mark.            (line   5)
+* d (Summary):                  delete mark.            (line   5)
+* D (Summary):                  features.               (line   5)
+* DEL (Summary):                singlepart.             (line   5)
+* E (Attach):                   mark-b-comp.            (line   5)
+* e (Attach):                   mime-comp.              (line   5)
+* E (Summary):                  sum-write.              (line   5)
+* F (Attach):                   mime-comp.              (line   5)
+* f (Attach):                   mime-comp.              (line   5)
+* F (Summary):                  Composing.              (line   5)
+* f (Summary):                  Composing.              (line   5)
+* F (Summary):                  forward.                (line   5)
+* f (Summary):                  forward.                (line   5)
+* F (Summary):                  sum-write.              (line   5)
+* f (Summary):                  sum-write.              (line   5)
+* F (Summary):                  target mark.            (line   5)
+* G (Attach):                   mark-b-comp.            (line   5)
+* g (Summary):                  moving.                 (line   5)
+* I (Attach):                   charset-guess.          (line   5)
+* i (Attach):                   mime-comp.              (line   5)
+* I (Summary):                  retrieving.             (line   5)
+* i (Summary):                  retrieving.             (line   5)
+* i (Summary):                  send.                   (line   5)
+* j (Summary):                  singlepart.             (line   5)
+* J (Summary):                  target mark.            (line   5)
+* k/ (Summary):                 search.                 (line   5)
+* k? (Summary):                 search.                 (line   5)
+* kc:                           dbsearch.               (line   5)
+* kI (Summary):                 dialog.                 (line   5)
+* kM:                           dbsearch.               (line   5)
+* km:                           dbsearch.               (line   5)
+* lc (Summary):                 copy-msg.               (line   5)
+* lh (Summary):                 spam2.                  (line   5)
+* li (Summary):                 copy-msg.               (line   5)
+* ls (Summary):                 spam2.                  (line   5)
+* lx:                           off-line.               (line   5)
+* m$:                           escape mark.            (line   5)
+* m*:                           escape mark.            (line   5)
+* m (Attach):                   mime-comp.              (line   5)
+* m$ (Summary):                 mark change.            (line   5)
+* m* (Summary):                 mark change.            (line   5)
+* M* (Summary):                 unmark.                 (line   5)
+* M-\ (Summary):                target mark.            (line   5)
+* ma (Summary):                 target mark.            (line   5)
+* M-b (Summary):                target mark.            (line   5)
+* mc (Summary):                 mark change.            (line   5)
+* Md (Summary):                 delete mark.            (line   5)
+* md (Summary):                 delete mark.            (line   5)
+* md (Summary):                 mark change.            (line   5)
+* M-d (Summary):                delete mark.            (line   5)
+* M-e:                          edit.                   (line   5)
+* M-e (Attach):                 mark-b-comp.            (line   5)
+* mI (Summary):                 target mark.            (line   5)
+* M-l (Summary):                features.               (line   5)
+* mlc (Summary):                copy-msg.               (line   5)
+* mli (Summary):                copy-msg.               (line   5)
+* mM-d (Summary):               delete mark.            (line   5)
+* mM-d (Summary):               mark change.            (line   5)
+* mM-u (Summary):               mark change.            (line   5)
+* M-n (Summary):                keyword.                (line   5)
+* mo (Summary):                 mark change.            (line   5)
+* M-o (Summary):                auto-refile.            (line   5)
+* M-p (Summary):                keyword.                (line   5)
+* mr (Summary):                 target mark.            (line   5)
+* M-RET (Summary):              singlepart.             (line   5)
+* M-s (Attach):                 mark-b-comp.            (line   5)
+* ms (Summary):                 mark change.            (line   5)
+* M-s (Summary):                sorting.                (line   5)
+* mt (Summary):                 thread.                 (line   5)
+* M-t (Summary):                target mark.            (line   5)
+* M-u:                          unread mark.            (line   5)
+* M-x mew:                      start.                  (line   5)
+* M-x mew:                      Viewing.                (line   5)
+* M-x mew-send:                 Composing.              (line   5)
+* M-x mew-send:                 start.                  (line   5)
+* mxd (Summary):                delete mark.            (line   5)
+* mxM-d (Summary):              delete mark.            (line   5)
+* n (Summary):                  singlepart.             (line   5)
+* N (Summary):                  target mark.            (line   5)
+* o (Summary):                  refile mark.            (line   5)
+* P (Attach):                   mime-comp.              (line   5)
+* p (Attach):                   mime-comp.              (line   5)
+* p (Attach):                   pgp-key.                (line   5)
+* p (Summary):                  singlepart.             (line   5)
+* P (Summary):                  target mark.            (line   5)
+* Q (Attach):                   mark-b-comp.            (line   5)
+* Q (Summary):                  Quit.                   (line   5)
+* q (Summary):                  Quit.                   (line   5)
+* r (Summary):                  resend.                 (line   5)
+* RET (Summary):                singlepart.             (line   5)
+* S (Attach):                   mark-b-comp.            (line   5)
+* s (Summary):                  off-line.               (line   5)
+* s (Summary):                  retrieving.             (line   5)
+* S (Summary):                  sorting.                (line   5)
+* SPC (Summary):                singlepart.             (line   5)
+* T (Attach):                   mime-comp.              (line   5)
+* t (Attach):                   mime-comp.              (line   5)
+* t (Virtual):                  thread.                 (line   5)
+* t* (Virtual):                 thread.                 (line   5)
+* ta (Virtual):                 thread.                 (line   5)
+* TAB (Draft):                  header.                 (line   5)
+* td (Virtual):                 thread.                 (line   5)
+* tg (Virtual):                 thread.                 (line   5)
+* tM-d (Virtual):               thread.                 (line   5)
+* tn (Virtual):                 thread.                 (line   5)
+* to (Virtual):                 thread.                 (line   5)
+* tp (Virtual):                 thread.                 (line   5)
+* tr (Summary):                 thread.                 (line   5)
+* tSPC (Virtual):               thread.                 (line   5)
+* tt (Summary):                 thread.                 (line   5)
+* tu (Virtual):                 thread.                 (line   5)
+* U (Attach):                   mark-b-comp.            (line   5)
+* U (Summary):                  unmark.                 (line   5)
+* u (Summary):                  unmark.                 (line   5)
+* V (Summary):                  dialog.                 (line   5)
+* v (Summary):                  features.               (line   5)
+* w (Summary):                  Composing.              (line   5)
+* W (Summary):                  resend.                 (line   5)
+* W (Summary):                  sum-write.              (line   5)
+* w (Summary):                  sum-write.              (line   5)
+* x (Summary):                  delete mark.            (line   5)
+* x (Summary):                  Marks.                  (line   5)
+* x (Summary):                  unmark.                 (line   5)
+* y (Attach):                   mime-comp.              (line   5)
+* y (Summary):                  features.               (line   5)
+* Z (Summary):                  auto-alias.             (line   5)
+* Z (Summary):                  status-update.          (line   5)
+* z8 (Summary):                 status-update.          (line   5)
+* zc (Summary):                 status-update.          (line   5)
+* zd (Summary):                 status-update.          (line   5)
+* zo (Summary):                 status-update.          (line   5)
+* zp (Summary):                 status-update.          (line   5)
+* zSPC:                         unread mark.            (line   5)
+* zv (Summary):                 features.               (line   5)
+* zv (Summary):                 status-update.          (line   5)
+* zw (Summary):                 status-update.          (line   5)
 

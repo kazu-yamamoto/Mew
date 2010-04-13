@@ -128,7 +128,7 @@ File: mew.info, Node: modes, Next: folder convention, Prev: Emacsen, Up: Overvie
 Modes
 =====
 
-Mew has the following six modes:
+Mew has the following seven modes:
 
 `Summary mode'
      A mode to list and select messages.

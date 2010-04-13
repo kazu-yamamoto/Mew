@@ -199,7 +199,7 @@ Message モードでアイコン化されます。初期値は `t' です。こ�
 利用するには、"netpbm" と "compface" パッケージをインストールして下
 さい。
 
-色を変更するには、Mew のソースと一緒に配布されている "mew.dot.theme" を
+色を変更するには、Mew のソースと一緒に配布されている "dot.theme" を
 適当な名前でコピーし内容を変更します。ここでは、そのファイル名を
 "~/.mew-theme.el" としましょう。まず、この名前を ".mew.el" で
 `mew-theme-file' に指定して下さい。
@@ -222,13 +222,13 @@ Message モードでアイコン化されます。初期値は `t' です。こ�
      (mew-setface-bold header-subject
        :tty "green" :light "ForestGreen" :dark "LimeGreen")
 
-シンボルに何があるのかは、"mew.dot.mew" を見て下さい。
+シンボルに何があるのかは、"dot.mew" を見て下さい。
 
 上記の方法では、ヘッダのすべてのフィールド名やフィールド値に対してシン
-ボルが定義されていません。そこで、すべてのフィールドの色を簡単に変更す
-るために、`mew-header-color' と `mew-header-color-bold' という関数が用
-意されています。後者を使うと太字に、前者を使うと普通の文字になります。
-たとえば、以下のように使います。
+ボルが定義されている訳ではありません。そこで、どんなフィールドの色でも
+簡単に変更できるように、`mew-header-color' と`mew-header-color-bold' と
+いう関数が用意されています。後者を使うと太字に、前者を使うと普通の文字
+になります。たとえば、以下のように使います。
 
      (mew-header-color-bold "Subject:" "LimeGreen" "OrangeRed")
 
@@ -891,7 +891,7 @@ Mew で "stunnel" を制御する重要な変数は 2 つです。
 `mew-ssl-cert-directory' は、信用する CA の証明書を置いておくディレクト
 リであり、初期値は "~/.certs" です。また、`mew-ssl-verify-level' で、証
 明書を検証するレベルを指定できます。レベルの初期値は 1 です。この意味は、
-以下の通りです。さい。
+以下の通りです。
 
 0
      検証しない

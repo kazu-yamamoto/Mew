@@ -117,7 +117,7 @@ If `mew-use-highlight-x-face' is `t', X-Face: in a header is iconified
 in Message mode. The default value is `t'. To use this feature,
 install the "netpbm" package and the "compface" package.
 
-To modify colors, copy "mew.dot.theme" contained Mew's source file to
+To modify colors, copy "dot.theme" contained Mew's source file to
 an appropriate place, say "~/.mew-theme.el". First, set
 `mew-theme-file' to this file name in ".mew.el" as follows:
 
@@ -141,7 +141,7 @@ configuration as follows:
      (mew-setface-bold header-subject
        :tty "green" :light "ForestGreen" :dark "LimeGreen")
 
-To know what kind of symbols are prepared, see the "mew.dot.mew".
+To know what kind of symbols are prepared, see the "dot.mew".
 
 The method above does not prepare symbols for all field names and
 field value. So, `mew-header-color' and `mew-header-color-bold' exist

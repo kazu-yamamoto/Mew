@@ -1,6 +1,6 @@
 \input texinfo  @c -*-texinfo-*-
 @c %**start of header
-@setfilename mew.ja.info
+@setfilename mew.info
 @settitle Mew (Messaging in the Emacs World)
 @c %**end of header
 
@@ -317,7 +317,7 @@ nor XEmacs.
 Mew には次の 7 つのモードがあります。
 @end ifset
 @ifset en
-Mew has the following six modes:
+Mew has the following seven modes:
 @end ifset
 
 @table @samp
