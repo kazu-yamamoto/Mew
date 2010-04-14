@@ -1104,7 +1104,7 @@ Return a part syntax after moving the beginning of the content body."
 	  (setq start (match-end 0))
 	  (when (string-match "^\r?$" key)
 	    (save-restriction
-	      (if (string-match cte mew-bin)
+	      (if (string-match mew-bin cte) ;; cte may include \r
 		  (narrow-to-region (point-min) (1+ start))
 		(narrow-to-region (point-min) (point-max)))
 	      (goto-char (point-min))

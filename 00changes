@@ -1,5 +1,7 @@
 Mew 7.0.50 (2010/01/xx)
 
+* Bug fix for PGP/MIME of binary encryption.
+	Shoichi Kurosaka <sho>
 * Both cmew and smew in Haskell works well finally!
 	Shuichi KITAGUCHI <kit>
 * Fixing info/Makefile.
