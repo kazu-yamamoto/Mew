@@ -965,6 +965,7 @@ An example is as follows:
 	 (name         \"Kazu Yamamoto\")
 	 (mail-domain  \"example.jp\"))))
 "
+;; bcc can be used but not recommended
   :group 'mew-env
   :type '(alist :key-type string
                 :value-type (repeat (cons string string))))
