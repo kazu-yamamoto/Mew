@@ -328,13 +328,13 @@
       (mew-nntp2-debug "NNTP SENTINEL" event)
       (cond
        (error
-	(message "%s  This mail has been queued to %s" error qfld)
 	(when buf
 	  ;; A message file is not inserted at the beginning of the NNTP
 	  ;; session.
 	  (set-buffer buf)
 	  (mew-nntp2-queue case error))
-	(mew-nntp2-log pnm error))
+	(mew-nntp2-log pnm error)
+	(message (format "%s  This mail has been queued to %s" error qfld)))
        (done
 	(message "Posting in background...done"))
        (t

@@ -612,13 +612,13 @@
     (save-excursion
       (cond
        (error
-	(message "%s  This mail has been queued to %s" error qfld)
 	(when buf
 	  ;; A message file is not inserted at the beginning of the SMTP
 	  ;; session.
 	  (set-buffer buf)
 	  (mew-smtp-queue case error pnm))
-	(mew-smtp-log pnm error))
+	(mew-smtp-log pnm error)
+	(message-box (format "%s  This mail has been queued to %s" error qfld)))
        (done
 	(message "Sending in background...done"))
        (t
