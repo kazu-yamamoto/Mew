@@ -149,7 +149,7 @@ walkDirectory dir ctl = do
 
 handleDirectory :: FilePath -> Control -> IO ()
 handleDirectory dir ctl
-  | dir =~ ignoreRegex ctl = ignoreDir ctl (toFolder ctl dir)
+  | takeFileName dir =~ ignoreRegex ctl = ignoreDir ctl (toFolder ctl dir)
   | otherwise = do
     modified <- isModified
     if modified

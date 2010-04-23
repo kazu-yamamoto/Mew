@@ -7,10 +7,10 @@ defaultMailDir :: String
 defaultMailDir = "~/Mail"
 
 defaultIgnoreRegex :: String
-defaultIgnoreRegex = "/casket$"
+defaultIgnoreRegex = "^casket$"
 
 defaultMessageRegex :: String
-defaultMessageRegex = "[0-9]+(\\.mew)?$"
+defaultMessageRegex = "^[0-9]+(\\.mew)?$"
 
 defaultDirModFile :: String
 defaultDirModFile = ".mew-mtime"
