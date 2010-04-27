@@ -1,6 +1,7 @@
 module Util where
 
 import Data.List
+import Control.Applicative
 import System.Directory
 import System.Environment
 import System.FilePath
@@ -9,9 +10,9 @@ import System.IO
 -- symbolic link to real link
 
 normalizePath :: FilePath -> IO FilePath
-normalizePath path = expandHome path >>= canonicalizePath >>= return . dropTrailingPathSeparator
+normalizePath path = dropTrailingPathSeparator <$> (expandHome path >>= canonicalizePath)
   where
-    expandHome ('~':cs) = getHomeDirectory >>= return . (++ cs)
+    expandHome ('~':cs) = (++ cs) <$> getHomeDirectory
     expandHome dir      = return dir
 
 help :: String -> IO ()

@@ -32,7 +32,7 @@ fileMsg file folder = makeMsg folder . header <$> readFileU8 file
 #endif
         hGetContents h
 
-header :: [Char] -> Header
+header :: String -> Header
 header = unfold . takeWhile (/= "") . lines
 
 unfold :: [String] -> Header
@@ -93,8 +93,8 @@ parseDate cs = parseTime defaultTimeLocale "%a, %e %b %Y %T %z" xs
 
 ----------------------------------------------------------------
 
-parseMaybe :: Parser a -> [Char] -> Maybe a
-parseMaybe p cs = either (const Nothing) (Just) (parse p "" cs)
+parseMaybe :: Parser a -> String -> Maybe a
+parseMaybe p cs = either (const Nothing) Just (parse p "" cs)
 
 ----------------------------------------------------------------
 
