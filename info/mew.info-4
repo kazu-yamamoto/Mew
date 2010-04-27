@@ -598,7 +598,7 @@ You can automatically set the "case" in Draft mode.
 `mew-case-guess-when-composed'
      If this variable is `t', the "case" is automatically guessed
      according `mew-case-guess-alist' when a message is composed. The
-     default is `nil'. The default is `nil'
+     default is `nil'.
 `mew-case-guess-when-replied'
      If this variable is `t', the "case" is automatically guessed
      according `mew-case-guess-alist' when a draft is prepared by
