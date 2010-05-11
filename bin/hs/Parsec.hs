@@ -1,6 +1,10 @@
 {-# LANGUAGE CPP #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
+#ifndef MIN_VERSION_parsec
+#define MIN_VERSION_parsec(x,y,z) 0
+#endif
+
 #if MIN_VERSION_parsec(3,0,0)
 module Parsec (
       module Control.Applicative
