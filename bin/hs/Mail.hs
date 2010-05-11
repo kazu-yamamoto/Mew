@@ -2,14 +2,13 @@
 
 module Mail (fileMsg) where
 
-import Control.Applicative
 import Data.Char
+import Data.Maybe
 import Data.Time
 import Locale
 import Msg
 import System.IO
-import Text.Parsec
-import Text.Parsec.String
+import Parsec
 
 ----------------------------------------------------------------
 
@@ -75,8 +74,8 @@ messagePaID hdr
   where
     ilen = length is
     rlen = length rs
-    is = maybe [] id inReplyTo
-    rs = maybe [] id references
+    is = fromMaybe [] inReplyTo
+    rs = fromMaybe [] references
     inReplyTo  = getValue "in-reply-to" hdr >>= parseMaybe msgids
     references = getValue "references"  hdr >>= parseMaybe msgids
 
