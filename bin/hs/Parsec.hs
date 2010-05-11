@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 #if MIN_VERSION_parsec(3,0,0)
 module Parsec (
@@ -7,7 +8,7 @@ module Parsec (
     , module Text.Parsec.String
     ) where
 
-import Control.Applicative
+import Control.Applicative hiding (many,optional,(<|>))
 import Text.Parsec
 import Text.Parsec.String
 #else
