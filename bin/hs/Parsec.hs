@@ -1,5 +1,4 @@
 {-# LANGUAGE CPP #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 #ifndef MIN_VERSION_parsec
 #define MIN_VERSION_parsec(x,y,z) 0
@@ -17,18 +16,37 @@ import Text.Parsec
 import Text.Parsec.String
 #else
 module Parsec (
-      module Control.Applicative
-    , module Text.ParserCombinators.Parsec
+      module Text.ParserCombinators.Parsec
+    , (<$>), (<$), (<*>), (<*), (*>), pure
     ) where
 
-import Control.Applicative
-import Control.Monad (MonadPlus(..), ap)
-import Text.ParserCombinators.Parsec hiding (many, optional, (<|>))
+import Control.Monad (ap, liftM)
+import Text.ParserCombinators.Parsec
 
-instance Applicative (GenParser s a) where
-    pure  = return
-    (<*>) = ap
-instance Alternative (GenParser s a) where
-    empty = mzero
-    (<|>) = mplus
+{-
+  GenParser cannot be an instance of Applicative and Alternative
+  due to the overlapping instances error, sigh!
+-}
+
+(<$>) :: Monad m => (a -> b) -> m a -> m b
+(<$>) = liftM
+
+(<$) :: Monad m => a -> m b -> m a
+a <$ m = m >> return a
+
+(<*>) :: Monad m => m (a -> b) -> m a -> m b
+(<*>) = ap
+
+(*>) :: Monad m => m a -> m b -> m b
+(*>) = (>>)
+
+(<*) :: Monad m => m a -> m b -> m a
+m1 <* m2 = do x <- m1
+              m2
+              return x
+
+pure :: Monad m => a -> m a
+pure = return
+
+infixl 4 <$>, <$, <*>, <*, *>
 #endif
