@@ -53,7 +53,7 @@ defaultCtl = Control { toFolder    = undefined
 ----------------------------------------------------------------
 
 process :: String -> IO ()
-process dir = putStrLn dir
+process = putStrLn
 
 ignore :: String -> IO ()
 ignore dir = putStrLn $ dir ++ " (ignored)"
