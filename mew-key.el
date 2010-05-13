@@ -505,6 +505,7 @@
   (define-key mew-draft-attach-map "G"      'mew-attach-gzip64)
   (define-key mew-draft-attach-map "B"      'mew-attach-base64)
   (define-key mew-draft-attach-map "Q"      'mew-attach-quoted-printable)
+  (define-key mew-draft-attach-map "Z"      'mew-attach-zip)
   (define-key mew-draft-attach-map "S"      'mew-attach-pgp-sign)
   (define-key mew-draft-attach-map "E"      'mew-attach-pgp-enc)
   (define-key mew-draft-attach-map "\es"    'mew-attach-smime-sign)
