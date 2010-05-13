@@ -85,7 +85,7 @@
 				   mew-mime-application-ms-tnef-ext))
 (defvar mew-prog-rtf             '(mew-mime-application/rtf
 				   mew-mime-application/rtf-ext))
-(defvar mew-prog-zip             'mew-mime-application/octet-stream)
+(defvar mew-prog-unzip           'mew-mime-application/octet-stream)
 
 ;;;
 ;;; Misc

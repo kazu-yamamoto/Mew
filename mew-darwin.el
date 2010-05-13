@@ -42,7 +42,7 @@
 (defvar mew-prog-visio           mew-darwin-exec)
 (defvar mew-prog-ooffice         mew-darwin-exec)
 (defvar mew-prog-rtf             mew-darwin-exec)
-(defvar mew-prog-zip             mew-darwin-exec)
+(defvar mew-prog-unzip           mew-darwin-exec)
 
 ;;;
 ;;; Text/Html, Application/Xml, Image

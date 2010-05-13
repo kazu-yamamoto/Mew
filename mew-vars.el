@@ -3094,6 +3094,7 @@ your public key as well as receivers' one."
 (defvar mew-prog-tar         "tar")
 (defvar mew-prog-compress    "compress")
 (defvar mew-prog-gzip        "gzip")
+(defvar mew-prog-zip         "zip")
 (defcustom mew-prog-pgp      "gpg"
   "*PGP name for version check."
   :group 'mew-privacy

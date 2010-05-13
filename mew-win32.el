@@ -143,7 +143,7 @@
 (defvar mew-prog-visio           mew-w32-exec)
 (defvar mew-prog-ooffice         mew-w32-exec)
 (defvar mew-prog-rtf             mew-w32-exec)
-(defvar mew-prog-zip             mew-w32-exec)
+(defvar mew-prog-unzip           mew-w32-exec)
 
 ;;;
 ;;; Text/Html, Application/Xml, Image

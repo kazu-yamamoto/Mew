@@ -177,9 +177,9 @@
    ("application/vnd.fujitsu.oasys3" "\\.oa3$" mew-b64
     mew-prog-oasys                  mew-icon-text)
    ("application/zip"               "\\.zip$" mew-b64
-    mew-prog-zip                    mew-icon-application/octet-stream)
+    mew-prog-unzip                  mew-icon-application/octet-stream)
    ("application/x-zip-compressed"  "\\.zip$" mew-b64
-    mew-prog-zip                    mew-icon-application/octet-stream)
+    mew-prog-unzip                  mew-icon-application/octet-stream)
    ("application/octet-stream"
     "\\.tar$\\|\\.tar\\.\\|\\.gz$\\|\\.Z$\\|\\.taz$\\|\\.tgz$\\|\\.tbz$\\|\\.bz2?$\\|\\.lzh$\\|\\.bin$\\|\\.pgp$\\|\\.gpg$\\|\\.exe$\\|\\.dll$"
     mew-b64 mew-prog-octet-stream mew-icon-application/octet-stream)
