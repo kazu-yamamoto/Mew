@@ -272,6 +272,10 @@ requires PTY.")
 	  nil
 	str))))
 
+(if (fboundp 'create-animated-image)
+    (defalias 'mew-create-image 'create-animated-image)
+  (defalias 'mew-create-image 'create-image))
+
 (provide 'mew-env)
 
 ;;; Copyright Notice:

@@ -66,7 +66,7 @@ Please send comments to Kazu@Mew.org.
 	     (fboundp 'image-type-available-p)
 	     (image-type-available-p 'png))
 	(goto-char (point-max))
-	(setq mew-logo (create-image
+	(setq mew-logo (mew-create-image
 			(expand-file-name mew-icon-mew mew-icon-directory)))
 	(setq indent (/ (- (window-width)
 			   (truncate (car (image-size mew-logo)))) 2))

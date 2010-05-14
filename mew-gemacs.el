@@ -307,7 +307,7 @@
        (setq image (mew-buffer-substring (point-min) (point-max)))))
     (mew-elet
      (condition-case nil
-	 (insert-image (create-image image format t))
+	 (insert-image (mew-create-image image format t))
        (error ()))))
   (goto-char (point-min))
   (message "Loading image...done"))
@@ -326,7 +326,7 @@
 ;;;
 
 (defun mew-x-face-create ()
-  (create-image
+  (mew-create-image
    (string-as-unibyte (mew-buffer-substring (point-min) (point-max)))
    nil t))
 
