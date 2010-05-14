@@ -657,7 +657,9 @@ is not effective other objects. For example, JPEG is already compressed."
 		     (zfullname (concat fullname ".zip"))
 		     (zct "application/zip")
 		     (default-directory (file-name-directory fullname)))
-		(call-process mew-prog-zip nil nil nil "-e" "-P" password zname name)
+		;; must not specify the "-e" option due to
+		;; variety of zip versions.
+		(call-process mew-prog-zip nil nil nil "-P" password zname name)
 		(if (not (file-exists-p zfullname))
 		    (message "\"zip\" does not support encryption")
 		  (mew-syntax-set-ct syntax (list zct))
