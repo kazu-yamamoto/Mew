@@ -67,6 +67,7 @@
 (defun mac-set-file-type (&rest args))
 (defun make-network-process (&rest args))
 (defun make-overlay (&rest args))
+(defun message-box (&rest args))
 (defun mew-hscroll (&rest args))
 (defun minibuffer-prompt-end (&rest args))
 (defun mouse-set-point (&rest args))
