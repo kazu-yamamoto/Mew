@@ -216,7 +216,7 @@
 (if (fboundp 'set-charset-priority)
     (defun mew-find-cs-region (beg end)
       (let ((charset-list (charset-priority-list))
-	    ret lat1 lat0)
+	    ret)
 	(catch 'find
 	  (set-charset-priority 'latin-iso8859-1)
 	  (setq ret (find-charset-region beg end))
