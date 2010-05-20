@@ -783,6 +783,135 @@ See 'mew-mime-content-type' to know how actions can be defined."
 	    (mew-mime-start-process program options file)
 	  (mew-mime-call-process program options file))))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; unzip
+;;;
+
+(defvar mew-ct-zip-list '("Application/Zip"
+			  "Application/X-Zip-Compressed"
+			  "Application/Octet-Stream"))
+
+(defun mew-ct-zip-p (ct)
+  (member ct mew-ct-zip-list))
+
+(defun mew-summary-unzip ()
+  (interactive)
+  (let* ((fld (mew-summary-folder-name))
+	 (msg (mew-summary-message-number2))
+	 (nums (mew-syntax-nums))
+	 (cache (mew-cache-hit fld msg 'must-hit))
+	 (syntax (mew-cache-decode-syntax cache))
+	 (stx (mew-syntax-get-entry syntax nums))
+	 (ct (mew-syntax-get-value (mew-syntax-get-ct stx) 'cap))
+	 (file0 (mew-syntax-get-param (mew-syntax-get-cdp stx) "filename"))
+	 (beg (mew-syntax-get-begin stx))
+	 (end (mew-syntax-get-end stx))
+	 (size (- end beg))
+	 (dir mew-temp-dir)
+	 file size1 end1)
+    (if (not (mew-ct-zip-p ct))
+	(message "Cannot unzip"))
+    (setq file (mew-unzip-file cache beg end dir file0))
+    (if (not file)
+	(message "unzip failed")
+      (let ((ct (mew-ctdb-ct (mew-ctdb-by-file file)))
+	    cs)
+	(unless ct
+	  (let ((txtp (mew-ct-textp (mew-content-type "default")))
+		(file- (file-name-nondirectory file)))
+	    (setq ct (if txtp
+			 (if (y-or-n-p (format "\"%s\" as text? " file-))
+			     mew-ct-txt mew-ct-apo)
+		       (if (y-or-n-p (format "\"%s\" as binary? " file-))
+			   mew-ct-apo mew-ct-txt)))))
+	(setq cs (if (mew-ct-textp ct) mew-cs-autoconv mew-cs-binary))
+	(with-current-buffer cache
+	  (delete-region beg end)
+	  (goto-char beg)
+	  (save-restriction
+	    (narrow-to-region beg beg)
+	    (mew-frwlet cs mew-cs-dummy
+	      (insert-file-contents (expand-file-name file dir)))
+	    (mew-syntax-set-ct stx (list ct))
+	    (setq end1 (point-max))
+	    (mew-syntax-set-end stx end1)
+	    (setq size1 (- end1 beg))
+	    (mew-syntax-set-cdp stx (mew-syntax-cdp-format ct file)))
+	  (mew-decode-syntax-adjust-message mew-decode-syntax beg (- size1 size))
+	  (mew-xinfo-set-multi-form nil)
+	  (mew-decode-syntax-set))
+	(let ((current (point))
+	      (start (mew-decode-syntax-begin)))
+	  (mew-decode-syntax-delete)
+	  (mew-decode-syntax-copy cache)
+	  (goto-char start)
+	  (forward-line -1)
+	  (mew-decode-syntax-print (current-buffer)
+				   mew-decode-syntax
+				   (mew-xinfo-get-multi-form)
+				 (mew-xinfo-get-icon-spec))
+	  (goto-char current)
+	  (mew-summary-display 'redisplay))))))
+
+(defun mew-decode-syntax-adjust (val threshold inc)
+  (if (> val threshold) (+ val inc) val))
+
+(defun mew-decode-syntax-adjust-single (syntax threshold inc)
+  (unless (= (mew-syntax-get-begin syntax) threshold)
+    (mew-syntax-set-begin
+     syntax (mew-decode-syntax-adjust
+	     (mew-syntax-get-begin syntax) threshold inc))
+    (mew-syntax-set-end
+     syntax (mew-decode-syntax-adjust
+	     (mew-syntax-get-end syntax) threshold inc))))
+
+(defun mew-decode-syntax-adjust-message (syntax threshold inc)
+  (mew-decode-syntax-adjust-single syntax threshold inc)
+  (let ((body (mew-syntax-get-part syntax)))
+    (if (mew-syntax-multipart-p body)
+	(mew-decode-syntax-adjust-multi body threshold inc)
+      (mew-decode-syntax-adjust-single body threshold inc))))
+
+(defun mew-decode-syntax-adjust-multi (syntax threshold inc)
+  (mew-decode-syntax-adjust-single syntax threshold inc)
+    (let ((i mew-syntax-magic)
+	  (len (length syntax))
+	  part)
+      (while (< i len)
+	(setq part (aref syntax i))
+	(cond
+	 ((mew-syntax-singlepart-p part)
+	  (mew-decode-syntax-adjust-single part threshold inc))
+	 ((mew-syntax-multipart-p part)
+	  (mew-decode-syntax-adjust-multi part threshold inc))
+	 ((mew-syntax-message-p part)
+	  (mew-decode-syntax-adjust-message part threshold inc)))
+	(setq i (1+ i)))))
+
+(defun mew-unzip-file (buf beg end dir file)
+  (let* ((zipfile (expand-file-name file dir))
+	 (encrypted (mew-zip-encrypted-p buf beg))
+	 (password (if encrypted (read-passwd "Zip password: ")))
+	 (args0 (list "-o" "-d" dir zipfile))
+	 (args (if password (cons "-P" (cons password args0)) args0)))
+    (with-current-buffer buf
+      (mew-frwlet mew-cs-dummy mew-cs-binary
+	(write-region beg end zipfile nil 'no-msg)))
+    (with-temp-buffer
+      (apply 'call-process "unzip" nil t nil args)
+      (goto-char (point-max))
+      (forward-line -1)
+      (beginning-of-line)
+      (when (looking-at "^ *[a-z]+: \\([^ ]+\\)")
+	(mew-match-string 1)))))
+
+(defun mew-zip-encrypted-p (buf beg)
+  (with-current-buffer buf
+    (goto-char beg)
+    (forward-char 6)
+    (= (% (char-after) 2) 1)))
+
 (provide 'mew-mime)
 
 ;;; Copyright Notice:

@@ -176,6 +176,7 @@
   (define-key mew-summary-mode-map "zw"   'mew-summary-toggle-warning)
   (define-key mew-summary-mode-map "zi"   'mew-summary-toggle-invisible)
   (define-key mew-summary-mode-map "z "   'mew-summary-toggle-mark-regex)
+  (define-key mew-summary-mode-map "zz"   'mew-summary-unzip)
   (define-key mew-summary-mode-map "l"	  (make-sparse-keymap))
   (define-key mew-summary-mode-map "lc"   'mew-summary-local-copy)
   (define-key mew-summary-mode-map "li"   'mew-summary-imap-copy)
