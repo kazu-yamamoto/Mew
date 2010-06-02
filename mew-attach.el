@@ -634,7 +634,7 @@ is not effective other objects. For example, JPEG is already compressed."
 (defun mew-attach-zip ()
   "Put the 'Z' mark and encrypt it with \"zip\" in attachments."
   (interactive)
-  (if (not (mew-attach-not-line0-1-dot))
+  (if (not (mew-attach-not-line02-1-dot))
       (message "Cannot encrypt with zip here")
     (let* ((nums (mew-syntax-nums))
 	   (syntax (mew-syntax-get-entry mew-encode-syntax nums))
@@ -661,7 +661,9 @@ is not effective other objects. For example, JPEG is already compressed."
 		;; variety of zip versions.
 		(call-process mew-prog-zip nil nil nil "-P" password zname name)
 		(if (not (file-exists-p zfullname))
-		    (message "\"zip\" does not support encryption")
+                    (if (string= password "")
+                        (message "\"zip\" does not allow zero length password")
+                      (message "\"zip\" does not support encryption"))
 		  (mew-syntax-set-ct syntax (list zct))
 		  (mew-syntax-set-cte syntax mew-b64)
 		  (mew-syntax-set-file syntax zname)
