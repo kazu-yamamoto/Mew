@@ -8,7 +8,7 @@ Synopsis:               Sub-commands for Mew
 Description:            "smew" and "cmew"
 Category:               Mail
 Cabal-Version:          >= 1.6
-Build-Type:             Configure
+Build-Type:             Simple
 Executable smew
   Main-Is:              smew.hs
   if impl(ghc >= 6.12)
@@ -32,6 +32,4 @@ Executable cmew
   else
     Build-Depends:      unix
   Other-Modules:        Msg Mail Sql Param Index Stat Util Parsec
-  includes:             config.h
-  install-includes:     config.h
 

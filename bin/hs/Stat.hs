@@ -2,11 +2,9 @@
 
 module Stat where
 
-#include "config.h"
-
 import Control.Applicative
 
-#ifdef HAVE_WINDOWS_H
+#if defined(mingw32_HOST_OS) || defined(__MINGW32__)
 import System.Win32.File
 import System.Win32.Time
 #else
@@ -14,21 +12,21 @@ import System.Posix.Files
 #endif
 
 isSymlink :: FilePath -> IO Bool
-#ifdef HAVE_WINDOWS_H
+#if defined(mingw32_HOST_OS) || defined(__MINGW32__)
 isSymlink _ = return False
 #else
 isSymlink file = isSymbolicLink <$> getSymbolicLinkStatus file
 #endif
 
 getLinkCount :: FilePath -> IO (Maybe Int)
-#ifdef HAVE_WINDOWS_H
+#if defined(mingw32_HOST_OS) || defined(__MINGW32__)
 getLinkCount _ = return Nothing
 #else
 getLinkCount file = Just . fromIntegral . linkCount <$> getFileStatus file
 #endif
 
 getStatusChangeTime :: FilePath -> IO Integer
-#ifdef HAVE_WINDOWS_H
+#if defined(mingw32_HOST_OS) || defined(__MINGW32__)
 getStatusChangeTime file = do
     fh <- createFile file gENERIC_READ fILE_SHARE_READ Nothing oPEN_EXISTING fILE_ATTRIBUTE_NORMAL Nothing
     (ctime,_,_) <- getFileTime fh
