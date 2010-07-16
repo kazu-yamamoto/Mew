@@ -1442,7 +1442,7 @@ by side-effect."
 	(cond
 	 ((< year 50)
 	  (setq year (+ year 2000)))
-	 ((< year 100)
+	 ((< year 150)
 	  (setq year (+ year 1900))))
 	(if (or (< year 1970) (>= year 2038))
 	    ;; invalid data

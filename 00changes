@@ -1,5 +1,7 @@
 Mew 7.0.50 (2010/01/xx)
 
+* Hack for mew-time-rfc-to-sortkey.
+	Hideyuki SHIRAI <shirai>
 * A patch for unzip.
 	Yu-ji Hosokawa <yu-ji>
 * Supporting unzip.
