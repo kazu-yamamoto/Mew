@@ -8,7 +8,7 @@ import Data.Ord
 import Database.HDBC.Sqlite3
 import Msg
 import Sql
-import System.FilePath
+import System.EasyFile
 
 ----------------------------------------------------------------
 

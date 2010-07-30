@@ -1,10 +1,9 @@
 module Util where
 
-import Data.List
 import Control.Applicative
-import System.Directory
+import Data.List
+import System.EasyFile
 import System.Environment
-import System.FilePath
 import System.IO
 
 -- symbolic link to real link

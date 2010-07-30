@@ -4,15 +4,14 @@ import Control.Applicative
 import Control.Monad
 import Data.IORef
 import Data.List
+import Data.Time
+import Data.Time.Clock.POSIX
 import Database.HDBC.Sqlite3
 import Mail
 import Msg
 import Param
 import Sql
-import Stat
-import System.Directory
-import System.FilePath (takeFileName, (</>))
-import System.Time
+import System.EasyFile
 import Text.Regex.Posix
 
 ----------------------------------------------------------------
@@ -73,7 +72,7 @@ makeIndex :: Bool -> Bool -> FilePath -> FilePath -> String -> IO (Int, Int)
 makeIndex dryRun fullUpdate db dir re =
   withNewDB db (not fullUpdate) $ \conn -> do
     createDB conn
-    stime <- modtimeToInteger <$> getClockTime
+    stime <- modtimeToInteger <$> getCurrentTime
     ctl <- makeControl conn
     walkDirectory dir ctl
     indexDB conn
@@ -190,7 +189,11 @@ handleFile file ctl
       Just dbmt -> do
         exist <- doesFileExist file
         if exist
-           then (dbmt <) <$> getStatusChangeTime file
+           then do
+            tm <- getChangeTime file
+            case tm of
+                Just x  -> return . (dbmt <) . modtimeToInteger $ x
+                Nothing -> return False
            else return False
     deleteMsgIfMoved msg = case dbModTime ctl of
       Nothing   -> return True
@@ -212,5 +215,5 @@ handleFile file ctl
 getModTime :: FilePath -> IO Integer
 getModTime file = modtimeToInteger <$> getModificationTime file
 
-modtimeToInteger :: ClockTime -> Integer
-modtimeToInteger (TOD x _) = x
+modtimeToInteger :: UTCTime -> Integer
+modtimeToInteger = truncate . toRational . utcTimeToPOSIXSeconds
