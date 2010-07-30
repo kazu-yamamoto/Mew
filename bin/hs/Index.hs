@@ -72,7 +72,7 @@ makeIndex :: Bool -> Bool -> FilePath -> FilePath -> String -> IO (Int, Int)
 makeIndex dryRun fullUpdate db dir re =
   withNewDB db (not fullUpdate) $ \conn -> do
     createDB conn
-    stime <- modtimeToInteger <$> getCurrentTime
+    stime <- utctimeToInteger <$> getCurrentTime
     ctl <- makeControl conn
     walkDirectory dir ctl
     indexDB conn
@@ -192,7 +192,7 @@ handleFile file ctl
            then do
             tm <- getChangeTime file
             case tm of
-                Just x  -> return . (dbmt <) . modtimeToInteger $ x
+                Just x  -> return . (dbmt <) . utctimeToInteger $ x
                 Nothing -> return False
            else return False
     deleteMsgIfMoved msg = case dbModTime ctl of
@@ -213,7 +213,7 @@ handleFile file ctl
 ----------------------------------------------------------------
 
 getModTime :: FilePath -> IO Integer
-getModTime file = modtimeToInteger <$> getModificationTime file
+getModTime file = utctimeToInteger <$> getModificationTime file
 
-modtimeToInteger :: UTCTime -> Integer
-modtimeToInteger = truncate . toRational . utcTimeToPOSIXSeconds
+utctimeToInteger :: UTCTime -> Integer
+utctimeToInteger = truncate . toRational . utcTimeToPOSIXSeconds
