@@ -60,7 +60,7 @@ end
 
 def set_ctime (db, ctime)
   sctime = ctime.to_s
-  db.execute('INSERT INTO mew VALUES(:id, :path, :parid, :date);', 
+  db.execute('INSERT INTO mew VALUES(:id, :path, :parid, :date);',
              'id' => '<mew-ctime>', 'date' => sctime)
 end
 
@@ -126,67 +126,69 @@ def register(db, maildir, ignore_regex, target, last_mod)
   registred = 0
   deleted = 0
   skipdir = ''
-
-  Find.find(target) do |fpath|
-    if fpath =~ ignore_regex
-      if FileTest.directory?(fpath)
-        print fpath, " (ignored)\n"
-        Find.prune # includes next
-      end
-      # next
-    else
-      st = File.lstat(fpath)
-      if st.symlink?
+  begin
+    Find.find(target) do |fpath|
+      if fpath =~ ignore_regex
         if FileTest.directory?(fpath)
           print fpath, " (ignored)\n"
           Find.prune # includes next
         end
-        # next      
-      elsif st.directory?
-        print fpath
-        mtime_file = File.expand_path('.mew-mtime', fpath)
-        if FileTest.file?(mtime_file) and last_mod > File.mtime(mtime_file).tv_sec
-          print " (skipped)\n"
-          skipdir = fpath
-          if st.nlink == 2
-            Find.prune # includes next          
-          end
-        else
-          print "\n"
-        end
-	STDOUT.flush
         # next
-      elsif st.file? and fpath =~ /\/[0-9]+(\.mew)?$/
-        next if File.dirname(fpath) == skipdir
-        next if last_mod > st.ctime.tv_sec
-        m = Mail.new(fpath)
-        id = get_id(m)
-        parid = get_parid(m)
-        date = get_date(m)
-        path = get_path(fpath)
-        newpath = true
-        if last_mod > 0
-          get_entry.execute!(id) do |row|
-            past_path = row['path']
-            unless File.exist?(past_path)
-              del_entry.execute(id, past_path)
-              deleted = deleted + 1
+      else
+        st = File.lstat(fpath) rescue next
+        if st.symlink?
+          if FileTest.directory?(fpath)
+            print fpath, " (ignored)\n"
+            Find.prune # includes next
+          end
+          # next
+        elsif st.directory?
+          print fpath
+          mtime_file = File.expand_path('.mew-mtime', fpath)
+          if FileTest.file?(mtime_file) and last_mod > File.mtime(mtime_file).tv_sec
+            print " (skipped)\n"
+            skipdir = fpath
+            if st.nlink == 2
+              Find.prune # includes next
             end
-            newpath = false if path == past_path
+          else
+            print "\n"
           end
+          STDOUT.flush
+          # next
+        elsif st.file? and fpath =~ /\/[0-9]+(\.mew)?$/
+          next if File.dirname(fpath) == skipdir
+          next if last_mod > st.ctime.tv_sec
+          m = Mail.new(fpath) rescue next
+          id = get_id(m)
+          parid = get_parid(m)
+          date = get_date(m)
+          path = get_path(fpath)
+          newpath = true
+          if last_mod > 0
+            get_entry.execute!(id) do |row|
+              past_path = row['path']
+              unless File.exist?(past_path)
+                del_entry.execute(id, past_path)
+                deleted = deleted + 1
+              end
+              newpath = false if path == past_path
+            end
+          end
+          if newpath == true
+            add_entry.execute('id' => id, 'path' => path, 'parid' => parid, 'date' => date)
+            registred = registred + 1
+          end
+          # next
         end
-        if newpath == true
-          add_entry.execute('id' => id, 'path' => path, 'parid' => parid, 'date' => date)
-          registred = registred + 1
-        end
-        # next
       end
     end
+  ensure
+    add_entry.close
+    get_entry.close
+    del_entry.close
+    print 'Registered: ',  registred, ', deleted: ', deleted, "\n"
   end
-  add_entry.close
-  get_entry.close
-  del_entry.close
-  print 'Registered: ',  registred, ', deleted: ', deleted, "\n"
 end
 
 ################################################################
@@ -209,7 +211,7 @@ OptionParser.new {|opt|
 
 db_file = ARGV[0] || File.expand_path('~/Mail/id.db')
 maildir = ARGV[1] || File.expand_path('~/Mail')
-ignore_regex = Regexp.new(ARGV[2] || '^\./casket$|^\./casket/|/\.')
+ignore_regex = Regexp.new(ARGV[2] || '^\./casket$|^\./casket/|^\./casket_replica$|^\./casket_replica/|/\.')
 target = if ARGV[3]; './' + ARGV[3] else '.' end
 have_target = if ARGV[3]; true else false end
 fullupdate = opts[:f] == true

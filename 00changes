@@ -1,5 +1,7 @@
 Mew 7.0.50 (2010/01/xx)
 
+* Making cmew safer in the case where mewest works at the same time.
+	Masamichi HOSODA <trueroad>
 * Hack for mew-time-rfc-to-sortkey.
 	Hideyuki SHIRAI <shirai>
 * A patch for unzip.
