@@ -11,7 +11,11 @@ import System.IO
 normalizePath :: FilePath -> IO FilePath
 normalizePath path = dropTrailingPathSeparator <$> (expandHome path >>= canonicalizePath)
   where
-    expandHome ('~':cs) = (++ cs) <$> getHomeDirectory
+    expandHome ('~':cs) = do
+        mhome <- getHomeDirectory2
+        case mhome of
+            Just home -> return $ home ++ cs
+            Nothing   -> (++ cs) <$> getHomeDirectory
     expandHome dir      = return dir
 
 help :: String -> IO ()
