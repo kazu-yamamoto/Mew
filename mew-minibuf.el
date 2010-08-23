@@ -820,11 +820,11 @@ it is deleted automatically."
 	file)
     (cond
      ((null default)
-      (setq file mew-home))
+      (setq file mew-save-dir))
      ((mew-folder-absolutep default)
       (setq file default))
      (t
-      (setq file (concat mew-home default))))
+      (setq file (concat mew-save-dir default))))
     (expand-file-name (read-file-name msg file file))))
 
 (defun mew-input-directory-name (&optional default)
