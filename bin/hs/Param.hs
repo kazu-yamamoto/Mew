@@ -7,7 +7,7 @@ defaultMailDir :: String
 defaultMailDir = "~/Mail"
 
 defaultIgnoreRegex :: String
-defaultIgnoreRegex = "^casket$"
+defaultIgnoreRegex = "^casket" -- including casket_replica
 
 defaultMessageRegex :: String
 defaultMessageRegex = "^[0-9]+(\\.mew)?$"
