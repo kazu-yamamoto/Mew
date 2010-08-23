@@ -1,5 +1,7 @@
 Mew 7.0.50 (2010/01/xx)
 
+* Fixing the hash-vs-array problem of cmew.
+	Masamichi HOSODA <trueroad>
 * Making cmew safer in the case where mewest works at the same time.
 	Masamichi HOSODA <trueroad>
 * Hack for mew-time-rfc-to-sortkey.

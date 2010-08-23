@@ -166,7 +166,7 @@ def register(db, maildir, ignore_regex, target, last_mod)
           path = get_path(fpath)
           newpath = true
           if last_mod > 0
-            get_entry.execute!(id) do |row|
+            get_entry.execute(id).each do |row|
               past_path = row['path']
               unless File.exist?(past_path)
                 del_entry.execute(id, past_path)
