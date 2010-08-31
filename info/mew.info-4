@@ -565,7 +565,7 @@ according to the following rule:
 
 Unless you set `mew-from-list' by yourself, `mew-from-list' is
 automatically set collecting 'from' for each "case" according to the
-rule above. See *Note cheader::.
+rule above. see *Note cheader::.
 
 Cases configured in `mew-config-alist' can be specified to the
 "case". When Mew boots up, both the "case" is "default".
@@ -1080,9 +1080,9 @@ To save edited message to a new message, type `C-cC-c' or
 `C-cC-m'. They are the exactly same command. To execute one of them,
 you are asked a folder to save the new message.
 
-Please take care that you may confuse this command as retry
-sending(*Note sum-write::). Retry seinding is to send a message after
-editing while Edit mode is to save a message after modifying.
+Please take care that you may confuse this command as retry sending
+(*Note sum-write::). Retry seinding is to send a message after editing
+while Edit mode is to save a message after modifying.
 
 The following is summary of commands relating to Edit mode. To enter
 Edit mode from Summary mode, use the following command.

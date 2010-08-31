@@ -193,7 +193,7 @@ The followings shows the marks in the strong order:
 `U'
      After marking a message, the cursor stays on the message.
 
-Refer to *Note summary-mode:: to know which direction the cursor moves
+refer to *Note summary-mode:: to know which direction the cursor moves
 after putting a strong mark.
 
 You can exchange marks as follows:
@@ -470,8 +470,7 @@ The whole is a list of (<key> <alist>). A field name is specified for
 
 <value> is a field value for <key>. <folder> means a folder to be
 chosen if matched. You can write <rule> recursively instead of
-<folder>.
-*Note config2::.)
+<folder>.  (*Note config2::.)
 
 There are two special <key>s: `nil' and `t'. `nil' is used to specify
 <folder> to be returned when nothing is guessed. `t' can specify
@@ -836,16 +835,16 @@ Selection is a virtual folder collecting necessary messages from
 several folders. There are five ways to create selection:
 
 `m/'
-     Listing messages marked with `*' on a folder. See *Note
+     Listing messages marked with `*' on a folder. see *Note
      sorting::.
 `S'
      Sorting messages on a folder and display them. (No effect to the
-     original folder.) See *Note dialog::.
+     original folder.) see *Note dialog::.
 `V'
      Listing messages which have relationship with the current message. See
      *Note dialog::.
 `/'
-     Listing messaged matched to a search condition on a folder. See
+     Listing messaged matched to a search condition on a folder. see
      *Note search::.
 `k/'
      Listing messaged matched to a search condition from all folders. See
@@ -949,15 +948,15 @@ Searching
 Mew provides the following method to search messages:
 
 `?'
-     Put the `*' mark onto messages in this follder, which are matched
+     Put the `*' mark onto messages in this folder, which are matched
      to a specified pattern. Either `mewl' or `grep' is called
      according to the specified pattern.
 `C-u?'
      `?' with a region specified.
 `/'
-     Make selection with messages in this follder, which are matched
-     to a specified pattern. Either `mewl' or `grep' is called
-     according to the specified pattern.
+     Make selection with messages in this folder, which are matched to
+     a specified pattern. Either `mewl' or `grep' is called according
+     to the specified pattern.
 `C-u/'
      `/' with a region specified.
 
@@ -966,7 +965,7 @@ Windows Desktop Search, etc. This feature is supported by the
 following commands.
 
 `k?'
-     Put the `*' mark onto messages in this follder, which are matched
+     Put the `*' mark onto messages in this folder, which are matched
      to a specified pattern.
 `k/'
      Make selection with messages in all folders, which are matched to

@@ -461,7 +461,7 @@ processing are listed as follows:
 
 `SPC'
      Read through messages. That is, display a message, scroll it, and
-     move-then-display another message. Refer to *Note summary-mode::
+     move-then-display another message. refer to *Note summary-mode::
      to know which direction the cursor moves.
 `C-uSPC'
      Redisplay the message from its header.
@@ -1106,7 +1106,7 @@ don't make any effects or some errors occur, use one of the following
 commands:
 
 `Z'
-     Update information including Addrbook(*Note addrbook::).
+     Update information including Addrbook (*Note addrbook::).
 `C-uZ'
      Update information about folders of the current world.
 
@@ -1260,7 +1260,7 @@ In the header, completions for each field are assigned to `TAB' as
 follows:
 
    - Field completion
-   - Address completion (To:, Cc:, etc) (See *Note addr-comp::)
+   - Address completion (To:, Cc:, etc) (see *Note addr-comp::)
    - Folder completion (Fcc:)
 
 <Field completion>
@@ -1392,7 +1392,7 @@ the user name is completed. And if the user name is uniquely completed
 and you type `TAB' again, it is expanded to its entire address. Let's
 call this Address Completion(1).
 
-An advantage of Address Completion(1)(*Note addr-comp1::) is that you
+An advantage of Address Completion(1) (*Note addr-comp1::) is that you
 can use the completion/expansion against the three kinds of addresses
 seamlessly. You can also explicitly expand the user name with `TAB' as
 described later. A disadvantage is that user names must be unique. So,
@@ -1403,7 +1403,7 @@ If `mew-use-full-alias' is `t', for learned addresses when sending,
 completion target is an entire address. Let's call this Address
 Completion(2).
 
-An advantage of Address Completion(2)(*Note addr-comp1::) is that Mew
+An advantage of Address Completion(2) (*Note addr-comp1::) is that Mew
 can learn addresses whose user names are the same. One of
 disadvantages is that only the first address of personal information
 can be used (the other addresses are useless). And for the explicit

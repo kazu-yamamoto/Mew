@@ -1,12 +1,12 @@
 \input texinfo  @c -*-texinfo-*-
 @c %**start of header
-@setfilename mew.ja.info
+@setfilename mew.info
 @settitle Mew (Messaging in the Emacs World)
 @c %**end of header
 
 @clear en
 @clear ja
-@set ja
+@set en
 
 @ifset ja
 @c Mew の texinfo
@@ -503,7 +503,7 @@ Newsgroups of NetNews. Example: "-fj.mail.reader.mew"
 @ifset en
 If you use several servers, there are multiple sets of remote folders.
 You can specify several servers by using "case". For more information
-about the "case", see @xref{config}. To specify a remote folder
+about the "case", see @ref{config}. To specify a remote folder
 corresponding to a "case", you should write "case:folder". You can
 omit "case:" if a case is "default".
 @end ifset
@@ -518,7 +518,7 @@ omit "case:" if a case is "default".
 A combination of "case" and proto organized a world to which a message
 belongs. A message can move within its world. To make it easy to
 search received messages afterward, they should be moved to proper
-folders. To know how to refile received messages, see @xref{Refile}.
+folders. To know how to refile received messages, see @ref{Refile}.
 @end ifset
 
 @ifset ja
@@ -540,7 +540,7 @@ since messages in the "-" world are not yours.
 @ifset en
 If you want to move a message from one world to another, you should
 COPY it. Its destination is restricted to a local folder. This method
-is described in @xref{retrieving}.
+is described in @ref{retrieving}.
 @end ifset
 
 @ifset ja
@@ -551,7 +551,7 @@ is described in @xref{retrieving}.
 @ifset en
 If you make a list of folders, you can use the completion
 functionality for folders. To know how to make a list of folders,
-please refer to @xref{status-update}.
+please refer to @ref{status-update}.
 @end ifset
 
 @c %%%%%%%%%%%%%%%%%
@@ -943,10 +943,10 @@ Execute Mew first unless Mew is running. And retrieve arrived
 messages or just visit to the default folder.
 
 @samp{proto} is determined by @samp{mew-proto} and the "case" (see
-@xref{config}).
+@ref{config}).
 
 If @samp{proto} is @samp{+} (i.e. a local folder), a mailbox is determined
-according to @samp{mew-mailbox-type} (see @xref{retrieving}). 
+according to @samp{mew-mailbox-type} (see @ref{retrieving}). 
 Otherwise (i.e. a remote folder), an appropriate protocol to retrieve
 messages is chosen according to @samp{proto}.
 
@@ -976,7 +976,7 @@ When Mew is executed on Emacs, two cute cats appear on the cover page.
 なお、Mew を終了する方法は、@xref{Quit} を参照して下さい。
 @end ifset
 @ifset en
-For the methods of quitting Mew, please refer to @xref{Quit}.
+For the methods of quitting Mew, please refer to @ref{Quit}.
 @end ifset
 
 @c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1036,7 +1036,7 @@ a mark, data type (a mark by Mew), date, a sender, Subject:, and a body.
 Summary モードを消去する方法については、@xref{Quit} を参照して下さい。
 @end ifset
 @ifset en
-For the method of terminating Summary mode, please see @xref{Quit}.
+For the method of terminating Summary mode, please see @ref{Quit}.
 @end ifset
 
 @menu
@@ -1127,7 +1127,7 @@ processing are listed as follows:
 @ifset en
 @item SPC
 Read through messages. That is, display a message, scroll it, and
-move-then-display another message. Refer to @xref{summary-mode} to know
+move-then-display another message. refer to @ref{summary-mode} to know
 which direction the cursor moves.
 @item C-uSPC
 Redisplay the message from its header.
@@ -1618,7 +1618,7 @@ In addition to @samp{.}, the following commands are prepared:
 Analyze the message and re-display it.
 @item C-u. 
 Analyze the message with @samp{mew-decode-broken} reversed (see
-@xref{invalid}).
+@ref{invalid}).
 @item :
 The same as @samp{.} with @samp{mew-use-alternative} and
 @samp{mew-use-text-body} reversed.
@@ -1720,7 +1720,7 @@ latter message was first signed then the body was encrypted.
 @end ifset
 @ifset en
 If some parts or the entire body is encrypted, Mew asks you to input
-your pass-phrase to get plain text. Please refer to @xref{start} to know
+your pass-phrase to get plain text. Please refer to @ref{start} to know
 what you should pay attention when inputting pass-phrase. The pass-phrase
 is used to decrypt your secret key. The secret key is then used to
 decrypt cipher text.
@@ -1737,7 +1737,7 @@ To visualize a cipher message, you need to input your pass-phrase
 every time you encounter cipher text. This is because Mew does not
 cache pass-phrases anywhere for security reasons. If you feel this is
 inconvenient, you can configure Mew to cache your pass-phrase. Please
-refer to @xref{password} for more information.
+refer to @ref{password} for more information.
 @end ifset
 
 @ifset ja
@@ -1955,7 +1955,7 @@ IMAP サーバ。IMAP らしくない利用方法なので、推奨されてい�
 @ifset en
 @item 'mbox
 A local mailbox. "incm" is used to copy messages for the local mailbox
-by default. To know how to configure it, see @xref{configuration}.
+by default. To know how to configure it, see @ref{configuration}.
 @item 'pop
 A POP server. To use POP as it is. (This is a default value.)
 @item 'imap
@@ -2144,7 +2144,7 @@ Here is a summary of the commands concerned with message retrieval:
 @item i
 In a local folder, fetch arrived messages, store them to the +inbox
 folder and create a list. If @samp{mew-auto-flush-queue} is @samp{t},
-send messages in +queue. Please refer to @xref{send} for more
+send messages in +queue. Please refer to @ref{send} for more
 information. In a remote folder, visit to its inbox folder and execute
 @samp{s} + @samp{update}.
 @item C-ui
@@ -2269,7 +2269,7 @@ deletion.
 @end ifset
 @ifset en
 When you type a remote folder, you may want to specify the "case"
-(described in @xref{config}). The "case" must be specified before a
+(described in @ref{config}). The "case" must be specified before a
 folder, separated by ":". Consider moving "%inbox" for a "case"
 @w{"}home". In this case, you should type "home:%inbox". Yes, this is
 inconvenient. So, typing @samp{C-cTAB} in any position does circular
@@ -2410,35 +2410,35 @@ Header モードに入る。@xref{resend} を参照のこと。
 @ifset en
 @item w
 Write a message. A new draft is prepared in Draft mode. Please refer to
-@xref{Composing}.
+@ref{Composing}.
 @item C-uw
 Write a message. A new draft is prepared in Draft mode. The From:
 address of the current message is copied to the To: field in the
 draft.
 @item W
 Send a message by modifying a part of the header of another message.
-Please refer to @xref{resend}.
+Please refer to @ref{resend}.
 @item a
 Answer to this message. A new draft is prepared in Draft mode. Mew
 automatically inserts the content of the fields To: and Cc:. Please
-refer to @xref{reply}.
+refer to @ref{reply}.
 @item C-ua
 Answer to this message only to the sender.
 @item A
 Answer to this message. A new draft is prepared in Draft mode. Mew
 automatically inserts the content of the fields To: and Cc: and cites
-the body. Please refer to @xref{reply}.
+the body. Please refer to @ref{reply}.
 @item C-uA
 Answer to this message only to the sender with citation.
 @item f
 Forward this message to a third person. A new draft is prepared in Draft
 mode and this message is automatically attached. Please refer to
-@xref{forward}.
+@ref{forward}.
 @item F
 Forward messages marked with @samp{*} to a third person. A new draft is
 prepared in Draft mode and this message is automatically attached. For
-more information, refer to @xref{target mark}. Please refer to
-@xref{forward}.
+more information, refer to @ref{target mark}. Please refer to
+@ref{forward}.
 @end ifset
 @end table
 
@@ -2493,7 +2493,7 @@ For +draft, +queue, and +postq, the "case" revives.
 
 For the other folders, if @samp{mew-case-guess-when-prepared} is
 @samp{t}, each field of the original header is replaced according to a
-guessed "case". For more information, see @xref{config}.
+guessed "case". For more information, see @ref{config}.
 @item C-uE
 The same as @samp{E}. But, when used for other folders than +draft,
 +queue, and +postq, the original header is retained even if
@@ -2634,15 +2634,15 @@ De-capsulate embedded messages in MIME format.
 Decompose embedded files in this message.
 @item C-cC-a
 Register the information on the current message to Addrbook
-(@xref{addrbook}).
+(@pxref{addrbook}).
 @item C-cC-v
 Select PGP version (@xref{cipher-viewing}).
 @item C-cC-z
 Let PGP decrypt and/or verify old fashioned PGP messages
-(@xref{cipher-viewing}).
+(@pxref{cipher-viewing}).
 @item C
 Change the value of the "case". For more information, please refer to
-@xref{config}.
+@ref{config}.
 @item =
 Display the folder name of this message and the message number. If this
 is a cache message, both the unique id and the size are also shown.
@@ -2697,7 +2697,7 @@ any effects or some errors occur, use one of the following commands:
 @end ifset
 @ifset en
 @item Z
-Update information including Addrbook(@xref{addrbook}). 
+Update information including Addrbook (@pxref{addrbook}). 
 @item C-uZ
 Update information about folders of the current world.
 @end ifset
@@ -2855,7 +2855,7 @@ X-Mew: Charset for body is not specified.
 @ifset en
 If you want to decode messages strictly, set @samp{mew-decode-broken} to
 @samp{nil}. This value can be toggled dynamically by @samp{C-u.} (see
-@xref{singlepart}).
+@ref{singlepart}).
 @end ifset
 
 @ifset ja
@@ -2998,7 +2998,7 @@ multiple messages simultaneously.
 @end ifset
 @ifset en
 For the method of deleting a prepared draft, please refer to
-@xref{Quit}.
+@ref{Quit}.
 @end ifset
 
 @ifset ja
@@ -3081,7 +3081,7 @@ follows:
 @end ifset
 @ifset en
 @item Field completion
-@item Address completion (To:, Cc:, etc) (See @xref{addr-comp})
+@item Address completion (To:, Cc:, etc) (see @ref{addr-comp})
 @item Folder completion (Fcc:)
 @end ifset
 @end itemize
@@ -3316,7 +3316,7 @@ From: フィールド上では、@samp{C-cTAB} は @samp{mew-from-list} の値�
 On the From: field, @samp{C-cTAB} circularly completes its value from
 @samp{mew-from-list}. You can set @samp{mew-from-list} by yourself.
 Also, @samp{mew-from-list} can be set automatically. For automatic
-setup, please refer to @xref{config}.
+setup, please refer to @ref{config}.
 @end ifset
 
 @ifset ja
@@ -3441,7 +3441,7 @@ Completion(1).
 のアドレスを学習できないことです。
 @end ifset
 @ifset en
-An advantage of Address Completion(1)(@xref{addr-comp1}) is that you
+An advantage of Address Completion(1) (@pxref{addr-comp1}) is that you
 can use the completion/expansion against the three kinds of addresses
 seamlessly. You can also explicitly expand the user name with
 @samp{TAB} as described later. A disadvantage is that user names must
@@ -3468,7 +3468,7 @@ Address Completion(2).
 とです。
 @end ifset
 @ifset en
-An advantage of Address Completion(2)(@xref{addr-comp1}) is that Mew
+An advantage of Address Completion(2) (@pxref{addr-comp1}) is that Mew
 can learn addresses whose user names are the same. One of
 disadvantages is that only the first address of personal information
 can be used (the other addresses are useless). And for the explicit
@@ -3554,7 +3554,7 @@ Next, the format to define personal information is shown below:
 In this way, four elements are separated by SPC. <shortname> is a short
 name. <nickname> and <fullname> are the person's nickname and full name,
 respectively. (For proper usage of the nickname, please refer to
-@xref{summary-mode} and/or @xref{draft-mode}.)
+@ref{summary-mode} and/or @ref{draft-mode}.)
 @end ifset
 
 @ifset ja
@@ -3595,7 +3595,7 @@ an example to define nicknames for addresses.
 @end ifset
 @ifset en
 The nickname is used to replace addresses in Summary mode and to replace
-the citation prefix (@xref{cite}) in Draft mode.
+the citation prefix (@pxref{cite}) in Draft mode.
 @end ifset
 
 @ifset ja
@@ -3657,7 +3657,7 @@ Comments:
 @ifset en
 Add or modify the information if necessary. To register this
 information, type @samp{C-cC-c}. To quit the registration, type
-@samp{C-cC-q}. You should also refer to @xref{Quit}.
+@samp{C-cC-q}. You should also refer to @ref{Quit}.
 @end ifset
 
 @ifset ja
@@ -3709,7 +3709,7 @@ To: kazu@@example.org
 が有効になります。
 @end ifset
 @ifset en
-In the case of Address Completion(1)(@xref{addr-comp1}): When this
+In the case of Address Completion(1) (@pxref{addr-comp1}): When this
 message is sent, a short name "kazu" is automatically registered for
 the address "kazu@@example.org". If there is already a short name of
 @w{"}kazu", the next action is decided according to
@@ -3725,7 +3725,7 @@ address book are valid.
 アドレス "kazu@@example.org" が自動登録されます。
 @end ifset
 @ifset en
-In the case of Address Completion(1)(@xref{addr-comp2}): When this message
+In the case of Address Completion(1) (@pxref{addr-comp2}): When this message
 is sent, the address "kazu@@example.org" is automatically registered.
 @end ifset
 
@@ -4954,10 +4954,10 @@ time. If the data type is either text (Text/Plain) or binary
 ます。
 @end ifset
 @ifset en
-Please refer to @xref{mark-b-comp} for explanation on changing the mark
+Please refer to @ref{mark-b-comp} for explanation on changing the mark
 (Content-Transfer-Encoding:). You can also insert descriptions
 (Content-Description:) by @samp{D}. This description column is
-overwritten when encrypted as described in @xref{mark-b-comp}.
+overwritten when encrypted as described in @ref{mark-b-comp}.
 @end ifset
 
 @ifset ja
@@ -5865,7 +5865,7 @@ hand, your secret key is used to sign a message, and so you need to
 input your pass-phrase when applying the signature. Note that if you
 are using the pass-phrase cache or the master password mechanism and
 there are pass-phrases presently cached, you do not have to type your
-pass-phrase (@xref{password}).
+pass-phrase (@pxref{password}).
 @end ifset
 
 @ifset ja
@@ -6935,7 +6935,7 @@ Delete all messages in a specified folder.
 To refile a message, type @samp{o} and input a folder name, then
 @samp{o} is put. A folder is guessed neatly, so most time what you
 should to is just type @samp{RET}. For more information, refer to
-@xref{Refile}.
+@ref{Refile}.
 @end ifset
 
 @ifset ja
@@ -7056,7 +7056,7 @@ that of the current message.
 @ifset en
 Please put the @samp{*} mark onto messages that you want to review
 later. @samp{?} also put the @samp{*} mark onto matched messages (for
-more information, refer to @xref{search}). Use @samp{N} and @samp{P} to
+more information, refer to @ref{search}). Use @samp{N} and @samp{P} to
 walk around messages marked with @samp{*}.
 @end ifset
 
@@ -7385,7 +7385,7 @@ After marking a message, the cursor stays on the message.
 を参照して下さい。
 @end ifset
 @ifset en
-Refer to @xref{summary-mode} to know which direction the cursor moves
+refer to @ref{summary-mode} to know which direction the cursor moves
 after putting a strong mark.
 @end ifset
 
@@ -7705,20 +7705,20 @@ Multipart/Alternative を表すマーク。@xref{analysis} を参照のこと。
 @end ifset
 @ifset en
 @item M
-This message is a multipart. Please refer to @xref{multipart}.
+This message is a multipart. Please refer to @ref{multipart}.
 @item -
 This message contains a Multipart/Alternative content. Please refer to
-@xref{analysis}.
+@ref{analysis}.
 @item T
-This message was truncated by Mew. Please refer to @xref{retrieving}.
+This message was truncated by Mew. Please refer to @ref{retrieving}.
 @item S
-This message is signed. Please refer to @xref{cipher-viewing}.
+This message is signed. Please refer to @ref{cipher-viewing}.
 @item E
-This is a cipher message. Please refer to @xref{cipher-viewing}.
+This is a cipher message. Please refer to @ref{cipher-viewing}.
 @item P
-This message is fragmented. Please refer to @xref{target mark}.
+This message is fragmented. Please refer to @ref{target mark}.
 @item #
-This message is invalid. Please refer to @xref{off-line}.
+This message is invalid. Please refer to @ref{off-line}.
 @end ifset
 @end table
 
@@ -7787,7 +7787,7 @@ in minibuffer. This command is only the exception.
 @end ifset
 @ifset en
 Mew also provides @samp{c} which is very similar to @samp{o}. To know
-the difference, please refer to @xref{refile mark}.
+the difference, please refer to @ref{refile mark}.
 @end ifset
 
 @ifset ja
@@ -8058,7 +8058,7 @@ The whole is a list of (<key> <alist>). A field name is specified for
 <value> is a field value for <key>. <folder> means a folder to be
 chosen if matched. You can write <rule> recursively instead of
 <folder>.
-@xref{config2}.)
+(@xref{config2}.)
 @end ifset
 
 @ifset ja
@@ -8182,7 +8182,7 @@ The function name to provide this feature is
 @end ifset
 @ifset en
 In addition to the mechanism to select a mailing-list folder described
-in @xref{by-folder}, Mew provides a mechanism to choose a private
+in @ref{by-folder}, Mew provides a mechanism to choose a private
 folder. Since private folders locate under +from, we can say that this
 mechanism select a folder from the folders under +from. Let's see the
 following example:
@@ -8328,7 +8328,7 @@ From: とフォルダの情報は、"~/Mail/.mew-refile-from-alist" に保存さ
 Information for relationship between From: and folder is stored to
 @w{"}~/Mail/.mew-refile-from-alist". @samp{mew-lisp-max-length}
 controls the amount of this information as the same as
-@xref{by-thread}.
+@ref{by-thread}.
 @end ifset
 
 @ifset ja
@@ -8348,7 +8348,7 @@ The function name to provide this feature is
 @ifset en
 If the value of @samp{mew-refile-guess-from-me-is-special} is @samp{t},
 @samp{mew-refile-guess-by-from} acts as
-@samp{mew-refile-guess-by-from-folder} (@xref{by-from-folder}).
+@samp{mew-refile-guess-by-from-folder} (@pxref{by-from-folder}).
 @end ifset
 
 @c %%%%%%%%%%%%%%%%%
@@ -8816,7 +8816,7 @@ Virtual モードを消去する方法については、@xref{Quit} を参照し
 @ifset en
 You should take note that Virtual folder is really virtual and it does
 not exist in file system. If you exit Mew, it then disappears.  To
-know how to delete Virtual mode, please refer to @xref{Quit}.
+know how to delete Virtual mode, please refer to @ref{Quit}.
 @end ifset
 
 @menu
@@ -8877,18 +8877,18 @@ several folders. There are five ways to create selection:
 @end ifset
 @ifset en
 @item m/
-Listing messages marked with @samp{*} on a folder. See @xref{sorting}.
+Listing messages marked with @samp{*} on a folder. see @ref{sorting}.
 @item S
 Sorting messages on a folder and display them. (No effect to the
-original folder.) See @xref{dialog}.
+original folder.) see @ref{dialog}.
 @item V
 Listing messages which have relationship with the current message. See
-@xref{dialog}.
+@ref{dialog}.
 @item /
-Listing messaged matched to a search condition on a folder. See @xref{search}.
+Listing messaged matched to a search condition on a folder. see @ref{search}.
 @item k/
 Listing messaged matched to a search condition from all folders. See
-@xref{search}.
+@ref{search}.
 @end ifset
 @end table
 
@@ -9721,19 +9721,19 @@ Here are commands to mark messages in a thread.
 @ifset en
 @item t*
 Put the @samp{*} mark all messages of the current sub-thread. Please
-refer to @xref{target mark} for more information.
+refer to @ref{target mark} for more information.
 @item t$
 Put the @samp{$} mark all messages of the current sub-thread. Please
-refer to @xref{escape mark} for more information.
+refer to @ref{escape mark} for more information.
 @item td
 Put the @samp{D} mark all messages of the current sub-thread. Please
-refer to @xref{delete mark} for more information.
+refer to @ref{delete mark} for more information.
 @item tM-d
 Put the @samp{X} mark all messages of the current sub-thread. Please
-refer to @xref{delete mark} for more information.
+refer to @ref{delete mark} for more information.
 @item to
 Put the @samp{o} mark all messages of the current sub-thread. Please
-refer to @xref{refile mark} for more information.
+refer to @ref{refile mark} for more information.
 @end ifset
 @end table
 
@@ -10139,7 +10139,7 @@ C: kazu@@example.org
 @samp{mew-addrbook-for-summary}. The default value of
 @samp{mew-addrbook-for-summary} is @samp{'nickname}. So, From: is
 converted a nickname by default. To know what kind of value can be used,
-refer to @xref{draft-mode}.
+refer to @ref{draft-mode}.
 @item
 (regex):: The substring first matched.
 @end ifset
@@ -10451,7 +10451,7 @@ Recently there are many message whose have Multipart/Alternative,
 which consists of Text/Plain and Text/Html. By default, Mew selects
 Text/Plain. When you install "emacs-w3m", you may want to choose
 Text/Html. In this case, add the following to "~/.mew.el". (Now, it's
-good idea to get back to @xref{multipart} to review how to use
+good idea to get back to @ref{multipart} to review how to use
 @samp{:}.)
 @end ifset
 
@@ -10695,7 +10695,7 @@ sumitch> Cabernet Sauvignon, Bordeaux, '90.
 適切な文字コードを自動的に選択します。
 @end ifset
 @ifset en
-As described in @xref{charset-guess}, Mew automatically chooses an
+As described in @ref{charset-guess}, Mew automatically chooses an
 appropriate charset for the message when composing.
 @end ifset
 
@@ -11421,7 +11421,7 @@ default is @samp{t}.
 The limit size of messages to be retrieved by POP. The default is 55296
 byte. 0 means unlimited, so you can get all messages from the POP
 server. To know how to retrieve the rest of a truncated message, please
-refer to @xref{retrieving}.
+refer to @ref{retrieving}.
 @item mew-pop-body-lines
 *The limit of body lines to get when the size of message exceeds
 @samp{mew-pop-size}. The default is 40.
@@ -11507,7 +11507,7 @@ access. Otherwise they are not deleted. The default is @samp{t}.
 The limit size of messages to be retrieved by IMAP. The default is 55296
 byte. 0 means unlimited, so you can get all messages from the IMAP
 server. To know how to retrieve the rest of a truncated message, please
-refer to @xref{retrieving}.
+refer to @ref{retrieving}.
 @item mew-imap-header-only
 Whether or not the body of a message is retrieved by IMAP. If non-nil,
 only header is retrieved. The default is @samp{nil}
@@ -11723,7 +11723,7 @@ number is 587), configure as follows:
 SSL (@xref{SSL})や TLS (@xref{TLS}) の章も参考にして下さい。
 @end ifset
 @ifset en
-Please refer also to SSL (@xref{SSL}) and TLS (@xref{TLS}).
+Please refer also to SSL (@pxref{SSL}) and TLS (@pxref{TLS}).
 @end ifset
 
 @ifset ja
@@ -11924,7 +11924,7 @@ from = name <user@@mail-domain>
 @ifset en
 Unless you set @samp{mew-from-list} by yourself, @samp{mew-from-list}
 is automatically set collecting 'from' for each "case" according to
-the rule above. See @xref{cheader}.
+the rule above. see @ref{cheader}.
 @end ifset
 
 @ifset ja
@@ -12032,7 +12032,7 @@ replying. The default is @samp{t}.
 The syntax of @samp{mew-case-guess-alist} and
 @samp{mew-case-guess-when-replied-alist} is the same as
 @samp{mew-refile-guess-alist}. For more information, please refer to
-@xref{by-alist}.
+@ref{by-alist}.
 @end ifset
 
 @ifset ja
@@ -12623,7 +12623,7 @@ Mew では SSL の代りに TLS を利用することもできます。TLS の�
 @ifset en
 Mew can use TLS instead of SSL. To enable TLS, Mew relies on
 @w{"}stunnel", too. So, before using TLS, you should configure
-according to the explanations in @xref{SSL}.
+according to the explanations in @ref{SSL}.
 @end ifset
 
 @ifset ja
@@ -13145,7 +13145,7 @@ them, you are asked a folder to save the new message.
 @end ifset
 @ifset en
 Please take care that you may confuse this command as retry
-sending(@xref{sum-write}). Retry seinding is to send a message after
+sending (@pxref{sum-write}). Retry seinding is to send a message after
 editing while Edit mode is to save a message after modifying.
 @end ifset
 
@@ -13270,7 +13270,7 @@ mistaking the addresses.
 @item The number of addresses To: and Cc: should be small
 It is discouraged to specify a lot of mail addresses on To: and Cc:. You
 should create a mailing-list instead. Or, if necessary, you should make
-the destination anonymous (@xref{anonymous}).
+the destination anonymous (@pxref{anonymous}).
 
 @item Write a short and clear summary of body in Subject:
 There are people who decide to read contents from their Subject:. So,

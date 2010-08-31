@@ -113,7 +113,7 @@ automatically registered. Consider the following:
 
      To: kazu@example.org
 
-In the case of Address Completion(1)(*Note addr-comp1::): When this
+In the case of Address Completion(1) (*Note addr-comp1::): When this
 message is sent, a short name "kazu" is automatically registered for
 the address "kazu@example.org". If there is already a short name of
 "kazu", the next action is decided according to
@@ -123,7 +123,7 @@ expanded, the address book short name has priority over the automatic
 short name. Only automatic short names which are not contained in the
 address book are valid.
 
-In the case of Address Completion(1)(*Note addr-comp2::): When this
+In the case of Address Completion(1) (*Note addr-comp2::): When this
 message is sent, the address "kazu@example.org" is automatically
 registered.
 
