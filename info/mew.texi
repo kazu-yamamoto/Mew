@@ -1,12 +1,12 @@
 \input texinfo  @c -*-texinfo-*-
 @c %**start of header
-@setfilename mew.info
+@setfilename mew.ja.info
 @settitle Mew (Messaging in the Emacs World)
 @c %**end of header
 
 @clear en
 @clear ja
-@set en
+@set ja
 
 @ifset ja
 @c Mew の texinfo
@@ -589,9 +589,8 @@ configuration file or in your "~/.emacs".
 (autoload 'mew "mew" nil t)
 (autoload 'mew-send "mew" nil t)
 
-;; Optional setup (Read Mail menu for Emacs 21):
-(if (boundp 'read-mail-command)
-    (setq read-mail-command 'mew))
+;; Optional setup (Read Mail menu):
+(setq read-mail-command 'mew)
 
 ;; Optional setup (e.g. C-xm for sending a message):
 (autoload 'mew-user-agent-compose "mew" nil t)

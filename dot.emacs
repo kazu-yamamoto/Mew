@@ -9,9 +9,8 @@
 (autoload 'mew "mew" nil t)
 (autoload 'mew-send "mew" nil t)
 
-;; Optional setup (Read Mail menu for Emacs 21):
-;(if (boundp 'read-mail-command)
-;    (setq read-mail-command 'mew))
+;; Optional setup (Read Mail menu):
+;(setq read-mail-command 'mew)
 
 ;; Optional setup (e.g. C-xm for sending a message):
 ;(autoload 'mew-user-agent-compose "mew" nil t)

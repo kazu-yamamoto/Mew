@@ -35,16 +35,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Window tips
-;;;
-
-;; If you use XEmacs and your video chip provides only limited
-;; color map(e.g. 256), put the following line to avoid exhaustion
-;; of colors.
-;(setq mew-demo-picture nil)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; Citation tip
 ;;;
 ;;;

@@ -143,8 +143,7 @@ File: mew.ja.info, Node: charset, Next: highlight, Prev: draft-mode, Up: Customi
        1. ISO-8859-1 に収まるなら "iso-8859-1" を利用
        2. そうでないなら "utf-8" を利用
   2. `unify-8859-on-decoding-mode' を利用していない場合：
-       1. ISO-8859-1 と ISO-8859-15 のどちらにも収まる場合、Emacs 21 と 22 であれ
-          ば `mew-charset-latin' を利用、Emacs 23 であれば "ISO-8859-1"
+       1. ISO-8859-1 と ISO-8859-15 のどちらにも収まる場合、"ISO-8859-1"
        2. ISO-8859-1 に収まるなら "iso-8859-1" を利用
        3. ISO-8859-15 に収まるなら "iso-8859-15" を利用
        4. そうでないなら、"utf-8" を利用

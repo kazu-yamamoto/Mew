@@ -1422,10 +1422,8 @@ valid operation.
 If you install "wvHtml", "xlhtml", and "ppthtml", you can display text
 parts of WORD, Excel, and PowerPoint file in Message,
 respectively. Since these commands uses HTML, the configuration of
-Text/Html above is required. Also, you need to install Mule-UCS for
-Emacs 21.4 because UTF-8 (Unicode) is required. With this, a WORD
-file, for example, can be displayed in Message mode as if it were
-text.
+Text/Html above is required. With this, a WORD file, for example, can
+be displayed in Message mode as if it were text.
 
 You can display the file with an external application itself instead
 of displaying it in the Message buffer. For this, type `C-cC-e'.

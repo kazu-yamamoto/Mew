@@ -62,8 +62,7 @@ draft, Mew takes the following step to decide a charset.
        2. Otherwise, use "utf-8".
   2. If `unify-8859-on-decoding-mode' is not used:
        1. If both ISO-8859-1 and ISO-8859-15 can be used with no loss,
-          `mew-charset-latin' is used for Emacs 21 and 22, and "ISO-8859-1"
-          is used for Emacs 23.
+          "ISO-8859-1" is used.
        2. Use "iso-8859-1" if no loss.
        3. Use "iso-8859-15" if no loss.
        4. Otherwise, use "utf-8".
