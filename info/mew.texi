@@ -9149,13 +9149,13 @@ Mew provides the following method to search messages:
 @end ifset
 @ifset en
 @item ?
-Put the @samp{*} mark onto messages in this follder, which are matched to a
+Put the @samp{*} mark onto messages in this folder, which are matched to a
 specified pattern. Either @samp{mewl} or @samp{grep} is called
 according to the specified pattern.
 @item C-u?
 @samp{?} with a region specified.
 @item /
-Make selection with messages in this follder, which are matched to a
+Make selection with messages in this folder, which are matched to a
 specified pattern. Either @samp{mewl} or @samp{grep} is called
 according to the specified pattern.
 @item C-u/
@@ -9186,7 +9186,7 @@ following commands.
 @end ifset
 @ifset en
 @item k?
-Put the @samp{*} mark onto messages in this follder, which are matched to a
+Put the @samp{*} mark onto messages in this folder, which are matched to a
 specified pattern. 
 @item k/
 Make selection with messages in all folders, which are matched to a
