@@ -19,9 +19,9 @@
 @c Try "M-x texinfo-format-buffer" or makeinfo to get the Info.
 @end ifset
 
-@set version 7.1
-@set modified 2010/01/05
-@set X-Mailer Mew version 7.1 on Emacs 22.3
+@set version 6.4
+@set modified 2010/08/31
+@set X-Mailer Mew version 6.4 on Emacs 22.3
 
 @titlepage
 @sp 10
@@ -295,11 +295,11 @@ the name.
 @end ifset
 
 @ifset ja
-Emacs 21.4 以降を使って下さい。これらより前のバージョンや XEmacs は、サ
+Emacs 22.3 以降を使って下さい。これらより前のバージョンや XEmacs は、サ
 ポートしていません。
 @end ifset
 @ifset en
-Please use Emacs 21.4 or later. Mew doesn't support earlier versions
+Please use Emacs 22.3 or later. Mew doesn't support earlier versions
 nor XEmacs.
 @end ifset
 
@@ -10319,19 +10319,15 @@ valid operation.
 "wvHtml"、"xlhtml"、"ppthtml" というコマンドをインストールすれば、それ
 ぞれ WORD、Excel、PowerPoint ファイルのテキスト部分を、Message バッファ
 に表示可能です。これらのコマンドは、HTML を利用するので、上記の
-Text/Html の設定を完了させて下さい。また、UTF-8 (Unicode) を利用します
-ので、Emacs 21.4 には、Mule-UCS もインストールして下さい。これで、たと
-えば WORD ファイルをあたかもテキストのように、Message バッファに表示可
-能になります。
+Text/Html の設定を完了させて下さい。これで、たとえば WORD ファイルをあ
+たかもテキストのように、Message バッファに表示可能になります。
 @end ifset
 @ifset en
 If you install "wvHtml", "xlhtml", and "ppthtml", you can display text
 parts of WORD, Excel, and PowerPoint file in Message,
 respectively. Since these commands uses HTML, the configuration of
-Text/Html above is required. Also, you need to install Mule-UCS for
-Emacs 21.4 because UTF-8 (Unicode) is required. With this,
-a WORD file, for example, can be displayed in Message mode as if it
-were text.
+Text/Html above is required. With this, a WORD file, for example, can
+be displayed in Message mode as if it were text.
 @end ifset
 
 @ifset ja
@@ -10811,8 +10807,7 @@ ISO-8859-1 に収まるなら "iso-8859-1" を利用
 @samp{unify-8859-on-decoding-mode} を利用していない場合：
 @enumerate
 @item
-ISO-8859-1 と ISO-8859-15 のどちらにも収まる場合、Emacs 21 と 22 であれ
-ば @samp{mew-charset-latin} を利用、Emacs 23 であれば @w{"}ISO-8859-1"
+ISO-8859-1 と ISO-8859-15 のどちらにも収まる場合、@w{"}ISO-8859-1"
 @item
 ISO-8859-1 に収まるなら "iso-8859-1" を利用
 @item
@@ -10835,8 +10830,7 @@ If @samp{unify-8859-on-decoding-mode} is not used:
 @enumerate
 @item
 If both ISO-8859-1 and ISO-8859-15 can be used with no loss,
-@samp{mew-charset-latin} is used for Emacs 21 and 22, and @w{"}ISO-8859-1"
-is used for Emacs 23.
+@w{"}ISO-8859-1" is used.
 @item
 Use "iso-8859-1" if no loss.
 @item

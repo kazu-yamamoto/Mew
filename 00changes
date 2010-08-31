@@ -1,4 +1,4 @@
-Mew 7.0.50 (2010/01/xx)
+Mew 6.3.50 (2010/08/31)
 
 * Making use of mew-save-dir.
 * Fixing the hash-vs-array problem of cmew.
