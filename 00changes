@@ -1,5 +1,7 @@
 Mew 6.3.50 (2010/08/31)
 
+* Defining mew-draft-use-format-flowed.
+	Christophe TROESTLER <Christophe.Troestler>
 * Making use of mew-save-dir.
 * Fixing the hash-vs-array problem of cmew.
 	Masamichi HOSODA <trueroad>

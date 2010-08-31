@@ -339,7 +339,9 @@
   (define-key (symbol-value symmap) "\C-c\C-p\C-e"
     'mew-draft-toggle-privacy-encrypted)
   (define-key (symbol-value symmap) "\C-c\C-p\C-d"
-    'mew-draft-set-privacy-type))
+    'mew-draft-set-privacy-type)
+  (define-key (symbol-value symmap) "\C-c\C-p\C-f"
+    'mew-draft-use-format-flowed))
 
 (unless mew-draft-header-map
   (setq mew-draft-header-map (make-sparse-keymap))
@@ -429,6 +431,8 @@
    "Mew"
    ["Cite"                mew-draft-cite t]
    ["Cite without Label"  mew-draft-yank t]
+   ["Flowed"              mew-draft-use-format-flowed :style toggle
+    :selected mew-use-format-flowed]
    mew-draft-mode-toolbar-menu
    ["Queue Message"       mew-draft-make-message        t]
    ["Send Message"        mew-draft-send-message        t]

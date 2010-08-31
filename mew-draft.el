@@ -604,6 +604,30 @@ format=flowed is used on composing."
       (mew-draft-rehighlight)
       (setq buffer-undo-list nil))))
 
+(defun mew-draft-use-format-flowed (&optional arg)
+  "Toggle the use of format=flowed for the current draft.
+If called with '\\[universal-argument]', enable format=flowed if the argument
+is positive.  You can use `mew-draft-use-format-flowed-hooks' to
+enable interesting minor modes according to whether the message is
+flowed or not.  Here is an example:
+
+\(add-hook 'mew-draft-use-format-flowed-hooks
+     '(lambda()
+	(if mew-use-format-flowed
+	    (progn
+	      (auto-fill-mode 0)
+	      (setq word-wrap t))
+	  (auto-fill-mode 1))
+	))"
+  (interactive "P")
+  (set (make-local-variable 'mew-use-format-flowed)
+       (if (null arg)
+	   (not (mew-use-format-flowed))
+	 (> (prefix-numeric-value arg) 0)))
+  (mew-tinfo-set-use-flowed mew-use-format-flowed)
+  (mew-draft-mode-name) ;; Display "F" if Flowed
+  (run-hooks 'mew-draft-use-format-flowed-hooks))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Misc
