@@ -47,6 +47,9 @@ Mew で、長い行を flowed で折り返すには 2 つの方法がありま�
 2) `mew-use-format-flowed' が `t' の場合は、`C-cC-c'や`C-cC-m'でメッセー
 ジを作成するときに、この機能が働きます。この変数の初期値は `nil' です。
 
+3) `C-cC-pC-f' で、`mew-use-format-flowed' の値を反転できます。
+
+
 なお、メッセージを表示する際は、`mew-use-format-flowed' の値に関係なく
 flowed で折り返された行は、元に戻されます。長い行が見にくい場合は、
 Summary モードで `_' を利用しましょう。

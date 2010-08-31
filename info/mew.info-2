@@ -772,6 +772,10 @@ If you type `C-cC-f' again, the folded lines are unfolded.
 took into account automatically at composing with `C-cC-c' or
 `C-cC-m'. Its default value is `nil'.
 
+3) You can toggle the value of `mew-use-format-flowed' by
+`C-cC-pC-f'.
+
+
 Note that folded lines with the "flowed" folding are always unfolded
 on viewing regardless of the value of `mew-use-format-flowed'.  If you
 feel it is hard to see long lines, use `_' in Summary mode.
