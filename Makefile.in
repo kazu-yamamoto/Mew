@@ -211,8 +211,13 @@ distclean:
 ## For github users
 ##
 
+# git fetch
+# make log     to see logs of updates
+# make diff    to see the updates
+# git pull
+
 log::
-	git log
+	git log FETCH_HEAD
 
 diff::
 	git diff FETCH_HEAD
