@@ -30,9 +30,6 @@ infodir=@infodir@
 ##
 
 EMACS = @emacsbin@
-#EMACS = emacs
-#EMACS = xemacs
-#EMACS = mule
 
 DETECT = xemacs
 
@@ -124,7 +121,7 @@ DESTDIR =
 
 ################################################################
 
-all: $(OBJS) bin 
+all: $(OBJS) bin
 
 install: install-el install-bin install-info install-etc
 
@@ -215,11 +212,11 @@ distclean:
 ## For anonymous CVS users
 ##
 
-ChangeLog::
-	cvs2cl -r --log-opts "-d \"> 1 weeks ago\""
+log::
+	git log
 
 diff::
-	-cvs diff -c -F "^(" > $@
+	git diff FETCH_HEAD
 
 ##
 ## End of Makefile
