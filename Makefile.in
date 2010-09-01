@@ -217,10 +217,10 @@ distclean:
 # git pull
 
 log::
-	git log FETCH_HEAD
+	git log HEAD..FETCH_HEAD
 
 diff::
-	git diff FETCH_HEAD
+	git diff HEAD..FETCH_HEAD
 
 ##
 ## End of Makefile
