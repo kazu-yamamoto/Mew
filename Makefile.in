@@ -222,6 +222,12 @@ log::
 diff::
 	git diff HEAD..FETCH_HEAD
 
+VERSION = `git tag | tail -1 | sed -e 's/v//'`
+
+archive:
+	git archive master -o ~/mew-$(VERSION).tar --prefix=mew-$(VERSION)/
+	gzip ~/mew-$(VERSION).tar
+
 ##
 ## End of Makefile
 ##
