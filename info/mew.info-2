@@ -1119,7 +1119,7 @@ File: mew.info, Node: mark-b-comp, Next: pgp-key, Prev: shortcut, Up: Composing
 Mark based composer
 ===================
 
-To support PGP/MIME and S/MIME, mark based composing is
+To support PGP/MIME, S/MIME and ZIP, mark based composing is
 provided. Remember the previous example.
 
      ----------------------------- attachments -----------------------------
@@ -1176,6 +1176,9 @@ Additional key binding for marks in attachments is as follows:
 `M-e'
      Put the `SE' mark to encrypt with S/MIME. Input decrypters'
      addresses.
+`Z'
+     Encrypt the part with ZIP immediately. After the encryption, the
+     `B' mark appears.
 `U'
      Unmark. The original mark appears.
 

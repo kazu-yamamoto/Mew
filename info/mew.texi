@@ -26,14 +26,11 @@
 @titlepage
 @sp 10
 @center
-@subtitle Messaging in the Emacs World
+@title Mew
 @ifset ja
-@title 『Mew』
-@subtitle // みゅう //
 @author Copyright @copyright{}1996-2010 山本和彦
 @end ifset
 @ifset en
-@title Mew
 @author Copyright @copyright{}1996-2010 Kazuhiko Yamamoto
 @end ifset
 @end titlepage
@@ -2518,6 +2515,7 @@ The same as @samp{E}. But, when used for other folders than +draft,
 @kindex C-cC-s (Summary)
 @kindex C-cC-r (Summary)
 @kindex y (Summary)
+@kindex b (Summary)
 @kindex # (Summary)
 @kindex | (Summary)
 @kindex B (Summary)
@@ -2559,6 +2557,8 @@ Message モードで順方向段階的検索。
 Message モードで逆方向段階的検索。
 @item y
 メッセージ、あるいは、パートを入力したファイル名で保存する。
+@item b
+Message モードの内容そのものを入力したファイル名で保存する。
 @item C-uy
 保存するテキストの coding-system を指定して、メッセージ、あるいは、パー
 トを入力したファイル名で保存する。
@@ -2613,6 +2613,9 @@ Incremental search backward in Message mode.
 @item y
 Save this message or this part into the file whose name is specified by
 you.
+@item b
+Save the buffer of Message mode as is into the file whose name is
+specified by you.
 @item C-uy
 Save this message or this part into the file whose name is specified by
 you, specifying coding-system for text.
@@ -5496,13 +5499,13 @@ This is read as follows:
 @end ifset
 
 @enumerate
+@item
 @ifset ja
 To: の値を新しい To: へ、
 Cc: の値を新しい Cc: へ、
 Newsgroups: の値を新しい Newsgroups: へコピーする。
 @end ifset
 @ifset en
-@item
 Copying the value of To: to new To: and 
 copying the value of Cc: to new Cc: and
 copying the value of Newsgroups: to new Newsgroups:.
@@ -6168,16 +6171,17 @@ PGP/MIME, not to old PGP. If you want to create old PGP signature with
 @kindex G (Attach)
 @kindex S (Attach)
 @kindex E (Attach)
+@kindex Z (Attach)
 @kindex M-s (Attach)
 @kindex M-e (Attach)
 @kindex U (Attach)
 
 @ifset ja
-PGP/MIME や S/MIME をサポートするために、マークを使った作成方法が提供さ
-れています。以前の例を思い出してみましょう。
+PGP/MIME、S/MIME、および ZIP をサポートするために、マークを使った作成方
+法が提供されています。以前の例を思い出してみましょう。
 @end ifset
 @ifset en
-To support PGP/MIME and S/MIME, mark based composing is
+To support PGP/MIME, S/MIME and ZIP, mark based composing is
 provided. Remember the previous example.
 @end ifset
 
@@ -6292,6 +6296,8 @@ S/MIME で署名するため @samp{SS} マークを付ける。
 @item M-e
 S/MIME で暗号化するため @samp{SE} マークを付ける。受信者のアドレスを入
 力する。
+@item Z
+ZIP で直ちに暗号化する。暗号化された後は、@samp{B}マークが付く。
 @item U
 符号化を元に戻す。元々のマークに戻る。
 @end ifset
@@ -6313,6 +6319,9 @@ Put the @samp{SS} mark to sign with S/MIME.
 @item M-e
 Put the @samp{SE} mark to encrypt with S/MIME. Input decrypters'
 addresses.
+@item Z
+Encrypt the part with ZIP immediately. After the encryption, the
+@samp{B} mark appears.
 @item U 
 Unmark. The original mark appears.
 @end ifset
@@ -10272,6 +10281,7 @@ bottom, set as follows:
 @end ifset
 @kindex C-cC-e (Summary)
 @kindex C-uC-cC-e (Summary)
+@kindex zz (Summary)
 @vindex mew-prog-text/html-ext
 @vindex mew-prog-msword-ext
 @vindex mew-prog-msexcel-ext
@@ -10464,6 +10474,13 @@ good idea to get back to @ref{multipart} to review how to use
 (setq mew-mime-multipart-alternative-list
       '("Text/Html" "Text/Plain" ".*"))
 @end lisp
+
+@ifset ja
+ZIP で暗号化された添付ファイルは、@samp{zz} で復号化し表示できます。
+@end ifset
+@ifset en
+You can decrypt a ZIP attach file and display it with @samp{zz}.
+@end ifset
 
 @c %%%%%%%%%%%%%%%%%
 @node draft-mode, charset, message-mode, Customize

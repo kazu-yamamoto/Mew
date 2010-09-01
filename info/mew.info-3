@@ -1477,6 +1477,8 @@ good idea to get back to *Note multipart:: to review how to use
      (setq mew-mime-multipart-alternative-list
            '("Text/Html" "Text/Plain" ".*"))
 
+You can decrypt a ZIP attach file and display it with `zz'.
+
 
 
 File: mew.info, Node: draft-mode, Next: charset, Prev: message-mode, Up: Customize

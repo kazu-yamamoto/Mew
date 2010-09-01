@@ -112,7 +112,7 @@ Summary モードで `a' や `A' を使うと、新しい草稿が Draft mode �
 
 これは、次のように解釈します。
 
-     To: の値を新しい To: へ、Cc: の値を新しい Cc: へ、Newsgroups: の値
+  1. To: の値を新しい To: へ、Cc: の値を新しい Cc: へ、Newsgroups: の値
      を新しい Newsgroups: へコピーする。
 
 `mew-reply-all-alist' の初期値は以下の通りです。
@@ -378,8 +378,8 @@ File: mew.ja.info, Node: mark-b-comp, Next: pgp-key, Prev: shortcut, Up: Composi
 マークを使った電子署名/暗号メールの作成
 =======================================
 
-PGP/MIME や S/MIME をサポートするために、マークを使った作成方法が提供さ
-れています。以前の例を思い出してみましょう。
+PGP/MIME、S/MIME、および ZIP をサポートするために、マークを使った作成方
+法が提供されています。以前の例を思い出してみましょう。
 
      ----------------------------- attachments -----------------------------
            Multipart/Mixed                                         1/
@@ -434,6 +434,8 @@ Base64、Quoted-Printable、Gzip64 (Gzip + Base64)、署名、暗号化などが
 `M-e'
      S/MIME で暗号化するため `SE' マークを付ける。受信者のアドレスを入
      力する。
+`Z'
+     ZIP で直ちに暗号化する。暗号化された後は、`B'マークが付く。
 `U'
      符号化を元に戻す。元々のマークに戻る。
 
@@ -2111,6 +2113,8 @@ Office 関連のファイルも、`C-cC-e' を使えば、それぞれのアプ�
 
      (setq mew-mime-multipart-alternative-list
            '("Text/Html" "Text/Plain" ".*"))
+
+ZIP で暗号化された添付ファイルは、`zz' で復号化し表示できます。
 
 
 

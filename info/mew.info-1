@@ -1053,6 +1053,9 @@ Mew provides you with the following useful commands in Summary mode:
 `y'
      Save this message or this part into the file whose name is
      specified by you.
+`b'
+     Save the buffer of Message mode as is into the file whose name is
+     specified by you.
 `C-uy'
      Save this message or this part into the file whose name is
      specified by you, specifying coding-system for text.
