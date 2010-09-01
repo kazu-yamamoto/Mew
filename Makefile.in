@@ -31,8 +31,6 @@ infodir=@infodir@
 
 EMACS = @emacsbin@
 
-DETECT = xemacs
-
 ##
 ## A directory where mew*.el[c] will be installed.
 ##
@@ -107,6 +105,7 @@ SRCS =	mew-addrbook.el	mew-attach.el	mew-auth.el	\
 
 TEMPFILE  = temp.el
 TEMPFILE2 = temp2.el
+DETECT = xemacs
 
 CP = cp
 RM = rm -f
@@ -209,7 +208,7 @@ distclean:
 
 ################################################################
 ##
-## For anonymous CVS users
+## For github users
 ##
 
 log::
