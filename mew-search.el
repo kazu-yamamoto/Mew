@@ -602,7 +602,7 @@ with a search method."
       (message "\"%s\" does not exist" mew-prog-est-update)
     (message "Hyper Estraier indexing for %s..." folder)
     (let* ((path (file-truename (mew-expand-folder folder)))
-	   (pro (start-process "*Mew EST*" nil mew-prog-est-update "-s" mew-suffix path)))
+	   (pro (start-process "*Mew EST*" nil mew-prog-est-update "-s" mew-suffix "-b" (mew-expand-folder mew-mail-path) path)))
       (set-process-filter pro 'mew-est-index-filter)
       (set-process-sentinel pro 'mew-est-index-sentinel))))
 
@@ -612,7 +612,7 @@ with a search method."
   (if (not (mew-which-exec mew-prog-est-update))
       (message "'%s' does not exist" mew-prog-est-update)
     (message "Hyper Estraier indexing...")
-    (let ((pro (start-process "*Mew EST*" nil mew-prog-est-update "-s" mew-suffix)))
+    (let ((pro (start-process "*Mew EST*" nil mew-prog-est-update "-s" mew-suffix "-b" (mew-expand-folder mew-mail-path))))
       (set-process-filter pro 'mew-est-index-filter)
       (set-process-sentinel pro 'mew-est-index-sentinel))))
 

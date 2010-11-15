@@ -27,6 +27,7 @@ USAGE: ${PROG} [directory]
   -s specify suffix
   -h help
   -v verbose mode
+  -b base dir
 __HDT__
     exit 1
 }
@@ -104,9 +105,12 @@ case $? in
     ;;
 esac
 
-while getopts "hvs:" OPTION
+while getopts "b:hvs:" OPTION
 do
     case ${OPTION} in
+      b)
+        BASEDIR=${OPTARG}
+        ;;
       h)
         usage
         ;;
@@ -122,7 +126,7 @@ do
     esac
 done
 shift `expr $OPTIND - 1`
-TGTDIR=${1:-${HOME}/Mail}
+TGTDIR=${1:-${BASEDIR}}
 
 trap cleanup_trap 1 2 3 9 15
 
