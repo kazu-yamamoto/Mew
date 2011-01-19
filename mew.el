@@ -181,6 +181,7 @@ CONTINUE, YANK-ACTION and SEND-ACTIONS are ignored."
 	  (or no-dir (mew-temp-dir-init))
 	  (mew-mark-init)
 	  (mew-config-init)
+	  (mew-subprocess-init)
 	  (mew-rotate-log-files mew-smtp-log-file)
 	  (mew-rotate-log-files mew-nntp-log-file)
 	  (mew-rotate-log-files mew-refile-log-file))
@@ -635,6 +636,7 @@ Mew remain, so you can resume with buffer operations."
     ;;
     (mew-passwd-clean-up) ;; should be before dir clean up
     (mew-temp-dir-clean-up)
+    (mew-subprocess-clean-up)
     ;;
     (run-hooks 'mew-quit-hook)
     ;;

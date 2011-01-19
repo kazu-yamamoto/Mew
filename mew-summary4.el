@@ -473,6 +473,16 @@ If executed with '\\[universal-argument]', you can set the sending case."
 ;;; Unlocking
 ;;;
 
+(defun mew-subprocess-init ()
+  (add-hook 'kill-emacs-hook 'mew-subprocess-kill))
+
+(defun mew-subprocess-clean-up ()
+  (mew-summary-kill-subprocess t)
+  (remove-hook 'kill-emacs-hook 'mew-subprocess-kil))
+
+(defun mew-subprocess-kill ()
+  (mew-summary-kill-subprocess t))
+
 (defun mew-summary-kill-subprocess (&optional kill-ssx)
   "\\<mew-summary-mode-map>
 Kill a process in Summary mode.
