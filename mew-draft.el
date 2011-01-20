@@ -549,7 +549,7 @@ citation prefix and label.
 		  (insert ellipses)
 		  (goto-char eol)
 		  (while (< fill-column (current-column))
-		    (delete-backward-char 1))))
+		    (delete-char -1))))
 	       ((eq mew-draft-cite-fill-mode 'wrap)
 		(setq beg (point))
 		(end-of-line)

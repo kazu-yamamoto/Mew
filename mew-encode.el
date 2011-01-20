@@ -174,7 +174,7 @@
 	    (setq start (match-end 0))
 	    (forward-line)
 	    (while (looking-at mew-lwsp)
-	      (delete-backward-char 1)
+	      (delete-char -1)
 	      (forward-line))
 	    (setq val (mew-buffer-substring start (1- (point))))
 	    (delete-region start (1- (point)))
@@ -737,7 +737,7 @@
 
 (defun mew-encode-flowed-remove-trailing-sp ()
   (while (and (not (bobp)) (= (char-before) mew-sp))
-    (delete-backward-char 1)))
+    (delete-char -1)))
 
 (defun mew-encode-flowed-line (column delsp)
   (let (prefix beg)

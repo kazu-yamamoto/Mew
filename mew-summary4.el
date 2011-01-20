@@ -357,7 +357,7 @@ If executed with '\\[universal-argument]', coding-system is asked."
 	(message "Not saved")
       (let ((writecs (if askcs
 			 (read-coding-system "Coding-system: ")
-		       default-buffer-file-coding-system)))
+		       (default-value 'buffer-file-coding-system))))
 	(with-current-buffer (mew-buffer-message)
 	  (mew-frwlet mew-cs-dummy writecs
 	    ;; do not specify 'no-msg

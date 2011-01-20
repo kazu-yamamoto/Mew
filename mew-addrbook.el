@@ -287,7 +287,7 @@ returned."
     (while (re-search-forward ",$" nil t)
       (end-of-line)
       (forward-char 1)
-      (delete-backward-char 1))
+      (delete-char -1))
     ;; replace ", " to "\0" inside/outside quote.
     (goto-char (point-min))
     (while (re-search-forward ",[ \t]+" nil t)
