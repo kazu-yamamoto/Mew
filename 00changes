@@ -1,5 +1,7 @@
 Mew 6.3.51
 
+* Text/Pdf for Thunderbird
+	Christophe TROESTLER <Christophe.Troestler>
 * Removing warnings for Emacs 23.3
 	Yu-ji Hosokawa <yu-ji>
 * Killing stunnel with -KILL since the spec of stunnel changed.

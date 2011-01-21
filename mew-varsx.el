@@ -132,6 +132,9 @@
     mew-prog-postscript             mew-icon-application/postscript)
    ("application/pdf"               "\\.pdf$"  mew-b64
     mew-prog-pdf                    mew-icon-application/postscript)
+   ;; Thunderbird/3.1.7 only, not registered in IANA
+   ("text/pdf"                      "\\.pdf$"  mew-b64
+    mew-prog-pdf                    mew-icon-application/postscript)
    ("application/octet-stream"      "\\.pages$"  mew-b64
     mew-default-external-program    mew-icon-application/octet-stream)
    ("application/octet-stream"      "\\.key$"  mew-b64
