@@ -6,15 +6,6 @@
 ;;; Code:
 
 ;;;
-;;; Office
-;;;
-
-(defvar mew-prog-application/msword "wvHtml")
-(defvar mew-prog-application/msexcel "xlhtml")
-(defvar mew-prog-application/mspowerpoint "ppthtml")
-(defvar mew-prog-application/rtf "rtf2html")
-
-;;;
 ;;; Text/Html, Application/Xml
 ;;;
 
@@ -66,26 +57,47 @@
 (defvar mew-prog-external-body   '(mew-mime-external-body mew-mime-external-body-ext))
 (defvar mew-prog-delivery-status 'mew-mime-text/plain)
 (defvar mew-prog-postscript      '("gv" ("-geometry" "+0+0") t))
-(defvar mew-prog-pdf             '("xpdf" ("-geometry" "+0+0") t))
 (defvar mew-prog-xml2            '(mew-mime-application/xml
 				   mew-mime-application/xml-ext))
 (defvar mew-prog-pgp-keys        '(mew-mime-pgp-keys mew-mime-pgp-keys-ext))
 (defvar mew-prog-oasys           nil)
 (defvar mew-prog-octet-stream    'mew-mime-application/octet-stream)
 
-(defvar mew-prog-msword-ext nil)
-(defvar mew-prog-msword nil)
-(defvar mew-prog-msexcel-ext nil)
-(defvar mew-prog-msexcel nil)
-(defvar mew-prog-mspowerpoint-ext nil)
-(defvar mew-prog-mspowerpoint nil)
-(defvar mew-prog-ooffice         "ooffice")
 (defvar mew-prog-visio           'mew-mime-application/octet-stream)
 (defvar mew-prog-mstnef          '(mew-mime-application-ms-tnef
 				   mew-mime-application-ms-tnef-ext))
+(defvar mew-prog-unzip           'mew-mime-application/octet-stream)
+
+;;;
+;;;
+;;;
+
+(defvar mew-prog-application/pdf "pdftotext")
+(defvar mew-prog-pdf-ext         '("xpdf" ("-geometry" "+0+0") t))
+(defvar mew-prog-pdf             `(mew-mime-application/pdf ,mew-prog-pdf-ext))
+
+(defvar mew-prog-application/rtf "rtf2html")
 (defvar mew-prog-rtf             '(mew-mime-application/rtf
 				   mew-mime-application/rtf-ext))
-(defvar mew-prog-unzip           'mew-mime-application/octet-stream)
+
+;;;
+;;; Office
+;;;
+
+(defvar mew-prog-ooffice "ooffice")
+
+(defvar mew-prog-application/msword "wvHtml")
+(defvar mew-prog-msword-ext mew-prog-ooffice)
+(defvar mew-prog-msword `(mew-mime-application/msword ,mew-prog-msword-ext))
+
+
+(defvar mew-prog-application/msexcel "xlhtml")
+(defvar mew-prog-msexcel-ext mew-prog-ooffice)
+(defvar mew-prog-msexcel `(mew-mime-application/msexcel mew-prog-msexcel-ext))
+
+(defvar mew-prog-application/mspowerpoint "ppthtml")
+(defvar mew-prog-mspowerpoint-ext mew-prog-ooffice)
+(defvar mew-prog-mspowerpoint `(mew-mime-application/mspowerpoint mew-prog-mspowerpoint-ext))
 
 ;;;
 ;;; Misc

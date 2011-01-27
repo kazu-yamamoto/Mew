@@ -566,6 +566,37 @@
 		    (w3m-expand-file-name-as-url (file-name-directory file2))))
       (message "Displaying an MS document...done"))))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; PDF
+;;;
+
+(defun mew-mime-application/pdf (cache begin end &optional parameter)
+  (message "Displaying a PDF document...")
+  (mew-erase-buffer)
+  (let ((doit t) (prog mew-prog-application/pdf)
+	file1 file2)
+    (unless (mew-which-exec prog)
+      (setq doit nil)
+      (mew-elet (insert "To display this, install \"" prog "\".\n")))
+    (if (not doit)
+	(progn
+	  (mew-elet (insert "\n"))
+	  (mew-mime-part-messages nil))
+      (setq file1 (mew-make-temp-name))
+      (with-current-buffer cache
+	(mew-flet
+	 (write-region begin end file1 nil 'no-msg)))
+      (setq file2 (mew-make-temp-name))
+      (call-process prog nil nil nil "-layout" "-enc" "UTF-8" file1 file2)
+      (when (file-exists-p file2)
+	(mew-frwlet 'utf-8 mew-cs-dummy
+	  (insert-file-contents file2)))
+      (if (file-exists-p file1) (delete-file file1))
+      (if (file-exists-p file2) (delete-file file2))
+  (message "Displaying a PDF document...done"))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Application/Ms-Tnef

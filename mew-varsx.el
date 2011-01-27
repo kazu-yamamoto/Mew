@@ -62,28 +62,6 @@
  (format  "\\([0-9]+\\)\\(%s\\)?$" (regexp-quote mew-suffix)))
 
 ;;
-;; Office
-;;
-
-(defvar mew-prog-msword-ext nil)
-(mew-defvar 'mew-prog-msword-ext "ooffice")
-(mew-defvar
- 'mew-prog-msword
- (list 'mew-mime-application/msword mew-prog-msword-ext))
-
-(defvar mew-prog-msexcel-ext nil)
-(mew-defvar 'mew-prog-msexcel-ext "ooffice")
-(mew-defvar
- 'mew-prog-msexcel
- (list 'mew-mime-application/msexcel mew-prog-msexcel-ext))
-
-(defvar mew-prog-mspowerpoint-ext nil)
-(mew-defvar 'mew-prog-mspowerpoint-ext "ooffice")
-(mew-defvar
- 'mew-prog-mspowerpoint
- (list 'mew-mime-application/mspowerpoint mew-prog-mspowerpoint-ext))
-
-;;
 ;; MIME
 ;;
 

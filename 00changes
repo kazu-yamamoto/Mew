@@ -1,5 +1,8 @@
 Mew 6.3.51
 
+* Inline display of PDF with "pdftotext".
+	Hideyuki SHIRAI <shirai>
+	Harumitsu YOSHITAKE <yositake>
 * Text/Pdf for Thunderbird
 	Christophe TROESTLER <Christophe.Troestler>
 * Removing warnings for Emacs 23.3
