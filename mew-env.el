@@ -276,6 +276,12 @@ requires PTY.")
     (defalias 'mew-create-image 'create-animated-image)
   (defalias 'mew-create-image 'create-image))
 
+(if (fboundp 'run-mode-hooks)
+    (defun mew-run-mode-hooks (&rest funcs)
+      (apply 'run-mode-hooks funcs))
+  (defun mew-run-mode-hooks (&rest funcs)
+    (apply 'run-hooks funcs)))
+
 (provide 'mew-env)
 
 ;;; Copyright Notice:

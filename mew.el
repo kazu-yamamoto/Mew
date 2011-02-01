@@ -390,6 +390,7 @@ the lower window is not zero, switch to the buffer."
     (if (get-buffer msgbuf)
 	(delete-windows-on msgbuf)
       (with-current-buffer (get-buffer-create msgbuf)
+	(kill-all-local-variables)
 	;; "truncate?" is asked in Message mode.
 	;; so set the same toolbar as Summary mode
 	(mew-summary-toolbar-update)

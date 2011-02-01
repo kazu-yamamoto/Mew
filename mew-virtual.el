@@ -47,7 +47,7 @@
   (mew-summary-setup-mode-line)
   (mew-summary-setup-decoration)
   (mew-highlight-cursor-line)
-  (run-hooks 'mew-virtual-mode-hook))
+  (mew-run-mode-hooks 'mew-virtual-mode-hook))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

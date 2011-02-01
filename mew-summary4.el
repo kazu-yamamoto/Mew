@@ -30,6 +30,7 @@
       nil) ;; existing folder
      (t
       (funcall (or func 'switch-to-buffer) (get-buffer-create case:folder))
+      (kill-all-local-variables)
       (mew-set-buffer-cs mew-cs-m17n)
       (mew-buffers-setup case:folder)
       (let* ((case (mew-case:folder-case case:folder))

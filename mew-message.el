@@ -35,7 +35,7 @@
   (setq page-delimiter mew-page-delimiter)
   (mew-message-setup-decoration)
   (mew-message-toolbar-update)
-  (run-hooks 'mew-message-mode-hook))
+  (mew-run-mode-hooks 'mew-message-mode-hook))
 
 (defun mew-message-mode-line (fld message)
   (let* ((msg (or message

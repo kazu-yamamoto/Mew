@@ -43,7 +43,7 @@ Execute mew-dinfo-set before calling this."
   (mew-header-setup-decoration)
   (mew-draft-mode-name 'header)
   (force-mode-line-update)
-  (run-hooks 'mew-header-mode-hook)
+  (mew-run-mode-hooks 'mew-header-mode-hook)
   ;; auto-fill-function is set by mew-header-mode-hook
   (when auto-fill-function
     (make-local-variable 'auto-fill-function)

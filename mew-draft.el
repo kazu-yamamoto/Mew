@@ -79,7 +79,7 @@
   (mew-tinfo-set-privacy-type nil)
   (mew-tinfo-set-use-flowed (mew-use-format-flowed (mew-tinfo-get-case)))
   (mew-draft-mode-name) ;; must be after (mew-tinfo-set-encrypted-p encrypted)
-  (run-hooks 'text-mode-hook 'mew-draft-mode-hook)
+  (mew-run-mode-hooks 'text-mode-hook 'mew-draft-mode-hook)
   ;; auto-fill-function is set by mew-draft-mode-hook
   (when auto-fill-function
     (make-local-variable 'auto-fill-function)
