@@ -93,6 +93,9 @@
   (mew-xinfo-set-decode-err error-msg)
   (error error-msg))
 
+(defun mew-decode-error2 (error-msg)
+  (mew-xinfo-set-decode-err error-msg))
+
 ;;;
 ;;; Decoding a header
 ;;;
@@ -1026,14 +1029,14 @@ Return a part syntax after moving the beginning of the content body."
     ;;
     (unless (and (re-search-forward bregex nil t)
 		 (mew-decode-multipart-boundary-cont))
-      (mew-decode-error "No first boundary for Multipart/Signed"))
+      (mew-decode-error2 "No first boundary for Multipart/Signed"))
     (forward-line) ;; the beginning of the signed part
     (delete-region (point-min) (point)) ;; deleting content-header
     (goto-char (point-min)) ;; just in case
     ;;
     (unless (and (re-search-forward bregex nil t)
 		 (mew-decode-multipart-boundary-cont))
-      (mew-decode-error "No second boundary for Multipart/Signed"))
+      (mew-decode-error2 "No second boundary for Multipart/Signed"))
     (beginning-of-line)
     (setq end1 (1- (point))) ;; the end of the signed part
     (forward-line) ;; the beginning of the key part
@@ -1041,7 +1044,7 @@ Return a part syntax after moving the beginning of the content body."
     ;;
     (unless (and (re-search-forward bregex nil t)
 		 (mew-decode-multipart-boundary-end))
-      (mew-decode-error "No third boundary for Multipart/Signed"))
+      (mew-decode-error2 "No third boundary for Multipart/Signed"))
     (beginning-of-line) ;; the end of the encrypted part + 1
     (setq syntax2 (mew-decode-security-singlepart start2 (1- (point))))
     (setq proto (mew-syntax-get-value (mew-syntax-get-ct syntax2) 'cap))
