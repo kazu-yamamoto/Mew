@@ -98,8 +98,9 @@ function."
 
 ;;;###autoload
 (defun mew-user-agent-compose (&optional to subject other-headers continue
-                                             switch-function yank-action
-                                             send-actions)
+					 switch-function yank-action
+					 send-actions
+					 &rest dummy)
   "Set up message composition draft with Mew.
 This is 'mail-user-agent' entry point to Mew.
 
