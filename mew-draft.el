@@ -616,8 +616,10 @@ flowed or not.  Here is an example:
 	(if mew-use-format-flowed
 	    (progn
 	      (auto-fill-mode 0)
-	      (setq word-wrap t))
-	  (auto-fill-mode 1))
+	      (visual-line-mode 1))
+	  (progn
+            (auto-fill-mode 1)
+            (visual-line-mode 0)))
 	))"
   (interactive "P")
   (set (make-local-variable 'mew-use-format-flowed)
