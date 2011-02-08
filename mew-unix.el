@@ -106,15 +106,6 @@
 (defvar mew-default-external-program nil)
 (defvar mew-dir-list-function 'mew-dir-list-with-link-count)
 
-(defun mew-set-file-type (file) ())
-
-(defvar mew-cs-est 'utf-8)
-
-(defun mew-focus-frame (frame)
-  (when focus-follows-mouse
-    (set-mouse-position
-     (selected-frame) (1- (frame-width)) 0)))
-
 (provide 'mew-unix)
 
 ;;; Copyright Notice:

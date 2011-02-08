@@ -29,13 +29,6 @@
 (require 'mew-vars) ;; mew-env && mew-key
 (require 'mew-vars2)
 (require 'mew-vars3)
-(cond
- ((memq system-type '(windows-nt cygwin))
-  (require 'mew-win32))
- ((eq system-type 'darwin)
-  (require 'mew-darwin))
- (t
-  (require 'mew-unix)))
 
 (defun mew-version-show ()
   "Show mew-version in minibuffer."
@@ -148,6 +141,13 @@ CONTINUE, YANK-ACTION and SEND-ACTIONS are ignored."
   (let ((buf (get-buffer-create "*Mew hello*")))
     (run-hooks 'mew-env-hook)
     (load mew-rc-file 'no-err 'no-msg)
+    (cond
+     ((memq system-type '(windows-nt cygwin))
+      (require 'mew-win32))
+     ((eq system-type 'darwin)
+      (require 'mew-darwin))
+     (t
+      (require 'mew-unix)))
     (require 'mew-varsx)
     (if mew-theme-file (load mew-theme-file 'no-err 'no-msg))
     (switch-to-buffer buf)

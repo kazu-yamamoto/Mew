@@ -1,5 +1,6 @@
 Mew 6.3.51
 
+* varsx hack.
 * Fixing regex of time.
 	Christophe TROESTLER <Christophe.Troestler
 * Fixing major mode hooks.

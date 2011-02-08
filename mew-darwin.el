@@ -77,19 +77,6 @@
 (setq mew-delete-temp-file nil)
 (defvar mew-dir-list-function 'mew-dir-list-with-link-count)
 
-;;
-
-(defun mew-set-file-type (file)
-  (unless mew-use-suffix
-    (mew-mac-set-file-type file mew-file-type)))
-
-(defvar mew-cs-est 'utf-8)
-
-(defun mew-focus-frame (frame)
-  (when focus-follows-mouse
-    (set-mouse-position
-     (selected-frame) (1- (frame-width)) 0)))
-
 (provide 'mew-darwin)
 
 ;;; Copyright Notice:

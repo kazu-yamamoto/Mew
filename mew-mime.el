@@ -7,6 +7,13 @@
 
 (require 'mew)
 (eval-when-compile
+  (cond
+   ((memq system-type '(windows-nt cygwin))
+    (require 'mew-win32))
+   ((eq system-type 'darwin)
+    (require 'mew-darwin))
+   (t
+    (require 'mew-unix)))
   (mew-no-warning-defun w3m-region)
   (mew-no-warning-defun w3m-expand-file-name-as-url))
 

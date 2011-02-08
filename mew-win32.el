@@ -199,13 +199,6 @@
 	   (t
 	    (mew-attach-copy from to))))))))
 
-(defun mew-set-file-type (file) ())
-
-(defvar mew-cs-est 'shift_jis)
-
-(defun mew-focus-frame (frame)
-  (if (fboundp 'w32-focus-frame) (w32-focus-frame frame)))
-
 (provide 'mew-win32)
 
 ;;; Copyright Notice:

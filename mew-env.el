@@ -282,6 +282,34 @@ requires PTY.")
   (defun mew-run-mode-hooks (&rest funcs)
     (apply 'run-hooks funcs)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Unix/Mac/Win
+;;;
+
+(cond
+ ((memq system-type '(windows-nt cygwin))
+  (defun mew-set-file-type (file) ())
+  (defvar mew-cs-est 'shift_jis)
+  (defun mew-focus-frame (frame)
+    (if (fboundp 'w32-focus-frame) (w32-focus-frame frame))))
+ ((eq system-type 'darwin)
+  (defun mew-set-file-type (file)
+    (unless mew-use-suffix
+      (mew-mac-set-file-type file mew-file-type)))
+  (defvar mew-cs-est 'utf-8)
+  (defun mew-focus-frame (frame)
+    (when focus-follows-mouse
+      (set-mouse-position
+       (selected-frame) (1- (frame-width)) 0))))
+ (t
+  (defun mew-set-file-type (file) ())
+  (defvar mew-cs-est 'utf-8)
+  (defun mew-focus-frame (frame)
+    (when focus-follows-mouse
+      (set-mouse-position
+       (selected-frame) (1- (frame-width)) 0)))))
+
 (provide 'mew-env)
 
 ;;; Copyright Notice:
