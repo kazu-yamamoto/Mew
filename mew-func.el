@@ -1380,7 +1380,7 @@ by side-effect."
 ;;;
 
 (defvar mew-time-rfc-regex
-  "\\([0-9]+\\)[ \t]+\\([a-zA-Z]+\\)[ \t]+\\([0-9]+\\)[ \t]+\\([0-9]+\\):\\([0-9]+\\)\\(:\\([0-9]+\\)\\)?\\([ \t]+\\([-+0-9a-zA-Z]+\\)\\)?")
+  "\\([0-9]+\\)[ \t\n\r]+\\([a-zA-Z]+\\)[ \t\n\r]+\\([0-9]+\\)[ \t\n\r]+\\([0-9]+\\):\\([0-9]+\\)\\(:\\([0-9]+\\)\\)?\\([ \t\n\r]+\\([-+0-9a-zA-Z]+\\)\\)?")
 
 (defmacro mew-time-rfc-day  ()
   '(string-to-number (substring s (match-beginning 1) (match-end 1))))
