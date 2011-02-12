@@ -590,7 +590,7 @@
     (if (not doit)
 	(progn
 	  (mew-elet (insert "\n"))
-	  (mew-mime-part-messages nil))
+	  (mew-mime-part-messages t))
       (setq file1 (mew-make-temp-name))
       (with-current-buffer cache
 	(mew-flet

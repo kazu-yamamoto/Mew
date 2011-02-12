@@ -132,7 +132,9 @@
 (defvar mew-prog-delivery-status 'mew-mime-text/plain)
 (defvar mew-prog-postscript      mew-w32-exec)
 (defvar mew-prog-pgp-keys        '(mew-mime-pgp-keys mew-mime-pgp-keys-ext))
-(defvar mew-prog-pdf             mew-w32-exec)
+(defvar mew-prog-application/pdf "pdftotext")
+(defvar mew-prog-pdf-ext         mew-w32-exec)
+(defvar mew-prog-pdf             `(mew-mime-application/pdf ,mew-prog-pdf-ext))
 (defvar mew-prog-xml2            '(mew-mime-application/xml
 				   mew-mime-application/xml-ext))
 (defvar mew-prog-oasys           mew-w32-exec)

@@ -1,5 +1,7 @@
 Mew 6.3.51
 
+* pdftotext support for Windows.
+	Shuichi KITAGUCHI <ki>
 * &rest to mew-user-agent-compose for Emacs 24.
 	Harald Hanche-Olsen <hanche>
 * More gentle for broken Multipart/Signed.
