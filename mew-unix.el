@@ -93,11 +93,11 @@
 
 (defvar mew-prog-application/msexcel "xlhtml")
 (defvar mew-prog-msexcel-ext mew-prog-ooffice)
-(defvar mew-prog-msexcel `(mew-mime-application/msexcel mew-prog-msexcel-ext))
+(defvar mew-prog-msexcel `(mew-mime-application/msexcel ,mew-prog-msexcel-ext))
 
 (defvar mew-prog-application/mspowerpoint "ppthtml")
 (defvar mew-prog-mspowerpoint-ext mew-prog-ooffice)
-(defvar mew-prog-mspowerpoint `(mew-mime-application/mspowerpoint mew-prog-mspowerpoint-ext))
+(defvar mew-prog-mspowerpoint `(mew-mime-application/mspowerpoint ,mew-prog-mspowerpoint-ext))
 
 ;;;
 ;;; Misc

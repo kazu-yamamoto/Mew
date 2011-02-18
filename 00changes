@@ -1,5 +1,7 @@
 Mew 6.3.51
 
+* Fixing excel and powerpoint on Unix.
+	Kan Sasaki <sasaki@fcc.ad.jp>
 * pdftotext support for Windows.
 	Shuichi KITAGUCHI <ki>
 * &rest to mew-user-agent-compose for Emacs 24.
