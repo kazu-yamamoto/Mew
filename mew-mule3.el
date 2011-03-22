@@ -113,6 +113,7 @@
     ((ascii latin-jisx0201 japanese-jisx0208 japanese-jisx0208-1978)
                                iso-2022-jp "7bit"             "B" t)
     ((ascii korean-ksc5601)     euc-kr     "8bit"             "B" t)
+    ((ascii chinese-gbk)        gbk        "base64"           "B" t)
     ((ascii chinese-gb2312)     cn-gb-2312 "base64"           "B" t)
     ((ascii chinese-big5-1 chinese-big5-2)
                               chinese-big5 "base64"           "B" t)
@@ -152,6 +153,7 @@
     ("iso-8859-15"       iso-8859-15)
     ("iso-2022-cn"       iso-2022-cn)
     ("iso-2022-cn-ext"   iso-2022-cn-ext)
+    ("gbk"               gbk)
     ("gb2312"            cn-gb-2312) ;; should be before cn-gb
     ("cn-gb"             cn-gb-2312)
     ("hz-gb-2312"        hz-gb-2312)
