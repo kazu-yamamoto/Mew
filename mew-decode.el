@@ -546,7 +546,8 @@ Return a part syntax after moving the beginning of the content body."
 	    ;; Never reach here when decoding.
 	    (mew-decode-error (concat "Unknown CTE: " cte))
 	  (setq file (mew-make-temp-name))
-	  (mew-frwlet mew-cs-dummy mew-cs-text-for-write
+	  (mew-frwlet mew-cs-dummy mew-cs-text-for-net
+	    ;; Due to broken MUAs, we need to write CRLF.
 	    ;; NEVER use call-process-region for privacy reasons
 	    (write-region beg (point-max) file nil 'no-msg))
 	  (delete-region beg (point-max))
