@@ -579,6 +579,7 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	  (setq textp t)
 	  (setq cs (mew-charset-to-cs charset))
 	  (if (null cs) (setq cs mew-cs-autoconv)))))) ;; end of 'break
+    (set-buffer-multibyte nil)
     (when (and textp (mew-coding-system-p cs))
       (setq i 0)
       (while (and (not (eobp)) (< i I) (< j J))
@@ -597,6 +598,7 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	  (setq body (concat body (mew-buffer-substring beg (1- (point))) " "))
 	  (setq j (1+ j)))
 	(setq i (1+ i)))
+      (set-buffer-multibyte t)
       (setq body (mew-replace-white-space body))
       (setq body (condition-case nil
 		     (mew-cs-decode-string body cs)
