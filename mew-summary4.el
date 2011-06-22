@@ -1103,7 +1103,7 @@ See also 'mew-spam-prog' and 'mew-spam-prog-args."
 	 (if (= (point) beg)
 	     (message "Learning as spam...done")
 	   (setq end (1- (point)))
-	   (message (concat "Learned as spam: " (mew-buffer-substring beg end)))))))))
+	   (message "%s" (concat "Learned as spam: " (mew-buffer-substring beg end)))))))))
 
 (defun mew-summary-learn-ham ()
   "Learn that this message is a ham.
@@ -1127,7 +1127,7 @@ See also 'mew-ham-prog' and 'mew-ham-prog-args."
 	 (if (= (point) beg)
 	     (message "Learning as ham...done")
 	   (setq end (1- (point)))
-	   (message (concat "Learned as ham: " (mew-buffer-substring beg end)))))))))
+	   (message "%s" (concat "Learned as ham: " (mew-buffer-substring beg end)))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
