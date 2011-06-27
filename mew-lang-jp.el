@@ -119,6 +119,11 @@
 	 (ent (rassoc str mew-katakana-alist)))
     (if ent (car ent))))
 
+(defun mew-hankaku-kigou-code (ch)
+  (let* ((str (char-to-string ch))
+	 (ent (rassoc str mew-katakana-kigou-alist)))
+    (if ent (car ent))))
+
 (defun mew-zenkaku-katakana-region (beg end)
   (let (ch wk)
     (save-restriction
@@ -156,7 +161,7 @@
 	   ((setq wk (mew-hankaku-code ch))
 	    (delete-char -1)
 	    (insert (make-char mew-lc-jp ?\245 wk)))
-	   ((setq wk (mew-hankaku-code ch))
+	   ((setq wk (mew-hankaku-kigou-code ch))
 	    (delete-char -1)
 	    (insert (make-char mew-lc-jp ?\241 wk)))))))))
 
