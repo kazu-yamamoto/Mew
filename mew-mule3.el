@@ -213,6 +213,7 @@
 				    japanese-jisx0208-1978
 				    japanese-jisx0213-1
 				    japanese-jisx0213-2
+				    katakana-jisx0201
 				    unicode))
 
 (if (fboundp 'set-charset-priority)
