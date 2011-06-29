@@ -1,5 +1,7 @@
 Mew 6.3.51
 
+* Bug fixes for hankaku.
+	<tmurata> and Tatsuya Kinoshita <tats>
 * Avoiding broken end-of-line for quoted-printable.
 * Multibyte hack for Emacs 23 and 24.
 * Supporting GBK.
