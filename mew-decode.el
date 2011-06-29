@@ -1125,7 +1125,7 @@ Return a part syntax after moving the beginning of the content body."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2010 Mew developing team.
+;; Copyright (C) 1996-2011 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

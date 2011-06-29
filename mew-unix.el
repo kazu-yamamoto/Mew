@@ -13,7 +13,7 @@
 (defvar mew-format-xml  "%s.xml")
 
 (defvar mew-unix-browser "firefox")
-(defvar mew-unix-browser-arg `("%s"))
+(defvar mew-unix-browser-arg '("%s"))
 (defvar mew-unix-browser-form `(,mew-unix-browser ,mew-unix-browser-arg t))
 
 (defvar mew-prog-text/html           'mew-mime-text/html-w3m) ;; See w3m.el
@@ -110,7 +110,7 @@
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2010 Mew developing team.
+;; Copyright (C) 1996-2011 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without
