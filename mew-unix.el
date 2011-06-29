@@ -13,7 +13,7 @@
 (defvar mew-format-xml  "%s.xml")
 
 (defvar mew-unix-browser "firefox")
-(defvar mew-unix-browser-arg `("%s"))
+(defvar mew-unix-browser-arg '("%s"))
 (defvar mew-unix-browser-form `(,mew-unix-browser ,mew-unix-browser-arg t))
 
 (defvar mew-prog-text/html           'mew-mime-text/html-w3m) ;; See w3m.el

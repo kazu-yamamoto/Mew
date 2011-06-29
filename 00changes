@@ -1,5 +1,7 @@
 Mew 6.3.51
 
+* A hack for calling browser on Unix.
+	"Diogo F. S. Ramos" <diogofsr> and Tatsuya Kinoshita <tats>
 * Bug fixes for hankaku.
 	<tmurata> and Tatsuya Kinoshita <tats>
 * Avoiding broken end-of-line for quoted-printable.
