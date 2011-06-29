@@ -227,7 +227,7 @@ after ':'."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1999-2010 Mew developing team.
+;; Copyright (C) 1999-2011 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without
