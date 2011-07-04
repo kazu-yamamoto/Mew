@@ -177,6 +177,7 @@
     nil     mew-prog-plain     mew-icon-text)
    ("text/rfc822-headers" "\\.hdr$" nil
     mew-prog-rfc822-headers    mew-icon-message/rfc822)
+   ("text/csv"      "\\.csv$"   nil     mew-prog-text      mew-icon-text)
    ("text"         "^$"        nil     mew-prog-text      mew-icon-text)
    ;; Unknown CT: matches here.
    ("application/xml"               "\\.xml$"  mew-b64
