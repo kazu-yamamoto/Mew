@@ -1,5 +1,7 @@
 Mew 6.3.52
 
+* Catching up to stunnel 4.39.
+	Ryo ONODERA <ryo_on>
 * Supporting text/csv.
 	Tetsuya Toda <toda>
 
