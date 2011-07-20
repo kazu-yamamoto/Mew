@@ -17,7 +17,7 @@ Executable smew
     GHC-Options:        -Wall -O2
   Build-Depends:        base >= 4 && < 5, haskell98, easy-file,
                         containers, parsec, HDBC, HDBC-sqlite3
-  Other-Modules:        Msg Param Search Util Sql Parsec
+  Other-Modules:        Msg Param Search Util Sql
 Executable cmew
   Main-Is:              cmew.hs
   if impl(ghc >= 6.12)
@@ -31,5 +31,5 @@ Executable cmew
     Build-Depends:      Win32
   else
     Build-Depends:      unix
-  Other-Modules:        Msg Mail Sql Param Index Util Parsec
+  Other-Modules:        Msg Mail Sql Param Index Util
 

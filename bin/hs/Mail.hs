@@ -2,13 +2,15 @@
 
 module Mail (fileMsg) where
 
+import Control.Applicative
 import Data.Char
 import Data.Maybe
 import Data.Time
 import Locale
 import Msg
 import System.IO
-import Parsec
+import Text.Parsec
+import Text.Parsec.String
 
 ----------------------------------------------------------------
 
