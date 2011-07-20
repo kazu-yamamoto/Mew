@@ -45,16 +45,17 @@ unfold (l:ls) = unfold' $ break (== ':') l
       where
         key = map toLower k
         v   = dropWhile isSpace v'
-    vs  = takeWhile (\(c:_) -> isSpace c) ls
-    ls' = dropWhile (\(c:_) -> isSpace c) ls
+    vs  = takeWhile (isSpace . head) ls
+    ls' = dropWhile (isSpace . head) ls
 
 makeMsg :: FilePath -> Header -> Maybe Msg
 makeMsg folder hdr = messageID hdr >>= \vmyid ->
-  Just Msg { myid = vmyid
-           , path = folder
-           , paid = messagePaID hdr
-           , date = messageDate hdr
-           }
+  Just Msg { 
+      myid = vmyid
+    , path = folder
+    , paid = messagePaID hdr
+    , date = messageDate hdr
+    }
 
 ----------------------------------------------------------------
 
