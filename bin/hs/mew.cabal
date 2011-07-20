@@ -31,5 +31,5 @@ Executable cmew
     Build-Depends:      Win32
   else
     Build-Depends:      unix
-  Other-Modules:        Msg Mail Sql Param Index Stat Util Parsec
+  Other-Modules:        Msg Mail Sql Param Index Util Parsec
 
