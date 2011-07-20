@@ -111,6 +111,9 @@ private int Body_len = MAX_BODY_LEN;
 private int PrintNumOfMsg = NO;
 private int Suffix_len = 0;
 
+private int no_fld_flag = 0;
+private int default_fld_error_flag = 0;
+
 /****************************************************************
  *
  * prototype
@@ -261,8 +264,12 @@ ch_folder(char *folder) {
 		ch_mail_home(Mail_home);
 		if (p == NUL)
 			break;
-		if (chdir(p) != 0)
-			warn_exit("can't change folder to %s.", folder);
+		if (chdir(p) != 0) {
+			if( no_fld_flag != 0 )
+				default_fld_error_flag = 1;
+			else
+				warn_exit("can't change folder to %s.", folder);
+		}
 		break;
 	case '~':
 		ch_home();
@@ -886,6 +893,8 @@ exec_getfile(char **filename, char **foldername) {
 			while ((c = getchar()) != LF && c != EOF) ;
 		}
 		if (STRCMP(p, CHDIR) == 0) {
+			no_fld_flag = 0;
+			default_fld_error_flag = 0;
 			p = p + strlen(CHDIR);
 			while (*p == SP || *p == TAB) p++;
 			if (strlen(p) >= sizeof(Current_folder))
@@ -895,6 +904,8 @@ exec_getfile(char **filename, char **foldername) {
 			*foldername = Current_folder;
 			continue;
 		}
+		if(default_fld_error_flag != 0)
+			warn_exit("default folder is not exist.");
 		while (*p == SP || *p == TAB) p++;
 		if (isdigit((unsigned char)*p) == 0) continue;
 		*filename = p;
@@ -1075,6 +1086,7 @@ main(int argc, char **argv) {
 		switch (rest) { /* lim == 0 */
 		case 0:
 			set_fld_rng(&Folders[lim++], NULL, NULL);
+			no_fld_flag = 1;
 			break;
 		case 1:
 			set_fld_rng(&Folders[lim++], argv[Optind], NULL);
