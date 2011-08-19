@@ -1,5 +1,6 @@
 Mew 6.3.52
 
+* A bug of rescan is fixed finally!
 * mewl avoids causing error if a folder does not exist.
 	Masamichi HOSODA <trueroad>
 * Catching up to stunnel 4.39.

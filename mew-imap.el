@@ -1594,17 +1594,15 @@
 	 ((eq directive 'scan)
 	  (mew-biff-clear)
 	  (cond
-	   ((= rttl 0)
+	   ((or (= rttl 0) (null msgid))
 	    (mew-imap-message pnm "No new messages"))
 	   ((= rttl 1)
 	    (mew-imap-message pnm "1 message retrieved")
 	    (mew-lisp-save file msgid nil 'unlimit)
-	    ;; xxx
 	    (mew-net-invalid-cache-clean))
 	   (t
 	    (mew-imap-message pnm "%s messages retrieved" rttl)
 	    (mew-lisp-save file msgid nil 'unlimit)
-	    ;; xxx
 	    (mew-net-invalid-cache-clean))))
 	 ((eq directive 'exec)
 	  (if kils (mew-mark-exec-unlink bnm kils))
