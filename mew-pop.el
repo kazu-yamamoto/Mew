@@ -888,7 +888,7 @@
 	 ((eq directive 'scan)
 	  (mew-biff-clear)
 	  (cond
-	   ((= rttl 0)
+	   ((or (= rttl 0) (null uidl))
 	    (mew-pop-message pnm "No messages scanned"))
 	   ((= rttl 1)
 	    (mew-pop-message pnm "1 message scanned")
