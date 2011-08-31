@@ -2,13 +2,15 @@
 
 module Mail (fileMsg) where
 
+import Control.Applicative
 import Data.Char
 import Data.Maybe
 import Data.Time
 import Locale
 import Msg
 import System.IO
-import Parsec
+import Text.Parsec
+import Text.Parsec.String
 
 ----------------------------------------------------------------
 
@@ -43,16 +45,17 @@ unfold (l:ls) = unfold' $ break (== ':') l
       where
         key = map toLower k
         v   = dropWhile isSpace v'
-    vs  = takeWhile (\(c:_) -> isSpace c) ls
-    ls' = dropWhile (\(c:_) -> isSpace c) ls
+    vs  = takeWhile (isSpace . head) ls
+    ls' = dropWhile (isSpace . head) ls
 
 makeMsg :: FilePath -> Header -> Maybe Msg
 makeMsg folder hdr = messageID hdr >>= \vmyid ->
-  Just Msg { myid = vmyid
-           , path = folder
-           , paid = messagePaID hdr
-           , date = messageDate hdr
-           }
+  Just Msg { 
+      myid = vmyid
+    , path = folder
+    , paid = messagePaID hdr
+    , date = messageDate hdr
+    }
 
 ----------------------------------------------------------------
 

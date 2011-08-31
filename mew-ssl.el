@@ -259,7 +259,8 @@ A local port number can be obtained the process name after ':'. "
     (with-temp-buffer
       (call-process mew-prog-ssl nil t nil "-version")
       (goto-char (point-min))
-      (if (looking-at "stunnel 4\\.\\([0-9]+\\)")
+      (re-search-forward "^stunnel " nil t 1)
+      (if (looking-at "4\\.\\([0-9]+\\)")
 	  (progn
 	    (setq mew-ssl-ver 4)
 	    (setq mew-ssl-minor-ver (string-to-number (mew-match-string 1))))

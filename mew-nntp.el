@@ -626,7 +626,7 @@
 	    (mew-summary-folder-cache-save))))
 	 ((eq directive 'scan)
 	  (cond
-	   ((= rttl 0)
+	   ((or (= rttl 0) (null msgid))
 	    (mew-nntp-message pnm "No messages scanned"))
 	   ((= rttl 1)
 	    (mew-nntp-message pnm "1 message scanned")

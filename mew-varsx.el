@@ -162,7 +162,7 @@
    ("application/x-zip-compressed"  "\\.zip$" mew-b64
     mew-prog-unzip                  mew-icon-application/octet-stream)
    ("application/octet-stream"
-    "\\.tar$\\|\\.tar\\.\\|\\.gz$\\|\\.Z$\\|\\.taz$\\|\\.tgz$\\|\\.tbz$\\|\\.bz2?$\\|\\.lzh$\\|\\.bin$\\|\\.pgp$\\|\\.gpg$\\|\\.exe$\\|\\.dll$"
+    "\\.tar$\\|\\.tar\\.\\|\\.jar$\\|\\.gz$\\|\\.Z$\\|\\.taz$\\|\\.tgz$\\|\\.tbz$\\|\\.bz2?$\\|\\.lzh$\\|\\.bin$\\|\\.pgp$\\|\\.gpg$\\|\\.exe$\\|\\.dll$\\|\\.class$"
     mew-b64 mew-prog-octet-stream mew-icon-application/octet-stream)
    ;;
    ("text/html"     "\\.html?$" nil     mew-prog-html      mew-icon-text)
@@ -177,6 +177,7 @@
     nil     mew-prog-plain     mew-icon-text)
    ("text/rfc822-headers" "\\.hdr$" nil
     mew-prog-rfc822-headers    mew-icon-message/rfc822)
+   ("text/csv"      "\\.csv$"   nil     mew-prog-text      mew-icon-text)
    ("text"         "^$"        nil     mew-prog-text      mew-icon-text)
    ;; Unknown CT: matches here.
    ("application/xml"               "\\.xml$"  mew-b64
