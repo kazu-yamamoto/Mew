@@ -193,7 +193,7 @@ handleFile file ctl
             tm <- getChangeTime file
             case tm of
                 Just x  -> return . (dbmt <) . utctimeToInteger $ x
-                Nothing -> return False
+                Nothing -> (dbmt <) . utctimeToInteger <$> getModificationTime file
            else return False
     deleteMsgIfMoved msg = case dbModTime ctl of
       Nothing   -> return True

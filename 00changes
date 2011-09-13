@@ -1,4 +1,6 @@
 
+* cmew falls back to getModificationTime on Windows.
+	Masamichi HOSODA <trueroad>
 * Supporting Ruby 1.9.
 	Takahiro Kambe <taca>
 
