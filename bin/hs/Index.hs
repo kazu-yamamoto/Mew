@@ -68,17 +68,20 @@ toBeAdded msg = putStrLn $ "  " ++ path msg ++ " (to be added)"
 
 ----------------------------------------------------------------
 
-makeIndex :: Bool -> Bool -> FilePath -> FilePath -> String -> IO (Int, Int)
-makeIndex dryRun fullUpdate db dir re =
+makeIndex :: Bool -> Bool -> FilePath -> FilePath -> Regexp -> Maybe FilePath
+          -> IO (Int, Int)
+makeIndex dryRun fullUpdate db dir re msubdir =
   withNewDB db (not fullUpdate) $ \conn -> do
     createDB conn
     stime <- utctimeToInteger <$> getCurrentTime
     ctl <- makeControl conn
-    walkDirectory dir ctl
+    walkDirectory (getTargetDir msubdir) ctl
     indexDB conn
     unless dryRun $ setDBModtime conn stime
     results ctl
   where
+    getTargetDir Nothing       = dir
+    getTargetDir (Just subdir) = dir </> subdir
     makeControl conn = do
       let ctl0 = defaultCtl
       ctl1 <- makeControl1 ctl0 dir re
