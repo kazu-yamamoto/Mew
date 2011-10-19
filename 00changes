@@ -1,3 +1,4 @@
+Mew 6.4 stable release (2011/10/19)
 
 * cmew falls back to getModificationTime on Windows.
 	Masamichi HOSODA <trueroad>
