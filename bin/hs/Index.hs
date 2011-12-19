@@ -94,7 +94,9 @@ makeIndex dryRun fullUpdate db dir re msubdir =
 
 withNewDB :: FilePath -> Bool -> (Connection -> IO a) -> IO a
 withNewDB db repl action = do
-    when repl $ copyFile db newdb
+    when repl $ do
+        exist <- doesFileExist db
+        when exist $ copyFile db newdb
     ret <- withDB newdb action
     renameFile newdb db
     return ret
