@@ -10,8 +10,9 @@ import System.IO
 -- symbolic link to real link
 
 normalizePath :: FilePath -> IO FilePath
-normalizePath path = dropTrailingPathSeparator <$> (expandHome path >>= canonicalizePath)
+normalizePath path = dropTrailingPathSeparator <$> (expandHome path >>= realPath)
   where
+    realPath sym = canonicalizePath sym `catch` \_ -> return sym
     expandHome ""       = expandHome defaultMailDir
     expandHome ('~':cs) = do
         mhome <- getHomeDirectory2

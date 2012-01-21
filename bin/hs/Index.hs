@@ -68,17 +68,20 @@ toBeAdded msg = putStrLn $ "  " ++ path msg ++ " (to be added)"
 
 ----------------------------------------------------------------
 
-makeIndex :: Bool -> Bool -> FilePath -> FilePath -> String -> IO (Int, Int)
-makeIndex dryRun fullUpdate db dir re =
+makeIndex :: Bool -> Bool -> FilePath -> FilePath -> Regexp -> Maybe FilePath
+          -> IO (Int, Int)
+makeIndex dryRun fullUpdate db dir re msubdir =
   withNewDB db (not fullUpdate) $ \conn -> do
     createDB conn
     stime <- utctimeToInteger <$> getCurrentTime
     ctl <- makeControl conn
-    walkDirectory dir ctl
+    walkDirectory (getTargetDir msubdir) ctl
     indexDB conn
     unless dryRun $ setDBModtime conn stime
     results ctl
   where
+    getTargetDir Nothing       = dir
+    getTargetDir (Just subdir) = dir </> subdir
     makeControl conn = do
       let ctl0 = defaultCtl
       ctl1 <- makeControl1 ctl0 dir re
@@ -91,7 +94,9 @@ makeIndex dryRun fullUpdate db dir re =
 
 withNewDB :: FilePath -> Bool -> (Connection -> IO a) -> IO a
 withNewDB db repl action = do
-    when repl $ copyFile db newdb
+    when repl $ do
+        exist <- doesFileExist db
+        when exist $ copyFile db newdb
     ret <- withDB newdb action
     renameFile newdb db
     return ret
@@ -193,7 +198,7 @@ handleFile file ctl
             tm <- getChangeTime file
             case tm of
                 Just x  -> return . (dbmt <) . utctimeToInteger $ x
-                Nothing -> return False
+                Nothing -> (dbmt <) . utctimeToInteger <$> getModificationTime file
            else return False
     deleteMsgIfMoved msg = case dbModTime ctl of
       Nothing   -> return True

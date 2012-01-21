@@ -13,7 +13,31 @@ require 'sqlite3'
 require 'time'
 require 'fileutils'
 require 'find'
-require 'mailread'
+
+################################################################
+##
+## mail_header
+##
+##	Get header from mail message.  If multiple header field
+##	exists, last one will be used.
+##
+def mail_header(path)
+  @header = {}
+  value = nil
+  File.open(path) do |f|
+    while l = f.gets.chomp
+      next if /^From / =~ l
+      break if /^$/ =~ l
+      if /^\s+/ !~ l
+        (name, value) = l.split(/:\s+/, 2)
+        @header[name.downcase] = value
+      else
+        value << $'
+      end
+    end
+  end
+  return @header
+end
 
 ################################################################
 ##
@@ -159,7 +183,7 @@ def register(db, maildir, ignore_regex, target, last_mod)
         elsif st.file? and fpath =~ /\/[0-9]+(\.mew)?$/
           next if File.dirname(fpath) == skipdir
           next if last_mod > st.ctime.tv_sec
-          m = Mail.new(fpath) rescue next
+          m = mail_header(fpath) rescue next
           id = get_id(m)
           parid = get_parid(m)
           date = get_date(m)

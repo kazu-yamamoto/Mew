@@ -1,6 +1,6 @@
 			    <Differences>
 			    Kazu Yamamoto
-			   August 21, 2009
+			   October 19, 2011
 
 			   <Important Note>
 
@@ -14,6 +14,11 @@
     - mew-refile-guess-alist
     - mew-inbox-action-alist
     - All above in mew-config-alist
+
+	      <Differences between Mew 6.4 and Mew 6.3>
+
+* Zip support for reading and composing.
+* Many bug fixes.
 
 	      <Differences between Mew 6.3 and Mew 6.2>
 
