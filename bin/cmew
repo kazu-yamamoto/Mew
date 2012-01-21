@@ -29,7 +29,8 @@ def mail_header(path)
       next if /^From / =~ l
       break if /^$/ =~ l
       if /^\s+/ !~ l
-        (name, value) = l.split(/:\s+/, 2)
+        (name, value) = l.split(/:\s*/, 2)
+        value = '' if value.nil?
         @header[name.downcase] = value
       else
         value << $'
