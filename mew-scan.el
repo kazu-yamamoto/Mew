@@ -521,8 +521,8 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
     "^--"
     "^- --"
     "^=2D"
-    "^.*\\(:\\|;\\|/\\)[ \t]*$"
-    "^.*\\(wrote\\|writes?\\|said\\|says?\\)[^.!\n]?[ \t]*$"
+    "^.\\{1,100\\}\\(:\\|;\\|/\\)[ \t]*$"
+    "^.\\{1,100\\}\\(wrote\\|writes?\\|said\\|says?\\)[^.!\n]?[ \t]*$"
     "^[ \t]*\\(On\\|At\\) .*[^.! \t\n][ \t]*$"
     "^[ \t]*In \\(message\\|article\\|mail\\|news\\|<\\|\"\\|\\[\\|(\\)"))
 
