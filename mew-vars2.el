@@ -782,7 +782,7 @@ undo-func, exec-func, and sanity-fucn.")
 
 (defvar mew-inbox-action-alist nil
   "*This variable controls actions when retrieving messages.
-Currently this works only when '\\<mew-summary-mode-map>\\[mew-summary-retrieve]' with POP or 'mewl/incm'.
+Currently this works when '\\<mew-summary-mode-map>\\[mew-summary-retrieve]'.
 You can put any marks, typically 'o' and 'D' according to message
 headers.
 
