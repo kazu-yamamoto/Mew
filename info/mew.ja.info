@@ -15,8 +15,8 @@ END-INFO-DIR-ENTRY
 
 Indirect:
 mew.ja.info-1: 285
-mew.ja.info-2: 50350
-mew.ja.info-3: 100984
+mew.ja.info-2: 50394
+mew.ja.info-3: 101028
 
 Tag table:
 (Indirect)
@@ -38,93 +38,93 @@ Node: retrieving19351
 Node: moving21915
 Node: sum-write23480
 Node: features24937
-Node: status-update26467
-Node: invalid27169
-Node: Composing28466
-Node: header29974
-Node: cheader30648
-Node: addr-comp31853
-Node: addrbook32847
-Node: auto-alias34986
-Node: addr-comp135996
-Node: addr-comp237688
-Node: send39048
-Node: cite41152
-Node: mime-comp42553
-Node: charset-guess48132
-Node: longline50353
-Node: reply51489
-Node: forward54488
-Node: resend55080
-Node: shortcut56255
-Node: mark-b-comp59592
-Node: pgp-key62000
-Node: anonymous62575
-Node: Marks63550
-Node: unread mark64693
-Node: delete mark65565
-Node: refile mark67150
-Node: target mark68142
-Node: escape mark69204
-Node: unmark69719
-Node: mark change70336
-Node: sync71202
-Node: off-line71895
-Node: mew-mark73157
-Node: Refile73685
-Node: by-folder74833
-Node: by-alist76014
-Node: by-thread77668
-Node: by-from-folder78284
-Node: by-from79237
-Node: by-newsgroups80447
-Node: by-default80682
-Node: guess-rule81039
-Node: auto-refile82567
-Node: copy-msg84267
-Node: Virtual85136
-Node: selection86254
-Node: sorting86760
-Node: dialog88038
-Node: search88704
-Node: condition89345
-Node: dbsearch91083
-Node: keyword91958
-Node: thread92457
-Node: thread-op93256
-Node: Quit94571
-Node: Customize94994
-Node: summary-mode95682
-Node: message-mode98461
-Node: draft-mode100987
-Node: charset103082
-Node: highlight104708
-Node: hooks106749
-Node: pop110153
-Node: imap111235
-Node: nntp112245
-Node: smtp113366
-Node: config115105
-Node: config2119620
-Node: custom-misc120776
-Node: Tips121494
-Node: region122021
-Node: visiting122530
-Node: SSH122892
-Node: SSL123489
-Node: TLS125038
-Node: spam125749
-Node: spam2127501
-Node: addr-warn128620
-Node: biff129393
-Node: edit129876
-Node: Convention130637
-Node: Implementation131677
-Node: Avail133136
-Node: obtain133385
-Node: ml133610
-Node: Copyright133790
-Node: Variable Index134798
-Node: Key Index150124
+Node: status-update26511
+Node: invalid27213
+Node: Composing28510
+Node: header30018
+Node: cheader30692
+Node: addr-comp31897
+Node: addrbook32891
+Node: auto-alias35030
+Node: addr-comp136040
+Node: addr-comp237732
+Node: send39092
+Node: cite41196
+Node: mime-comp42597
+Node: charset-guess48176
+Node: longline50397
+Node: reply51533
+Node: forward54532
+Node: resend55124
+Node: shortcut56299
+Node: mark-b-comp59636
+Node: pgp-key62044
+Node: anonymous62619
+Node: Marks63594
+Node: unread mark64737
+Node: delete mark65609
+Node: refile mark67194
+Node: target mark68186
+Node: escape mark69248
+Node: unmark69763
+Node: mark change70380
+Node: sync71246
+Node: off-line71939
+Node: mew-mark73201
+Node: Refile73729
+Node: by-folder74877
+Node: by-alist76058
+Node: by-thread77712
+Node: by-from-folder78328
+Node: by-from79281
+Node: by-newsgroups80491
+Node: by-default80726
+Node: guess-rule81083
+Node: auto-refile82611
+Node: copy-msg84311
+Node: Virtual85180
+Node: selection86298
+Node: sorting86804
+Node: dialog88082
+Node: search88748
+Node: condition89389
+Node: dbsearch91127
+Node: keyword92002
+Node: thread92501
+Node: thread-op93300
+Node: Quit94615
+Node: Customize95038
+Node: summary-mode95726
+Node: message-mode98505
+Node: draft-mode101031
+Node: charset103126
+Node: highlight104752
+Node: hooks106793
+Node: pop110197
+Node: imap111279
+Node: nntp112289
+Node: smtp113410
+Node: config115149
+Node: config2119664
+Node: custom-misc120820
+Node: Tips121538
+Node: region122065
+Node: visiting122574
+Node: SSH122936
+Node: SSL123533
+Node: TLS125082
+Node: spam125793
+Node: spam2127545
+Node: addr-warn128664
+Node: biff129437
+Node: edit129920
+Node: Convention130681
+Node: Implementation131721
+Node: Avail133180
+Node: obtain133429
+Node: ml133654
+Node: Copyright133834
+Node: Variable Index134842
+Node: Key Index150168
 
 End tag table

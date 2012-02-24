@@ -15,14 +15,14 @@ END-INFO-DIR-ENTRY
 
 File: mew.ja.info, Node: Top, Next: Overview, Prev: (dir), Up: (dir)
 
-Mew 6.4 マニュアル
+Mew 6.5 マニュアル
 ******************
 
                                                               山本和彦
                                                        作成 1996/02/19
-                                                       更新 2011/06/29
+                                                       更新 2012/02/24
 
-このマニュアルでは、Mew バージョン 6.4 について解説します。このマニュア
+このマニュアルでは、Mew バージョン 6.5 について解説します。このマニュア
 ルの他に、Mew に関する有益な情報は Mew の公式ホームページ
 (http://www.Mew.org/)から得られるかもしれません。
 
@@ -80,7 +80,7 @@ File: mew.ja.info, Node: characteristic, Next: Emacsen, Prev: Overview, Up: Over
 Mew の特長
 ==========
 
-Mew バージョン 6.4 の特長を以下に示します。
+Mew バージョン 6.5 の特長を以下に示します。
 
    - 複雑な構造を持つメッセージを簡単に表示できます。メッセージを表示す
      る作業は、`SPC' を押すだけです。
@@ -1053,6 +1053,10 @@ Mew では、Summary モードに以下のような便利なコマンドが用�
      ドウマネージャのカットバッファに入る。
 `;'
      Received: フィールドを解析し、分りやすく Message モードに表示する。
+`Rd'
+     フォルダを削除する。
+`Rr'
+     フォルダの名前を変える。
 
 
 
@@ -1166,7 +1170,7 @@ File: mew.ja.info, Node: Composing, Next: header, Prev: invalid, Up: Top
      To:
      Subject:
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.4 on Emacs 22.3
+     X-Mailer: Mew version 6.5 on Emacs 22.3
      ----
 
 これを Draft モードといいます。Draft モードにおいて、"----" より上をヘッ
@@ -1644,7 +1648,7 @@ File: mew.ja.info, Node: send, Next: cite, Prev: addr-comp2, Up: Composing
      To: pooh
      Subject: 明日の日曜日
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.4 on Emacs 22.3
+     X-Mailer: Mew version 6.5 on Emacs 22.3
      ----
      明日の日曜日、遊びませんか？
 
@@ -1658,7 +1662,7 @@ File: mew.ja.info, Node: send, Next: cite, Prev: addr-comp2, Up: Composing
      To: winnie-the-pooh@example.net
      Subject: =?iso-2022-jp?B?GyRCTEBGfCRORnxNS0Z8GyhC?=
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.4 on Emacs 22.3
+     X-Mailer: Mew version 6.5 on Emacs 22.3
      Mime-Version: 1.0
      Content-Type: Text/Plain; charset=iso-2022-jp
      Content-Transfer-Encoding: 7bit
@@ -1786,7 +1790,7 @@ File: mew.ja.info, Node: mime-comp, Next: charset-guess, Prev: cite, Up: Composi
      To: mew-dist
      Subject: ここがヘッダ
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.4 on Emacs 22.3
+     X-Mailer: Mew version 6.5 on Emacs 22.3
      ----
      本文だよ。
 

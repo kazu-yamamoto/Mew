@@ -19,9 +19,9 @@
 @c Try "M-x texinfo-format-buffer" or makeinfo to get the Info.
 @end ifset
 
-@set version 6.4
-@set modified 2011/06/29
-@set X-Mailer Mew version 6.4 on Emacs 22.3
+@set version 6.5
+@set modified 2012/02/24
+@set X-Mailer Mew version 6.5 on Emacs 22.3
 
 @titlepage
 @sp 10
@@ -2527,6 +2527,8 @@ The same as @samp{E}. But, when used for other folders than +draft,
 @kindex C (Summary)
 @kindex = (Summary)
 @kindex ; (Summary)
+@kindex Rd (Summary)
+@kindex Rr (Summary)
 
 @ifset ja
 Mew では、Summary モードに以下のような便利なコマンドが用意されています。
@@ -2590,6 +2592,10 @@ PGP のバージョンを切替える(@xref{cipher-viewing})。
 ジャのカットバッファに入る。
 @item ;
 Received: フィールドを解析し、分りやすく Message モードに表示する。
+@item Rd
+フォルダを削除する。
+@item Rr
+フォルダの名前を変える。
 @end ifset
 @ifset en
 @item v
@@ -2652,6 +2658,10 @@ The full path to the message is set to the cut buffer of your
 window manager.
 @item ;
 Parse the Received: fields and display them in Message mode.
+@item Rd
+Delete this folder.
+@item Rr
+Rename this folder.
 @end ifset
 @end table
 
