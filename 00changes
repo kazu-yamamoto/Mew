@@ -1,7 +1,11 @@
 Mew 6.4.50
 
-* supporting stunnel 4.51.
+* Supporting stunnel 4.51.
 	Seiji Ariga <ariga>
+* Hilighting HTML produced by w3m.
+* Fixing regex of mew-regex-ignore-scan-body-list.
+	Tatsuya Kinoshita <tats>
+* Fixing cmew bugs.
 
 Mew 6.4 stable release (2011/10/19)
 
