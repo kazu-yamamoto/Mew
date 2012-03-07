@@ -214,7 +214,7 @@ A local port number can be obtained the process name after ':'. "
       (mew-ssl-set-string pnm string)
       (setq string (concat prev-str string))
       (cond
-       ((string-match "bound to" string)
+       ((string-match "bound \\(\\|FD=[0-9]+ \\)to" string)
 	(mew-ssl-set-status pnm t))
        ((string-match "gethostbyname: Valid name, no data record of requested type" string)
 	(mew-ssl-set-status pnm 'gethostbyname-failure))

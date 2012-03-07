@@ -1,3 +1,8 @@
+Mew 6.4.50
+
+* supporting stunnel 4.51.
+	Seiji Ariga <ariga>
+
 Mew 6.4 stable release (2011/10/19)
 
 * cmew falls back to getModificationTime on Windows.
