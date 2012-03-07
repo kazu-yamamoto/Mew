@@ -1,0 +1,88 @@
+Mew 6.4 stable release (2011/10/19)
+
+* cmew falls back to getModificationTime on Windows.
+	Masamichi HOSODA <trueroad>
+* Supporting Ruby 1.9.
+	Takahiro Kambe <taca>
+
+Mew 6.4 release candidate 1 (2011/09/06)
+
+* A bug of rescan is fixed finally!
+* mewl avoids causing error if a folder does not exist.
+	Masamichi HOSODA <trueroad>
+* Catching up to stunnel 4.39.
+	Ryo ONODERA <ryo_on>
+* Supporting text/csv.
+	Tetsuya Toda <toda>
+
+Mew 6.3.51 (2011/06/29)
+
+* A hack for calling browser on Unix.
+	"Diogo F. S. Ramos" <diogofsr> and Tatsuya Kinoshita <tats>
+* Bug fixes for hankaku.
+	<tmurata> and Tatsuya Kinoshita <tats>
+* Avoiding broken end-of-line for quoted-printable.
+* Multibyte hack for Emacs 23 and 24.
+* Supporting GBK.
+* Fixing excel and powerpoint on Unix.
+	Kan Sasaki <sasaki@fcc.ad.jp>
+* pdftotext support for Windows.
+	Shuichi KITAGUCHI <ki>
+* &rest to mew-user-agent-compose for Emacs 24.
+	Harald Hanche-Olsen <hanche>
+* More gentle for broken Multipart/Signed.
+	Eisaku YAMAGUCHI <eisaku>
+* Improving the documentation of mew-draft-use-format-flowed.
+	Christophe TROESTLER <Christophe.Troestler>
+* varsx hack.
+* Fixing regex of time.
+	Christophe TROESTLER <Christophe.Troestler>
+* Fixing major mode hooks.
+	Hayashi Masahiro <mhayashi1120>
+* Inline display of PDF with "pdftotext".
+	Hideyuki SHIRAI <shirai>
+	Harumitsu YOSHITAKE <yositake>
+* Text/Pdf for Thunderbird
+	Christophe TROESTLER <Christophe.Troestler>
+* Removing warnings for Emacs 23.3
+	Yu-ji Hosokawa <yu-ji>
+* Killing stunnel with -KILL since the spec of stunnel changed.
+* The -b option for mewest.
+	"Diogo F. S. Ramos" <diogofs>
+
+Mew 6.3.50 (2010/08/31)
+
+* Defining mew-draft-use-format-flowed.
+	Christophe TROESTLER <Christophe.Troestler>
+* Making use of mew-save-dir.
+* Fixing the hash-vs-array problem of cmew.
+	Masamichi HOSODA <trueroad>
+* Making cmew safer in the case where mewest works at the same time.
+	Masamichi HOSODA <trueroad>
+* Hack for mew-time-rfc-to-sortkey.
+	Hideyuki SHIRAI <shirai>
+* A patch for unzip.
+	Yu-ji Hosokawa <yu-ji>
+* Supporting unzip.
+* Bug fix for PGP/MIME of binary encryption.
+	Shoichi Kurosaka <sho>
+* Both cmew and smew in Haskell works well finally!
+	Shuichi KITAGUCHI <kit>
+* Fixing info/Makefile.
+	Yasuhiro KIMURA <yasu>
+* Guarding mew-addrbook-clean-up.
+	Hideyuki SHIRAI <shirai>
+* A bug fix of mew-mime-content-type.
+	Yu-ji Hosokawa <yu-ji>
+* Setting split-width-threshold to nil in mew-summary-reply.
+* "b" in Summary saves the buffer of Message mode to a file.
+* header-only now can work for M-x mew.
+* Bold of font can be specified on Emacs 23.
+* Deleting " " from global-mode-string.
+	Christophe TROESTLER <Christophe.Troestler>
+* Correcting the -P option of stunnel3.
+	Kendall Shaw <kshaw>
+* Define mew-sumsym-encode-folder and mew-sumsym-decode-folder.
+* set-buffer -> with-current-buffer.
+* Making mew-mime-image() safer.
+	Hideyuki SHIRAI <shirai>
