@@ -786,7 +786,7 @@ over the window. Type '\\[mew-summary-prev-page]' to see them when a message is 
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2011 Mew developing team.
+;; Copyright (C) 1996-2012 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without
