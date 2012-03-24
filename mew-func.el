@@ -1027,9 +1027,7 @@ and sets buffer-file-coding-system."
   (unless (file-exists-p mew-temp-dir)
     (mew-make-directory mew-temp-dir)) ;; just in case
   (if fname
-      ;; File name of a temporary file should be ASCII only.
-      (if (and (string-match "^[ -~]+$" fname)
-	       (not (file-exists-p (expand-file-name fname mew-temp-dir))))
+      (if (not (file-exists-p (expand-file-name fname mew-temp-dir)))
 	  (expand-file-name fname mew-temp-dir)	
 	(if (string-match "\\.[ -~]+$" fname)
 	    (concat (make-temp-name mew-temp-file) (mew-match-string 0 fname))
