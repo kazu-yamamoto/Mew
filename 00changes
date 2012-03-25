@@ -1,3 +1,8 @@
+Mew 6.5rc1
+
+* mew-make-temp-name allows non-ASCII characters
+	Yoshinari Nomura <nom>
+
 Mew 6.4.50 (2012/03/07)
 
 * Supporting stunnel 4.51.
