@@ -1,5 +1,7 @@
-Mew 6.5rc1
+Mew 6.5rc1 (2012/03/28)
 
+* Workaround of cmew for Ruby 1.9.
+	Tatsuya Kinoshita <tats>
 * mew-make-temp-name allows non-ASCII characters
 	Yoshinari Nomura <nom>
 
