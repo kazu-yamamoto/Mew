@@ -1,3 +1,10 @@
+Mew 6.5rc2
+
+* Supporting stunnel 4.53.
+	TAKANO Yuji <takachan>
+* Disabling libwrap.
+	ARAI Shun-ichi <hermes>
+
 Mew 6.5rc1 (2012/03/28)
 
 * Workaround of cmew for Ruby 1.9.

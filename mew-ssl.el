@@ -102,6 +102,8 @@ A file name of a certificate should be 'cert-hash.0'.
 	(insert (format "verify=%d\n" (mew-ssl-verify-level case)))
 	(insert "foreground=yes\n")
 	(insert "debug=debug\n")
+	(if (>= mew-ssl-minor-ver 45)
+	    (insert "libwrap=no\n"))
 	(if (>= mew-ssl-minor-ver 22)
 	    (insert "syslog=no\n"))
 	(insert "CApath=" (expand-file-name (mew-ssl-cert-directory case)) "\n")
@@ -231,7 +233,7 @@ A local port number can be obtained the process name after ':'. "
       (mew-ssl-set-string pnm string)
       (setq string (concat prev-str string))
       (cond
-       ((string-match "Negotiated ciphers\\|opened with SSL" string)
+       ((string-match "Negotiated \\|opened with SSL" string)
 	(mew-ssl-set-status pnm t))
        ((string-match "Failed to initialize" string)
 	(mew-ssl-set-status pnm t)) ;; xxx
