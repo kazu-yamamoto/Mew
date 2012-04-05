@@ -30,6 +30,8 @@ A file name of a certificate should be 'cert-hash.0'.
 (defvar mew-ssl-ver nil)
 (defvar mew-ssl-minor-ver nil)
 
+(defvar mew-ssl-libwrap nil)
+
 (defconst mew-ssl-process-exec-cnt 3)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -102,7 +104,7 @@ A file name of a certificate should be 'cert-hash.0'.
 	(insert (format "verify=%d\n" (mew-ssl-verify-level case)))
 	(insert "foreground=yes\n")
 	(insert "debug=debug\n")
-	(if (>= mew-ssl-minor-ver 45)
+	(if (and mew-ssl-libwrap (>= mew-ssl-minor-ver 45))
 	    (insert "libwrap=no\n"))
 	(if (>= mew-ssl-minor-ver 22)
 	    (insert "syslog=no\n"))
@@ -266,7 +268,9 @@ A local port number can be obtained the process name after ':'. "
 	  (progn
 	    (setq mew-ssl-ver 4)
 	    (setq mew-ssl-minor-ver (string-to-number (mew-match-string 1))))
-	(setq mew-ssl-ver 3)))))
+	(setq mew-ssl-ver 3))
+      (when (re-search-forward "LIBWRAP" nil t)
+	(setq mew-ssl-libwrap t)))))
 
 (provide 'mew-ssl)
 
