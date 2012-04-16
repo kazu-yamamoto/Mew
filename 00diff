@@ -1,6 +1,6 @@
 			    <Differences>
 			    Kazu Yamamoto
-			   October 19, 2011
+			    April 16, 2012
 
 			   <Important Note>
 
@@ -14,6 +14,12 @@
     - mew-refile-guess-alist
     - mew-inbox-action-alist
     - All above in mew-config-alist
+
+	      <Differences between Mew 6.5 and Mew 6.4>
+
+* Catching up to latest "stunnel".
+* Catching up to Ruby 1.9.
+* Highlighting HTML produced by "w3m".
 
 	      <Differences between Mew 6.4 and Mew 6.3>
 
