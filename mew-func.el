@@ -1027,11 +1027,14 @@ and sets buffer-file-coding-system."
   (unless (file-exists-p mew-temp-dir)
     (mew-make-directory mew-temp-dir)) ;; just in case
   (if fname
-      (if (not (file-exists-p (expand-file-name fname mew-temp-dir)))
-	  (expand-file-name fname mew-temp-dir)	
-	(if (string-match "\\.[ -~]+$" fname)
-	    (concat (make-temp-name mew-temp-file) (mew-match-string 0 fname))
-	  (make-temp-name mew-temp-file)))
+      (let ((exist (file-exists-p (expand-file-name fname mew-temp-dir))))
+	(if (and (not exist)
+		 (or (not (featurep 'meadow))
+		     (string-match "^[ -~]+$" fname)))
+	    (expand-file-name fname mew-temp-dir)
+	  (if (string-match "\\.[ -~]+$" fname)
+	      (concat (make-temp-name mew-temp-file) (mew-match-string 0 fname))
+	    (make-temp-name mew-temp-file))))
     (make-temp-name mew-temp-file)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
