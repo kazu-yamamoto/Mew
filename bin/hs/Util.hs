@@ -1,6 +1,9 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+
 module Util where
 
 import Control.Applicative
+import Control.Exception as E
 import Data.List
 import Param
 import System.EasyFile
@@ -12,7 +15,7 @@ import System.IO
 normalizePath :: FilePath -> IO FilePath
 normalizePath path = dropTrailingPathSeparator <$> (expandHome path >>= realPath)
   where
-    realPath sym = canonicalizePath sym `catch` \_ -> return sym
+    realPath sym = canonicalizePath sym `E.catch` \(_::SomeException) -> return sym
     expandHome ""       = expandHome defaultMailDir
     expandHome ('~':cs) = do
         mhome <- getHomeDirectory2

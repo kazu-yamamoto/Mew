@@ -6,9 +6,9 @@ import Control.Applicative
 import Data.Char
 import Data.Maybe
 import Data.Time
-import Locale
 import Msg
 import System.IO
+import System.Locale
 import Text.Parsec
 import Text.Parsec.String
 
@@ -102,11 +102,11 @@ parseMaybe p cs = either (const Nothing) Just (parse p "" cs)
 
 msgid :: Parser String
 msgid = do
-    char '<'
+    _ <- char '<'
     left  <- many1 (oneOf dotAtom)
-    char '@'
+    _ <- char '@'
     right <- many1 (oneOf dotAtom)
-    char '>'
+    _ <- char '>'
     spaces
     return $ "<" ++ left ++ "@" ++ right ++ ">"
   where
