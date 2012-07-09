@@ -10,13 +10,18 @@
 ESTCMD=estcmd
 FIND=find
 RM=rm
+MV=mv
+CP=cp
 MKDIR=mkdir
+
 BASEDIR=${HOME}/Mail
-INDEXDIR_ORG=casket
+
+CASKETDIR=${HOME}/Mail
+INDEXDIR=casket
 INDEXDIR_REPLICA=casket_replica
-INDEXDIR=${INDEXDIR_ORG}
+
 OUTPUT=${OUTPUT:-/dev/null}
-LOCK=${BASEDIR}/.mewest.lock
+LOCK=${CASKETDIR}/.mewest.lock
 CYGWINENV=no
 SUFFIX=${SUFFIX:-.mew}
 
@@ -49,8 +54,8 @@ cleanup_exit () {
 }
 
 clean_up_replica () {
-    if [ -d "${BASEDIR}/${INDEXDIR_REPLICA}" ]; then
-	rm -fr "${BASEDIR}/${INDEXDIR_REPLICA}"
+    if [ -d "${CASKETDIR}/${INDEXDIR_REPLICA}" ]; then
+	${RM} -fr "${CASKETDIR}/${INDEXDIR_REPLICA}"
     fi
 }
 
@@ -143,14 +148,14 @@ if [ ! -d "${TGTDIR}" ]; then
     cleanup_exit "${TGTDIR} not found"
 fi
 
-if [ -d "${BASEDIR}/${INDEXDIR}" ]; then
+if [ -d "${CASKETDIR}/${INDEXDIR}" ]; then
     echo "Replicating index..."
     clean_up_replica
-    cp -R "${BASEDIR}/${INDEXDIR}" "${BASEDIR}/${INDEXDIR_REPLICA}"
+    ${CP} -R "${CASKETDIR}/${INDEXDIR}" "${CASKETDIR}/${INDEXDIR_REPLICA}"
     INDEXDIR=${INDEXDIR_REPLICA}
     echo "Replicating index...done"
     echo "Purging old messages..."
-    ${ESTCMD} purge "`path_conv \"${BASEDIR}/${INDEXDIR}\"`" "`path_conv \"${TGTDIR}\"`" > ${OUTPUT} ||\
+    ${ESTCMD} purge "`path_conv \"${CASKETDIR}/${INDEXDIR}\"`" "`path_conv \"${TGTDIR}\"`" > ${OUTPUT} ||\
       cleanup_exit "Purging old messages...failed"
     echo "Purging old messages...done"
 fi
@@ -161,17 +166,17 @@ echo "Indexing new messages..."
 
 ${FIND} "`path_conv \"${TGTDIR}\"`" \
   -type d -name "trash" -prune -o \
-  -type d -name ${INDEXDIR_ORG} -prune -o \
+  -type d -name ${INDEXDIR} -prune -o \
   -type d -name ${INDEXDIR_REPLICA} -prune -o \
   -type f \( -name "[0-9]" -o -name "[0-9]*[0-9]" -o -name "[0-9]*${SUFFIX}" \) -print |\
-  ${ESTCMD} gather -cl -fm -cm -sd -xh "`path_conv \"${BASEDIR}/${INDEXDIR}\"`" - > ${OUTPUT} ||\
+  ${ESTCMD} gather -cl -fm -cm -sd -xh "`path_conv \"${CASKETDIR}/${INDEXDIR}\"`" - > ${OUTPUT} ||\
     cleanup_exit "Indexing new messages...failed"
 
 echo "Indexing new messages...done"
-if [ "${BASEDIR}/${INDEXDIR}" = "${BASEDIR}/${INDEXDIR_REPLICA}" ]; then
+if [ "${CASKETDIR}/${INDEXDIR}" = "${CASKETDIR}/${INDEXDIR_REPLICA}" ]; then
     echo "Replacing old index with new one..."
-    rm -fr "${BASEDIR}/${INDEXDIR_ORG}"
-    mv "${BASEDIR}/${INDEXDIR_REPLICA}" "${BASEDIR}/${INDEXDIR_ORG}"
+    ${RM} -fr "${CASKETDIR}/${INDEXDIR}"
+    ${MV} "${CASKETDIR}/${INDEXDIR_REPLICA}" "${CASKETDIR}/${INDEXDIR}"
     echo "Replacing old index with new one...done"
 fi
 
