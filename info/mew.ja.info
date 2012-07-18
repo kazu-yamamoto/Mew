@@ -16,7 +16,7 @@ END-INFO-DIR-ENTRY
 Indirect:
 mew.ja.info-1: 285
 mew.ja.info-2: 50394
-mew.ja.info-3: 101028
+mew.ja.info-3: 101025
 
 Tag table:
 (Indirect)
@@ -87,44 +87,44 @@ Node: selection86298
 Node: sorting86804
 Node: dialog88082
 Node: search88748
-Node: condition89389
-Node: dbsearch91127
-Node: keyword92002
-Node: thread92501
-Node: thread-op93300
-Node: Quit94615
-Node: Customize95038
-Node: summary-mode95726
-Node: message-mode98505
-Node: draft-mode101031
-Node: charset103126
-Node: highlight104752
-Node: hooks106793
-Node: pop110197
-Node: imap111279
-Node: nntp112289
-Node: smtp113410
-Node: config115149
-Node: config2119664
-Node: custom-misc120820
-Node: Tips121538
-Node: region122065
-Node: visiting122574
-Node: SSH122936
-Node: SSL123533
-Node: TLS125082
-Node: spam125793
-Node: spam2127545
-Node: addr-warn128664
-Node: biff129437
-Node: edit129920
-Node: Convention130681
-Node: Implementation131721
-Node: Avail133180
-Node: obtain133429
-Node: ml133654
-Node: Copyright133834
-Node: Variable Index134842
-Node: Key Index150168
+Node: condition89386
+Node: dbsearch91124
+Node: keyword91999
+Node: thread92498
+Node: thread-op93297
+Node: Quit94612
+Node: Customize95035
+Node: summary-mode95723
+Node: message-mode98502
+Node: draft-mode101028
+Node: charset103123
+Node: highlight104749
+Node: hooks106790
+Node: pop110194
+Node: imap111276
+Node: nntp112286
+Node: smtp113407
+Node: config115146
+Node: config2119661
+Node: custom-misc120817
+Node: Tips121535
+Node: region122062
+Node: visiting122571
+Node: SSH122933
+Node: SSL123530
+Node: TLS125079
+Node: spam125790
+Node: spam2127542
+Node: addr-warn128661
+Node: biff129434
+Node: edit129917
+Node: Convention130678
+Node: Implementation131718
+Node: Avail133177
+Node: obtain133426
+Node: ml133651
+Node: Copyright133831
+Node: Variable Index134839
+Node: Key Index150165
 
 End tag table

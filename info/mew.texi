@@ -9173,7 +9173,7 @@ Mew provides the following method to search messages:
 現在のフォルダで、条件に合致したメッセージからセレクションを作る。入力
 された条件によって、@samp{mewl} か @samp{grep} のどちらかが呼ばれる。
 @item C-u/
-リージョンを指定した @samp{C-u/}。
+リージョンを指定した @samp{/}。
 @end ifset
 @ifset en
 @item ?
