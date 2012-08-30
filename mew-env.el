@@ -42,7 +42,7 @@ requires PTY.")
 
 (if window-system (require 'faces))
 
-(defvar mew-icon-p (featurep 'tool-bar))
+(defvar mew-icon-p (and (featurep 'tool-bar) window-system))
 
 (defvar mew-internal-utf-8p nil)
 (if (or (fboundp 'utf-translate-cjk-mode) ;; Emacs 22.1 or later
