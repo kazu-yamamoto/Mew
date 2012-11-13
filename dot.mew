@@ -93,7 +93,7 @@
 ;;;
 ;;; Using "w3m" with "emacs-w3m"
 ;;;
-;;; w3m: please use w3m-m17n based on m3m 0.2.5 (or greater maybe).
+;;; w3m: please use w3m-m17n based on w3m 0.2.5 (or greater maybe).
 ;;;	http://www2u.biglobe.ne.jp/~hsaka/w3m/
 ;;;
 ;;; emacs-w3m:
