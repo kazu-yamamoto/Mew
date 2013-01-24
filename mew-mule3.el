@@ -117,8 +117,8 @@
     ((ascii chinese-gb2312)     cn-gb-2312 "base64"           "B" t)
     ((ascii chinese-big5-1 chinese-big5-2)
                               chinese-big5 "base64"           "B" t)
-    ((ascii japanese-jisx0208 japanese-jisx0213-1 japanese-jisx0213-2)
-                             iso-2022-jp-3 "7bit"             "B" t)
+;;    ((ascii japanese-jisx0208 japanese-jisx0213-1 japanese-jisx0213-2)
+;;                             iso-2022-jp-3 "7bit"             "B" t)
     (nil utf-7 "7bit" "Q" t) ;; xxx
     (nil utf-8 ,mew-charset-utf-8-encoding ,mew-charset-utf-8-header-encoding t)
     (nil iso-2022-jp-2 "7bit" "B" t)))
