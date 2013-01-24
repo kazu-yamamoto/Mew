@@ -2,6 +2,7 @@
 (defvar ange-ftp-generate-anonymous-password nil)
 (defvar ange-ftp-tmp-name-template nil)
 (defvar auto-image-file-mode nil)
+(defvar bidi-paragraph-direction nil)
 (defvar coding-category-list nil)
 (defvar current-menubar nil)
 (defvar default-file-name-coding-system nil)

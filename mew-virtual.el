@@ -36,6 +36,8 @@
   (setq buffer-read-only t)
   (setq truncate-lines t)
   ;;
+  (if (boundp 'bidi-paragraph-direction)
+      (setq bidi-paragraph-direction 'left-to-right))
   (make-local-variable 'tab-width)
   (make-local-variable 'search-invisible)
   (setq search-invisible nil)
