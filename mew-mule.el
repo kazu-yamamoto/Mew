@@ -77,6 +77,23 @@
 ;;;
 ;;;
 
+(defun mew-file-guess-coding-system (file)
+  (with-temp-buffer
+    (kill-local-variable 'find-file-literally)
+    (set-buffer-multibyte t)
+    (insert-file-contents file nil 0 1024)
+    buffer-file-coding-system))
+
+(defun mew-cs-strip-lineinfo (cs)
+  (let ((str (symbol-name cs)))
+    (if (string-match "-\\(unix\\|mac\\|dos\\)$" str)
+	(intern (substring str 0 (match-beginning 0)))
+      cs)))
+
+;;;
+;;;
+;;;
+
 (defun mew-cs-to-charset (cs)
   (let ((dcsdb (mew-assoc-equal cs mew-cs-database-for-decoding 1)))
     (if (null dcsdb)

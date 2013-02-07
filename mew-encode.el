@@ -556,6 +556,8 @@
 (defvar mew-ask-encoding t)
 (defvar mew-default-encoding mew-b64)
 
+(defvar mew-draft-keep-text-charset t)
+
 (defun mew-encode-mime-body (ctl cte file no-encoding)
   ;; If file is 't', target is buffered.
   ;; text should be buffered
@@ -584,6 +586,11 @@
 	    (mew-encode-error
 	     (format "Unknown coding system %s in the body"
 		     (symbol-name cs)))))
+	;; If a user want to keep text charset,
+	(when (and mew-draft-keep-text-charset (null charset))
+	  (let ((cs (mew-cs-strip-lineinfo
+		     (mew-file-guess-coding-system file))))
+	    (if cs (setq charset (mew-cs-to-charset cs)))))
 	(mew-frwlet (or cs mew-cs-autoconv) mew-cs-dummy
 	  (mew-insert-file-contents file)))
       ;; A user may specify charset to convey JIS X 0201 Katakana.
