@@ -556,7 +556,7 @@
 (defvar mew-ask-encoding t)
 (defvar mew-default-encoding mew-b64)
 
-(defvar mew-draft-keep-text-charset t)
+(defvar mew-draft-keep-text-charset nil)
 
 (defun mew-encode-mime-body (ctl cte file no-encoding)
   ;; If file is 't', target is buffered.
