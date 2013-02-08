@@ -18,7 +18,7 @@ mew.info-1: 282
 mew.info-2: 50863
 mew.info-3: 101543
 mew.info-4: 153559
-mew.info-5: 214417
+mew.info-5: 214416
 
 Tag table:
 (Indirect)
@@ -124,9 +124,9 @@ Node: Convention191666
 Node: Implementation193734
 Node: Avail196097
 Node: obtain196404
-Node: ml196697
-Node: Copyright197093
-Node: Variable Index199042
-Node: Key Index214420
+Node: ml196696
+Node: Copyright197092
+Node: Variable Index199041
+Node: Key Index214419
 
 End tag table

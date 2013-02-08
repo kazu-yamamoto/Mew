@@ -1223,9 +1223,9 @@ The latest Mew is available from the following repository.
 
      http://www.Mew.org/Release/
 
-If you want to know about CVS versions of Mew, please refer to:
+If you want to know about Git versions of Mew, please refer to:
 
-     http://www.mew.org/anoncvs/
+     http://www.mew.org/ja/git/
 
 
 
@@ -1255,7 +1255,7 @@ Copyright
 
 Mew conforms the following copyright.
 
-Copyright (C) 1994-2011 Mew developing team.
+Copyright (C) 1994-2013 Mew developing team.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -1319,8 +1319,8 @@ Variable Index
 * mew-case-guess-alist:         config.                 (line   5)
 * mew-case-guess-when-composed: config.
 * mew-case-guess-when-prepared: config.
-* mew-case-guess-when-replied:  config.
 * mew-case-guess-when-replied-alist: config.            (line   5)
+* mew-case-guess-when-replied:  config.
 * mew-cc:                       draft-mode.             (line   5)
 * mew-charset-latin:            charset.                (line   5)
 * mew-charset-m17n:             charset.                (line   5)
@@ -1358,8 +1358,8 @@ Variable Index
 * mew-flowed-fold-threshold:    longline.               (line   5)
 * mew-from:                     draft-mode.             (line   5)
 * mew-from-list:                cheader.                (line   5)
-* mew-ham-prog:                 spam2.                  (line   5)
 * mew-ham-prog-args:            spam2.                  (line   5)
+* mew-ham-prog:                 spam2.                  (line   5)
 * mew-header-alist:             draft-mode.             (line   5)
 * mew-header-max-length:        analysis.
 * mew-header-mode-hook:         hooks.
@@ -1392,20 +1392,18 @@ Variable Index
 * mew-lisp-max-length:          by-from.                (line   5)
 * mew-lisp-max-length:          by-thread.              (line   5)
 * mew-mail-address-list:        reply.                  (line   5)
+* mew-mail-domain-list:         cheader.                (line   5)
 * mew-mailbox-type:             config.                 (line   5)
 * mew-mailbox-type:             configuration.          (line   5)
 * mew-mailbox-type:             retrieving.             (line   5)
 * mew-mailbox-type:             start.                  (line   5)
-* mew-mail-domain-list:         cheader.                (line   5)
 * mew-make-message-hook:        hooks.
-* mew-mbox-command:             configuration.          (line   5)
 * mew-mbox-command-arg:         configuration.          (line   5)
+* mew-mbox-command:             configuration.          (line   5)
 * mew-message-hook:             hooks.
 * mew-message-mode-hook:        hooks.
 * mew-mime-multipart-alternative-list: message-mode.    (line   5)
 * mew-name:                     configuration.          (line   5)
-* mew-nntp2-flush-hook:         hooks.
-* mew-nntp2-sentinel-hook:      hooks.
 * mew-nntp-header-only:         nntp.
 * mew-nntp-header-only:         retrieving.             (line   5)
 * mew-nntp-msgid-domain:        nntp.
@@ -1419,10 +1417,12 @@ Variable Index
 * mew-nntp-ssl:                 nntp.
 * mew-nntp-ssl-port:            nntp.
 * mew-nntp-user:                nntp.
+* mew-nntp2-flush-hook:         hooks.
+* mew-nntp2-sentinel-hook:      hooks.
 * mew-pack-hook:                hooks.
 * mew-pick-pattern-list:        condition.              (line   5)
-* mew-pop-auth:                 pop.
 * mew-pop-auth-list:            pop.
+* mew-pop-auth:                 pop.
 * mew-pop-body-lines:           pop.
 * mew-pop-delete:               pop.
 * mew-pop-delete:               retrieving.             (line   5)
@@ -1432,12 +1432,12 @@ Variable Index
 * mew-pop-sentinel-non-biff-hook: hooks.
 * mew-pop-server:               pop.
 * mew-pop-size:                 pop.
-* mew-pop-ssh-server:           pop.
 * mew-pop-ssh-server:           SSH.                    (line   5)
-* mew-pop-ssl:                  pop.
+* mew-pop-ssh-server:           pop.
 * mew-pop-ssl:                  SSL.                    (line   5)
-* mew-pop-ssl-port:             pop.
+* mew-pop-ssl:                  pop.
 * mew-pop-ssl-port:             SSL.                    (line   5)
+* mew-pop-ssl-port:             pop.
 * mew-pop-user:                 configuration.          (line   5)
 * mew-pop-user:                 pop.
 * mew-post-hook:                hooks.
@@ -1446,12 +1446,12 @@ Variable Index
 * mew-prog-gpg:                 cipher-viewing.         (line   5)
 * mew-prog-grep:                condition.              (line   5)
 * mew-prog-grep-opts:           condition.              (line   5)
-* mew-prog-msexcel:             message-mode.           (line   5)
 * mew-prog-msexcel-ext:         message-mode.           (line   5)
-* mew-prog-mspowerpoint:        message-mode.           (line   5)
+* mew-prog-msexcel:             message-mode.           (line   5)
 * mew-prog-mspowerpoint-ext:    message-mode.           (line   5)
-* mew-prog-msword:              message-mode.           (line   5)
+* mew-prog-mspowerpoint:        message-mode.           (line   5)
 * mew-prog-msword-ext:          message-mode.           (line   5)
+* mew-prog-msword:              message-mode.           (line   5)
 * mew-prog-pgp:                 cipher-viewing.         (line   5)
 * mew-prog-pgp2:                cipher-viewing.         (line   5)
 * mew-prog-pgp5:                cipher-viewing.         (line   5)
@@ -1472,8 +1472,8 @@ Variable Index
 * mew-refile-guess-alist:       by-alist.               (line   5)
 * mew-refile-guess-by-from-learn-hook: hooks.
 * mew-refile-guess-control:     guess-rule.             (line   5)
-* mew-refile-guess-from-me-is-special: by-from.         (line   5)
 * mew-refile-guess-from-me-is-special: by-from-folder.  (line   5)
+* mew-refile-guess-from-me-is-special: by-from.         (line   5)
 * mew-refile-guess-strip-domainpart: by-default.        (line   5)
 * mew-reply-all-alist:          reply.                  (line   5)
 * mew-reply-fromme-alist:       reply.                  (line   5)
@@ -1497,28 +1497,28 @@ Variable Index
 * mew-smtp-server:              configuration.          (line   5)
 * mew-smtp-server:              smtp.
 * mew-smtp-ssh-server:          smtp.
-* mew-smtp-ssl:                 smtp.
 * mew-smtp-ssl:                 SSL.                    (line   5)
 * mew-smtp-ssl-port:            smtp.
+* mew-smtp-ssl:                 smtp.
 * mew-smtp-user:                smtp.
-* mew-sort-default-key:         sorting.                (line   5)
 * mew-sort-default-key-alist:   sorting.                (line   5)
+* mew-sort-default-key:         sorting.                (line   5)
 * mew-sort-hook:                hooks.
 * mew-sort-key-alist:           sorting.                (line   5)
-* mew-spam:                     spam.                   (line   5)
-* mew-spam-prog:                spam2.                  (line   5)
 * mew-spam-prog-args:           spam2.                  (line   5)
+* mew-spam-prog:                spam2.                  (line   5)
+* mew-spam:                     spam.                   (line   5)
 * mew-ssl-cert-directory:       SSL.                    (line   5)
 * mew-ssl-verify-level:         SSL.                    (line   5)
 * mew-status-update-hook:       hooks.
 * mew-summary-delete-folder-hook: hooks.
 * mew-summary-exec-hook:        hooks.
-* mew-summary-form:             summary-mode.           (line   5)
 * mew-summary-form-extract-rule: summary-mode.          (line   5)
 * mew-summary-form-from-me-prefix: summary-mode.        (line   5)
 * mew-summary-form-mark-delete: summary-mode.           (line   5)
 * mew-summary-form-mark-review: summary-mode.           (line   5)
 * mew-summary-form-mark-spam:   summary-mode.           (line   5)
+* mew-summary-form:             summary-mode.           (line   5)
 * mew-summary-ls-no-scan-hook:  hooks.
 * mew-summary-mark-direction:   summary-mode.           (line   5)
 * mew-summary-mode-hook:        hooks.
@@ -1535,8 +1535,8 @@ Variable Index
 * mew-use-8bit:                 smtp.
 * mew-use-8bit:                 status-update.          (line   5)
 * mew-use-alternative:          analysis.
-* mew-use-biff:                 biff.                   (line   5)
 * mew-use-biff-bell:            biff.                   (line   5)
+* mew-use-biff:                 biff.                   (line   5)
 * mew-use-cached-passwd:        password.               (line   5)
 * mew-use-cursor-mark:          highlight.              (line   5)
 * mew-use-fast-refile:          by-folder.              (line   5)
@@ -1555,7 +1555,6 @@ Variable Index
 * mew-use-node-folder:          by-folder.              (line   5)
 * mew-use-old-pgp:              shortcut.               (line   5)
 * mew-use-old-pgp:              status-update.          (line   5)
-* mew-user:                     configuration.          (line   5)
 * mew-use-samba-encoding:       custom-misc.            (line   5)
 * mew-use-smtp-auth:            smtp.
 * mew-use-text-body:            analysis.
@@ -1563,6 +1562,7 @@ Variable Index
 * mew-use-text/xml:             analysis.
 * mew-use-thread-separator:     thread.                 (line   5)
 * mew-use-unread-mark:          unread mark.            (line   5)
+* mew-user:                     configuration.          (line   5)
 * mew-virtual-mode-hook:        hooks.
 * mew-visit-inbox-after-setting-case: visiting.         (line   5)
 * mew-visit-queue-after-sending: visiting.              (line   5)
