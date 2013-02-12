@@ -95,7 +95,7 @@
 ;;;
 
 (defun mew-cs-to-charset (cs)
-  (let ((dcsdb (mew-assoc-equal cs mew-cs-database-for-decoding 1)))
+  (let ((dcsdb (mew-assoc-equal cs mew-cs-database-for-decoding 1 'coding-system-equal)))
     (if (null dcsdb)
 	(mew-charset-m17n)
       (mew-dcsdb-get-charset dcsdb))))

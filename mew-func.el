@@ -139,12 +139,13 @@ This is O(N^2). So, do not use this function with a large LST."
 ;;; Associative list functions
 ;;;
 
-(defun mew-assoc-equal (key alist nth)
-  (let (n)
+(defun mew-assoc-equal (key alist nth &optional equal-func)
+  (let ((func (or equal-func 'equal))
+	n)
     (catch 'loop
       (dolist (a alist)
 	(setq n (nth nth a))
-	(if (or (equal n key) (eq n t)) (throw 'loop a))))))
+	(if (or (funcall func n key) (eq n t)) (throw 'loop a))))))
 
 (defun mew-assoc-case-equal (key alist nth)
   (let ((skey (downcase key)) n)
