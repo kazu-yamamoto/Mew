@@ -167,6 +167,7 @@
     ("iso-2022-jp-3"     iso-2022-jp-3)
     ("euc-jp"            euc-japan)
     ("shift_jis"         shift_jis)
+    ("windows-31j"       cp932)
     ("tis-620"           tis-620)
     ("koi8-r"            koi8-r)
     ("iso-2022-int-1"    iso-2022-int-1)
