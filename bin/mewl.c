@@ -348,7 +348,7 @@ nextfield(char *p, char *lim, char **truncated_end, char **prev_beg, int hdr_onl
 	do {
 		q = p;
 		p = nextline(p, lim, hdr_only);
-		if (p == NULL) return NULL;
+		if (p == NULL) break;
 		i++;
 		if (Field_len != 0 && i == Field_len)
 			*truncated_end = p;
