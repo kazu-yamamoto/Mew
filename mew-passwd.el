@@ -231,7 +231,7 @@
        ((string-match "invalid passphrase" string)
 	(mew-warn "Master password mismatch!")
 	(setq mew-passwd-master nil))
-       ((string-match "bad key" string)
+       ((string-match "[bB]ad \\(?:session \\)?key" string)
 	(mew-warn "Master password is wrong!")
 	(setq mew-passwd-master nil))
        ((string-match "Enter passphrase:" string)
