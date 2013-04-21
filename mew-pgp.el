@@ -993,6 +993,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
 	   (mew-syntax-get-param
 	    (mew-syntax-get-ct (mew-syntax-get-part syntax)) "charset"))
 	  mew-cs-autoconv))
+     (mew-highlight-body-region (point) (point-max))
      (mew-message-set-end-of)
      (set-window-start win start)
      (set-buffer-modified-p nil))))
