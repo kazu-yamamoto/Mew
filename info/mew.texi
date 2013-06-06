@@ -12048,8 +12048,8 @@ according @samp{mew-case-guess-alist} when a message is composed. The
 default is @samp{nil}.
 @item mew-case-guess-when-replied
 If this variable is @samp{t}, the "case" is automatically guessed
-according @samp{mew-case-guess-alist} when a draft is prepared by
-replying. The default is @samp{t}.
+according @samp{mew-case-guess-when-replied-alist} when a draft is
+prepared by replying. The default is @samp{t}.
 @end ifset
 @end vtable
 
