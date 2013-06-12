@@ -13475,14 +13475,18 @@ http://www.Mew.org/Release/
 
 @ifset ja
 Mew の Git 版について知りたければ、以下を参照して下さい。
-@end ifset
-@ifset en
-If you want to know about Git versions of Mew, please refer to:
-@end ifset
 
 @example
 http://www.mew.org/ja/git/
 @end example
+@end ifset
+@ifset en
+If you want to know about Git versions of Mew, please refer to:
+
+@example
+http://www.mew.org/en/git/
+@end example
+@end ifset
 
 @c %%%%%%%%%%%%%%%%%
 @node ml, Copyright, obtain, Avail
