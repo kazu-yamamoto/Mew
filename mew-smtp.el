@@ -357,7 +357,7 @@
       (message "SMTP time out"))))
 
 (defun mew-smtp-passtag (pnm)
-  (concat (mew-smtp-get-user pnm)
+  (concat (mew-smtp-get-auth-user pnm)
 	  "@" (mew-smtp-get-server pnm)
 	  ":" (mew-smtp-get-port pnm)))
 
