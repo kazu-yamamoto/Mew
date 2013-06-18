@@ -10500,7 +10500,6 @@ You can decrypt a ZIP attach file and display it with @samp{zz}.
 @ifset en
 @section Draft mode
 @end ifset
-@vindex mew-from
 @vindex mew-cc
 @vindex mew-dcc
 @vindex mew-header-alist
