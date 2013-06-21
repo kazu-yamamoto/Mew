@@ -1,3 +1,4 @@
+;;-*-coding:iso-2022-jp;-*-
 ;;; mew-vars.el --- Variables and Constants for Mew
 
 ;; Author:  Kazu Yamamoto <Kazu@Mew.org>
