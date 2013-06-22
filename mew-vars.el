@@ -1,4 +1,3 @@
-;;-*-coding:iso-2022-jp;-*-
 ;;; mew-vars.el --- Variables and Constants for Mew
 
 ;; Author:  Kazu Yamamoto <Kazu@Mew.org>
@@ -2857,8 +2856,8 @@ in Summary/Virtual mode."
    "\\|"
    "\\(\\(s?https?\\|ftp\\|gopher\\|telnet\\|wais\\)://\\)"
    "\\)"
-   "[^ 　\t\n>)\"]*"
-   "[^ 　\t\n>.,:)\"]+")
+   "[^ \t\n>)\"]*"
+   "[^ \t\n>.,:)\"]+")
   "*Regular expression to find URL."
   :group 'mew-highlight
   :type 'regexp)
