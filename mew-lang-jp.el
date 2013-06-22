@@ -172,6 +172,16 @@
 (defvar mew-highlight-body-regex-cite
   "^\\(\\([ \t]\\{,7\\}\\([>:|〉＞》≫：｜]\\|\\w+\\([._-]+\\w+\\)*>+\\)\\)+\\).*")
 
+(defvar mew-regex-url
+  (concat
+   "\\b\\("
+   "\\(\\(file\\|news\\|mailto\\):\\)"
+   "\\|"
+   "\\(\\(s?https?\\|ftp\\|gopher\\|telnet\\|wais\\)://\\)"
+   "\\)"
+   "[^ 　\t\n>)\"]*"
+   "[^ 　\t\n>.,:)\"]+"))
+
 (provide 'mew-lang-jp)
 
 ;;; Copyright Notice:
