@@ -1350,6 +1350,8 @@ Functions called MEW-FOO will be defined according to this variable.")
 
 (defvar mew-scan-decode-fields (list mew-subj: mew-from: mew-to:))
 
+(defvar mew-scan-decode-bq-body t)
+
 (defvar mew-draft-address-warning-fields
   (list mew-to: mew-cc: mew-dcc: mew-bcc:
 	mew-resent-to: mew-resent-cc: mew-resent-dcc: mew-resent-bcc:))
