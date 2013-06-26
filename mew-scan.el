@@ -534,14 +534,15 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	 (cte (MEW-CTE))
 	 (body "")
 	 (case-fold-search t)
-	 textp charset cs beg skip boundary found regex)
+	 textp charset cs beg end skip boundary found regex)
     (catch 'break
       (cond
        (draftp
 	(setq textp t)
 	(setq cs mew-cs-m17n))
        ((string= ctr "")
-	(if (mew-case-equal cte mew-b64) (throw 'break nil))
+	(if (and (not mew-scan-decode-bq-body) cte (mew-case-equal cte mew-b64))
+	    (throw 'break nil))
 	(setq textp t)
 	(setq cs mew-cs-autoconv))
        (t
@@ -571,7 +572,8 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	      (setq textp t)
 	      (setq cs mew-cs-autoconv)
 	      (throw 'break nil))))
-	(if (and cte (mew-case-equal cte mew-b64)) (throw 'break nil))
+	(if (and (not mew-scan-decode-bq-body) cte (mew-case-equal cte mew-b64))
+	    (throw 'break nil))
 	(when (string-match "^Text/Plain" ctr)
 	  (when (string-match "charset=\"?\\([^\"\n\t;]+\\)\"?" ctr)
 	    (setq charset (mew-match-string 1 ctr)))
@@ -579,6 +581,22 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	  (setq textp t)
 	  (setq cs (mew-charset-to-cs charset))
 	  (if (null cs) (setq cs mew-cs-autoconv)))))) ;; end of 'break
+    (when (and mew-scan-decode-bq-body cte
+	       (or (mew-case-equal cte mew-b64) (mew-case-equal cte mew-qp)))
+      (setq beg (point))
+      (if (not found)
+	  (setq end (point-max))
+	(while (and (not (eobp)) (not (looking-at boundary)))
+	  (forward-line))
+	(setq end (point)))
+      (goto-char beg)
+      (condition-case nil
+	  (cond
+	   ((mew-case-equal cte mew-b64)
+	    (base64-decode-region beg end))
+	   ((mew-case-equal cte mew-qp)
+	    (quoted-printable-decode-region beg end)))
+	(error nil)))
     (set-buffer-multibyte nil)
     (when (and textp (mew-coding-system-p cs))
       (setq i 0)
