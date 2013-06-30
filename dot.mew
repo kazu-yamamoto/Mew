@@ -101,7 +101,7 @@
 ;;;     cvs -d :pserver:anonymous@cvs.namazu.org:/storage/cvsroot co emacs-w3m
 
 
-;(setq mew-mime-multipart-alternative-list '("Text/Html" "Text/Plain" "*."))
+;(setq mew-mime-multipart-alternative-list '("Text/Html" "Text/Plain" ".*"))
 
 ;(condition-case nil
 ;    (require 'mew-w3m)
