@@ -550,11 +550,13 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	;; (setq ctl (mew-param-decode ctr))
 	;; (setq ct (mew-syntax-get-value ctl 'cap))
 	;; So, this hard coding is used.
-	(when (and (string-match "^Multipart/" ctr)
+	(while (and (string-match "^Multipart/" ctr)
 		   (string-match "boundary=\"?\\([^\"\n\t;]+\\)\"?" ctr))
 	  (setq boundary (mew-match-string 1 ctr))
 	  (setq boundary (concat "^--" (regexp-quote boundary)))
+	  (setq found nil)
 	  (catch 'loop
+	    (setq i 0)
 	    (while (< i I)
 	      (if (looking-at boundary) (throw 'loop (setq found t)))
 	      (forward-line)
