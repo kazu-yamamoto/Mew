@@ -593,7 +593,12 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
       (condition-case nil
 	  (cond
 	   ((mew-case-equal cte mew-b64)
-	    (base64-decode-region beg end))
+	    (save-restriction
+	      (narrow-to-region beg end)
+	      (base64-decode-region beg end)
+	      (while (re-search-forward "\r+$" nil t)
+		(replace-match "")))
+	    (goto-char beg))
 	   ((mew-case-equal cte mew-qp)
 	    (quoted-printable-decode-region beg end)))
 	(error nil)))
