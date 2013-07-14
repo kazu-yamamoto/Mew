@@ -332,7 +332,7 @@
 (defun mew-smtp-info-name (case &optional fallbacked)
   (let ((server (mew-smtp-server case))
 	(port (mew-*-to-string (mew-smtp-port case)))
-	(user (mew-smtp-user-only case))
+	(user (mew-smtp-user case))
 	(sshsrv (mew-smtp-ssh-server case))
 	(name mew-smtp-info-prefix))
     (if user
