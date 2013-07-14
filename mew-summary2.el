@@ -529,6 +529,8 @@ If called with '\\[universal-argument]', it stays writable."
      (mew-summary-display-preamble)
      (save-excursion
        (dolist (ent lst)
+	 (while (string-match "\n" ent)
+	   (setq ent (replace-match "" nil t ent)))
 	 (setq svr-date (mew-split ent ?\;))
 	 (mew-set '(svr date) svr-date)
 	 (unless date
