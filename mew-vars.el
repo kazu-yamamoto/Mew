@@ -2859,7 +2859,7 @@ in Summary/Virtual mode."
    "\\(\\(s?https?\\|ftp\\|gopher\\|telnet\\|wais\\)://\\)"
    "\\)"
    "[^ \t\n>)\"]*"
-   "[^ \t\n>.,:)\"]+")
+   "[^] \t\n>.,:)\"]")
   "*Regular expression to find URL."
   :group 'mew-highlight
   :type 'regexp)
