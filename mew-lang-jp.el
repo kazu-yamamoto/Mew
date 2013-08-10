@@ -182,7 +182,7 @@
    "\\(\\(s?https?\\|ftp\\|gopher\\|telnet\\|wais\\)://\\)"
    "\\)"
    "[^ 　\t\n>)\"]*"
-   "[^ 　\t\n>.,:)\"]+"))
+   "[^] 　\t\n>.,:)\"]+"))
 
 (provide 'mew-lang-jp)
 
