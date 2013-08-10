@@ -135,8 +135,7 @@
 (defun mew-draft-find-and-switch (draft-path &optional switch-func)
   ;; switch-func = nil :: switch-to-buffer
   ;; switch-func = t   :: switch-to-buffer-other-window
-  (let* ((special-display-buffer-names nil)
-	 (special-display-regexps nil)
+  (let* ((display-buffer-alist nil)
 	 (same-window-buffer-names nil)
 	 (same-window-regexps nil)
 	 (draftname (mew-path-to-folder draft-path)))
@@ -790,7 +789,7 @@ Set privacy service which will be effective when \\[mew-draft-make-message]."
       (mew-draft-process-message 'send))))
 
 (defun mew-draft-process-message (action &optional privacy signer)
-  (if (and (boundp 'longlines-mode) longlines-mode) (longlines-mode -1))
+  (if (and (boundp 'visual-line-mode) visual-line-mode) (visual-line-mode -1))
   (run-hooks 'mew-make-message-hook)
   (let* ((case (or (mew-tinfo-get-case) mew-case-default))
 	 (old-case case)
