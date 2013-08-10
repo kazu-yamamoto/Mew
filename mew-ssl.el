@@ -25,7 +25,11 @@ A file name of a certificate should be 'cert-hash.0'.
 3 - verify server's certificate which locally installed (not one from
     the server).")
 
-(defvar mew-prog-ssl-arg nil) ;; xxx what about v4?
+(defvar mew-prog-ssl-arg nil
+  "For stunnel v3, a list of command-line arguments, each one a string.
+For stunnel v4, a string of extra text to place in the configuration file,
+which should end with a newline (example: \"fips=no\\n\"); or nil to insert
+no extra text.")
 
 (defvar mew-ssl-ver nil)
 (defvar mew-ssl-minor-ver nil)
@@ -109,6 +113,8 @@ A file name of a certificate should be 'cert-hash.0'.
 	(if (>= mew-ssl-minor-ver 22)
 	    (insert "syslog=no\n"))
 	(insert "CApath=" (expand-file-name (mew-ssl-cert-directory case)) "\n")
+	(if mew-prog-ssl-arg
+	    (insert mew-prog-ssl-arg))
 	(insert (format "[%d]\n" localport))
 	(insert (format "accept=%s:%d\n" mew-ssl-localhost localport))
 	(insert (format "connect=%s:%d\n" server remoteport))
