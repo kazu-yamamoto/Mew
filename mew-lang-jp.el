@@ -172,6 +172,8 @@
 (defvar mew-highlight-body-regex-cite
   "^\\(\\([ \t]\\{,7\\}\\([>:|〉＞》≫：｜]\\|\\w+\\([._-]+\\w+\\)*>+\\)\\)+\\).*")
 
+;; mew-regex-url is defined in mew-vars.el. This duplication is intentional.
+;; This definition includes full-width space characters.
 (defvar mew-regex-url
   (concat
    "\\b\\("
