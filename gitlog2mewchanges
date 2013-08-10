@@ -1,0 +1,96 @@
+#!/usr/bin/perl
+
+=head1 NAME
+
+gitlog2mewchanges - tiny tool to convert Git commit logs to Mew's 00changes
+
+=head1 SYNOPSIS
+
+git log | gitlog2mewchanges > 00changes
+
+git log --no-merges --decorate | gitlog2mewchanges > 00changes
+
+(Use --no-merges to ignore merge commits.
+ Use --decorate to show version tags.)
+
+=head1 SEE ALSO
+
+Mew:
+    <http://www.mew.org/>
+    <https://github.com/kazu-yamamoto/Mew>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2013 Tatsuya Kinoshita
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted without restriction, with NO WARRANTY.
+You may regard this as a work that is placed in the public domain.
+
+=cut
+
+use strict;
+use warnings;
+
+my $PRODUCT = "Mew";
+my $OWNER = "Kazu Yamamoto <kazu>";
+
+my $author = ""; my $date = ""; my $comment = "";
+my $version = "x.x"; my $pre_version = "";
+
+sub print_entry {
+    print "* ";
+
+    $comment =~ s/\n([ \t]*\n)+/\n/g;
+    $comment =~ s/\n+$//;
+    $comment =~ s/\n/\n  /g;
+    $comment =~ s/^\* //;
+    print "$comment\n";
+
+    my $name = $author;
+    $name =~ s/<([^@]+)@[^>]+>/<$1>/;
+    if ($name ne $OWNER) {
+	print "\t$name\n";
+    }
+
+    $author = ""; $date = ""; $comment = "";
+}
+
+while (<>) {
+    if (/^Author:[ \t]+([^\n]+)/) {
+	$author = $1;
+    } elsif (/^Date:[ \t]+(Sun|Mon|Tue|Wed|Thu|Fri|Sat) +(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +(\d+) +\d+:\d+:\d+ +(\d+)/) {  # Assume git log --date=default or --date=local
+	my $mm = $2;
+	my $dd = $3;
+	my $yyyy = $4;
+	$mm =~ s/Jan/01/; $mm =~ s/Feb/02/; $mm =~ s/Mar/03/; $mm =~ s/Apr/04/;
+	$mm =~ s/May/05/; $mm =~ s/Jun/06/; $mm =~ s/Jul/07/; $mm =~ s/Aug/08/;
+	$mm =~ s/Sep/09/; $mm =~ s/Oct/10/; $mm =~ s/Nov/11/; $mm =~ s/Dec/12/;
+	$dd =~ s/^(\d)$/0$1/;
+	$date = "$yyyy/$mm/$dd";
+    } elsif (/^Date:[ \t]+(\d+-\d+-\d+)/) {  # Assume git log --date=short or --date=iso
+	$date = $1;
+	$date  =~ s!-!/!g;
+    } elsif (/^Date:[ \t]+(.+)$/) {
+	$date = $1;
+    } elsif (/^    (.*)$/) {
+	$comment .= "$1\n";
+    } elsif (/^commit /) {
+	if ($author && $date) {
+	    &print_entry;
+	}
+	if (/\((tag: v\d[^\)]+)\)$/) {
+	    $version = $1;
+	    $version =~ s/tag: v//g;
+	}
+    }
+    if ($version ne $pre_version && $date ne "") {
+	print "\n" if $pre_version ne "";
+	print "$PRODUCT " if $PRODUCT ne "";
+	print "$version ($date)\n\n";
+	$pre_version = $version;
+    }
+}
+if ($author && $date) {
+    &print_entry;
+}
