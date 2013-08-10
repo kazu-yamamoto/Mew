@@ -495,7 +495,7 @@ If called with '\\[universal-argument]', all SSH processes, if
 any, are killed."
   (interactive "P")
   (let ((process mew-summary-buffer-process)
-	(disp-msg (interactive-p))
+	(disp-msg (called-interactively-p 'interactive))
 	pros sentinel)
     (if kill-ssx
 	(progn

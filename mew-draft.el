@@ -772,7 +772,7 @@ Set privacy service which will be effective when \\[mew-draft-make-message]."
   (interactive)
   (if (string= mode-name "Edit")
       (mew-edit-make)
-    (if (and (interactive-p) ;; prevent the loop
+    (if (and (called-interactively-p 'interactive) ;; prevent the loop
 	     mew-use-old-pgp
 	     mew-protect-privacy-with-old-pgp-signature)
 	(mew-pgp-sign-message)
@@ -783,7 +783,7 @@ Set privacy service which will be effective when \\[mew-draft-make-message]."
   (interactive)
   (if (string= mode-name "Edit")
       (mew-edit-make)
-    (if (and (interactive-p) ;; just in case
+    (if (and (called-interactively-p 'interactive) ;; just in case
 	     mew-use-old-pgp
 	     mew-protect-privacy-with-old-pgp-signature)
 	(mew-pgp-sign-message)

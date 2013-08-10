@@ -228,7 +228,7 @@ of the current world is also updated."
       (mew-set '(case proto) (mew-summary-case-proto))
       (cond
        ((mew-folder-localp proto)
-	(mew-local-update (interactive-p)))
+	(mew-local-update (called-interactively-p 'interactive)))
        ((mew-folder-popp proto)
 	(message "Nothing updated for POP"))
        ((mew-folder-imapp proto)
@@ -236,12 +236,12 @@ of the current world is also updated."
        ((mew-folder-nntpp proto)
 	(mew-nntp-update case)))))
    (t
-    (if (interactive-p) (mew-set-environment 'no-dir))
+    (if (called-interactively-p 'interactive) (mew-set-environment 'no-dir))
     ;; These two must be before mew-local-update
     (message "Updating status...")
     (mew-config-setup)
     (mew-regex-setup)
-    (if arg (mew-local-update (interactive-p)))
+    (if arg (mew-local-update (called-interactively-p 'interactive)))
     (mew-folder-init mew-basic-folders)
     (mew-folder-init mew-inbox-folders)
     (mew-folder-init mew-queue-folders)
