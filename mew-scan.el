@@ -602,7 +602,7 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 		(replace-match "")))
 	    (goto-char beg))
 	   ((mew-case-equal cte mew-qp)
-	    (quoted-printable-decode-region beg end)))
+	    (quoted-printable-decode-region beg end mew-cs-binary)))
 	(error nil)))
     (set-buffer-multibyte nil)
     (when (and textp (mew-coding-system-p cs))
