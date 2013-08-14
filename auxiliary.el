@@ -64,7 +64,6 @@
 (defun general-process-argument-editing-function (&rest args))
 (defun image-size (&rest args))
 (defun image-type-available-p (&rest args))
-(defun image-type-available-p (&rest args))
 (defun insert-image (&rest args))
 (defun jit-lock-register (&rest args))
 (defun longlines-mode (&rest args))
