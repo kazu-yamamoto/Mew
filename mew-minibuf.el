@@ -753,9 +753,8 @@ it is deleted automatically."
 	comp range ret)
     (when askp
       (setq comp (mapcar 'list mew-input-range-list))
-      (setq range (completing-read (format "Range (%s): " default) comp)))
-    (if (or (string= range "") (null range))
-	(setq range default))
+      (setq range (completing-read (format "Range (%s): " default) comp
+				   nil nil nil nil default)))
     (cond
      ((string= range mew-range-str-all)
       (setq ret (list mew-range-all 'erase)))
@@ -781,9 +780,8 @@ it is deleted automatically."
 					    mew-range-list-string-type
 					    mew-range-list-list-type))))
 	 (comp (mapcar 'list mew-input-range-remote-list))
-	 (range (completing-read (format "Range (%s): " default) comp)))
-    (if (or (string= range "") (null range))
-	(setq range default))
+	 (range (completing-read (format "Range (%s): " default) comp
+				 nil nil nil nil default)))
     (cond
      ((string= range mew-range-str-sync)   'sync)
      ((string= range mew-range-str-all)      t)
@@ -799,15 +797,12 @@ it is deleted automatically."
 
 (defun mew-input-draft-buffer (default)
   (let* ((regex (mew-folder-regex (file-name-as-directory mew-draft-folder)))
-	 (comp (mew-buffer-list regex t))
-	 buf)
+	 (comp (mew-buffer-list regex t)))
     (if (and (= (length comp) 1)
 	     (string= default (car (car comp))))
 	default
-      (setq buf (completing-read (format "Buffer (%s): " default) comp))
-      (if (string= buf "")
-	  default
-	buf))))
+      (completing-read (format "Buffer (%s): " default) comp
+		       nil nil nil nil default))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -902,9 +897,8 @@ it is deleted automatically."
 (defun mew-input-general (prompt alist &optional require-match initial)
   (let* ((completion-ignore-case t)
 	 (question (if initial (format "%s (%s): " prompt initial)
-		     (format "(%s): " prompt)))
-	 (value (completing-read question alist nil require-match nil)))
-    (if (and initial (string= value "")) initial value)))
+		     (format "(%s): " prompt))))
+    (completing-read question alist nil require-match nil nil initial)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -912,15 +906,14 @@ it is deleted automatically."
 ;;;
 
 (defun mew-input-type (prompt filename default type-list)
-  (let ((completion-ignore-case t)
-	(type))
-    (setq type (completing-read
-		(format prompt filename default)
-		(mapcar 'list type-list)
-		nil
-		t
-		""))
-    (if (string= type "") default type)))
+  (let ((completion-ignore-case t))
+    (completing-read (format prompt filename default)
+		     (mapcar 'list type-list)
+		     nil
+		     t
+		     ""
+		     nil
+		     default)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1000,14 +993,14 @@ it is deleted automatically."
 	 (encoding-alist (mapcar (lambda (x) (list x)) encoding-list))
 	 (prompt (format "Lines are too long. Input encoding (%s): "
 			 mew-default-encoding))
-	 (cte (completing-read prompt encoding-alist)))
-    (if (string= cte "") (setq cte mew-default-encoding))
+	 (cte (completing-read prompt encoding-alist nil nil nil nil
+			       mew-default-encoding)))
     (setq cte (downcase cte))
     (while (not (member cte encoding-list))
       (setq prompt (format "'%s' is unknown. Input encoding (%s): "
 			   cte mew-default-encoding))
-      (setq cte (completing-read prompt encoding-alist))
-      (if (string= cte "") (setq cte mew-default-encoding))
+      (setq cte (completing-read prompt encoding-alist nil nil nil nil
+				 mew-default-encoding))
       (setq cte (downcase cte)))
     cte))
 
