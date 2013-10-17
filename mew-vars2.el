@@ -74,7 +74,7 @@
     ;; delete extra string (no new text means delete)
     (,mew-was-regex nil)) ;; regexp
   "*Replacement alist to simplify Subject: field body
-Each element is cons cell whos car is REGEXP to replace,
+Each element is cons cell whose car is REGEXP to replace,
 cdr is new text.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
