@@ -290,12 +290,12 @@
 	   (call-process-region (point-min) (point-max) prog
 				t '(t nil) nil)
 	   (if mew-image-display-resize-care-height
-	       (call-process-region (point-min) (point-max) "pnmscale"
+	       (call-process-region (point-min) (point-max) "pamscale"
 				    t '(t nil) nil
 				    "-xysize"
 				    (format "%d" width)
 				    (format "%d" height))
-	     (call-process-region (point-min) (point-max) "pnmscale"
+	     (call-process-region (point-min) (point-max) "pamscale"
 				  t '(t nil) nil
 				  "-xsize" (format "%d" width)))
 	   (if (and (string< emacs-version "22") ;; xxx
