@@ -746,11 +746,12 @@ it is deleted automatically."
 		"-")))))
 
 (defun mew-input-range (folder askp)
-  (let ((default (or (car (mew-folder-spec folder mew-range-list
-					   mew-range-list-string-type
-					   mew-range-list-list-type))
-		     mew-range-str-update))
-	comp range ret)
+  (let* ((default (or (car (mew-folder-spec folder mew-range-list
+					    mew-range-list-string-type
+					    mew-range-list-list-type))
+		      mew-range-str-update))
+	 (range default)
+	 comp ret)
     (when askp
       (setq comp (mapcar 'list mew-input-range-list))
       (setq range (completing-read (format "Range (%s): " default) comp
