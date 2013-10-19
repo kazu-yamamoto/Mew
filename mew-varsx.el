@@ -162,7 +162,7 @@
    ("application/x-zip-compressed"  "\\.zip$" mew-b64
     mew-prog-unzip                  mew-icon-application/octet-stream)
    ("application/octet-stream"
-    "\\.tar$\\|\\.tar\\.\\|\\.jar$\\|\\.gz$\\|\\.Z$\\|\\.taz$\\|\\.tgz$\\|\\.tbz$\\|\\.bz2?$\\|\\.lzh$\\|\\.bin$\\|\\.pgp$\\|\\.gpg$\\|\\.exe$\\|\\.dll$\\|\\.class$"
+    "\\.tar$\\|\\.tar\\.\\|\\.jar$\\|\\.gz$\\|\\.Z$\\|\\.taz$\\|\\.tgz$\\|\\.xz$\\|\\.txz$\\|\\.lzma?$\\|\\.tlz$\\|\\.tbz$\\|\\.bz2?$\\|\\.lzh$\\|\\.bin$\\|\\.pgp$\\|\\.gpg$\\|\\.exe$\\|\\.dll$\\|\\.class$"
     mew-b64 mew-prog-octet-stream mew-icon-application/octet-stream)
    ;;
    ("text/html"     "\\.html?$" nil     mew-prog-html      mew-icon-text)
