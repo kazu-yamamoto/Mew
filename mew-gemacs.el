@@ -247,9 +247,9 @@
 
 (defvar mew-image-alist
   '((jpeg mew-jpeg-size "jpegtopnm" "pnmtojpeg")
-    (png  mew-png-size  "pngtopnm"  "pnmtopng")
-    (gif  mew-gif-size  "giftopnm"  "pnmtogif")
-    (tiff mew-tiff-size "tifftopnm" "pnmtotiff")))
+    (png  mew-png-size  "pngtopam"  "pnmtopng")
+    (gif  mew-gif-size  "giftopnm"  "pamtogif")
+    (tiff mew-tiff-size "tifftopnm" "pamtotiff")))
 
 (defun mew-image-format-ent (format)
   (assoc format mew-image-alist))
