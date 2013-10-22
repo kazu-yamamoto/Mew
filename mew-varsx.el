@@ -179,9 +179,9 @@
     mew-prog-rfc822-headers    mew-icon-message/rfc822)
    ("text/csv"      "\\.csv$"   nil     mew-prog-text      mew-icon-text)
    ("text"         "^$"        nil     mew-prog-text      mew-icon-text)
-   ;; Unknown CT: matches here.
    ("application/xml"               "\\.xml$"  mew-b64
     mew-prog-xml2              mew-icon-text)
+   ;; Unknown CT: matches here.
    (t               "^$"       nil   mew-prog-octet-stream mew-icon-unknown)
    ;; Unknown suffix matches here and return the entry specified
    ;; by mew-content-type.
