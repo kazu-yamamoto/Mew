@@ -156,7 +156,10 @@
 
 (defun mew-image-inline-p (format)
   ;; display-graphic-p
-  (and window-system (image-type-available-p format)))
+  (or (and window-system (image-type-available-p format))
+      (let* ((ent (mew-image-format-ent format))
+	     (prog (mew-image-get-prog ent)))
+	(and prog (mew-which-exec prog)))))
 
 (defun mew-img-get-n (op len)
   (let* ((size 0))
@@ -249,7 +252,14 @@
   '((jpeg mew-jpeg-size "jpegtopnm" "pnmtojpeg")
     (png  mew-png-size  "pngtopam"  "pnmtopng")
     (gif  mew-gif-size  "giftopnm"  "pamtogif")
-    (tiff mew-tiff-size "tifftopnm" "pamtotiff")))
+    (tiff mew-tiff-size "tifftopnm" "pamtotiff")
+    (xwd  nil           "xwdtopnm"  "pnmtoxwd")
+    (xbm  nil           "xbmtopbm"  "pbmtoxbm")
+    (xpm  nil           "xpmtoppm"  "ppmtoxpm")
+    (bmp  nil           "bmptopnm"  "ppmtobmp")
+    (PCX  nil           "pcxtoppm"  "ppmtopcx")
+    (TGA  nil           "tgatoppm"  "pamtotga")
+    (ICO  nil           "winicontoppm" "ppmtowinicon")))
 
 (defun mew-image-format-ent (format)
   (assoc format mew-image-alist))
@@ -277,18 +287,30 @@
       (mew-plet
        (insert-buffer-substring cache begin end)
        (mew-set-buffer-multibyte nil)
-       (when (and prog prog2 func-size)
-	 (goto-char (point-min))
-	 (setq image-size (funcall func-size))
-	 (setq image-width (car image-size))
-	 (setq image-height (cdr image-size))
+       (goto-char (point-min))
+       (cond (func-size
+	      (setq image-size (funcall func-size))
+	      (setq image-width (car image-size))
+	      (setq image-height (cdr image-size)))
+	     (t
+	      (setq image-width nil)
+	      (setq image-height nil)))
+       (when (and (not (image-type-available-p format))
+		  prog (mew-which-exec prog))
+	 (message "Converting image...")
+	 (call-process-region (point-min) (point-max) prog
+			      t '(t nil) nil)
+	 (setq format 'pbm)
+	 (message "Converting image...done"))
 	 (when (and image-width image-height
 		    (or (< width image-width)
 			(and mew-image-display-resize-care-height (< height image-height)))
 		    (mew-which-exec prog))
 	   (message "Resizing image...")
-	   (call-process-region (point-min) (point-max) prog
-				t '(t nil) nil)
+	   (unless (eq format 'pbm)
+	     (call-process-region (point-min) (point-max) prog
+				  t '(t nil) nil)
+	     (setq format 'pbm))
 	   (if mew-image-display-resize-care-height
 	       (call-process-region (point-min) (point-max) "pamscale"
 				    t '(t nil) nil
@@ -298,13 +320,8 @@
 	     (call-process-region (point-min) (point-max) "pamscale"
 				  t '(t nil) nil
 				  "-xsize" (format "%d" width)))
-	   (if (and (string< emacs-version "22") ;; xxx
-		    (mew-which-exec prog2))
-	       (call-process-region (point-min) (point-max) prog2
-				    t '(t nil) nil)
-	     (setq format 'pbm))
-	   (message "Resizing image...done")))
-       (setq image (mew-buffer-substring (point-min) (point-max)))))
+	   (message "Resizing image...done"))
+	 (setq image (mew-buffer-substring (point-min) (point-max)))))
     (mew-elet
      (condition-case nil
 	 (insert-image (mew-create-image image format t))
