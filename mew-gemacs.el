@@ -248,6 +248,17 @@
 	    (throw 'loop nil)))))
     (cons width height)))
 
+(defun mew-bmp-size ()
+  (let (width height)
+    (save-excursion
+      (forward-char 18)
+      ;; length is four bytes
+      ;; but we takes lower two bytes
+      (setq width (mew-img-get-n mew-image-l-endian 2))
+      (forward-char 2)
+      (setq height (mew-img-get-n mew-image-l-endian 2))
+      (cons width height))))
+
 (defvar mew-image-alist
   '((jpeg mew-jpeg-size "jpegtopnm" "pnmtojpeg")
     (png  mew-png-size  "pngtopam"  "pnmtopng")
@@ -256,7 +267,7 @@
     (xwd  nil           "xwdtopnm"  "pnmtoxwd")
     (xbm  nil           "xbmtopbm"  "pbmtoxbm")
     (xpm  nil           "xpmtoppm"  "ppmtoxpm")
-    (bmp  nil           "bmptopnm"  "ppmtobmp")
+    (bmp  mew-bmp-size  "bmptopnm"  "ppmtobmp")
     (PCX  nil           "pcxtoppm"  "ppmtopcx")
     (TGA  nil           "tgatoppm"  "pamtotga")
     (ICO  nil           "winicontoppm" "ppmtowinicon")))
