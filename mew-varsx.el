@@ -91,6 +91,11 @@
    ("image/x-tga" "\\.tga$"   mew-b64 mew-prog-image mew-icon-image TGA)
    ("image/vnd.ms-modi" "\\.mdi$" mew-b64 mew-prog-image mew-icon-image)
    ("image/vnd.microsoft.icon" "\\.ico$" mew-b64 mew-prog-image mew-icon-image ICO)
+   ("image/x-portable-bitmap" "\\.pbm$" mew-b64 mew-prog-image mew-icon-image pbm)
+   ("image/x-portable-graymap" "\\.pgm$" mew-b64 mew-prog-image mew-icon-image pbm)
+   ("image/x-portable-pixmap" "\\.ppm$" mew-b64 mew-prog-image mew-icon-image pbm)
+   ("image/x-portable-anymap" "\\.pnm$" mew-b64 mew-prog-image mew-icon-image pbm)
+   ("image/x-portable-arbitrarymap" "\\.pam$" mew-b64 mew-prog-image mew-icon-image PAM)
    ("image"       "^$"        mew-b64 mew-prog-image mew-icon-image)
    ;;
    ("model/iges" "\\.ige?s$" mew-b64 mew-prog-iges  mew-icon-image) ;; xxx
