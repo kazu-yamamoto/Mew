@@ -159,7 +159,7 @@
   (or (and window-system (image-type-available-p format))
       (let* ((ent (mew-image-format-ent format))
 	     (prog (mew-image-get-prog ent)))
-	(and prog (mew-which-exec prog)))))
+	(and prog (mew-which-exec prog) t))))
 
 (defun mew-img-get-n (op len)
   (let* ((size 0))
