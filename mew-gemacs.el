@@ -270,7 +270,8 @@
     (bmp  mew-bmp-size  "bmptopnm"  "ppmtobmp")
     (PCX  nil           "pcxtoppm"  "ppmtopcx")
     (TGA  nil           "tgatoppm"  "pamtotga")
-    (ICO  nil           "winicontoppm" "ppmtowinicon")))
+    (ICO  nil           "winicontoppm" "ppmtowinicon")
+    (PAM  nil           "pamtopnm"  "pamtopam")))
 
 (defun mew-image-format-ent (format)
   (assoc format mew-image-alist))
