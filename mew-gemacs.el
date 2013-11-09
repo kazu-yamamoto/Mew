@@ -329,26 +329,26 @@
 			      t '(t nil) nil)
 	 (setq format 'pbm)
 	 (message "Converting image...done"))
-	 (when (and image-width image-height
-		    (or (< width image-width)
-			(and mew-image-display-resize-care-height (< height image-height)))
-		    (or (eq format 'pbm) (mew-which-exec prog)))
-	   (message "Resizing image...")
-	   (unless (eq format 'pbm)
-	     (call-process-region (point-min) (point-max) prog
-				  t '(t nil) nil)
-	     (setq format 'pbm))
-	   (if mew-image-display-resize-care-height
-	       (call-process-region (point-min) (point-max) "pamscale"
-				    t '(t nil) nil
-				    "-xysize"
-				    (format "%d" width)
-				    (format "%d" height))
+       (when (and image-width image-height
+		  (or (< width image-width)
+		      (and mew-image-display-resize-care-height (< height image-height)))
+		  (or (eq format 'pbm) (mew-which-exec prog)))
+	 (message "Resizing image...")
+	 (unless (eq format 'pbm)
+	   (call-process-region (point-min) (point-max) prog
+				t '(t nil) nil)
+	   (setq format 'pbm))
+	 (if mew-image-display-resize-care-height
 	     (call-process-region (point-min) (point-max) "pamscale"
 				  t '(t nil) nil
-				  "-xsize" (format "%d" width)))
-	   (message "Resizing image...done"))
-	 (setq image (mew-buffer-substring (point-min) (point-max)))))
+				  "-xysize"
+				  (format "%d" width)
+				  (format "%d" height))
+	   (call-process-region (point-min) (point-max) "pamscale"
+				t '(t nil) nil
+				"-xsize" (format "%d" width)))
+	 (message "Resizing image...done"))
+       (setq image (mew-buffer-substring (point-min) (point-max)))))
     (mew-elet
      (condition-case nil
 	 (insert-image (mew-create-image image format t))
