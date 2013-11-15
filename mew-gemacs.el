@@ -259,6 +259,20 @@
       (setq height (mew-img-get-n mew-image-l-endian 2))
       (cons width height))))
 
+(defun mew-pbm-size ()
+  (let (width height)
+    (save-excursion
+      (cond ((looking-at "^P[1-6][\t\n\v\f\r ]*\\(#[^\r\n]*[\r\n][\t\n\v\f\r ]*\\)*\\([0-9]+\\)[\t\n\v\f\r ]*\\(#[^\r\n]*[\r\n][\t\n\v\f\r ]*\\)*\\([0-9]+\\)[\t\n\v\f\r #]")  ;; PBM, PGM, PPM, PNM
+	     (setq width (string-to-number (match-string 2)))
+	     (setq height (string-to-number (match-string 4))))
+	    ((looking-at "^P7$")  ;; PAM
+	     (when (re-search-forward "^WIDTH[ \t]+\\([0-9]+\\)[ \t]*$" nil t)
+	       (setq width (string-to-number (match-string 1))))
+	     (goto-char (point-min))
+	     (when (re-search-forward "^HEIGHT[ \t]+\\([0-9]+\\)[ \t]*$" nil t)
+	       (setq height (string-to-number (match-string 1))))))
+      (cons width height))))
+
 (defvar mew-image-alist
   '((jpeg mew-jpeg-size "jpegtopnm" "pnmtojpeg")
     (png  mew-png-size  "pngtopam"  "pnmtopng")
@@ -271,7 +285,8 @@
     (PCX  nil           "pcxtoppm"  "ppmtopcx")
     (TGA  nil           "tgatoppm"  "pamtotga")
     (ICO  nil           "winicontoppm" "ppmtowinicon")
-    (PAM  nil           "pamtopnm"  "pamtopam")))
+    (pbm  mew-pbm-size  nil         nil)
+    (PAM  mew-pbm-size  "pamtopnm"  "pamtopam")))
 
 (defun mew-image-format-ent (format)
   (assoc format mew-image-alist))
@@ -314,26 +329,26 @@
 			      t '(t nil) nil)
 	 (setq format 'pbm)
 	 (message "Converting image...done"))
-	 (when (and image-width image-height
-		    (or (< width image-width)
-			(and mew-image-display-resize-care-height (< height image-height)))
-		    (mew-which-exec prog))
-	   (message "Resizing image...")
-	   (unless (eq format 'pbm)
-	     (call-process-region (point-min) (point-max) prog
-				  t '(t nil) nil)
-	     (setq format 'pbm))
-	   (if mew-image-display-resize-care-height
-	       (call-process-region (point-min) (point-max) "pamscale"
-				    t '(t nil) nil
-				    "-xysize"
-				    (format "%d" width)
-				    (format "%d" height))
+       (when (and image-width image-height
+		  (or (< width image-width)
+		      (and mew-image-display-resize-care-height (< height image-height)))
+		  (or (eq format 'pbm) (mew-which-exec prog)))
+	 (message "Resizing image...")
+	 (unless (eq format 'pbm)
+	   (call-process-region (point-min) (point-max) prog
+				t '(t nil) nil)
+	   (setq format 'pbm))
+	 (if mew-image-display-resize-care-height
 	     (call-process-region (point-min) (point-max) "pamscale"
 				  t '(t nil) nil
-				  "-xsize" (format "%d" width)))
-	   (message "Resizing image...done"))
-	 (setq image (mew-buffer-substring (point-min) (point-max)))))
+				  "-xysize"
+				  (format "%d" width)
+				  (format "%d" height))
+	   (call-process-region (point-min) (point-max) "pamscale"
+				t '(t nil) nil
+				"-xsize" (format "%d" width)))
+	 (message "Resizing image...done"))
+       (setq image (mew-buffer-substring (point-min) (point-max)))))
     (mew-elet
      (condition-case nil
 	 (insert-image (mew-create-image image format t))
