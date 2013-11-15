@@ -327,6 +327,11 @@
 	 (call-process-region (point-min) (point-max) prog
 			      t '(t nil) nil)
 	 (setq format 'pbm)
+	 (unless (or image-width image-height)
+	   (goto-char (point-min))
+	   (setq image-size (mew-pbm-size))
+	   (setq image-width (car image-size))
+	   (setq image-height (cdr image-size)))
 	 (message "Converting image...done"))
        (when (and image-width image-height
 		  (or (< width image-width)
