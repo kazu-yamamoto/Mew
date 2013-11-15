@@ -307,7 +307,6 @@
 	 (height (- (frame-pixel-height (selected-frame)) mew-image-height-margin))
 	 (ent (mew-image-format-ent format))
 	 (prog (mew-image-get-prog ent))
-	 (prog2 (mew-image-get-prog2 ent))
 	 (func-size (mew-image-get-func ent))
 	 image-size image-width image-height image)
     (with-temp-buffer
