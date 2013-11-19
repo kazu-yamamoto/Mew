@@ -314,7 +314,8 @@
        (insert-buffer-substring cache begin end)
        (mew-set-buffer-multibyte nil)
        (goto-char (point-min))
-       (cond (func-size
+       (cond ((and mew-image-display-resize
+		   func-size)
 	      (setq image-size (funcall func-size))
 	      (setq image-width (car image-size))
 	      (setq image-height (cdr image-size)))
@@ -333,7 +334,8 @@
 	   (setq image-width (car image-size))
 	   (setq image-height (cdr image-size)))
 	 (message "Converting image...done"))
-       (when (and image-width image-height
+       (when (and mew-image-display-resize
+		  image-width image-height
 		  (or (< width image-width)
 		      (and mew-image-display-resize-care-height (< height image-height)))
 		  (or (eq format 'pbm) (mew-which-exec prog)))
