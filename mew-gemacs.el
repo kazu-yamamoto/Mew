@@ -355,7 +355,7 @@
 	 (if mew-image-display-resize-care-height
 	     (call-process-region (point-min) (point-max) "pamscale"
 				  t '(t nil) nil
-				  "-xysize"
+				  "-xyfit"
 				  (format "%d" width)
 				  (format "%d" height))
 	   (call-process-region (point-min) (point-max) "pamscale"
