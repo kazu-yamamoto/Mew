@@ -136,6 +136,11 @@
   :group 'mew-message
   :type 'boolean)
 
+(defcustom mew-image-display-resize-always nil
+  "*If nil, only a larger image than frame size will be displayed with fitting to frame size"
+  :group 'mew-message
+  :type 'boolean)
+
 (defcustom mew-image-display-resize-care-height t
   "*If nil, image will be displayed with fitting to only frame width"
   :group 'mew-message
@@ -315,6 +320,7 @@
        (mew-set-buffer-multibyte nil)
        (goto-char (point-min))
        (cond ((and mew-image-display-resize
+		   (not mew-image-display-resize-always)
 		   func-size)
 	      (setq image-size (funcall func-size))
 	      (setq image-width (car image-size))
@@ -335,9 +341,11 @@
 	   (setq image-height (cdr image-size)))
 	 (message "Converting image...done"))
        (when (and mew-image-display-resize
-		  image-width image-height
-		  (or (< width image-width)
-		      (and mew-image-display-resize-care-height (< height image-height)))
+		  (or mew-image-display-resize-always
+		      (and image-width image-height
+			   (or (< width image-width)
+			       (and mew-image-display-resize-care-height
+				    (< height image-height)))))
 		  (or (eq format 'pbm) (mew-which-exec prog)))
 	 (message "Resizing image...")
 	 (unless (eq format 'pbm)
@@ -347,7 +355,7 @@
 	 (if mew-image-display-resize-care-height
 	     (call-process-region (point-min) (point-max) "pamscale"
 				  t '(t nil) nil
-				  "-xysize"
+				  "-xyfit"
 				  (format "%d" width)
 				  (format "%d" height))
 	   (call-process-region (point-min) (point-max) "pamscale"
