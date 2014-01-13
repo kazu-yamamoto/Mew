@@ -360,7 +360,8 @@ folder and displays it in addition to its bound key."
                  ((eq mew-input-folder-search-direction 'backward)
                   (goto-char (point-max))))))
             (mew-input-folder-display)))
-         ((not (string-match "self-insert-command" (symbol-name gfunc)))
+         ((and (symbolp gfunc)
+               (not (string-match "self-insert-command" (symbol-name gfunc))))
           (mew-input-folder-display "not allowed"))
          ((eq mew-input-folder-search-direction 'forward)
           (setq mew-input-folder-search-key
@@ -373,7 +374,8 @@ folder and displays it in addition to its bound key."
       (cond
        ((null gfunc)
         ())
-       ((string-match "self-insert-command" (symbol-name gfunc))
+       ((and (symbolp gfunc)
+             (string-match "self-insert-command" (symbol-name gfunc)))
         (insert last-command-event))
        ((and (fboundp gfunc) (commandp gfunc))
         (call-interactively gfunc))))))
