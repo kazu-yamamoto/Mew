@@ -372,12 +372,13 @@ folder and displays it in addition to its bound key."
                 (concat mew-input-folder-search-key last-str))
           (mew-input-folder-search-backward-1)))
       (cond
-       ((null gfunc)
+       ((or (null gfunc)
+            (and (symbolp gfunc) (not (fboundp gfunc))))
         ())
        ((and (symbolp gfunc)
              (string-match "self-insert-command" (symbol-name gfunc)))
         (insert last-command-event))
-       ((and (fboundp gfunc) (commandp gfunc))
+       ((commandp gfunc)
         (call-interactively gfunc))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
