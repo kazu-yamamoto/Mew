@@ -327,7 +327,7 @@ When in folder search mode, this function searches a candidate
 folder and displays it in addition to its bound key."
   (interactive)
   (let ((key (this-command-keys))
-	last-str gfunc)
+        last-str gfunc)
     (cond
      ((stringp key)
       (setq last-str key)
@@ -335,48 +335,51 @@ folder and displays it in addition to its bound key."
      ((vectorp key)
       (setq gfunc (lookup-key (current-global-map) key))
       (unless gfunc
-	(setq key (lookup-key function-key-map key))
-	(cond
-	 ((vectorp key) ;; normal Emacs
-	  (setq gfunc (lookup-key (current-global-map) key)))
-	 ((stringp key) ;; Meadow
-	  (setq last-str key)
-	  (setq gfunc (lookup-key (current-global-map) key)))))))
+        (setq key (lookup-key function-key-map key))
+        (cond
+         ((vectorp key) ;; normal Emacs
+          (setq gfunc (lookup-key (current-global-map) key)))
+         ((stringp key) ;; Meadow
+          (setq last-str key)
+          (setq gfunc (lookup-key (current-global-map) key)))))))
     (if mew-input-folder-search-direction
-	(cond
-	 ((or (equal key "\177") (equal key [127])
-	      (equal key 'delete) (equal key 'backspace))
-	  (if (null mew-input-folder-search-key)
-	      (mew-input-folder-display "not allowed")
-	    (setq mew-input-folder-search-key
-		  (substring mew-input-folder-search-key 0 -1))
-	    (when (string= mew-input-folder-search-key "")
-	      (setq mew-input-folder-search-key nil)
-	      (setq mew-input-folder-search-match nil)
-	      (with-current-buffer mew-input-folder-search-buf
-		(cond
-		 ((eq mew-input-folder-search-direction 'forward)
-		  (goto-char (point-min)))
-		 ((eq mew-input-folder-search-direction 'backward)
-		  (goto-char (point-max))))))
-	    (mew-input-folder-display)))
-	 ((not (string-match "self-insert-command" (symbol-name gfunc)))
-	  (mew-input-folder-display "not allowed"))
-	 ((eq mew-input-folder-search-direction 'forward)
-	  (setq mew-input-folder-search-key
-		(concat mew-input-folder-search-key last-str))
-	  (mew-input-folder-search-forward-1))
-	 ((eq mew-input-folder-search-direction 'backward)
-	  (setq mew-input-folder-search-key
-		(concat mew-input-folder-search-key last-str))
-	  (mew-input-folder-search-backward-1)))
+        (cond
+         ((or (equal key "\177") (equal key [127])
+              (equal key 'delete) (equal key 'backspace))
+          (if (null mew-input-folder-search-key)
+              (mew-input-folder-display "not allowed")
+            (setq mew-input-folder-search-key
+                  (substring mew-input-folder-search-key 0 -1))
+            (when (string= mew-input-folder-search-key "")
+              (setq mew-input-folder-search-key nil)
+              (setq mew-input-folder-search-match nil)
+              (with-current-buffer mew-input-folder-search-buf
+                (cond
+                 ((eq mew-input-folder-search-direction 'forward)
+                  (goto-char (point-min)))
+                 ((eq mew-input-folder-search-direction 'backward)
+                  (goto-char (point-max))))))
+            (mew-input-folder-display)))
+         ((and (symbolp gfunc)
+               (not (string-match "self-insert-command" (symbol-name gfunc))))
+          (mew-input-folder-display "not allowed"))
+         ((eq mew-input-folder-search-direction 'forward)
+          (setq mew-input-folder-search-key
+                (concat mew-input-folder-search-key last-str))
+          (mew-input-folder-search-forward-1))
+         ((eq mew-input-folder-search-direction 'backward)
+          (setq mew-input-folder-search-key
+                (concat mew-input-folder-search-key last-str))
+          (mew-input-folder-search-backward-1)))
       (cond
-       ((null gfunc)
-	())
-       ((string-match "self-insert-command" (symbol-name gfunc))
-	(insert last-command-event))
-       ((and (fboundp gfunc) (commandp gfunc))
-	(call-interactively gfunc))))))
+       ((or (null gfunc)
+            (and (symbolp gfunc) (not (fboundp gfunc))))
+        ())
+       ((and (symbolp gfunc)
+             (string-match "self-insert-command" (symbol-name gfunc)))
+        (insert last-command-event))
+       ((commandp gfunc)
+        (call-interactively gfunc))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
