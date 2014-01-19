@@ -514,7 +514,7 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 (defvar mew-regex-ignore-scan-body-list
   '("^[ \t]*$"
     "^[ \t]*[-a-zA-Z0-9]+: "
-    "^[ \t]*[>:|#;/_}]"
+    "^[ \t]*[[>:|#;/_}]"
     "^[ \t]*\\w+\\(['._-]+\\w+\\)*>"
     "^[ \t]*[[</(.-]+ *\\(snip\\|\\.\\.\\)"
     "^   "
