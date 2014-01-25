@@ -592,7 +592,8 @@
     (if (not doit)
 	(progn
 	  (mew-elet (insert "\n"))
-	  (mew-mime-part-messages t))
+	  (mew-mime-part-messages t)
+	  (message "Displaying a PDF document...failed"))
       (setq file1 (mew-make-temp-name))
       (with-current-buffer cache
 	(mew-flet
