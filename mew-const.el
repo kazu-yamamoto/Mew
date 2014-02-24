@@ -219,10 +219,10 @@
 (defun mew-sumsyn-mark () (string-to-char (mew-match-string 1)))
 
 ;; fld msg
-(defconst mew-regex-sumsyn-short   "\r \\([^ \n]*\\) \\([0-9]+\\)")
+(defconst mew-regex-sumsyn-short   "\r \\([^ \n]*\\) \\([^ \n]+\\)")
 
 ;; fld msg my-id par-id uid siz
-(defconst mew-regex-sumsyn-long    "\r \\([^ \n]*\\) \\([0-9]+\\) \\([^ \n]*\\) \\([^ \n]*\\) \\([^ \n]*\\) \\([0-9]*\\)")
+(defconst mew-regex-sumsyn-long    "\r \\([^ \n]*\\) \\([^ \n]+\\) \\([^ \n]*\\) \\([^ \n]*\\) \\([^ \n]*\\) \\([0-9]*\\)")
 
 ;; fld msg
 (defun mew-regex-sumsyn-msg (msg)
@@ -235,7 +235,7 @@
       (beginning-of-line)
       t)))
 
-(defconst mew-regex-sumsyn-valid   "\r \\([^ \n]*\\) \\([1-9][0-9]*\\)")
+(defconst mew-regex-sumsyn-valid   "\r \\([^ \n]*\\) \\([^ \n]+\\)")
 (defconst mew-regex-sumsyn-invalid "\r [^ \n]* 0[1-9][0-9]*")
 
 (defun mew-msg-validp (msg)
