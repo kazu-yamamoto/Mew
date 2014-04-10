@@ -353,12 +353,12 @@
 				t '(t nil) nil)
 	   (setq format 'pbm))
 	 (if mew-image-display-resize-care-height
-	     (call-process-region (point-min) (point-max) "pamscale"
+	     (call-process-region (point-min) (point-max) mew-prog-pamscale 
 				  t '(t nil) nil
-				  "-xyfit"
+				  mew-prog-pamscale-opt
 				  (format "%d" width)
 				  (format "%d" height))
-	   (call-process-region (point-min) (point-max) "pamscale"
+	   (call-process-region (point-min) (point-max) mew-prog-pamscale
 				t '(t nil) nil
 				"-xsize" (format "%d" width)))
 	 (message "Resizing image...done"))
