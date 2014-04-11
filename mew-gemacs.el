@@ -5,15 +5,11 @@
 
 ;;; Code:
 
-(defvar mew-prog-pamscale
-  (or (executable-find       "pamscale")
-      (executable-find       "pnmscale")
-      "")) ;; used for string-match
+(defvar mew-prog-pamscale (or (executable-find "pamscale") "pnmscale"))
 (defvar mew-prog-pamscale-opt
-  (cond ((string-match "pamscale" mew-prog-pamscale)
-         "-xyfit")
-        ((string-match "pnmscale" mew-prog-pamscale)
-         "-xysize")))
+  (cond
+   ((string-match "pamscale" mew-prog-pamscale) "-xyfit")
+   ((string-match "pnmscale" mew-prog-pamscale) "-xysize")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
