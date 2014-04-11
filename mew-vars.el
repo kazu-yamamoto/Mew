@@ -3113,14 +3113,6 @@ your public key as well as receivers' one."
 (defvar mew-prog-icontopbm   "icontopbm")
 (defvar mew-prog-pbmtoxbm    "pbmtoxbm")
 (defvar mew-prog-pbminvert   "pnminvert")
-(defvar mew-prog-pamscale
-  (or (executable-find       "pamscale")
-      (executable-find       "pnmscale")))
-(defvar mew-prog-pamscale-opt
-  (cond ((string-match "pamscale" mew-prog-pamscale)
-         "-xyfit")
-        ((string-match "pnmscale" mew-prog-pamscale)
-         "-xysize")))
 
 (defvar mew-prog-grep "grep")
 (defvar mew-prog-grep-opts '("-l" "-e"))
