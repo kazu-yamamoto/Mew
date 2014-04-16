@@ -1,6 +1,6 @@
 			    <Differences>
 			    Kazu Yamamoto
-			    April 16, 2012
+			    April 16, 2014
 
 			   <Important Note>
 
@@ -14,6 +14,15 @@
     - mew-refile-guess-alist
     - mew-inbox-action-alist
     - All above in mew-config-alist
+
+	      <Differences between Mew 6.6 and Mew 6.5>
+
+* Better image supports.
+* The body encoded with Base64/Quoted-Printable is decoded.
+* Catching up to the latest GnuPG.
+* Support of ISO-2022-JP-3 was removed in favor of UTF-8.
+* The speed to move the cursor in Summary mode got much faster.
+* Supporting stunnel 5.
 
 	      <Differences between Mew 6.5 and Mew 6.4>
 
