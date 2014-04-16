@@ -322,7 +322,7 @@ following example:
      To: pooh
      Subject: the next Sunday
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.5 on Emacs 22.3
+     X-Mailer: Mew version 6.5 on Emacs 24.3
      ----
      Would you like to play with me next Sunday?
 
@@ -336,7 +336,7 @@ This message is modified as follows, for example, if it is put into
      To: winnie-the-pooh@example.net
      Subject: the next Sunday
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.5 on Emacs 22.3
+     X-Mailer: Mew version 6.5 on Emacs 24.3
      Mime-Version: 1.0
      Content-Type: Text/Plain; charset=us-ascii
      Content-Transfer-Encoding: 7bit
@@ -470,7 +470,7 @@ body. Now the entire draft looks like:
 
      To: mew-dist
      Subject: This is header
-     X-Mailer: Mew version 6.5 on Emacs 22.3
+     X-Mailer: Mew version 6.5 on Emacs 24.3
      ----
      This is the body.
 

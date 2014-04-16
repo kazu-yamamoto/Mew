@@ -600,8 +600,8 @@ You can automatically set the "case" in Draft mode.
      default is `nil'.
 `mew-case-guess-when-replied'
      If this variable is `t', the "case" is automatically guessed
-     according `mew-case-guess-alist' when a draft is prepared by
-     replying. The default is `t'.
+     according `mew-case-guess-when-replied-alist' when a draft is
+     prepared by replying. The default is `t'.
 
 The syntax of `mew-case-guess-alist' and
 `mew-case-guess-when-replied-alist' is the same as
@@ -1225,7 +1225,7 @@ The latest Mew is available from the following repository.
 
 If you want to know about Git versions of Mew, please refer to:
 
-     http://www.mew.org/ja/git/
+     http://www.mew.org/en/git/
 
 
 
@@ -1356,7 +1356,6 @@ Variable Index
 * mew-flowed-auto-wrap:         longline.               (line   5)
 * mew-flowed-fold-length:       longline.               (line   5)
 * mew-flowed-fold-threshold:    longline.               (line   5)
-* mew-from:                     draft-mode.             (line   5)
 * mew-from-list:                cheader.                (line   5)
 * mew-ham-prog-args:            spam2.                  (line   5)
 * mew-ham-prog:                 spam2.                  (line   5)

@@ -15,14 +15,14 @@ END-INFO-DIR-ENTRY
 
 File: mew.info, Node: Top, Next: Overview, Prev: (dir), Up: (dir)
 
-Mew 6.5 Manual
+Mew 6.6 Manual
 **************
 
                                                          Kazu YAMAMOTO
                                                     Created 1996/02/18
-                                                   Modified 2012/02/24
+                                                   Modified 2014/04/16
 
-This manual documents Mew version 6.5. In addition to this manual, you
+This manual documents Mew version 6.6. In addition to this manual, you
 may find useful information about Mew from Mew's official home page
 (http://www.Mew.org/).
 
@@ -80,7 +80,7 @@ File: mew.info, Node: characteristic, Next: Emacsen, Prev: Overview, Up: Overvie
 Mew's features
 ==============
 
-The features of Mew 6.5 are as follows:
+The features of Mew 6.6 are as follows:
 
    - You can easily display a very complicated structured
      message. What you should do to view messages is just type `SPC'.
@@ -1216,7 +1216,7 @@ Then a buffer like the following is prepared.
      To:
      Subject:
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.5 on Emacs 22.3
+     X-Mailer: Mew version 6.5 on Emacs 24.3
      ----
 
 We call this "Draft mode". In Draft mode, we call the region above
