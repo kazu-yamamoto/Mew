@@ -384,7 +384,7 @@ and return (beg . end)."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2012 Mew developing team.
+;; Copyright (C) 1996-2014 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

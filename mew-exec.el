@@ -661,7 +661,7 @@ the queue, type '\\[mew-summary-send-message]' in the queue online."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2012 Mew developing team.
+;; Copyright (C) 1997-2014 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

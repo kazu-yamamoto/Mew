@@ -57,7 +57,7 @@
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2002-2012 Mew developing team.
+;; Copyright (C) 2002-2014 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

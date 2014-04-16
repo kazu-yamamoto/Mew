@@ -957,7 +957,7 @@ See 'mew-mime-content-type' to know how actions can be defined."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2012 Mew developing team.
+;; Copyright (C) 1997-2014 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without
