@@ -317,8 +317,10 @@ requires PTY.")
 
 (cond 
  ((>= emacs-major-version 24)
-  (defun mew-called-interactively-p ()
-    (called-interactively-p 'interactive)))
+  ;; this must be macro. If implemented as a function, its behavior
+  ;; is changed.
+  (defmacro mew-called-interactively-p ()
+    '(called-interactively-p 'interactive)))
  (t
   (defalias 'mew-called-interactively-p 'called-interactively-p)))
 
