@@ -37,7 +37,7 @@
     (if (null ecsdb)
 	(setq ret (mew-charset-m17n))
       (setq ret (mew-cs-to-charset (mew-ecsdb-get-cs ecsdb)))) ;; not hcs
-    (if (called-interactively-p) (message "%s" ret)) ;; for debug
+    (if (mew-called-interactively-p) (message "%s" ret)) ;; for debug
     ret))
 
 (defun mew-ecsdb-guess-region (beg end)

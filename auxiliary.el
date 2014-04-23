@@ -49,7 +49,7 @@
 (defun ange-ftp-file-name-all-completions (&rest args))
 (defun ange-ftp-file-name-completion (&rest args))
 (defun bitmap-insert-xbm-file (&rest args))
-(defun called-interactively-p)
+(defun called-interactively-p (&rest args))
 (defun charset-priority-list (&rest args))
 (defun create-image (&rest args))
 (defun define-process-argument-editing (&rest args))

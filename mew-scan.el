@@ -700,7 +700,7 @@ non-nil, only headers of messages are cached. If executed with
 	 (setq askp nil)
 	 (setq range nil) ;; update
 	 (setq scanp t))
-	((called-interactively-p) ;; "s"
+	((mew-called-interactively-p) ;; "s"
 	 (setq askp t)
 	 (setq scanp t))
 	((mew-summary-folder-dir-newp) ;; "g"
@@ -709,7 +709,7 @@ non-nil, only headers of messages are cached. If executed with
        ;; for mew-summary-exchange-point.
        (mew-sinfo-set-ret-pos (point))
        (if (mew-summary-folder-dir-newp) (setq dir-newp t))
-       (if (or (called-interactively-p) goend) (goto-char (point-max)))
+       (if (or (mew-called-interactively-p) goend) (goto-char (point-max)))
        (set-buffer-modified-p nil)
        (if (not scanp)
 	   (progn

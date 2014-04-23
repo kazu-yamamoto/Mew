@@ -310,6 +310,18 @@ requires PTY.")
       (set-mouse-position
        (selected-frame) (1- (frame-width)) 0)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Unix/Mac/Win
+;;;
+
+(cond 
+ ((>= emacs-major-version 24)
+  (defun mew-called-interactively-p ()
+    (called-interactively-p 'interactive)))
+ (t
+  (defalias 'mew-called-interactively-p 'called-interactively-p)))
+
 (provide 'mew-env)
 
 ;;; Copyright Notice:
