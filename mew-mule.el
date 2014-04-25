@@ -94,8 +94,14 @@
 ;;;
 ;;;
 
+(defun mew-coding-system-equal (cs1 cs2)
+  ;; Emacs 22 causes an error if cs is not defined.
+  (condition-case nil
+      (coding-system-equal cs1 cs2)
+    (error nil)))
+
 (defun mew-cs-to-charset (cs)
-  (let ((dcsdb (mew-assoc-equal cs mew-cs-database-for-decoding 1 'coding-system-equal)))
+  (let ((dcsdb (mew-assoc-equal cs mew-cs-database-for-decoding 1 'mew-coding-system-equal)))
     (if (null dcsdb)
 	(mew-charset-m17n)
       (mew-dcsdb-get-charset dcsdb))))
