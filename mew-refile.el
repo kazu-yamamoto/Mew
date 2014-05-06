@@ -756,10 +756,11 @@ with '\\[universal-argument]', it displays how the refile rules work in Message 
 	(customize-var '(mew-refile-ctrl-multi
 			 mew-refile-guess-key-list
 			 mew-refile-guess-strip-domainpart
-			 mew-refile-guess-from-me-is-special))
+			 mew-refile-guess-from-me-is-special
+			 mew-header-reasonable-size))
 	mew-inherit-refile-case
 	mew-inherit-refile-proto
-	fld msg guess)
+	fld msg guess boundary)
     (save-excursion
       (mew-summary-goto-message)
       (when (mew-sumsyn-match mew-regex-sumsyn-short)
@@ -771,6 +772,9 @@ with '\\[universal-argument]', it displays how the refile rules work in Message 
     (with-temp-buffer
       (mew-insert-message
        fld msg mew-cs-text-for-read mew-header-reasonable-size)
+      (save-excursion
+	(goto-char (point-min))
+	(setq boundary (search-forward "\n\n" nil t)))
       (mew-refile-decode-subject)
       (setq guess (mew-refile-guess nil t)))
     (mew-window-configure 'message)
@@ -785,6 +789,8 @@ with '\\[universal-argument]', it displays how the refile rules work in Message 
        (dolist (cvar customize-var)
 	 (insert (format "%-40s:  " cvar))
 	 (insert (format "%s\n"     (eval cvar))))
+       (unless boundary
+	 (insert "Warning: Not analyzing whole header. You may need to increase mew-header-reasonable-size\n"))
        (insert "\n** Each function's opinion:\n\n")
        ;; report how each functions guessed.
        (setq guess (cdr guess))
