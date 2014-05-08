@@ -1394,7 +1394,7 @@ than mew-file-max-size, Mew skips MIME analysis."
   :group 'mew-message
   :type 'integer)
 
-(defcustom mew-header-reasonable-size 5000
+(defcustom mew-header-reasonable-size 10000
   "*The max size of header to be inserted to a temporary buffer to
 obtain any fields."
   :group 'mew-message
