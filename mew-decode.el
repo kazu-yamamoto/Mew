@@ -854,10 +854,10 @@ Return a part syntax after moving the beginning of the content body."
 	(atpref (mew-mime-external-body-preference part)))
     ;; returns '(prefpart lastpref lastatpref)
     (cond
-     ((or (null prefpart) (< pref lastpref))
+     ((or (null prefpart) (<= pref lastpref))
       (list part pref atpref))
      ((and (= pref lastpref) atpref
-	   (or (null lastatpref) (< atpref lastatpref)))
+	   (or (null lastatpref) (<= atpref lastatpref)))
       ;; If external-body and internal-body are alternative,
       ;; what should we do?
       (list part lastpref atpref))
