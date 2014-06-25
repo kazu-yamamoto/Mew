@@ -51,6 +51,7 @@
 (defun bitmap-insert-xbm-file (&rest args))
 (defun called-interactively-p (&rest args))
 (defun charset-priority-list (&rest args))
+(defun coding-system-equal(&rest args))
 (defun create-image (&rest args))
 (defun define-process-argument-editing (&rest args))
 (defun delete-overlay (&rest args))
