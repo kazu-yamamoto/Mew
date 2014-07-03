@@ -807,7 +807,8 @@ Input decrypters' addresses."
 
 (defun mew-draft-dnd-handle-local-file (uri action)
   (let* ((from (dnd-get-local-file-name uri t))
-	 (to (file-name-nondirectory from)))
+	 (to (if from (file-name-nondirectory from)
+	       (error "Can not read %s" uri) nil)))
     (when from
       (unless (mew-attach-p)
 	(mew-draft-prepare-attachments))
@@ -826,11 +827,21 @@ Input decrypters' addresses."
        (t
 	(message "Nothing happened"))))))
 
+(defun mew-draft-dnd-handle-remote-url (uri _action)
+  (error "Remote files not supported") nil)
+
+(defvar mew-draft-dnd-handle-remote-file-function
+  (if (eq system-type 'windows-nt)
+      'mew-draft-dnd-handle-local-file
+    'mew-draft-dnd-handle-remote-url))
+
 (defun mew-draft-dnd-handle-file (uri action)
   (let ((local-file (dnd-get-local-file-uri uri)))
     (if local-file
 	(mew-draft-dnd-handle-local-file local-file action)
-      nil)))
+      (if mew-draft-dnd-handle-remote-file-function
+	  (funcall mew-draft-dnd-handle-remote-file-function uri action)
+	(error "Remote files not supported") nil))))
 
 (provide 'mew-attach)
 
