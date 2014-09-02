@@ -258,6 +258,7 @@
 					mew-use-text/html-list-type)))
 	      (progn
 		(funcall mew-prog-text/html start (point-max))
+                (delete-trailing-whitespace start (point-max))
 		(mew-highlight-body-region start (point-max)))
 	    (mew-message-for-summary "To parse HTML, type '\\[mew-summary-analyze-again]'"))))
     (insert " #     # ####### #     # #\n"
