@@ -417,6 +417,10 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
     (if (and mew-encrypt-to-myself
 	     (not (member mew-inherit-encode-pgp-signer decrypters)))
 	(setq decrypters (cons mew-inherit-encode-pgp-signer decrypters)))
+    (setq decrypters
+	  (mapcar (lambda (x)
+		    (if (string-match "^[^<].*@" x) (concat "<" x ">") x))
+		  decrypters))
     (if (not roption)
 	(setq args (append (list ooption file3 file1) eoptions decrypters))
       (mapc
@@ -852,6 +856,10 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
     (if (and mew-encrypt-to-myself
 	     (not (member mew-inherit-encode-pgp-signer decrypters)))
 	(setq decrypters (cons mew-inherit-encode-pgp-signer decrypters)))
+    (setq decrypters
+	  (mapcar (lambda (x)
+		    (if (string-match "^[^<].*@" x) (concat "<" x ">") x))
+		  decrypters))
     (setq file2 (mew-make-temp-name))
     (setq args (list loption mew-inherit-encode-pgp-signer ooption file2 file1))
     (if (not roption)
