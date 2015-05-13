@@ -152,14 +152,14 @@
 ;;; Load and save
 ;;;
 
-(defmacro mew-passwd-rendezvous ()
-  `(let ((inhibit-quit t))
-     (setq mew-passwd-rendezvous t)
-     (while mew-passwd-rendezvous
-       (sit-for 0.1)
-       ;; accept-process-output or sleep-for is not enough
-       (discard-input)
-       (if quit-flag (setq mew-passwd-rendezvous nil)))))
+(defmacro mew-passwd-rendezvous (pro)
+  `(condition-case nil
+       (let ((inhibit-quit nil))
+	 (setq mew-passwd-rendezvous t)
+	 (while mew-passwd-rendezvous
+	   (accept-process-output ,pro 0.1 nil t)))
+     (quit
+      (setq mew-passwd-rendezvous nil))))
 
 (defun mew-passwd-load ()
   (let ((process-connection-type mew-connection-type2)
@@ -176,7 +176,7 @@
 			 "-d" "--yes" "--output" tfile file))
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
-	      (mew-passwd-rendezvous)
+	      (mew-passwd-rendezvous pro)
 	      (unless (file-exists-p tfile)
 		(setq mew-passwd-master nil))
 	      (when mew-passwd-master
@@ -211,7 +211,7 @@
 			 "--yes" "--output" file tfile))
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
-	      (mew-passwd-rendezvous)
+	      (mew-passwd-rendezvous pro)
 	      (if (file-exists-p file) (throw 'loop nil)))
 	    (message "Master password is wrong! Passwords not saved")
 	    (mew-let-user-read)))
