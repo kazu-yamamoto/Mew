@@ -395,7 +395,7 @@ Binary search is used for speed reasons."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2001-2014 Mew developing team.
+;; Copyright (C) 2001-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

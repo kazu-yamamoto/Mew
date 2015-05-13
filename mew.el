@@ -744,7 +744,7 @@ Mew remain, so you can resume with buffer operations."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1994-2014 Mew developing team.
+;; Copyright (C) 1994-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

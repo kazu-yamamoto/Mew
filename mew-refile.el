@@ -915,7 +915,7 @@ This is very convenient to refile all messages picked by '\\[mew-summary-pick]'.
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1994-2014 Mew developing team.
+;; Copyright (C) 1994-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without
