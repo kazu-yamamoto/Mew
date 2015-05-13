@@ -10,28 +10,28 @@
 
 @ifset ja
 @c Mew の texinfo
-@c Copyright (C) 1996-2014 山本和彦
+@c Copyright (C) 1996-2015 山本和彦
 @c M-x texinfo-format-buffer で info にしてね。
 @end ifset
 @ifset en
 @c Texinfo for Mew
-@c Copyright (C) 1996-2014 Kazuhiko Yamamoto
+@c Copyright (C) 1996-2015 Kazuhiko Yamamoto
 @c Try "M-x texinfo-format-buffer" or makeinfo to get the Info.
 @end ifset
 
-@set version 6.6
-@set modified 2014/04/16
-@set X-Mailer Mew version 6.5 on Emacs 24.3
+@set version 6.7
+@set modified 2015/05/13
+@set X-Mailer Mew version 6.7 on Emacs 24.4
 
 @titlepage
 @sp 10
 @center
 @title Mew
 @ifset ja
-@author Copyright @copyright{}1996-2013 山本和彦
+@author Copyright @copyright{}1996-2015 山本和彦
 @end ifset
 @ifset en
-@author Copyright @copyright{}1996-2013 Kazuhiko Yamamoto
+@author Copyright @copyright{}1996-2015 Kazuhiko Yamamoto
 @end ifset
 @end titlepage
 
