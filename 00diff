@@ -1,6 +1,6 @@
 			    <Differences>
 			    Kazu Yamamoto
-			    April 16, 2014
+			     May 13, 2015
 
 			   <Important Note>
 
@@ -14,6 +14,10 @@
     - mew-refile-guess-alist
     - mew-inbox-action-alist
     - All above in mew-config-alist
+
+	      <Differences between Mew 6.7 and Mew 6.6>
+
+* Security fix for GnuPG.
 
 	      <Differences between Mew 6.6 and Mew 6.5>
 
