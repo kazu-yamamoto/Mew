@@ -15,14 +15,14 @@ END-INFO-DIR-ENTRY
 
 File: mew.info, Node: Top, Next: Overview, Prev: (dir), Up: (dir)
 
-Mew 6.6 Manual
+Mew 6.7 Manual
 **************
 
                                                          Kazu YAMAMOTO
                                                     Created 1996/02/18
-                                                   Modified 2014/04/16
+                                                   Modified 2015/05/13
 
-This manual documents Mew version 6.6. In addition to this manual, you
+This manual documents Mew version 6.7. In addition to this manual, you
 may find useful information about Mew from Mew's official home page
 (http://www.Mew.org/).
 
@@ -80,7 +80,7 @@ File: mew.info, Node: characteristic, Next: Emacsen, Prev: Overview, Up: Overvie
 Mew's features
 ==============
 
-The features of Mew 6.6 are as follows:
+The features of Mew 6.7 are as follows:
 
    - You can easily display a very complicated structured
      message. What you should do to view messages is just type `SPC'.
@@ -883,7 +883,7 @@ Here is a summary of the commands concerned with message retrieval:
      List up messages in Summary mode or flush them.
 `C-us'
      On a remote folder, list up messages in Summary mode by toggling
-     copying a header only" and "copying both a header and a body".
+     "copying a header only" and "copying both a header and a body".
 `lc'
      Copy a cached message in a remote folder to a local folder.
 
@@ -1216,7 +1216,7 @@ Then a buffer like the following is prepared.
      To:
      Subject:
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.5 on Emacs 24.3
+     X-Mailer: Mew version 6.7 on Emacs 24.4
      ----
 
 We call this "Draft mode". In Draft mode, we call the region above
@@ -1347,7 +1347,7 @@ The above example gives:
 <Circular completion of From:>
 
 In Draft mode, the From: field is inserted with the format of
-mew-name <mew-user@mew-domain>".
+"mew-name <mew-user@mew-domain>".
 
      From: Kazu Yamamoto <kazu@example.org>
 

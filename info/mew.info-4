@@ -309,7 +309,7 @@ variables to control POP.
      `mew-pop-auth-list'. The default is 'apop.
 `mew-pop-auth-list'
      A list of SASL methods in the preferred order. Currently,
-     CRAM-MD5" can be used.
+     "CRAM-MD5" can be used.
 `mew-pop-delete'
      Whether or not delete messages on a POP server after retrieval by
      POP.  If `t', delete the messages. If `nil', retain the messages.
@@ -353,7 +353,7 @@ following variables to control IMAP.
      `mew-imap-auth-list'. The default is `t'.
 `mew-imap-auth-list'
      A list of SASL methods in the preferred order.  Currently,
-     CRAM-MD5" and "LOGIN" can be used.
+     "CRAM-MD5" and "LOGIN" can be used.
 `mew-imap-delete'
      Whether or not delete messages on an IMAP server after retrieval
      by IMAP. If `t', delete the messages. If `nil', retain the
@@ -435,7 +435,7 @@ password. This section describes following variables to control SMTP.
      address is automatically set.
 `mew-smtp-auth-list'
      A list of SMTP AUTH methods in the preferred order.  Currently,
-     CRAM-MD5", "PLAIN", and "LOGIN" can be used.
+     "CRAM-MD5", "PLAIN", and "LOGIN" can be used.
 `mew-smtp-helo-domain'
      An e-mail domain to tell a SMTP server with HELO/EHLO. The
      default is "localhost".

@@ -794,7 +794,7 @@ Virtual mode is a virtual folder and it consists of "selection" and
 `Thread'
      A virtual folder to visualize message flow with indentation,
      created from a folder or a virtual folder. Its folder name has
-     *" on the both sides.
+     "*" on the both sides.
 
 In Virtual mode, you can use most commands that you can find in
 Summary mode.
