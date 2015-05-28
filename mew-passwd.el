@@ -22,6 +22,11 @@
 
 (defvar mew-passwd-encryption-name "GPG Encryption")
 (defvar mew-passwd-decryption-name "GPG Decryption")
+(defvar mew-passwd-new-gpg-p
+  (let ((version (shell-command-to-string "gpg --version")))
+    (setq version (substring version 0 (string-match (string ?\n) version)))
+    (>= (string-to-number (substring version (string-match "[1-9]" version)))
+        2.1)))
 
 (defvar mew-passwd-master nil)
 (defvar mew-passwd-alist nil)
@@ -173,6 +178,10 @@
 	    (dotimes (i N)
 	      (setq pro (mew-start-process-lang
 			 mew-passwd-decryption-name (current-buffer) mew-prog-passwd
+                         (when mew-passwd-new-gpg-p
+                           "--pinentry-mode")
+                         (when mew-passwd-new-gpg-p
+                           "loopback")
 			 "-d" "--yes" "--output" tfile file))
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
@@ -207,6 +216,10 @@
 	    (dotimes (i N)
 	      (setq pro (mew-start-process-lang
 			 mew-passwd-encryption-name (current-buffer) mew-prog-passwd
+                         (when mew-passwd-new-gpg-p
+                           "pinentry-mode")
+                         (when mew-passwd-new-gpg-p
+                           "loopback")
 			 "-c" "--cipher-algo" mew-passwd-cipher
 			 "--yes" "--output" file tfile))
 	      (set-process-filter   pro 'mew-passwd-filter)
