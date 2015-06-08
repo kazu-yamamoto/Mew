@@ -27,6 +27,7 @@
 (defvar mew-passwd-alist nil)
 (defvar mew-passwd-timer-id nil)
 (defvar mew-passwd-rendezvous nil)
+(defvar mew-passwd-agent-hack nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -58,6 +59,32 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; GPG version
+;;;
+
+(defun mew-passwd-gpg-version ()
+  (when (mew-which mew-prog-passwd exec-path)
+    (with-temp-buffer
+      (call-process mew-prog-passwd nil t nil "--version")
+      (goto-char (point-min))
+      (re-search-forward "(GnuPG) " nil t)
+      (if (looking-at "\\([0-9]+\\)\\.\\([0-9]+\\)")
+	  (list
+	   (string-to-number (match-string 1))
+	   (string-to-number (match-string 2)))))))
+
+(defun mew-passwd-check-agent-hack ()
+  (let ((ver (mew-passwd-gpg-version)))
+    (when ver
+      (let ((major (nth 0 ver))
+	    (minor (nth 1 ver)))
+	(cond
+	 ((= major 1) nil)
+	 ((= major 2) (>= minor 1))
+	 (t t))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; Setup and cleanup
 ;;;
 
@@ -68,8 +95,8 @@
 	  (mew-timer (* mew-passwd-timer-unit 60) 'mew-passwd-timer))))
 
 (defun mew-passwd-setup-master ()
-  (when (and (not mew-passwd-master)
-	     mew-use-master-passwd (eq mew-pgp-ver 3))
+  (when (and (not mew-passwd-master) mew-use-master-passwd)
+    (setq mew-passwd-agent-hack (mew-passwd-check-agent-hack))
     (let ((file (expand-file-name mew-passwd-file mew-conf-path)))
       (if (file-exists-p file)
 	  (setq mew-passwd-alist (mew-passwd-load))
@@ -139,8 +166,7 @@
 	(mew-timing)
 	mew-passwd-master)
     (let ((pass (mew-read-passwd prompt)))
-      (if (not encrypt-p)
-	  (setq mew-passwd-master pass))
+      (unless encrypt-p (setq mew-passwd-master pass))
       pass)))
 
 (defun mew-passwd-change ()
@@ -164,18 +190,22 @@
       (setq mew-passwd-rendezvous nil))))
 
 (defun mew-passwd-load ()
-  (let ((process-connection-type mew-connection-type2)
-	(file (expand-file-name mew-passwd-file mew-conf-path))
-	(tfile (mew-make-temp-name "gpg-load"))
-	(N mew-passwd-repeat)
-	pwds pro)
+  (let* ((process-connection-type mew-connection-type2)
+	 (file (expand-file-name mew-passwd-file mew-conf-path))
+	 (tfile (mew-make-temp-name "gpg-load"))
+	 (args (mew-passwd-adjust-args (list "-d" "--yes" "--output" tfile file)))
+	 (N mew-passwd-repeat)
+	 pwds pro)
     (unwind-protect
 	(with-temp-buffer
 	  (catch 'loop
 	    (dotimes (i N)
-	      (setq pro (mew-start-process-lang
-			 mew-passwd-decryption-name (current-buffer) mew-prog-passwd
-			 "-d" "--yes" "--output" tfile file))
+	      (when mew-passwd-agent-hack (mew-passwd-clear-passphrase file))
+	      (setq pro (apply 'mew-start-process-lang
+			       mew-passwd-decryption-name
+			       (current-buffer)
+			       mew-prog-passwd
+			       args))
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
 	      (mew-passwd-rendezvous pro)
@@ -194,11 +224,14 @@
     pwds))
 
 (defun mew-passwd-save ()
-  (let ((process-connection-type mew-connection-type2)
-	(file (expand-file-name mew-passwd-file mew-conf-path))
-	(tfile (mew-make-temp-name "gpg-save"))
-	(N mew-passwd-repeat)
-	pro)
+  (let* ((process-connection-type mew-connection-type2)
+	 (file (expand-file-name mew-passwd-file mew-conf-path))
+	 (tfile (mew-make-temp-name "gpg-save"))
+	 (args (mew-passwd-adjust-args (list "-c"
+					     "--cipher-algo" mew-passwd-cipher
+					     "--yes" "--output" file tfile)))
+	 (N mew-passwd-repeat)
+	 pro)
     (if (file-exists-p file)
 	(rename-file file (concat file mew-backup-suffix) 'override))
     (unwind-protect
@@ -207,10 +240,12 @@
 	  (write-region (point-min) (point-max) tfile nil 'no-msg)
 	  (catch 'loop
 	    (dotimes (i N)
-	      (setq pro (mew-start-process-lang
-			 mew-passwd-encryption-name (current-buffer) mew-prog-passwd
-			 "-c" "--cipher-algo" mew-passwd-cipher
-			 "--yes" "--output" file tfile))
+	      (setq pro (apply
+			 'mew-start-process-lang
+			 mew-passwd-encryption-name
+			 (current-buffer)
+			 mew-prog-passwd
+			 args))
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
 	      (mew-passwd-rendezvous pro)
@@ -264,6 +299,25 @@
 	  (insert 0))
 	(write-region (point-min) (point-max) file nil 'no-msg)))
     (delete-file file)))
+
+(defun mew-passwd-get-cache-id (file)
+  (with-temp-buffer
+    (call-process mew-prog-passwd nil t nil "--list-packets" file)
+    (goto-char (point-min))
+    (when (re-search-forward "salt \\([^ ,]+\\)," nil t)
+      (concat "S" (match-string 1)))))
+
+(defun mew-passwd-clear-passphrase (file)
+  (when (file-exists-p file)
+    (let ((cache-id (mew-passwd-get-cache-id file)))
+      (with-temp-buffer
+	(insert "CLEAR_PASSPHRASE " cache-id "\n")
+	(call-process-region (point-min) (point-max) "gpg-connect-agent")))))
+
+(defun mew-passwd-adjust-args (args)
+  (if mew-passwd-agent-hack
+      (cons "--pinentry-mode" (cons "loopback" args))
+    args))
 
 (provide 'mew-passwd)
 
