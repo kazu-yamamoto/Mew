@@ -35,6 +35,7 @@
 
 (defun mew-passwd-get-passwd (key)
   (nth 1 (assoc key mew-passwd-alist)))
+
 (defun mew-passwd-set-passwd (key val)
   (if (assoc key mew-passwd-alist)
       (setcar (nthcdr 1 (assoc key mew-passwd-alist)) val)
@@ -47,6 +48,7 @@
 
 (defun mew-passwd-get-counter (key)
   (nth 2 (assoc key mew-passwd-alist)))
+
 (defun mew-passwd-set-counter (key val)
   (if (assoc key mew-passwd-alist)
       (setcar (nthcdr 2 (assoc key mew-passwd-alist)) val)))
