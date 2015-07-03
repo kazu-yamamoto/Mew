@@ -20,7 +20,7 @@ Mew 6.7 Manual
 
                                                          Kazu YAMAMOTO
                                                     Created 1996/02/18
-                                                   Modified 2015/05/13
+                                                   Modified 2015/07/03
 
 This manual documents Mew version 6.7. In addition to this manual, you
 may find useful information about Mew from Mew's official home page
@@ -340,7 +340,8 @@ To use Feature 1., configure as follows:
 
      (setq mew-use-cached-passwd t)
 
-To use Feature 2., after installing GnuPG, configure as follows:
+To use Feature 2., after installing GnuPG, configure as follows (GnuPG
+version 1.x, 2.0 and 2.1 are supported for this feature):
 
      (setq mew-use-master-passwd t)
 

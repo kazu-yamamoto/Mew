@@ -1112,6 +1112,8 @@ PGP/MIME, not to old PGP. If you want to create old PGP signature with
 `C-cC-m' or `C-cC-c' always, set
 `mew-protect-privacy-with-old-pgp-signature' to `t'.
 
+For PGP/MIME and S/MIME, Mew supports GnuPG 1.x and 2.0, not 2.1.
+
 
 
 File: mew.info, Node: mark-b-comp, Next: pgp-key, Prev: shortcut, Up: Composing

@@ -20,7 +20,7 @@ Mew 6.7 マニュアル
 
                                                               山本和彦
                                                        作成 1996/02/19
-                                                       更新 2015/05/13
+                                                       更新 2015/07/03
 
 このマニュアルでは、Mew バージョン 6.7 について解説します。このマニュ
 アルの他に、Mew に関する有益な情報は Mew の公式ホームページ
@@ -340,7 +340,7 @@ File: mew.ja.info, Node: password, Next: start, Prev: configuration, Up: Overvie
      (setq mew-use-cached-passwd t)
 
 2. の機能を利用するには、GnuPG をインストールした後、以下のように設定
-します。
+します。(GnuPG は、バージョン 1.x、2.0、2.1に対応しています。)
 
      (setq mew-use-master-passwd t)
 

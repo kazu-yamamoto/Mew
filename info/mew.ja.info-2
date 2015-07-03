@@ -374,6 +374,9 @@ Draft モードにおいて現在書いている草稿に対してのみあら�
 を施すには、`mew-protect-privacy-with-old-pgp-signature'を `t' にして
 下さい。
 
+PGP/MIME や S/MIME のために Mew は GnuPG 1.x と 2.0 をサポートしていま
+すが、2.1 はサポートしていません。
+
 
 
 File: mew.ja.info, Node: mark-b-comp, Next: pgp-key, Prev: shortcut, Up: Composing

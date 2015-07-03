@@ -20,7 +20,7 @@
 @end ifset
 
 @set version 6.7
-@set modified 2015/05/13
+@set modified 2015/07/03
 @set X-Mailer Mew version 6.7 on Emacs 24.4
 
 @titlepage
@@ -807,10 +807,11 @@ To use Feature 1., configure as follows:
 
 @ifset ja
 2. の機能を利用するには、GnuPG をインストールした後、以下のように設定し
-ます。
+ます。(GnuPG は、バージョン 1.x、2.0、2.1に対応しています。)
 @end ifset
 @ifset en
-To use Feature 2., after installing GnuPG, configure as follows:
+To use Feature 2., after installing GnuPG, configure as follows
+(GnuPG version 1.x, 2.0 and 2.1 are supported for this feature):
 @end ifset
 
 @lisp
@@ -6166,6 +6167,14 @@ error occurs.
 PGP/MIME, not to old PGP. If you want to create old PGP signature with
 @samp{C-cC-m} or @samp{C-cC-c} always, set
 @samp{mew-protect-privacy-with-old-pgp-signature} to @samp{t}.
+@end ifset
+
+@ifset ja
+PGP/MIME や S/MIME のために Mew は GnuPG 1.x と 2.0 をサポートしていますが、
+2.1 はサポートしていません。
+@end ifset
+@ifset en
+For PGP/MIME and S/MIME, Mew supports GnuPG 1.x and 2.0, not 2.1.
 @end ifset
 
 @c %%%%%%%%%%%%%%%%%
