@@ -13509,23 +13509,17 @@ http://www.mew.org/en/git/
 Mew に関するメーリングリストについては、以下を参照して下さい。
 
 @example
-http://www.mew.org/mailman/listinfo
+https://groups.google.com/forum/#!forum/mew-ja
 @end example
 @end ifset
 
 @ifset en
-If you want to receive release announcement, please
-subscribe yourself to mew-release.
+If you want to receive release announcements, ask questions,
+and/or discuss features in English,
+please subscribe yourself to mew-en.
 
 @example
-http://www.mew.org/mailman/listinfo/mew-release
-@end example
-
-If you want to ask questions and/or discuss features in English,
-please subscribe yourself to mew-int.
-
-@example
-http://www.mew.org/mailman/listinfo/mew-int
+https://groups.google.com/forum/#!forum/mew-en
 @end example
 @end ifset
 
