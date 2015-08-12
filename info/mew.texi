@@ -10329,17 +10329,12 @@ buffer.
 す。) 両者をインストールしたら、"~/.mew.el" に以下の設定を加えて下さい。
 @end ifset
 @ifset en
-If you install "w3m" and "emacs-w3m", Text/Html can be displayed in
-Message mode. (Please note that multilingualized "w3m", not pure
-@w{"}w3m", is necessary for "wvHtml", "xlhtml", and "ppthtml"
-described below.)  When you install both of them, add the following to
-"~/.mew.el'.
+Text/Html can be displayed in Message mode, if you add the following to
+"~/.mew.el".
 @end ifset
 
 @lisp
-(condition-case nil
-    (require 'mew-w3m)
-  (file-error nil))
+(setq mew-use-text/html t)		; decode HTML for all folders
 @end lisp
 
 @ifset ja
@@ -10351,7 +10346,22 @@ described below.)  When you install both of them, add the following to
 With this, Text/Html can be displayed in Message mode as if it were
 Text/Plain. Even in this situation, @samp{C-cC-e} described below is a
 valid operation.
+
+By default, Text/Html is displayed using Emacs's built-in HTML renderer.
+
+Alternatively, you can display Text/Html using the w3m browser.
+First, install "w3m" and "emacs-w3m".
+(Please note that multilingualized "w3m", not pure
+@w{"}w3m", is necessary for "wvHtml", "xlhtml", and "ppthtml"
+described below.)  When you install both of them, add the following to
+"~/.mew.el".
 @end ifset
+
+@lisp
+(condition-case nil
+    (require 'mew-w3m)
+  (file-error nil))
+@end lisp
 
 @ifset ja
 "wvHtml"、"xlhtml"、"ppthtml" というコマンドをインストールすれば、それ
@@ -10483,8 +10493,8 @@ application, type @samp{C-uC-cC-e}.
 @ifset en
 Recently there are many message whose have Multipart/Alternative,
 which consists of Text/Plain and Text/Html. By default, Mew selects
-Text/Plain. When you install "emacs-w3m", you may want to choose
-Text/Html. In this case, add the following to "~/.mew.el". (Now, it's
+Text/Plain. If you prefer to choose
+Text/Html, add the following to "~/.mew.el". (Now, it's a
 good idea to get back to @ref{multipart} to review how to use
 @samp{:}.)
 @end ifset

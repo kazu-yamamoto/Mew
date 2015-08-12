@@ -16,10 +16,18 @@
 (defvar mew-unix-browser-arg '("%s"))
 (defvar mew-unix-browser-form `(,mew-unix-browser ,mew-unix-browser-arg t))
 
-(defvar mew-prog-text/html           'mew-mime-text/html-w3m) ;; See w3m.el
+(defvar mew-prog-text/html
+  (if (and (fboundp 'shr-render-region)
+	   (fboundp 'libxml-parse-html-region))
+      'shr-render-region
+    'mew-mime-text/html-w3m)) ;; See w3m.el
 (defvar mew-prog-text/html-ext       mew-unix-browser-form)
 
-(defvar mew-prog-text/xml            'mew-mime-text/html-w3m) ;; See w3m.el
+(defvar mew-prog-text/xml
+  (if (and (fboundp 'shr-render-region)
+	   (fboundp 'libxml-parse-html-region))
+      'shr-render-region
+    'mew-mime-text/html-w3m)) ;; See w3m.el
 (defvar mew-prog-text/xml-ext        mew-unix-browser-form)
 
 (defvar mew-prog-application/xml     nil)

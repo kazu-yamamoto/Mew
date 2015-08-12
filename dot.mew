@@ -91,6 +91,19 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; Using the "eww" browser
+;;;
+;;; shr-render-region is built into Emacs 24.1 and later.
+
+;(setq mew-use-text/html t)		; decode HTML for all folders
+;(setq mew-mime-multipart-alternative-list '("Text/Html" "Text/Plain" ".*"))
+;(if (and (fboundp 'shr-render-region)
+;	 ;; \\[shr-render-region] requires Emacs to be compiled with libxml2. 
+;	 (fboundp 'libxml-parse-html-region))
+;    (setq mew-prog-text/html 'shr-render-region))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; Using "w3m" with "emacs-w3m"
 ;;;
 ;;; w3m: please use w3m-m17n based on w3m 0.2.5 (or greater maybe).
@@ -101,6 +114,7 @@
 ;;;     cvs -d :pserver:anonymous@cvs.namazu.org:/storage/cvsroot co emacs-w3m
 
 
+;(setq mew-use-text/html t)		; decode HTML for all folders
 ;(setq mew-mime-multipart-alternative-list '("Text/Html" "Text/Plain" ".*"))
 
 ;(condition-case nil
