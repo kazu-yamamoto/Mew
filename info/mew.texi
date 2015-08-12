@@ -12489,13 +12489,13 @@ command line.
 
 @ifset ja
 SSL を使うには、認証局方式の信用モデルを理解している必要があります。現
-在、Mew は SSL のために "stunnel" バージョン 3 とバージョン 4 をサポー
-トしています。
+在、Mew は SSL のために "stunnel" バージョン 3、4、5 をサポートしていま
+す。
 @end ifset
 @ifset en
 Before you use SSL, you should understand the trust model of
 certificate authorities (CA). Currently, Mew supports "stunnel" version
-3 and version 4 for SSL.
+3, 4 and 5 for SSL.
 @end ifset
 
 @ifset ja
