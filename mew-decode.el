@@ -298,8 +298,9 @@ Return the existence MIME-Version: and the value of Subject:."
 	     ;; MIME-Version:
 	     (setq mimep (string-match
 			  mew-mv:-num
-			  (mew-addrstr-parse-value
-			   (mew-buffer-substring med (point)))))))
+			  (or (mew-addrstr-parse-value
+			       (mew-buffer-substring med (point)))
+			      "")))))
 	   (when prop
 	     (setq key-face (mew-key-face key nspec))
 	     (setq val-face (mew-val-face key nspec))
