@@ -37,7 +37,6 @@ EMACS = @emacsbin@
 
 elispdir = @elispdir@
 #elispdir = $(prefix)/share/emacs/site-lisp/mew
-#elispdir  = $(prefix)/lib/xemacs/site-lisp
 #elispdir = $(prefix)/lib/emacs
 
 ##
@@ -46,7 +45,6 @@ elispdir = @elispdir@
 
 etcdir = @etcdir@
 #etcdir = $(prefix)/share/emacs/site-lisp/mew/etc
-#etcdir = $(prefix)/lib/xemacs/etc/Mew
 
 ################################################################
 ##
