@@ -198,7 +198,7 @@
     (unwind-protect
 	(with-temp-buffer
 	  (catch 'loop
-	    (dotimes (i N)
+	    (dotimes (_i N) ;; prevent byte-compile warning
 	      (when mew-passwd-agent-hack (mew-passwd-clear-passphrase file))
 	      (setq pro (apply 'mew-start-process-lang
 			       mew-passwd-decryption-name
@@ -238,7 +238,7 @@
 	  (pp mew-passwd-alist (current-buffer))
 	  (write-region (point-min) (point-max) tfile nil 'no-msg)
 	  (catch 'loop
-	    (dotimes (i N)
+	    (dotimes (_i N) ;; prevent byte-compile warning
 	      (setq pro (apply
 			 'mew-start-process-lang
 			 mew-passwd-encryption-name
@@ -294,7 +294,7 @@
     (with-temp-buffer
       (let ((coding-system-for-write 'binary)
 	    (size (mew-file-get-size file)))
-	(dotimes (i size)
+	(dotimes (_i size) ;; prevent byte-compile warning
 	  (insert 0))
 	(write-region (point-min) (point-max) file nil 'no-msg)))
     (delete-file file)))

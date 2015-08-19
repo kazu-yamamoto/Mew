@@ -104,7 +104,7 @@ after ':'."
 	(message "Connecting to the SSH server...")
 	(setq pro nil)
 	(catch 'loop
-	  (dotimes (i N)
+	  (dotimes (_i N) ;; prevent byte-compile warning
 	    (setq name (mew-ssh-info-name sshserver server remoteport localport))
 	    (setq pro (apply 'start-process
 			     name nil
