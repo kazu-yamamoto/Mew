@@ -240,7 +240,7 @@
 ;;; Message-Id:, Date:
 ;;;
 
-(defun mew-encode-id-date (pnm msgid &optional resentp)
+(defun mew-encode-id-date (_pnm msgid &optional resentp)
   (let ((time (current-time)))
     (cond
      (resentp

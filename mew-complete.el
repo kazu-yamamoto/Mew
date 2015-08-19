@@ -58,7 +58,7 @@
   (mew-remove-buffer mew-buffer-completions)
   (setq mew-complete-candidates nil))
 
-(defun mew-complete-insert-folder-function (choice buffer mini-p base-size)
+(defun mew-complete-insert-folder-function (choice _buffer _mini-p _base-size)
   (let ((start (mew-minibuf-point-min))
 	(proto (substring choice 0 1))
 	(pos (point)))

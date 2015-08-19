@@ -113,7 +113,7 @@
 ;;; Draft subfunctions
 ;;;
 
-(defun mew-draft-dynamic-highlight (beg end len)
+(defun mew-draft-dynamic-highlight (_beg _end _len)
   (when (mew-in-header-p)
     (save-match-data
       (mew-highlight-header)

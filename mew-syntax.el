@@ -590,7 +590,7 @@ system."
       (put-text-property
        beg (1- (point)) 'mouse-face mew-highlight-mouse-line-face))))
 
-(defun mew-decode-syntax-print (sumbuf syntax form icon)
+(defun mew-decode-syntax-print (sumbuf syntax form _icon)
   (let* ((stx (mew-syntax-get-part syntax)))
     (with-current-buffer sumbuf
       (when (mew-syntax-multipart-p stx)
@@ -665,7 +665,7 @@ system."
 	(setq part (number-to-string num)))
       (mew-syntax-format mew-encode-syntax-dot part dec))))
 
-(defun mew-syntax-singlepart (syntax dec part func first)
+(defun mew-syntax-singlepart (syntax dec part _func first)
   ;; part is valid only when called by mew-syntax-multipart.
   (let ((ct (mew-syntax-get-value (mew-syntax-get-ct syntax) 'cap)))
     ;; see also mew-mime-message/rfc822.

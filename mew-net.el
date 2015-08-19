@@ -552,7 +552,7 @@ In remote folders, visit an inbox folder and scan with 'update."
 	(let ((get-body (if (mew-nntp-header-only case) nil t)))
 	  (mew-nntp-retrieve case 'scan case:inbox nil get-body)))))))
 
-(defun mew-mbox-retrieve (case directive inbox &optional flush)
+(defun mew-mbox-retrieve (case _directive inbox &optional flush)
   ;; directive is 'inc
   (let* ((mbox-command (mew-mbox-command case))
 	 (mbox-command-arg (mew-mbox-command-arg case))

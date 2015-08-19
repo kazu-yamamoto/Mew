@@ -248,11 +248,11 @@ A local port number can be obtained the process name after ':'. "
        ((string-match "verify failed" string)
 	(mew-ssl-set-status pnm 'verify-failure))))))
 
-(defun mew-ssl-filter3 (process string)
+(defun mew-ssl-filter3 (_process string)
   (save-excursion
     (mew-ssl-debug "SSL/TLS: " string)))
 
-(defun mew-ssl-sentinel (process event)
+(defun mew-ssl-sentinel (process _event)
   (let* ((pnm (process-name process))
 	 (file (mew-ssl-get-file pnm)))
     (save-excursion

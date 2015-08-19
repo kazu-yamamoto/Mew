@@ -191,7 +191,7 @@ after ':'."
 	(mew-ssh-set-status pnm 'bound)
 	(message "Connecting to the SSH server...done"))))))
 
-(defun mew-ssh-sentinel (process event)
+(defun mew-ssh-sentinel (process _event)
   (let ((pnm (process-name process)))
     (save-excursion
       (unless (mew-ssh-get-status pnm)

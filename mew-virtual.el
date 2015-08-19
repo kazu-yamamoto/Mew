@@ -103,7 +103,7 @@
 	      (message "Picking messages in %s..." pfolder)
 	      (mew-summary-selection-by-pick-with-mewl pattern pfolder msgs rfolder lra))))))))))
 
-(defun mew-summary-selection-by-pick-with-mewl (pattern folder src-msgs rfolder lra)
+(defun mew-summary-selection-by-pick-with-mewl (pattern _folder src-msgs rfolder lra)
   "Create selection with 'mewl'"
   (let ((opts (list "-a" "-p" pattern "-b" mew-mail-path))
 	(range (mew-summary-pick-range src-msgs)))
@@ -113,7 +113,7 @@
       (setq opts (nconc opts (list rfolder))))
     (mew-local-retrieve 'vir opts nil lra)))
 
-(defun mew-summary-selection-by-pick-with-grep (prog opts pattern folder msgs rfolder lra)
+(defun mew-summary-selection-by-pick-with-grep (prog opts pattern _folder msgs rfolder lra)
   "Create selection with 'grep'"
   (interactive)
   (let ((file-rttl (mew-summary-selection-by-pick-with-grep1 prog opts pattern rfolder msgs))

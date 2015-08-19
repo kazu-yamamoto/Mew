@@ -924,7 +924,7 @@
 (defun mew-imap-command-logout3 (pro pnm)
   (mew-imap-process-send-string pro pnm "LOGOUT"))
 
-(defun mew-imap-command-noop (pro pnm)
+(defun mew-imap-command-noop (_pro _pnm)
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

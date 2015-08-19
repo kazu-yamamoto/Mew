@@ -438,7 +438,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
 ;;; PGP decrypting
 ;;;
 
-(defun mew-pgp-decrypt (file1 file2)
+(defun mew-pgp-decrypt (_file1 file2)
   ;; file1 is a key file. just ignore.
   ;; file2 is an encrypted file with PGP.
   (message "PGP decrypting...")
@@ -533,7 +533,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
 ;;; PGP process functions
 ;;;
 
-(defun mew-pgp-process-sentinel (process event)
+(defun mew-pgp-process-sentinel (_process _event)
   (save-excursion
     (let ((decrypted mew-pgp-result-sec-succ)
 	  (msg ""))
@@ -694,12 +694,12 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
   (interactive)
   (mew-pgp-encode-message 'pgp-encryption))
 
-(defun mew-pgp-sign-encrypt-message (&optional arg)
+(defun mew-pgp-sign-encrypt-message (&optional _arg)
   "Sign then encrypt the entire draft with PGP. Input your passphrase."
   (interactive "P")
   (mew-pgp-encode-message 'pgp-signature-encryption))
 
-(defun mew-pgp-encrypt-sign-message (&optional arg)
+(defun mew-pgp-encrypt-sign-message (&optional _arg)
   "Encrypt then sign the entire draft with PGP. Input your passphrase."
   (interactive "P")
   (mew-pgp-encode-message 'pgp-encryption-signature))
@@ -1063,7 +1063,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
 
 (defvar mew-pgp-tmp-file nil)
 
-(defun mew-mime-pgp-keys (cache begin end &optional params)
+(defun mew-mime-pgp-keys (_cache _begin _end &optional _params)
   "A function to add PGP keys in Application/PGP-Keys to your
 public keyring."
   (mew-elet
@@ -1079,7 +1079,7 @@ public keyring."
     "To add this key to your pubring, type "
     "'\\<mew-summary-mode-map>\\[mew-summary-execute-external]'.\n")))
 
-(defun mew-mime-pgp-keys-ext (cache begin end &optional params)
+(defun mew-mime-pgp-keys-ext (cache begin end &optional _params)
   "A function to add PGP keys to your public keyring."
   (if (not mew-pgp-ver)
       (message "PGP not found")
@@ -1187,7 +1187,7 @@ according to a URL in a field specified by 'mew-x-pgp-key-list'."
 		       (append mew-prog-pgpkey-args (list uri)))))
     (set-process-sentinel pro 'mew-pgp-fetch-process-sentinel)))
 
-(defun mew-pgp-fetch-process-sentinel (process event)
+(defun mew-pgp-fetch-process-sentinel (process _event)
   (message "PGP key fetching...done")
   (let ((buf (process-buffer process)))
     (with-current-buffer buf

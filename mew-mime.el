@@ -66,7 +66,7 @@
     (setq mew-process-file-alist (cons (cons pro file) mew-process-file-alist))
     t)) ;; to next part
 
-(defun mew-mime-start-process-sentinel (process event)
+(defun mew-mime-start-process-sentinel (process _event)
   (let* ((al (assoc process mew-process-file-alist))
 	 (file (cdr al)))
     (save-excursion
@@ -214,7 +214,7 @@
 ;;; Text/Enriched
 ;;;
 
-(defun mew-mime-text/enriched (cache begin end &optional params)
+(defun mew-mime-text/enriched (cache begin end &optional _params)
   ;; called in Message buffer
   (when (> end begin)
     (save-excursion
@@ -239,7 +239,7 @@
 ;;; Text/Html
 ;;;
 
-(defun mew-mime-text/html (cache begin end &optional params)
+(defun mew-mime-text/html (cache begin end &optional _params)
   ;; called in Message buffer
   (if (and (symbolp mew-prog-text/html) (fboundp mew-prog-text/html))
       (save-excursion
@@ -324,7 +324,7 @@
 ;;; Text/XML
 ;;;
 
-(defun mew-mime-text/xml (cache begin end &optional params)
+(defun mew-mime-text/xml (cache begin end &optional _params)
   ;; called in Message buffer
   (if (and (symbolp mew-prog-text/xml) (fboundp mew-prog-text/xml))
       (save-excursion
@@ -357,7 +357,7 @@
 ;;; Application/Xml
 ;;;
 
-(defun mew-mime-application/xml (cache begin end &optional params)
+(defun mew-mime-application/xml (cache begin end &optional _params)
   ;; called in Message buffer
   (if (and (symbolp mew-prog-application/xml)
 	   (fboundp mew-prog-application/xml))
@@ -389,7 +389,7 @@
 ;;; Text/X-Patch
 ;;;
 
-(defun mew-mime-text/patch-ext (cache begin end &optional params)
+(defun mew-mime-text/patch-ext (cache begin end &optional _params)
   (when (> end begin)
     (save-excursion
       (switch-to-buffer-other-frame "*Mew Patch*")
@@ -403,7 +403,7 @@
 ;;; Image/*
 ;;;
 
-(defun mew-mime-image/* (cache begin end &optional params fname ct cte)
+(defun mew-mime-image/* (cache begin end &optional _params fname ct cte)
   (let* ((format (mew-mime-image-format-name ct)))
     (if (mew-image-inline-p format)
 	(mew-mime-image cache begin end format)
@@ -423,7 +423,7 @@
       (insert "\n")
       (mew-mime-part-messages t))))
 
-(defun mew-mime-image/*-ext (cache begin end &optional params fname ct cte)
+(defun mew-mime-image/*-ext (cache begin end &optional _params fname _ct _cte)
   (let ((file (mew-make-temp-name fname)))
     (with-current-buffer cache
       (mew-flet
@@ -441,7 +441,7 @@
 ;;; Message/Rfc822
 ;;;
 
-(defun mew-mime-text/rfc822-headers (cache begin end &optional params)
+(defun mew-mime-text/rfc822-headers (cache begin end &optional _params)
   ;; called in Message buffer
   (when (> end begin)
     (save-excursion
@@ -526,7 +526,7 @@
   (save-excursion
     (mew-mime-application/rtf cache begin end parameter)))
 
-(defun mew-mime-application/msoffice (prog cache begin end &optional parameter)
+(defun mew-mime-application/msoffice (prog cache begin end &optional _parameter)
   (let ((doit t) file1 file2)
     (unless mew-internal-utf-8p
       (condition-case nil
@@ -582,7 +582,7 @@
 ;;; PDF
 ;;;
 
-(defun mew-mime-application/pdf (cache begin end &optional parameter)
+(defun mew-mime-application/pdf (cache begin end &optional _parameter)
   (message "Displaying a PDF document...")
   (mew-erase-buffer)
   (let ((doit t) (prog mew-prog-application/pdf)
@@ -613,7 +613,7 @@
 ;;; Application/Ms-Tnef
 ;;;
 
-(defun mew-mime-application-ms-tnef (cache begin end &optional parameter)
+(defun mew-mime-application-ms-tnef (_cache _begin _end &optional _parameter)
   (insert " ####### #     # ####### ########\n"
 	  "    #    ##    # #       #\n"
 	  "    #    # #   # #       #\n"
@@ -628,7 +628,7 @@
 
 (defvar mew-prog-tnef "tnef")
 
-(defun mew-mime-application-ms-tnef-ext (cache begin end &optional parameter)
+(defun mew-mime-application-ms-tnef-ext (cache begin end &optional _parameter)
   ;; called in Message buffer
   (let ((file (mew-make-temp-name))
 	(dir (mew-input-directory-name mew-home)))
@@ -767,7 +767,7 @@ See 'mew-mime-content-type' to know how actions can be defined."
 	  (mew-summary-display-postscript 'no-hook))
        (select-window win)))))
 
-(defun mew-summary-execute-symbol (program ct ctl cache begin end params fname was-apo)
+(defun mew-summary-execute-symbol (program ct _ctl cache begin end params fname was-apo)
   (cond
    ((not (fboundp program))
     (message "%s is not implemented" (symbol-name program)))
@@ -791,7 +791,7 @@ See 'mew-mime-content-type' to know how actions can be defined."
 	(funcall program cache begin end params))))))
 
 ;;; external
-(defun mew-summary-execute-program (program ct ctl cache begin end params fname options async)
+(defun mew-summary-execute-program (program ct ctl cache begin end _params fname options async)
   (if (not (mew-which-exec program))
       (message "%s does not exist" program)
     (let ((file (mew-make-temp-name fname))

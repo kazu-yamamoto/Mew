@@ -282,7 +282,7 @@
        ((string-match "exiting" string)
 	(setq mew-passwd-rendezvous nil))))))
 
-(defun mew-passwd-sentinel (process event)
+(defun mew-passwd-sentinel (_process _event)
   (setq mew-passwd-rendezvous nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

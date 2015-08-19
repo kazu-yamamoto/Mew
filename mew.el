@@ -97,10 +97,10 @@ function."
   (mew-summary-send to cc subject))
 
 ;;;###autoload
-(defun mew-user-agent-compose (&optional to subject other-headers continue
-					 switch-function yank-action
-					 send-actions
-					 &rest dummy)
+(defun mew-user-agent-compose (&optional to subject other-headers _continue
+					 switch-function _yank-action
+					 _send-actions
+					 &rest _dummy)
   "Set up message composition draft with Mew.
 This is 'mail-user-agent' entry point to Mew.
 

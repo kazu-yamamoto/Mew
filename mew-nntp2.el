@@ -53,7 +53,7 @@
 ;;; Filters 2
 ;;;
 
-(defun mew-nntp2-command-mode-reader (pro pnm)
+(defun mew-nntp2-command-mode-reader (pro _pnm)
   (mew-nntp2-process-send-string pro "MODE READER"))
 
 (defun mew-nntp2-command-authinfo (pro pnm)
@@ -93,10 +93,10 @@
       (mew-nntp2-set-status pnm "quit")
       (mew-nntp2-command-quit pro pnm))))
 
-(defun mew-nntp2-command-post (pro pnm)
+(defun mew-nntp2-command-post (pro _pnm)
   (mew-nntp2-process-send-string pro "POST"))
 
-(defun mew-nntp2-command-post-post (pro pnm)
+(defun mew-nntp2-command-post-post (pro _pnm)
   (goto-char (point-max))
   (unless (bolp) (insert "\n"))
   (mew-dot-insert)
@@ -129,7 +129,7 @@
     (mew-nntp2-set-status pnm "quit")
     (mew-nntp2-process-send-string pro "QUIT")))
 
-(defun mew-nntp2-command-noop (pro pnm)
+(defun mew-nntp2-command-noop (_pro _pnm)
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

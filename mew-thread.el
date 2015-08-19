@@ -1006,8 +1006,7 @@ If the children are hidden, they will appear."
 The thread/message is specified with the mark(\\[set-mark-command])."
   (interactive)
   (mew-summary-msg
-   (let* ((zmacs-regions nil)
-	  (pos (marker-position (mark-marker))))
+   (let* ((pos (marker-position (mark-marker))))
      (cond
       ((null pos)
        (message "No marker"))

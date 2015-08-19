@@ -256,7 +256,7 @@ with a search method."
      (mew-alet
       (call-process prog nil t nil "-onlyin" path pattern)))))
 
-(defun mew-search-with-spotlight (pattern folder &optional dummy)
+(defun mew-search-with-spotlight (pattern folder &optional _dummy)
   (let ((path (mew-expand-folder folder))
 	msgs)
     (with-temp-buffer
@@ -270,7 +270,7 @@ with a search method."
       (setq msgs (sort (mapcar 'string-to-number msgs) '<))
       (mapcar 'number-to-string msgs))))
 
-(defun mew-search-virtual-with-spotlight (pattern flds &optional dummy)
+(defun mew-search-virtual-with-spotlight (pattern flds &optional _dummy)
   (let* ((mpath (mew-expand-folder mew-folder-local))
 	 (mail-regex (regexp-quote (file-name-as-directory mpath)))
 	 (regex (format "^%s%s\\([0-9]+\\)\\(%s\\)?$" mail-regex (file-name-as-directory "\\(.*\\)") mew-suffix))
@@ -351,7 +351,7 @@ with a search method."
      (mew-alet
       (call-process prog nil t nil "-m" "-p" path "-s" "-q" pattern)))))
 
-(defun mew-search-with-google (pattern folder &optional dummy)
+(defun mew-search-with-google (pattern folder &optional _dummy)
   (let* ((path (mew-expand-folder folder))
 	 msgs)
     (with-temp-buffer
@@ -366,7 +366,7 @@ with a search method."
       (mapcar 'number-to-string msgs))))
 
 ;; xxx flds are not used at this moment
-(defun mew-search-virtual-with-google (pattern flds &optional dummy)
+(defun mew-search-virtual-with-google (pattern _flds &optional _dummy)
   (let* ((path (mew-expand-folder mew-folder-local))
 	 (mail-regex (regexp-quote (file-name-as-directory path)))
 	 (regex (concat "^" mail-regex "\\(.*\\)/" "\\([0-9]+\\)"))
@@ -432,7 +432,7 @@ with a search method."
      (mew-alet
       (call-process prog nil t nil "-e" mew-suffix "-p" path "-s" pattern)))))
 
-(defun mew-search-with-wds (pattern folder &optional dummy)
+(defun mew-search-with-wds (pattern folder &optional _dummy)
   (let* ((path (mew-expand-folder folder))
 	 msgs)
     (with-temp-buffer
@@ -447,7 +447,7 @@ with a search method."
       (mapcar 'number-to-string msgs))))
 
 ;; xxx flds are not used at this moment
-(defun mew-search-virtual-with-wds (pattern flds &optional dummy)
+(defun mew-search-virtual-with-wds (pattern _flds &optional _dummy)
   (let* ((path (mew-expand-folder mew-folder-local))
 	 (mail-regex (regexp-quote (file-name-as-directory path)))
 	 (regex (concat "^" mail-regex "\\(.*\\)/" "\\([0-9]+\\)"))
@@ -470,7 +470,7 @@ with a search method."
       (write-region (point-min) (point-max) file nil 'no-msg))
     (list file rttl)))
 
-(defun mew-wds-index-folder (folder)
+(defun mew-wds-index-folder (_folder)
   "Make WDS index for all folders."
   (mew-wds-index-all))
 
@@ -616,7 +616,7 @@ with a search method."
       (set-process-filter pro 'mew-est-index-filter)
       (set-process-sentinel pro 'mew-est-index-sentinel))))
 
-(defun mew-est-index-filter (process string)
+(defun mew-est-index-filter (_process string)
   (save-excursion
     (cond
      ((string-match "exists" string)
@@ -628,7 +628,7 @@ with a search method."
      ((string-match "new messages\.\.\.done" string)
       (message "Hyper Estraier indexing ...done")))))
 
-(defun mew-est-index-sentinel (process event)
+(defun mew-est-index-sentinel (_process _event)
   (save-excursion ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -769,7 +769,7 @@ from scratch."
      (goto-char (point-max))
      (insert string))))
 
-(defun mew-summary-make-id-index-sentinel (process event)
+(defun mew-summary-make-id-index-sentinel (process _event)
   (let ((buf (process-buffer process)))
     (with-current-buffer buf
       (goto-char (point-max))
