@@ -149,8 +149,7 @@
     (mew-read-passwd prompt)))
 
 (defun mew-read-passwd (prompt)
-  (let ((inhibit-input-event-recording t)
-	;; A process filter sets inhibit-quit to t to prevent quitting.
+  (let (;; A process filter sets inhibit-quit to t to prevent quitting.
 	;; Set inhibit-quit to nil so that C-g can be used
 	(inhibit-quit nil))
     (condition-case nil
