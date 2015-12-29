@@ -5,9 +5,9 @@
 
 ;;; Code:
 
-;;
-;; MIME setting
-;;
+;;;
+;;; MIME setting
+;;;
 
 (defvar mew-darwin-exec "open")
 (defvar mew-default-external-program mew-darwin-exec)
@@ -29,27 +29,23 @@
 (defvar mew-prog-rfc822-headers  'mew-mime-text/rfc822-headers)
 (defvar mew-prog-external-body   '(mew-mime-external-body mew-mime-external-body-ext))
 (defvar mew-prog-delivery-status 'mew-mime-text/plain)
+(defvar mew-prog-oasys           mew-darwin-exec)
+(defvar mew-prog-octet-stream    mew-darwin-exec)
 (defvar mew-prog-postscript      mew-darwin-exec)
-(defvar mew-prog-pgp-keys        '(mew-mime-pgp-keys mew-mime-pgp-keys-ext))
-
 (defvar mew-prog-application/pdf "pdftotext")
 (defvar mew-prog-pdf-ext         mew-darwin-exec)
 (defvar mew-prog-pdf             `(mew-mime-application/pdf ,mew-prog-pdf-ext))
+(defvar mew-prog-pgp-keys        '(mew-mime-pgp-keys mew-mime-pgp-keys-ext))
+
+(defvar mew-prog-application/rtf nil)
+(defvar mew-prog-rtf             mew-darwin-exec)
 
 (defvar mew-prog-xml2            '(mew-mime-application/xml
 				   mew-mime-application/xml-ext))
-(defvar mew-prog-oasys           mew-darwin-exec)
-(defvar mew-prog-octet-stream    mew-darwin-exec)
-(defvar mew-prog-msword          mew-darwin-exec)
-(defvar mew-prog-msexcel         mew-darwin-exec)
-(defvar mew-prog-mspowerpoint    mew-darwin-exec)
-(defvar mew-prog-visio           mew-darwin-exec)
-(defvar mew-prog-ooffice         mew-darwin-exec)
-(defvar mew-prog-rtf             mew-darwin-exec)
 (defvar mew-prog-unzip           mew-darwin-exec)
 
 ;;;
-;;; Text/Html, Application/Xml, Image
+;;; Text/Html, Application/Xml
 ;;;
 
 (defvar mew-format-html "%s.html")
@@ -72,15 +68,36 @@
 (defvar mew-prog-application/xml     nil)
 (defvar mew-prog-application/xml-ext mew-darwin-exec)
 
+
+;;;
+;;; Image
+;;;
+
 (defvar mew-prog-image/*         'mew-mime-image/*)
 (defvar mew-prog-image/*-ext     mew-darwin-exec)
 
-(defvar mew-prog-application/msword nil)
-(defvar mew-prog-application/msexcel nil)
-(defvar mew-prog-application/mspowerpoint nil)
-(defvar mew-prog-application/rtf nil)
 
-;;
+;;;
+;;; Office
+;;;
+
+(defvar mew-prog-ooffice         mew-darwin-exec)
+
+(defvar mew-prog-application/msword nil)
+(defvar mew-prog-msword          mew-darwin-exec)
+
+(defvar mew-prog-application/msexcel nil)
+(defvar mew-prog-msexcel         mew-darwin-exec)
+
+(defvar mew-prog-application/mspowerpoint nil)
+(defvar mew-prog-mspowerpoint    mew-darwin-exec)
+
+(defvar mew-prog-visio           mew-darwin-exec)
+
+
+;;;
+;;; Misc
+;;;
 
 (setq mew-delete-temp-file nil)
 (defvar mew-dir-list-function 'mew-dir-list-with-link-count)
