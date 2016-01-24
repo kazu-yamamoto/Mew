@@ -548,7 +548,7 @@ with a search method."
 
 (defun mew-search-with-est (pattern folder filter)
   (let* ((path (mew-expand-folder folder))
-	 (regex (format "file://.*/%s/.*/\\([0-9]+\\)\\(%s\\)?$"
+	 (regex (format "file://.*?/%s/.*/\\([0-9]+\\)\\(%s\\)?$"
 			(file-name-nondirectory mew-mail-path)
 			(regexp-quote mew-suffix)))
 	 msgs)
@@ -564,7 +564,7 @@ with a search method."
       (mapcar 'number-to-string msgs))))
 
 (defun mew-search-virtual-with-est (pattern flds filter)
-  (let* ((regex (format "file://.*/%s/\\(.*\\)/\\([0-9]+\\)\\(%s\\)?$"
+  (let* ((regex (format "file://.*?/%s/\\(.*\\)/\\([0-9]+\\)\\(%s\\)?$"
 			(file-name-nondirectory mew-mail-path)
 			(regexp-quote mew-suffix)))
 	 (file (mew-make-temp-name))
