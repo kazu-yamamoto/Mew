@@ -514,15 +514,15 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 (defvar mew-regex-ignore-scan-body-list
   '("^[ \t]*$"
     "^[ \t]*[-a-zA-Z0-9]+: "
-    "^[ \t]*[>:|#;/_}]"
+    "^[ \t]*[[>:|#;/_}]"
     "^[ \t]*\\w+\\(['._-]+\\w+\\)*>"
     "^[ \t]*[[</(.-]+ *\\(snip\\|\\.\\.\\)"
     "^   "
     "^--"
     "^- --"
     "^=2D"
-    "^.*\\(:\\|;\\|/\\)[ \t]*$"
-    "^.*\\(wrote\\|writes?\\|said\\|says?\\)[^.!\n]?[ \t]*$"
+    "^.\\{1,100\\}\\(:\\|;\\|/\\)[ \t]*$"
+    "^.\\{1,100\\}\\(wrote\\|writes?\\|said\\|says?\\)[^.!\n]?[ \t]*$"
     "^[ \t]*\\(On\\|At\\) .*[^.! \t\n][ \t]*$"
     "^[ \t]*In \\(message\\|article\\|mail\\|news\\|<\\|\"\\|\\[\\|(\\)"))
 
@@ -534,14 +534,15 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	 (cte (MEW-CTE))
 	 (body "")
 	 (case-fold-search t)
-	 textp charset cs beg skip boundary found regex)
+	 textp charset cs beg end skip boundary found regex)
     (catch 'break
       (cond
        (draftp
 	(setq textp t)
 	(setq cs mew-cs-m17n))
        ((string= ctr "")
-	(if (mew-case-equal cte mew-b64) (throw 'break nil))
+	(if (and (not mew-scan-decode-bq-body) cte (mew-case-equal cte mew-b64))
+	    (throw 'break nil))
 	(setq textp t)
 	(setq cs mew-cs-autoconv))
        (t
@@ -549,11 +550,13 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	;; (setq ctl (mew-param-decode ctr))
 	;; (setq ct (mew-syntax-get-value ctl 'cap))
 	;; So, this hard coding is used.
-	(when (and (string-match "^Multipart/" ctr)
+	(while (and (string-match "^Multipart/" ctr)
 		   (string-match "boundary=\"?\\([^\"\n\t;]+\\)\"?" ctr))
 	  (setq boundary (mew-match-string 1 ctr))
 	  (setq boundary (concat "^--" (regexp-quote boundary)))
+	  (setq found nil)
 	  (catch 'loop
+	    (setq i 0)
 	    (while (< i I)
 	      (if (looking-at boundary) (throw 'loop (setq found t)))
 	      (forward-line)
@@ -571,7 +574,8 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	      (setq textp t)
 	      (setq cs mew-cs-autoconv)
 	      (throw 'break nil))))
-	(if (and cte (mew-case-equal cte mew-b64)) (throw 'break nil))
+	(if (and (not mew-scan-decode-bq-body) cte (mew-case-equal cte mew-b64))
+	    (throw 'break nil))
 	(when (string-match "^Text/Plain" ctr)
 	  (when (string-match "charset=\"?\\([^\"\n\t;]+\\)\"?" ctr)
 	    (setq charset (mew-match-string 1 ctr)))
@@ -579,6 +583,29 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	  (setq textp t)
 	  (setq cs (mew-charset-to-cs charset))
 	  (if (null cs) (setq cs mew-cs-autoconv)))))) ;; end of 'break
+    (when (and mew-scan-decode-bq-body cte
+	       (or (mew-case-equal cte mew-b64) (mew-case-equal cte mew-qp)))
+      (setq beg (point))
+      (if (not found)
+	  (setq end (point-max))
+	(while (and (not (eobp)) (not (looking-at boundary)))
+	  (forward-line))
+	(setq end (point)))
+      (goto-char beg)
+      (condition-case nil
+	  (cond
+	   ((mew-case-equal cte mew-b64)
+	    (save-restriction
+	      (narrow-to-region beg end)
+	      (base64-decode-region beg end)
+	      (while (re-search-forward "\r+$" nil t)
+		(replace-match ""))
+	      (if (re-search-forward "[^\n]\\'" nil t)
+		  (insert "\n")))
+	    (goto-char beg))
+	   ((mew-case-equal cte mew-qp)
+	    (quoted-printable-decode-region beg end mew-cs-binary)))
+	(error nil)))
     (set-buffer-multibyte nil)
     (when (and textp (mew-coding-system-p cs))
       (setq i 0)
@@ -675,7 +702,7 @@ non-nil, only headers of messages are cached. If executed with
 	 (setq askp nil)
 	 (setq range nil) ;; update
 	 (setq scanp t))
-	((interactive-p) ;; "s"
+	((mew-called-interactively-p) ;; "s"
 	 (setq askp t)
 	 (setq scanp t))
 	((mew-summary-folder-dir-newp) ;; "g"
@@ -684,7 +711,7 @@ non-nil, only headers of messages are cached. If executed with
        ;; for mew-summary-exchange-point.
        (mew-sinfo-set-ret-pos (point))
        (if (mew-summary-folder-dir-newp) (setq dir-newp t))
-       (if (or (interactive-p) goend) (goto-char (point-max)))
+       (if (or (mew-called-interactively-p) goend) (goto-char (point-max)))
        (set-buffer-modified-p nil)
        (if (not scanp)
 	   (progn
@@ -850,7 +877,7 @@ non-nil, only headers of messages are cached. If executed with
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2011 Mew developing team.
+;; Copyright (C) 1996-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

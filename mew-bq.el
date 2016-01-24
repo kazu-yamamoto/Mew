@@ -830,7 +830,8 @@ That is, each line may be more than 75."
 ;;
 
 (defun mew-param-encode (str)
-  (let* ((ecsdb (mew-ecsdb-guess-string str))
+  (let* ((ecsdb (or (mew-ecsdb-guess-string str)
+		    (mew-charset-to-ecsdb (mew-charset-m17n))))
          (hcs (mew-ecsdb-hcs ecsdb))
 	 (charset (mew-cs-to-charset hcs))
          (estr (mew-cs-encode-string str hcs))
@@ -1167,7 +1168,7 @@ That is, each line may be more than 75."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2011 Mew developing team.
+;; Copyright (C) 1997-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

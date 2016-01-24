@@ -1,6 +1,6 @@
 			    <Differences>
 			    Kazu Yamamoto
-			   August 21, 2009
+			     July 3, 2015
 
 			   <Important Note>
 
@@ -14,6 +14,32 @@
     - mew-refile-guess-alist
     - mew-inbox-action-alist
     - All above in mew-config-alist
+
+	      <Differences between Mew 6.7 and Mew 6.6>
+
+* Security fix for GnuPG.
+* GnuPG 2.1 is supported only for master password, not for PGP/MIME
+  and S/MIME.
+
+	      <Differences between Mew 6.6 and Mew 6.5>
+
+* Better image supports.
+* The body encoded with Base64/Quoted-Printable is decoded.
+* Catching up to the latest GnuPG.
+* Support of ISO-2022-JP-3 was removed in favor of UTF-8.
+* The speed to move the cursor in Summary mode got much faster.
+* Supporting stunnel 5.
+
+	      <Differences between Mew 6.5 and Mew 6.4>
+
+* Catching up to latest "stunnel".
+* Catching up to Ruby 1.9.
+* Highlighting HTML produced by "w3m".
+
+	      <Differences between Mew 6.4 and Mew 6.3>
+
+* Zip support for reading and composing.
+* Many bug fixes.
 
 	      <Differences between Mew 6.3 and Mew 6.2>
 

@@ -24,10 +24,10 @@ createDB conn = () <$ run conn format []
 
 indexDB :: Connection -> IO ()
 indexDB conn = do
-   run conn "CREATE INDEX IF NOT EXISTS mew_id ON mew (id);" []
-   run conn "REINDEX mew_id;" []
-   run conn "CREATE INDEX IF NOT EXISTS mew_parid ON mew (parid);" []
-   run conn "REINDEX mew_parid;" []
+   _ <- run conn "CREATE INDEX IF NOT EXISTS mew_id ON mew (id);" []
+   _ <- run conn "REINDEX mew_id;" []
+   _ <- run conn "CREATE INDEX IF NOT EXISTS mew_parid ON mew (parid);" []
+   _ <- run conn "REINDEX mew_parid;" []
    return ()
 
 ----------------------------------------------------------------

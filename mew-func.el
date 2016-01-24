@@ -139,12 +139,13 @@ This is O(N^2). So, do not use this function with a large LST."
 ;;; Associative list functions
 ;;;
 
-(defun mew-assoc-equal (key alist nth)
-  (let (n)
+(defun mew-assoc-equal (key alist nth &optional equal-func)
+  (let ((func (or equal-func 'equal))
+	n)
     (catch 'loop
       (dolist (a alist)
 	(setq n (nth nth a))
-	(if (or (equal n key) (eq n t)) (throw 'loop a))))))
+	(if (or (funcall func n key) (eq n t)) (throw 'loop a))))))
 
 (defun mew-assoc-case-equal (key alist nth)
   (let ((skey (downcase key)) n)
@@ -1027,13 +1028,14 @@ and sets buffer-file-coding-system."
   (unless (file-exists-p mew-temp-dir)
     (mew-make-directory mew-temp-dir)) ;; just in case
   (if fname
-      ;; File name of a temporary file should be ASCII only.
-      (if (and (string-match "^[ -~]+$" fname)
-	       (not (file-exists-p (expand-file-name fname mew-temp-dir))))
-	  (expand-file-name fname mew-temp-dir)	
-	(if (string-match "\\.[ -~]+$" fname)
-	    (concat (make-temp-name mew-temp-file) (mew-match-string 0 fname))
-	  (make-temp-name mew-temp-file)))
+      (let ((exist (file-exists-p (expand-file-name fname mew-temp-dir))))
+	(if (and (not exist)
+		 (or (not (featurep 'meadow))
+		     (string-match "^[ -~]+$" fname)))
+	    (expand-file-name fname mew-temp-dir)
+	  (if (string-match "\\.[ -~]+$" fname)
+	      (concat (make-temp-name mew-temp-file) (mew-match-string 0 fname))
+	    (make-temp-name mew-temp-file))))
     (make-temp-name mew-temp-file)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1636,7 +1638,7 @@ by side-effect."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2011 Mew developing team.
+;; Copyright (C) 1997-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

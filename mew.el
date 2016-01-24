@@ -2,7 +2,7 @@
 
 ;; Author:  Kazu Yamamoto <Kazu@Mew.org>
 ;; Created: Mar 23, 1994
-;; Revised: Jun 29, 2011
+;; Revised: Aug  4, 2015
 
 ;;; Commentary:
 
@@ -18,7 +18,7 @@
 ;;; Mew version
 ;;;
 
-(defconst mew-version-number "6.3.51"
+(defconst mew-version-number "6.7"
   "Version number for this version of Mew.")
 (defconst mew-version (format "Mew version %s" mew-version-number)
   "Version string for this version of Mew.")
@@ -228,7 +228,7 @@ of the current world is also updated."
       (mew-set '(case proto) (mew-summary-case-proto))
       (cond
        ((mew-folder-localp proto)
-	(mew-local-update (interactive-p)))
+	(mew-local-update (mew-called-interactively-p)))
        ((mew-folder-popp proto)
 	(message "Nothing updated for POP"))
        ((mew-folder-imapp proto)
@@ -236,12 +236,12 @@ of the current world is also updated."
        ((mew-folder-nntpp proto)
 	(mew-nntp-update case)))))
    (t
-    (if (interactive-p) (mew-set-environment 'no-dir))
+    (if (mew-called-interactively-p) (mew-set-environment 'no-dir))
     ;; These two must be before mew-local-update
     (message "Updating status...")
     (mew-config-setup)
     (mew-regex-setup)
-    (if arg (mew-local-update (interactive-p)))
+    (if arg (mew-local-update (mew-called-interactively-p)))
     (mew-folder-init mew-basic-folders)
     (mew-folder-init mew-inbox-folders)
     (mew-folder-init mew-queue-folders)
@@ -744,7 +744,7 @@ Mew remain, so you can resume with buffer operations."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1994-2011 Mew developing team.
+;; Copyright (C) 1994-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

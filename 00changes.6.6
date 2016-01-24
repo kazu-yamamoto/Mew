@@ -1,0 +1,186 @@
+Mew 6.6 release (2014/04/29)
+
+Mew 6.6 release candidate 3 (2014/04/25)
+
+* Guarding coding-system-equal to rescue Emacs 22.
+
+Mew 6.6 release candidate 2 (2014/04/24)
+
+* Remove argument for called-interactively-p to rescue Emacs 22.
+	Shuichi KITAGUCHI <kit>
+
+Mew 6.6 release candidate 1 (2014/04/16)
+
+* Using "pnmscale" by default.
+* temporary fix for pnm.
+* Use variables instead of fixed string
+	Yuta Yamada <cokesboy>
+* Add variables for pamscale
+	Yuta Yamada <cokesboy>
+* Allow arbitrary filename in summary buffer
+	Yoshinari Nomura <nom>
+* Support stunnel 5.x
+	Tatsuya Kinoshita <tats>
+* Add "failed" message when pdftotext does not exist
+  This is about displaying a PDF attached file.
+	Masamichi Hosoda <trueroad>
+* Update mew-regex-ignore-scan-body-list for a line beginning with "["
+	Tatsuya Kinoshita <tats>
+* Move fboundp statement
+	Yuta Yamada <cokesboy>
+* Add guard conditions
+	Yuta Yamada <cokesboy>
+* Fix indent
+	Yuta Yamada <cokesboy>
+* Change the image resizing command line option
+  pamscale option -xysize is obsoleted by -xyfit.
+	Masamichi Hosoda <trueroad>
+* Add image resizing always flag
+  variable `mew-image-display-resize-always`
+	Masamichi Hosoda <trueroad>
+* Fix variable mew-image-display-resize ignored
+  The variable `mew-image-display-resize` was ignored and did not performed.
+	Masamichi Hosoda <trueroad>
+* Add emacs unsupported image resizing
+  Emacs unsupported image size is obtained
+  after converting the image to PNM (pbm) format.
+	Masamichi Hosoda <trueroad>
+* removing unnecessary local var.
+* Fix indent
+  function mew-mime-image
+  Fix indent only. No other changed.
+	Masamichi Hosoda <trueroad>
+* Add netpbm image size obtaining and resizing
+  function mew-pbm-size
+  netpbm (PBM, PGM, PPM, PNM, PAM) formats
+	Masamichi Hosoda <trueroad>
+* Fix function mew-image-inline-p return value
+  function mew-image-inline-p may return strings.
+  It should return value t or nil only.
+	Masamichi Hosoda <trueroad>
+* Add internet media types of netpbm formats
+  image/x-portable-bitmap pbm
+  image/x-portable-graymap pgm
+  image/x-portable-pixmap ppm
+  image/x-portable-anymap pnm
+  image/x-portable-arbitrarymap pam
+	Masamichi Hosoda <trueroad>
+* Add bmp image size obtaining and resizing
+  function mew-bmp-size
+	Masamichi Hosoda <trueroad>
+* Add codes that convert from emacs unsupported formats to inline images
+  Bmp etc. to pnm / pam by netpbm image converting tools.
+	Masamichi Hosoda <trueroad>
+* Add some Content-Types
+  image/bmp: Windows bitmap (*.bmp), unofficial, IANA unregistered, Microsoft's de facto standard.
+  image/jpg: JPEG (*.jpg), unofficial, IANA unregistered, some MUA's typo, registered type is image/jpeg.
+  image/vnd.microsoft.icon: Windows icon (*.ico), IANA registered.
+	Masamichi Hosoda <trueroad>
+* Fix a comment line row position
+  The comment line row position is wrong.
+	Masamichi Hosoda <trueroad>
+* Update mew-mime-content-type to support xz suffixes
+	Tatsuya Kinoshita <tats>
+* change the image converting command
+  pngtopnm was obsoleted by pngtopam.
+  pnmtotiff was extended and renamed to pamtotiff.
+  pnmtogif is not present but pamtogif is.
+	Masamichi Hosoda <trueroad>
+* change the image resizing command
+  pnmscale was obsoleted by pamscale.
+	Masamichi Hosoda <trueroad>
+* Fix the broken default value handling in mew-input-range
+  This commit fixes a defect in my previous commit 4af7048 which broke the
+  case where askp is nil.
+	Tadaaki Nagao <abtk>
+* Fixing type by Michael Ernst.
+* Use the default value handling of completing-read
+  On Emacs at least 22.1 and later, completing-read has the 7th argument
+  DEF which specifies the default value in case the user input is null.
+  Make use of this argument instead of a home-grown logic to check the
+  user input later and assign the default value.
+  This should allow some elisp packages that replace the completion UI,
+  such as Helm and anything.el, to happily make use of given default
+  values for their good user experience.
+	Tadaaki Nagao <abtk>
+* removing duplicated image-type-available-p from auxiliary.el.
+* Prevent SIGABRT when Quoted-Printable decoding in mew-scan-body()
+	Tatsuya Kinoshita <tats>
+* syncing two mew-regex-url.
+* adding comment.
+* Revert "removing mew-url-regex in mew-lang-jp."
+  This reverts commit 7f1830f26f6ccb7c8b84db5751d1352d057f68cd.
+* file name change.
+* Stop using obsoleted one.
+  Using display-buffer-alist instead of special-display-buffer-names and
+  special-display-regexps. Using visual-line-mode instead of longlines-mode.
+  We need carefuly watch whether or not these changes introduce side-effects.
+* Using called-interactively-p instead of interactive-p.
+* removing mew-url-regex in mew-lang-jp.
+  Why does this duplicated definition exist?
+* Fix mew-prog-ssl-arg with stunnel 4
+  Currently, variable mew-prog-ssl-arg is ignored when using stunnel 4.
+  This makes it difficult to supply extra arguments to stunnel 4.  A
+  reason to do so is to work around a stunnel installation that does not
+  support FIPS.  This patch corrects the problem.  Ref. [mew-int 3158]
+	Michael Ernst <mernst>
+* Add gitlog2mewchanges to easily generate 00changes
+	Tatsuya Kinoshita <tats>
+* Changed mew-regex-url to disallow right square bracket at the end.
+	Harald Hanche-Olsen <hanche>
+* Use unfolding for mew-summary-trace-path
+	Tatsuya Kinoshita <tats>
+* Make mew-smtp-info-name use the domain part of mew-smtp-user
+	Tadaaki Nagao <abtk>
+* Find a deep part for mew-scan-body
+	Tatsuya Kinoshita <tats>
+* Remove "\r" on Base64 decoding for mew-scan-body
+	Tatsuya Kinoshita <tats>
+* Typo fix for dot.mew
+	Tatsuya Kinoshita <tats>
+* Support Base64/Quoted-Printable decoding for mew-scan-body
+	Tatsuya Kinoshita <tats>
+* Define mew-regex-url in mew-lang-jp.el
+	Tatsuya Kinoshita <tats>
+* Add coding tag to clarify non-ASCII
+	Tatsuya Kinoshita <tats>
+* Fallback to mew-charset-m17n for mew-param-encode
+	Tatsuya Kinoshita <tats>
+* removing mew-from from info.
+* Use auth-user for smtp-passtag
+	Tatsuya Kinoshita <tats>
+* Doc fix, point to the English git page
+	Tatsuya Kinoshita <tats>
+* Typo fix for info/mew.texi
+	Tatsuya Kinoshita <tats>
+* wording change.
+* adding README.md.
+* Check for the existence of a decrypted file instead of relying upon
+  Emacs's process filter
+  It seems that Emacs's process filter frequently drops some lines of
+  process's output. This patch works around this (long-standing?) Emacs
+  bug.
+	Tadaaki Nagao <abtk>
+* GnuPG at least 2.0.19 emits 'Bad session key' for a wrong passphrase
+	Tadaaki Nagao <abtk>
+* Re-highlight the message body after decrypting an old-styled PGP message
+	Tadaaki Nagao <abtk>
+* Fixing segfault of mewl.
+	Tatsuya Kinoshita <tats>
+* Supporting cp932 (Windows-31J).
+	Tatsuya Kinoshita <tats>
+* mew-cs-to-charset uses coding-system-equal.
+* s/CVS/Git/g
+  s/2011/2013/g
+* mew-draft-keep-text-charset is nil by default.
+* Defining mew-draft-keep-text-charset.
+* Removing iso-2022-jp-3 from charset guess candidates.
+* Setting bidi-paragraph-direction for speed up on Emacs 24.x.
+* Typo.
+	Munechika Sumikawa <sumikawa>
+* Supporting Mac terminal.
+* fix `mew-thread-glue' destroying file encoding.
+	Masahiro Hayashi <mhayashi1120>
+* typo fix.
+* catching up to GHC 7.4.x.
+* convert file name to ASCII on Meadow.

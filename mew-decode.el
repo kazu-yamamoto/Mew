@@ -298,8 +298,9 @@ Return the existence MIME-Version: and the value of Subject:."
 	     ;; MIME-Version:
 	     (setq mimep (string-match
 			  mew-mv:-num
-			  (mew-addrstr-parse-value
-			   (mew-buffer-substring med (point)))))))
+			  (or (mew-addrstr-parse-value
+			       (mew-buffer-substring med (point)))
+			      "")))))
 	   (when prop
 	     (setq key-face (mew-key-face key nspec))
 	     (setq val-face (mew-val-face key nspec))
@@ -854,10 +855,10 @@ Return a part syntax after moving the beginning of the content body."
 	(atpref (mew-mime-external-body-preference part)))
     ;; returns '(prefpart lastpref lastatpref)
     (cond
-     ((or (null prefpart) (< pref lastpref))
+     ((or (null prefpart) (<= pref lastpref))
       (list part pref atpref))
      ((and (= pref lastpref) atpref
-	   (or (null lastatpref) (< atpref lastatpref)))
+	   (or (null lastatpref) (<= atpref lastatpref)))
       ;; If external-body and internal-body are alternative,
       ;; what should we do?
       (list part lastpref atpref))
@@ -1125,7 +1126,7 @@ Return a part syntax after moving the beginning of the content body."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2011 Mew developing team.
+;; Copyright (C) 1996-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

@@ -77,8 +77,8 @@
     (if (not names)
 	(message "No search method")
       (setq names (mapcar (lambda (x) (list x)) names))
-      (setq name (completing-read (format "Search method (%s): " default) names nil t))
-      (if (string= name "") (setq name default))
+      (setq name (completing-read (format "Search method (%s): " default)
+				  names nil t nil nil default))
       (setq mew-search-method (nth 0 (mew-assoc-equal name mew-search-switch 1))))))
 
 (defun mew-summary-search ()
@@ -783,7 +783,7 @@ from scratch."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2005-2011 Mew developing team.
+;; Copyright (C) 2005-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

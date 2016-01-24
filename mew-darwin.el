@@ -55,10 +55,18 @@
 (defvar mew-format-html "%s.html")
 (defvar mew-format-xml  "%s.xml")
 
-(defvar mew-prog-text/html           'mew-mime-text/html-w3m) ;; See w3m.el
+(defvar mew-prog-text/html
+  (if (and (fboundp 'shr-render-region)
+	   (fboundp 'libxml-parse-html-region))
+      'shr-render-region
+    'mew-mime-text/html-w3m)) ;; See w3m.el
 (defvar mew-prog-text/html-ext       mew-darwin-exec)
 
-(defvar mew-prog-text/xml            'mew-mime-text/html-w3m) ;; See w3m.el
+(defvar mew-prog-text/xml
+  (if (and (fboundp 'shr-render-region)
+	   (fboundp 'libxml-parse-html-region))
+      'shr-render-region
+    'mew-mime-text/html-w3m)) ;; See w3m.el
 (defvar mew-prog-text/xml-ext        mew-darwin-exec)
 
 (defvar mew-prog-application/xml     nil)
@@ -81,7 +89,7 @@
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2002-2011 Mew developing team.
+;; Copyright (C) 2002-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

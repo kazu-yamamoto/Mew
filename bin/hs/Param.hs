@@ -1,16 +1,21 @@
 module Param where
 
-defaultDB :: String
+type Regexp = String
+
+defaultDB :: FilePath
 defaultDB = "~/Mail/id.db"
 
-defaultMailDir :: String
+defaultMailDir :: FilePath
 defaultMailDir = "~/Mail"
 
-defaultIgnoreRegex :: String
+defaultIgnoreRegex :: Regexp
 defaultIgnoreRegex = "^casket" -- including casket_replica
 
-defaultMessageRegex :: String
+defaultMessageRegex :: Regexp
 defaultMessageRegex = "^[0-9]+(\\.mew)?$"
 
-defaultDirModFile :: String
+defaultDirModFile :: FilePath
 defaultDirModFile = ".mew-mtime"
+
+defaultTarget :: Maybe FilePath
+defaultTarget = Nothing

@@ -135,8 +135,7 @@
 (defun mew-draft-find-and-switch (draft-path &optional switch-func)
   ;; switch-func = nil :: switch-to-buffer
   ;; switch-func = t   :: switch-to-buffer-other-window
-  (let* ((special-display-buffer-names nil)
-	 (special-display-regexps nil)
+  (let* ((display-buffer-alist nil)
 	 (same-window-buffer-names nil)
 	 (same-window-regexps nil)
 	 (draftname (mew-path-to-folder draft-path)))
@@ -772,7 +771,7 @@ Set privacy service which will be effective when \\[mew-draft-make-message]."
   (interactive)
   (if (string= mode-name "Edit")
       (mew-edit-make)
-    (if (and (interactive-p) ;; prevent the loop
+    (if (and (mew-called-interactively-p) ;; prevent the loop
 	     mew-use-old-pgp
 	     mew-protect-privacy-with-old-pgp-signature)
 	(mew-pgp-sign-message)
@@ -783,14 +782,14 @@ Set privacy service which will be effective when \\[mew-draft-make-message]."
   (interactive)
   (if (string= mode-name "Edit")
       (mew-edit-make)
-    (if (and (interactive-p) ;; just in case
+    (if (and (mew-called-interactively-p) ;; just in case
 	     mew-use-old-pgp
 	     mew-protect-privacy-with-old-pgp-signature)
 	(mew-pgp-sign-message)
       (mew-draft-process-message 'send))))
 
 (defun mew-draft-process-message (action &optional privacy signer)
-  (if (and (boundp 'longlines-mode) longlines-mode) (longlines-mode -1))
+  (if (and (boundp 'visual-line-mode) visual-line-mode) (visual-line-mode -1))
   (run-hooks 'mew-make-message-hook)
   (let* ((case (or (mew-tinfo-get-case) mew-case-default))
 	 (old-case case)
@@ -1000,7 +999,7 @@ Set privacy service which will be effective when \\[mew-draft-make-message]."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2011 Mew developing team.
+;; Copyright (C) 1996-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

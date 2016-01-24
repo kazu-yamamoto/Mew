@@ -210,7 +210,8 @@ confused. Please use '\\[mew-message-forward]' instead."
   (let ((buf (current-buffer)) url)
     (mouse-set-point event)
     (setq url (or (get-text-property (point) 'mew-url)
-		  (get-text-property (point) 'w3m-href-anchor)))
+		  (get-text-property (point) 'w3m-href-anchor)
+		  (get-text-property (point) 'shr-url)))
     (if (and url (string-match mew-regex-nonascii url))
 	(setq url (mew-puny-encode-url url)))
     (if url (browse-url url))
@@ -220,7 +221,8 @@ confused. Please use '\\[mew-message-forward]' instead."
   (interactive)
   (let (url)
     (setq url (or (get-text-property (point) 'mew-url)
-		  (get-text-property (point) 'w3m-href-anchor)))
+		  (get-text-property (point) 'w3m-href-anchor)
+		  (get-text-property (point) 'shr-url)))
     (if (and url (string-match mew-regex-nonascii url))
 	(setq url (mew-puny-encode-url url)))
     (if url (browse-url url))))
@@ -308,7 +310,7 @@ confused. Please use '\\[mew-message-forward]' instead."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2011 Mew developing team.
+;; Copyright (C) 1996-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

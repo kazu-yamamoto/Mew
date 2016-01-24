@@ -10,28 +10,28 @@
 
 @ifset ja
 @c Mew の texinfo
-@c Copyright (C) 1996-2011 山本和彦
+@c Copyright (C) 1996-2015 山本和彦
 @c M-x texinfo-format-buffer で info にしてね。
 @end ifset
 @ifset en
 @c Texinfo for Mew
-@c Copyright (C) 1996-2011 Kazuhiko Yamamoto
+@c Copyright (C) 1996-2015 Kazuhiko Yamamoto
 @c Try "M-x texinfo-format-buffer" or makeinfo to get the Info.
 @end ifset
 
-@set version 6.4
-@set modified 2011/06/29
-@set X-Mailer Mew version 6.4 on Emacs 22.3
+@set version 6.7
+@set modified 2015/07/03
+@set X-Mailer Mew version 6.7 on Emacs 24.4
 
 @titlepage
 @sp 10
 @center
 @title Mew
 @ifset ja
-@author Copyright @copyright{}1996-2011 山本和彦
+@author Copyright @copyright{}1996-2015 山本和彦
 @end ifset
 @ifset en
-@author Copyright @copyright{}1996-2011 Kazuhiko Yamamoto
+@author Copyright @copyright{}1996-2015 Kazuhiko Yamamoto
 @end ifset
 @end titlepage
 
@@ -807,10 +807,11 @@ To use Feature 1., configure as follows:
 
 @ifset ja
 2. の機能を利用するには、GnuPG をインストールした後、以下のように設定し
-ます。
+ます。(GnuPG は、バージョン 1.x、2.0、2.1に対応しています。)
 @end ifset
 @ifset en
-To use Feature 2., after installing GnuPG, configure as follows:
+To use Feature 2., after installing GnuPG, configure as follows
+(GnuPG version 1.x, 2.0 and 2.1 are supported for this feature):
 @end ifset
 
 @lisp
@@ -2527,6 +2528,8 @@ The same as @samp{E}. But, when used for other folders than +draft,
 @kindex C (Summary)
 @kindex = (Summary)
 @kindex ; (Summary)
+@kindex Rd (Summary)
+@kindex Rr (Summary)
 
 @ifset ja
 Mew では、Summary モードに以下のような便利なコマンドが用意されています。
@@ -2590,6 +2593,10 @@ PGP のバージョンを切替える(@xref{cipher-viewing})。
 ジャのカットバッファに入る。
 @item ;
 Received: フィールドを解析し、分りやすく Message モードに表示する。
+@item Rd
+フォルダを削除する。
+@item Rr
+フォルダの名前を変える。
 @end ifset
 @ifset en
 @item v
@@ -2652,6 +2659,10 @@ The full path to the message is set to the cut buffer of your
 window manager.
 @item ;
 Parse the Received: fields and display them in Message mode.
+@item Rd
+Delete this folder.
+@item Rr
+Rename this folder.
 @end ifset
 @end table
 
@@ -6158,6 +6169,14 @@ PGP/MIME, not to old PGP. If you want to create old PGP signature with
 @samp{mew-protect-privacy-with-old-pgp-signature} to @samp{t}.
 @end ifset
 
+@ifset ja
+PGP/MIME や S/MIME のために Mew は GnuPG 1.x と 2.0 をサポートしていますが、
+2.1 はサポートしていません。
+@end ifset
+@ifset en
+For PGP/MIME and S/MIME, Mew supports GnuPG 1.x and 2.0, not 2.1.
+@end ifset
+
 @c %%%%%%%%%%%%%%%%%
 @node mark-b-comp, pgp-key, shortcut, Composing
 @ifset ja
@@ -9163,7 +9182,7 @@ Mew provides the following method to search messages:
 現在のフォルダで、条件に合致したメッセージからセレクションを作る。入力
 された条件によって、@samp{mewl} か @samp{grep} のどちらかが呼ばれる。
 @item C-u/
-リージョンを指定した @samp{C-u/}。
+リージョンを指定した @samp{/}。
 @end ifset
 @ifset en
 @item ?
@@ -10310,17 +10329,12 @@ buffer.
 す。) 両者をインストールしたら、"~/.mew.el" に以下の設定を加えて下さい。
 @end ifset
 @ifset en
-If you install "w3m" and "emacs-w3m", Text/Html can be displayed in
-Message mode. (Please note that multilingualized "w3m", not pure
-@w{"}w3m", is necessary for "wvHtml", "xlhtml", and "ppthtml"
-described below.)  When you install both of them, add the following to
-"~/.mew.el'.
+Text/Html can be displayed in Message mode, if you add the following to
+"~/.mew.el".
 @end ifset
 
 @lisp
-(condition-case nil
-    (require 'mew-w3m)
-  (file-error nil))
+(setq mew-use-text/html t)		; decode HTML for all folders
 @end lisp
 
 @ifset ja
@@ -10332,7 +10346,22 @@ described below.)  When you install both of them, add the following to
 With this, Text/Html can be displayed in Message mode as if it were
 Text/Plain. Even in this situation, @samp{C-cC-e} described below is a
 valid operation.
+
+By default, Text/Html is displayed using Emacs's built-in HTML renderer.
+
+Alternatively, you can display Text/Html using the w3m browser.
+First, install "w3m" and "emacs-w3m".
+(Please note that multilingualized "w3m", not pure
+@w{"}w3m", is necessary for "wvHtml", "xlhtml", and "ppthtml"
+described below.)  When you install both of them, add the following to
+"~/.mew.el".
 @end ifset
+
+@lisp
+(condition-case nil
+    (require 'mew-w3m)
+  (file-error nil))
+@end lisp
 
 @ifset ja
 "wvHtml"、"xlhtml"、"ppthtml" というコマンドをインストールすれば、それ
@@ -10464,8 +10493,8 @@ application, type @samp{C-uC-cC-e}.
 @ifset en
 Recently there are many message whose have Multipart/Alternative,
 which consists of Text/Plain and Text/Html. By default, Mew selects
-Text/Plain. When you install "emacs-w3m", you may want to choose
-Text/Html. In this case, add the following to "~/.mew.el". (Now, it's
+Text/Plain. If you prefer to choose
+Text/Html, add the following to "~/.mew.el". (Now, it's a
 good idea to get back to @ref{multipart} to review how to use
 @samp{:}.)
 @end ifset
@@ -10490,7 +10519,6 @@ You can decrypt a ZIP attach file and display it with @samp{zz}.
 @ifset en
 @section Draft mode
 @end ifset
-@vindex mew-from
 @vindex mew-cc
 @vindex mew-dcc
 @vindex mew-header-alist
@@ -12038,8 +12066,8 @@ according @samp{mew-case-guess-alist} when a message is composed. The
 default is @samp{nil}.
 @item mew-case-guess-when-replied
 If this variable is @samp{t}, the "case" is automatically guessed
-according @samp{mew-case-guess-alist} when a draft is prepared by
-replying. The default is @samp{t}.
+according @samp{mew-case-guess-when-replied-alist} when a draft is
+prepared by replying. The default is @samp{t}.
 @end ifset
 @end vtable
 
@@ -12471,13 +12499,13 @@ command line.
 
 @ifset ja
 SSL を使うには、認証局方式の信用モデルを理解している必要があります。現
-在、Mew は SSL のために "stunnel" バージョン 3 とバージョン 4 をサポー
-トしています。
+在、Mew は SSL のために "stunnel" バージョン 3、4、5 をサポートしていま
+す。
 @end ifset
 @ifset en
 Before you use SSL, you should understand the trust model of
 certificate authorities (CA). Currently, Mew supports "stunnel" version
-3 and version 4 for SSL.
+3, 4 and 5 for SSL.
 @end ifset
 
 @ifset ja
@@ -13464,15 +13492,19 @@ http://www.Mew.org/Release/
 @end example
 
 @ifset ja
-Mew の CVS 版について知りたければ、以下を参照して下さい。
-@end ifset
-@ifset en
-If you want to know about CVS versions of Mew, please refer to:
-@end ifset
+Mew の Git 版について知りたければ、以下を参照して下さい。
 
 @example
-http://www.mew.org/anoncvs/
+http://www.mew.org/ja/git/
 @end example
+@end ifset
+@ifset en
+If you want to know about Git versions of Mew, please refer to:
+
+@example
+http://www.mew.org/en/git/
+@end example
+@end ifset
 
 @c %%%%%%%%%%%%%%%%%
 @node ml, Copyright, obtain, Avail
@@ -13487,23 +13519,17 @@ http://www.mew.org/anoncvs/
 Mew に関するメーリングリストについては、以下を参照して下さい。
 
 @example
-http://www.mew.org/mailman/listinfo
+https://groups.google.com/forum/#!forum/mew-ja
 @end example
 @end ifset
 
 @ifset en
-If you want to receive release announcement, please
-subscribe yourself to mew-release.
+If you want to receive release announcements, ask questions,
+and/or discuss features in English,
+please subscribe yourself to mew-en.
 
 @example
-http://www.mew.org/mailman/listinfo/mew-release
-@end example
-
-If you want to ask questions and/or discuss features in English,
-please subscribe yourself to mew-int.
-
-@example
-http://www.mew.org/mailman/listinfo/mew-int
+https://groups.google.com/forum/#!forum/mew-en
 @end example
 @end ifset
 
@@ -13522,7 +13548,7 @@ http://www.mew.org/mailman/listinfo/mew-int
 @ifset ja
 Mew は以下の著作権に従います。
 
-Copyright (C) 1994-2011 Mew developing team.@*
+Copyright (C) 1994-2013 Mew developing team.@*
 All rights reserved.
 
 変更の有無にかかわらず、ソースおよびバイナリ形式の再配布および利用は、以
@@ -13555,7 +13581,7 @@ All rights reserved.
 @ifset en
 Mew conforms the following copyright.
 
-Copyright (C) 1994-2011 Mew developing team.@*
+Copyright (C) 1994-2013 Mew developing team.@*
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

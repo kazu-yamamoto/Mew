@@ -495,7 +495,7 @@ If called with '\\[universal-argument]', all SSH processes, if
 any, are killed."
   (interactive "P")
   (let ((process mew-summary-buffer-process)
-	(disp-msg (interactive-p))
+	(disp-msg (mew-called-interactively-p))
 	pros sentinel)
     (if kill-ssx
 	(progn
@@ -1198,7 +1198,7 @@ Executing this command enables searching such information."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2011 Mew developing team.
+;; Copyright (C) 1996-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

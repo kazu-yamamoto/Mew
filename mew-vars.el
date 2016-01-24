@@ -967,7 +967,7 @@ value of 'mew-mail-domain' is used."
 ;;;
 
 (defcustom mew-range-list nil
-  "*A list to define RANGE for each folder.
+  "*A list of (KEY VALUE) to define RANGE for each folder.
 
 If KEY is t, all folders matches it. The corresponding RANGE is
 returned always.
@@ -1025,10 +1025,10 @@ If this value is nil, an appropriate value is set when Mew is booting.
 (defcustom mew-unread-mark-list
   '((("+inbox" "$inbox" "%inbox" "-") t)
     (t nil))
-  "*A list to define the read/unread marks for each folder when
-scanning. If VALUE is non-nil, messages are marked as
-unread. Otherwise, message are not marked, that is, marked as
-read.
+  "*A list of (KEY VALUE) to define the read/unread marks for
+each folder when scanning. If VALUE is non-nil, messages are
+marked as unread. Otherwise, message are not marked, that is,
+marked as read.
 
 If KEY is t, all folders matches it. The corresponding VALUE is
 returned always.
@@ -1179,8 +1179,8 @@ You can also set this value in 'mew-summary-form-list'."
   :type mew-custom-type-of-summary-form)
 
 (defcustom mew-summary-form-list nil
-  "*A list to define 'mew-summary-form' for each folder. Each component
-is (key summary-form).
+  "*A list of (KEY VALUE) to define 'mew-summary-form' for each
+folder. Each component is (key summary-form).
 
 If KEY is t, all folders matches it. The corresponding SUMMARY-FORM is
 returned always.
@@ -1350,6 +1350,8 @@ Functions called MEW-FOO will be defined according to this variable.")
 
 (defvar mew-scan-decode-fields (list mew-subj: mew-from: mew-to:))
 
+(defvar mew-scan-decode-bq-body t)
+
 (defvar mew-draft-address-warning-fields
   (list mew-to: mew-cc: mew-dcc: mew-bcc:
 	mew-resent-to: mew-resent-cc: mew-resent-dcc: mew-resent-bcc:))
@@ -1392,7 +1394,7 @@ than mew-file-max-size, Mew skips MIME analysis."
   :group 'mew-message
   :type 'integer)
 
-(defcustom mew-header-reasonable-size 5000
+(defcustom mew-header-reasonable-size 10000
   "*The max size of header to be inserted to a temporary buffer to
 obtain any fields."
   :group 'mew-message
@@ -1596,7 +1598,8 @@ If you want to use 'mew-use-text/html-list', this value should be 'nil'."
   :type 'boolean)
 
 (defcustom mew-use-text/html-list nil
-  "*A list to define whether or not HTML should be parsed for each folder.
+  "*A list of (KEY VALUE) to define whether or not HTML should be parsed
+for each folder.
 
 If KEY is t, all folders matches it. The corresponding boolean is
 returned always.
@@ -2855,8 +2858,8 @@ in Summary/Virtual mode."
    "\\|"
    "\\(\\(s?https?\\|ftp\\|gopher\\|telnet\\|wais\\)://\\)"
    "\\)"
-   "[^ 　\t\n>)\"]*"
-   "[^ 　\t\n>.,:)\"]+")
+   "[^ \t\n>)\"]*"
+   "[^] \t\n>.,:)\"]")
   "*Regular expression to find URL."
   :group 'mew-highlight
   :type 'regexp)
@@ -3285,7 +3288,7 @@ Level 2: syntax error."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2011 Mew developing team.
+;; Copyright (C) 1996-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

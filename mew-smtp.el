@@ -332,7 +332,7 @@
 (defun mew-smtp-info-name (case &optional fallbacked)
   (let ((server (mew-smtp-server case))
 	(port (mew-*-to-string (mew-smtp-port case)))
-	(user (mew-smtp-user-only case))
+	(user (mew-smtp-user case))
 	(sshsrv (mew-smtp-ssh-server case))
 	(name mew-smtp-info-prefix))
     (if user
@@ -357,7 +357,7 @@
       (message "SMTP time out"))))
 
 (defun mew-smtp-passtag (pnm)
-  (concat (mew-smtp-get-user pnm)
+  (concat (mew-smtp-get-auth-user pnm)
 	  "@" (mew-smtp-get-server pnm)
 	  ":" (mew-smtp-get-port pnm)))
 
@@ -751,7 +751,7 @@
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1999-2011 Mew developing team.
+;; Copyright (C) 1999-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

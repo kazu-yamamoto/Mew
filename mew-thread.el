@@ -1141,17 +1141,18 @@ The thread/message is specified with the mark(\\[set-mark-command])."
 (defun mew-thread-save-xref (fld msg id)
   (with-temp-buffer
     (let ((file (mew-expand-msg fld msg)))
-      (mew-insert-file-contents2 file)
-      (mew-header-delete-lines (list mew-x-mew-ref:))
-      (goto-char (point-min))
-      (mew-header-insert mew-x-mew-ref: id)
-      (write-region (point-min) (point-max) file nil 'no-msg))))
+      (mew-plet
+       (mew-insert-file-contents2 file)
+       (mew-header-delete-lines (list mew-x-mew-ref:))
+       (goto-char (point-min))
+       (mew-header-insert mew-x-mew-ref: id)
+       (write-region (point-min) (point-max) file nil 'no-msg)))))
 
 (provide 'mew-thread)
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2000-2011 Mew developing team.
+;; Copyright (C) 2000-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

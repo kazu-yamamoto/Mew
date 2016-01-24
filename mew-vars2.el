@@ -74,7 +74,7 @@
     ;; delete extra string (no new text means delete)
     (,mew-was-regex nil)) ;; regexp
   "*Replacement alist to simplify Subject: field body
-Each element is cons cell whos car is REGEXP to replace,
+Each element is cons cell whose car is REGEXP to replace,
 cdr is new text.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -782,7 +782,7 @@ undo-func, exec-func, and sanity-fucn.")
 
 (defvar mew-inbox-action-alist nil
   "*This variable controls actions when retrieving messages.
-Currently this works only when '\\<mew-summary-mode-map>\\[mew-summary-retrieve]' with POP or 'mewl/incm'.
+Currently this works when '\\<mew-summary-mode-map>\\[mew-summary-retrieve]'.
 You can put any marks, typically 'o' and 'D' according to message
 headers.
 
@@ -981,7 +981,7 @@ An example is as follows:
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2000-2011 Mew developing team.
+;; Copyright (C) 2000-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

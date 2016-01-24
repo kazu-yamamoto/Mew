@@ -457,6 +457,10 @@
   (if (and mew-encrypt-to-myself
 	   (not (member mew-inherit-encode-smime-signer decrypters)))
       (setq decrypters (cons mew-inherit-encode-smime-signer decrypters)))
+  (setq decrypters
+	(mapcar (lambda (x)
+		  (if (string-match "^[^<].*@" x) (concat "<" x ">") x))
+		decrypters))
   (let (decs)
     (dolist (decrypter decrypters)
       (setq decs (cons decrypter (cons roption decs))))
@@ -466,7 +470,7 @@
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2004-2011 Mew developing team.
+;; Copyright (C) 2004-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

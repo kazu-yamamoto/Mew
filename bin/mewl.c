@@ -9,7 +9,7 @@
 
 #include "mew.h"
 
-private char version_message[] = "version 5.3 20060727 Kazu Yamamoto";
+private char version_message[] = "version 6.6 20140416 Kazu Yamamoto";
 
 #ifdef HAVE_UNISTD_H
 # include <sys/types.h>
@@ -110,6 +110,9 @@ private int Field_len = MAX_FIELD_LEN;
 private int Body_len = MAX_BODY_LEN;
 private int PrintNumOfMsg = NO;
 private int Suffix_len = 0;
+
+private int no_fld_flag = 0;
+private int default_fld_error_flag = 0;
 
 /****************************************************************
  *
@@ -261,8 +264,12 @@ ch_folder(char *folder) {
 		ch_mail_home(Mail_home);
 		if (p == NUL)
 			break;
-		if (chdir(p) != 0)
-			warn_exit("can't change folder to %s.", folder);
+		if (chdir(p) != 0) {
+			if( no_fld_flag != 0 )
+				default_fld_error_flag = 1;
+			else
+				warn_exit("can't change folder to %s.", folder);
+		}
 		break;
 	case '~':
 		ch_home();
@@ -341,7 +348,7 @@ nextfield(char *p, char *lim, char **truncated_end, char **prev_beg, int hdr_onl
 	do {
 		q = p;
 		p = nextline(p, lim, hdr_only);
-		if (p == NULL) return NULL;
+		if (p == NULL) break;
 		i++;
 		if (Field_len != 0 && i == Field_len)
 			*truncated_end = p;
@@ -886,6 +893,8 @@ exec_getfile(char **filename, char **foldername) {
 			while ((c = getchar()) != LF && c != EOF) ;
 		}
 		if (STRCMP(p, CHDIR) == 0) {
+			no_fld_flag = 0;
+			default_fld_error_flag = 0;
 			p = p + strlen(CHDIR);
 			while (*p == SP || *p == TAB) p++;
 			if (strlen(p) >= sizeof(Current_folder))
@@ -895,6 +904,8 @@ exec_getfile(char **filename, char **foldername) {
 			*foldername = Current_folder;
 			continue;
 		}
+		if(default_fld_error_flag != 0)
+			warn_exit("default folder is not exist.");
 		while (*p == SP || *p == TAB) p++;
 		if (isdigit((unsigned char)*p) == 0) continue;
 		*filename = p;
@@ -1075,6 +1086,7 @@ main(int argc, char **argv) {
 		switch (rest) { /* lim == 0 */
 		case 0:
 			set_fld_rng(&Folders[lim++], NULL, NULL);
+			no_fld_flag = 1;
 			break;
 		case 1:
 			set_fld_rng(&Folders[lim++], argv[Optind], NULL);

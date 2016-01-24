@@ -117,8 +117,8 @@
     ((ascii chinese-gb2312)     cn-gb-2312 "base64"           "B" t)
     ((ascii chinese-big5-1 chinese-big5-2)
                               chinese-big5 "base64"           "B" t)
-    ((ascii japanese-jisx0208 japanese-jisx0213-1 japanese-jisx0213-2)
-                             iso-2022-jp-3 "7bit"             "B" t)
+;;    ((ascii japanese-jisx0208 japanese-jisx0213-1 japanese-jisx0213-2)
+;;                             iso-2022-jp-3 "7bit"             "B" t)
     (nil utf-7 "7bit" "Q" t) ;; xxx
     (nil utf-8 ,mew-charset-utf-8-encoding ,mew-charset-utf-8-header-encoding t)
     (nil iso-2022-jp-2 "7bit" "B" t)))
@@ -167,6 +167,7 @@
     ("iso-2022-jp-3"     iso-2022-jp-3)
     ("euc-jp"            euc-japan)
     ("shift_jis"         shift_jis)
+    ("windows-31j"       cp932)
     ("tis-620"           tis-620)
     ("koi8-r"            koi8-r)
     ("iso-2022-int-1"    iso-2022-int-1)
@@ -390,7 +391,7 @@
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2011 Mew developing team.
+;; Copyright (C) 1997-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

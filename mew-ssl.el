@@ -25,10 +25,16 @@ A file name of a certificate should be 'cert-hash.0'.
 3 - verify server's certificate which locally installed (not one from
     the server).")
 
-(defvar mew-prog-ssl-arg nil) ;; xxx what about v4?
+(defvar mew-prog-ssl-arg nil
+  "For stunnel v3, a list of command-line arguments, each one a string.
+For stunnel v4 or v5, a string of extra text to place in the configuration
+file, which should end with a newline (example: \"fips=no\\n\"); or nil to
+insert no extra text.")
 
 (defvar mew-ssl-ver nil)
 (defvar mew-ssl-minor-ver nil)
+
+(defvar mew-ssl-libwrap nil)
 
 (defconst mew-ssl-process-exec-cnt 3)
 
@@ -102,9 +108,13 @@ A file name of a certificate should be 'cert-hash.0'.
 	(insert (format "verify=%d\n" (mew-ssl-verify-level case)))
 	(insert "foreground=yes\n")
 	(insert "debug=debug\n")
-	(if (>= mew-ssl-minor-ver 22)
+	(if (and mew-ssl-libwrap (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 45)))
+	    (insert "libwrap=no\n"))
+	(if (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 22))
 	    (insert "syslog=no\n"))
 	(insert "CApath=" (expand-file-name (mew-ssl-cert-directory case)) "\n")
+	(if mew-prog-ssl-arg
+	    (insert mew-prog-ssl-arg))
 	(insert (format "[%d]\n" localport))
 	(insert (format "accept=%s:%d\n" mew-ssl-localhost localport))
 	(insert (format "connect=%s:%d\n" server remoteport))
@@ -163,7 +173,7 @@ A local port number can be obtained the process name after ':'. "
 	    (setq pnm (process-name pro))
 	    (mew-info-clean-up pnm)
 	    (mew-ssl-set-try pnm 0)
-	    (if (= mew-ssl-ver 4) (mew-ssl-set-file pnm (car opts)))
+	    (if (>= mew-ssl-ver 4) (mew-ssl-set-file pnm (car opts)))
 	    (mew-set-process-cs pro mew-cs-text-for-read mew-cs-text-for-write)
 	    (set-process-filter pro 'mew-ssl-filter1)
 	    (set-process-sentinel pro 'mew-ssl-sentinel)
@@ -214,7 +224,7 @@ A local port number can be obtained the process name after ':'. "
       (mew-ssl-set-string pnm string)
       (setq string (concat prev-str string))
       (cond
-       ((string-match "bound to" string)
+       ((string-match "bound \\(\\|FD=[0-9]+ \\)to" string)
 	(mew-ssl-set-status pnm t))
        ((string-match "gethostbyname: Valid name, no data record of requested type" string)
 	(mew-ssl-set-status pnm 'gethostbyname-failure))
@@ -231,7 +241,7 @@ A local port number can be obtained the process name after ':'. "
       (mew-ssl-set-string pnm string)
       (setq string (concat prev-str string))
       (cond
-       ((string-match "Negotiated ciphers\\|opened with SSL" string)
+       ((string-match "Negotiated \\|opened with SSL" string)
 	(mew-ssl-set-status pnm t))
        ((string-match "Failed to initialize" string)
 	(mew-ssl-set-status pnm t)) ;; xxx
@@ -259,17 +269,20 @@ A local port number can be obtained the process name after ':'. "
     (with-temp-buffer
       (call-process mew-prog-ssl nil t nil "-version")
       (goto-char (point-min))
-      (if (looking-at "stunnel 4\\.\\([0-9]+\\)")
+      (re-search-forward "^stunnel " nil t 1)
+      (if (looking-at "\\([45]\\)\\.\\([0-9]+\\)")
 	  (progn
-	    (setq mew-ssl-ver 4)
-	    (setq mew-ssl-minor-ver (string-to-number (mew-match-string 1))))
-	(setq mew-ssl-ver 3)))))
+	    (setq mew-ssl-ver (string-to-number (mew-match-string 1)))
+	    (setq mew-ssl-minor-ver (string-to-number (mew-match-string 2))))
+	(setq mew-ssl-ver 3))
+      (when (re-search-forward "LIBWRAP" nil t)
+	(setq mew-ssl-libwrap t)))))
 
 (provide 'mew-ssl)
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2002-2011 Mew developing team.
+;; Copyright (C) 2002-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

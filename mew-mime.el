@@ -256,7 +256,10 @@
 					mew-use-text/html-list
 					mew-use-text/html-string-type
 					mew-use-text/html-list-type)))
-	      (funcall mew-prog-text/html start (point-max))
+	      (progn
+		(funcall mew-prog-text/html start (point-max))
+                (delete-trailing-whitespace start (point-max))
+		(mew-highlight-body-region start (point-max)))
 	    (mew-message-for-summary "To parse HTML, type '\\[mew-summary-analyze-again]'"))))
     (insert " #     # ####### #     # #\n"
 	    " #     #    #    ##   ## #\n"
@@ -590,7 +593,8 @@
     (if (not doit)
 	(progn
 	  (mew-elet (insert "\n"))
-	  (mew-mime-part-messages t))
+	  (mew-mime-part-messages t)
+	  (message "Displaying a PDF document...failed"))
       (setq file1 (mew-make-temp-name))
       (with-current-buffer cache
 	(mew-flet
@@ -954,7 +958,7 @@ See 'mew-mime-content-type' to know how actions can be defined."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2011 Mew developing team.
+;; Copyright (C) 1997-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

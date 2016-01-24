@@ -130,6 +130,7 @@ the current message is copied to To: in a draft."
     ret))
 
 (defun mew-subject-simplify-ml (str)
+  "Remove leading \"[...]\" and \"(...)\" from subject line."
   (if (string-match "^[[(][^])]+[])][ \t]*" str)
       (substring str (match-end 0))
     str))
@@ -459,7 +460,7 @@ attached."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2011 Mew developing team.
+;; Copyright (C) 1996-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

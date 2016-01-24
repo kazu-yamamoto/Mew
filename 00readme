@@ -1,8 +1,8 @@
-			 <Readme for Mew 6.4>
+			 <Readme for Mew 6.6>
 			    Kazu Yamamoto
-			   January 5, 2010
+			     May 13, 2015
 
-This is one of beta releases of Mew 6.4.
+This is stable releases of Mew 6.7.
 
 			     <Platforms>
 
@@ -20,7 +20,7 @@ Useful information may be found from the following web page:
 
 (2) Type 'make'.
 
-(2.1) Mew's info is formatted by Emacs 22.x. So, the info could not be
+(2.1) Mew's info is formatted by Emacs 24.x. So, the info could not be
 visible with other Emacsen. In this case, type 'make info' to format
 the info.
 

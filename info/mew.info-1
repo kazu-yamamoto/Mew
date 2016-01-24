@@ -15,14 +15,14 @@ END-INFO-DIR-ENTRY
 
 File: mew.info, Node: Top, Next: Overview, Prev: (dir), Up: (dir)
 
-Mew 6.4 Manual
+Mew 6.7 Manual
 **************
 
                                                          Kazu YAMAMOTO
                                                     Created 1996/02/18
-                                                   Modified 2011/06/29
+                                                   Modified 2015/07/03
 
-This manual documents Mew version 6.4. In addition to this manual, you
+This manual documents Mew version 6.7. In addition to this manual, you
 may find useful information about Mew from Mew's official home page
 (http://www.Mew.org/).
 
@@ -80,7 +80,7 @@ File: mew.info, Node: characteristic, Next: Emacsen, Prev: Overview, Up: Overvie
 Mew's features
 ==============
 
-The features of Mew 6.4 are as follows:
+The features of Mew 6.7 are as follows:
 
    - You can easily display a very complicated structured
      message. What you should do to view messages is just type `SPC'.
@@ -340,7 +340,8 @@ To use Feature 1., configure as follows:
 
      (setq mew-use-cached-passwd t)
 
-To use Feature 2., after installing GnuPG, configure as follows:
+To use Feature 2., after installing GnuPG, configure as follows (GnuPG
+version 1.x, 2.0 and 2.1 are supported for this feature):
 
      (setq mew-use-master-passwd t)
 
@@ -883,7 +884,7 @@ Here is a summary of the commands concerned with message retrieval:
      List up messages in Summary mode or flush them.
 `C-us'
      On a remote folder, list up messages in Summary mode by toggling
-     copying a header only" and "copying both a header and a body".
+     "copying a header only" and "copying both a header and a body".
 `lc'
      Copy a cached message in a remote folder to a local folder.
 
@@ -1094,6 +1095,10 @@ Mew provides you with the following useful commands in Summary mode:
      cut buffer of your window manager.
 `;'
      Parse the Received: fields and display them in Message mode.
+`Rd'
+     Delete this folder.
+`Rr'
+     Rename this folder.
 
 
 
@@ -1212,7 +1217,7 @@ Then a buffer like the following is prepared.
      To:
      Subject:
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.4 on Emacs 22.3
+     X-Mailer: Mew version 6.7 on Emacs 24.4
      ----
 
 We call this "Draft mode". In Draft mode, we call the region above
@@ -1343,7 +1348,7 @@ The above example gives:
 <Circular completion of From:>
 
 In Draft mode, the From: field is inserted with the format of
-mew-name <mew-user@mew-domain>".
+"mew-name <mew-user@mew-domain>".
 
      From: Kazu Yamamoto <kazu@example.org>
 

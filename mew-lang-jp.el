@@ -172,11 +172,23 @@
 (defvar mew-highlight-body-regex-cite
   "^\\(\\([ \t]\\{,7\\}\\([>:|〉＞》≫：｜]\\|\\w+\\([._-]+\\w+\\)*>+\\)\\)+\\).*")
 
+;; mew-regex-url is defined in mew-vars.el. This duplication is intentional.
+;; This definition includes full-width space characters.
+(defvar mew-regex-url
+  (concat
+   "\\b\\("
+   "\\(\\(file\\|news\\|mailto\\):\\)"
+   "\\|"
+   "\\(\\(s?https?\\|ftp\\|gopher\\|telnet\\|wais\\)://\\)"
+   "\\)"
+   "[^ 　\t\n>)\"]*"
+   "[^] 　\t\n>.,:)\"]+"))
+
 (provide 'mew-lang-jp)
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2011 Mew developing team.
+;; Copyright (C) 1997-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

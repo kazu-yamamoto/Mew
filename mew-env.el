@@ -42,7 +42,7 @@ requires PTY.")
 
 (if window-system (require 'faces))
 
-(defvar mew-icon-p (featurep 'tool-bar))
+(defvar mew-icon-p (and (featurep 'tool-bar) window-system))
 
 (defvar mew-internal-utf-8p nil)
 (if (or (fboundp 'utf-translate-cjk-mode) ;; Emacs 22.1 or later
@@ -310,11 +310,25 @@ requires PTY.")
       (set-mouse-position
        (selected-frame) (1- (frame-width)) 0)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Unix/Mac/Win
+;;;
+
+(cond 
+ ((>= emacs-major-version 24)
+  ;; this must be macro. If implemented as a function, its behavior
+  ;; is changed.
+  (defmacro mew-called-interactively-p ()
+    '(called-interactively-p 'interactive)))
+ (t
+  (defalias 'mew-called-interactively-p 'called-interactively-p)))
+
 (provide 'mew-env)
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2011 Mew developing team.
+;; Copyright (C) 1997-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

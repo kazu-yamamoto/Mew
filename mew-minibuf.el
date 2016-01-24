@@ -327,7 +327,7 @@ When in folder search mode, this function searches a candidate
 folder and displays it in addition to its bound key."
   (interactive)
   (let ((key (this-command-keys))
-	last-str gfunc)
+        last-str gfunc)
     (cond
      ((stringp key)
       (setq last-str key)
@@ -335,48 +335,51 @@ folder and displays it in addition to its bound key."
      ((vectorp key)
       (setq gfunc (lookup-key (current-global-map) key))
       (unless gfunc
-	(setq key (lookup-key function-key-map key))
-	(cond
-	 ((vectorp key) ;; normal Emacs
-	  (setq gfunc (lookup-key (current-global-map) key)))
-	 ((stringp key) ;; Meadow
-	  (setq last-str key)
-	  (setq gfunc (lookup-key (current-global-map) key)))))))
+        (setq key (lookup-key function-key-map key))
+        (cond
+         ((vectorp key) ;; normal Emacs
+          (setq gfunc (lookup-key (current-global-map) key)))
+         ((stringp key) ;; Meadow
+          (setq last-str key)
+          (setq gfunc (lookup-key (current-global-map) key)))))))
     (if mew-input-folder-search-direction
-	(cond
-	 ((or (equal key "\177") (equal key [127])
-	      (equal key 'delete) (equal key 'backspace))
-	  (if (null mew-input-folder-search-key)
-	      (mew-input-folder-display "not allowed")
-	    (setq mew-input-folder-search-key
-		  (substring mew-input-folder-search-key 0 -1))
-	    (when (string= mew-input-folder-search-key "")
-	      (setq mew-input-folder-search-key nil)
-	      (setq mew-input-folder-search-match nil)
-	      (with-current-buffer mew-input-folder-search-buf
-		(cond
-		 ((eq mew-input-folder-search-direction 'forward)
-		  (goto-char (point-min)))
-		 ((eq mew-input-folder-search-direction 'backward)
-		  (goto-char (point-max))))))
-	    (mew-input-folder-display)))
-	 ((not (string-match "self-insert-command" (symbol-name gfunc)))
-	  (mew-input-folder-display "not allowed"))
-	 ((eq mew-input-folder-search-direction 'forward)
-	  (setq mew-input-folder-search-key
-		(concat mew-input-folder-search-key last-str))
-	  (mew-input-folder-search-forward-1))
-	 ((eq mew-input-folder-search-direction 'backward)
-	  (setq mew-input-folder-search-key
-		(concat mew-input-folder-search-key last-str))
-	  (mew-input-folder-search-backward-1)))
+        (cond
+         ((or (equal key "\177") (equal key [127])
+              (equal key 'delete) (equal key 'backspace))
+          (if (null mew-input-folder-search-key)
+              (mew-input-folder-display "not allowed")
+            (setq mew-input-folder-search-key
+                  (substring mew-input-folder-search-key 0 -1))
+            (when (string= mew-input-folder-search-key "")
+              (setq mew-input-folder-search-key nil)
+              (setq mew-input-folder-search-match nil)
+              (with-current-buffer mew-input-folder-search-buf
+                (cond
+                 ((eq mew-input-folder-search-direction 'forward)
+                  (goto-char (point-min)))
+                 ((eq mew-input-folder-search-direction 'backward)
+                  (goto-char (point-max))))))
+            (mew-input-folder-display)))
+         ((and (symbolp gfunc)
+               (not (string-match "self-insert-command" (symbol-name gfunc))))
+          (mew-input-folder-display "not allowed"))
+         ((eq mew-input-folder-search-direction 'forward)
+          (setq mew-input-folder-search-key
+                (concat mew-input-folder-search-key last-str))
+          (mew-input-folder-search-forward-1))
+         ((eq mew-input-folder-search-direction 'backward)
+          (setq mew-input-folder-search-key
+                (concat mew-input-folder-search-key last-str))
+          (mew-input-folder-search-backward-1)))
       (cond
-       ((null gfunc)
-	())
-       ((string-match "self-insert-command" (symbol-name gfunc))
-	(insert last-command-event))
-       ((and (fboundp gfunc) (commandp gfunc))
-	(call-interactively gfunc))))))
+       ((or (null gfunc)
+            (and (symbolp gfunc) (not (fboundp gfunc))))
+        ())
+       ((and (symbolp gfunc)
+             (string-match "self-insert-command" (symbol-name gfunc)))
+        (insert last-command-event))
+       ((commandp gfunc)
+        (call-interactively gfunc))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -746,16 +749,16 @@ it is deleted automatically."
 		"-")))))
 
 (defun mew-input-range (folder askp)
-  (let ((default (or (car (mew-folder-spec folder mew-range-list
-					   mew-range-list-string-type
-					   mew-range-list-list-type))
-		     mew-range-str-update))
-	comp range ret)
+  (let* ((default (or (car (mew-folder-spec folder mew-range-list
+					    mew-range-list-string-type
+					    mew-range-list-list-type))
+		      mew-range-str-update))
+	 (range default)
+	 comp ret)
     (when askp
       (setq comp (mapcar 'list mew-input-range-list))
-      (setq range (completing-read (format "Range (%s): " default) comp)))
-    (if (or (string= range "") (null range))
-	(setq range default))
+      (setq range (completing-read (format "Range (%s): " default) comp
+				   nil nil nil nil default)))
     (cond
      ((string= range mew-range-str-all)
       (setq ret (list mew-range-all 'erase)))
@@ -781,9 +784,8 @@ it is deleted automatically."
 					    mew-range-list-string-type
 					    mew-range-list-list-type))))
 	 (comp (mapcar 'list mew-input-range-remote-list))
-	 (range (completing-read (format "Range (%s): " default) comp)))
-    (if (or (string= range "") (null range))
-	(setq range default))
+	 (range (completing-read (format "Range (%s): " default) comp
+				 nil nil nil nil default)))
     (cond
      ((string= range mew-range-str-sync)   'sync)
      ((string= range mew-range-str-all)      t)
@@ -799,15 +801,12 @@ it is deleted automatically."
 
 (defun mew-input-draft-buffer (default)
   (let* ((regex (mew-folder-regex (file-name-as-directory mew-draft-folder)))
-	 (comp (mew-buffer-list regex t))
-	 buf)
+	 (comp (mew-buffer-list regex t)))
     (if (and (= (length comp) 1)
 	     (string= default (car (car comp))))
 	default
-      (setq buf (completing-read (format "Buffer (%s): " default) comp))
-      (if (string= buf "")
-	  default
-	buf))))
+      (completing-read (format "Buffer (%s): " default) comp
+		       nil nil nil nil default))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -902,9 +901,8 @@ it is deleted automatically."
 (defun mew-input-general (prompt alist &optional require-match initial)
   (let* ((completion-ignore-case t)
 	 (question (if initial (format "%s (%s): " prompt initial)
-		     (format "(%s): " prompt)))
-	 (value (completing-read question alist nil require-match nil)))
-    (if (and initial (string= value "")) initial value)))
+		     (format "(%s): " prompt))))
+    (completing-read question alist nil require-match nil nil initial)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -912,15 +910,14 @@ it is deleted automatically."
 ;;;
 
 (defun mew-input-type (prompt filename default type-list)
-  (let ((completion-ignore-case t)
-	(type))
-    (setq type (completing-read
-		(format prompt filename default)
-		(mapcar 'list type-list)
-		nil
-		t
-		""))
-    (if (string= type "") default type)))
+  (let ((completion-ignore-case t))
+    (completing-read (format prompt filename default)
+		     (mapcar 'list type-list)
+		     nil
+		     t
+		     ""
+		     nil
+		     default)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1000,14 +997,14 @@ it is deleted automatically."
 	 (encoding-alist (mapcar (lambda (x) (list x)) encoding-list))
 	 (prompt (format "Lines are too long. Input encoding (%s): "
 			 mew-default-encoding))
-	 (cte (completing-read prompt encoding-alist)))
-    (if (string= cte "") (setq cte mew-default-encoding))
+	 (cte (completing-read prompt encoding-alist nil nil nil nil
+			       mew-default-encoding)))
     (setq cte (downcase cte))
     (while (not (member cte encoding-list))
       (setq prompt (format "'%s' is unknown. Input encoding (%s): "
 			   cte mew-default-encoding))
-      (setq cte (completing-read prompt encoding-alist))
-      (if (string= cte "") (setq cte mew-default-encoding))
+      (setq cte (completing-read prompt encoding-alist nil nil nil nil
+				 mew-default-encoding))
       (setq cte (downcase cte)))
     cte))
 
@@ -1030,7 +1027,7 @@ it is deleted automatically."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2011 Mew developing team.
+;; Copyright (C) 1997-2015 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

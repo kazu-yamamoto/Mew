@@ -37,7 +37,6 @@ EMACS = @emacsbin@
 
 elispdir = @elispdir@
 #elispdir = $(prefix)/share/emacs/site-lisp/mew
-#elispdir  = $(prefix)/lib/xemacs/site-lisp
 #elispdir = $(prefix)/lib/emacs
 
 ##
@@ -46,7 +45,6 @@ elispdir = @elispdir@
 
 etcdir = @etcdir@
 #etcdir = $(prefix)/share/emacs/site-lisp/mew/etc
-#etcdir = $(prefix)/lib/xemacs/etc/Mew
 
 ################################################################
 ##
@@ -105,7 +103,7 @@ SRCS =	mew-addrbook.el	mew-attach.el	mew-auth.el	\
 
 TEMPFILE  = temp.el
 TEMPFILE2 = temp2.el
-DETECT = xemacs
+DETECT = emacs
 
 CP = cp
 RM = rm -f
@@ -157,7 +155,7 @@ detect: $(TEMPFILE2) mew.el
 $(TEMPFILE2):
 	@echo '(setq mew-compiling t)' > $(TEMPFILE2)
 	@echo '(setq load-path (cons "." load-path))' >> $(TEMPFILE2)
-	@echo '(load "auxiliary.el")' >> $(TEMPFILE2)
+	@echo '(setq hack-local-variables-hook (lambda () (setq lexical-binding t)))' >> $(TEMPFILE2)
 	@echo "(defun mew-compile () (mapcar (lambda (x) (byte-compile-file (symbol-name x))) '($(SRCS))))" >> $(TEMPFILE2)
 
 ################################################################
