@@ -294,9 +294,9 @@ requires PTY.")
   (defun mew-focus-frame (frame)
     (if (fboundp 'w32-focus-frame) (w32-focus-frame frame))))
  ((eq system-type 'darwin)
-  (defun mew-set-file-type (file)
+  (defun mew-set-file-type (_file) ;; prevent byte-compile warning
     (unless mew-use-suffix
-      (mew-mac-set-file-type file mew-file-type)))
+      (mew-mac-set-file-type _file mew-file-type)))
   (defvar mew-cs-est 'utf-8)
   (defun mew-focus-frame (_frame)
     (when focus-follows-mouse
