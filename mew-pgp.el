@@ -16,14 +16,15 @@
 
 (defvar mew-pgp-ver nil
   "Automatically set 0 if PGP version is 2.
-Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
+Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 
-(defconst mew-pgp-ver2 0)
-(defconst mew-pgp-ver5 1)
-(defconst mew-pgp-ver6 2)
-(defconst mew-pgp-verg 3)
-(defconst mew-pgp-list '("PGPv2" "PGPv5" "PGPv6" "GNUPG"))
-(defconst mew-pgp-keys '(pgpv2 pgpv5 pgpv6 gnupg)) ;; use symbols, cases are string
+(defconst mew-pgp-ver2  0)
+(defconst mew-pgp-ver5  1)
+(defconst mew-pgp-ver6  2)
+(defconst mew-pgp-verg  3)
+(defconst mew-pgp-verg2 4)
+(defconst mew-pgp-list '("PGPv2" "PGPv5" "PGPv6" "GNUPG" "GNUPG2"))
+(defconst mew-pgp-keys '(pgpv2 pgpv5 pgpv6 gnupg gnupg2)) ;; use symbols, cases are string
 
 ;; mew-prog-pgp is used only for version check
 (defvar mew-prog-pgp2  "pgp") ;; "pgp263i", PGP selection
@@ -32,87 +33,98 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
 (defvar mew-prog-pgp5s "pgps")
 (defvar mew-prog-pgp5v "pgpv")
 (defvar mew-prog-pgp5k "pgpk")
-(defvar mew-prog-pgp6  "pgp") ;; "pgp651i", PGP selection
-(defvar mew-prog-gpg   "gpg") ;; PGP selection
+(defvar mew-prog-pgp6  "pgp")  ;; "pgp651i", PGP selection
+(defvar mew-prog-gpg   "gpg")  ;; PGP selection
+(defvar mew-prog-gpg2  "gpg2") ;; PGP selection
 
 (defvar mew-prog-pgpe
-  `(,mew-prog-pgp2 ,mew-prog-pgp5e ,mew-prog-pgp6 ,mew-prog-gpg))
+  `(,mew-prog-pgp2 ,mew-prog-pgp5e ,mew-prog-pgp6 ,mew-prog-gpg ,mew-prog-gpg2))
 (defvar mew-prog-pgps
-  `(,mew-prog-pgp2 ,mew-prog-pgp5s ,mew-prog-pgp6 ,mew-prog-gpg))
+  `(,mew-prog-pgp2 ,mew-prog-pgp5s ,mew-prog-pgp6 ,mew-prog-gpg ,mew-prog-gpg2))
 (defvar mew-prog-pgpv
-  `(,mew-prog-pgp2 ,mew-prog-pgp5v ,mew-prog-pgp6 ,mew-prog-gpg))
+  `(,mew-prog-pgp2 ,mew-prog-pgp5v ,mew-prog-pgp6 ,mew-prog-gpg ,mew-prog-gpg2))
 (defvar mew-prog-pgpd
-  `(,mew-prog-pgp2 ,mew-prog-pgp5v ,mew-prog-pgp6 ,mew-prog-gpg))
+  `(,mew-prog-pgp2 ,mew-prog-pgp5v ,mew-prog-pgp6 ,mew-prog-gpg ,mew-prog-gpg2))
 (defvar mew-prog-pgpk
-  `(,mew-prog-pgp2 ,mew-prog-pgp5k ,mew-prog-pgp6 ,mew-prog-gpg))
+  `(,mew-prog-pgp2 ,mew-prog-pgp5k ,mew-prog-pgp6 ,mew-prog-gpg ,mew-prog-gpg2))
 
 (defconst mew-prog-pgpe-arg
   '(("-ea" "+language=en" "+batchmode=on" "+armorlines=0")
     ("-a" "+language=en" "+batchmode=on" "+armorlines=0")
     ("-ea" "+language=en" "+batchmode=on" "+armorlines=0")
+    ("--encrypt" "--armor" "--batch")
     ("--encrypt" "--armor" "--batch")))
 
 (defconst mew-prog-pgpd-arg
   '(("+language=en" "+batchmode=off")
     ("+language=en" "+batchmode=off")
     ("+language=en" "+batchmode=off")
+    ("--decrypt")
     ("--decrypt")))
 
 (defvar mew-prog-pgps-arg ;; local binding
   '(("-sba" "+language=en" "+batchmode=off")
     ("-ba" "+language=en" "+batchmode=off")
     ("-sba" "+language=en" "+batchmode=off")
-    ("--detach-sign" "--armor" "--status-fd" "1")))
+    ("--detach-sign" "--armor" "--status-fd" "1")
+    ("--detach-sign" "--armor" "--status-fd" "1" "--command-fd" "0" "--no-tty" "--yes")))
 
 (defconst mew-prog-pgpv-arg
   '(("+batchmode=on" "+language=en")
     ("+batchmode=on" "+language=en" "+force=on")
     ("+batchmode=on" "+language=en")
+    ("--verify" "--batch")
     ("--verify" "--batch")))
 
 (defconst mew-prog-old-pgpv-arg
   '(("+batchmode=on" "+language=en")
     ("+batchmode=on" "+language=en" "+force=on")
     ("+batchmode=on" "+language=en")
-    ("--decrypt" "--batch"))) ;; --verify does not extract original data
+    ("--decrypt" "--batch")   ;; --verify does not extract original data
+    ("--decrypt" "--batch")))
 
-(defconst mew-prog-pgp-arg-output  '("-o" "-o" "-o" "--output"))
-(defconst mew-prog-pgp-arg-input   '(nil  "-o" nil  nil))
-(defconst mew-prog-pgp-arg-luserid '("-u" "-u" "-u" "--local-user"))
-(defconst mew-prog-pgp-arg-ruserid '(nil  "-r" nil  "--remote-user"))
+(defconst mew-prog-pgp-arg-output  '("-o" "-o" "-o" "--output" "--output"))
+(defconst mew-prog-pgp-arg-input   '(nil  "-o" nil  nil nil))
+(defconst mew-prog-pgp-arg-luserid '("-u" "-u" "-u" "--local-user" "--local-user"))
+(defconst mew-prog-pgp-arg-ruserid '(nil  "-r" nil  "--remote-user" "--remote-user"))
 
 (defconst mew-prog-pgpk-add-arg
   '(("-ka" "+batchmode=on")
     ("-a" "+batchmode=on")
     ("-ka" "+batchmode=on")
+    ("--import" "--batch")
     ("--import" "--batch")))
 
 (defconst mew-prog-pgpk-ext-arg
-  '(("-kxfa") ("-xa") ("+force" "-kxfa") ("--export" "--armor" "--batch")))
+  '(("-kxfa") ("-xa") ("+force" "-kxfa") ("--export" "--armor" "--batch") ("--export" "--armor" "--batch")))
 
 (defconst mew-pgp-msg-signature
   '("\n\\(.*\\) signature from user \\(.*\\)\\."
     "\n\\(.*\\) signature made"
     "\\([a-zA-Z0-9]*\\) signature from user \\(.*\\)\\."
+    " \\(.*\\) signature from \"\\(.*\\)\""
     " \\(.*\\) signature from \"\\(.*\\)\""))
 
 (defconst mew-pgp-msg-key-id
   '("Key ID \\([a-zA-Z0-9]+\\) not found"
     ": 0x\\([a-zA-Z0-9]+\\)"
     ": 0x\\([a-zA-Z0-9]+\\)"
+    "key ID \\([a-zA-Z0-9]+\\)"
     "key ID \\([a-zA-Z0-9]+\\)"))
 
 (defconst mew-pgp-msg-bad-pass
   '("No passphrase"
     "Cannot unlock private key\\|It can only be decrypted"
     "Bad pass phrase"
+    "bad passphrase"
     "bad passphrase"))
 
 (defconst mew-pgp-msg-enter
-  '("Enter" "Enter" "Enter" "xxx"))
+  '("Enter" "Enter" "Enter" "xxx" "xxx"))
 
 (defconst mew-pgp-msg-overwrite
   '("Overwrite (y/N)\\? "
+    "Overwrite (y/N)\\? "
     "Overwrite (y/N)\\? "
     "Overwrite (y/N)\\? "
     "Overwrite (y/N)\\? "))
@@ -121,60 +133,69 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
   '("Enter pass phrase: "
     "Enter pass phrase: "
     "Enter pass phrase: "
+    "Enter passphrase: "
     "Enter passphrase: "))
 
 (defconst mew-pgp-msg-reenter-pass
   '("Enter pass phrase: "
     "Enter pass phrase: "
     "Enter pass phrase: "
+    "Enter passphrase: "
     "Enter passphrase: "))
 
 (defconst mew-pgp-msg-no-enckey
   '("Key matching"
     "No encryption keys"
     "public key matching"
+    "public key not found"
     "public key not found"))
 
 (defconst mew-pgp-msg-no-validkey
   '("DUMMY"
     "^WARNING:[ -9;-~\n]+belongs? to:"
     "^WARNING:[ -9;-~\n]+belongs? to:"
+    "There is no indication that this key really belongs to the owner"
     "There is no indication that this key really belongs to the owner"))
 
 (defconst mew-pgp-msg-pubkey-expired
   '("xxx"
     "xxx"
     "xxx"
+    "encryption failed: unusable public key"
     "encryption failed: unusable public key"))
 
 (defconst mew-pgp-msg-no-vrfkey
-  '("Key matching" "unknown keyid" "key does not meet" "public key not found"))
+  '("Key matching" "unknown keyid" "key does not meet" "public key not found" "public key not found"))
 
 (defconst mew-pgp-msg-no-keyring
-  '("Keyring file" "Keyring file" "NO MESSAGE" "public key not found"))
+  '("Keyring file" "Keyring file" "NO MESSAGE" "public key not found" "public key not found"))
 
 (defconst mew-pgp-msg-no-seckey-or-secring
   '("You do not have the secret key"
     "Cannot find a private key"
     "Signature error\\|You do not have the secret key"
+    "failed: secret key not available"
     "failed: secret key not available"))
 
 (defconst mew-pgp-msg-unsupported
   '("Unsupported packet format" ;; including algorithms and packets
     "Unsupported packet format\\|None of the signatures were understood"
     "Unsupported packet format" ;; including algorithms and packets
+    "xxx"
     "xxx"))
 
 (defconst mew-pgp-msg-nocross
   '("xxx"
     "xxx"
     "xxx"
+    "is not cross-certified"
     "is not cross-certified"))
 
 (defconst mew-pgp-verify-addr
   '(".* \\(signature from user\\) "
     "\\(   \\)"
     ".* \\(signature from user\\) "
+    "gpg: .* \\(from\\|aka\\) "
     "gpg: .* \\(from\\|aka\\) "))
 
 ;; 2: ASCII armor corrupted
@@ -186,7 +207,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
 (defconst mew-pgp-msg-no-export-key
   '("Key not found" "No keys" "Key not found" "nothing exported"))
 
-(defvar mew-pgp-micalg '("pgp-md5" "pgp-sha1" "pgp-sha1" "pgp-sha1"))
+(defvar mew-pgp-micalg '("pgp-md5" "pgp-sha1" "pgp-sha1" "pgp-sha1" "pgp-sha1"))
 
 (defvar mew-pgp-hash-alist
   '(("1"  . "pgp-md5")
@@ -271,12 +292,15 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
 	(if (search-forward "Pretty Good Privacy(tm) 2" nil t)
 	    (setq mew-pgp-ver mew-pgp-ver2)
 	  (goto-char (point-min))
-	  (if (search-forward "gpg" nil t)
-	      (setq mew-pgp-ver mew-pgp-verg)
+	  (if (search-forward "Unknown system error" nil t)
+	      (setq mew-pgp-ver mew-pgp-verg2)
 	    (goto-char (point-min))
-	    (if (search-forward "Pretty Good Privacy(tm) Version 6" nil t)
-		(setq mew-pgp-ver mew-pgp-ver6)
-	      (setq mew-pgp-ver nil)))))))
+	    (if (search-forward "gpg" nil t)
+		(setq mew-pgp-ver mew-pgp-verg)
+	      (goto-char (point-min))
+	      (if (search-forward "Pretty Good Privacy(tm) Version 6" nil t)
+		  (setq mew-pgp-ver mew-pgp-ver6)
+		(setq mew-pgp-ver nil))))))))
    (t (setq mew-pgp-ver nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -290,7 +314,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
   (setq mew-prog-pgp
 	(completing-read
 	 "PGP name: "
-	 (mapcar 'list (list mew-prog-pgp2 mew-prog-pgp5 mew-prog-gpg))
+	 (mapcar 'list (list mew-prog-pgp2 mew-prog-pgp5 mew-prog-gpg mew-prog-gpg2))
 	 nil t))
   (mew-pgp-setup))
 
@@ -490,7 +514,8 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG.")
 
 (defun mew-pgp-get-micalg ()
   (let ((micalg (mew-pgp-get mew-pgp-micalg)) alg)
-    (if (/= mew-pgp-ver mew-pgp-verg)
+    (if (and (/= mew-pgp-ver mew-pgp-verg)
+	     (/= mew-pgp-ver mew-pgp-verg2))
 	micalg
       (with-temp-buffer
 	(insert mew-pgp-string)
@@ -1110,6 +1135,8 @@ public keyring."
 	  ((eq mew-pgp-ver mew-pgp-ver6)
 	   (insert "\"pgp -ke\" and \"pgp -ks\" to change them.\n"))
 	  ((eq mew-pgp-ver mew-pgp-verg)
+	   (insert "\"gpg --edit-key\" to change them.\n"))
+	  ((eq mew-pgp-ver mew-pgp-verg2)
 	   (insert "\"gpg --edit-key\" to change them.\n")))
 	 (insert "If you do not know what TRUST and VALIDITY is,\n"
 		 "you should learn the web of trust system BEFORE\n"
