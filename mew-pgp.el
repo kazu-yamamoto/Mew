@@ -748,18 +748,21 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   '(("-sat" "+clearsig=on" "+language=en" "+batchmode=off")
     ("-at" "+clearsig=on" "+language=en" "+batchmode=off")
     ("-sat" "+clearsig=on" "+language=en" "+batchmode=off")
-    ("--clearsign" "--armor" "--textmode")))
+    ("--clearsign" "--armor" "--textmode" "--status-fd" "1")
+    ("--clearsign" "--armor" "--textmode" "--status-fd" "1" "--command-fd" "0" "--no-tty" "--yes")))
 
 (defconst mew-prog-old-pgpse-arg
   '(("-seat" "+language=en" "+batchmode=off")
     ("-eat"  "+language=en" "+batchmode=off")
     ("-seat" "+language=en" "+batchmode=off")
+    ("--sign" "--encrypt" "--armor" "--textmode")
     ("--sign" "--encrypt" "--armor" "--textmode")))
 
 (defconst mew-prog-old-pgpe-arg
   '(("-eat" "+language=en" "+batchmode=on" "+armorlines=0")
     ("-at" "+language=en" "+batchmode=on" "+armorlines=0")
     ("-eat" "+language=en" "+batchmode=on" "+armorlines=0")
+    ("--encrypt" "--armor" "--textmode" "--batch")
     ("--encrypt" "--armor" "--textmode" "--batch")))
 
 (defun mew-old-pgp-encode (type &optional signer)
