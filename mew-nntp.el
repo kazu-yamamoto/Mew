@@ -87,7 +87,7 @@
          (pass (mew-nntp-input-passwd prompt pnm)))
     (mew-nntp-process-send-string pro "AUTHINFO PASS %s" pass)))
 
-(defun mew-nntp-command-wpwd (pro pnm)
+(defun mew-nntp-command-wpwd (_pro pnm)
   (mew-nntp-message pnm "NNTP password is wrong!")
   (mew-passwd-set-passwd (mew-nntp-passtag pnm) nil)
   (mew-nntp-set-status pnm "pre-quit"))
@@ -331,7 +331,7 @@
   (mew-nntp-set-status pnm "quit")
   (mew-nntp-process-send-string pro "QUIT"))
 
-(defun mew-nntp-command-noop (pro pnm)
+(defun mew-nntp-command-noop (_pro _pnm)
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

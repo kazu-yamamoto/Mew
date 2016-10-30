@@ -21,13 +21,13 @@
     ("num"     mew-sort-key-num     mew-sort-number)
     ("postnum" mew-sort-key-postnum mew-sort-number)))
 
-(defun mew-sort-key-text (key folder msg)
+(defun mew-sort-key-text (key _folder _msg)
   (mew-subject-simplify key nil 'no-replace))
 
-(defun mew-sort-key-ml (key folder msg)
+(defun mew-sort-key-ml (key _folder _msg)
   (mew-subject-simplify2 key))
 
-(defun mew-sort-key-mlnum (key folder msg)
+(defun mew-sort-key-mlnum (key _folder _msg)
   (let (mlname mlnum)
     (cond
      ((string-match "^\\([[(][^])]+\\)[: ]+\\([0-9]+\\)[])]" key)
@@ -47,10 +47,10 @@
 	(mew-time-ctz-to-sortkey time))
     (mew-time-rfc-to-sortkey key)))
 
-(defun mew-sort-key-num (key folder msg)
+(defun mew-sort-key-num (key _folder _msg)
   (string-to-number key))
 
-(defun mew-sort-key-postnum (key folder msg)
+(defun mew-sort-key-postnum (key _folder _msg)
   (if (string-match "[0-9]+$" key)
       (string-to-number (match-string 0 key))
     (string-to-number key)))
@@ -90,7 +90,7 @@
   (mew-refile-change src dst)
   (mew-summary-sort-move src dst pos lastp))
 
-(defun mew-summary-sort-move-for-selection (src dst pos &optional lastp)
+(defun mew-summary-sort-move-for-selection (src _dst pos &optional lastp)
   (mew-summary-sort-move src nil pos lastp))
 
 ;; If not found, returns nil.
@@ -146,7 +146,7 @@
 	   (delete-region beg end)
 	   beg))))))))
 
-(defun mew-summary-sort-move-for-debug (src dst pos &optional lastp)
+(defun mew-summary-sort-move-for-debug (src dst _pos &optional _lastp)
   (mew-elet
    (insert (format "move %s to %s\n" src dst))))
 

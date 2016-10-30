@@ -104,7 +104,7 @@ after ':'."
 	(message "Connecting to the SSH server...")
 	(setq pro nil)
 	(catch 'loop
-	  (dotimes (i N)
+	  (dotimes (_i N) ;; prevent byte-compile warning
 	    (setq name (mew-ssh-info-name sshserver server remoteport localport))
 	    (setq pro (apply 'start-process
 			     name nil
@@ -191,7 +191,7 @@ after ':'."
 	(mew-ssh-set-status pnm 'bound)
 	(message "Connecting to the SSH server...done"))))))
 
-(defun mew-ssh-sentinel (process event)
+(defun mew-ssh-sentinel (process _event)
   (let ((pnm (process-name process)))
     (save-excursion
       (unless (mew-ssh-get-status pnm)

@@ -197,7 +197,7 @@
       (mew-imap2-set-status pnm "post-append")
       (mew-imap2-command-post-append pro pnm))))
 
-(defun mew-imap2-command-post-append (pro pnm)
+(defun mew-imap2-command-post-append (pro _pnm)
   (process-send-region pro (point-min) (point-max))
   (process-send-string pro mew-cs-eol)) ;; APPEND command ends
 
@@ -231,7 +231,7 @@
     (mew-imap2-set-status pnm "logout")
     (mew-imap2-process-send-string pro pnm "LOGOUT")))
 
-(defun mew-imap2-command-noop (pro pnm)
+(defun mew-imap2-command-noop (_pro _pnm)
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

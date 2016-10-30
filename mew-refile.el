@@ -99,10 +99,10 @@
 ;;; Guess control functions
 ;;;
 
-(defun mew-refile-ctrl-auto-boundary (guess auto)
+(defun mew-refile-ctrl-auto-boundary (_guess auto)
   (if auto "stop"))
 
-(defun mew-refile-ctrl-throw (guess auto)
+(defun mew-refile-ctrl-throw (guess _auto)
   (if guess "stop"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -525,7 +525,7 @@ Return t if exists or created. Otherwise, return nil."
 	      (message "%s has been created" folder)
 	      t)))))))) ;; created
 
-(defun mew-refile-decide-folders (buf msg cur-folders &optional auto exfld)
+(defun mew-refile-decide-folders (buf _msg cur-folders &optional auto exfld)
   ;; This functions returns
   ;;  ((folder1 folder2...)
   ;;   (func1 guess11 guess12...)  ;; for learning

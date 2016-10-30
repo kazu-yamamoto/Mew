@@ -827,7 +827,7 @@ Input decrypters' addresses."
        (t
 	(message "Nothing happened"))))))
 
-(defun mew-draft-dnd-handle-remote-url (uri _action)
+(defun mew-draft-dnd-handle-remote-url (_uri _action)
   (error "Remote files not supported") nil)
 
 (defvar mew-draft-dnd-handle-remote-file-function

@@ -285,7 +285,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun mew-ext-ftp (cache begin end &optional params)
+(defun mew-ext-ftp (_cache _begin _end &optional params)
   (mew-elet
    (let* ((site (mew-syntax-get-param params "site"))
 	  (directory (mew-syntax-get-param params "directory"))
@@ -314,7 +314,7 @@
       "To get this file, type "
       "'\\<mew-summary-mode-map>\\[mew-summary-execute-external]'.\n"))))
 
-(defun mew-ext-ftp-ext (cache begin end &optional params)
+(defun mew-ext-ftp-ext (_cache _begin _end &optional params)
   (let* ((site (mew-syntax-get-param params "site"))
 	 (directory (mew-syntax-get-param params "directory"))
 	 (name (mew-syntax-get-param params "name"))
@@ -337,12 +337,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun mew-ext-tftp (cache begin end &optional params)
+(defun mew-ext-tftp (_cache _begin _end &optional _params)
   (message "Access-type TFTP is not supported yet"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun mew-ext-anon-ftp (cache begin end &optional params)
+(defun mew-ext-anon-ftp (_cache _begin _end &optional params)
   (mew-elet
    (let* ((site (mew-syntax-get-param params "site"))
 	  (directory (mew-syntax-get-param params "directory"))
@@ -372,7 +372,7 @@
       "To get this file, type "
       "'\\<mew-summary-mode-map>\\[mew-summary-execute-external]'.\n"))))
 
-(defun mew-ext-anon-ftp-ext (cache begin end &optional params)
+(defun mew-ext-anon-ftp-ext (_cache _begin _end &optional params)
   (let* ((site (mew-syntax-get-param params "site"))
 	 (directory (mew-syntax-get-param params "directory"))
 	 (name (mew-syntax-get-param params "name"))
@@ -394,7 +394,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun mew-ext-mail-server (cache begin end &optional params)
+(defun mew-ext-mail-server (_cache _begin _end &optional params)
   (mew-elet
    (let* ((server (mew-syntax-get-param params "server"))
 	  (size (mew-syntax-get-param params "size")))
@@ -468,7 +468,7 @@
       "To operate this URL, type "
       "'\\<mew-summary-mode-map>\\[mew-summary-execute-external]'.\n"))))
 
-(defun mew-ext-url-ext (cache begin end &optional params)
+(defun mew-ext-url-ext (_cache _begin _end &optional params)
   (let* ((url (mew-syntax-get-param params "url"))
 	 (process-connection-type mew-connection-type1)
 	 (spec mew-prog-text/html-ext)

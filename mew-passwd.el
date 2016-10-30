@@ -149,8 +149,7 @@
     (mew-read-passwd prompt)))
 
 (defun mew-read-passwd (prompt)
-  (let ((inhibit-input-event-recording t)
-	;; A process filter sets inhibit-quit to t to prevent quitting.
+  (let (;; A process filter sets inhibit-quit to t to prevent quitting.
 	;; Set inhibit-quit to nil so that C-g can be used
 	(inhibit-quit nil))
     (condition-case nil
@@ -199,7 +198,7 @@
     (unwind-protect
 	(with-temp-buffer
 	  (catch 'loop
-	    (dotimes (i N)
+	    (dotimes (_i N) ;; prevent byte-compile warning
 	      (when mew-passwd-agent-hack (mew-passwd-clear-passphrase file))
 	      (setq pro (apply 'mew-start-process-lang
 			       mew-passwd-decryption-name
@@ -239,7 +238,7 @@
 	  (pp mew-passwd-alist (current-buffer))
 	  (write-region (point-min) (point-max) tfile nil 'no-msg)
 	  (catch 'loop
-	    (dotimes (i N)
+	    (dotimes (_i N) ;; prevent byte-compile warning
 	      (setq pro (apply
 			 'mew-start-process-lang
 			 mew-passwd-encryption-name
@@ -282,7 +281,7 @@
        ((string-match "exiting" string)
 	(setq mew-passwd-rendezvous nil))))))
 
-(defun mew-passwd-sentinel (process event)
+(defun mew-passwd-sentinel (_process _event)
   (setq mew-passwd-rendezvous nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -295,7 +294,7 @@
     (with-temp-buffer
       (let ((coding-system-for-write 'binary)
 	    (size (mew-file-get-size file)))
-	(dotimes (i size)
+	(dotimes (_i size) ;; prevent byte-compile warning
 	  (insert 0))
 	(write-region (point-min) (point-max) file nil 'no-msg)))
     (delete-file file)))

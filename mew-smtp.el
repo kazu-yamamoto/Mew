@@ -236,7 +236,7 @@
     (mew-smtp-set-status pnm "quit")
     (mew-smtp-process-send-string pro "QUIT")))
 
-(defun mew-smtp-command-noop (pro pnm)
+(defun mew-smtp-command-noop (_pro _pnm)
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -599,7 +599,7 @@
        (t
 	(mew-smtp-sentinel2 process event))))))
 
-(defun mew-smtp-sentinel2 (process event)
+(defun mew-smtp-sentinel2 (process _event)
   (let* ((pnm (process-name process))
 	 (buf (process-buffer process))
 	 (qfld (mew-smtp-get-qfld pnm))

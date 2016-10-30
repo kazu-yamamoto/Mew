@@ -155,7 +155,7 @@ A local port number can be obtained the process name after ':'. "
 	(message "Creating an SSL/TLS connection...")
 	(setq pro nil)
 	(catch 'loop
-	  (dotimes (i N)
+	  (dotimes (_i N) ;; prevent byte-compile warning
 	    (setq name (mew-ssl-info-name server remoteport localport))
 	    (setq opts (mew-ssl-options case server remoteport localport tls))
 	    (setq pro (apply 'start-process name nil mew-prog-ssl opts))
@@ -248,11 +248,11 @@ A local port number can be obtained the process name after ':'. "
        ((string-match "verify failed" string)
 	(mew-ssl-set-status pnm 'verify-failure))))))
 
-(defun mew-ssl-filter3 (process string)
+(defun mew-ssl-filter3 (_process string)
   (save-excursion
     (mew-ssl-debug "SSL/TLS: " string)))
 
-(defun mew-ssl-sentinel (process event)
+(defun mew-ssl-sentinel (process _event)
   (let* ((pnm (process-name process))
 	 (file (mew-ssl-get-file pnm)))
     (save-excursion

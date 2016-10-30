@@ -122,7 +122,7 @@
       (setq mew-smime-failure (cdr (assoc (mew-match-string 1 string) mew-smime-inv-recp-alist)))
       (setq mew-smime-failure (concat mew-smime-failure " for " (mew-match-string 2 string)))))))
 
-(defun mew-smime-process-sentinel (process event)
+(defun mew-smime-process-sentinel (_process _event)
   (save-excursion
     (let ((decrypted mew-smime-result-sec-succ)
 	  (msg ""))
@@ -221,12 +221,12 @@
   (interactive)
   (mew-smime-encode-message 'smime-encryption))
 
-(defun mew-smime-sign-encrypt-message (&optional arg)
+(defun mew-smime-sign-encrypt-message (&optional _arg)
   "Sign then encrypt the entire draft with S/MIME. Input your passphrase."
   (interactive "P")
   (mew-smime-encode-message 'smime-signature-encryption))
 
-(defun mew-smime-encrypt-sign-message (&optional arg)
+(defun mew-smime-encrypt-sign-message (&optional _arg)
   "Encrypt then sign the entire draft with S/MIME. Input your passphrase."
   (interactive "P")
   (mew-smime-encode-message 'smime-encryption-signature))

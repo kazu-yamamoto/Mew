@@ -493,7 +493,7 @@
   (mew-pop-set-status pnm "quit")
   (mew-pop-process-send-string pro "QUIT"))
 
-(defun mew-pop-command-noop (pro pnm)
+(defun mew-pop-command-noop (_pro _pnm)
   ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

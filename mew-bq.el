@@ -118,7 +118,7 @@
   (let ((func (mew-header-decode-get-error-func b-or-q)))
     (if func (funcall func key b-or-q estr))))
 
-(defun mew-base64-decode-error-string (key b-or-q estr)
+(defun mew-base64-decode-error-string (key _b-or-q estr)
   (let ((str estr) strlen r ret)
     (when (string-match "^\\([^=]*\\)=*$" str)
       (setq str (mew-match-string 1 str)))
@@ -495,7 +495,7 @@
     ;; end of while
     (mew-header-encode-cond2 nil)))
 
-(defun mew-header-encode-text (str &optional comment key-len)
+(defun mew-header-encode-text (str &optional _comment key-len)
   ;; 'comment' means that we are in RFC822 comment "(...)".
   (let ((str-list (mew-header-encode-split-string str))
 	head-is-e e-list)
