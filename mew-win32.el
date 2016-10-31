@@ -15,7 +15,7 @@
 
 ;;; for NTEmacs User
 ;;
-;; put mw32script.el(in Meadow's archive) into load-path.
+;; put mw32script.el (in Meadow's archive) into load-path.
 ;;
 
 ;;
@@ -37,21 +37,6 @@
 ;;       (general-process-argument-editing-function x nil t)))
 ;;   (setq mew-print-function 'mew-w32-print-buffer)
 
-;; Win32 programs.
-(defvar mew-w32-exec           "fiber.exe")
-(defvar mew-w32-prog-print     "notepad.exe")
-(defvar mew-w32-prog-print-arg nil)
-
-(defvar mew-default-external-program mew-w32-exec)
-
-(defvar mew-w32-cs-print nil)
-
-(setq mew-which-exec-suffixes (if (and (boundp 'exec-suffixes)
-				       exec-suffixes)
-				  exec-suffixes
-				'(".exe" ".com" ".bat" ".cmd" "")))
-
-(setq mew-delete-temp-file  nil)
 
 ;; Emacs version dependent variables.
 (cond
@@ -111,7 +96,20 @@
     (mew-delete-file tempfile)))
 
 
-;; MIME setting
+;;;
+;;; MIME setting
+;;;
+
+(defvar mew-w32-exec           "fiber.exe")
+(defvar mew-default-external-program mew-w32-exec)
+(setq mew-which-exec-suffixes (if (and (boundp 'exec-suffixes)
+				       exec-suffixes)
+				  exec-suffixes
+				'(".exe" ".com" ".bat" ".cmd" "")))
+
+(defvar mew-w32-prog-print     "notepad.exe")
+(defvar mew-w32-prog-print-arg nil)
+(defvar mew-w32-cs-print nil)
 
 (defvar mew-prog-plain    'mew-mime-text/plain)
 (defvar mew-prog-html     '(mew-mime-text/html mew-mime-text/html-ext))
@@ -132,23 +130,22 @@
 (defvar mew-prog-delivery-status 'mew-mime-text/plain)
 (defvar mew-prog-postscript      mew-w32-exec)
 (defvar mew-prog-pgp-keys        '(mew-mime-pgp-keys mew-mime-pgp-keys-ext))
+
 (defvar mew-prog-application/pdf "pdftotext")
 (defvar mew-prog-pdf-ext         mew-w32-exec)
 (defvar mew-prog-pdf             `(mew-mime-application/pdf ,mew-prog-pdf-ext))
+
+(defvar mew-prog-application/rtf nil)
+
 (defvar mew-prog-xml2            '(mew-mime-application/xml
 				   mew-mime-application/xml-ext))
 (defvar mew-prog-oasys           mew-w32-exec)
 (defvar mew-prog-octet-stream    mew-w32-exec)
-(defvar mew-prog-msword          mew-w32-exec)
-(defvar mew-prog-msexcel         mew-w32-exec)
-(defvar mew-prog-mspowerpoint    mew-w32-exec)
-(defvar mew-prog-visio           mew-w32-exec)
-(defvar mew-prog-ooffice         mew-w32-exec)
 (defvar mew-prog-rtf             mew-w32-exec)
 (defvar mew-prog-unzip           mew-w32-exec)
 
 ;;;
-;;; Text/Html, Application/Xml, Image
+;;; Text/Html, Application/Xml
 ;;;
 
 (defvar mew-format-html "%s.htm")
@@ -171,13 +168,36 @@
 (defvar mew-prog-application/xml     nil)
 (defvar mew-prog-application/xml-ext mew-w32-exec)
 
+
+;;;
+;;; Image
+;;;
+
 (defvar mew-prog-image/*         'mew-mime-image/*)
 (defvar mew-prog-image/*-ext     mew-w32-exec)
 
+
+;;;
+;;; Office
+;;;
+
+(defvar mew-prog-ooffice         mew-w32-exec)
+
 (defvar mew-prog-application/msword nil)
+(defvar mew-prog-msword          mew-w32-exec)
+
 (defvar mew-prog-application/msexcel nil)
+(defvar mew-prog-msexcel         mew-w32-exec)
+
 (defvar mew-prog-application/mspowerpoint nil)
-(defvar mew-prog-application/rtf nil)
+(defvar mew-prog-mspowerpoint    mew-w32-exec)
+
+(defvar mew-prog-visio           mew-w32-exec)
+
+
+;;;
+;;; Misc
+;;;
 
 (setq mew-cs-database-for-arg
       '((iso-2022-jp . shift_jis-unix)
@@ -208,6 +228,10 @@
 	    (message "Directory cannot be attached"))
 	   (t
 	    (mew-attach-copy from to))))))))
+
+;;
+
+(setq mew-delete-temp-file nil)
 
 (provide 'mew-win32)
 
