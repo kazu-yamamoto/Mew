@@ -9,6 +9,7 @@
 (require 'mew)
 
 (defmacro mew-summary-refilable (&rest body)
+  (declare (debug (&rest form)))
   `(mew-pickable
     (mew-summary-not-in-draft
      (mew-summary-local-or-imap

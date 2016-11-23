@@ -642,6 +642,7 @@ with a search method."
 (defvar mew-id-db-ignore-regex "^\\./casket$|^\\./casket/|/\\.")
 
 (defmacro mew-msgid-check (&rest body)
+  (declare (debug (&rest form)))
   `(let ((db (mew-expand-file "+" mew-id-db-file)))
      (cond
       ((not (file-exists-p db))

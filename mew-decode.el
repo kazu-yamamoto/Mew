@@ -101,6 +101,7 @@
 ;;;
 
 (defmacro mew-decode-narrow-to-header (&rest body)
+  (declare (debug (&rest form)))
   `(progn
      (if (re-search-forward mew-eoh nil t)
 	 (beginning-of-line)

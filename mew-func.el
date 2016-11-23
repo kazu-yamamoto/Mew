@@ -1093,6 +1093,7 @@ and sets buffer-file-coding-system."
   (if (and buf (get-buffer buf)) (kill-buffer buf)))
 
 (defmacro mew-elet (&rest body)
+  (declare (debug (&rest form)))
   `(let ((buffer-read-only nil)
 	 (inhibit-read-only t)
 	 (after-change-functions nil)
@@ -1166,6 +1167,7 @@ and sets buffer-file-coding-system."
 ;;;
 
 (defmacro mew-filter (&rest body)
+  (declare (debug (&rest form)))
   `(let ((pbuf (process-buffer process)) ;; MUST use 'process'
 	 (obuf (buffer-name))
 	 (inhibit-eol-conversion nil)) ;; \r\n as is

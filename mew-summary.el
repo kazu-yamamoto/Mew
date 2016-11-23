@@ -54,6 +54,7 @@
 
 (defmacro mew-summary-msg-or-part (&rest body)
   "See if the cursor is on a message or a part."
+  (declare (debug (&rest form)))
   `(cond
     ((eobp) (message "No message"))
     ((not (or (mew-summary-message-number) (mew-syntax-number)))
@@ -62,6 +63,7 @@
 
 (defmacro mew-summary-msg (&rest body)
   "See if the cursor is on a message."
+  (declare (debug (&rest form)))
   `(cond
     ((eobp) (message "No message"))
     ((not (mew-summary-message-number))
@@ -70,6 +72,7 @@
 
 (defmacro mew-summary-part (&rest body)
   "See if the cursor is on a part."
+  (declare (debug (&rest form)))
   `(cond
     ((eobp) (message "No part"))
     ((not (mew-syntax-number))
@@ -79,6 +82,7 @@
 (defmacro mew-summary-multi-msgs (&rest body)
   "Collect messages marked with '*' and set their corresponding
 files to FILES."
+  (declare (debug (&rest form)))
   `(let* ((FLD-MSGS (mew-summary-mark-collect2 mew-mark-review))
 	  (FLD-MSG-LIST FLD-MSGS) ;; may be used in body
 	  FILES) ;; may be used in body
@@ -123,6 +127,7 @@ files to FILES."
 (defmacro mew-summary-only (&rest body)
   "See if the mode of this buffer is Summary mode.
 This macro is used to prohibit using a command in Virtual mode."
+  (declare (debug (&rest form)))
   `(cond
     ((not (mew-summary-p))
      (message "This command can be used in Summary mode only"))
@@ -139,6 +144,7 @@ This macro is used to prohibit using a command in Summary mode."
 (defmacro mew-thread-only (&rest body)
   "See if this buffer is Thread folder.
 This macro is used to prohibit using a command in Summary mode."
+  (declare (debug (&rest form)))
   `(cond
     ((not (mew-thread-p))
      (message "This command can be used in Thread folder only"))
@@ -146,6 +152,7 @@ This macro is used to prohibit using a command in Summary mode."
 
 (defmacro mew-pickable (&rest body)
   "See if pick can be used for this folder."
+  (declare (debug (&rest form)))
   `(cond
     ((not (mew-pickable-p))
      (message "This command cannot be used in this folder"))
@@ -153,6 +160,7 @@ This macro is used to prohibit using a command in Summary mode."
 
 (defmacro mew-summary-not-in-queue (&rest body)
   "See if this folder is not +queue."
+  (declare (debug (&rest form)))
   `(cond
     ((not (mew-summary-or-virtual-p))
      (message "This command cannot be used in this mode"))
@@ -162,6 +170,7 @@ This macro is used to prohibit using a command in Summary mode."
 
 (defmacro mew-summary-not-in-draft (&rest body)
   "See if this folder is not +draft."
+  (declare (debug (&rest form)))
   `(cond
     ((not (mew-summary-or-virtual-p))
      (message "This command cannot be used in this mode"))
@@ -171,6 +180,7 @@ This macro is used to prohibit using a command in Summary mode."
 
 (defmacro mew-summary-not-in-nntp (&rest body)
   "See if this folder is not NNTP."
+  (declare (debug (&rest form)))
   `(cond
     ((mew-folder-nntpp (mew-sinfo-get-folder))
      (message "This command cannot be used in %s" (mew-summary-folder-name)))
@@ -178,6 +188,7 @@ This macro is used to prohibit using a command in Summary mode."
 
 (defmacro mew-summary-local-or-imap (&rest body)
   "See if this folder is either local or IMAP."
+  (declare (debug (&rest form)))
   `(cond
     ((not (mew-summary-or-virtual-p))
      (message "This command cannot be used in this mode"))
@@ -188,6 +199,7 @@ This macro is used to prohibit using a command in Summary mode."
 
 (defmacro mew-summary-local-only (&rest body)
   "See if this folder is local."
+  (declare (debug (&rest form)))
   `(cond
     ((not (mew-summary-or-virtual-p))
      (message "This command cannot be used in this mode"))
@@ -196,6 +208,7 @@ This macro is used to prohibit using a command in Summary mode."
     (t ,@body)))
 
 (defmacro mew-summary-with-mewl (&rest body)
+  (declare (debug (&rest form)))
   `(cond
     ((not (mew-which-exec mew-prog-mewl))
      (message "'%s' not found!" mew-prog-mewl))

@@ -86,7 +86,9 @@ requires PTY.")
 
 (eval-when-compile
   (unless (fboundp 'with-no-warnings)
-    (defmacro with-no-warnings (&rest body) `(progn ,@body))))
+    (defmacro with-no-warnings (&rest body)
+      (declare (debug (&rest form)))
+      `(progn ,@body))))
 
 (if (fboundp 'set-process-query-on-exit-flag)
     (defun mew-process-silent-exit (pro)
@@ -315,7 +317,7 @@ requires PTY.")
 ;;; Unix/Mac/Win
 ;;;
 
-(cond 
+(cond
  ((>= emacs-major-version 24)
   ;; this must be macro. If implemented as a function, its behavior
   ;; is changed.
