@@ -14,6 +14,7 @@
 
 (defmacro mew-summary-prepare-draft (&rest body)
   "Common procedure to prepare a draft."
+  (declare (debug (&rest form)))
   `(progn
      (unwind-protect
 	 (let ((inhibit-quit t))

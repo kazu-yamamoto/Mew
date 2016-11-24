@@ -275,6 +275,7 @@
   (setq buffer-file-coding-system write))
 
 (defmacro mew-plet (&rest body)
+  (declare (debug (&rest form)))
   `(let ((coding-system-for-read  'binary)
 	 (coding-system-for-write 'binary))
      ,@body))
@@ -287,6 +288,7 @@
 (put 'mew-piolet 'lisp-indent-function 2)
 
 (defmacro mew-flet (&rest body)
+  (declare (debug (&rest form)))
   `(let ((coding-system-for-read  'binary)
 	 (coding-system-for-write 'binary)
 	 (format-alist nil)
@@ -305,6 +307,7 @@
 (put 'mew-frwlet 'lisp-indent-function 2)
 
 (defmacro mew-alet (&rest body)
+  (declare (debug (&rest form)))
   `(let ((default-file-name-coding-system nil)
 	 (file-name-coding-system nil))
      ,@body))
