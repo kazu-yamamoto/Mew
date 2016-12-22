@@ -153,16 +153,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Using OpenOffice.org (openoffice)
-;;;
-
-;(setq mew-prog-msword '("openoffice" nil t))
-;(setq mew-prog-msexcel '("openoffice" nil t))
-;(setq mew-prog-mspowerpoint '("openoffice" nil t))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Using StarSuite (soffice)
+;;; Using Apache OpenOffice / LibreOffice / StarSuite
 ;;;
 
 ;(setq mew-prog-msword '("soffice" nil t))
