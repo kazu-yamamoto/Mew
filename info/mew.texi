@@ -10428,33 +10428,33 @@ If you want to set it to "firefox", for example, configure like this:
 @ifset ja
 Office 関連のファイルも、@samp{C-cC-e} を使えば、それぞれのアプリケーショ
 ンで表示可能です。Windows や Mac では、文字通り Office のアプリケーショ
-ンが起動されます。Unix では、以下のように "ooffice" が初期値となってい
+ンが起動されます。Unix では、以下のように "soffice" が初期値となってい
 ます。
 @end ifset
 @ifset en
 You can visualize an Office-family file to each application by typing
 @samp{C-cC-e}. On Windows and Mac, an Office-family application is
-executed. On Unix, "ooffice" is set to the default application as
+executed. On Unix, "soffice" is set to the default application as
 follows:
 @end ifset
 
 @lisp
-(defvar mew-prog-msword-ext "ooffice")
-(defvar mew-prog-msexcel-ext "ooffice")
-(defvar mew-prog-mspowerpoint-ext "ooffice")
+(defvar mew-prog-msword-ext "soffice")
+(defvar mew-prog-msexcel-ext "soffice")
+(defvar mew-prog-mspowerpoint-ext "soffice")
 @end lisp
 
 @ifset ja
-これを "soffice" に変更するには以下のようにします。
+これを "xdg-open" に変更するには以下のようにします。
 @end ifset
 @ifset en
-If you want to set it to "soffice", for instace, do like this:
+If you want to set it to "xdg-open", for instace, do like this:
 @end ifset
 
 @lisp
-(setq mew-prog-msword-ext "soffice")
-(setq mew-prog-msexcel-ext "soffice")
-(setq mew-prog-mspowerpoint-ext "soffice")
+(setq mew-prog-msword-ext "xdg-open")
+(setq mew-prog-msexcel-ext "xdg-open")
+(setq mew-prog-mspowerpoint-ext "xdg-open")
 @end lisp
 
 @ifset ja

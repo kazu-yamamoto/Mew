@@ -2095,18 +2095,18 @@ HTML は `C-cC-e' を使って外部のブラウザに表示できます。Windo
 
 Office 関連のファイルも、`C-cC-e' を使えば、それぞれのアプリケーション
 で表示可能です。Windows や Mac では、文字通り Office のアプリケーショ
-ンが起動されます。Unix では、以下のように "ooffice" が初期値となってい
+ンが起動されます。Unix では、以下のように "soffice" が初期値となってい
 ます。
 
-     (defvar mew-prog-msword-ext "ooffice")
-     (defvar mew-prog-msexcel-ext "ooffice")
-     (defvar mew-prog-mspowerpoint-ext "ooffice")
+     (defvar mew-prog-msword-ext "soffice")
+     (defvar mew-prog-msexcel-ext "soffice")
+     (defvar mew-prog-mspowerpoint-ext "soffice")
 
-これを "soffice" に変更するには以下のようにします。
+これを "xdg-open" に変更するには以下のようにします。
 
-     (setq mew-prog-msword-ext "soffice")
-     (setq mew-prog-msexcel-ext "soffice")
-     (setq mew-prog-mspowerpoint-ext "soffice")
+     (setq mew-prog-msword-ext "xdg-open")
+     (setq mew-prog-msexcel-ext "xdg-open")
+     (setq mew-prog-mspowerpoint-ext "xdg-open")
 
 また Office 関連のアプリケーションに対し、`SPC' などでは内容を表示せず、
 `C-cC-e' では "wvHtml" などを使って Message バッファに表示するには、以

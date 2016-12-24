@@ -87,7 +87,7 @@
 ;;; Office
 ;;;
 
-(defvar mew-prog-ooffice "ooffice")
+(defvar mew-prog-ooffice "soffice")
 
 (defvar mew-prog-application/msword "wvHtml")
 (defvar mew-prog-msword-ext mew-prog-ooffice)
