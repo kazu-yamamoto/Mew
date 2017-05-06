@@ -117,6 +117,11 @@
   :group 'mew-env
   :type 'directory)
 
+(defcustom mew-suffix ".mew"
+  "*Suffix of message files.  This suffix will be added if `mew-use-suffix` is non-nil."
+  :group 'mew-env
+  :type 'string)
+
 (defcustom mew-pop-inbox-folder "$inbox"
   "*The default folder for POP."
   :group 'mew-folder
