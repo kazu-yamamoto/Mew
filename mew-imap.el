@@ -43,6 +43,7 @@
     "wrk" "jobs" "namespace" "authl"
     "spam" "spam-field" "spam-word" "spam-pattern"
     "new-mailbox" "my-prefix" "specials" "bytes"
+    "gm-ext-1" "gm-thrid" "gm-msgid" "gm-labels"
     "virtual-info" "disp-info" "status-buf" "mark-hist"))
 
 (mew-info-defun "mew-imap-" mew-imap-info-list)
@@ -116,6 +117,9 @@
   (let ((case-fold-search t)
 	authl)
     (save-excursion
+      (goto-char (point-min))
+      (if (re-search-forward "X-GM-EXT-1" nil t)
+          (mew-imap-set-gm-ext-1 pnm t))
       (goto-char (point-min))
       (while (re-search-forward "AUTH=\\([^ \r\n]+\\)" nil t)
 	(setq authl (cons (mew-match-string 1) authl)))
@@ -261,7 +265,10 @@
 		      "Checking" nil (mew-imap-secure-p pnm))
       (if (eq directive 'get)
 	  (mew-imap-process-send-string
-	   pro pnm "UID FETCH %s:%s (UID RFC822.SIZE FLAGS)"
+	   pro pnm
+           (if (mew-imap-get-gm-ext-1 pnm)
+               "UID FETCH %s:%s (UID RFC822.SIZE FLAGS X-GM-MSGID X-GM-THRID X-GM-LABELS)"
+             "UID FETCH %s:%s (UID RFC822.SIZE FLAGS)")
 	   (mew-refileinfo-get-uid (car refs))
 	   (mew-refileinfo-get-uid (nth (1- (length refs)) refs)))
 	(cond
@@ -276,7 +283,11 @@
 	  (setq max 0))
 	(mew-imap-set-max pnm max)
 	(mew-imap-process-send-string
-	 pro pnm "UID FETCH %d:* (UID RFC822.SIZE FLAGS)" (1+ max))))))
+	 pro pnm
+         (if (mew-imap-get-gm-ext-1 pnm)
+             "UID FETCH %d:* (UID RFC822.SIZE FLAGS X-GM-MSGID X-GM-THRID X-GM-LABELS)"
+           "UID FETCH %d:* (UID RFC822.SIZE FLAGS)")
+         (1+ max))))))
 
 (defun mew-imap-command-umsg (pro pnm)
   (let* ((directive (mew-imap-get-directive pnm))
@@ -626,17 +637,36 @@
       (mew-imap-set-truncated pnm nil)
       ;; RFC822 turns the Seen flag "on"
       ;; BODY.PEEK[] keeps the Seen flag "off"
-      (mew-imap-process-send-string pro pnm "UID FETCH %s BODY.PEEK[]" uid))
+      (mew-imap-process-send-string
+       pro pnm
+       (if (mew-imap-get-gm-ext-1 pnm)
+           "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[])"
+         "UID FETCH %s BODY.PEEK[]")
+       uid))
      ((and (eq directive 'scan) (not get-body))
       (mew-imap-set-truncated pnm t)
-      (mew-imap-process-send-string pro pnm "UID FETCH %s BODY.PEEK[HEADER]" uid))
+      (mew-imap-process-send-string
+       pro pnm
+       (if (mew-imap-get-gm-ext-1 pnm)
+           "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[HEADER])"
+         "UID FETCH %s BODY.PEEK[HEADER]")
+       uid))
      ((or (= lim 0) (< (string-to-number siz) lim))
       (mew-imap-set-truncated pnm nil)
-      (mew-imap-process-send-string pro pnm "UID FETCH %s BODY.PEEK[]" uid))
+      (mew-imap-process-send-string
+       pro pnm
+       (if (mew-imap-get-gm-ext-1 pnm)
+           "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[])"
+         "UID FETCH %s BODY.PEEK[]")
+       uid))
      (t
       (mew-imap-set-truncated pnm t)
       (mew-imap-process-send-string
-       pro pnm "UID FETCH %s BODY.PEEK[HEADER]" uid)))))
+       pro pnm
+       (if (mew-imap-get-gm-ext-1 pnm)
+           "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[HEADER])"
+           "UID FETCH %s BODY.PEEK[HEADER]")
+       uid)))))
 
 (defun mew-imap-command-post-fetch (pro pnm)
   (let* ((directive (mew-imap-get-directive pnm))
@@ -680,6 +710,11 @@
       (mew-header-insert-xmu uid siz nil))
      ((and (eq directive 'get) (mew-folder-imapp folder))
       (mew-header-insert-xmu uid siz nil)))
+    (if (mew-imap-get-gm-ext-1 pnm)
+        (progn
+          (mew-header-insert-x-gm-msgid (mew-imap-get-gm-msgid pnm))
+          (mew-header-insert-x-gm-thrid (mew-imap-get-gm-thrid pnm))
+          (mew-header-insert-x-gm-labels (mew-imap-get-gm-labels pnm))))
     (catch 'write-error
       (condition-case nil
 	  (let ((write-region-inhibit-fsync mew-use-async-write))
@@ -1417,6 +1452,12 @@
 		  (looking-at "^\\*[^{]*{\\([0-9]+\\)}"))
 	 (setq bytes (string-to-number (mew-match-string 1)))
 	 (mew-imap-set-bytes pnm bytes))
+       (when (looking-at "^\\* .*X-GM-THRID +\\([0-9]+\\)")
+	 (mew-imap-set-gm-thrid pnm (mew-match-string 1)))
+       (when (looking-at "^\\* .*X-GM-MSGID +\\([0-9]+\\)")
+	 (mew-imap-set-gm-msgid pnm (mew-match-string 1)))
+       (when (looking-at "^\\* .*X-GM-LABELS +(\\([^)]+\\)*)")
+	 (mew-imap-set-gm-labels pnm (mew-match-string 1)))
        (when bytes
 	 (goto-char (point-min))
 	 (while (and (looking-at "^\\*") (= (forward-line) 0))
