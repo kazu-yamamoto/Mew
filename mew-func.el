@@ -764,7 +764,7 @@ If case is \"default\", it is not prepended."
 	(setq maxfile (number-to-string max))
 	(setq maxpath (mew-expand-new-msg folder maxfile)))
       (while (file-exists-p maxpath)
-	(setq maxfile (read-string (format "%s/%s exists. Input a message number: " max folder)))
+	(setq maxfile (read-string (format "%s/%s exists. Input a message number: " folder max)))
 	(while (not (string-match mew-regex-message-files maxfile))
 	  (setq maxfile (read-string "Input NUMBER: ")))
 	(setq maxpath (mew-expand-new-msg folder maxfile)))
