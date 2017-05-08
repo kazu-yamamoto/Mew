@@ -23,6 +23,7 @@
        mew-subj: mew-date: mew-from: mew-to: mew-cc:
        mew-ct: mew-cte: mew-x-mew-uidl:
        mew-message-id: mew-in-reply-to: mew-references: mew-x-mew-ref:
+       mew-x-gm-msgid: mew-x-gm-thrid: mew-x-gm-labels:
        mew-spam: "Body"))
 
 (mew-defvar
@@ -30,6 +31,7 @@
  '("FLD" "NUM" "SUBJ" "DATE" "FROM" "TO" "CC"
    "CT" "CTE" "UID"
    "ID" "IRT" "REF" "XREF"
+   "GM-MSGID" "GM-THRID" "GM-LABELS"
    "SPAM" "BODY"))
 
 ;;

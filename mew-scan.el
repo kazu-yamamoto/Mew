@@ -664,6 +664,27 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	(mew-header-delete-lines (list mew-x-mew-uidl:)))
       (mew-header-insert mew-x-mew-uidl: fields 'no-fold))))
 
+(defun mew-header-insert-x-gm-labels (labels)
+  (save-excursion
+    (mew-header-delete-lines (list "X-GM-LABELS:"))
+    (mew-header-insert "X-GM-LABELS:" labels 'no-fold)))
+
+(defun mew-header-insert-x-gm-msgid (msgid)
+  (save-excursion
+    (mew-header-delete-lines (list "X-GM-MSGID:"))
+    (mew-header-insert
+     "X-GM-MSGID:"
+     (format "%x" (string-to-number msgid))
+     'no-fold)))
+
+(defun mew-header-insert-x-gm-thrid (thrid)
+  (save-excursion
+    (mew-header-delete-lines (list "X-GM-THRID:"))
+    (mew-header-insert
+     "X-GM-THRID:"
+     (format "%x" (string-to-number thrid))
+     'no-fold)))
+
 (defun mew-scan-message-truncatedp ()
   (mew-msg-truncatedp (mew-scan-uid-size (MEW-UID))))
 

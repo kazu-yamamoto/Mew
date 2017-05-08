@@ -83,6 +83,10 @@
 (defconst mew-x-mew-uidl:  "X-Mew-Uidl:")
 (defconst mew-x-mew-ref:   "X-Mew-Ref:")
 
+(defconst mew-x-gm-msgid:  "X-GM-MSGID:")
+(defconst mew-x-gm-thrid:  "X-GM-THRID:")
+(defconst mew-x-gm-labels: "X-GM-LABELS:")
+
 (defconst mew-keywords: "Keywords:")
 (defconst mew-body:	"Body:")
 
