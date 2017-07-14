@@ -64,8 +64,8 @@ private char version_message[] = "version 6.6 20140416 Kazu Yamamoto";
 #define HEAD     "head"
 #define FILE_SEPARATOR '\7'
 
-/* 16k, my experience says that 8k is not enough. */
-#define MAX_HEADER         16384
+/* 64k, now even 16k is not enough. */
+#define MAX_HEADER         65536
 #define MAX_FIELD_LEN          5
 #define MAX_BODY_LEN          20
 #define MAX_FOLDER            16
