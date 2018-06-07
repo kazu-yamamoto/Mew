@@ -34,8 +34,6 @@ Executable cmew
                       , bytestring
                       , containers
                       , easy-file
-                      , old-locale
-                      , old-time
                       , parsec
                       , regex-posix
                       , time
