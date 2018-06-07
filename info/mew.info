@@ -340,8 +340,14 @@ To use Feature 1., configure as follows:
 
      (setq mew-use-cached-passwd t)
 
-To use Feature 2., after installing GnuPG, configure as follows (GnuPG
-version 1.x, 2.0 and 2.1 are supported for this feature):
+To use Feature 2., install GnuPG first. GnuPG version 1.x and 2.1.23
+or later are supported for this feature. If you use GnuPG 2.1.23 or
+later, put the following to "~/.gnupg/gpg.conf":
+
+     no-auto-key-retrieve
+     auto-key-locate local
+
+Then, configure as follows:
 
      (setq mew-use-master-passwd t)
 
@@ -6228,103 +6234,103 @@ Node: modes4335
 Node: folder convention5102
 Node: configuration8154
 Node: password10927
-Node: start13310
-Node: Viewing14478
-Node: singlepart15774
-Node: multipart17263
-Node: analysis20493
-Node: cipher-viewing24442
-Node: retrieving29468
-Node: moving33477
-Node: sum-write36125
-Node: features38502
-Node: status-update40982
-Node: invalid42007
-Node: Composing44204
-Node: header46252
-Node: cheader47252
-Node: addr-comp49054
-Node: addrbook50932
-Node: auto-alias54124
-Node: addr-comp155843
-Node: addr-comp258265
-Node: send60482
-Node: cite63573
-Node: mime-comp65819
-Node: charset-guess73166
-Node: longline76853
-Node: reply78681
-Node: forward82499
-Node: resend83372
-Node: shortcut85445
-Node: mark-b-comp90879
-Node: pgp-key93844
-Node: anonymous94725
-Node: Marks96292
-Node: unread mark97936
-Node: delete mark99437
-Node: refile mark101679
-Node: target mark103290
-Node: escape mark104921
-Node: unmark105776
-Node: mark change106755
-Node: sync108199
-Node: off-line109377
-Node: mew-mark111227
-Node: Refile111949
-Node: by-folder113809
-Node: by-alist115706
-Node: by-thread117789
-Node: by-from-folder118643
-Node: by-from120000
-Node: by-newsgroups121579
-Node: by-default121914
-Node: guess-rule122368
-Node: auto-refile124139
-Node: copy-msg126351
-Node: Virtual127618
-Node: selection129278
-Node: sorting129998
-Node: dialog131841
-Node: search132968
-Node: condition134132
-Node: dbsearch136371
-Node: keyword137595
-Node: thread138453
-Node: thread-op139713
-Node: Quit141879
-Node: Customize142428
-Node: summary-mode143243
-Node: message-mode147402
-Node: draft-mode150936
-Node: charset153903
-Node: highlight156109
-Node: hooks159073
-Node: pop163622
-Node: imap165301
-Node: nntp166869
-Node: smtp168230
-Node: config170715
-Node: config2176645
-Node: custom-misc178161
-Node: Tips179182
-Node: region179770
-Node: visiting180460
-Node: SSH180990
-Node: SSL181962
-Node: TLS184335
-Node: spam185234
-Node: spam2187523
-Node: addr-warn188857
-Node: biff189985
-Node: edit190743
-Node: Convention192018
-Node: Implementation194086
-Node: Avail196449
-Node: obtain196756
-Node: ml197048
-Node: Copyright197336
-Node: Variable Index199285
-Node: Key Index214596
+Node: start13450
+Node: Viewing14618
+Node: singlepart15914
+Node: multipart17403
+Node: analysis20633
+Node: cipher-viewing24582
+Node: retrieving29608
+Node: moving33617
+Node: sum-write36265
+Node: features38642
+Node: status-update41122
+Node: invalid42147
+Node: Composing44344
+Node: header46392
+Node: cheader47392
+Node: addr-comp49194
+Node: addrbook51072
+Node: auto-alias54264
+Node: addr-comp155983
+Node: addr-comp258405
+Node: send60622
+Node: cite63713
+Node: mime-comp65959
+Node: charset-guess73306
+Node: longline76993
+Node: reply78821
+Node: forward82639
+Node: resend83512
+Node: shortcut85585
+Node: mark-b-comp91019
+Node: pgp-key93984
+Node: anonymous94865
+Node: Marks96432
+Node: unread mark98076
+Node: delete mark99577
+Node: refile mark101819
+Node: target mark103430
+Node: escape mark105061
+Node: unmark105916
+Node: mark change106895
+Node: sync108339
+Node: off-line109517
+Node: mew-mark111367
+Node: Refile112089
+Node: by-folder113949
+Node: by-alist115846
+Node: by-thread117929
+Node: by-from-folder118783
+Node: by-from120140
+Node: by-newsgroups121719
+Node: by-default122054
+Node: guess-rule122508
+Node: auto-refile124279
+Node: copy-msg126491
+Node: Virtual127758
+Node: selection129418
+Node: sorting130138
+Node: dialog131981
+Node: search133108
+Node: condition134272
+Node: dbsearch136511
+Node: keyword137735
+Node: thread138593
+Node: thread-op139853
+Node: Quit142019
+Node: Customize142568
+Node: summary-mode143383
+Node: message-mode147542
+Node: draft-mode151076
+Node: charset154043
+Node: highlight156249
+Node: hooks159213
+Node: pop163762
+Node: imap165441
+Node: nntp167009
+Node: smtp168370
+Node: config170855
+Node: config2176785
+Node: custom-misc178301
+Node: Tips179322
+Node: region179910
+Node: visiting180600
+Node: SSH181130
+Node: SSL182102
+Node: TLS184475
+Node: spam185374
+Node: spam2187663
+Node: addr-warn188997
+Node: biff190125
+Node: edit190883
+Node: Convention192158
+Node: Implementation194226
+Node: Avail196589
+Node: obtain196896
+Node: ml197188
+Node: Copyright197476
+Node: Variable Index199425
+Node: Key Index214736
 
 End tag table
