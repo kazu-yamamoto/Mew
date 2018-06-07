@@ -28,10 +28,10 @@
 @center
 @title Mew
 @ifset ja
-@author Copyright @copyright{}1996-2015 山本和彦
+@author Copyright @copyright{}1996-2018 山本和彦
 @end ifset
 @ifset en
-@author Copyright @copyright{}1996-2015 Kazuhiko Yamamoto
+@author Copyright @copyright{}1996-2018 Kazuhiko Yamamoto
 @end ifset
 @end titlepage
 
@@ -13548,7 +13548,7 @@ https://groups.google.com/forum/#!forum/mew-en
 @ifset ja
 Mew は以下の著作権に従います。
 
-Copyright (C) 1994-2013 Mew developing team.@*
+Copyright (C) 1994-2018 Mew developing team.@*
 All rights reserved.
 
 変更の有無にかかわらず、ソースおよびバイナリ形式の再配布および利用は、以
@@ -13581,7 +13581,7 @@ All rights reserved.
 @ifset en
 Mew conforms the following copyright.
 
-Copyright (C) 1994-2013 Mew developing team.@*
+Copyright (C) 1994-2018 Mew developing team.@*
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
