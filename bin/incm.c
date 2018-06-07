@@ -7,7 +7,7 @@
 
 #include "mew.h"
 
-private char version_message[] = "version 6.6 20140416 Yasunari Momoi";
+private char version_message[] = "version 6.8 20180607 Kazu Yamamoto";
 
 #include <stdio.h>
 #include <stdlib.h>
