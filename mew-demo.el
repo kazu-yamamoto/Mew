@@ -20,7 +20,7 @@ Mew -- Messaging in the Emacs World
 
 %s
 
-Copyright (C) 1994-2015 Kazu Yamamoto
+Copyright (C) 1994-2018 Kazu Yamamoto
 
 Please send comments to Kazu@Mew.org.
 
