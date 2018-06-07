@@ -35,7 +35,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 (defvar mew-prog-pgp5k "pgpk")
 (defvar mew-prog-pgp6  "pgp")  ;; "pgp651i", PGP selection
 (defvar mew-prog-gpg   "gpg")  ;; PGP selection
-(defvar mew-prog-gpg2  "gpg2") ;; PGP selection
+(defvar mew-prog-gpg2  "gpg")  ;; PGP selection
 
 (defvar mew-prog-pgpe
   `(,mew-prog-pgp2 ,mew-prog-pgp5e ,mew-prog-pgp6 ,mew-prog-gpg ,mew-prog-gpg2))
