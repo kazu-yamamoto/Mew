@@ -1,6 +1,6 @@
 			    <Differences>
 			    Kazu Yamamoto
-			     July 3, 2015
+			     June 7, 2018
 
 			   <Important Note>
 
@@ -14,6 +14,10 @@
     - mew-refile-guess-alist
     - mew-inbox-action-alist
     - All above in mew-config-alist
+
+	      <Differences between Mew 6.8 and Mew 6.7>
+
+* Mew now supports Emacs 24.3 or later only.
 
 	      <Differences between Mew 6.7 and Mew 6.6>
 

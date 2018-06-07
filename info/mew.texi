@@ -292,11 +292,11 @@ the name.
 @end ifset
 
 @ifset ja
-Emacs 22.3 以降を使って下さい。これらより前のバージョンや XEmacs は、サ
+Emacs 24.3 以降を使って下さい。これらより前のバージョンや XEmacs は、サ
 ポートしていません。
 @end ifset
 @ifset en
-Please use Emacs 22.3 or later. Mew doesn't support earlier versions
+Please use Emacs 24.3 or later. Mew doesn't support earlier versions
 nor XEmacs.
 @end ifset
 
