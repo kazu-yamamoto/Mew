@@ -24,7 +24,7 @@
   Put the following to your "~/.gnupg/gpg.conf".
         no-auto-key-retrieve
         auto-key-locate local
-* Using LibreOffice (soffice) on Unix by default
+* Using LibreOffice (soffice) on Unix by default.
 
 	      <Differences between Mew 6.7 and Mew 6.6>
 
