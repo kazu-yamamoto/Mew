@@ -806,12 +806,26 @@ To use Feature 1., configure as follows:
 @end lisp
 
 @ifset ja
-2. の機能を利用するには、GnuPG をインストールした後、以下のように設定し
-ます。(GnuPG は、バージョン 1.x、2.0、2.1に対応しています。)
+2. の機能を利用するには、まず GnuPG をインストールします。GnuPG は、バー
+ジョン 1.x、2.1.23以降に対応しています。バージョン2.1.23以降を使う場合は、
+"~/.gnupg/gpg.conf" に以下の設定を加えます。
 @end ifset
 @ifset en
-To use Feature 2., after installing GnuPG, configure as follows
-(GnuPG version 1.x, 2.0 and 2.1 are supported for this feature):
+To use Feature 2., install GnuPG first. GnuPG version 1.x and 2.1.23
+or later are supported for this feature. If you use GnuPG 2.1.23 or
+later, put the following to "~/.gnupg/gpg.conf":
+@end ifset
+
+@example
+no-auto-key-retrieve
+auto-key-locate local
+@end example
+
+@ifset ja
+そして、以下のように設定します。
+@end ifset
+@ifset en
+Then, configure as follows:
 @end ifset
 
 @lisp
