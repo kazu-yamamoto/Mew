@@ -2,12 +2,11 @@
 
 * Installation
 
-- Install the Haskell Platform
-	http://hackage.haskell.org/platform/
+- Install "stack"
+	https://docs.haskellstack.org/en/stable/README/
 
 - Compile
 
-    % cabal install
-
-  "cmew" and "smew" will be installed to "~/.cabal/bin".
-  Note that this may displays warnings. Please ignore them.
+    % stack init
+    % stack build
+    % stack --local-bin-path . install
