@@ -2,7 +2,6 @@
 
 module Util where
 
-import Control.Applicative
 import Control.Exception as E
 import Data.List
 import Param

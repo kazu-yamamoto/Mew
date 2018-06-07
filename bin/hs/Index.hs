@@ -1,6 +1,5 @@
 module Index (makeIndex) where
 
-import Control.Applicative
 import Control.Monad
 import Data.IORef
 import Data.List

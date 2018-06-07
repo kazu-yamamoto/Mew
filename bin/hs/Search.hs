@@ -1,6 +1,5 @@
 module Search (Search, withDB, searchMe, searchChild, searchFamily) where
 
-import Control.Applicative
 import Data.List
 import Data.Map (Map)
 import qualified Data.Map as Map hiding (Map)

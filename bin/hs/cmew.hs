@@ -5,7 +5,6 @@
 
 module Main where
 
-import Control.Applicative
 import Data.List
 import Index
 import Param

@@ -1,6 +1,5 @@
 module Sql where
 
-import Control.Applicative
 import Data.List
 import Database.HDBC
 import Database.HDBC.Sqlite3

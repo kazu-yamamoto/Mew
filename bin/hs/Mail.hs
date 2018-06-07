@@ -2,7 +2,6 @@
 
 module Mail (fileMsg) where
 
-import Control.Applicative
 import Data.Char
 import Data.Maybe
 import Data.Time
