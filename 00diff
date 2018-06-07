@@ -19,7 +19,7 @@
 
 * Mew now supports Emacs 24.3 or later only.
 * Supporting stunnel 5.
-* Supporting GnuPG 2.
+* Supporting GnuPG 2. The command name should be "gpg" instead of "gpg2".
 * Using LibreOffice (soffice) on Unix by default
 
 	      <Differences between Mew 6.7 and Mew 6.6>
