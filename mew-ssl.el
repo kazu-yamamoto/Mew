@@ -104,14 +104,17 @@ insert no extra text.")
     (let ((file (mew-make-temp-name)))
       (with-temp-buffer
 	(insert "client=yes\n")
-	(insert "pid=\n")
+	(if (not (eq system-type 'windows-nt))
+	    (insert "pid=\n"))		; Unix only
 	(insert (format "verify=%d\n" (mew-ssl-verify-level case)))
-	(insert "foreground=yes\n")
+	(if (not (eq system-type 'windows-nt))
+	    (insert "foreground=yes\n")) ; Unix only
 	(insert "debug=debug\n")
 	(if (and mew-ssl-libwrap (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 45)))
 	    (insert "libwrap=no\n"))
-	(if (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 22))
-	    (insert "syslog=no\n"))
+	(if (and (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 22))
+		 (not (eq system-type 'windows-nt)))
+	    (insert "syslog=no\n"))	; Unix only
 	(insert "CApath=" (expand-file-name (mew-ssl-cert-directory case)) "\n")
 	(if mew-prog-ssl-arg
 	    (insert mew-prog-ssl-arg))
