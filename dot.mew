@@ -35,6 +35,27 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; POP/SMTP over SSL
+;;;
+;
+; This setting is necessary for Gmail etc.
+; stunnel has to be installed.
+;
+;(setq mew-mail-domain "example.jp")
+;(setq mew-ssl-verify-level 0) ;;; See a comment in mew-ssl.el for more detail
+;(setq mew-prog-ssl "/usr/local/bin/stunnel") ;;; for UNIX
+;(setq mew-prog-ssl "C:/Program Files (x86)/stunnel/tstunnel.exe") ;;; for Windows (instead of using stunnel.exe)
+;(setq mew-smtp-ssl t)
+;(setq mew-smtp-user "foo@example.com")
+;(setq mew-smtp-server "smtp.example.com")
+;(setq mew-pop-ssl t)
+;(setq mew-pop-user "foo@example.com")
+;(setq mew-pop-server "pop.example.com")
+;(setq mew-pop-auth 'pass)
+;(setq mew-use-cached-passwd t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; Citation tip
 ;;;
 ;;;

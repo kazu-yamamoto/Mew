@@ -44,6 +44,6 @@ automatically added to the "dir" file.  Otherwise, add it by yourself.
 ---
 
 (4) See info for configuring a site file/.emacs/.mew.el.
-    See also "mew.dot.emacs" and "mew.dot.mew".
+    See also "dot.emacs" and "dot.mew".
 
 --End of file
