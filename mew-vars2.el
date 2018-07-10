@@ -549,6 +549,7 @@ the next version of Mew.")
     ("^DKIM-Signature:$" nil)
     ("^ARC-" nil)
     ("^Received-SPF:$" nil)
+    ("^Autocrypt:$" nil)
     ("^Authentication-Results:$"
      mew-authentication-results
      mew-face-header-important
