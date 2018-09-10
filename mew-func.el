@@ -1032,7 +1032,7 @@ and sets buffer-file-coding-system."
   (if fname
       (let ((exist (file-exists-p (expand-file-name fname mew-temp-dir))))
 	(if (and (not exist)
-		 (or (not (featurep 'meadow))
+		 (or (not (eq system-type 'windows-nt))
 		     (string-match "^[ -~]+$" fname)))
 	    (expand-file-name fname mew-temp-dir)
 	  (if (string-match "\\.[ -~]+$" fname)
