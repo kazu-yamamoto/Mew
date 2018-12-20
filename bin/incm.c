@@ -630,8 +630,19 @@ lock_mbox(char *lockfile)
 				return 1; /* doesn't need a lockfile, maybe. */
 			else if (errno != EEXIST)
 				error("open(%s)", lockfile);
-			if (retry-- <= 0)
-				error("can't get lock(%s)", lockfile);
+			if (retry-- <= 0) {
+				char buf[PATH_MAX];
+				STRCPY(buf, lockfile);
+				MboxLock[0] = '\0'; /* no unlinking lockfile */
+				error("can't get lock(%s)", buf);
+			} else {
+				if (warn_prog != NULL)
+					fprintf(stderr, "%s: ", warn_prog);
+				fprintf(stderr,
+					"waiting for lockfile (%s) "
+					"released (%d)\n",
+					lockfile, retry);
+			}
 		}
 		else {
 			/* lock succeeded. */
