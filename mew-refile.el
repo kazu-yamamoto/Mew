@@ -424,10 +424,11 @@ values."
 			   (and (member csn (car oho)) (throw 'find t))
 			   (setq oho (cdr oho))))))
 	      (throw 'match (setq folder csn)))))
-      (setq mew-refile-msgid-alist
-	    (cons (list msgid folder "??")
-		  (delq (assoc msgid mew-refile-msgid-alist) ;; delq is right
-			mew-refile-msgid-alist))))))
+      (if (and folder (not (string= folder (mew-imap-spam-folder))))
+	  (setq mew-refile-msgid-alist
+		(cons (list msgid folder "??")
+		      (delq (assoc msgid mew-refile-msgid-alist) ;; delq is right
+			    mew-refile-msgid-alist)))))))
 
 (defun mew-refile-guess-by-from-learn (chosen info)
   ;; Create mew-refile-from-alist for mew-refile-guess-by-from.
@@ -457,8 +458,8 @@ values."
 	  (unless (mew-member* csn info)
 	    (throw 'match (setq folder csn)))))
       (run-hooks 'mew-refile-guess-by-from-learn-hook)
-      ;; If candidate was found, I memorize it.
-      (when folder
+      ;; If candidate was found and it is not spam folder for IMAP, I memorize it.
+      (when (and folder (not (string= folder (mew-imap-spam-folder))))
 	(setq mew-refile-from-alist
 	      (cons (cons from folder)
 		    (delq (assoc from mew-refile-from-alist) ;; delq is right
