@@ -205,7 +205,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 ;; 2: ERROR: or Error:
 
 (defconst mew-pgp-msg-no-export-key
-  '("Key not found" "No keys" "Key not found" "nothing exported"))
+  '("Key not found" "No keys" "Key not found" "nothing exported" "nothing exported"))
 
 (defvar mew-pgp-micalg '("pgp-md5" "pgp-sha1" "pgp-sha1" "pgp-sha1" "pgp-sha1"))
 
