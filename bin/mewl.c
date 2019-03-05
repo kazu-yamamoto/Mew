@@ -262,7 +262,7 @@ ch_folder(char *folder) {
 	switch (c) {
 	case '+':
 		ch_mail_home(Mail_home);
-		if (p == NUL)
+		if (*p == NUL)
 			break;
 		if (chdir(p) != 0) {
 			if( no_fld_flag != 0 )
