@@ -1059,6 +1059,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 	(setq file (file-name-nondirectory filepath))
 	(setq user (car (mew-input-address
 			 "Who's key? (%s): " (mew-get-my-address))))
+	(if (string-match "^[^<].*@" user) (setq user (concat "<" user ">")))
 	(with-temp-buffer
 	  (apply 'mew-call-process-lang
 		 (mew-pgp-get mew-prog-pgpk)
