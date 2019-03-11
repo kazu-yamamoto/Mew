@@ -16,7 +16,6 @@ private char version_message[] = "version 6.8 20180607 Kazu Yamamoto";
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <pwd.h>
 #include <signal.h>
 #include <errno.h>
 
@@ -37,6 +36,10 @@ private char version_message[] = "version 6.8 20180607 Kazu Yamamoto";
 
 #if HAVE_FCNTL_H
 # include <fcntl.h>
+#endif
+
+#if HAVE_PWD_H
+# include <pwd.h>
 #endif
 
 #if HAVE_SYS_FILE_H
@@ -325,12 +328,16 @@ sig_ignore(int signo)
 private void
 set_sighandler(void)
 {
+#if HAVE_SIGHUP
 	if (signal(SIGHUP, sig_ignore) == SIG_ERR)
 		error("can't catch SIGHUP\n");
+#endif
 	if (signal(SIGINT, sig_exit) == SIG_ERR)
 		error("can't catch SIGINT\n");
+#if HAVE_SIGHUP
 	if (signal(SIGALRM, sig_ignore) == SIG_ERR)
 		error("can't catch SIGALRM\n");
+#endif
 	if (signal(SIGTERM, sig_ignore) == SIG_ERR)
 		error("can't catch SIGTERM\n");
 }
@@ -438,11 +445,11 @@ copyfile(char *src, char *dst)
 		warning("fchmod(%s) failed", dst);
 #endif
 	close(dstfd);
-#if !HAVE_FUTIMES
+#if !HAVE_FUTIMES && HAVE_UTIMES
 	if (utimes(dst, tv))
 		warning("utimes(%s) failed", dst);
 #endif
-#if !HAVE_FCHMOD
+#if !HAVE_FCHMOD && HAVE_CHMOD
 	if (chmod(dst, sb.st_mode))
 		warning("chmod(%s) failed", dst);
 #endif
@@ -630,8 +637,19 @@ lock_mbox(char *lockfile)
 				return 1; /* doesn't need a lockfile, maybe. */
 			else if (errno != EEXIST)
 				error("open(%s)", lockfile);
-			if (retry-- <= 0)
-				error("can't get lock(%s)", lockfile);
+			if (retry-- <= 0) {
+				char buf[PATH_MAX];
+				STRCPY(buf, lockfile);
+				MboxLock[0] = '\0'; /* no unlinking lockfile */
+				error("can't get lock(%s)", buf);
+			} else {
+				if (warn_prog != NULL)
+					fprintf(stderr, "%s: ", warn_prog);
+				fprintf(stderr,
+					"waiting for lockfile (%s) "
+					"released (%d)\n",
+					lockfile, retry);
+			}
 		}
 		else {
 			/* lock succeeded. */

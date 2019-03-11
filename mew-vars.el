@@ -1400,7 +1400,7 @@ obtain any fields."
   :group 'mew-message
   :type 'integer)
 
-(defcustom mew-header-max-length 200
+(defcustom mew-header-max-length 400
   "*If the length of a header exceeds this value,
 it is not arranged nor MIME decoded.
 See also 'mew-header-max-depth'."
