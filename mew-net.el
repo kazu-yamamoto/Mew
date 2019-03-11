@@ -30,6 +30,7 @@
    ((integerp serv) serv)
    ((string-match "^[0-9]+$" serv)
     (string-to-number serv))
+   ((string-match "^/" serv) serv)
    (t
     (or (mew-alist-get-value (assoc serv mew-port-db)) 0))))
 

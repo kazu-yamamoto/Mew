@@ -11692,7 +11692,10 @@ password. This section describes following variables to control SMTP.
 @item mew-smtp-server
 SMTP サーバの名前。
 @item mew-smtp-port
-SMTP ポート番号。
+SMTP ポート番号。絶対パス名を指定すると Unix ドメインソケットを
+使用する。
+@item mew-smtp-submission-family
+SMTP サーバと接続する際に用いるアドレスファミリ。初期値は 'ipv4。
 @item mew-smtp-ssh-server
 SSH 経由でメッセージを送る際の SSH サーバの名前。
 @item mew-smtp-ssl
@@ -11726,7 +11729,10 @@ Message-Id: の書式は以下を参照。
 @item mew-smtp-server
 The name of your SMTP server.
 @item mew-smtp-port
-The port for SMTP.
+The port for SMTP.  When an absolute pathname is specified,
+it will be used as a Unix domain socket.
+@item mew-smtp-submission-family
+The address family to be used for the SMTP server.  The default value is 'ipv4.
 @item mew-smtp-ssh-server
 The name of SSH server which forwards the SMTP port.
 @item mew-smtp-ssl
@@ -11779,6 +11785,32 @@ number is 587), configure as follows:
 
 @lisp
 (setq mew-smtp-port "submission")
+@end lisp
+
+@ifset ja
+送信サーバとの接続に Unix ドメインソケットを使いたい場合は、以下のように
+@samp{mew-smtp-port} に絶対パス名を設定して下さい。
+@end ifset
+@ifset en
+If you want to use a Unix domain socket to connect MTA,
+configure as follows:
+@end ifset
+
+@lisp
+(setq mew-smtp-port "/var/run/msp.sock")
+@end lisp
+
+@ifset ja
+送信サーバとの接続に IPv6 を使いたい場合は、以下のように
+@samp{mew-smtp-submission-family} に 'ipv6 を設定して下さい。
+@end ifset
+@ifset en
+If you want to use IPv6 as the transport protocol to connect MTA,
+configure as follows:
+@end ifset
+
+@lisp
+(setq mew-smtp-submission-family 'ipv6)
 @end lisp
 
 @ifset ja
