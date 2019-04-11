@@ -12,6 +12,12 @@
 
 ;; For SMTP
 ;(setq mew-smtp-server "your SMTP server")  ;; if not localhost
+;; Set 587 or submission to use submission port.
+;(setq mew-smtp-port "smtp")
+;; Set 'ipv6 for IPv6
+;(setq mew-smtp-submission-family 'ipv4)
+;; Set a user name to enable SMTP AUTH
+;(setq mew-smtp-user "foo@example.com")
 
 ;; For POP
 ;; (setq mew-pop-user "your POP account")  ;; (user-login-name)
