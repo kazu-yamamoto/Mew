@@ -390,10 +390,9 @@
 	(when mew-inherit-submission
 	  (setq family mew-smtp-submission-family)
 	  (setq nowait t))
-	(if (string-match "^/" port)
-	    (progn
-	      (setq family 'local)
-	      (setq server 'local)))
+	(when (and (stringp port) (string-match "^/" port))
+	  (setq family 'local)
+	  (setq server 'local))
 	(setq pro (make-network-process :name name :buffer buf
 					:host server :service port
 					:family family :nowait nowait))
