@@ -134,6 +134,8 @@
 	  (mew-smtp-set-case pnm case) ;; override
 	  (mew-smtp-set-messages pnm msgs)
 	  (set-process-buffer pro (current-buffer))
+	  (mew-remove-buffer mew-msg-buffer)
+	  (setq mew-msg-buffer (current-buffer))
 	  (mew-smtp-set-status pnm "mail-from")
 	  (mew-smtp-command-mail-from pro pnm))
       (mew-smtp-set-status pnm "quit")
@@ -442,6 +444,7 @@
 	(sslport (mew-smtp-ssl-port case))
 	mew-inherit-submission
 	process sshname sshpro sslname sslpro lport tlsp tls fallback)
+    (setq mew-msg-buffer nil)
     (when (and sslp (mew-port-equal port sslport))
       (setq tlsp t)
       ;; let stunnel know that a wrapper protocol is SMTP
