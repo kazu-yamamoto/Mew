@@ -73,6 +73,8 @@ while (<>) {
 	$date  =~ s!-!/!g;
     } elsif (/^Date:[ \t]+(.+)$/) {
 	$date = $1;
+    } elsif (/^    Credit:[ \t]+([^\n]+)/) {
+	$author = $1;
     } elsif (/^    (.*)$/) {
 	$comment .= "$1\n";
     } elsif (/^commit /) {
