@@ -41,10 +41,10 @@ my $version = "x.x"; my $pre_version = "";
 sub print_entry {
     print "* ";
 
-    $comment =~ s/\n([ \t]*\n)+/\n/g;
+    $comment =~ s/\n([ \t]*\n.*)+/\n/g;
     $comment =~ s/\n+$//;
     $comment =~ s/\n/\n  /g;
-    $comment =~ s/^\* //;
+    $comment =~ s/^[-*] //;
     print "$comment\n";
 
     my $name = $author;
@@ -75,7 +75,7 @@ while (<>) {
 	$date = $1;
     } elsif (/^    Credit:[ \t]+([^\n]+)/) {
 	$author = $1;
-    } elsif (/^    (.*)$/) {
+    } elsif (/^    [ \t]*(.*)$/) {
 	$comment .= "$1\n";
     } elsif (/^commit /) {
 	if ($author && $date) {
