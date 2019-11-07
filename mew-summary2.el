@@ -545,7 +545,7 @@ If called with '\\[universal-argument]', it stays writable."
 	   (setq rcv (match-string 1 svr)))
 	  ((string-match "by[ \t]+\\([^() \t\n]+\\)" svr)
 	   (setq rcv (match-string 1 svr))
-	   (if (string-match "from[ \t]+\\([^() \t\n]+\\).*\\([[][.0-9]+[]]\\)" svr)
+           (if (string-match "from[ \t]+\\([^() \t\n]+\\).*\\([[]\\([.0-9]+\\|IPv6:[0-9a-f:]+\\)[]]\\)" svr)
 	       (setq snd (format "%s %s" (match-string 1 svr) (match-string 2 svr)))
 	     (if (string-match "from[ \t]+\\([^() \t\n]+\\)" svr)
 		 (setq snd (match-string 1 svr))))
