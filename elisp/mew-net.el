@@ -14,9 +14,7 @@
 
 (defvar mew-port-db
   '(("smtp"        25)
-    ;; This is officially assigned to another service (urd) by IANA.
-    ;; IESG will never assign a port number to SMTP over SSL...
-    ("smtps"      465)
+    ("smtps"      465) ; RFC 8314
     ("pop3"       110)
     ("pop3s"      995)
     ("nntp"       119)

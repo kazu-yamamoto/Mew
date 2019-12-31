@@ -578,6 +578,35 @@ is kept for further connections. This must be 't' for IMAP and NNTP."
   :group 'mew-net
   :type 'boolean)
 
+(defcustom mew-ssl-default 'tunnel
+  "*Default SSL/TLS type when mew-{imap,nntp,pop,smtp}-ssl is 't'."
+  :group 'mew-net
+  :type '(choice (const :tag "Native (GnuTLS)" native)
+		 (const :tag "External (stunnel)" tunnel)))
+
+;; XXX: the default value of gnutls-trustfiles can
+;; be different from the compile-time list.
+(defcustom mew-ssl-trustfiles nil
+  "List of CA buldle location filenames used by GnuTLS.
+nil - use the default list specified at compile time of the Emacs."
+  :group 'mew-net
+  :type '(choice (const :tag "System Default" nil)
+		 (repeat string)))
+
+(defcustom mew-ssl-algorithm-priority nil
+  "TLS priority string used by GnuTLS.
+nil - use the default specified by Emacs Network Security Manager."
+  :group 'mew-net
+  :type '(choice (const :tag "System Default" nil)
+		 (string :tag "Priority string")))
+
+(defcustom mew-ssl-client-keycert-list nil
+  "The client-side certificate used for TLS connection.
+'((\"keyfile\" \"certfile\")) - A list of key/cert pairs."
+  :group 'mew-net
+  :type '(choice (const :tag "None" nil)
+		 (repeat string)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; SMTP
@@ -601,11 +630,19 @@ server, set an appropriate value."
 		 (string :tag "Ssh server")))
 
 (defcustom mew-smtp-ssl nil
-  "*If non-nil, SMTP connections are made over SSL/TLS."
+  "*If non-nil, SMTP connections are made over SSL/TLS.
+native - Use GnuTLS (this requires Emacs compiled with GnuTLS
+         library).  When mew-smtp-ssl-port is equal to
+         mew-smtp-port, a plain connection will be opened and
+         upgraded by STARTTLS.
+tunnel - Use an external program to establish a TLS tunnel.
+         stunnel(1) utility is used by default."
   :group 'mew-smtp
-  :type 'boolean)
+  :type '(choice (const :tag "No TLS/SSL" nil)
+		 (const :tag "Native (GnuTLS)" native)
+		 (const :tag "External (stunnel)" tunnel)))
 
-(defcustom mew-smtp-ssl-port 465 ;; no universal consensus
+(defcustom mew-smtp-ssl-port 465 ;; RFC 8314
   "*The port for SMTP over SSL/TLS. Set this to \"smtp\" if you
 want to use TLS."
   :group 'mew-smtp
@@ -712,9 +749,17 @@ server, set an appropriate value."
   :type '(choice string (const nil)))
 
 (defcustom mew-pop-ssl nil
-  "*If non-nil, POP connections are made over SSL/TLS."
+  "*If non-nil, POP connections are made over SSL/TLS.
+native - Use GnuTLS (this requires Emacs compiled with GnuTLS
+         library).  When mew-pop-ssl-port is equal to
+         mew-pop-port, a plain connection will be opened and
+         upgraded by STARTTLS.
+tunnel - Use an external program to establish a TLS tunnel.
+         stunnel(1) utility is used by default."
   :group 'mew-pop
-  :type 'boolean)
+  :type '(choice (const :tag "No TLS/SSL" nil)
+		 (const :tag "Native (GnuTLS)" native)
+		 (const :tag "External (stunnel)" tunnel)))
 
 (defcustom mew-pop-ssl-port "pop3s"
   "*The port for POP over SSL/TLS."
@@ -805,9 +850,17 @@ server, set an appropriate value."
   :type '(choice string (const nil)))
 
 (defcustom mew-imap-ssl nil
-  "*If non-nil, IMAP connections are made over SSL/TLS."
+  "*If non-nil, IMAP connections are made over SSL/TLS.
+native - Use GnuTLS (this requires Emacs compiled with GnuTLS
+         library).  When mew-imap-ssl-port is equal to
+         mew-imap-port, a plain connection will be opened and
+         upgraded by STARTTLS.
+tunnel - Use an external program to establish a TLS tunnel.
+         stunnel(1) utility is used by default."
   :group 'mew-imap
-  :type 'boolean)
+  :type '(choice (const :tag "No TLS/SSL" nil)
+		 (const :tag "Native (GnuTLS)" native)
+		 (const :tag "External (stunnel)" tunnel)))
 
 (defcustom mew-imap-ssl-port "imaps"
   "*The port for IMAP over SSL/TLS."
@@ -922,9 +975,17 @@ server, set an appropriate value."
   :type '(choice string (const nil)))
 
 (defcustom mew-nntp-ssl nil
-  "*If non-nil, NNTP connections are made over SSL/TLS."
+  "*If non-nil, NNTP connections are made over SSL/TLS.
+native - Use GnuTLS (this requires Emacs compiled with GnuTLS
+         library).  When mew-nntp-ssl-port is equal to
+         mew-nntp-port, a plain connection will be opened and
+         upgraded by STARTTLS.
+tunnel - Use an external program to establish a TLS tunnel.
+         stunnel(1) utility is used by default."
   :group 'mew-nntp
-  :type 'boolean)
+  :type '(choice (const :tag "No TLS/SSL" nil)
+		 (const :tag "Native (GnuTLS)" native)
+		 (const :tag "External (stunnel)" tunnel)))
 
 (defcustom mew-nntp-ssl-port "nntps"
   "*The port for NNTP over SSL/TLS."

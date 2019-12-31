@@ -619,14 +619,18 @@
 ;;; Opening POP
 ;;;
 
-(defun mew-pop-open (pnm server port no-msg)
+(defun mew-pop-open (pnm case server port no-msg starttlsp)
   (let ((sprt (mew-*-to-port port))
+	(sslnp (mew-ssl-native-p (mew-pop-ssl case)))
 	pro tm)
     (condition-case emsg
 	(progn
 	  (setq tm (run-at-time mew-pop-timeout-time nil 'mew-pop-timeout))
 	  (or no-msg (message "Connecting to the POP server..."))
-	  (setq pro (open-network-stream pnm nil server sprt))
+	  (setq pro (mew-open-network-stream pnm nil server sprt
+					     'pop sslnp starttlsp case))
+	  (setq pro (car pro))
+	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
 	  (mew-set-process-cs pro mew-cs-text-for-net mew-cs-text-for-net)
 	  (or no-msg (message "Connecting to the POP server...done")))
@@ -640,7 +644,11 @@
     pro))
 
 (defun mew-pop-timeout ()
-  (signal 'quit nil))
+  ;; Do not timeout if the NSM query pane is active.
+  (unless (get-buffer "*Network Security Manager*")
+    (message "POP connection timed out (%d seconds)"
+	     mew-pop-timeout-time)
+    (signal 'quit nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -655,6 +663,11 @@
 	 (sshsrv (mew-pop-ssh-server case))
 	 (sslp (mew-pop-ssl case))
 	 (sslport (mew-pop-ssl-port case))
+	 (sslnp (mew-ssl-native-p (mew-pop-ssl case)))
+	 (starttlsp
+	  (mew-ssl-starttls-p (mew-pop-ssl case)
+			     (mew-*-to-string (mew-pop-port case))
+			     (mew-pop-ssl-port case)))
          (proxysrv (mew-pop-proxy-server case))
          (proxyport (mew-pop-proxy-port case))
 	 (pnm (mew-pop-info-name case))
@@ -665,25 +678,28 @@
     (if (mew-pop-get-process pnm)
 	(message "Another POP process is running. Try later")
       (cond
+       (sslnp
+	(let ((serv (if starttlsp port sslport)))
+	  (setq process (mew-pop-open pnm case server serv no-msg starttlsp))))
        (sshsrv
 	(setq sshpro (mew-open-ssh-stream case server port sshsrv))
 	(when sshpro
 	  (setq sshname (process-name sshpro))
 	  (setq lport (mew-ssh-pnm-to-lport sshname))
 	  (when lport
-	    (setq process (mew-pop-open pnm "localhost" lport no-msg)))))
+	    (setq process (mew-pop-open pnm case "localhost" lport no-msg nil)))))
        (sslp
-	(if (mew-port-equal port sslport) (setq tls mew-tls-pop))
+	(when starttlsp (setq tls mew-tls-pop))
 	(setq sslpro (mew-open-ssl-stream case server sslport tls))
 	(when sslpro
 	  (setq sslname (process-name sslpro))
 	  (setq lport (mew-ssl-pnm-to-lport sslname))
 	  (when lport
-	    (setq process (mew-pop-open pnm mew-ssl-localhost lport no-msg)))))
+	    (setq process (mew-pop-open pnm case mew-ssl-localhost lport no-msg nil)))))
        (proxysrv
-	(setq process (mew-pop-open pnm proxysrv proxyport no-msg)))
+	(setq process (mew-pop-open pnm case proxysrv proxyport no-msg nil)))
        (t
-	(setq process (mew-pop-open pnm server port no-msg))))
+	(setq process (mew-pop-open pnm case server port no-msg nil))))
       (if (null process)
 	  (if (eq directive 'exec)
 	      (mew-summary-visible-buffer bnm))
@@ -752,7 +768,13 @@
 	;;
 	(set-process-sentinel process 'mew-pop-sentinel)
 	(set-process-filter process 'mew-pop-filter)
-	(set-process-buffer process buf)))))
+	(set-process-buffer process buf)
+	(when sslnp
+	  ;; GnuTLS requires a client-initiated command after the
+	  ;; session is established or upgraded to use TLS because
+	  ;; no additional greeting from the server.
+	  (mew-pop-command-capa process pnm))
+	))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

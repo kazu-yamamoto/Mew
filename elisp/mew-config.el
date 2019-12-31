@@ -166,6 +166,17 @@
 (defun mew-ssl-proxy-port (&optional case)
   (mew-cfent-value case "ssl-proxy-port" mew-ssl-proxy-port))
 
+(defun mew-ssl-client-keycert-list (&optional case)
+  (mew-cfent-value case "ssl-client-keycert-list"
+		   mew-ssl-client-keycert-list))
+
+(defun mew-ssl-trustfiles (&optional case)
+  (mew-cfent-value case "ssl-trustfiles" mew-ssl-trustfiles))
+
+(defun mew-ssl-algorithm-priority (&optional case)
+  (mew-cfent-value case "ssl-algorithm-priority"
+		   mew-ssl-algorithm-priority))
+
 ;;
 
 (defun mew-smtp-server (&optional case)

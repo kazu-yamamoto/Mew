@@ -388,14 +388,18 @@
 ;;; Opening NNTP
 ;;;
 
-(defun mew-nntp-open (pnm server port no-msg)
+(defun mew-nntp-open (pnm case server port no-msg starttlsp)
   (let ((sprt (mew-*-to-port port))
+	(sslnp (mew-ssl-native-p (mew-nntp-ssl case)))
 	pro tm)
     (condition-case emsg
 	(progn
 	  (setq tm (run-at-time mew-nntp-timeout-time nil 'mew-nntp-timeout))
 	  (or no-msg (message "Connecting to the NNTP server..."))
-	  (setq pro (open-network-stream pnm nil server sprt))
+	  (setq pro (mew-open-network-stream pnm nil server sprt
+					     'nntp sslnp starttlsp case))
+	  (setq pro (car pro))
+	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
 	  (mew-set-process-cs pro mew-cs-text-for-net mew-cs-text-for-net)
 	  (or no-msg (message "Connecting to the NNTP server...done")))
@@ -409,7 +413,11 @@
     pro))
 
 (defun mew-nntp-timeout ()
-  (signal 'quit nil))
+  ;; Do not timeout if the NSM query pane is active.
+  (unless (get-buffer "*Network Security Manager*")
+    (message "NNTP connection timed out (%d seconds)"
+	     mew-nntp-timeout-time)
+    (signal 'quit nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -423,6 +431,11 @@
 	 (sshsrv (mew-nntp-ssh-server case))
 	 (sslp (mew-nntp-ssl case))
 	 (sslport (mew-nntp-ssl-port case))
+	 (sslnp (mew-ssl-native-p (mew-nntp-ssl case)))
+	 (starttlsp
+	  (mew-ssl-starttls-p (mew-nntp-ssl case)
+			      (mew-*-to-string (mew-nntp-port case))
+			      (mew-nntp-ssl-port case)))
 	 (newsgroup (mew-bnm-to-newsgroup bnm))
 	 (pnm (mew-nntp-info-name case newsgroup))
 	 (buf (get-buffer-create (mew-nntp-buffer-name pnm)))
@@ -432,23 +445,26 @@
     (if (mew-nntp-get-process pnm)
 	(message "Another NNTP process is running. Try later")
       (cond
+       (sslnp
+	(let ((serv (if starttlsp port sslport)))
+	  (setq process (mew-nntp-open pnm case server serv no-msg starttlsp))))
        (sshsrv
 	(setq sshpro (mew-open-ssh-stream case server port sshsrv))
 	(when sshpro
 	  (setq sshname (process-name sshpro))
 	  (setq lport (mew-ssh-pnm-to-lport sshname))
 	  (when lport
-	    (setq process (mew-nntp-open pnm "localhost" lport no-msg)))))
+	    (setq process (mew-nntp-open pnm case "localhost" lport no-msg nil)))))
        (sslp
-	(if (mew-port-equal port sslport) (setq tls mew-tls-nntp))
+	(when starttlsp (setq tls mew-tls-nntp))
 	(setq sslpro (mew-open-ssl-stream case server sslport tls))
 	(when sslpro
 	  (setq sslname (process-name sslpro))
 	  (setq lport (mew-ssl-pnm-to-lport sslname))
 	  (when lport
-	    (setq process (mew-nntp-open pnm mew-ssl-localhost lport no-msg)))))
+	    (setq process (mew-nntp-open pnm case mew-ssl-localhost lport no-msg nil)))))
        (t
-	(setq process (mew-nntp-open pnm server port no-msg))))
+	(setq process (mew-nntp-open pnm case server port no-msg nil))))
       (when process
 	(mew-summary-lock process "NNTPing" (or sshpro sslpro))
 	(mew-sinfo-set-summary-form (mew-get-summary-form bnm))
@@ -502,7 +518,13 @@
 	(mew-sinfo-set-start-point (point)) ;; after erase-buffer
 	(set-process-sentinel process 'mew-nntp-sentinel)
 	(set-process-filter process 'mew-nntp-filter)
-	(set-process-buffer process buf)))))
+	(set-process-buffer process buf)
+	(when sslnp
+	  ;; GnuTLS requires a client-initiated command after the
+	  ;; session is established or upgraded to use TLS because
+	  ;; no additional greeting from the server.
+	  (mew-nntp-command-mode-reader process pnm))
+	))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
