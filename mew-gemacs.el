@@ -199,13 +199,13 @@
 	   ((or (eq c ?\xd8)                      ;; SOI
 		(eq c ?\xd9)                      ;; EOI
 		(and (>= c ?\xd0) (<= c ?\xd7)))) ;; RSTm
-	   ((eq c ?\xc0)
+	   ((and (>= c ?\xc0) (<= c ?\xcf))
 	    (forward-char 3)
 	    (setq height (mew-img-get-n mew-image-b-endian 2))
 	    (setq width (mew-img-get-n mew-image-b-endian 2))
 	    (backward-char)
 	    (throw 'loop nil))
-	   ((and (>= c ?\xc1) (<= c ?\xfe))
+	   ((and (>= c ?\xd0) (<= c ?\xfe))
 	    (setq size (mew-img-get-n mew-image-b-endian 2))
 	    (forward-char (- size 2)))
 	   (t
