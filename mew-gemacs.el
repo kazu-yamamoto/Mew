@@ -199,7 +199,7 @@
 	   ((or (eq c ?\xd8)                      ;; SOI
 		(eq c ?\xd9)                      ;; EOI
 		(and (>= c ?\xd0) (<= c ?\xd7)))) ;; RSTm
-	   ((eq c ?\xc0)
+	   ((or (eq c ?\xc0) (eq c ?\xc2))
 	    (forward-char 3)
 	    (setq height (mew-img-get-n mew-image-b-endian 2))
 	    (setq width (mew-img-get-n mew-image-b-endian 2))
