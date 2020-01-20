@@ -45,6 +45,7 @@ sub print_entry {
     $comment =~ s/\n+$//;
     $comment =~ s/\n/\n  /g;
     $comment =~ s/^[-*] //;
+    $comment =~ s/\.(  |\n).*/./s;
     print "$comment\n";
 
     my $name = $author;
