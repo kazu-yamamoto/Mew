@@ -51,8 +51,9 @@ info:
 	mv tmp.texi mew.texi
 	$(RM) mew.info*
 	$(TOUCH) mew.info
-	$(EMACS) -batch -q -no-site-file -l texinfmt \
-		-f batch-texinfo-format mew.texi
+	$(EMACS) -batch -q -no-site-file \
+		--eval "(set-default-coding-systems 'utf-8-unix)" \
+		-l texinfmt -f batch-texinfo-format mew.texi
 
 jinfo:
 	sed -e 's/@setfilename mew.info/@setfilename mew.ja.info/' \
@@ -60,8 +61,9 @@ jinfo:
 	mv tmp.texi mew.texi
 	$(RM) mew.ja.info*
 	$(TOUCH) mew.ja.info
-	$(EMACS) -batch -q -no-site-file -l texinfmt \
-		-f batch-texinfo-format mew.texi
+	$(EMACS) -batch -q -no-site-file \
+		--eval "(set-default-coding-systems 'utf-8-unix)" \
+		-l texinfmt -f batch-texinfo-format mew.texi
 
 install: install-info
 install-info:
