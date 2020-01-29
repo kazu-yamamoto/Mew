@@ -37,6 +37,7 @@ insert no extra text.")
 (defvar mew-ssl-libwrap nil)
 (defvar mew-ssl-unixlike nil
   "Set to t when stunnel supports \"foreground\" option.")
+(defvar mew-ssl-checkhost nil)
 
 (defconst mew-ssl-process-exec-cnt 3)
 
@@ -109,6 +110,8 @@ insert no extra text.")
 	(if mew-ssl-unixlike
 	    (insert "pid=\n"))
 	(insert (format "verify=%d\n" (mew-ssl-verify-level case)))
+	(if (and (> (mew-ssl-verify-level case) 0) mew-ssl-checkhost)
+	    (insert (format "checkHost=%s\n" server)))
 	(if mew-ssl-unixlike
 	    (insert "foreground=yes\n"))
 	(insert "debug=debug\n")
@@ -283,7 +286,9 @@ A local port number can be obtained the process name after ':'. "
       (when (re-search-forward "LIBWRAP" nil t)
 	(setq mew-ssl-libwrap t))
       (when (re-search-forward "foreground" nil t)
-	(setq mew-ssl-unixlike t)))))
+	(setq mew-ssl-unixlike t))
+      (when (re-search-forward "checkHost" nil t)
+	(setq mew-ssl-checkhost t)))))
 
 (provide 'mew-ssl)
 
