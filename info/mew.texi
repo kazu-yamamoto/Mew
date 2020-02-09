@@ -734,6 +734,7 @@ To read and/or write articles of NetNews, the followings are necessary.
 @end ifset
 @vindex mew-use-cached-passwd
 @vindex mew-use-master-passwd
+@vindex mew-master-passwd-type
 
 @ifset ja
 メッセージを送受信したり、PGP や S/MIME を使ったりする場合には、パスワー
@@ -897,6 +898,90 @@ Cached passwords in memory are not encrypted. So, if you use either
 Feature 1. or Feature 2., you should take care so that nobody can
 touch your Emacs. If you leave your PC and an Emacs expert happens to
 check your configuration, your passwords could be stolen.
+@end ifset
+
+@ifset ja
+Mew のマスターパスワード機能は Mew 独自のものですが、Emacs には
+auth-source と呼ばれるパスワードマネージャが含まれています。
+auth-source は .netrc 形式のテキストファイル、GNOME Keyring, macOS
+Keychain といった、プラットフォームが提供するパスワード保存機能にも対
+応しています。
+@end ifset
+@ifset en
+While the master password feature is one of the feature of Mew, Emacs
+supports ``auth-source'' password manager.  Auth-source is similar to
+Mew's master password but supports variety of platform-dependent
+password stores including .netrc-style plain text, GNOME Keyring, and
+macOS Keychain.
+@end ifset
+
+@ifset ja
+Mew の auth-source 対応は、まだ実験的なものです。
+auth-source を試すには、マスターパスワードを使用する
+設定に加えて、次のように設定します。
+@end ifset
+@ifset en
+Note that support for auth-source is still experimental.
+To try auth-source, configure the following variable:
+@end ifset
+
+@lisp
+(setq mew-master-passwd-type 'auth-source)
+(setq auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
+@end lisp
+
+@ifset ja
+どのパスワード保存機能を使用するかは、@samp{auth-sources} 変数で設定で
+きます。上記設定では 3 個のファイルを探し、一番最初に見つかったものを
+使用します。@samp{auth-sources} を指定しなかった場合、
+デフォルトでは .netrc 形式のテキストファイルとして、~/.authinfoと
+いうファイルが使われます。GnuPG を使って暗号化し、~/.authinfo.gpg とい
+う名前で用意すれば、暗号化した状態で維持することも可能です。平文のファ
+イルにパスワードを保存するのは危険ですので、暗号化しておくことを強くお
+勧めします。詳しくは、@xref{(auth)Top} を参照してください。
+@end ifset
+@ifset en
+Which password store is used can be set by @samp{auth-sources}
+variable.  In this example, one of the three files which was found
+first is used.  By default .netrc-style text file named
+``~/.authinfo'' is used.  You can encrypt this file by using GnuPG and
+put the encrypted file as ``~/.authinfo.gpg'' and remove the original
+file.  Mew will use the encrypted version seamlessly.  It is strongly
+recommended to use an encrypted file to store your passwords because
+there is no protection in a plain text file.  For more details, see
+@xref{(auth)Top}.
+@end ifset
+
+@ifset ja
+.netrc 形式のテキストファイルを GnuPG で暗号化した場合、Mew は保存され
+たパスワードの使用時に、復号用の鍵にアクセスするためのパスフレーズを尋
+ねます。この復号処理には、EasyPG Assistant と呼ばれる Emacs パッケージ
+が使われます。このパッケージは GnuPG を呼び出して暗号の処理を行なうも
+のです。多くの場合、デフォルトの設定で問題なく動作しますが、設定可能な
+項目がいくつかあります。詳しくは、@xref{(epa)Top} を参照してください。
+@end ifset
+@ifset en
+If you use encrypted version of the .netrc-style text file as your
+password store, Mew will ask you passphrase of the decryption key to
+retrieve passwords from the file.  For encryption and decryption, an
+Emacs package named EasyPG Assistant, which calls GnuPG from Emacs, is
+used.  While it works with no specific configuration in most cases,
+you can find several configuration knobs.  For more details, see
+@xref{(epa)Top}.
+@end ifset
+
+@ifset ja
+現在の auth-source には、記録したパスワードを上書き・消去できないとい
+う大きな欠点があることに注意してください。サーバのパスワードを変更した
+場合は、~/.authinfo.gpg ファイルを手動で編集してください。これは、将来の
+Emacs で修正される見込みです。
+@end ifset
+@ifset en
+Note that the current version of auth-source has a big problem that it
+cannot delete or update the password entry in the password store.  If
+you want to change or remove a password, you have to edit the
+~/.authinfo file manually.  This will be fixed in the future version
+of Emacs.
 @end ifset
 
 @c %%%%%%%%%%%%%%%%%
