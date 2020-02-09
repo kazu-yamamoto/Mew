@@ -35,12 +35,100 @@
 ;;;
 
 (defun mew-passwd-get-passwd (key)
-  (nth 1 (assoc key mew-passwd-alist)))
+  (cond
+   ((mew-passwd-use-auth-source-p)
+    (mew-passwd-auth-source-get-passwd key))
+   (t (nth 1 (assoc key mew-passwd-alist)))))
 
 (defun mew-passwd-set-passwd (key val)
-  (if (assoc key mew-passwd-alist)
-      (setcar (nthcdr 1 (assoc key mew-passwd-alist)) val)
-    (setq mew-passwd-alist (cons (list key val 0) mew-passwd-alist))))
+  (cond
+   ((mew-passwd-use-auth-source-p)
+    (mew-passwd-auth-source-set-passwd key val))
+   (t (if (assoc key mew-passwd-alist)
+	  (setcar (nthcdr 1 (assoc key mew-passwd-alist)) val)
+	(setq mew-passwd-alist (cons (list key val 0) mew-passwd-alist))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Functions for auth-source backend
+;;;
+
+(autoload 'auth-source-search "auth-source")
+
+(defun mew-passwd-use-auth-source-p ()
+  (eq mew-master-passwd-type 'auth-source))
+
+(defun mew-passwd-auth-source-parse-key (key)
+  (let ((st (split-string key "[@:]")))
+    (list :user (nth 0 st)
+	  :host (nth 1 st)
+	  :port (nth 2 st))))
+
+;;; XXX will be revisited.
+(defun mew-passwd-auth-source-parse-key-x (key)
+  (if (string-match "\\([^@]+\\)@\\([^:]+\\):\\(.+\\)" key)
+      (list :user (match-string 1 key)
+	    :host (match-string 2 key)
+	    :port (match-string 3 key))
+    (list  :key key
+	   :user nil
+	   :host nil
+	   :port nil)))
+
+;;; XXX epa-pinentry-mode is set to 'loopback to avoid GUI pinentry
+;;; window.  This might not be a recommended way but it works.
+;;;
+;;; XXX when the backend is an encrypted file and an wrong passphrase
+;;; is provided, a password prompt will be displayed.  This may be
+;;; confusing.
+(defun mew-passwd-auth-source-get-passwd (key)
+  (let* ((epa-pinentry-mode 'loopback)
+	 (slist (mew-passwd-auth-source-parse-key key))
+	 found)
+    (cond
+     ((member key mew-pgp-list)
+      ;; Never get GnuPG passphrase.  Rely on gpg-agent for caching.
+      (setq found nil))
+     (t
+      (condition-case error
+	  (setq found (apply #'auth-source-search (nconc slist)))
+	(error
+	 (setq found nil)))))
+    (if found
+	(let ((secret (plist-get (nth 0 found) :secret)))
+	  (if (functionp secret)
+	      (funcall secret)
+	    secret))
+      nil)))
+
+(defun mew-passwd-auth-source-set-passwd (key val)
+  (cond
+   ((member key mew-pgp-list)
+    ;; Never store GnuPG passphrase.  Rely on gpg-agent for caching.
+    )
+   (val
+    ;; Authenticated successfully.
+    (let* ((epa-pinentry-mode 'loopback)
+	   (slist (mew-passwd-auth-source-parse-key key))
+	   (entry (apply #'auth-source-search
+			 (append slist (list
+					:secret val :create t))))
+	   (save-function (plist-get (nth 0 entry) :save-function)))
+      (when (functionp save-function)
+	(funcall save-function))))
+   (t
+    ;; Authentication failed.
+    ;;
+    ;; XXX: removal of the wrong password is not supported by any
+    ;;      backends (i.e. auth-source-delete is noop).
+    (let* ((epa-pinentry-mode 'loopback)
+	   (slist (mew-passwd-auth-source-parse-key key))
+	   (num (apply #'auth-source-forget+ (nconc slist)))
+	   (entry (apply #'auth-source-delete (nconc slist)))
+	   (save-function (plist-get (nth 0 entry) :save-function)))
+      (when (functionp save-function)
+	(funcall save-function))
+      (message "Wrong password is stored.  Please remove it manually.")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -95,14 +183,19 @@
 	  (mew-timer (* mew-passwd-timer-unit 60) 'mew-passwd-timer))))
 
 (defun mew-passwd-setup-master ()
-  (when (and (not mew-passwd-master) mew-use-master-passwd)
+  (cond
+   ((mew-passwd-use-auth-source-p)
+    ;;; do nothing
+    )
+   (t
+    (when (and (not mew-passwd-master) mew-use-master-passwd)
     (setq mew-passwd-agent-hack (mew-passwd-check-agent-hack))
     (let ((file (expand-file-name mew-passwd-file mew-conf-path)))
       (if (file-exists-p file)
 	  (setq mew-passwd-alist (mew-passwd-load))
 	;; save nil and ask master twice
 	(mew-passwd-save)))
-    (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))
+    (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))))
 
 (defun mew-passwd-clean-up ()
   (remove-hook 'kill-emacs-hook 'mew-passwd-clean-up)

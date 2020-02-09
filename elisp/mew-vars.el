@@ -1735,6 +1735,13 @@ created (if the feature is provided)."
   :group 'mew-privacy
   :type 'boolean)
 
+(defcustom mew-master-passwd-type 'master
+  "*Type of the password manager when mew-use-master-passwd is non-nil."
+  :group 'mew-privacy
+  :type '(choice
+	  (const :tag "Master Password" 'master)
+	  (const :tag "auth-source" 'auth-source)))
+
 (defcustom mew-use-8bit nil
   "*If non-nil, the 8bit-clean charset mechanism is used for 8bit
 charsets, such as ISO-8859-1, in Draft mode. If nil, an appropriate
