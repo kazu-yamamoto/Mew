@@ -63,7 +63,7 @@
 ;;;
 
 (defun mew-passwd-gpg-version ()
-  (when (mew-which mew-prog-passwd exec-path)
+  (when (mew-which-exec mew-prog-passwd)
     (with-temp-buffer
       (call-process mew-prog-passwd nil t nil "--version")
       (goto-char (point-min))
