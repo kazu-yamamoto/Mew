@@ -160,6 +160,12 @@
 (defun mew-ssl-verify-level (&optional case)
   (mew-cfent-value case "ssl-verify-level" mew-ssl-verify-level))
 
+(defun mew-ssl-proxy-server (&optional case)
+  (mew-cfent-value case "ssl-proxy-server" mew-ssl-proxy-server))
+
+(defun mew-ssl-proxy-port (&optional case)
+  (mew-cfent-value case "ssl-proxy-port" mew-ssl-proxy-port))
+
 ;;
 
 (defun mew-smtp-server (&optional case)

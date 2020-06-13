@@ -47,6 +47,9 @@ insert no extra text.")
 
 (defconst mew-ssl-process-exec-cnt 3)
 
+(defvar mew-ssl-proxy-server nil)
+(defvar mew-ssl-proxy-port nil)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Magic words
@@ -130,8 +133,13 @@ insert no extra text.")
 	    (insert (mew-prog-ssl-arg case)))
 	(insert (format "[%d]\n" localport))
 	(insert (format "accept=%s:%d\n" mew-ssl-localhost localport))
-	(insert (format "connect=%s:%d\n" server remoteport))
-	(if tls (insert (format "protocol=%s\n" tls)))
+	(if mew-ssl-proxy-server
+	    (insert
+	     (format "connect=%s:%s\nprotocol=connect\nprotocolHost=%s:%d\n"
+		     mew-ssl-proxy-server mew-ssl-proxy-port
+		     server remoteport))
+	  (insert (format "connect=%s:%d\n" server remoteport))
+	  (if tls (insert (format "protocol=%s\n" tls))))
 	(mew-frwlet mew-cs-dummy mew-cs-text-for-write
 	  ;; NEVER use call-process-region for privacy reasons
 	  (write-region (point-min) (point-max) file nil 'no-msg))
