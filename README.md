@@ -1,4 +1,4 @@
-<div align="center"><img src="https://raw.githubusercontent.com/kazu-yamamoto/Mew/master/etc/Mew.png"/></div>
+<div align="center"><img src="https://www.mew.org/image/Mew.jpg"/></div>
 <h2 align="center">Mew - Messaging in the Emacs World</h2>
 
 - Home page: [http://www.mew.org/](http://www.mew.org/)
