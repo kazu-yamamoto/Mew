@@ -268,11 +268,11 @@
     (if key-len
 	(setq max (- max key-len)))
     (if (> (length encoded-word) max)
-        (let ((med (/ (length str) 2)))
-          (append
-           (mew-header-encode-string1
+	(let ((med (/ (length str) 2)))
+	  (append
+	   (mew-header-encode-string1
 	    charset b-or-q fun hcs (substring str 0 med) key-len)
-           (mew-header-encode-string1
+	   (mew-header-encode-string1
 	    charset b-or-q fun hcs (substring str med))))
       (list encoded-word))))
 
@@ -756,10 +756,10 @@ That is, each line may be more than 75."
 	  ;; Regular expression cannot express a quoted string in
 	  ;; general case. So, canonicalize as follows:
 	  ;;     Not quoted line (may be null line)
-          ;;     "quoted line"
+	  ;;     "quoted line"
 	  ;;     Not quoted line
-          ;;     "quoted line"
-          ;;     ...
+	  ;;     "quoted line"
+	  ;;     ...
 	  ;; For this purpose, "\n" is converted to ^\@(\0).
 	  (goto-char (point-min))
 	  (while (re-search-forward "\n" nil t)
@@ -832,9 +832,9 @@ That is, each line may be more than 75."
 (defun mew-param-encode (str)
   (let* ((ecsdb (or (mew-ecsdb-guess-string str)
 		    (mew-charset-to-ecsdb (mew-charset-m17n))))
-         (hcs (mew-ecsdb-hcs ecsdb))
+	 (hcs (mew-ecsdb-hcs ecsdb))
 	 (charset (mew-cs-to-charset hcs))
-         (estr (mew-cs-encode-string str hcs))
+	 (estr (mew-cs-encode-string str hcs))
 	 (len (length estr))
 	 (ret (mew-make-string (* len 3)))
 	 (j 0) char)
@@ -915,7 +915,7 @@ That is, each line may be more than 75."
 
 (defun mew-param-analyze (param)
   "Return (paramname paramvalue) or
-          (paramname paramvalue section charset lang)."
+	  (paramname paramvalue section charset lang)."
   (let (name section asterisk value charset lang)
     (when (string-match mew-header-param-regex param)
       (setq name (match-string 1 param))

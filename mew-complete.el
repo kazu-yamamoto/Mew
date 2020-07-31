@@ -29,7 +29,7 @@
 (defun mew-draft-on-value-p (switch)
   (save-excursion
     (beginning-of-line)
-    (while (and (< (point-min) (point))	(looking-at mew-lwsp))
+    (while (and (< (point-min) (point)) (looking-at mew-lwsp))
       (forward-line -1))
     (if (looking-at "\\([^:]*:\\)")
 	(mew-field-get-func (match-string 1) switch)
@@ -218,11 +218,11 @@ is inserted before the cursor, the short name is expanded to its address."
   (interactive)
   (mew-complete-proto-folder word
     (if (null word)
-       (mew-complete-window-show (list "+"))
-     (if (and (mew-folder-absolutep word)
-	      (not (mew-draft-or-header-p)))
-	 (mew-complete word (mew-complete-directory-alist word) "directory" nil)
-       (mew-complete word (mew-local-folder-alist) "folder" nil)))))
+	(mew-complete-window-show (list "+"))
+      (if (and (mew-folder-absolutep word)
+	       (not (mew-draft-or-header-p)))
+	  (mew-complete word (mew-complete-directory-alist word) "directory" nil)
+	(mew-complete word (mew-local-folder-alist) "folder" nil)))))
 
 ;; case is specified by mew-inherit-case.
 (defun mew-complete-imap-folder ()
@@ -686,21 +686,21 @@ the name exists."
   "Delete appropriate preceding word and return it."
   (interactive)
   (let ((case-fold-search t)
-        (start nil)
-        (end (point))
-        (regex (concat "[^" (or sep mew-address-separator) "]")))
+	(start nil)
+	(end (point))
+	(regex (concat "[^" (or sep mew-address-separator) "]")))
     (save-excursion
       (while (and (not (bobp))
-                  (string-match regex (mew-buffer-substring (1- (point)) (point))))
-        (forward-char -1))
+		  (string-match regex (mew-buffer-substring (1- (point)) (point))))
+	(forward-char -1))
       (if (and here (not (re-search-forward (regexp-quote here) end t)))
-          nil ;; "here" does not exist.
-          (setq start (point))
-          (if (= start end)
-              (if here t nil) ;; just after "here",  just after separator
-            (prog1
-                (mew-buffer-substring start end)
-              (delete-region start end)))))))
+	  nil ;; "here" does not exist.
+	(setq start (point))
+	(if (= start end)
+	    (if here t nil) ;; just after "here",  just after separator
+	  (prog1
+	      (mew-buffer-substring start end)
+	    (delete-region start end)))))))
 
 (defun mew-delete-file-name ()
   (if (search-backward mew-path-separator nil t)

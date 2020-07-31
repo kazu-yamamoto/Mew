@@ -88,7 +88,7 @@
 (defconst mew-x-gm-labels: "X-GM-LABELS:")
 
 (defconst mew-keywords: "Keywords:")
-(defconst mew-body:	"Body:")
+(defconst mew-body:     "Body:")
 
 (defconst mew-mv:     "Mime-Version:")
 (defconst mew-mv:-num "1.0")
@@ -226,7 +226,7 @@
 
 ;; fld msg
 (defun mew-regex-sumsyn-msg (msg)
-                           (format "\r \\([^ \n]*\\) \\(%s\\) " msg))
+  (format "\r \\([^ \n]*\\) \\(%s\\) " msg))
 
 (defun mew-summary-search-msg (msg)
   (let ((regex (mew-regex-sumsyn-msg msg)))
@@ -277,7 +277,7 @@
 
 ;; Can skip \n. Match the first id. For example:
 ;; In-Reply-To: Your message of "Mon, 5 Oct 1998 13:33:14 +0900"
-;;	<19981005133317N.kazu@example.org>
+;;      <19981005133317N.kazu@example.org>
 (defconst mew-regex-id "<[^>\n\t]+>")
 
 (defconst mew-regex-case "^\\([^-+$%*,:][^,:]+\\):\\(.*\\)")
@@ -298,7 +298,7 @@
 (defconst mew-folder-virtual "*")
 (defconst mew-folder-prefixes
   `(,mew-folder-local ,mew-folder-pop ,mew-folder-imap
-    ,mew-folder-nntp ,mew-folder-virtual))
+		      ,mew-folder-nntp ,mew-folder-virtual))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

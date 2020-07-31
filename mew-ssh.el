@@ -7,7 +7,7 @@
 
 (require 'mew)
 
-(defvar mew-ssh-prog-ver nil)		;; 0-SSH1, 1-SSH2, 2-OpenSSH, 3-PuTTY
+(defvar mew-ssh-prog-ver nil)           ;; 0-SSH1, 1-SSH2, 2-OpenSSH, 3-PuTTY
 
 (defun mew-ssh-get (case list-or-vec)
   (elt list-or-vec (mew-ssh-prog-ver case)))
@@ -26,13 +26,13 @@
 
 (defconst mew-ssh-msg-denied
   '("Permission denied\\." "Permission denied\\." "Permission denied\\."
-    "Permission denied\\."))		;XXX
+    "Permission denied\\."))            ;XXX
 
 (defconst mew-ssh-msg-refused
   '("Secure connection .* refused\\."
     "FATAL: Connecting .* failed:"
     "Secure connection .* refused\\."
-    "Secure connection .* refused\\."))	;XXX
+    "Secure connection .* refused\\.")) ;XXX
 
 (defconst mew-ssh-process-exec-cnt 3)
 
@@ -127,7 +127,7 @@ after ':'."
 	    (mew-info-clean-up pnm)
 	    (mew-ssh-set-try pnm 0)
 	    (mew-ssh-set-case pnm case)
-            (mew-ssh-set-account pnm (format "%s" sshserver))
+	    (mew-ssh-set-account pnm (format "%s" sshserver))
 	    (mew-set-process-cs pro mew-cs-text-for-read mew-cs-text-for-write)
 	    (set-process-filter pro 'mew-ssh-filter)
 	    (set-process-sentinel pro 'mew-ssh-sentinel)

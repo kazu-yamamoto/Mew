@@ -800,10 +800,10 @@ If you want to change the stored keyword, execute this command with '\\[universa
       (format "%s == \"%s\"wc" kmd vl))
      ((string= op "==")
       (format "%s == \"%s\"w" kmd vl))
-;;      ((string= op "!=")
-;;       (format "%s != \"%s\"wc" kmd vl))
-;;      ((string= op "!==")
-;;       (format "%s != \"%s\"c" kmd vl))
+     ;;      ((string= op "!=")
+     ;;       (format "%s != \"%s\"wc" kmd vl))
+     ;;      ((string= op "!==")
+     ;;       (format "%s != \"%s\"c" kmd vl))
      (t
       (error "'%s' is not supported" op)))))
 

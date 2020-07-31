@@ -297,9 +297,9 @@ a text object to be saved can be specified."
 	   (setq file (mew-samba-encoding file)))
        (setq file (mew-summary-input-file-name nil file))
        (let ((dir (mew-parent-directory file)))
-         (if (and (not (file-exists-p dir))
-                  (y-or-n-p (format "Make directory %s? " dir)))
-             (mew-make-directory dir)))
+	 (if (and (not (file-exists-p dir))
+		  (y-or-n-p (format "Make directory %s? " dir)))
+	     (mew-make-directory dir)))
        (if (not (file-exists-p file))
 	   (setq doit t)
 	 (if (null mew-file-append-p)
@@ -456,11 +456,11 @@ If executed with '\\[universal-argument]', coding-system is asked."
 
 (defun mew-input-burst-folder ()
   (let (default)
-     (if (and mew-use-burst-folder-history mew-burst-last-folder)
-	 (setq default mew-burst-last-folder)
-       (setq default (mew-inbox-folder))) ;; local folder
-     (setq mew-burst-last-folder (mew-input-local-folder default))
-     mew-burst-last-folder))
+    (if (and mew-use-burst-folder-history mew-burst-last-folder)
+	(setq default mew-burst-last-folder)
+      (setq default (mew-inbox-folder))) ;; local folder
+    (setq mew-burst-last-folder (mew-input-local-folder default))
+    mew-burst-last-folder))
 
 (defun mew-summary-burst-part (part folder newmsg &optional num)
   (let (n len nums entry file)
@@ -1098,7 +1098,7 @@ mew-summary-reedit."
 	  (if (not (looking-at mew-keyval))
 	      (forward-line)
 	    (setq fields (cons (mew-match-string 1) fields))
-            (forward-line)
+	    (forward-line)
 	    (mew-header-goto-next))))
       fields)))
 

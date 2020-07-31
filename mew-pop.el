@@ -50,7 +50,7 @@
     ("pass"          nil ("\\+OK" . "list") ("-ERR" . "wpwd"))
     ("list"          t   ("\\+OK" . "uidl"))
     ("uidl"          t   ("\\+OK" . "umsg") ("-ERR" . "nouidl"))
-    ("dels"	     nil ("\\+OK" . "dels"))
+    ("dels"          nil ("\\+OK" . "dels"))
     ("retr"          t   ("\\+OK" . "dele"))
     ("dele"          nil ("\\+OK" . "retr"))
     ("quit"          nil ("\\+OK" . "noop"))))
@@ -127,14 +127,14 @@
 
 (defun mew-pop-command-pass (pro pnm)
   (let* ((prompt (format "POP password (%s): "
-                        (mew-pop-get-account pnm)))
-          (passwd (mew-pop-input-passwd prompt pnm)))
+			 (mew-pop-get-account pnm)))
+	 (passwd (mew-pop-input-passwd prompt pnm)))
     (mew-pop-message pnm "Sending your POP password to the POP server...")
     (mew-pop-process-send-string pro "PASS %s" passwd)))
 
 (defun mew-pop-command-apop (pro pnm)
   (let ((user (mew-pop-get-user pnm))
-        (prompt (format "APOP password (%s): " (mew-pop-get-account pnm)))
+	(prompt (format "APOP password (%s): " (mew-pop-get-account pnm)))
 	(key (mew-pop-get-key pnm))
 	passwd kmd5)
     (cond
@@ -529,8 +529,8 @@
 
 (defun mew-pop-command-pwd-plain (pro pnm)
   (let* ((prompt (format "POP PLAIN password (%s): "
-                         (mew-pop-get-account pnm)))
-         (passwd (mew-pop-input-passwd prompt pnm))
+			 (mew-pop-get-account pnm)))
+	 (passwd (mew-pop-input-passwd prompt pnm))
 	 (user (mew-pop-get-user pnm))
 	 (plain (mew-base64-encode-string (format "\0%s\0%s" user passwd))))
     (mew-pop-process-send-string pro "%s" plain)))
@@ -552,7 +552,7 @@
     (unless (mew-port-equal port mew-pop-port)
       (setq name (concat name ":" port)))
     (if sshsrv
-        (concat name "%" sshsrv)
+	(concat name "%" sshsrv)
       name)))
 
 (defun mew-pop-buffer-name (pnm)
@@ -641,13 +641,13 @@
 (defun mew-pop-retrieve (case directive bnm &rest args)
   ;; in +inbox
   (let* ((server (mew-pop-server case))
-         (user (mew-pop-user case))
+	 (user (mew-pop-user case))
 	 (port (mew-*-to-string (mew-pop-port case)))
 	 (sshsrv (mew-pop-ssh-server case))
 	 (sslp (mew-pop-ssl case))
 	 (sslport (mew-pop-ssl-port case))
-         (proxysrv (mew-pop-proxy-server case))
-         (proxyport (mew-pop-proxy-port case))
+	 (proxysrv (mew-pop-proxy-server case))
+	 (proxyport (mew-pop-proxy-port case))
 	 (pnm (mew-pop-info-name case))
 	 (buf (get-buffer-create (mew-pop-buffer-name pnm)))
 	 (no-msg (eq directive 'biff))
@@ -693,7 +693,7 @@
 	(mew-pop-set-server pnm server)
 	(mew-pop-set-port pnm port)
 	(mew-pop-set-user pnm user)
-        (mew-pop-set-account pnm (format "%s@%s" user server))
+	(mew-pop-set-account pnm (format "%s@%s" user server))
 	(mew-pop-set-auth pnm (mew-pop-auth case))
 	(mew-pop-set-auth-list pnm (mew-pop-auth-list case))
 	(mew-pop-set-status pnm "greeting")

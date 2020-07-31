@@ -67,7 +67,7 @@
     ("uid"           ("OK" . "umsg"))
     ("copy"          ("OK" . "copy") ("NO \\[TRYCREATE\\]" . "create") ("NO" . "wmbx"))
     ("create"        ("OK" . "copy") ("NO" . "wmbx"))
-    ("dels"	     ("OK" . "dels")) ;; xxx NG but loop
+    ("dels"          ("OK" . "dels")) ;; xxx NG but loop
     ("expunge"       ("OK" . "post-expunge"))
     ;;
     ("search"        ("OK" . "post-search"))
@@ -119,7 +119,7 @@
     (save-excursion
       (goto-char (point-min))
       (if (re-search-forward "X-GM-EXT-1" nil t)
-          (mew-imap-set-gm-ext-1 pnm t))
+	  (mew-imap-set-gm-ext-1 pnm t))
       (goto-char (point-min))
       (while (re-search-forward "AUTH=\\([^ \r\n]+\\)" nil t)
 	(setq authl (cons (mew-match-string 1) authl)))
@@ -150,8 +150,8 @@
 
 (defun mew-imap-command-login (pro pnm)
   (let* ((user (mew-imap-get-user pnm))
-         (prompt (format "IMAP password (%s): " (mew-imap-get-account pnm)))
-         (pass (mew-input-passwd prompt (mew-imap-passtag pnm))))
+	 (prompt (format "IMAP password (%s): " (mew-imap-get-account pnm)))
+	 (pass (mew-input-passwd prompt (mew-imap-passtag pnm))))
     (setq user (mew-quote-string user ?\\ '(?\\ ?\")))
     (setq pass (mew-quote-string pass ?\\ '(?\\ ?\")))
     (mew-imap-process-send-string pro pnm "LOGIN \"%s\" \"%s\"" user pass)))
@@ -266,9 +266,9 @@
       (if (eq directive 'get)
 	  (mew-imap-process-send-string
 	   pro pnm
-           (if (mew-imap-get-gm-ext-1 pnm)
-               "UID FETCH %s:%s (UID RFC822.SIZE FLAGS X-GM-MSGID X-GM-THRID X-GM-LABELS)"
-             "UID FETCH %s:%s (UID RFC822.SIZE FLAGS)")
+	   (if (mew-imap-get-gm-ext-1 pnm)
+	       "UID FETCH %s:%s (UID RFC822.SIZE FLAGS X-GM-MSGID X-GM-THRID X-GM-LABELS)"
+	     "UID FETCH %s:%s (UID RFC822.SIZE FLAGS)")
 	   (mew-refileinfo-get-uid (car refs))
 	   (mew-refileinfo-get-uid (nth (1- (length refs)) refs)))
 	(cond
@@ -284,10 +284,10 @@
 	(mew-imap-set-max pnm max)
 	(mew-imap-process-send-string
 	 pro pnm
-         (if (mew-imap-get-gm-ext-1 pnm)
-             "UID FETCH %d:* (UID RFC822.SIZE FLAGS X-GM-MSGID X-GM-THRID X-GM-LABELS)"
-           "UID FETCH %d:* (UID RFC822.SIZE FLAGS)")
-         (1+ max))))))
+	 (if (mew-imap-get-gm-ext-1 pnm)
+	     "UID FETCH %d:* (UID RFC822.SIZE FLAGS X-GM-MSGID X-GM-THRID X-GM-LABELS)"
+	   "UID FETCH %d:* (UID RFC822.SIZE FLAGS)")
+	 (1+ max))))))
 
 (defun mew-imap-command-umsg (pro pnm)
   (let* ((directive (mew-imap-get-directive pnm))
@@ -640,32 +640,32 @@
       (mew-imap-process-send-string
        pro pnm
        (if (mew-imap-get-gm-ext-1 pnm)
-           "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[])"
-         "UID FETCH %s BODY.PEEK[]")
+	   "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[])"
+	 "UID FETCH %s BODY.PEEK[]")
        uid))
      ((and (eq directive 'scan) (not get-body))
       (mew-imap-set-truncated pnm t)
       (mew-imap-process-send-string
        pro pnm
        (if (mew-imap-get-gm-ext-1 pnm)
-           "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[HEADER])"
-         "UID FETCH %s BODY.PEEK[HEADER]")
+	   "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[HEADER])"
+	 "UID FETCH %s BODY.PEEK[HEADER]")
        uid))
      ((or (= lim 0) (< (string-to-number siz) lim))
       (mew-imap-set-truncated pnm nil)
       (mew-imap-process-send-string
        pro pnm
        (if (mew-imap-get-gm-ext-1 pnm)
-           "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[])"
-         "UID FETCH %s BODY.PEEK[]")
+	   "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[])"
+	 "UID FETCH %s BODY.PEEK[]")
        uid))
      (t
       (mew-imap-set-truncated pnm t)
       (mew-imap-process-send-string
        pro pnm
        (if (mew-imap-get-gm-ext-1 pnm)
-           "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[HEADER])"
-           "UID FETCH %s BODY.PEEK[HEADER]")
+	   "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[HEADER])"
+	 "UID FETCH %s BODY.PEEK[HEADER]")
        uid)))))
 
 (defun mew-imap-command-post-fetch (pro pnm)
@@ -711,10 +711,10 @@
      ((and (eq directive 'get) (mew-folder-imapp folder))
       (mew-header-insert-xmu uid siz nil)))
     (if (mew-imap-get-gm-ext-1 pnm)
-        (progn
-          (mew-header-insert-x-gm-msgid (mew-imap-get-gm-msgid pnm))
-          (mew-header-insert-x-gm-thrid (mew-imap-get-gm-thrid pnm))
-          (mew-header-insert-x-gm-labels (mew-imap-get-gm-labels pnm))))
+	(progn
+	  (mew-header-insert-x-gm-msgid (mew-imap-get-gm-msgid pnm))
+	  (mew-header-insert-x-gm-thrid (mew-imap-get-gm-thrid pnm))
+	  (mew-header-insert-x-gm-labels (mew-imap-get-gm-labels pnm))))
     (catch 'write-error
       (condition-case nil
 	  (let ((write-region-inhibit-fsync mew-use-async-write))
@@ -980,8 +980,8 @@
 
 (defun mew-imap-command-pwd-cram-md5 (pro pnm)
   (let ((user (mew-imap-get-user pnm))
-        (prompt (format "IMAP CRAM-MD5 password (%s): "
-                        (mew-imap-get-account pnm)))
+	(prompt (format "IMAP CRAM-MD5 password (%s): "
+			(mew-imap-get-account pnm)))
 	challenge passwd cram-md5)
     (save-excursion
       (goto-char (point-min))
@@ -1002,8 +1002,8 @@
 
 (defun mew-imap-command-pwd-login (pro pnm)
   (let* ((prompt (format "IMAP LOGIN password (%s): "
-                         (mew-imap-get-account pnm)))
-         (passwd (mew-imap-input-passwd prompt pnm))
+			 (mew-imap-get-account pnm)))
+	 (passwd (mew-imap-input-passwd prompt pnm))
 	 (epasswd (mew-base64-encode-string passwd)))
     (mew-imap-process-send-string2 pro epasswd)))
 
@@ -1023,7 +1023,7 @@
     (unless (mew-port-equal port mew-imap-port)
       (setq name (concat name ":" port)))
     (if sshsrv
-        (concat name "%" sshsrv)
+	(concat name "%" sshsrv)
       name)))
 
 (defun mew-imap-buffer-name (pnm)
@@ -1118,7 +1118,7 @@
     (if (char-equal sep-char (aref dir len))
 	(substring dir 0 len)
       dir)))
-	
+
 (defun mew-imap-file-name-as-directory (dir case)
   ;; inbox.foo => inbox.foo.
   (let* ((sep (mew-imap-separator case))
@@ -1177,26 +1177,26 @@
 	  (concat "#" user-prefix (substring str 1)))
       str)))
 
-;;		Mew		cache		IMAP
-;;		folder		directory	mailbox
+;;              Mew             cache           IMAP
+;;              folder          directory       mailbox
 ;;
 ;; WU
-;;		%foo		foo		foo
-;;		%foo/bar	foo/bar		foo/bar
-;;		%~alice/foo	#~alice/foo	~alice/foo   "~" -> "~"
-;;		%#shared.foo	#shared.foo	#shared.foo
+;;              %foo            foo             foo
+;;              %foo/bar        foo/bar         foo/bar
+;;              %~alice/foo     #~alice/foo     ~alice/foo   "~" -> "~"
+;;              %#shared.foo    #shared.foo     #shared.foo
 ;;
 ;; Cyrus
-;;		%foo		foo		inbox.foo
-;;		%foo.bar	foo.bar		inbox.foo.bar
-;;		%~alice.foo	#user.alice.foo	user.alice.foo
-;;		%#shared.foo	#shared.foo	shared.foo
+;;              %foo            foo             inbox.foo
+;;              %foo.bar        foo.bar         inbox.foo.bar
+;;              %~alice.foo     #user.alice.foo user.alice.foo
+;;              %#shared.foo    #shared.foo     shared.foo
 ;;
 ;; Courier
-;;		%foo		foo		inbox.foo
-;;		%foo.bar	foo.bar		inbox.foo.bar
-;;		%~alice.foo	N/A		N/A
-;;		%#shared.foo	#shared.foo	shared.foo
+;;              %foo            foo             inbox.foo
+;;              %foo.bar        foo.bar         inbox.foo.bar
+;;              %~alice.foo     N/A             N/A
+;;              %#shared.foo    #shared.foo     shared.foo
 
 (defun mew-imap-local-to-imap (case str)
   (let* ((sep (mew-imap-separator case))
@@ -1269,7 +1269,7 @@
 
 (defun mew-imap-retrieve (case directive bnm &rest args)
   (let* ((server (mew-imap-server case))
-         (user (mew-imap-user case))
+	 (user (mew-imap-user case))
 	 (port (mew-*-to-string (mew-imap-port case)))
 	 (sshsrv (mew-imap-ssh-server case))
 	 (sslp (mew-imap-ssl case))
@@ -1325,7 +1325,7 @@
 	(mew-imap-set-server pnm server)
 	(mew-imap-set-port pnm port)
 	(mew-imap-set-user pnm user)
-        (mew-imap-set-account pnm (format "%s@%s" user server))
+	(mew-imap-set-account pnm (format "%s@%s" user server))
 	(mew-imap-set-auth pnm (mew-imap-auth case))
 	(mew-imap-set-auth-list pnm (mew-imap-auth-list case))
 	(mew-imap-set-status pnm "greeting")
@@ -1368,9 +1368,9 @@
 	  (mew-sinfo-set-unread-mark (mew-get-unread-mark bnm))
 	  (if (mew-imap-get-range pnm)
 	      (progn
-;;		(mew-imap-set-mdb pnm (mew-summary-mark-collect4))
+		;;              (mew-imap-set-mdb pnm (mew-summary-mark-collect4))
 		(mew-net-folder-clean))
-;;	    (mew-imap-set-mdb pnm (mew-summary-mark-collect5))
+	    ;;          (mew-imap-set-mdb pnm (mew-summary-mark-collect5))
 	    (mew-net-invalid-cache-invisible))
 	  (when (and (string= mailbox mew-imap-inbox-string)
 		     (or (mew-imap-spam-pattern case)
