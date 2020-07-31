@@ -29,23 +29,23 @@
 (defun mew-sinfo-save ()
   (when (mew-summary-p)
     (let* ((n mew-sinfo-list-save-length)
-	   (data (make-vector n nil))
-	   (bnm (mew-summary-folder-name 'ext))
-	   (file (mew-expand-file bnm mew-sinfo-file)))
+           (data (make-vector n nil))
+           (bnm (mew-summary-folder-name 'ext))
+           (file (mew-expand-file bnm mew-sinfo-file)))
       (dotimes (i n)
-	(aset data i (aref mew-sinfo i)))
+        (aset data i (aref mew-sinfo i)))
       (mew-lisp-save file data nil 'unlimit))))
 
 (defun mew-sinfo-load ()
   (when (mew-summary-p)
     (let* ((n mew-sinfo-list-save-length)
-	   (bnm (mew-summary-folder-name 'ext))
-	   (file (mew-expand-file bnm mew-sinfo-file))
-	   data)
+           (bnm (mew-summary-folder-name 'ext))
+           (file (mew-expand-file bnm mew-sinfo-file))
+           data)
       (setq data (mew-lisp-load file))
       (when data
-	(dotimes (i n)
-	  (aset mew-sinfo i (aref data i)))))))
+        (dotimes (i n)
+          (aset mew-sinfo i (aref data i)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -84,16 +84,16 @@
 files to FILES."
   (declare (debug (&rest form)))
   `(let* ((FLD-MSGS (mew-summary-mark-collect2 mew-mark-review))
-	  (FLD-MSG-LIST FLD-MSGS) ;; may be used in body
-	  FILES) ;; may be used in body
+          (FLD-MSG-LIST FLD-MSGS) ;; may be used in body
+          FILES) ;; may be used in body
      (cond
       ((null FLD-MSGS)
        (message "No %c marks" mew-mark-review))
       (t
        ;; a little bit complicated because of Virtual mode
        (dolist (fld-msg FLD-MSGS)
-	 (setq FILES (cons (mew-expand-msg (car fld-msg) (cdr fld-msg))
-			   FILES)))
+         (setq FILES (cons (mew-expand-msg (car fld-msg) (cdr fld-msg))
+                           FILES)))
        (setq FILES (nreverse FILES))
        ,@body))))
 
@@ -193,7 +193,7 @@ This macro is used to prohibit using a command in Summary mode."
     ((not (mew-summary-or-virtual-p))
      (message "This command cannot be used in this mode"))
     ((or (mew-folder-nntpp (mew-sinfo-get-folder))
-	 (mew-folder-popp (mew-sinfo-get-folder)))
+         (mew-folder-popp (mew-sinfo-get-folder)))
      (message "This command cannot be used in %s" (mew-summary-folder-name)))
     (t ,@body))) ;; local or IMAP
 
@@ -224,22 +224,22 @@ This macro is used to prohibit using a command in Summary mode."
 and return (beg . end)."
   (save-excursion
     (let ((beg (region-beginning))
-	  (end (region-end)))
+          (end (region-end)))
       (goto-char beg)
       (beginning-of-line)
       (setq beg (point))
       (goto-char end)
       (cond
        ((eq mew-summary-region-include-cursor-line t)
-	(forward-line))
+        (forward-line))
        ((eq mew-summary-region-include-cursor-line 'end)
-	(if (eq (char-after) ?\n)
-	    (forward-line)
-	  (beginning-of-line)))
+        (if (eq (char-after) ?\n)
+            (forward-line)
+          (beginning-of-line)))
        (t
-	(if (> (current-column) 0)
-	    (forward-line)
-	  (beginning-of-line))))
+        (if (> (current-column) 0)
+            (forward-line)
+          (beginning-of-line))))
       (cons beg (point)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -271,18 +271,18 @@ and return (beg . end)."
 
 (defun mew-summary-setup-mode-line ()
   (let ((tgt mew-mode-line-target)
-	target prev pos)
+        target prev pos)
     (if (boundp 'mode-line-position)
-	(progn
-	  (make-local-variable 'mode-line-position) ;; Emacs 21.3.50
-	  (setq mode-line-position
-		(copy-sequence (default-value 'mode-line-position)))
-	  (setq prev mode-line-position))
+        (progn
+          (make-local-variable 'mode-line-position) ;; Emacs 21.3.50
+          (setq mode-line-position
+                (copy-sequence (default-value 'mode-line-position)))
+          (setq prev mode-line-position))
       (setq mode-line-format (copy-sequence (default-value 'mode-line-format)))
       (setq prev mode-line-format))
     (setq target (or (rassoc (list tgt) prev) ;; Emacs 21.3.50
-		     (rassoc tgt prev)
-		     (car (member tgt prev))))
+                     (rassoc tgt prev)
+                     (car (member tgt prev))))
     (when target
       (setq pos (- (length prev) (length (member target prev))))
       (setcar (nthcdr pos prev) mew-mode-line-format))
@@ -290,8 +290,8 @@ and return (beg . end)."
       (make-local-variable 'line-number-mode)
       (setq line-number-mode nil))
     (or (assq 'mew-summary-buffer-process mode-line-process)
-	(setq mode-line-process
-	      (append mew-mode-line-process mode-line-process)))))
+        (setq mode-line-process
+              (append mew-mode-line-process mode-line-process)))))
 
 (defun mew-summary-reset-mode-line ()
   (setq mew-summary-buffer-left-msgs nil))
@@ -299,29 +299,29 @@ and return (beg . end)."
 (defun mew-summary-mode-name (name)
   (let ((case (if (mew-case-default-p mew-case) "" mew-case)))
     (if (string= case "")
-	(setq mode-name name)
+        (setq mode-name name)
       (setq mode-name (format "%s %s" name case)))
     (force-mode-line-update)))
 
 (defun mew-summary-mode-line ()
   (unless mew-summary-buffer-process
     (let ((pos (point))
-	  (mid-point (marker-position (mew-sinfo-get-mid-marker)))
-	  (mid-line (mew-sinfo-get-mid-line))
-	  (ttl (mew-sinfo-get-ttl-line))
-	  cur left)
+          (mid-point (marker-position (mew-sinfo-get-mid-marker)))
+          (mid-line (mew-sinfo-get-mid-line))
+          (ttl (mew-sinfo-get-ttl-line))
+          cur left)
       (if (< pos mid-point)
-	  (if (< pos (/ mid-point 2))
-	      (setq cur (mew-count-lines (point-min) pos))
-	    (setq cur (- mid-line (mew-count-lines pos mid-point))))
-	(if (< pos (+ mid-point (/ mid-point 2)))
-	    (setq cur (+ mid-line (mew-count-lines mid-point pos)))
-	  (setq cur (- ttl (mew-count-lines pos (point-max))))))
+          (if (< pos (/ mid-point 2))
+              (setq cur (mew-count-lines (point-min) pos))
+            (setq cur (- mid-line (mew-count-lines pos mid-point))))
+        (if (< pos (+ mid-point (/ mid-point 2)))
+            (setq cur (+ mid-line (mew-count-lines mid-point pos)))
+          (setq cur (- ttl (mew-count-lines pos (point-max))))))
       (unless (and (mew-decode-syntax-p)
-		   (equal (mew-decode-syntax-buffer) (current-buffer))
-		   (>= pos (mew-decode-syntax-begin))
-		   (<= pos (mew-decode-syntax-end)))
-	(setq cur (1+ cur)))
+                   (equal (mew-decode-syntax-buffer) (current-buffer))
+                   (>= pos (mew-decode-syntax-begin))
+                   (<= pos (mew-decode-syntax-end)))
+        (setq cur (1+ cur)))
       (setq left (- ttl cur))
       (setq mew-summary-buffer-left-msgs (format "[%d/%d{%d}]" cur ttl left)))
     (force-mode-line-update)))
@@ -338,8 +338,8 @@ and return (beg . end)."
     nil) ;; not exclusive
    ((processp mew-summary-buffer-process)
     (or no-msg
-	(mew-message-for-summary
-	 "Another process is running. Try later or type '\\[mew-summary-kill-subprocess]' to kill it"))
+        (mew-message-for-summary
+         "Another process is running. Try later or type '\\[mew-summary-kill-subprocess]' to kill it"))
     nil) ;; not exclusive
    (t t))) ;; exclusive
 

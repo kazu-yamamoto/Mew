@@ -59,8 +59,8 @@ If FOLDER is a sub-folder of KEY or KEY itself, t is returned."
   ;; file-name-as-directory should be first
   ;; because the path separator may be regex-non-safe.
   (let ((regex (if (string-match "^[-+%$]$" key)
-		   (mew-folder-regex key)
-		 (mew-folder-regex (file-name-as-directory key)))))
+                   (mew-folder-regex key)
+                 (mew-folder-regex (file-name-as-directory key)))))
     (string-match regex (file-name-as-directory folder))))
 
 (defun mew-member-case-equal (str list)
@@ -68,16 +68,16 @@ If FOLDER is a sub-folder of KEY or KEY itself, t is returned."
   (let ((n 0) (dstr (downcase str)))
     (catch 'member
       (dolist (x list)
-	(if (string= (downcase x) dstr) (throw 'member n))
-	(setq n (1+ n))))))
+        (if (string= (downcase x) dstr) (throw 'member n))
+        (setq n (1+ n))))))
 
 (defun mew-member* (x list)
   "Member in a nested list."
   (catch 'found
     (dolist (ent list)
       (if (consp ent)
-	  (if (mew-member* x ent) (throw 'found t))
-	(if (equal x ent) (throw 'found t))))))
+          (if (mew-member* x ent) (throw 'found t))
+        (if (equal x ent) (throw 'found t))))))
 
 (defun mew-member-match (str list &optional ignore-case)
   "Return the position matched to STR in LIST. If
@@ -85,14 +85,14 @@ IGNORE-CASE is t, matching is performed by ignoring case."
   (let ((n 0) (case-fold-search ignore-case))
     (catch 'member
       (dolist (x list)
-	(if (string-match x str) (throw 'member n))
-	(setq n (1+ n))))))
+        (if (string-match x str) (throw 'member n))
+        (setq n (1+ n))))))
 
 (defun mew-member-match2 (regex list &optional ignore-case)
   (let ((case-fold-search ignore-case))
     (catch 'member
       (dolist (x list)
-	(if (string-match regex x) (throw 'member x))))))
+        (if (string-match regex x) (throw 'member x))))))
 
 (defun mew-uniq-list (lst)
   "Destructively uniqfy elements of LST.
@@ -104,17 +104,17 @@ This is O(N^2). So, do not use this function with a large LST."
 (defun mew-uniq-alist (alist)
   "Uniqfy elements of ALIST."
   (let ((vec (make-vector 511 0)) ;; hash
-	str ret)
+        str ret)
     (dolist (ent alist)
       (setq str (car ent))
       (cond
        ((not (stringp str))
-	(setq ret (cons ent ret)))
+        (setq ret (cons ent ret)))
        ((intern-soft str vec)
-	())
+        ())
        (t
-	(setq ret (cons ent ret))
-	(intern str vec))))
+        (setq ret (cons ent ret))
+        (intern str vec))))
     (nreverse ret)))
 
 (defun mew-delete (key alist)
@@ -123,12 +123,12 @@ This is O(N^2). So, do not use this function with a large LST."
       alist
     (let (ret)
       (while (and (listp (nth 0 alist)) (equal (car (nth 0 alist)) key))
-	(setq alist (cdr alist)))
+        (setq alist (cdr alist)))
       (setq ret alist)
       (while alist ;; cannot use dolist
-	(if (and (listp (nth 1 alist)) (equal (car (nth 1 alist)) key))
-	    (setcdr alist (cdr (cdr alist)))
-	  (setq alist (cdr alist))))
+        (if (and (listp (nth 1 alist)) (equal (car (nth 1 alist)) key))
+            (setcdr alist (cdr (cdr alist)))
+          (setq alist (cdr alist))))
       ret)))
 
 (defmacro mew-ntake (n lst)
@@ -141,20 +141,20 @@ This is O(N^2). So, do not use this function with a large LST."
 
 (defun mew-assoc-equal (key alist nth &optional equal-func)
   (let ((func (or equal-func 'equal))
-	n)
+        n)
     (catch 'loop
       (dolist (a alist)
-	(setq n (nth nth a))
-	(if (or (funcall func n key) (eq n t)) (throw 'loop a))))))
+        (setq n (nth nth a))
+        (if (or (funcall func n key) (eq n t)) (throw 'loop a))))))
 
 (defun mew-assoc-case-equal (key alist nth)
   (let ((skey (downcase key)) n)
     (catch 'loop
       (dolist (a alist)
-	(setq n (nth nth a))
-	(if (or (and (stringp n) (string= (downcase n) skey))
-		(eq n t))
-	    (throw 'loop a))))))
+        (setq n (nth nth a))
+        (if (or (and (stringp n) (string= (downcase n) skey))
+                (eq n t))
+            (throw 'loop a))))))
 
 (defun mew-assoc-match (key alist nth)
   "Return list in ALIST that KEY regex is matched to its NTH element.
@@ -163,10 +163,10 @@ the list is always selected."
   (let ((case-fold-search t) n)
     (catch 'loop
       (dolist (a alist)
-	(setq n (nth nth a))
-	(if (or (and (stringp n) (string-match key n))
-		(equal n key) (eq n t))
-	    (throw 'loop a))))))
+        (setq n (nth nth a))
+        (if (or (and (stringp n) (string-match key n))
+                (equal n key) (eq n t))
+            (throw 'loop a))))))
 
 (defun mew-assoc-match2 (key alist nth)
   "Return list in ALIST whose NTH regex is matched to KEY.
@@ -175,10 +175,10 @@ the list is always selected."
   (let ((case-fold-search t) n)
     (catch 'loop
       (dolist (a alist)
-	(setq n (nth nth a))
-	(if (or (and (stringp n) (string-match n key))
-		(equal n key) (eq n t))
-	    (throw 'loop a))))))
+        (setq n (nth nth a))
+        (if (or (and (stringp n) (string-match n key))
+                (equal n key) (eq n t))
+            (throw 'loop a))))))
 
 (defun mew-assoc-match3 (key alist nth)
   "Return list in ALIST whose NTH regex is matched to KEY.
@@ -189,11 +189,11 @@ to the list itself."
   (let ((case-fold-search t) (i 0) n)
     (catch 'loop
       (dolist (a alist)
-	(setq n (nth nth a))
-	(if (or (and (stringp n) (string-match n key))
-		(equal n key) (eq n t))
-	    (throw 'loop (cons i a)))
-	(setq i (1+ i))))))
+        (setq n (nth nth a))
+        (if (or (and (stringp n) (string-match n key))
+                (equal n key) (eq n t))
+            (throw 'loop (cons i a)))
+        (setq i (1+ i))))))
 
 (defun mew-assoc-member (key lol nth)
   "Return a list member of LoL whose NTH list contains
@@ -211,7 +211,7 @@ in the context of FUNC."
   (catch 'loop
     (dolist (l lol)
       (if (and (listp (nth nth l)) (funcall func key (nth nth l)))
-	  (throw 'loop l)))))
+          (throw 'loop l)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -222,7 +222,7 @@ in the context of FUNC."
 (defun mew-alist-get-value (ent)
   (let ((value (cdr ent)))
     (if (consp value)
-	(car value) ;; new
+        (car value) ;; new
       value))) ;; old
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -237,14 +237,14 @@ in the context of FUNC."
     (setq LIST (cdr LIST))
     (setq next (car LIST))
     (if (equal frst MEM)
-	(if next next frst)
-    (catch 'loop
-      (while LIST ;; cannot use dolist
-	(setq crnt next)
-	(setq LIST (cdr LIST))
-	(setq next (car LIST))
-	(if (equal crnt MEM)
-	    (throw 'loop (if next next frst))))))))
+        (if next next frst)
+      (catch 'loop
+        (while LIST ;; cannot use dolist
+          (setq crnt next)
+          (setq LIST (cdr LIST))
+          (setq next (car LIST))
+          (if (equal crnt MEM)
+              (throw 'loop (if next next frst))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -262,30 +262,30 @@ in the context of FUNC."
   `(let ((var ,variable))
      (catch 'loop
        (while var ;; cannot use dolist
-	 (if (equal (nth 0 (car var)) ,key)
-	     (throw 'loop (setcdr var (cons ,value (cdr var)))))
-	 (setq var (cdr var))))))
+         (if (equal (nth 0 (car var)) ,key)
+             (throw 'loop (setcdr var (cons ,value (cdr var)))))
+         (setq var (cdr var))))))
 
 (defmacro mew-replace-with (variable value key)
   `(let ((var ,variable))
      (catch 'loop
        (while var ;; cannot use dolist
-	 (if (equal (nth 0 (car var)) ,key)
-	     (throw 'loop (setcar var ,value)))
-	 (setq var (cdr var))))))
+         (if (equal (nth 0 (car var)) ,key)
+             (throw 'loop (setcar var ,value)))
+         (setq var (cdr var))))))
 
 (defmacro mew-remove-entry (variable key)
   `(let ((crn ,variable) prv)
      (if (equal (nth 0 (car crn)) ,key)
-	 (setq ,variable (cdr crn))
+         (setq ,variable (cdr crn))
        (setq prv crn)
        (setq crn (cdr crn))
        (catch 'loop
-	 (while crn ;; cannot use dolist
-	   (if (equal (nth 0 (car crn)) ,key)
-	       (throw 'loop (setcdr prv (cdr crn))))
-	   (setq prv crn)
-	   (setq crn (cdr crn)))))))
+         (while crn ;; cannot use dolist
+           (if (equal (nth 0 (car crn)) ,key)
+               (throw 'loop (setcdr prv (cdr crn))))
+           (setq prv crn)
+           (setq crn (cdr crn)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -299,7 +299,7 @@ in the context of FUNC."
   "Replace characters equal to FROM to TO in STRING."
   (dotimes (cnt (length string))
     (if (char-equal (aref string cnt) from)
-	(aset string cnt to)))
+        (aset string cnt to)))
   string)
 
 (defun mew-replace-white-space (string)
@@ -320,19 +320,19 @@ in the context of FUNC."
   "Syntax table independent version of capitalize.
 Words are separated by '/' and '-'."
   (let* ((len (length ostr))
-	 (nstr (mew-make-string len))
-	 (topp t) c)
+         (nstr (mew-make-string len))
+         (topp t) c)
     (dotimes (i len)
       (setq c (aref ostr i))
       (cond
        (topp
-	(aset nstr i (upcase c))
-	(setq topp nil))
+        (aset nstr i (upcase c))
+        (setq topp nil))
        ((or (char-equal c ?/) (char-equal c ?-))
-	(aset nstr i c)
-	(setq topp t))
+        (aset nstr i c)
+        (setq topp t))
        (t
-	(aset nstr i (downcase c)))))
+        (aset nstr i (downcase c)))))
     nstr))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -343,7 +343,7 @@ Words are separated by '/' and '-'."
 (defun mew-insert (form str)
   (when str
     (if form
-	(insert (format form str))
+        (insert (format form str))
       (insert str))))
 
 (defun mew-insert-message (fld msg rcs size)
@@ -355,11 +355,11 @@ Words are separated by '/' and '-'."
       (error "The size of %s is 0" (mew-concat-folder fld msg)))
      ((file-readable-p file)
       (let ((old-cs (and (boundp 'buffer-file-coding-system)
-			 buffer-file-coding-system)))
-	(mew-frwlet rcs mew-cs-dummy
-	  (mew-insert-file-contents file nil 0 size))
-	(if (boundp 'buffer-file-coding-system)
-	    (setq buffer-file-coding-system old-cs)))
+                         buffer-file-coding-system)))
+        (mew-frwlet rcs mew-cs-dummy
+          (mew-insert-file-contents file nil 0 size))
+        (if (boundp 'buffer-file-coding-system)
+            (setq buffer-file-coding-system old-cs)))
       ;; return physical size
       (cons (mew-file-get-time file) (mew-file-get-size file))))))
 
@@ -379,20 +379,20 @@ Words are separated by '/' and '-'."
   (let ((len (length str)) (start 0) ret)
     (dotimes (i len)
       (when (char-equal (aref str i) sepchar)
-	(setq ret (cons (substring str start i) ret))
-	(setq start (1+ i))))
+        (setq ret (cons (substring str start i) ret))
+        (setq start (1+ i))))
     (if (/= start len)
-	(setq ret (cons (substring str start) ret)))
+        (setq ret (cons (substring str start) ret)))
     (nreverse ret)))
 
 (defun mew-remove-single-quote (str)
   (let* ((len (length str))
-	 (ret (mew-make-string len))
-	 (j 0))
+         (ret (mew-make-string len))
+         (j 0))
     (dotimes (i len)
       (unless (char-equal (aref str i) ?')
-	(aset ret j (aref str i))
-	(setq j (1+ j))))
+        (aset ret j (aref str i))
+        (setq j (1+ j))))
     (substring ret 0 j)))
 
 (defun mew-split-quoted (str sepchar &optional qopen qclose no-single)
@@ -406,24 +406,24 @@ also ignored."
       (setq c (aref str i))
       (cond
        ((char-equal ?\\ c)
-	(setq i (1+ i)))
+        (setq i (1+ i)))
        ((or (char-equal ?\" c) (and (not no-single) (char-equal ?' c)))
-	(setq dblq (not dblq)))
+        (setq dblq (not dblq)))
        ((and qopen (char-equal c qopen))
-	(setq qlevel (1+ qlevel)))
+        (setq qlevel (1+ qlevel)))
        ((and qclose (char-equal c qclose))
-	(setq qlevel (1- qlevel)))
+        (setq qlevel (1- qlevel)))
        ((char-equal c sepchar)
-	(unless (or dblq (>= qlevel 1))
-	  (setq sub (substring str start i))
-	  (unless no-single
-	    (setq sub (mew-remove-single-quote sub)))
-	  (setq ret (cons sub ret))
-	  (setq start (1+ i))))))
+        (unless (or dblq (>= qlevel 1))
+          (setq sub (substring str start i))
+          (unless no-single
+            (setq sub (mew-remove-single-quote sub)))
+          (setq ret (cons sub ret))
+          (setq start (1+ i))))))
     (when (/= start len)
       (setq sub (substring str start))
       (unless no-single
-	(setq sub (mew-remove-single-quote sub)))
+        (setq sub (mew-remove-single-quote sub)))
       (setq ret (cons sub ret)))
     (nreverse ret)))
 
@@ -432,29 +432,29 @@ also ignored."
   (let ((i 0) (j (length str)) c)
     (catch 'loop
       (while (< i j)
-	(setq c (aref str i))
-	(if (or (char-equal c mew-sp) (char-equal c ?\t))
-	    (setq i (1+ i))
-	  (throw 'loop nil))))
+        (setq c (aref str i))
+        (if (or (char-equal c mew-sp) (char-equal c ?\t))
+            (setq i (1+ i))
+          (throw 'loop nil))))
     (setq j (1- j))
     (catch 'loop
       (while (< i j)
-	(setq c (aref str j))
-	(if (or (char-equal c mew-sp) (char-equal c ?\t))
-	    (setq j (1- j))
-	  (throw 'loop nil))))
+        (setq c (aref str j))
+        (if (or (char-equal c mew-sp) (char-equal c ?\t))
+            (setq j (1- j))
+          (throw 'loop nil))))
     (substring str i (1+ j))))
 
 (defun mew-quote-string (str qchar targets)
   "If characters in STR is a member of TARGETS, QCHAR is prepended to them."
   (let* ((len (length str))
-	(ret (mew-make-string (* len 2)))
-	(j 0) c)
+         (ret (mew-make-string (* len 2)))
+         (j 0) c)
     (dotimes (i len)
       (setq c (aref str i))
       (when (member c targets)
-	(aset ret j qchar)
-	(setq j (1+ j)))
+        (aset ret j qchar)
+        (setq j (1+ j)))
       (aset ret j c)
       (setq j (1+ j)))
     (substring ret 0 j)))
@@ -486,8 +486,8 @@ also ignored."
   "Concat case and folder to produce case:folder.
 If case is \"default\", it is not prepended."
   (if (and case
-	   (not (string= case mew-case-default))
-	   (mew-folder-remotep folder))
+           (not (string= case mew-case-default))
+           (mew-folder-remotep folder))
       (concat case ":" folder)
     folder))
 
@@ -536,22 +536,22 @@ If case is \"default\", it is not prepended."
     ;; depends on folder
     (mew-set '(case proto) (mew-summary-case-proto))
     (if (mew-folder-localp proto)
-	(if has-proto
-	    path
-	  (mew-string-to-local path))
+        (if has-proto
+            path
+          (mew-string-to-local path))
       (let* ((base-path (mew-folder-string
-			 (mew-path-to-folder
-			  (mew-expand-folder (mew-case-folder case proto)))))
-	     (path-regex (concat "^" (regexp-quote base-path)))
-	     (no-proto-path path))
-	(when has-proto
-	  (setq no-proto-path (mew-case:folder-folder no-proto-path))
-	  (setq no-proto-path (mew-folder-string no-proto-path)))
-	(if (string-match path-regex no-proto-path)
-	    (mew-case-folder
-	     case
-	     (concat proto (substring no-proto-path (match-end 0))))
-	  path)))))
+                         (mew-path-to-folder
+                          (mew-expand-folder (mew-case-folder case proto)))))
+             (path-regex (concat "^" (regexp-quote base-path)))
+             (no-proto-path path))
+        (when has-proto
+          (setq no-proto-path (mew-case:folder-folder no-proto-path))
+          (setq no-proto-path (mew-folder-string no-proto-path)))
+        (if (string-match path-regex no-proto-path)
+            (mew-case-folder
+             case
+             (concat proto (substring no-proto-path (match-end 0))))
+          path)))))
 
 ;;
 
@@ -566,8 +566,8 @@ If case is \"default\", it is not prepended."
   ;; So, string-match must not be used here.
   (if (eq (aref folder 0) ?*)
       (if (eq (aref folder (1- (length folder))) ?*)
-	  (substring folder 1 -1)
-	(substring folder 1))
+          (substring folder 1 -1)
+        (substring folder 1))
     folder))
 
 ;;
@@ -604,7 +604,7 @@ If case is \"default\", it is not prepended."
 
 (defun mew-folder-imap-queuep ()
   (string= (mew-sinfo-get-folder)
-	   (mew-imap-queue-folder (mew-sinfo-get-case))))
+           (mew-imap-queue-folder (mew-sinfo-get-case))))
 
 ;;
 
@@ -622,43 +622,43 @@ If case is \"default\", it is not prepended."
 (defun mew-path-to-folder (path)
   (let ((regex (concat "^" (regexp-quote (file-name-as-directory (expand-file-name mew-mail-path))))))
     (if (string-match regex path)
-	(mew-string-to-local (substring path (match-end 0)))
+        (mew-string-to-local (substring path (match-end 0)))
       path)))
 
 (defun mew-canonicalize-case-folder (case:folder)
   (let ((case (mew-case:folder-case case:folder))
-	(folder (mew-case:folder-folder case:folder))
-	len)
+        (folder (mew-case:folder-folder case:folder))
+        len)
     (cond
      ((mew-folder-localp folder)   (directory-file-name folder))
      ((mew-folder-absolutep folder)(directory-file-name folder))
      ((mew-folder-virtualp folder) folder)
      (t
       (if (null case)
-	  (setq folder case:folder)
-	(if (string= case mew-case-default)
-	    (progn
-	      (setq case nil)
-	      (setq case:folder folder))))
+          (setq folder case:folder)
+        (if (string= case mew-case-default)
+            (progn
+              (setq case nil)
+              (setq case:folder folder))))
       (cond
        ((mew-folder-popp folder) case:folder)
        ((mew-folder-imapp folder)
-	(mew-imap-directory-file-name
-	 case:folder (or case ;; visit
-			 mew-inherit-case))) ;; refile
+        (mew-imap-directory-file-name
+         case:folder (or case ;; visit
+                         mew-inherit-case))) ;; refile
        ((mew-folder-nntpp folder)
-	(setq len (1- (length case:folder)))
-	(if (char-equal (aref case:folder len) ?.)
-	    (substring case:folder 0 len)
-	  case:folder)))))))
+        (setq len (1- (length case:folder)))
+        (if (char-equal (aref case:folder len) ?.)
+            (substring case:folder 0 len)
+          case:folder)))))))
 
 ;;
 
 (defun mew-expand-folder2 (case:folder)
   "Expanding FOLDER to a relative path to '+'"
   (let ((case (mew-case:folder-case case:folder))
-	(folder (mew-case:folder-folder case:folder))
-	subdir)
+        (folder (mew-case:folder-folder case:folder))
+        subdir)
     ;; The length of "case" must be longer than or equal to 2.
     (setq subdir (mew-folder-string folder))
     (cond
@@ -668,9 +668,9 @@ If case is \"default\", it is not prepended."
       (mew-concat-folder (mew-nntp-folder case) subdir))
      ((mew-folder-imapp folder)
       (mew-concat-folder (mew-imap-folder case)
-			 (mew-imap-expand-folder
-			  case
-			  (mew-imap-utf-7-encode-string subdir))))
+                         (mew-imap-expand-folder
+                          case
+                          (mew-imap-utf-7-encode-string subdir))))
      (t folder))))
 
 (defun mew-expand-folder (folder)
@@ -679,10 +679,10 @@ If case is \"default\", it is not prepended."
     (let (dir)
       (setq folder (mew-expand-folder2 folder))
       (if (mew-folder-localp folder)
-	  (setq dir (expand-file-name (mew-folder-string folder) mew-mail-path))
-	;; absolute path
-	;; "C:/" -> t, "C:" -> nil , "CC:/" -> nil
-	(setq dir (expand-file-name folder)))
+          (setq dir (expand-file-name (mew-folder-string folder) mew-mail-path))
+        ;; absolute path
+        ;; "C:/" -> t, "C:" -> nil , "CC:/" -> nil
+        (setq dir (expand-file-name folder)))
       dir)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -700,7 +700,7 @@ If case is \"default\", it is not prepended."
 (defun mew-msg-get-filename (file)
   (let ((sfile (format "%s%s" file mew-suffix)))
     (if (file-exists-p sfile)
-	sfile
+        sfile
       file)))
 
 (defun mew-expand-msg (folder message)
@@ -731,7 +731,7 @@ If case is \"default\", it is not prepended."
   ;; ENCODE_FILE() and DECODE_FILE() are skipped, resulting speed up.
   ;; So, we need to encode DIR by ourselves.
   (let ((edir (expand-file-name dir))
-	(cs default-file-name-coding-system))
+        (cs default-file-name-coding-system))
     (setq edir (mew-cs-encode-string edir cs))
     (or regex (setq regex mew-regex-message-files))
     (mew-alet
@@ -739,7 +739,7 @@ If case is \"default\", it is not prepended."
 
 (defun mew-folder-messages (folder)
   (let* ((dir (mew-expand-folder folder))
-	 msgs nums)
+         msgs nums)
     (when (file-directory-p dir)
       (setq msgs (mew-dir-messages dir))
       (setq nums (sort (mapcar 'string-to-number msgs) '<))
@@ -747,37 +747,37 @@ If case is \"default\", it is not prepended."
 
 (defun mew-folder-new-message (folder &optional num-only cache)
   (let* ((dir (mew-expand-folder folder))
-	 (regex (if cache mew-regex-message-files3 mew-regex-message-files))
-	 (max 0)
-	 cur maxfile maxpath)
+         (regex (if cache mew-regex-message-files3 mew-regex-message-files))
+         (max 0)
+         cur maxfile maxpath)
     ;; xxx create if there is no directory?
     (when (file-directory-p dir)
       (dolist (msg (mew-dir-messages dir regex))
-	(setq cur (string-to-number (file-name-sans-extension msg)))
-	(if (> cur max) (setq max cur)))
+        (setq cur (string-to-number (file-name-sans-extension msg)))
+        (if (> cur max) (setq max cur)))
       (setq max (1+ max))
       (setq maxfile (number-to-string max))
       (setq maxpath (mew-expand-new-msg folder maxfile))
       (while (get-file-buffer maxpath) ;; xxx
-	;; file not exist but there is a buffer.
-	(setq max (1+ max))
-	(setq maxfile (number-to-string max))
-	(setq maxpath (mew-expand-new-msg folder maxfile)))
+        ;; file not exist but there is a buffer.
+        (setq max (1+ max))
+        (setq maxfile (number-to-string max))
+        (setq maxpath (mew-expand-new-msg folder maxfile)))
       (while (file-exists-p maxpath)
-	(setq maxfile (read-string (format "%s/%s exists. Input a message number: " max folder)))
-	(while (not (string-match mew-regex-message-files maxfile))
-	  (setq maxfile (read-string "Input NUMBER: ")))
-	(setq maxpath (mew-expand-new-msg folder maxfile)))
+        (setq maxfile (read-string (format "%s/%s exists. Input a message number: " max folder)))
+        (while (not (string-match mew-regex-message-files maxfile))
+          (setq maxfile (read-string "Input NUMBER: ")))
+        (setq maxpath (mew-expand-new-msg folder maxfile)))
       (if num-only
-	  (mew-msg-new-filename maxfile)
-	maxpath))))
+          (mew-msg-new-filename maxfile)
+        maxpath))))
 
 (defun mew-touch-folder (fld)
   (when (stringp mew-summary-touch-file)
     (let ((file (mew-expand-file fld mew-summary-touch-file)))
       (when (file-writable-p file)
-	(write-region "touched by Mew." nil file nil 'no-msg)
-	(mew-set-file-modes file)))))
+        (write-region "touched by Mew." nil file nil 'no-msg)
+        (mew-set-file-modes file)))))
 
 ;; this kind of defmacro can't recurse
 ;; if +foo exists and we insert +foo/bar,
@@ -785,22 +785,22 @@ If case is \"default\", it is not prepended."
 (defmacro mew-folder-insert (folder lst subdir)
   `(unless (mew-assoc-equal ,folder ,lst 0)
      (let ((case-fold-search nil)
-	   (max (1- (length ,lst)))
-	   (pair (mew-folder-func ,folder ,subdir))
-	   (min 0)
-	   mid crr prv)
+           (max (1- (length ,lst)))
+           (pair (mew-folder-func ,folder ,subdir))
+           (min 0)
+           mid crr prv)
        (while (> (- max min) 20) ;; 20 is enough?
-	 (setq mid (/ (+ min max) 2))
-	 (if (string< (car (nth mid ,lst)) ,folder)
-	     (setq min mid)
-	   (setq max mid)))
+         (setq mid (/ (+ min max) 2))
+         (if (string< (car (nth mid ,lst)) ,folder)
+             (setq min mid)
+           (setq max mid)))
        (setq crr (nthcdr min ,lst))
        (while (and crr (string< (car (car crr)) ,folder))
-	 (setq prv crr)
-	 (setq crr (cdr crr)))
+         (setq prv crr)
+         (setq crr (cdr crr)))
        (if prv
-	   (setcdr prv (cons pair crr))
-	 (setq ,lst (cons pair crr))))))
+           (setcdr prv (cons pair crr))
+         (setq ,lst (cons pair crr))))))
 
 (defmacro mew-folder-delete (folder lst)
   `(setq ,lst (delete (assoc ,folder ,lst) ,lst)))
@@ -809,11 +809,11 @@ If case is \"default\", it is not prepended."
   (cond
    ((mew-folder-localp folder)
     (let* ((dir (file-name-as-directory folder))
-	   (regex (concat "^" (regexp-quote dir))))
+           (regex (concat "^" (regexp-quote dir))))
       (mew-assoc-match regex (mew-local-folder-alist) 0)))
    ((mew-folder-imapp folder)
     (let* ((dir (mew-imap-file-name-as-directory folder case))
-	   (regex (concat "^" (regexp-quote dir))))
+           (regex (concat "^" (regexp-quote dir))))
       (mew-assoc-match regex (mew-imap-folder-alist case) 0)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -831,23 +831,23 @@ If case is \"default\", it is not prepended."
 
 (defun mew-folder-spec (folder lst str-type lst-type)
   (let ((str-func (mew-folder-spec-func str-type))
-	(lst-func (mew-folder-spec-func lst-type))
-	keys values ret)
+        (lst-func (mew-folder-spec-func lst-type))
+        keys values ret)
     (setq folder (mew-case:folder-folder folder))
     (catch 'loop
       (dolist (ent lst)
-	(setq keys (car ent))
-	(setq values (cdr ent))
-	(cond
-	 ((eq keys t)
-	  (throw 'loop (setq ret values)))
-	 ((stringp keys)
-	  (if (funcall str-func keys folder)
-	      (throw 'loop (setq ret values))))
-	 ((listp keys)
-	  (dolist (key keys)
-	    (if (funcall lst-func key folder)
-		(throw 'loop (setq ret values))))))))
+        (setq keys (car ent))
+        (setq values (cdr ent))
+        (cond
+         ((eq keys t)
+          (throw 'loop (setq ret values)))
+         ((stringp keys)
+          (if (funcall str-func keys folder)
+              (throw 'loop (setq ret values))))
+         ((listp keys)
+          (dolist (key keys)
+            (if (funcall lst-func key folder)
+                (throw 'loop (setq ret values))))))))
     ret))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -876,19 +876,19 @@ If case is \"default\", it is not prepended."
      (t
       (make-directory path)))
     (if (/= mew-folder-mode (file-modes path))
-	(set-file-modes path mew-folder-mode))))
+        (set-file-modes path mew-folder-mode))))
 
 (defun mew-delete-directory-recursively (dir)
   (when (file-directory-p dir)
     (dolist (file (directory-files dir 'full mew-regex-files 'no-sort))
       (cond
        ((file-symlink-p file)
-	;; never chase symlink which points a directory
-	(delete-file file))
+        ;; never chase symlink which points a directory
+        (delete-file file))
        ((file-directory-p file)
-	(mew-delete-directory-recursively file))
+        (mew-delete-directory-recursively file))
        (t
-	(delete-file file))))
+        (delete-file file))))
     (unless (directory-files dir 'full mew-regex-files 'no-sort)
       (delete-directory dir))))
 
@@ -906,7 +906,7 @@ If case is \"default\", it is not prepended."
   (catch 'loop
     (dolist (dir path)
       (if (file-exists-p (expand-file-name file dir))
-	  (throw 'loop (expand-file-name file dir))))))
+          (throw 'loop (expand-file-name file dir))))))
 
 (defun mew-which-el (elfile)
   (or (mew-which (concat elfile ".el") load-path)
@@ -918,8 +918,8 @@ If case is \"default\", it is not prepended."
   (let (file)
     (catch 'detect
       (dolist (suffix mew-which-exec-suffixes)
-	(when (setq file (mew-which (concat execfile suffix) exec-path))
-	  (throw 'detect file))))))
+        (when (setq file (mew-which (concat execfile suffix) exec-path))
+          (throw 'detect file))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -964,12 +964,12 @@ Does not examine containing directories for links."
 (defun mew-rotate-log-files (file-name)
   (let ((i 8) (file (expand-file-name file-name mew-conf-path)))
     (when (and (file-exists-p file)
-	       (>= (mew-file-get-size file) mew-log-max-size))
+               (>= (mew-file-get-size file) mew-log-max-size))
       (while (>= i 0)
-	(if (file-exists-p (format "%s.%d" file i))
-	    (rename-file (format "%s.%d" file i)
-			 (format "%s.%d" file (1+ i)) t))
-	(setq i (1- i)))
+        (if (file-exists-p (format "%s.%d" file i))
+            (rename-file (format "%s.%d" file i)
+                         (format "%s.%d" file (1+ i)) t))
+        (setq i (1- i)))
       (rename-file file (format "%s.0" file)))))
 
 (defun mew-remove-drive-letter (file)
@@ -979,7 +979,7 @@ Does not examine containing directories for links."
 
 (defun mew-get-file-modes (path)
   (let* ((dir (file-name-directory path))
-	 (dirmode (file-modes dir)))
+         (dirmode (file-modes dir)))
     (logand dirmode mew-file-mode-mask)))
 
 (defun mew-set-file-modes (path)
@@ -1014,11 +1014,11 @@ But this does not set buffer-file-coding-system."
 This checks -*-coding:ctext;-*- internally when including a file
 and sets buffer-file-coding-system."
   (let ((auto-image-file-mode nil)
-	(format-alist nil)
-	(auto-mode-alist nil)
+        (format-alist nil)
+        (auto-mode-alist nil)
         (enable-local-variables nil)
-	(find-file-hook nil)
-	(large-file-warning-threshold nil))
+        (find-file-hook nil)
+        (large-file-warning-threshold nil))
     (apply 'find-file-noselect args)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1031,13 +1031,13 @@ and sets buffer-file-coding-system."
     (mew-make-directory mew-temp-dir)) ;; just in case
   (if fname
       (let ((exist (file-exists-p (expand-file-name fname mew-temp-dir))))
-	(if (and (not exist)
-		 (or (not (eq system-type 'windows-nt))
-		     (string-match "^[ -~]+$" fname)))
-	    (expand-file-name fname mew-temp-dir)
-	  (if (string-match "\\.[ -~]+$" fname)
-	      (concat (make-temp-name mew-temp-file) (mew-match-string 0 fname))
-	    (make-temp-name mew-temp-file))))
+        (if (and (not exist)
+                 (or (not (eq system-type 'windows-nt))
+                     (string-match "^[ -~]+$" fname)))
+            (expand-file-name fname mew-temp-dir)
+          (if (string-match "\\.[ -~]+$" fname)
+              (concat (make-temp-name mew-temp-file) (mew-match-string 0 fname))
+            (make-temp-name mew-temp-file))))
     (make-temp-name mew-temp-file)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1050,8 +1050,8 @@ and sets buffer-file-coding-system."
 
 (defun mew-random ()
   (let* ((vec (recent-keys))
-	 (ran (+ (random) (emacs-pid)))
-	 c)
+         (ran (+ (random) (emacs-pid)))
+         c)
     (dotimes (i (length vec))
       (setq c (aref vec i))
       (if (integerp c) (setq ran (+ ran c))))
@@ -1059,15 +1059,15 @@ and sets buffer-file-coding-system."
 
 (defun mew-random-string (len nump)
   (let* ((base (if nump mew-random-base-09 mew-random-base-az))
-	 (baselen (length base))
-	 (ret (mew-make-string len)))
+         (baselen (length base))
+         (ret (mew-make-string len)))
     (dotimes (i len)
       (aset ret i (aref base (% (mew-random) baselen))))
     ret))
 
 (defun mew-random-filename (dir len nump &optional suffix)
   (let ((cnt 0) (max 20) ;; ad hoc
-	file filepath)
+        file filepath)
     (setq file (concat (mew-random-string len nump) suffix))
     (setq filepath (expand-file-name file dir))
     (while (and (file-exists-p filepath) (< cnt max))
@@ -1075,7 +1075,7 @@ and sets buffer-file-coding-system."
       (setq filepath (expand-file-name file dir))
       (setq cnt (1+ cnt)))
     (if (file-exists-p filepath)
-	nil
+        nil
       filepath)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1095,9 +1095,9 @@ and sets buffer-file-coding-system."
 (defmacro mew-elet (&rest body)
   (declare (debug (&rest form)))
   `(let ((buffer-read-only nil)
-	 (inhibit-read-only t)
-	 (after-change-functions nil)
-	 (mark-active nil))
+         (inhibit-read-only t)
+         (after-change-functions nil)
+         (mark-active nil))
      ,@body))
 
 (defun mew-push-mark ()
@@ -1111,7 +1111,7 @@ and sets buffer-file-coding-system."
   ;; So, use this way.
   (with-current-buffer buf
     (if (fboundp 'string-as-unibyte)
-	(length (string-as-unibyte (mew-buffer-substring beg end)))
+        (length (string-as-unibyte (mew-buffer-substring beg end)))
       (- end beg))))
 
 (defun mew-count-lines (beg end)
@@ -1124,13 +1124,13 @@ and sets buffer-file-coding-system."
     (beginning-of-line)
     (setq end (point))
     (if (or (not (mew-decode-syntax-p))
-	    (not (equal (mew-decode-syntax-buffer) (current-buffer))))
-	(mew-count-lines1 beg end)
+            (not (equal (mew-decode-syntax-buffer) (current-buffer))))
+        (mew-count-lines1 beg end)
       (let ((mbeg (mew-decode-syntax-begin))
-	    (mend (mew-decode-syntax-end)))
-	(if (or (<= end mbeg) (>= beg mend))
-	    (mew-count-lines1 beg end)
-	  (+ (mew-count-lines1 beg mbeg) (mew-count-lines1 mend end)))))))
+            (mend (mew-decode-syntax-end)))
+        (if (or (<= end mbeg) (>= beg mend))
+            (mew-count-lines1 beg end)
+          (+ (mew-count-lines1 beg mbeg) (mew-count-lines1 mend end)))))))
 
 (defun mew-count-lines1 (beg end)
   (if (>= beg end)
@@ -1139,26 +1139,26 @@ and sets buffer-file-coding-system."
       (narrow-to-region beg end)
       (goto-char (point-min))
       (if (not (and (mew-thread-p) mew-use-thread-separator))
-	  (- (buffer-size) (forward-line (buffer-size)))
-	(let ((regex mew-regex-thread-separator)
-	      (lines 0))
-	  (while (not (eobp))
-	    (unless (looking-at regex)
-	      (setq lines (1+ lines)))
-	    (forward-line))
-	  lines)))))
+          (- (buffer-size) (forward-line (buffer-size)))
+        (let ((regex mew-regex-thread-separator)
+              (lines 0))
+          (while (not (eobp))
+            (unless (looking-at regex)
+              (setq lines (1+ lines)))
+            (forward-line))
+          lines)))))
 
 (defun mew-buffer-list (regex &optional listp mode)
   (let (ret)
     (dolist (buf (mapcar 'buffer-name (buffer-list)))
       (when (and (string-match regex buf)
-		 (or (not mode)
-		     (and mode (get-buffer buf)
-			  (with-current-buffer buf
-			    (eq major-mode mode)))))
-	(if listp
-	    (setq ret (cons (list buf) ret))
-	  (setq ret (cons buf ret)))))
+                 (or (not mode)
+                     (and mode (get-buffer buf)
+                          (with-current-buffer buf
+                            (eq major-mode mode)))))
+        (if listp
+            (setq ret (cons (list buf) ret))
+          (setq ret (cons buf ret)))))
     (nreverse ret)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1169,24 +1169,24 @@ and sets buffer-file-coding-system."
 (defmacro mew-filter (&rest body)
   (declare (debug (&rest form)))
   `(let ((pbuf (process-buffer process)) ;; MUST use 'process'
-	 (obuf (buffer-name))
-	 (inhibit-eol-conversion nil)) ;; \r\n as is
+         (obuf (buffer-name))
+         (inhibit-eol-conversion nil)) ;; \r\n as is
      (if (and (bufferp pbuf)
-	      (buffer-name pbuf)) ;; check a killed buffer
-	 ;; must use buffer-name instead of current-buffer
-	 ;; so that get-buffer can detect killed buffer.
-	 (unwind-protect
-	     (progn
-	       ;; buffer surely exists.
-	       (set-buffer (process-buffer process)) ;; necessary
-	       ,@body)
-	   (if (get-buffer obuf)
-	       ;; the body sometimes kills obuf.
-	       (set-buffer obuf))))))
+              (buffer-name pbuf)) ;; check a killed buffer
+         ;; must use buffer-name instead of current-buffer
+         ;; so that get-buffer can detect killed buffer.
+         (unwind-protect
+             (progn
+               ;; buffer surely exists.
+               (set-buffer (process-buffer process)) ;; necessary
+               ,@body)
+           (if (get-buffer obuf)
+               ;; the body sometimes kills obuf.
+               (set-buffer obuf))))))
 
 (defun mew-start-process-disp (name buffer program &rest program-args)
   (let ((disp (cdr (assq 'display (frame-parameters))))
-	(process-environment (copy-sequence process-environment)))
+        (process-environment (copy-sequence process-environment)))
     (if disp (setenv "DISPLAY" disp))
     (apply 'start-process name buffer program program-args)))
 
@@ -1214,27 +1214,27 @@ and sets buffer-file-coding-system."
    ((vectorp name) name) ;; just for .mqi
    ((stringp name)
     (if (or (not (intern-soft name))
-	    (not (boundp (intern name))))
-	(if (string-match "^mew-[^-]+-info-" name)
-	    (let* ((sym (intern (concat (mew-match-string 0 name) "list")))
-		   (lst (symbol-value sym))
-		   (len (length lst)))
-	      (set (intern name) (make-vector len nil)))))
+            (not (boundp (intern name))))
+        (if (string-match "^mew-[^-]+-info-" name)
+            (let* ((sym (intern (concat (mew-match-string 0 name) "list")))
+                   (lst (symbol-value sym))
+                   (len (length lst)))
+              (set (intern name) (make-vector len nil)))))
     (symbol-value (intern-soft name)))))
 
 (defun mew-info-defun (prefix lst)
   (let ((i 0))
     (dolist (ent lst)
       (fset (intern (concat prefix "get-" ent))
-	    `(lambda (arg)
-	       (cond
-		((stringp arg) (aref (mew-info arg) ,i))
-		((vectorp arg) (aref arg ,i)))))
+            `(lambda (arg)
+               (cond
+                ((stringp arg) (aref (mew-info arg) ,i))
+                ((vectorp arg) (aref arg ,i)))))
       (fset (intern (concat prefix "set-" ent))
-	    `(lambda (arg value)
-	       (cond
-		((stringp arg) (aset (mew-info arg) ,i value))
-		((vectorp arg) (aset arg ,i value)))))
+            `(lambda (arg value)
+               (cond
+                ((stringp arg) (aset (mew-info arg) ,i value))
+                ((vectorp arg) (aset arg ,i value)))))
       (setq i (1+ i)))))
 
 (defun mew-info-clean-up (arg &optional start)
@@ -1257,10 +1257,10 @@ and sets buffer-file-coding-system."
 
 (defun mew-blinfo (sym)
   (let* ((name (symbol-name sym))
-	 (lname (concat name "-list"))
-	 (lsym (intern lname))
-	 (lst (symbol-value lsym))
-	 (len (length lst)))
+         (lname (concat name "-list"))
+         (lsym (intern lname))
+         (lst (symbol-value lsym))
+         (len (length lst)))
     (set sym (make-vector len nil))
     (symbol-value sym)))
 
@@ -1268,15 +1268,15 @@ and sets buffer-file-coding-system."
   (let ((i 0))
     (dolist (ent lst)
       (fset (intern (concat (symbol-name blv-sym) "-get-" ent))
-	    `(lambda ()
-	       (cond
-		((null ,blv-sym) (aref (mew-blinfo (quote ,blv-sym)) ,i))
-		((vectorp ,blv-sym) (aref ,blv-sym ,i)))))
+            `(lambda ()
+               (cond
+                ((null ,blv-sym) (aref (mew-blinfo (quote ,blv-sym)) ,i))
+                ((vectorp ,blv-sym) (aref ,blv-sym ,i)))))
       (fset (intern (concat (symbol-name blv-sym) "-set-" ent))
-	    `(lambda (value)
-	       (cond
-		((null ,blv-sym) (aset (mew-blinfo (quote ,blv-sym)) ,i value))
-		((vectorp ,blv-sym) (aset ,blv-sym ,i value)))))
+            `(lambda (value)
+               (cond
+                ((null ,blv-sym) (aset (mew-blinfo (quote ,blv-sym)) ,i value))
+                ((vectorp ,blv-sym) (aset ,blv-sym ,i value)))))
       (setq i (1+ i)))))
 
 (defvar mew-ainfo-list '("icon" "win-cfg"))
@@ -1297,16 +1297,16 @@ and sets buffer-file-coding-system."
 whether or not a given address is mine. The list is created
 from (mew-user), (mew-mail-address), and 'mew-mail-address-list'."
   (cons (concat "^" (regexp-quote (mew-user)) "$")
-	(cons (concat "^" (regexp-quote (mew-mail-address)) "$")
-	      mew-mail-address-list)))
+        (cons (concat "^" (regexp-quote (mew-mail-address)) "$")
+              mew-mail-address-list)))
 
 (defun mew-is-my-address (addrs from)
   (and from
        (let ((case-fold-search t))
-	 (catch (quote match)
-	   (car (mapcar (lambda (arg) (and (string-match arg from)
-					   (throw (quote match) t)))
-			addrs))))))
+         (catch (quote match)
+           (car (mapcar (lambda (arg) (and (string-match arg from)
+                                           (throw (quote match) t)))
+                        addrs))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1316,39 +1316,39 @@ from (mew-user), (mew-mail-address), and 'mew-mail-address-list'."
 (defun mew-lisp-load (filename)
   "Load lisp from FILENAME"
   (let ((fullname (if (file-name-absolute-p filename)
-		      filename
-		    (expand-file-name filename mew-conf-path))))
+                      filename
+                    (expand-file-name filename mew-conf-path))))
     (if (file-readable-p fullname)
-	(with-temp-buffer
-	  (mew-frwlet mew-cs-m17n mew-cs-dummy
-	    (mew-insert-file-contents fullname))
-	  (goto-char (point-min))
-	  (condition-case nil
-	      (read (current-buffer))
-	    (error ()))))))
+        (with-temp-buffer
+          (mew-frwlet mew-cs-m17n mew-cs-dummy
+            (mew-insert-file-contents fullname))
+          (goto-char (point-min))
+          (condition-case nil
+              (read (current-buffer))
+            (error ()))))))
 
 (defun mew-lisp-save (filename lisp &optional nobackup unlimit)
   "Save LISP to FILENAME. LISP is truncated to mew-lisp-max-length
 by side-effect."
   (let* ((fullname (if (file-name-absolute-p filename)
-		       filename
-		     (expand-file-name filename mew-conf-path)))
-	 (backname (concat fullname mew-backup-suffix))
-	 print-length print-level) ;; for Emacs 21
+                       filename
+                     (expand-file-name filename mew-conf-path)))
+         (backname (concat fullname mew-backup-suffix))
+         print-length print-level) ;; for Emacs 21
     (when (file-writable-p fullname)
       (if nobackup
-	  (mew-delete-file fullname)
-	(if (file-exists-p fullname)
-	    (rename-file fullname backname 'override)))
+          (mew-delete-file fullname)
+        (if (file-exists-p fullname)
+            (rename-file fullname backname 'override)))
       (when (and (not unlimit) (> (length lisp) mew-lisp-max-length))
-	(setq lisp (copy-sequence lisp)) ;; no side effect
-	(mew-ntake mew-lisp-max-length lisp))
+        (setq lisp (copy-sequence lisp)) ;; no side effect
+        (mew-ntake mew-lisp-max-length lisp))
       (with-temp-buffer
-	(if (> (length lisp) mew-lisp-max-length)
-	    (print lisp (current-buffer))
-	  (pp lisp (current-buffer)))
-	(mew-frwlet mew-cs-dummy mew-cs-m17n
-	  (write-region (point-min) (point-max) fullname nil 'no-msg)))
+        (if (> (length lisp) mew-lisp-max-length)
+            (print lisp (current-buffer))
+          (pp lisp (current-buffer)))
+        (mew-frwlet mew-cs-dummy mew-cs-m17n
+          (write-region (point-min) (point-max) fullname nil 'no-msg)))
       (mew-set-file-modes fullname))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1413,14 +1413,14 @@ by side-effect."
 (defmacro mew-time-rfc-tmzn ()
   '(if (match-beginning 9)
        (let ((tmzn (substring s (match-beginning 9) (match-end 9)))
-	     int)
-	 (cond
-	  ((string-match "^[-+][0-9]+$" tmzn)
-	   (setq int (string-to-number tmzn))
-	   (+ (* (/ int 100) 3600) (* (% int 100) 60)))
-	  ((setq int (mew-time-tmzn-str-to-int tmzn))
-	   (* int 3600))
-	  (t 0)))
+             int)
+         (cond
+          ((string-match "^[-+][0-9]+$" tmzn)
+           (setq int (string-to-number tmzn))
+           (+ (* (/ int 100) 3600) (* (% int 100) 60)))
+          ((setq int (mew-time-tmzn-str-to-int tmzn))
+           (* int 3600))
+          (t 0)))
      0))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1440,23 +1440,23 @@ by side-effect."
 (defun mew-time-rfc-to-sortkey (s &optional tzadj)
   (if (string-match mew-time-rfc-regex s)
       (let ((year (mew-time-rfc-year))
-	    (mon  (mew-time-mon-str-to-int (mew-time-rfc-mon)))
-	    (day  (mew-time-rfc-day))
-	    (hour (mew-time-rfc-hour))
-	    (min  (mew-time-rfc-min))
-	    (sec  (mew-time-rfc-sec))
-	    (tmzn (mew-time-rfc-tmzn)))
-	(cond
-	 ((< year 50)
-	  (setq year (+ year 2000)))
-	 ((< year 150)
-	  (setq year (+ year 1900))))
-	(if (or (< year 1970) (>= year 2038))
-	    ;; invalid data
-	    (mew-time-ctz-to-sortkey-invalid sec min hour day mon year)
-	  (setq sec (- sec tmzn))
-	  (if tzadj (setq sec (+ sec (car (current-time-zone)))))
-	  (mew-time-ctz-to-sortkey (encode-time sec min hour day mon year))))))
+            (mon  (mew-time-mon-str-to-int (mew-time-rfc-mon)))
+            (day  (mew-time-rfc-day))
+            (hour (mew-time-rfc-hour))
+            (min  (mew-time-rfc-min))
+            (sec  (mew-time-rfc-sec))
+            (tmzn (mew-time-rfc-tmzn)))
+        (cond
+         ((< year 50)
+          (setq year (+ year 2000)))
+         ((< year 150)
+          (setq year (+ year 1900))))
+        (if (or (< year 1970) (>= year 2038))
+            ;; invalid data
+            (mew-time-ctz-to-sortkey-invalid sec min hour day mon year)
+          (setq sec (- sec tmzn))
+          (if tzadj (setq sec (+ sec (car (current-time-zone)))))
+          (mew-time-ctz-to-sortkey (encode-time sec min hour day mon year))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1466,17 +1466,17 @@ by side-effect."
 (defun mew-time-tmzn-int ()
   (let ((tz (car (current-time-zone))))
     (if (< tz 0)
-	(format "-%02d%02d" (/ (- tz) 3600) (/ (% (- tz) 3600) 60))
+        (format "-%02d%02d" (/ (- tz) 3600) (/ (% (- tz) 3600) 60))
       (format "+%02d%02d" (/ tz 3600) (/ (% tz 3600) 60)))))
 
 ;; Wed, 26 Jul 2000 21:18:35 +0900 (JST)
 (defun mew-time-ctz-to-rfc (time)
   (let* ((system-time-locale "C")
-	 ;; A bug of Emacs 22.3 on Windows
-	 (time-zone-name (format-time-string "%Z" time))
-	 (date (format-time-string "%a, %d %b %Y %T %z" time)))
+         ;; A bug of Emacs 22.3 on Windows
+         (time-zone-name (format-time-string "%Z" time))
+         (date (format-time-string "%a, %d %b %Y %T %z" time)))
     (if (string= time-zone-name "")
-	date
+        date
       (concat date (format " (%s)" time-zone-name)))))
 
 ;; 2000/07/12 16:22:30
@@ -1493,9 +1493,9 @@ by side-effect."
 
 (defun mew-time-calc (new old)
   (let ((million 1000000)
-	(sec (+ (* 65536 (- (nth 0 new) (nth 0 old)))
-		(- (nth 1 new) (nth 1 old))))
-	(usec (- (nth 2 new) (nth 2 old))))
+        (sec (+ (* 65536 (- (nth 0 new) (nth 0 old)))
+                (- (nth 1 new) (nth 1 old))))
+        (usec (- (nth 2 new) (nth 2 old))))
     (if (< usec 0)
         (setq sec (1- sec)
               usec (+ usec million))
@@ -1612,26 +1612,26 @@ by side-effect."
 (defmacro mew-defstruct-constructor (type &rest spec)
   `(defun ,(intern (concat "mew-make-" (symbol-name type))) (&rest args)
      (let* ((alist (quote ,(mew-keyword-number-pair spec)))
-	    (struct (make-list (length alist) nil))
-	    key val key-num)
+            (struct (make-list (length alist) nil))
+            key val key-num)
        (while args ;; cannot use dolist
-	 (setq key  (car args))
-	 (setq args (cdr args))
-	 (setq val  (car args))
-	 (setq args (cdr args))
-	 (unless (keywordp key)
-	   (error "'%s' is not a keyword" key))
-	 (setq key-num (assoc key alist))
-	 (if key-num
-	     (setcar (nthcdr (cdr key-num) struct) val)
-	   (error "'%s' is unknown" key)))
+         (setq key  (car args))
+         (setq args (cdr args))
+         (setq val  (car args))
+         (setq args (cdr args))
+         (unless (keywordp key)
+           (error "'%s' is not a keyword" key))
+         (setq key-num (assoc key alist))
+         (if key-num
+             (setcar (nthcdr (cdr key-num) struct) val)
+           (error "'%s' is unknown" key)))
        struct)))
 
 (defmacro mew-defstruct-s/getter (type &rest spec)
   `(let* ((type-name (symbol-name ',type))
-	  (keys ',spec)
-	  (len (length keys))
-	  member-name setter getter)
+          (keys ',spec)
+          (len (length keys))
+          member-name setter getter)
      (dotimes (i len)
        (setq member-name (symbol-name (car keys)))
        (setq setter (intern (format "mew-%s-set-%s" type-name member-name)))

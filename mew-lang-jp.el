@@ -108,20 +108,20 @@
 
 (defvar mew-dakuon-list
   '( ?カ ?キ ?ク ?ケ ?コ
-     ?サ ?シ ?ス ?セ ?ソ
-     ?タ ?チ ?ツ ?テ ?ト
-     ?ハ ?ヒ ?フ ?ヘ ?ホ))
+         ?サ ?シ ?ス ?セ ?ソ
+         ?タ ?チ ?ツ ?テ ?ト
+         ?ハ ?ヒ ?フ ?ヘ ?ホ))
 
 (defvar mew-handakuon-list (memq ?ハ mew-dakuon-list))
 
 (defun mew-hankaku-code (ch)
   (let* ((str (char-to-string ch))
-	 (ent (rassoc str mew-katakana-alist)))
+         (ent (rassoc str mew-katakana-alist)))
     (if ent (car ent))))
 
 (defun mew-hankaku-kigou-code (ch)
   (let* ((str (char-to-string ch))
-	 (ent (rassoc str mew-katakana-kigou-alist)))
+         (ent (rassoc str mew-katakana-kigou-alist)))
     (if ent (car ent))))
 
 (defun mew-zenkaku-katakana-region (beg end)
@@ -129,41 +129,41 @@
     (save-restriction
       (narrow-to-region beg end)
       (save-excursion
-	(goto-char (point-min))
-	(while (re-search-forward "\\ck" nil t)
-	  (setq ch (preceding-char))
-	  (setq wk nil)
-	  (cond
-	   ((= ch ?ﾞ)
-	    (save-excursion
-	      (backward-char 1)
-	      (setq wk (preceding-char)))
-	    (cond
-	     ((= wk ?ウ)
-	      (delete-char -2)
-	      (insert "ヴ"))
-	     ((setq wk (memq wk mew-dakuon-list))
-	      (delete-char -2)
-	      (insert (1+ (car wk))))
-	     (t
-	      (delete-char -1)
-	      (insert "゛"))))
-	   ((= ch ?ﾟ)
-	    (save-excursion
-	      (backward-char 1)
-	      (setq wk (preceding-char)))
-	    (if (setq wk (memq wk mew-handakuon-list))
-		(progn
-		  (delete-char -2)
-		  (insert (+ 2 (car wk))))
-	      (delete-char -1)
-	      (insert "゜")))
-	   ((setq wk (mew-hankaku-code ch))
-	    (delete-char -1)
-	    (insert (make-char mew-lc-jp ?\245 wk)))
-	   ((setq wk (mew-hankaku-kigou-code ch))
-	    (delete-char -1)
-	    (insert (make-char mew-lc-jp ?\241 wk)))))))))
+        (goto-char (point-min))
+        (while (re-search-forward "\\ck" nil t)
+          (setq ch (preceding-char))
+          (setq wk nil)
+          (cond
+           ((= ch ?ﾞ)
+            (save-excursion
+              (backward-char 1)
+              (setq wk (preceding-char)))
+            (cond
+             ((= wk ?ウ)
+              (delete-char -2)
+              (insert "ヴ"))
+             ((setq wk (memq wk mew-dakuon-list))
+              (delete-char -2)
+              (insert (1+ (car wk))))
+             (t
+              (delete-char -1)
+              (insert "゛"))))
+           ((= ch ?ﾟ)
+            (save-excursion
+              (backward-char 1)
+              (setq wk (preceding-char)))
+            (if (setq wk (memq wk mew-handakuon-list))
+                (progn
+                  (delete-char -2)
+                  (insert (+ 2 (car wk))))
+              (delete-char -1)
+              (insert "゜")))
+           ((setq wk (mew-hankaku-code ch))
+            (delete-char -1)
+            (insert (make-char mew-lc-jp ?\245 wk)))
+           ((setq wk (mew-hankaku-kigou-code ch))
+            (delete-char -1)
+            (insert (make-char mew-lc-jp ?\241 wk)))))))))
 
 ;;
 

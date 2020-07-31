@@ -287,20 +287,20 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
       (mew-call-process-lang mew-prog-pgp nil t nil)
       (goto-char (point-min))
       (if (search-forward "PGP is now invoked" nil t)
-	  (setq mew-pgp-ver mew-pgp-ver5)
-	(goto-char (point-min))
-	(if (search-forward "Pretty Good Privacy(tm) 2" nil t)
-	    (setq mew-pgp-ver mew-pgp-ver2)
-	  (goto-char (point-min))
-	  (if (search-forward "Unknown system error" nil t)
-	      (setq mew-pgp-ver mew-pgp-verg2)
-	    (goto-char (point-min))
-	    (if (search-forward "gpg" nil t)
-		(setq mew-pgp-ver mew-pgp-verg)
-	      (goto-char (point-min))
-	      (if (search-forward "Pretty Good Privacy(tm) Version 6" nil t)
-		  (setq mew-pgp-ver mew-pgp-ver6)
-		(setq mew-pgp-ver nil))))))))
+          (setq mew-pgp-ver mew-pgp-ver5)
+        (goto-char (point-min))
+        (if (search-forward "Pretty Good Privacy(tm) 2" nil t)
+            (setq mew-pgp-ver mew-pgp-ver2)
+          (goto-char (point-min))
+          (if (search-forward "Unknown system error" nil t)
+              (setq mew-pgp-ver mew-pgp-verg2)
+            (goto-char (point-min))
+            (if (search-forward "gpg" nil t)
+                (setq mew-pgp-ver mew-pgp-verg)
+              (goto-char (point-min))
+              (if (search-forward "Pretty Good Privacy(tm) Version 6" nil t)
+                  (setq mew-pgp-ver mew-pgp-ver6)
+                (setq mew-pgp-ver nil))))))))
    (t (setq mew-pgp-ver nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -312,10 +312,10 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   "Select PGP version and set up environment for selected PGP."
   (interactive)
   (setq mew-prog-pgp
-	(completing-read
-	 "PGP name: "
-	 (mapcar 'list (list mew-prog-pgp2 mew-prog-pgp5 mew-prog-gpg mew-prog-gpg2))
-	 nil t))
+        (completing-read
+         "PGP name: "
+         (mapcar 'list (list mew-prog-pgp2 mew-prog-pgp5 mew-prog-gpg mew-prog-gpg2))
+         nil t))
   (mew-pgp-setup))
 
 ;; xxx how about multiple users on local machine?
@@ -324,9 +324,9 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 
 (defun mew-pgp-passphrase (&optional again)
   (let ((prompt (if again
-		    mew-pgp-prompt-reenter-pass
-		  mew-pgp-prompt-enter-pass))
-	(msg (mew-pgp-passtag)))
+                    mew-pgp-prompt-reenter-pass
+                  mew-pgp-prompt-enter-pass))
+        (msg (mew-pgp-passtag)))
     (setq prompt (format prompt msg))
     (mew-input-passwd prompt msg)))
 
@@ -339,67 +339,67 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   (let (ret keyid)
     (goto-char (point-min))
     (if (not (re-search-forward (mew-pgp-get mew-pgp-msg-signature) nil t))
-	;; this is verification, so the error is about public key
-	(progn
-	  (goto-char (point-min))
-	  (if (search-forward (mew-pgp-get mew-pgp-msg-no-vrfkey) nil t)
-	      (progn
-		(goto-char (point-min))
-		(if (not (re-search-forward (mew-pgp-get mew-pgp-msg-key-id) nil t))
-		    (setq keyid "not found")
-		  (setq keyid (format "0x%s"(mew-match-string 1))))
-		(setq ret (concat mew-pgp-result-pubkey ": ID = " keyid)))
-	    (if (search-forward (mew-pgp-get mew-pgp-msg-no-keyring) nil t)
-		(setq ret mew-pgp-result-pubring)
-	      (if (re-search-forward (mew-pgp-get mew-pgp-msg-unsupported) nil t)
-		  (setq ret mew-pgp-result-unsup)
-		(if (re-search-forward (mew-pgp-get mew-pgp-msg-nocross) nil t)
-		    (setq ret mew-pgp-result-nocross)
-		  ;; this line must be nil since this function is used
-		  ;; by the decryption function, too, for signed-then-encrypted
-		  ;; messages. We cannot tell whether or not signatures exist
-		  ;; from the outside of the cipher.
-		  )))))
+        ;; this is verification, so the error is about public key
+        (progn
+          (goto-char (point-min))
+          (if (search-forward (mew-pgp-get mew-pgp-msg-no-vrfkey) nil t)
+              (progn
+                (goto-char (point-min))
+                (if (not (re-search-forward (mew-pgp-get mew-pgp-msg-key-id) nil t))
+                    (setq keyid "not found")
+                  (setq keyid (format "0x%s"(mew-match-string 1))))
+                (setq ret (concat mew-pgp-result-pubkey ": ID = " keyid)))
+            (if (search-forward (mew-pgp-get mew-pgp-msg-no-keyring) nil t)
+                (setq ret mew-pgp-result-pubring)
+              (if (re-search-forward (mew-pgp-get mew-pgp-msg-unsupported) nil t)
+                  (setq ret mew-pgp-result-unsup)
+                (if (re-search-forward (mew-pgp-get mew-pgp-msg-nocross) nil t)
+                    (setq ret mew-pgp-result-nocross)
+                  ;; this line must be nil since this function is used
+                  ;; by the decryption function, too, for signed-then-encrypted
+                  ;; messages. We cannot tell whether or not signatures exist
+                  ;; from the outside of the cipher.
+                  )))))
       ;; Signature result is found.
       (setq ret (concat (mew-match-string 1) " PGP sign "))
       (goto-char (point-max))
       (if (and mew-inherit-decode-signer
-	       (re-search-backward (concat (mew-pgp-get mew-pgp-verify-addr) ".*" mew-inherit-decode-signer) nil t))
-	  (progn
-	    (beginning-of-line)
-	    (looking-at (concat (mew-pgp-get mew-pgp-verify-addr) "\\(.*\\)"))
-	    (setq ret (concat ret (mew-match-string 2))))
-	(goto-char (point-max))
-	(re-search-backward (concat (mew-pgp-get mew-pgp-verify-addr) "\\(.*\\)") nil t)
-	(setq ret (concat ret (mew-match-string 2))))
+               (re-search-backward (concat (mew-pgp-get mew-pgp-verify-addr) ".*" mew-inherit-decode-signer) nil t))
+          (progn
+            (beginning-of-line)
+            (looking-at (concat (mew-pgp-get mew-pgp-verify-addr) "\\(.*\\)"))
+            (setq ret (concat ret (mew-match-string 2))))
+        (goto-char (point-max))
+        (re-search-backward (concat (mew-pgp-get mew-pgp-verify-addr) "\\(.*\\)") nil t)
+        (setq ret (concat ret (mew-match-string 2))))
       ;; xxx
       (goto-char (point-min))
       (if (re-search-forward "not certified with \\(enough\\|sufficiently\\)" nil t)
-	  (setq ret (concat ret " MARGINAL"))
-	(goto-char (point-min))
-	(if (search-forward "not trusted" nil t)
-	    (setq ret (concat ret " UNTRUSTED"))
-	  (goto-char (point-min))
-	  (if (search-forward "not certified with a" nil t)
-	      ;; PGP uses "unknown" for validity internally, but
-	      ;; prints "undefined" instead of "unknown".
-	      (setq ret (concat ret " UNDEFINED"))
-	    (goto-char (point-min))
-	    (if (search-forward "expired" nil t)
-		(setq ret (concat ret " EXPIRED"))
-	      (setq ret (concat ret " COMPLETE")))))))
+          (setq ret (concat ret " MARGINAL"))
+        (goto-char (point-min))
+        (if (search-forward "not trusted" nil t)
+            (setq ret (concat ret " UNTRUSTED"))
+          (goto-char (point-min))
+          (if (search-forward "not certified with a" nil t)
+              ;; PGP uses "unknown" for validity internally, but
+              ;; prints "undefined" instead of "unknown".
+              (setq ret (concat ret " UNDEFINED"))
+            (goto-char (point-min))
+            (if (search-forward "expired" nil t)
+                (setq ret (concat ret " EXPIRED"))
+              (setq ret (concat ret " COMPLETE")))))))
     ret))
 
 (defun mew-pgp-verify (file1 file2)
   (message "PGP verifying...")
   (let ((ioption (mew-pgp-get mew-prog-pgp-arg-input)) ;; detached signature
-	(voptions (mew-pgp-get mew-prog-pgpv-arg))
-	(pgpv (mew-pgp-get mew-prog-pgpv))
-	files ret)
+        (voptions (mew-pgp-get mew-prog-pgpv-arg))
+        (pgpv (mew-pgp-get mew-prog-pgpv))
+        files ret)
     (with-temp-buffer
       (if ioption
-	  (setq files (list ioption file1 file2))
-	(setq files (list file2 file1)))
+          (setq files (list ioption file1 file2))
+        (setq files (list file2 file1)))
       (apply 'mew-call-process-lang pgpv nil t nil (append voptions files))
       (setq ret (mew-pgp-verify-check)))
     (message "PGP verifying...done")
@@ -421,32 +421,32 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
         (goto-char (point-min))
         (if (search-forward (mew-pgp-get mew-pgp-msg-no-keyring) nil t)
             (setq ret mew-pgp-result-pubring)
-	  (goto-char (point-min))
-	  (if (search-forward (mew-pgp-get mew-pgp-msg-pubkey-expired) nil t)
-	      (setq ret mew-pgp-result-expired)))))
+          (goto-char (point-min))
+          (if (search-forward (mew-pgp-get mew-pgp-msg-pubkey-expired) nil t)
+              (setq ret mew-pgp-result-expired)))))
     ret))
 
 (defun mew-pgp-encrypt (file1 decrypters)
   (message "PGP encrypting...")
   (let ((roption (mew-pgp-get mew-prog-pgp-arg-ruserid))
-	(ooption (mew-pgp-get mew-prog-pgp-arg-output))
-	(eoptions (mew-pgp-get mew-prog-pgpe-arg))
-	(pgpe (mew-pgp-get mew-prog-pgpe))
-	(file2 (mew-make-temp-name))
-	check file3 decs args) ;; not unique if file3 is made here
+        (ooption (mew-pgp-get mew-prog-pgp-arg-output))
+        (eoptions (mew-pgp-get mew-prog-pgpe-arg))
+        (pgpe (mew-pgp-get mew-prog-pgpe))
+        (file2 (mew-make-temp-name))
+        check file3 decs args) ;; not unique if file3 is made here
     (with-temp-buffer
       (insert "Version: 1\n")
       (write-region (point-min) (point-max) file2 nil 'no-msg))
     (setq file3 (concat (mew-make-temp-name) mew-pgp-ascii-suffix))
     (if (and mew-encrypt-to-myself
-	     (not (member mew-inherit-encode-pgp-signer decrypters)))
-	(setq decrypters (cons mew-inherit-encode-pgp-signer decrypters)))
+             (not (member mew-inherit-encode-pgp-signer decrypters)))
+        (setq decrypters (cons mew-inherit-encode-pgp-signer decrypters)))
     (setq decrypters
-	  (mapcar (lambda (x)
-		    (if (string-match "^[^<].*@" x) (concat "<" x ">") x))
-		  decrypters))
+          (mapcar (lambda (x)
+                    (if (string-match "^[^<].*@" x) (concat "<" x ">") x))
+                  decrypters))
     (if (not roption)
-	(setq args (append (list ooption file3 file1) eoptions decrypters))
+        (setq args (append (list ooption file3 file1) eoptions decrypters))
       (mapc
        (lambda (x) (setq decs (cons roption (cons x decs))))
        decrypters)
@@ -471,33 +471,33 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   (setq mew-pgp-decrypt-msg nil)
   (setq mew-pgp-failure nil)
   (let ((process-connection-type mew-connection-type2)
-	(ooption (mew-pgp-get mew-prog-pgp-arg-output))
-	(doptions (mew-pgp-get mew-prog-pgpd-arg))
-	(pgpd (mew-pgp-get mew-prog-pgpd))
-	file3 process verify)
+        (ooption (mew-pgp-get mew-prog-pgp-arg-output))
+        (doptions (mew-pgp-get mew-prog-pgpd-arg))
+        (pgpd (mew-pgp-get mew-prog-pgpd))
+        file3 process verify)
     (setq file3 (mew-make-temp-name))
     (setq process
-	  (apply 'mew-start-process-lang
-		 "PGP decrypt"
-		 (current-buffer)
-		 pgpd
-		 (append doptions (list ooption file3 file2))))
+          (apply 'mew-start-process-lang
+                 "PGP decrypt"
+                 (current-buffer)
+                 pgpd
+                 (append doptions (list ooption file3 file2))))
     (mew-set-process-cs process mew-cs-autoconv mew-cs-dummy)
     (set-process-filter process 'mew-pgp-process-filter1)
     (set-process-sentinel process 'mew-pgp-process-sentinel)
     (mew-rendezvous mew-pgp-running)
     (message "PGP decrypting...done")
     (if (file-exists-p file3)
-	(progn
-	  (with-temp-buffer
-	    (insert mew-pgp-string)
-	    (setq verify (mew-pgp-verify-check)))
-	  (when verify
-	    (setq mew-pgp-decrypt-msg (concat mew-pgp-decrypt-msg "\n\t" verify))))
+        (progn
+          (with-temp-buffer
+            (insert mew-pgp-string)
+            (setq verify (mew-pgp-verify-check)))
+          (when verify
+            (setq mew-pgp-decrypt-msg (concat mew-pgp-decrypt-msg "\n\t" verify))))
       ;; unpredictable error
       (mew-passwd-set-passwd (mew-pgp-passtag) nil)
       (if (string= mew-pgp-decrypt-msg mew-pgp-result-sec-succ)
-	  (setq mew-pgp-decrypt-msg mew-pgp-result-dec-fail)))
+          (setq mew-pgp-decrypt-msg mew-pgp-result-dec-fail)))
     (list file3 mew-pgp-decrypt-msg)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -515,13 +515,13 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 (defun mew-pgp-get-micalg ()
   (let ((micalg (mew-pgp-get mew-pgp-micalg)) alg)
     (if (and (/= mew-pgp-ver mew-pgp-verg)
-	     (/= mew-pgp-ver mew-pgp-verg2))
-	micalg
+             (/= mew-pgp-ver mew-pgp-verg2))
+        micalg
       (with-temp-buffer
-	(insert mew-pgp-string)
-	(goto-char (point-min))
-	(if (re-search-forward "SIG_CREATED [A-Z] [0-9]+ \\([0-9]+\\)" nil t)
-	   (setq alg (cdr (assoc (mew-match-string 1) mew-pgp-hash-alist)))))
+        (insert mew-pgp-string)
+        (goto-char (point-min))
+        (if (re-search-forward "SIG_CREATED [A-Z] [0-9]+ \\([0-9]+\\)" nil t)
+            (setq alg (cdr (assoc (mew-match-string 1) mew-pgp-hash-alist)))))
       (or alg micalg))))
 
 (defun mew-pgp-sign (file1)
@@ -531,19 +531,19 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   (setq mew-pgp-sign-msg nil)
   (setq mew-pgp-failure nil)
   (let ((process-connection-type mew-connection-type2)
-	(loption (mew-pgp-get mew-prog-pgp-arg-luserid))
-	(ooption (mew-pgp-get mew-prog-pgp-arg-output))
-	(soptions (mew-pgp-get mew-prog-pgps-arg))
-	(pgps (mew-pgp-get mew-prog-pgps))
-	file2 process)
+        (loption (mew-pgp-get mew-prog-pgp-arg-luserid))
+        (ooption (mew-pgp-get mew-prog-pgp-arg-output))
+        (soptions (mew-pgp-get mew-prog-pgps-arg))
+        (pgps (mew-pgp-get mew-prog-pgps))
+        file2 process)
     (setq file2 (concat (mew-make-temp-name) mew-pgp-ascii-suffix))
     ;; not perfectly unique but OK
     (setq process
-	  (apply 'mew-start-process-lang
-		 "PGP sign"
-		 (current-buffer) ;; xxx nil?
-		 pgps
-		 (append soptions (list loption mew-inherit-encode-pgp-signer ooption file2 file1))))
+          (apply 'mew-start-process-lang
+                 "PGP sign"
+                 (current-buffer) ;; xxx nil?
+                 pgps
+                 (append soptions (list loption mew-inherit-encode-pgp-signer ooption file2 file1))))
     (mew-set-process-cs process mew-cs-autoconv mew-cs-dummy)
     (set-process-filter process 'mew-pgp-process-filter1)
     (set-process-sentinel process 'mew-pgp-process-sentinel)
@@ -561,40 +561,40 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 (defun mew-pgp-process-sentinel (_process _event)
   (save-excursion
     (let ((decrypted mew-pgp-result-sec-succ)
-	  (msg ""))
+          (msg ""))
       (if (not mew-pgp-failure)
-	  (cond
-	   ((eq mew-pgp-running 'decrypting)
-	    (setq mew-pgp-decrypt-msg decrypted))
-	   ((eq mew-pgp-running 'signing)
-	    (setq mew-pgp-sign-msg nil)))
-	(cond
-	 ;; sign or decrypt
-	 ((eq mew-pgp-failure mew-pgp-err-pass)
-	  (setq msg mew-pgp-result-pass))
-	 ;; decrypt-then-verify
-	 ((eq mew-pgp-failure mew-pgp-err-pubring)
-	  (setq msg decrypted))
-	 ;; decrypt-then-verify
-	 ((eq mew-pgp-failure mew-pgp-err-pubkey)
-	  (setq msg decrypted))
-	 ;; sign
-	 ((eq mew-pgp-failure mew-pgp-err-secring)
-	  (setq msg mew-pgp-result-secring))
-	 ;; sign
-	 ((eq mew-pgp-failure mew-pgp-err-seckey)
-	  (setq msg mew-pgp-result-seckey))
-	 ;; decrypt
-	 ((eq mew-pgp-failure mew-pgp-err-seckey-or-secring)
-	  (setq msg mew-pgp-result-seckey-or-secring))
-	 ;; other
-	 (t ;; mew-pgp-err-other or nil
-	  (setq msg mew-pgp-result-other)))
-	(cond
-	 ((eq mew-pgp-running 'decrypting)
-	  (setq mew-pgp-decrypt-msg msg))
-	 ((eq mew-pgp-running 'signing)
-	  (setq mew-pgp-sign-msg msg))))
+          (cond
+           ((eq mew-pgp-running 'decrypting)
+            (setq mew-pgp-decrypt-msg decrypted))
+           ((eq mew-pgp-running 'signing)
+            (setq mew-pgp-sign-msg nil)))
+        (cond
+         ;; sign or decrypt
+         ((eq mew-pgp-failure mew-pgp-err-pass)
+          (setq msg mew-pgp-result-pass))
+         ;; decrypt-then-verify
+         ((eq mew-pgp-failure mew-pgp-err-pubring)
+          (setq msg decrypted))
+         ;; decrypt-then-verify
+         ((eq mew-pgp-failure mew-pgp-err-pubkey)
+          (setq msg decrypted))
+         ;; sign
+         ((eq mew-pgp-failure mew-pgp-err-secring)
+          (setq msg mew-pgp-result-secring))
+         ;; sign
+         ((eq mew-pgp-failure mew-pgp-err-seckey)
+          (setq msg mew-pgp-result-seckey))
+         ;; decrypt
+         ((eq mew-pgp-failure mew-pgp-err-seckey-or-secring)
+          (setq msg mew-pgp-result-seckey-or-secring))
+         ;; other
+         (t ;; mew-pgp-err-other or nil
+          (setq msg mew-pgp-result-other)))
+        (cond
+         ((eq mew-pgp-running 'decrypting)
+          (setq mew-pgp-decrypt-msg msg))
+         ((eq mew-pgp-running 'signing)
+          (setq mew-pgp-sign-msg msg))))
       (setq mew-pgp-running nil))))
 
 (defun mew-pgp-process-filter1 (process string)
@@ -734,10 +734,10 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
       (message "%s does not exist" mew-prog-pgp)
     (let ((func 'mew-draft-make-message))
       (if (mew-use-old-pgp (mew-tinfo-get-case))
-	  (setq func 'mew-old-pgp-encode))
+          (setq func 'mew-old-pgp-encode))
       (if (and ask-signer (string-match "signature" (symbol-name type)))
-	  (funcall func type (car (mew-input-address "Who's key?: ")))
-	(funcall func type)))))
+          (funcall func type (car (mew-input-address "Who's key?: ")))
+        (funcall func type)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -768,38 +768,38 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 (defun mew-old-pgp-encode (type &optional signer)
   (let (mew-inherit-encode-pgp-signer doit syntax ctl ct charset cs)
     (if (mew-attach-p)
-	(if (mew-encode-syntax-have-one-part)
-	    (progn
-	      (setq syntax (mew-syntax-get-part mew-encode-syntax))
-	      (setq ctl (mew-syntax-get-ct syntax))
-	      (setq ct (mew-syntax-get-value ctl 'cap))
-	      (if (string= ct mew-ct-txt)
-		  (progn
-		    (setq charset (mew-syntax-get-param ctl "charset"))
-		    (setq cs (mew-charset-to-cs charset))
-		    (setq doit t)
-		    (mew-attach-clear))
-		(message "Old PGP cannot be used for non-text")))
-	  (message "Old PGP cannot be used if multipart exists"))
+        (if (mew-encode-syntax-have-one-part)
+            (progn
+              (setq syntax (mew-syntax-get-part mew-encode-syntax))
+              (setq ctl (mew-syntax-get-ct syntax))
+              (setq ct (mew-syntax-get-value ctl 'cap))
+              (if (string= ct mew-ct-txt)
+                  (progn
+                    (setq charset (mew-syntax-get-param ctl "charset"))
+                    (setq cs (mew-charset-to-cs charset))
+                    (setq doit t)
+                    (mew-attach-clear))
+                (message "Old PGP cannot be used for non-text")))
+          (message "Old PGP cannot be used if multipart exists"))
       (setq doit t))
     (when doit
       (setq mew-inherit-encode-pgp-signer (or signer
-					      (mew-pgp-signer (mew-tinfo-get-case))
-					      (mew-get-my-address)))
+                                              (mew-pgp-signer (mew-tinfo-get-case))
+                                              (mew-get-my-address)))
       (cond
        ((eq type 'pgp-signature)
-	(mew-old-pgp-sign cs syntax))
+        (mew-old-pgp-sign cs syntax))
        ((eq type 'pgp-encryption)
-	(mew-old-pgp-encrypt cs))
+        (mew-old-pgp-encrypt cs))
        ((eq type 'pgp-signature-encryption)
-	(mew-pgp-old-sign-encrypt cs))
+        (mew-pgp-old-sign-encrypt cs))
        (t
-	(message "Not supported"))))))
+        (message "Not supported"))))))
 
 (defun mew-old-pgp-sign (cs &optional syntax)
   (let ((file1 (mew-make-temp-name))
-	(mew-prog-pgps-arg mew-prog-old-pgps-arg)
-	file2 fmc errmsg charset)
+        (mew-prog-pgps-arg mew-prog-old-pgps-arg)
+        file2 fmc errmsg charset)
     (goto-char (mew-header-end))
     (forward-line)
     (unless cs
@@ -808,21 +808,21 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
     (mew-frwlet mew-cs-dummy cs
       (write-region (point) (point-max) file1 nil 'no-msg))
     (condition-case nil
-	(setq fmc (mew-pgp-sign file1))
+        (setq fmc (mew-pgp-sign file1))
       (error
        (mew-delete-file file1)
        (mew-encode-error
-	(format "unknown error for %s. Check %s, anyway"
-		mew-ct-mls mew-temp-dir))))
+        (format "unknown error for %s. Check %s, anyway"
+                mew-ct-mls mew-temp-dir))))
     (mew-set '(file2 nil nil errmsg) fmc)
     (if errmsg
-	(progn
-	  (mew-delete-file file1)
-	  (mew-delete-file file2)
-	  (error errmsg))
+        (progn
+          (mew-delete-file file1)
+          (mew-delete-file file2)
+          (error errmsg))
       (delete-region (point) (point-max))
       (mew-frwlet cs mew-cs-dummy
-	(insert-file-contents file2))
+        (insert-file-contents file2))
       (mew-delete-file file1)
       (mew-delete-file file2)
       (setq mew-encode-syntax syntax)
@@ -830,9 +830,9 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 
 (defun mew-old-pgp-encrypt (cs)
   (let ((file1 (mew-make-temp-name))
-	(mew-prog-pgps-arg mew-prog-old-pgps-arg)
-	(decrypters (mew-header-parse-address-list mew-destination:-list))
-	file2 file3 fc errmsg charset)
+        (mew-prog-pgps-arg mew-prog-old-pgps-arg)
+        (decrypters (mew-header-parse-address-list mew-destination:-list))
+        file2 file3 fc errmsg charset)
     (goto-char (mew-header-end))
     (forward-line)
     (unless cs
@@ -841,23 +841,23 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
     (mew-frwlet mew-cs-dummy cs
       (write-region (point) (point-max) file1 nil 'no-msg))
     (condition-case nil
-	(setq fc (mew-pgp-encrypt file1 decrypters))
+        (setq fc (mew-pgp-encrypt file1 decrypters))
       (error
        (mew-delete-file file1)
        (mew-encode-error
-	(format "unknown error for %s. Check %s, anyway"
-		mew-ct-mle mew-temp-dir))))
+        (format "unknown error for %s. Check %s, anyway"
+                mew-ct-mle mew-temp-dir))))
     (mew-set '(file2 nil file3 nil errmsg) fc)
     (if errmsg
-	(progn
-	  (mew-delete-file file1)
-	  (mew-delete-file file2)
-	  (mew-delete-file file3)
-	  (error errmsg))
+        (progn
+          (mew-delete-file file1)
+          (mew-delete-file file2)
+          (mew-delete-file file3)
+          (error errmsg))
       ;; Create multipart content-header
       (delete-region (point) (point-max))
       (mew-frwlet cs mew-cs-dummy
-	(insert-file-contents file3))
+        (insert-file-contents file3))
       (mew-delete-file file1)
       (mew-delete-file file2)
       (mew-delete-file file3)
@@ -867,13 +867,13 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 (defun mew-pgp-old-sign-encrypt (cs)
   (message "PGP signing then encrypting...")
   (let ((decrypters (mew-header-parse-address-list mew-destination:-list))
-	(roption (mew-pgp-get mew-prog-pgp-arg-ruserid))
-	(loption (mew-pgp-get mew-prog-pgp-arg-luserid))
-	(ooption (mew-pgp-get mew-prog-pgp-arg-output))
-	(eoptions (mew-pgp-get mew-prog-old-pgpse-arg)) ;; xxx
-	(pgpe (mew-pgp-get mew-prog-pgpe)) ;; xxx
-	(file1 (mew-make-temp-name))
-	file2 check decs args process charset)
+        (roption (mew-pgp-get mew-prog-pgp-arg-ruserid))
+        (loption (mew-pgp-get mew-prog-pgp-arg-luserid))
+        (ooption (mew-pgp-get mew-prog-pgp-arg-output))
+        (eoptions (mew-pgp-get mew-prog-old-pgpse-arg)) ;; xxx
+        (pgpe (mew-pgp-get mew-prog-pgpe)) ;; xxx
+        (file1 (mew-make-temp-name))
+        file2 check decs args process charset)
     (goto-char (mew-header-end))
     (forward-line)
     (unless cs
@@ -882,19 +882,19 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
     (mew-frwlet mew-cs-dummy cs
       (write-region (point) (point-max) file1 nil 'no-msg))
     (if (and mew-encrypt-to-myself
-	     (not (member mew-inherit-encode-pgp-signer decrypters)))
-	(setq decrypters (cons mew-inherit-encode-pgp-signer decrypters)))
+             (not (member mew-inherit-encode-pgp-signer decrypters)))
+        (setq decrypters (cons mew-inherit-encode-pgp-signer decrypters)))
     (setq decrypters
-	  (mapcar (lambda (x)
-		    (if (string-match "^[^<].*@" x) (concat "<" x ">") x))
-		  decrypters))
+          (mapcar (lambda (x)
+                    (if (string-match "^[^<].*@" x) (concat "<" x ">") x))
+                  decrypters))
     (setq file2 (mew-make-temp-name))
     (setq args (list loption mew-inherit-encode-pgp-signer ooption file2 file1))
     (if (not roption)
-	(setq args (append args eoptions decrypters))
+        (setq args (append args eoptions decrypters))
       (dolist (decrypter decrypters)
-	;; nreverse later, take care.
-	(setq decs (cons decrypter (cons roption decs))))
+        ;; nreverse later, take care.
+        (setq decs (cons decrypter (cons roption decs))))
       (setq decrypters (nreverse decs))
       (setq args (append eoptions decrypters args)))
     (setq mew-pgp-running 'signing)
@@ -903,9 +903,9 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
     (setq mew-pgp-failure nil)
     (with-temp-buffer
       (setq process (apply 'mew-start-process-lang
-			   "PGP sign"
-			   (current-buffer)
-			   pgpe args))
+                           "PGP sign"
+                           (current-buffer)
+                           pgpe args))
       (mew-set-process-cs process mew-cs-autoconv mew-cs-dummy)
       (set-process-filter process 'mew-pgp-process-filter1)
       (set-process-sentinel process 'mew-pgp-process-sentinel)
@@ -915,13 +915,13 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
     (unless (file-exists-p file2) ;; for unpredictable error
       (mew-passwd-set-passwd (mew-pgp-passtag) nil))
     (if (or mew-pgp-sign-msg check)
-	(progn
-	  (mew-delete-file file1)
-	  (mew-delete-file file2)
-	  (error (or mew-pgp-sign-msg check)))
+        (progn
+          (mew-delete-file file1)
+          (mew-delete-file file2)
+          (error (or mew-pgp-sign-msg check)))
       (delete-region (point) (point-max))
       (mew-frwlet cs mew-cs-dummy
-	(insert-file-contents file2))
+        (insert-file-contents file2))
       (mew-delete-file file1)
       (mew-delete-file file2)
       (setq mew-encode-syntax nil)
@@ -939,19 +939,19 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
       'pgp-encryption
     (goto-char (point-min))
     (if (re-search-forward (concat "^" mew-pgp-signature-begin) nil t)
-	'pgp-signature
+        'pgp-signature
       nil)))
 
 (defun mew-old-pgp-verify (file)
   (message "PGP verifying...")
   (let ((voptions (mew-pgp-get mew-prog-old-pgpv-arg))
-	(ooption (mew-pgp-get mew-prog-pgp-arg-output))
-	(pgpv (mew-pgp-get mew-prog-pgpv))
-	(file1 (mew-make-temp-name))
-	verify)
+        (ooption (mew-pgp-get mew-prog-pgp-arg-output))
+        (pgpv (mew-pgp-get mew-prog-pgpv))
+        (file1 (mew-make-temp-name))
+        verify)
     (with-temp-buffer
       (apply 'mew-call-process-lang
-	     pgpv nil t nil (append voptions (list ooption file1 file)))
+             pgpv nil t nil (append voptions (list ooption file1 file)))
       (setq verify (mew-pgp-verify-check)))
     (message "PGP verifying...done")
     (list file1 verify)))
@@ -963,40 +963,40 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
       (message "%s does not exist" mew-prog-pgp)
     (mew-summary-msg
      (let ((fld (mew-summary-folder-name))
-	   (msg (mew-summary-message-number2))
-	   type)
+           (msg (mew-summary-message-number2))
+           type)
        (with-current-buffer (mew-buffer-message)
-	 ;; We need MIME-decoded buffer to check PGP boundaries.
-	 (setq type (mew-old-pgp-check))
-	 (if type
-	    (mew-old-pgp-decode fld msg type)
-	   (message "No PGP data found")))))))
+         ;; We need MIME-decoded buffer to check PGP boundaries.
+         (setq type (mew-old-pgp-check))
+         (if type
+             (mew-old-pgp-decode fld msg type)
+           (message "No PGP data found")))))))
 
 (defun mew-old-pgp-decode (fld msg type)
   ;; in Message buffer
   (let* ((cache (mew-cache-hit fld msg 'must-hit))
-	 (syntax (mew-cache-decode-syntax cache))
-	 (file (mew-expand-msg fld msg))
-	 mew-inherit-decode-signer
-	 file1 file2 result xmew win start cte)
+         (syntax (mew-cache-decode-syntax cache))
+         (file (mew-expand-msg fld msg))
+         mew-inherit-decode-signer
+         file1 file2 result xmew win start cte)
     (with-temp-buffer
       (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
-	(mew-insert-file-contents file)
-	(re-search-forward mew-eoh nil t)
-	(forward-line)
-	(delete-region (point-min) (point))
-	(when (eq type 'pgp-signature)
-	  (setq cte (mew-syntax-get-cte (mew-syntax-get-part syntax)))
-	  (mew-decode-mime-body nil mew-ct-txt cte))
-	(setq file1 (mew-make-temp-name))
-	(write-region (point-min) (point-max) file1 nil 'no-msg)))
+        (mew-insert-file-contents file)
+        (re-search-forward mew-eoh nil t)
+        (forward-line)
+        (delete-region (point-min) (point))
+        (when (eq type 'pgp-signature)
+          (setq cte (mew-syntax-get-cte (mew-syntax-get-part syntax)))
+          (mew-decode-mime-body nil mew-ct-txt cte))
+        (setq file1 (mew-make-temp-name))
+        (write-region (point-min) (point-max) file1 nil 'no-msg)))
     (mew-elet
      (widen)
      (setq win (get-buffer-window (current-buffer)))
      (setq start (window-start win))
      (setq mew-inherit-decode-signer
-	   (mew-addrstr-parse-address
-	    (mew-header-get-value mew-from:)))
+           (mew-addrstr-parse-address
+            (mew-header-get-value mew-from:)))
      (goto-char (mew-header-end))
      (forward-line)
      (delete-region (point) (point-max))
@@ -1017,7 +1017,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
        (mew-delete-file file1))
      (when (and file2 (file-exists-p file2))
        (mew-frwlet mew-cs-text-for-read mew-cs-dummy
-	 (mew-insert-file-contents file2))
+         (mew-insert-file-contents file2))
        (mew-delete-file file2))
      (mew-cs-decode-region
       (point) (point-max)
@@ -1026,9 +1026,9 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
       ;; be "US-ASCII". I don't know this code is valid for
       ;; cipher text in the case that a wrong charset is specified.
       (or (mew-charset-to-cs
-	   (mew-syntax-get-param
-	    (mew-syntax-get-ct (mew-syntax-get-part syntax)) "charset"))
-	  mew-cs-autoconv))
+           (mew-syntax-get-param
+            (mew-syntax-get-ct (mew-syntax-get-part syntax)) "charset"))
+          mew-cs-autoconv))
      (mew-highlight-body-region (point) (point-max))
      (mew-message-set-end-of)
      (set-window-start win start)
@@ -1045,50 +1045,50 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   (if (not (mew-attach-not-line012-1))
       (message "Cannot link here")
     (let* ((error nil)
-	   (nums (mew-syntax-nums))
-	   (subdir (mew-attach-expand-path mew-encode-syntax nums))
-	   (attachdir (mew-attachdir))
-	   user file filepath begin end)
+           (nums (mew-syntax-nums))
+           (subdir (mew-attach-expand-path mew-encode-syntax nums))
+           (attachdir (mew-attachdir))
+           user file filepath begin end)
       ;; attachdir / {subdir/} dir
       (unless (string= subdir "")
-	(setq attachdir (expand-file-name subdir attachdir)))
+        (setq attachdir (expand-file-name subdir attachdir)))
       ;; attachdir / file
       (setq filepath (mew-random-filename attachdir 1 nil mew-pgp-key-suffix))
       (if (null filepath)
-	  (message "Cannot make a file for pgp key, sorry")
-	(setq file (file-name-nondirectory filepath))
-	(setq user (car (mew-input-address
-			 "Who's key? (%s): " (mew-get-my-address))))
-	(if (string-match "^[^<].*@" user) (setq user (concat "<" user ">")))
-	(with-temp-buffer
-	  (apply 'mew-call-process-lang
-		 (mew-pgp-get mew-prog-pgpk)
-		 nil t nil
-		 (append
-		  (mew-pgp-get mew-prog-pgpk-ext-arg)
-		  (list user)))
-	  (goto-char (point-min))
-	  (if (search-forward (mew-pgp-get mew-pgp-msg-no-export-key) nil t)
-	      (setq error t)
-	    (goto-char (point-min))
-	    (if (not (search-forward mew-pgp-key-begin nil t))
-		(setq error t)
-	      (beginning-of-line)
-	      (setq begin (point))
-	      (if (not (search-forward mew-pgp-key-end nil t))
-		  (setq error t)
-		(beginning-of-line)
-		(forward-line)
-		(setq end (point)))
-	      (write-region begin end filepath nil 'no-msg))))
-	(if error
-	    (message "Cannot extract pgp key for %s" user)
-	  (setq mew-encode-syntax
-		(mew-syntax-insert-entry
-		 mew-encode-syntax
-		 nums
-		 (mew-encode-syntax-single file mew-type-apk nil user)))
-	  (mew-encode-syntax-print mew-encode-syntax))))))
+          (message "Cannot make a file for pgp key, sorry")
+        (setq file (file-name-nondirectory filepath))
+        (setq user (car (mew-input-address
+                         "Who's key? (%s): " (mew-get-my-address))))
+        (if (string-match "^[^<].*@" user) (setq user (concat "<" user ">")))
+        (with-temp-buffer
+          (apply 'mew-call-process-lang
+                 (mew-pgp-get mew-prog-pgpk)
+                 nil t nil
+                 (append
+                  (mew-pgp-get mew-prog-pgpk-ext-arg)
+                  (list user)))
+          (goto-char (point-min))
+          (if (search-forward (mew-pgp-get mew-pgp-msg-no-export-key) nil t)
+              (setq error t)
+            (goto-char (point-min))
+            (if (not (search-forward mew-pgp-key-begin nil t))
+                (setq error t)
+              (beginning-of-line)
+              (setq begin (point))
+              (if (not (search-forward mew-pgp-key-end nil t))
+                  (setq error t)
+                (beginning-of-line)
+                (forward-line)
+                (setq end (point)))
+              (write-region begin end filepath nil 'no-msg))))
+        (if error
+            (message "Cannot extract pgp key for %s" user)
+          (setq mew-encode-syntax
+                (mew-syntax-insert-entry
+                 mew-encode-syntax
+                 nums
+                 (mew-encode-syntax-single file mew-type-apk nil user)))
+          (mew-encode-syntax-print mew-encode-syntax))))))
 
 (defvar mew-pgp-tmp-file nil)
 
@@ -1097,13 +1097,13 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 public keyring."
   (mew-elet
    (insert " ######   #####  ######  #     # ####### #     #\n"
-	   " #     # #     # #     # #    #  #        #   #\n"
-	   " #     # #       #     # #   #   #         # #\n"
-	   " ######  #  #### ######  ####    #######    #\n"
-	   " #       #     # #       #   #   #          #\n"
-	   " #       #     # #       #    #  #          #\n"
-	   " #        #####  #       #     # #######    #\n"
-	   "\n\n")
+           " #     # #     # #     # #    #  #        #   #\n"
+           " #     # #       #     # #   #   #         # #\n"
+           " ######  #  #### ######  ####    #######    #\n"
+           " #       #     # #       #   #   #          #\n"
+           " #       #     # #       #    #  #          #\n"
+           " #        #####  #       #     # #######    #\n"
+           "\n\n")
    (mew-insert-manual
     "To add this key to your pubring, type "
     "'\\<mew-summary-mode-map>\\[mew-summary-execute-external]'.\n")))
@@ -1115,37 +1115,37 @@ public keyring."
     (when (y-or-n-p "Add this PGP key onto your public keyring? ")
       (setq mew-pgp-tmp-file (mew-make-temp-name))
       (with-current-buffer cache
-	(mew-frwlet mew-cs-dummy mew-cs-autoconv
-	  (write-region begin end mew-pgp-tmp-file nil 'no-msg))
-	(set-buffer (mew-buffer-message))
-	(mew-elet
-	 (message "Adding PGP keys...")
-	 (apply 'mew-call-process-lang
-		(mew-pgp-get mew-prog-pgpk)
-		nil t nil
-		(append (mew-pgp-get mew-prog-pgpk-add-arg)
-			(list mew-pgp-tmp-file)))
-	 (message "Adding PGP keys...done")
-	 (insert "\n\n"
-		 "**************** IMPORTANT NOTE ****************\n"
-		 "When Mew adds PGP keys onto your public keyring,\n"
-		 "it is careless about both TRUST and VALIDITY.\n"
-		 "It is YOU who set these values. Please use\n")
-	 (cond
-	  ((eq mew-pgp-ver mew-pgp-ver2)
-	   (insert "\"pgp -ke\" and \"pgp -ks\" to change them.\n"))
-	  ((eq mew-pgp-ver mew-pgp-ver5)
-	   (insert "\"pgpk -e\" and \"pgpk -s\" to change them.\n"))
-	  ((eq mew-pgp-ver mew-pgp-ver6)
-	   (insert "\"pgp -ke\" and \"pgp -ks\" to change them.\n"))
-	  ((eq mew-pgp-ver mew-pgp-verg)
-	   (insert "\"gpg --edit-key\" to change them.\n"))
-	  ((eq mew-pgp-ver mew-pgp-verg2)
-	   (insert "\"gpg --edit-key\" to change them.\n")))
-	 (insert "If you do not know what TRUST and VALIDITY is,\n"
-		 "you should learn the web of trust system BEFORE\n"
-		 "using PGP to protect your privacy.\n"
-		 "**************** IMPORTANT NOTE ****************\n")))
+        (mew-frwlet mew-cs-dummy mew-cs-autoconv
+          (write-region begin end mew-pgp-tmp-file nil 'no-msg))
+        (set-buffer (mew-buffer-message))
+        (mew-elet
+         (message "Adding PGP keys...")
+         (apply 'mew-call-process-lang
+                (mew-pgp-get mew-prog-pgpk)
+                nil t nil
+                (append (mew-pgp-get mew-prog-pgpk-add-arg)
+                        (list mew-pgp-tmp-file)))
+         (message "Adding PGP keys...done")
+         (insert "\n\n"
+                 "**************** IMPORTANT NOTE ****************\n"
+                 "When Mew adds PGP keys onto your public keyring,\n"
+                 "it is careless about both TRUST and VALIDITY.\n"
+                 "It is YOU who set these values. Please use\n")
+         (cond
+          ((eq mew-pgp-ver mew-pgp-ver2)
+           (insert "\"pgp -ke\" and \"pgp -ks\" to change them.\n"))
+          ((eq mew-pgp-ver mew-pgp-ver5)
+           (insert "\"pgpk -e\" and \"pgpk -s\" to change them.\n"))
+          ((eq mew-pgp-ver mew-pgp-ver6)
+           (insert "\"pgp -ke\" and \"pgp -ks\" to change them.\n"))
+          ((eq mew-pgp-ver mew-pgp-verg)
+           (insert "\"gpg --edit-key\" to change them.\n"))
+          ((eq mew-pgp-ver mew-pgp-verg2)
+           (insert "\"gpg --edit-key\" to change them.\n")))
+         (insert "If you do not know what TRUST and VALIDITY is,\n"
+                 "you should learn the web of trust system BEFORE\n"
+                 "using PGP to protect your privacy.\n"
+                 "**************** IMPORTANT NOTE ****************\n")))
       (mew-delete-file mew-pgp-tmp-file))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1157,14 +1157,14 @@ public keyring."
   (let (val uri)
     (with-current-buffer (mew-buffer-message)
       (catch 'loop
-	(dolist (key mew-x-pgp-key-list)
-	  (setq val (mew-header-get-value key))
-	  (when (and val (string-match "http:[^ \t\n]*" val))
-	    (setq val (mew-match-string 0 val))
-	    (if (y-or-n-p (format "Fetch a PGP public key from %s? " val))
-		(throw 'loop (setq uri val)))))))
+        (dolist (key mew-x-pgp-key-list)
+          (setq val (mew-header-get-value key))
+          (when (and val (string-match "http:[^ \t\n]*" val))
+            (setq val (mew-match-string 0 val))
+            (if (y-or-n-p (format "Fetch a PGP public key from %s? " val))
+                (throw 'loop (setq uri val)))))))
     (if uri
-	(mew-pgp-fetch uri)
+        (mew-pgp-fetch uri)
       (message "A PGP key is not fetched"))))
 
 (defun mew-pgp-fetch-key (arg)
@@ -1181,24 +1181,24 @@ according to a URL in a field specified by 'mew-x-pgp-key-list'."
       (mew-pgp-fetch-key-by-xuri)
     (let (keyid userid xmew)
       (with-current-buffer (mew-buffer-message)
-	(setq userid (mew-header-parse-address mew-from:))
-	(setq xmew (mew-header-get-value mew-x-mew:)))
+        (setq userid (mew-header-parse-address mew-from:))
+        (setq xmew (mew-header-get-value mew-x-mew:)))
       (cond
        ((and xmew
-	     (string-match " ID = \\(0x[0-9a-fA-F]+\\)" xmew nil)
-	     (setq keyid (mew-match-string 1 xmew)))
-	(if (y-or-n-p (format "Fetch the PGP public key for %s? " keyid))
-	    (mew-pgp-fetch-key-from-pks keyid)))
+             (string-match " ID = \\(0x[0-9a-fA-F]+\\)" xmew nil)
+             (setq keyid (mew-match-string 1 xmew)))
+        (if (y-or-n-p (format "Fetch the PGP public key for %s? " keyid))
+            (mew-pgp-fetch-key-from-pks keyid)))
        (userid
-	(if (y-or-n-p (format "Fetch the PGP public key for %s? " userid))
-	    (mew-pgp-fetch-key-from-pks userid)))
+        (if (y-or-n-p (format "Fetch the PGP public key for %s? " userid))
+            (mew-pgp-fetch-key-from-pks userid)))
        (t
-	(message "A PGP key is not fetched"))))))
+        (message "A PGP key is not fetched"))))))
 
 (defun mew-pgp-fetch-key-from-pks (&optional id)
   (let* ((alist mew-pgp-pks-servers)
-	 (server (car (car alist)))
-	 uri)
+         (server (car (car alist)))
+         uri)
     (unless id
       (setq id (read-string "PGP key id or e-mail address: ")))
     (setq server (mew-input-general "PGP key server" alist nil server))
@@ -1212,10 +1212,10 @@ according to a URL in a field specified by 'mew-x-pgp-key-list'."
   (let (pro)
     (mew-piolet mew-cs-autoconv mew-cs-autoconv
       (setq pro (apply 'start-process
-		       "Mew PGP fetch"
-		       (generate-new-buffer mew-buffer-prefix)
-		       mew-prog-pgpkey
-		       (append mew-prog-pgpkey-args (list uri)))))
+                       "Mew PGP fetch"
+                       (generate-new-buffer mew-buffer-prefix)
+                       mew-prog-pgpkey
+                       (append mew-prog-pgpkey-args (list uri)))))
     (set-process-sentinel pro 'mew-pgp-fetch-process-sentinel)))
 
 (defun mew-pgp-fetch-process-sentinel (process _event)
@@ -1224,9 +1224,9 @@ according to a URL in a field specified by 'mew-x-pgp-key-list'."
     (with-current-buffer buf
       (goto-char (point-min))
       (if (and (search-forward mew-pgp-key-begin nil t)
-	       (search-forward mew-pgp-key-end nil t))
-	  (mew-mime-pgp-keys-ext (current-buffer) (point-min) (point-max))
-	(message "PGP key fetch failed")))
+               (search-forward mew-pgp-key-end nil t))
+          (mew-mime-pgp-keys-ext (current-buffer) (point-min) (point-max))
+        (message "PGP key fetch failed")))
     (mew-remove-buffer buf)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1236,11 +1236,11 @@ according to a URL in a field specified by 'mew-x-pgp-key-list'."
 ;; You do not have the secret key needed to decrypt this file.
 ;;
 ;;    <Verify> <2>
-;;	Keyring file 'pubring.pgp' does not exist.
-;;	Enter public key filename:
+;;      Keyring file 'pubring.pgp' does not exist.
+;;      Enter public key filename:
 ;;
-;;	Key matching expected Key ID 1B8BF431 not found in file 'pubring.pgp'.
-;;	Enter public key filename:
+;;      Key matching expected Key ID 1B8BF431 not found in file 'pubring.pgp'.
+;;      Enter public key filename:
 ;;
 ;; <Sign> <1>
 ;;

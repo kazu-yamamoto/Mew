@@ -76,36 +76,36 @@ If no cache entry is found, nil is returned.
 If a cache entry is invalid, the entry is removed and nil is returned.
 If MUST-HIT is non-nil and no valid cache entry is found, an error occurs."
   (let ((entry (mew-cache-get fld msg))
-	cache file time size ok)
+        cache file time size ok)
     (if (null entry)
-	(if must-hit
-	    (error "Cache not found")
-	  nil)
+        (if must-hit
+            (error "Cache not found")
+          nil)
       (setq cache (mew-cache-buffer-get entry))
       (setq file (mew-expand-msg fld msg))
       (unless (file-readable-p file)
-	(error "%s does not exist" (mew-concat-folder fld msg)))
+        (error "%s does not exist" (mew-concat-folder fld msg)))
       (setq time (mew-file-get-time file))
       (setq size (mew-file-get-size file))
       (with-current-buffer cache
-	(setq ok (mew-cinfo-equal fld msg time size)))
+        (setq ok (mew-cinfo-equal fld msg time size)))
       (if ok
-	  (progn
-	    (mew-cache-sort entry)
-	    cache)
-	(if must-hit
-	    (error "Cache not found")
-	  (mew-cache-delete2 fld msg)
-	  nil)))))
+          (progn
+            (mew-cache-sort entry)
+            cache)
+        (if must-hit
+            (error "Cache not found")
+          (mew-cache-delete2 fld msg)
+          nil)))))
 
 (defun mew-cache-sort (entry)
   (setq mew-cache (cons entry (delq entry mew-cache))))
 
 (defun mew-cache-add (fld msg)
   (let ((len (length mew-cache))
-	buf)
+        buf)
     (if (< len mew-cache-size)
-	(setq buf (get-buffer-create (format "%s%d" mew-buffer-cache len)))
+        (setq buf (get-buffer-create (format "%s%d" mew-buffer-cache len)))
       (setq buf (mew-cache-buffer-get (nth (1- len) mew-cache)))
       (setcdr (nthcdr (- len 2) mew-cache) nil))
     (setq mew-cache (cons (mew-cache-entry-make fld msg buf) mew-cache))
@@ -117,46 +117,46 @@ If MUST-HIT is non-nil and no valid cache entry is found, an error occurs."
     ;; must preserve the buffer itself because the buffer creation
     ;; depends on the length of mew-cache.
     (setq mew-cache (nconc (cdr mew-cache)
-			   (list (mew-cache-entry-make nil nil buf))))))
+                           (list (mew-cache-entry-make nil nil buf))))))
 
 (defun mew-cache-delete2 (fld msg)
   "Delete the specific cache entry."
   (let ((entry (mew-cache-get fld msg)) buf)
     (if (null entry)
-	()
+        ()
       (setq buf (mew-cache-buffer-get entry))
       (setq mew-cache (delq entry mew-cache))
       (setq mew-cache (nconc mew-cache
-			     (list (mew-cache-entry-make nil nil buf)))))))
+                             (list (mew-cache-entry-make nil nil buf)))))))
 
 (defvar mew-fields-xcc
   (list mew-fcc: mew-dcc: mew-bcc:
-	mew-resent-fcc: mew-resent-bcc: mew-resent-dcc:))
+        mew-resent-fcc: mew-resent-bcc: mew-resent-dcc:))
 
 (defun mew-xinfo-get-xcc (fld msg)
   (when (or (mew-folder-queuep fld) (mew-folder-postqp fld))
     (let ((info (concat (mew-expand-msg fld msg) mew-queue-info-suffix))
-	  (headers mew-fields-xcc)
-	  data addr xinfo)
+          (headers mew-fields-xcc)
+          data addr xinfo)
       (when (and (file-readable-p info)
-		 (setq data (aref (mew-lisp-load info) 0)))
-	(with-temp-buffer
-	  (insert data)
-	  (goto-char (point-min))
-	  (dolist (header headers)
-	    (when (setq addr (mew-header-get-value header))
-	      (setq xinfo (cons (format "%s %s\n" header addr) xinfo)))))
-	(nreverse xinfo)))))
+                 (setq data (aref (mew-lisp-load info) 0)))
+        (with-temp-buffer
+          (insert data)
+          (goto-char (point-min))
+          (dolist (header headers)
+            (when (setq addr (mew-header-get-value header))
+              (setq xinfo (cons (format "%s %s\n" header addr) xinfo)))))
+        (nreverse xinfo)))))
 
 (defun mew-disable-alternative-check ()
   (let ((xmailer (mew-header-get-value mew-x-mailer:))
-	(regexs mew-disable-alternative-regex-list))
+        (regexs mew-disable-alternative-regex-list))
     (if (null xmailer)
-	t
+        t
       (catch 'loop
-	(dolist (regex regexs t)
-	  (if (string-match regex xmailer)
-	      (throw 'loop nil)))))))
+        (dolist (regex regexs t)
+          (if (string-match regex xmailer)
+              (throw 'loop nil)))))))
 
 (defun mew-cache-message (fld msg &optional unlimit no-err)
   "Cache the message specified by FLD and MSG.
@@ -165,53 +165,53 @@ If UNLIMIT is non-nil, decodes the message to be cached without
 the limitations. If NO-ERR is non-nil, an error is caused
 if decode fails."
   (let* ((cbuf (current-buffer))
-	 (cache (mew-cache-hit fld msg))
-	 (use-alternative mew-use-alternative)
-	 tim-siz decode errormsg)
+         (cache (mew-cache-hit fld msg))
+         (use-alternative mew-use-alternative)
+         tim-siz decode errormsg)
     (catch 'return
       (if cache
-	  (progn
-	    (set-buffer cache)
-	    ;; Decryption may fail if password is wrong. So, try
-	    ;; to decode this again.
-	    (if (or (and unlimit (mew-xinfo-get-not-decrypted))
-		    (and unlimit (mew-xinfo-get-decode-err)))
-		;; cache is invalid
-		(setq decode t)))
-	(setq cache (mew-cache-add fld msg))
-	(setq decode t))
+          (progn
+            (set-buffer cache)
+            ;; Decryption may fail if password is wrong. So, try
+            ;; to decode this again.
+            (if (or (and unlimit (mew-xinfo-get-not-decrypted))
+                    (and unlimit (mew-xinfo-get-decode-err)))
+                ;; cache is invalid
+                (setq decode t)))
+        (setq cache (mew-cache-add fld msg))
+        (setq decode t))
       (if (not decode) (throw 'return nil))
       ;;
       (set-buffer cache)
       ;; in cache buffer
       (mew-erase-buffer)
       (condition-case errmsg
-	  (setq tim-siz	(mew-insert-message fld msg mew-cs-text-for-read nil))
-	(error
-	 ;; file not exist
-	 (mew-cache-delete)
-	 (setq errormsg (nth 1 errmsg))
-	 (throw 'return (setq cache nil))))
+          (setq tim-siz (mew-insert-message fld msg mew-cs-text-for-read nil))
+        (error
+         ;; file not exist
+         (mew-cache-delete)
+         (setq errormsg (nth 1 errmsg))
+         (throw 'return (setq cache nil))))
       (mew-cinfo-set fld msg (car tim-siz) (cdr tim-siz) mew-decode-broken)
       (if (and use-alternative mew-disable-alternative-regex-list)
-	  (setq use-alternative (mew-disable-alternative-check)))
+          (setq use-alternative (mew-disable-alternative-check)))
       (mew-dinfo-set nil t t use-alternative)
       (mew-decode-syntax-clear)
       (mew-xinfo-set-text-body mew-use-text-body)
       (condition-case nil
-	  (if unlimit
-	      (let ((mew-header-max-length nil)
-		    (mew-header-max-depth nil))
-		(mew-decode))
-	    (mew-decode))
-	;; Don't put error handing here. Because (mew-decode) would
-	;; set debug-on-error to t.
-	(quit
-	 ;; prefetching an encrypted message
-	 (mew-cache-delete)
-	 ;; The following message is not friendly to users.
-	 ;; (message "MIME decoding for %s/%s aborted" fld msg)
-	 (throw 'return (setq cache nil))))
+          (if unlimit
+              (let ((mew-header-max-length nil)
+                    (mew-header-max-depth nil))
+                (mew-decode))
+            (mew-decode))
+        ;; Don't put error handing here. Because (mew-decode) would
+        ;; set debug-on-error to t.
+        (quit
+         ;; prefetching an encrypted message
+         (mew-cache-delete)
+         ;; The following message is not friendly to users.
+         ;; (message "MIME decoding for %s/%s aborted" fld msg)
+         (throw 'return (setq cache nil))))
       (mew-ainfo-set-icon msg)
       (mew-xinfo-set-info (append (mew-xinfo-get-info) (mew-xinfo-get-xcc fld msg)))
       (mew-decode-syntax-set))

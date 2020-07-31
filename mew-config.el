@@ -20,29 +20,29 @@
 
 (defun mew-cfent-value (case key def &optional type)
   (let ((cases (and case (mapcar 'mew-chop (mew-split case ?,))))
-	ent ret cfent)
+        ent ret cfent)
     (or (member mew-case-default cases)
-	(setq cases (cons mew-case-default cases)))
+        (setq cases (cons mew-case-default cases)))
     (setq cases (nreverse cases))
     (catch 'loop
       (dolist (cs cases)
-	(setq cfent (mew-cfent-by-case cs))
-	(setq ent (or (assoc key cfent) ;; old
-		      (assoc (intern key) cfent))) ;; new
-	(when ent
-	  (setq ret (cdr ent)) ;; old
-	  (cond
-	   ((eq type 'symbol)
-	    (if (consp ret) (setq ret (car ret)))
-	    (setq ret (symbol-value ret)))
-	   ((eq type 'list)
-	    (if (and (consp (car ret)) (null (cdr ret))) ;; new
-		(setq ret (car ret)))
-	    (if (equal ret '(nil))
-		(setq ret nil)))
-	   (t
-	    (if (consp ret) (setq ret (car ret))))) ;; new
-	  (if ent (throw 'loop nil))))
+        (setq cfent (mew-cfent-by-case cs))
+        (setq ent (or (assoc key cfent) ;; old
+                      (assoc (intern key) cfent))) ;; new
+        (when ent
+          (setq ret (cdr ent)) ;; old
+          (cond
+           ((eq type 'symbol)
+            (if (consp ret) (setq ret (car ret)))
+            (setq ret (symbol-value ret)))
+           ((eq type 'list)
+            (if (and (consp (car ret)) (null (cdr ret))) ;; new
+                (setq ret (car ret)))
+            (if (equal ret '(nil))
+                (setq ret nil)))
+           (t
+            (if (consp ret) (setq ret (car ret))))) ;; new
+          (if ent (throw 'loop nil))))
       (setq ret def))
     ret))
 
@@ -60,7 +60,7 @@
 (defun mew-config-case-name (ent)
   (let ((case (car ent)))
     (if (symbolp case)
-	(symbol-name case)
+        (symbol-name case)
       case)))
 
 (defun mew-config-setup ()
@@ -74,32 +74,32 @@
   (or (member mew-case-default mew-config-cases)
       (setq mew-config-cases (cons mew-case-default mew-config-cases)))
   (setq mew-config-cases2
-	(append mew-folder-prefixes
-		(mapcar (lambda (x) (concat x ":")) mew-config-cases)))
+        (append mew-folder-prefixes
+                (mapcar (lambda (x) (concat x ":")) mew-config-cases)))
   (let ((cases (reverse mew-config-cases)) ;; must copy
-	val)
+        val)
     (dolist (case cases)
       (setq val (mew-inbox-folder case))
       (or (mew-folder-inboxp val)
-	  (setq mew-inbox-folders (cons val mew-inbox-folders)))
+          (setq mew-inbox-folders (cons val mew-inbox-folders)))
       (setq val (mew-queue-folder case))
       (or (mew-folder-queuep val)
-	  (setq mew-queue-folders (cons val mew-queue-folders)))
+          (setq mew-queue-folders (cons val mew-queue-folders)))
       (setq val (mew-postq-folder case))
       (or (mew-folder-postqp val)
-	  (setq mew-postq-folders (cons val mew-postq-folders)))
+          (setq mew-postq-folders (cons val mew-postq-folders)))
       (when mew-generate-mail-address-list
-	(setq val (concat "^" (regexp-quote (mew-mail-address case)) "$"))
-	(or (member val mew-mail-address-list)
-	    (setq mew-mail-address-list (cons val mew-mail-address-list))))
+        (setq val (concat "^" (regexp-quote (mew-mail-address case)) "$"))
+        (or (member val mew-mail-address-list)
+            (setq mew-mail-address-list (cons val mew-mail-address-list))))
       (when mew-generate-mail-domain-list
-	(setq val (mew-mail-domain case))
-	(or (member val mew-mail-domain-list)
-	    (setq mew-mail-domain-list (cons val mew-mail-domain-list))))
+        (setq val (mew-mail-domain case))
+        (or (member val mew-mail-domain-list)
+            (setq mew-mail-domain-list (cons val mew-mail-domain-list))))
       (when mew-generate-from-list
-	(setq val (mew-from case))
-	(or (member val mew-from-list)
-	    (setq mew-from-list (cons val mew-from-list)))))))
+        (setq val (mew-from case))
+        (or (member val mew-from-list)
+            (setq mew-from-list (cons val mew-from-list)))))))
 
 ;;;
 ;;;
@@ -120,14 +120,14 @@
 ;; mew-from is really strange to maintain backword compatibility.
 (defun mew-from (&optional case)
   (or (unless mew-config-alist
-	(if mew-generate-from-list
-	    mew-from
-	  (car mew-from-list)))
+        (if mew-generate-from-list
+            mew-from
+          (car mew-from-list)))
       (let ((name (mew-name case))
-	    (addr (mew-mail-address case)))
-	(if (and name (string-match "[^ \t]" name))
-	    (format "%s <%s>" name addr)
-	  addr))))
+            (addr (mew-mail-address case)))
+        (if (and name (string-match "[^ \t]" name))
+            (format "%s <%s>" name addr)
+          addr))))
 
 (defun mew-cc (&optional case)
   (let ((cc (mew-cfent-value case "cc" mew-cc)))
@@ -180,7 +180,7 @@
 (defun mew-smtp-user-only (&optional case)
   (let ((user-domain (mew-smtp-user case)))
     (if (string-match "^\\([^@]+\\)@" user-domain)
-	(mew-match-string 1 user-domain)
+        (mew-match-string 1 user-domain)
       user-domain)))
 
 (defun mew-smtp-user (&optional case)
@@ -203,9 +203,9 @@
 
 (defun mew-smtp-message-id (&optional case)
   (let* ((random (format "%08d" (mew-random)))
-	 (domain (mew-smtp-msgid-domain case))
-	 (user (mew-smtp-msgid-user case))
-	 (time (mew-time-ctz-to-msgid (current-time))))
+         (domain (mew-smtp-msgid-domain case))
+         (user (mew-smtp-msgid-user case))
+         (time (mew-time-ctz-to-msgid (current-time))))
     (concat "<" time "." random "." user "@" domain ">")))
 
 (defun mew-use-smtp-auth (&optional case)
@@ -351,9 +351,9 @@
 
 (defun mew-nntp-message-id (&optional case)
   (let* ((random (format "%08d" (mew-random)))
-	 (domain (mew-nntp-msgid-domain case))
-	 (user (mew-nntp-msgid-user case))
-	 (time (mew-time-ctz-to-msgid (current-time))))
+         (domain (mew-nntp-msgid-domain case))
+         (user (mew-nntp-msgid-user case))
+         (time (mew-time-ctz-to-msgid (current-time))))
     (concat "<" time "." random "." user "@" domain ">")))
 ;;
 
@@ -513,18 +513,18 @@
   (let ((case (mew-case-set))) ;; side effect
     (save-excursion
       (dolist (buf mew-buffers)
-	(when (get-buffer buf)
-	  (set-buffer buf)
-	  (cond
-	   ((mew-summary-p)
-	    (mew-summary-mode-name mew-mode-name-summary))
-	   ((mew-virtual-p)
-	    (mew-summary-mode-name mew-mode-name-virtual))))))
+        (when (get-buffer buf)
+          (set-buffer buf)
+          (cond
+           ((mew-summary-p)
+            (mew-summary-mode-name mew-mode-name-summary))
+           ((mew-virtual-p)
+            (mew-summary-mode-name mew-mode-name-virtual))))))
     (when mew-visit-inbox-after-setting-case
       (let ((inbox (mew-case-folder
-		    case
-		    (mew-proto-inbox-folder (mew-proto case) case))))
-	(mew-summary-visit-folder inbox)))))
+                    case
+                    (mew-proto-inbox-folder (mew-proto case) case))))
+        (mew-summary-visit-folder inbox)))))
 
 (defun mew-draft-set-case (&optional arg)
   "Guess case and set the case for output to it. The value is
@@ -534,10 +534,10 @@ fields in the header according to the new value."
   (interactive "P")
   (let ((old-case (mew-tinfo-get-case)) new-case)
     (if arg
-	(setq new-case (mew-input-case old-case 'edit))
+        (setq new-case (mew-input-case old-case 'edit))
       (setq new-case (mew-draft-get-case-by-guess))
       (if mew-case-guess-addition
-	  (setq new-case (mew-draft-add-case old-case new-case)))
+          (setq new-case (mew-draft-add-case old-case new-case)))
       (setq new-case (mew-input-case (or new-case mew-case))))
     (mew-tinfo-set-case new-case)
     (mew-tinfo-set-use-flowed (mew-use-format-flowed new-case))
@@ -551,22 +551,22 @@ fields in the header according to the new value."
   (save-excursion
     (goto-char (point-min))
     (let ((new-case (mew-tinfo-get-case))
-	  from fcc dcc eoh)
+          from fcc dcc eoh)
       ;; (mew-header-end) cannot be used here
       (mew-header-goto-end)
       (setq eoh (point))
       (goto-char (point-min))
       (cond
        ((mew-draft-resent-p eoh)
-	(setq from mew-resent-from:)
-	;; (setq cc mew-resent-cc:)
-	(setq fcc mew-resent-fcc:)
-	(setq dcc mew-resent-dcc:))
+        (setq from mew-resent-from:)
+        ;; (setq cc mew-resent-cc:)
+        (setq fcc mew-resent-fcc:)
+        (setq dcc mew-resent-dcc:))
        (t
-	(setq from mew-from:)
-	;; (setq cc mew-cc:)
-	(setq fcc mew-fcc:)
-	(setq dcc mew-dcc:)))
+        (setq from mew-from:)
+        ;; (setq cc mew-cc:)
+        (setq fcc mew-fcc:)
+        (setq dcc mew-dcc:)))
       (mew-header-replace-value from (mew-from new-case))
       ;; (mew-header-replace-value cc (mew-cc new-case))
       (mew-header-replace-value dcc (mew-dcc new-case))
@@ -581,30 +581,30 @@ fields in the header according to the new value."
       (mew-draft-header-insert-alist (mew-header-alist new-case))
       ;; X-Mailer: must be the last
       (if (mew-use-x-mailer new-case)
-	  (mew-draft-header-insert mew-x-mailer: mew-x-mailer)))))
+          (mew-draft-header-insert mew-x-mailer: mew-x-mailer)))))
 
 (defun mew-draft-get-case-by-guess (&optional alist)
   "Guess case according to 'mew-case-guess-alist'."
   (unless alist (setq alist mew-case-guess-alist))
   (let ((cases (mew-refile-guess-by-alist1 alist)))
     (if cases
-	(mew-join "," cases)
+        (mew-join "," cases)
       nil)))
 
 (defun mew-draft-set-case-by-guess ()
   (let ((case (mew-draft-get-case-by-guess)))
     (when case
       (if mew-case-guess-addition
-	  (setq case (mew-draft-add-case (mew-tinfo-get-case) case)))
+          (setq case (mew-draft-add-case (mew-tinfo-get-case) case)))
       (mew-tinfo-set-case case))))
 
 (defun mew-draft-add-case (dst src)
   (if (mew-case-default-p dst)
       src
     (if (> (length src) 0)
-	(mew-join
-	 "," (nreverse
-	      (mew-uniq-list (nreverse (mew-split (concat dst "," src) ?,)))))
+        (mew-join
+         "," (nreverse
+              (mew-uniq-list (nreverse (mew-split (concat dst "," src) ?,)))))
       dst)))
 
 (provide 'mew-config)

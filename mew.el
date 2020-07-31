@@ -7,7 +7,7 @@
 ;;; Commentary:
 
 ;; The updated version is available from:
-;;	http://www.Mew.org/
+;;      http://www.Mew.org/
 ;;
 ;; See info for configuring a site file/.emacs/.mew.el.
 
@@ -76,11 +76,11 @@ considered reversed."
   (mew-window-push)
   (unless mew-init-p (mew-init))
   (let* ((auto (if arg (not mew-auto-get) mew-auto-get))
-	 (case mew-case)
-	 (proto (mew-proto case))
-	 inbox case:inbox)
+         (case mew-case)
+         (proto (mew-proto case))
+         inbox case:inbox)
     (if auto
-	(mew-summary-scan-boot proto case)
+        (mew-summary-scan-boot proto case)
       ;; see also mew-summary-retrieve
       (setq inbox (mew-proto-inbox-folder proto case))
       (setq case:inbox (mew-case-folder case inbox))
@@ -98,9 +98,9 @@ function."
 
 ;;;###autoload
 (defun mew-user-agent-compose (&optional to subject other-headers _continue
-					 switch-function _yank-action
-					 _send-actions
-					 &rest _dummy)
+                                         switch-function _yank-action
+                                         _send-actions
+                                         &rest _dummy)
   "Set up message composition draft with Mew.
 This is 'mail-user-agent' entry point to Mew.
 
@@ -116,8 +116,8 @@ A Draft buffer is prepared according to SWITCH-FUNCTION.
 CONTINUE, YANK-ACTION and SEND-ACTIONS are ignored."
   (unless mew-init-p (mew-init))
   (let* ((draft (mew-folder-new-message mew-draft-folder))
-	 (attachdir (mew-attachdir draft))
-	 cc asked)
+         (attachdir (mew-attachdir draft))
+         cc asked)
     (when (and mew-ask-to (null to))
       (setq to (mew-input-address (concat mew-to: " ")))
       (setq asked t))
@@ -168,24 +168,24 @@ CONTINUE, YANK-ACTION and SEND-ACTIONS are ignored."
 (defun mew-set-environment (&optional no-dir)
   (let (error-message)
     (condition-case nil
-	(progn
-	  ;; sanity check
-	  (cond
-	   ((featurep 'xemacs)
-	    (setq error-message "Not support XEmacs\n")
-	    (error ""))
-	   ((string-match "^\\(18\\|19\\|20\\)" emacs-version)
-	    (setq error-message "Not support Emacs 18/19/20 nor Mule 1\n")
-	    (error "")))
-	  ;; initializing
-	  (or no-dir (mew-buffers-init))
-	  (or no-dir (mew-temp-dir-init))
-	  (mew-mark-init)
-	  (mew-config-init)
-	  (mew-subprocess-init)
-	  (mew-rotate-log-files mew-smtp-log-file)
-	  (mew-rotate-log-files mew-nntp-log-file)
-	  (mew-rotate-log-files mew-refile-log-file))
+        (progn
+          ;; sanity check
+          (cond
+           ((featurep 'xemacs)
+            (setq error-message "Not support XEmacs\n")
+            (error ""))
+           ((string-match "^\\(18\\|19\\|20\\)" emacs-version)
+            (setq error-message "Not support Emacs 18/19/20 nor Mule 1\n")
+            (error "")))
+          ;; initializing
+          (or no-dir (mew-buffers-init))
+          (or no-dir (mew-temp-dir-init))
+          (mew-mark-init)
+          (mew-config-init)
+          (mew-subprocess-init)
+          (mew-rotate-log-files mew-smtp-log-file)
+          (mew-rotate-log-files mew-nntp-log-file)
+          (mew-rotate-log-files mew-refile-log-file))
       (error
        (set-buffer (generate-new-buffer mew-buffer-debug))
        (goto-char (point-max))
@@ -207,13 +207,13 @@ CONTINUE, YANK-ACTION and SEND-ACTIONS are ignored."
       (setq folder (mew-canonicalize-folder folder))
       (setq dir (mew-expand-folder folder))
       (unless (file-exists-p dir)
-	(mew-make-directory dir)
-	(mew-local-folder-insert folder)
-	(message "%s was created" dir))
+        (mew-make-directory dir)
+        (mew-local-folder-insert folder)
+        (message "%s was created" dir))
       (setq dir (file-chase-links dir))
       (if (file-exists-p dir)
-	  (if (/= mew-folder-mode (file-modes dir))
-	      (set-file-modes dir mew-folder-mode))))))
+          (if (/= mew-folder-mode (file-modes dir))
+              (set-file-modes dir mew-folder-mode))))))
 
 (defun mew-status-update (&optional arg)
   "Read Addrbook and update its information.
@@ -228,13 +228,13 @@ of the current world is also updated."
       (mew-set '(case proto) (mew-summary-case-proto))
       (cond
        ((mew-folder-localp proto)
-	(mew-local-update (mew-called-interactively-p)))
+        (mew-local-update (mew-called-interactively-p)))
        ((mew-folder-popp proto)
-	(message "Nothing updated for POP"))
+        (message "Nothing updated for POP"))
        ((mew-folder-imapp proto)
-	(mew-imap-update case))
+        (mew-imap-update case))
        ((mew-folder-nntpp proto)
-	(mew-nntp-update case)))))
+        (mew-nntp-update case)))))
    (t
     (if (mew-called-interactively-p) (mew-set-environment 'no-dir))
     ;; These two must be before mew-local-update
@@ -267,8 +267,8 @@ of the current world is also updated."
 (defun mew-ct-setup ()
   (dolist (ct (mapcar 'car mew-mime-content-type))
     (if (and (stringp ct) (not (string-match "/$" ct)))
-	(setq mew-mime-content-type-list
-	      (cons (capitalize ct) mew-mime-content-type-list)))))
+        (setq mew-mime-content-type-list
+              (cons (capitalize ct) mew-mime-content-type-list)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -278,8 +278,8 @@ of the current world is also updated."
 (defun mew-frame-id (&optional frame)
   (if window-system
       (let ((fram (or frame (selected-frame))))
-	(concat "mew-current-info-"
-		(cdr (assq 'window-id (frame-parameters fram)))))
+        (concat "mew-current-info-"
+                (cdr (assq 'window-id (frame-parameters fram)))))
     "mew-current-info-no-window"))
 
 (defvar mew-current-info-list '("fld" "msg" "part" "window"))
@@ -295,7 +295,7 @@ of the current world is also updated."
 (defun mew-current-clean-up ()
   (if window-system
       (dolist (frame (frame-list))
-	(mew-info-clean-up (concat "mew-current-info-" (mew-frame-id frame))))
+        (mew-info-clean-up (concat "mew-current-info-" (mew-frame-id frame))))
     (mew-info-clean-up "mew-current-info-no-window")))
 
 (defun mew-current-set-window-config ()
@@ -323,14 +323,14 @@ of the current world is also updated."
 
 (defun mew-window-push ()
   (let ((frame (selected-frame))
-	(config (current-window-configuration)))
+        (config (current-window-configuration)))
     (setq mew-window-stack (cons (cons frame config) mew-window-stack))))
 
 (defun mew-window-pop ()
   (let* ((frame (selected-frame))
-	 (assoc (assoc frame mew-window-stack)))
+         (assoc (assoc frame mew-window-stack)))
     (if (and assoc (window-configuration-p (cdr assoc)))
-	(set-window-configuration (cdr assoc))
+        (set-window-configuration (cdr assoc))
       (switch-to-buffer (get-buffer-create mew-window-home-buffer)))
     (setq mew-window-stack (delq assoc mew-window-stack))))
 
@@ -341,18 +341,18 @@ of the current world is also updated."
 (defun mew-delete-other-window ()
   (unless (one-window-p)
     (let ((owin (selected-window))
-	  wins ret)
+          wins ret)
       (walk-windows
        (lambda (win)
-	 (set-buffer (window-buffer win))
-	 (unless (or (eq owin win)
-		     (string-match "^mew-" (symbol-name major-mode)))
-	   (setq wins (cons win wins))))
+         (set-buffer (window-buffer win))
+         (unless (or (eq owin win)
+                     (string-match "^mew-" (symbol-name major-mode)))
+           (setq wins (cons win wins))))
        nil)
       (dolist (win wins)
-	(unless (one-window-p)
-	  (setq ret t)
-	  (delete-window win)))
+        (unless (one-window-p)
+          (setq ret t)
+          (delete-window win)))
       (select-window owin)
       ret)))
 
@@ -369,15 +369,15 @@ the lower window (i.e. the window of Message buffer).
 If Message buffer does not exist, it will be created. If the height of
 the lower window is not zero, switch to the buffer."
   (let* ((windows
-	  (if (listp action)
-	      action
-	    (car (cdr (assq action mew-window-configuration)))))
-	 (msgbuf  (mew-buffer-message))
-	 (obufwin (get-buffer-window (current-buffer)))
-	 (msgwin  (get-buffer-window msgbuf))
-	 (height nil) (winsum nil) (sum-height 0) (msg-height 0))
+          (if (listp action)
+              action
+            (car (cdr (assq action mew-window-configuration)))))
+         (msgbuf  (mew-buffer-message))
+         (obufwin (get-buffer-window (current-buffer)))
+         (msgwin  (get-buffer-window msgbuf))
+         (height nil) (winsum nil) (sum-height 0) (msg-height 0))
     (setq height (+ (if obufwin (window-height obufwin) 0)
-		    (if msgwin  (window-height msgwin)  0)))
+                    (if msgwin  (window-height msgwin)  0)))
     (cond
      ((<= height (* 2 window-min-height))
       ;; Delete other windows and use full emacs window.
@@ -386,23 +386,23 @@ the lower window is not zero, switch to the buffer."
      ((and mew-use-full-window (mew-delete-other-window))
       ;; delete windows all but Mew's one.
       (setq height (+ (if obufwin (window-height obufwin) 0)
-		      (if msgwin  (window-height msgwin)  0)))))
+                      (if msgwin  (window-height msgwin)  0)))))
     ;;
     (if (get-buffer msgbuf)
-	(delete-windows-on msgbuf)
+        (delete-windows-on msgbuf)
       (with-current-buffer (get-buffer-create msgbuf)
-	(kill-all-local-variables)
-	;; "truncate?" is asked in Message mode.
-	;; so set the same toolbar as Summary mode
-	(mew-summary-toolbar-update)
-	(mew-message-mode)))
+        (kill-all-local-variables)
+        ;; "truncate?" is asked in Message mode.
+        ;; so set the same toolbar as Summary mode
+        (mew-summary-toolbar-update)
+        (mew-message-mode)))
     ;;
     (setq winsum (apply '+ windows))
     (unless (zerop (nth 0 windows))
       (setq sum-height (max window-min-height
-			    (/ (* height (nth 0 windows)) winsum))))
+                            (/ (* height (nth 0 windows)) winsum))))
     (if (and (eq action 'message) (= (% sum-height 2) 1))
-	(setq sum-height (1+ sum-height)))
+        (setq sum-height (1+ sum-height)))
     (unless (zerop (nth 1 windows))
       (setq msg-height (max window-min-height (- height sum-height))))
     (setq height (+ sum-height msg-height))
@@ -420,29 +420,29 @@ the lower window is not zero, switch to the buffer."
 
 (defun mew-window-number ()
   (let ((x (car (window-edges (selected-window))))
-	(i 1))
+        (i 1))
     (walk-windows
      (lambda (win)
        (when (with-current-buffer (window-buffer win)
-	       (mew-summary-or-virtual-p))
-	 (if (< (car (window-edges win)) x)
-	     (setq i (1+ i)))))
+               (mew-summary-or-virtual-p))
+         (if (< (car (window-edges win)) x)
+             (setq i (1+ i)))))
      'nominibuf)
     i))
 
 (defun mew-buffer-message ()
   (let* ((me (selected-frame))
-	 (frames (frame-list))
-	 (len (length frames))
-	 (n (mew-window-number))
-	 (i 0))
+         (frames (frame-list))
+         (len (length frames))
+         (n (mew-window-number))
+         (i 0))
     (catch 'loop
       (dolist (frame frames)
-	(if (equal me frame) (throw 'loop i))
-	(setq i (1+ i))))
+        (if (equal me frame) (throw 'loop i))
+        (setq i (1+ i))))
     (setq i (- len i 1))
     (if (= n 1)
-	(format "%s%d" mew-buffer-message i)
+        (format "%s%d" mew-buffer-message i)
       (format "%s%d<%d>" mew-buffer-message i n))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -527,37 +527,37 @@ It is typically called by kill-emacs-hook."
   (setq mew-regex-msg-review (mew-mark-regex mew-mark-review))
   (setq mew-regex-msg-delete (mew-mark-regex mew-mark-delete))
   (setq mew-regex-thread-separator
-	(concat "^" (regexp-quote mew-thread-separator)))
+        (concat "^" (regexp-quote mew-thread-separator)))
   (setq mew-regex-attach-beg
-	(concat "^" mew-draft-attach-boundary-beg "$"))
+        (concat "^" mew-draft-attach-boundary-beg "$"))
   (setq mew-regex-attach-end
-	(concat "^" mew-draft-attach-boundary-end "$"))
+        (concat "^" mew-draft-attach-boundary-end "$"))
   (setq mew-regex-my-address-list (mew-get-my-address-regex-list))
   (setq mew-regex-ignore-folders
-	(mapconcat
-	 'mew-folder-regex
-	 (mew-uniq-list
-	  (append
-	   mew-basic-folders
-	   mew-inbox-folders
-	   mew-queue-folders
-	   mew-postq-folders
-	   (list
-	    mew-friend-folder
-	    mew-attach-folder)))
-	 "\\|"))
+        (mapconcat
+         'mew-folder-regex
+         (mew-uniq-list
+          (append
+           mew-basic-folders
+           mew-inbox-folders
+           mew-queue-folders
+           mew-postq-folders
+           (list
+            mew-friend-folder
+            mew-attach-folder)))
+         "\\|"))
   (unless mew-range-list
     (setq mew-range-list
-	  `((,mew-queue-folders ,mew-range-str-all)
-	    (, mew-postq-folders ,mew-range-str-all)
-	    ((,mew-draft-folder) ,mew-range-str-all)
-	    (t ,mew-range-str-update)))))
+          `((,mew-queue-folders ,mew-range-str-all)
+            (, mew-postq-folders ,mew-range-str-all)
+            ((,mew-draft-folder) ,mew-range-str-all)
+            (t ,mew-range-str-update)))))
 
 (defun mew-summary-toggle-mark-regex ()
   (interactive)
   (let (lst)
     (if (equal mew-regex-msg-show-list mew-mark-show-list)
-	(setq lst mew-mark-show-list2)
+        (setq lst mew-mark-show-list2)
       (setq lst mew-mark-show-list))
     (mew-regex-setup-msg lst)
     (message "Target marks are: %s" (mapconcat (lambda (x) (message "'%c'" x)) lst ", "))))
@@ -570,11 +570,11 @@ It is typically called by kill-emacs-hook."
 (defun mew-decoration-setup ()
   (interactive)
   (put-text-property 0 (length mew-end-of-message-string)
-		     'face 'mew-face-eof-message
-		     mew-end-of-message-string)
+                     'face 'mew-face-eof-message
+                     mew-end-of-message-string)
   (put-text-property 0 (length mew-end-of-part-string)
-		     'face 'mew-face-eof-part
-		     mew-end-of-part-string))
+                     'face 'mew-face-eof-part
+                     mew-end-of-part-string))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -589,16 +589,16 @@ It is typically called by kill-emacs-hook."
   "Erase the current buffer."
   (interactive)
   (let* ((buf (or buf (current-buffer)))
-	 (folder (if (bufferp buf) (buffer-name buf) buf))
-	 obuf)
+         (folder (if (bufferp buf) (buffer-name buf) buf))
+         obuf)
     (if (get-buffer buf)
-	(with-current-buffer buf
-	  (when (mew-summary-or-virtual-p)
-	    (mew-summary-kill-subprocess)
-	    (setq obuf (mew-local-buffer-name folder))
-	    ;; xxx should kill pop's buffer...
-	    (mew-remove-buffer obuf))
-	  (mew-overlay-delete-buffer)))
+        (with-current-buffer buf
+          (when (mew-summary-or-virtual-p)
+            (mew-summary-kill-subprocess)
+            (setq obuf (mew-local-buffer-name folder))
+            ;; xxx should kill pop's buffer...
+            (mew-remove-buffer obuf))
+          (mew-overlay-delete-buffer)))
     (mew-remove-buffer buf)))
 
 (defun mew-buffer-clean-up (regex &optional func)
@@ -672,19 +672,19 @@ Mew remain, so you can resume with buffer operations."
   (let (old new dirs subnew)
     (with-temp-buffer
       (dolist (ent mew-transit-folder-alist)
-	(setq old (mew-expand-folder (nth 0 ent)))
-	(setq new (mew-expand-folder (nth 1 ent)))
-	(when (and (file-directory-p old) (not (file-exists-p new)))
-	  (rename-file old new)
-	  (cd new)
-	  (setq dirs (directory-files "."))
-	  (dolist (subold dirs)
-	    ;; % is a special character for URL.
-	    ;; And "open" does not convert % to %25, sigh.
-	    (when (string-match "@[^%]+\\(%\\)" subold)
-	      (setq subnew (copy-sequence subold))
-	      (aset subnew (match-beginning 1) ?#)
-	      (rename-file subold subnew))))))))
+        (setq old (mew-expand-folder (nth 0 ent)))
+        (setq new (mew-expand-folder (nth 1 ent)))
+        (when (and (file-directory-p old) (not (file-exists-p new)))
+          (rename-file old new)
+          (cd new)
+          (setq dirs (directory-files "."))
+          (dolist (subold dirs)
+            ;; % is a special character for URL.
+            ;; And "open" does not convert % to %25, sigh.
+            (when (string-match "@[^%]+\\(%\\)" subold)
+              (setq subnew (copy-sequence subold))
+              (aset subnew (match-beginning 1) ?#)
+              (rename-file subold subnew))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

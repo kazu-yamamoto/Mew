@@ -64,7 +64,7 @@
     (insert mew-smime-string)
     (goto-char (point-min))
     (if (re-search-forward "SIG_CREATED [A-Z] [0-9]+ \\([0-9]+\\)" nil t)
-	(cdr (assoc (mew-match-string 1) mew-smime-hash-alist))
+        (cdr (assoc (mew-match-string 1) mew-smime-hash-alist))
       "sha1")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -88,7 +88,7 @@
 
 (defun mew-smime-passphrase ()
   (let ((prompt mew-smime-prompt-enter-pass)
-	(tag (mew-smime-passtag)))
+        (tag (mew-smime-passtag)))
     (mew-input-passwd prompt tag)))
 
 (defvar mew-smime-msg-enter-pass       "Enter passphrase:")
@@ -125,24 +125,24 @@
 (defun mew-smime-process-sentinel (_process _event)
   (save-excursion
     (let ((decrypted mew-smime-result-sec-succ)
-	  (msg ""))
+          (msg ""))
       (if (not mew-smime-failure)
-	  (cond
-	   ((eq mew-smime-running 'decrypting)
-	    (setq mew-smime-decrypt-msg decrypted))
-	   ((eq mew-smime-running 'signing)
-	    (setq mew-smime-sign-msg nil)))
-	(cond
-	 ;; sign or decrypt
-	 ((eq mew-smime-failure t)
-	  (setq msg mew-smime-result-pass))
-	 ((stringp mew-smime-failure)
-	  (setq msg mew-smime-failure)))
-	(cond
-	 ((eq mew-smime-running 'decrypting)
-	  (setq mew-smime-decrypt-msg msg))
-	 ((eq mew-smime-running 'signing)
-	  (setq mew-smime-sign-msg msg))))
+          (cond
+           ((eq mew-smime-running 'decrypting)
+            (setq mew-smime-decrypt-msg decrypted))
+           ((eq mew-smime-running 'signing)
+            (setq mew-smime-sign-msg nil)))
+        (cond
+         ;; sign or decrypt
+         ((eq mew-smime-failure t)
+          (setq msg mew-smime-result-pass))
+         ((stringp mew-smime-failure)
+          (setq msg mew-smime-failure)))
+        (cond
+         ((eq mew-smime-running 'decrypting)
+          (setq mew-smime-decrypt-msg msg))
+         ((eq mew-smime-running 'signing)
+          (setq mew-smime-sign-msg msg))))
       (setq mew-smime-running nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -154,7 +154,7 @@
   (let (addr warning result trust ret)
     (goto-char (point-min))
     (if (re-search-forward "EMail=\\(.*\\)" nil t)
-	(setq addr (mew-match-string 1)))
+        (setq addr (mew-match-string 1)))
     (goto-char (point-min))
     (cond
      ((search-forward "GOODSIG" nil t)
@@ -177,7 +177,7 @@
     (goto-char (point-min))
     ;; xxx error code check for TRUST_UNDEFINED/NEVER?
     (if (re-search-forward "TRUST_\\([A-Z]*\\)" nil t)
-	(setq trust (mew-match-string 1)))
+        (setq trust (mew-match-string 1)))
     (setq ret result)
     (if addr (setq ret (concat ret " <" addr ">")))
     (if trust (setq ret (concat ret " " trust)))
@@ -235,7 +235,7 @@
   (if (null mew-smime-ver)
       (message "%s does not exist" mew-prog-smime)
     (if (and ask-signer (string-match "signature" (symbol-name type)))
-	(mew-draft-make-message type (car (mew-input-address "Who's key?: ")))
+        (mew-draft-make-message type (car (mew-input-address "Who's key?: ")))
       (mew-draft-make-message type))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -245,7 +245,7 @@
 
 (defun mew-encode-smime (type cte decrypters)
   (let ((file1 (mew-save-transfer-form (point-min) (point-max) nil cte))
-	file2 errmsg file2-errmsg)
+        file2 errmsg file2-errmsg)
     (cond
      ((string= type mew-ct-smm-sig)
       (setq file2-errmsg (mew-smime-sign file1)))
@@ -253,19 +253,19 @@
       (setq file2-errmsg (mew-smime-encrypt file1 decrypters))))
     (mew-set '(file2 errmsg) file2-errmsg)
     (if errmsg
-	(progn
-	  (mew-delete-file file1)
-	  (mew-delete-file file2)
-	  (mew-tinfo-set-privacy-err t)
-	  (mew-tinfo-set-privacy-type nil)
-	  (mew-draft-mode-name)
-	  (mew-encode-error errmsg))
+        (progn
+          (mew-delete-file file1)
+          (mew-delete-file file2)
+          (mew-tinfo-set-privacy-err t)
+          (mew-tinfo-set-privacy-type nil)
+          (mew-draft-mode-name)
+          (mew-encode-error errmsg))
       (mew-encode-singlepart
        (mew-encode-syntax-single file2
-				 (list mew-ct-smm
-				       (list mew-smime-type type)
-				       (list "name" (concat mew-smime-file-name mew-smime-mime-suffix)))
-				 mew-b64)))
+                                 (list mew-ct-smm
+                                       (list mew-smime-type type)
+                                       (list "name" (concat mew-smime-file-name mew-smime-mime-suffix)))
+                                 mew-b64)))
     (mew-delete-file file1)
     (mew-delete-file file2)))
 
@@ -280,12 +280,12 @@
   (setq mew-smime-sign-msg nil)
   (setq mew-smime-failure nil)
   (let* ((process-connection-type mew-connection-type2)
-	 (file2 (mew-make-temp-name))
-	 (prog mew-prog-smime)
-	 (opts `("--sign" ,@mew-prog-smime-options
-		 "--local-user" ,mew-inherit-encode-smime-signer
-		 "--output" ,file2 ,file1))
-	 process)
+         (file2 (mew-make-temp-name))
+         (prog mew-prog-smime)
+         (opts `("--sign" ,@mew-prog-smime-options
+                 "--local-user" ,mew-inherit-encode-smime-signer
+                 "--output" ,file2 ,file1))
+         process)
     (message "S/MIME signing...")
     (setq process (apply 'mew-start-process-lang "GPGSM sign" nil prog opts))
     (mew-set-process-cs process mew-cs-autoconv mew-cs-dummy)
@@ -306,14 +306,14 @@
 
 (defun mew-smime-encrypt (file1 decrypters)
   (let* ((process-connection-type mew-connection-type2)
-	 (file2 (mew-make-temp-name))
-	 (decs (mew-gpg-roption decrypters "--recipient"))
-	 (prog mew-prog-smime)
-	 (opts `("--encrypt" ,@mew-prog-smime-options
-		 ,@decs
-		 "--cipher-algo" ,mew-smime-cipher
-		 "--output" ,file2 ,file1))
-	 check)
+         (file2 (mew-make-temp-name))
+         (decs (mew-gpg-roption decrypters "--recipient"))
+         (prog mew-prog-smime)
+         (opts `("--encrypt" ,@mew-prog-smime-options
+                 ,@decs
+                 "--cipher-algo" ,mew-smime-cipher
+                 "--output" ,file2 ,file1))
+         check)
     (message "S/MIME encrypting...")
     (with-temp-buffer
       (apply 'mew-call-process-lang prog nil t nil opts)
@@ -328,8 +328,8 @@
 
 (defun mew-decode-smime (syntax cnt)
   (let* ((ctl (mew-syntax-get-ct syntax))
-	 (type (mew-syntax-get-param ctl mew-smime-type))
-	 file1 file2 syntax2 result privacy)
+         (type (mew-syntax-get-param ctl mew-smime-type))
+         file1 file2 syntax2 result privacy)
     ;; xxx smime-type is optional, sigh
     (if (null type) (setq type mew-ct-smm-enc))
     (mew-syntax-set-ct syntax mew-type-apo)
@@ -345,11 +345,11 @@
       (setq syntax2 syntax)
       (mew-syntax-set-ct syntax mew-type-apo)))
     (if (and (file-exists-p file2)
-	     (> (mew-file-get-size file2) 0)) ;; shell creates file2 anyway
-	(mew-flet
-	 (mew-insert-file-contents file2)
-	 (put-text-property (point-min) (point-max) 'mew-noncontents nil)
-	 (mew-decode-crlf-magic))
+             (> (mew-file-get-size file2) 0)) ;; shell creates file2 anyway
+        (mew-flet
+         (mew-insert-file-contents file2)
+         (put-text-property (point-min) (point-max) 'mew-noncontents nil)
+         (mew-decode-crlf-magic))
       (insert "\n") ;; CT: text/plain; charset=us-ascii
       (insert (format "%s could not be decrypted.\n" mew-ct-smm))
       (mew-xinfo-set-not-decrypted t))
@@ -371,9 +371,9 @@
 
 (defun mew-smime-verify (file1 file2)
   (let ((prog mew-prog-smime)
-	(opts `("--verify" ,@mew-prog-smime-options
-		"--output" ,file2 ,file1))
-	result)
+        (opts `("--verify" ,@mew-prog-smime-options
+                "--output" ,file2 ,file1))
+        result)
     (message "S/MIME verifying...")
     (with-temp-buffer
       (apply 'mew-call-process-lang prog nil t nil opts)
@@ -392,10 +392,10 @@
   (setq mew-smime-decrypt-msg nil)
   (setq mew-smime-failure nil)
   (let ((process-connection-type mew-connection-type2)
-	(prog mew-prog-smime)
-	(opts `("--decrypt"
-		"--output" ,file2 ,file1))
-	process)
+        (prog mew-prog-smime)
+        (opts `("--decrypt"
+                "--output" ,file2 ,file1))
+        process)
     (message "S/MIME decrypting...")
     (setq process (apply 'mew-start-process-lang "GPGSM decrypt" nil prog opts))
     (mew-set-process-cs process mew-cs-autoconv mew-cs-dummy)
@@ -414,9 +414,9 @@
 
 (defun mew-smime-detach-verify (file1 file2)
   (let ((prog mew-prog-smime)
-	(opts `("--verify" ,@mew-prog-smime-options
-		,file2 ,file1))
-	ret)
+        (opts `("--verify" ,@mew-prog-smime-options
+                ,file2 ,file1))
+        ret)
     (message "S/MIME verifying...")
     (with-temp-buffer
       (apply 'mew-call-process-lang prog nil t nil opts)
@@ -430,13 +430,13 @@
   (setq mew-smime-sign-msg nil)
   (setq mew-smime-failure nil)
   (let* ((process-connection-type mew-connection-type2)
-	 (file2 (concat (mew-make-temp-name mew-smime-file-name)
-			mew-smime-signature-suffix))
-	 (prog mew-prog-smime)
-	 (opts `("--detach-sign" ,@mew-prog-smime-options
-		 "--local-user" ,mew-inherit-encode-smime-signer
-		 "--output" ,file2 ,file1))
-	 process)
+         (file2 (concat (mew-make-temp-name mew-smime-file-name)
+                        mew-smime-signature-suffix))
+         (prog mew-prog-smime)
+         (opts `("--detach-sign" ,@mew-prog-smime-options
+                 "--local-user" ,mew-inherit-encode-smime-signer
+                 "--output" ,file2 ,file1))
+         process)
     (message "S/MIME signing...")
     (setq process (apply 'mew-start-process-lang "GPGSM sign" nil prog opts))
     (mew-set-process-cs process mew-cs-autoconv mew-cs-dummy)
@@ -455,12 +455,12 @@
 
 (defun mew-gpg-roption (decrypters roption)
   (if (and mew-encrypt-to-myself
-	   (not (member mew-inherit-encode-smime-signer decrypters)))
+           (not (member mew-inherit-encode-smime-signer decrypters)))
       (setq decrypters (cons mew-inherit-encode-smime-signer decrypters)))
   (setq decrypters
-	(mapcar (lambda (x)
-		  (if (string-match "^[^<].*@" x) (concat "<" x ">") x))
-		decrypters))
+        (mapcar (lambda (x)
+                  (if (string-match "^[^<].*@" x) (concat "<" x ">") x))
+                decrypters))
   (let (decs)
     (dolist (decrypter decrypters)
       (setq decs (cons decrypter (cons roption decs))))

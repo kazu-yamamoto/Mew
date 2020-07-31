@@ -59,7 +59,7 @@
 (defun mew-nntp2-command-authinfo (pro pnm)
   (let ((user (mew-nntp2-get-user pnm)))
     (if user
-	(mew-nntp2-process-send-string pro "AUTHINFO USER %s" user)
+        (mew-nntp2-process-send-string pro "AUTHINFO USER %s" user)
       (mew-nntp2-set-status pnm "next")
       (mew-nntp2-command-next pro pnm))))
 
@@ -75,21 +75,21 @@
 
 (defun mew-nntp2-command-next (pro pnm)
   (let ((msgs (mew-nntp2-get-messages pnm))
-	(qfld (mew-nntp2-get-qfld pnm))
-	(case (mew-nntp2-get-case pnm))
-	msg)
+        (qfld (mew-nntp2-get-qfld pnm))
+        (case (mew-nntp2-get-case pnm))
+        msg)
     (if msgs
-	(progn
-	  (setq msg (car msgs))
-	  (setq msgs (cdr msgs))
-	  (mew-queue-insert-file pnm mew-nntp2-info-list-save-length qfld msg)
-	  (mew-set-buffer-multibyte nil)
-	  (mew-info-clean-up pnm mew-nntp2-info-list-clean-length)
-	  (mew-nntp2-set-case pnm case) ;; override
-	  (mew-nntp2-set-messages pnm msgs)
-	  (set-process-buffer pro (current-buffer))
-	  (mew-nntp2-set-status pnm "post")
-	  (mew-nntp2-command-post pro pnm))
+        (progn
+          (setq msg (car msgs))
+          (setq msgs (cdr msgs))
+          (mew-queue-insert-file pnm mew-nntp2-info-list-save-length qfld msg)
+          (mew-set-buffer-multibyte nil)
+          (mew-info-clean-up pnm mew-nntp2-info-list-clean-length)
+          (mew-nntp2-set-case pnm case) ;; override
+          (mew-nntp2-set-messages pnm msgs)
+          (set-process-buffer pro (current-buffer))
+          (mew-nntp2-set-status pnm "post")
+          (mew-nntp2-command-post pro pnm))
       (mew-nntp2-set-status pnm "quit")
       (mew-nntp2-command-quit pro pnm))))
 
@@ -107,9 +107,9 @@
 
 (defun mew-nntp2-command-done (pro pnm)
   (let ((fcc (mew-nntp2-get-fcc pnm))
-	(case (mew-nntp2-get-case pnm))
-	(back (mew-queue-backup (buffer-file-name) mew-queue-info-suffix))
-	imapp)
+        (case (mew-nntp2-get-case pnm))
+        (back (mew-queue-backup (buffer-file-name) mew-queue-info-suffix))
+        imapp)
     ;; mew-folder-new-message may be slow if the folder contains
     ;; a lot of messages. So, let's Fcc in background.
     (setq imapp (mew-net-fcc-message case fcc back))
@@ -141,27 +141,27 @@
 
 (defun mew-nntp2-info-name (case)
   (let ((server (mew-nntp-server case))
-	(port (mew-*-to-string (mew-nntp-port case)))
-	(sshsrv (mew-nntp-ssh-server case))
-	(name mew-nntp2-info-prefix))
+        (port (mew-*-to-string (mew-nntp-port case)))
+        (sshsrv (mew-nntp-ssh-server case))
+        (name mew-nntp2-info-prefix))
     (setq name (concat name server))
     (unless (mew-port-equal port mew-nntp-port)
       (setq name (concat name ":" port)))
     (if sshsrv
-	(concat name "%" sshsrv)
+        (concat name "%" sshsrv)
       name)))
 
 (defun mew-nntp2-process-send-string (pro &rest args)
   (let ((str (apply 'format args)))
     (mew-nntp2-debug "=SEND=" str)
     (if (and (processp pro) (eq (process-status pro) 'open))
-	(process-send-string pro (concat str mew-cs-eol))
+        (process-send-string pro (concat str mew-cs-eol))
       (message "NNTP time out"))))
 
 (defun mew-nntp2-passtag (pnm)
   (let ((server (mew-nntp2-get-server pnm))
-	(port (mew-nntp2-get-port pnm))
-	(user (mew-nntp2-get-user pnm)))
+        (port (mew-nntp2-get-port pnm))
+        (user (mew-nntp2-get-user pnm)))
     (concat user "@" server ":" port)))
 
 (defun mew-nntp2-input-passwd (prompt pnm)
@@ -179,15 +179,15 @@
 
 (defun mew-nntp2-open (pnm server port)
   (let ((sprt (mew-*-to-port port))
-	pro tm)
+        pro tm)
     (condition-case emsg
-	(progn
-	  (setq tm (run-at-time mew-nntp-timeout-time nil 'mew-nntp2-timeout))
-	  (message "Connecting to the NNTP server...")
-	  (setq pro (open-network-stream pnm nil server sprt))
-	  (mew-process-silent-exit pro)
-	  (mew-set-process-cs pro mew-cs-text-for-net mew-cs-text-for-net)
-	  (message "Connecting to the NNTP server...done"))
+        (progn
+          (setq tm (run-at-time mew-nntp-timeout-time nil 'mew-nntp2-timeout))
+          (message "Connecting to the NNTP server...")
+          (setq pro (open-network-stream pnm nil server sprt))
+          (mew-process-silent-exit pro)
+          (mew-set-process-cs pro mew-cs-text-for-net mew-cs-text-for-net)
+          (message "Connecting to the NNTP server...done"))
       (quit
        (setq pro nil)
        (message "Cannot connect to the NNTP server"))
@@ -208,38 +208,38 @@
 (defun mew-nntp2-send-message (case qfld msgs)
   (let ((server (mew-nntp-server case))
         (user (mew-nntp-user case))
-	(port (mew-*-to-string (mew-nntp-port case)))
-	(pnm (mew-nntp2-info-name case))
-	(sshsrv (mew-nntp-ssh-server case))
-	(sslp (mew-nntp-ssl case))
-	(sslport (mew-nntp-ssl-port case))
-	process sshname sshpro sslname sslpro lport tls)
+        (port (mew-*-to-string (mew-nntp-port case)))
+        (pnm (mew-nntp2-info-name case))
+        (sshsrv (mew-nntp-ssh-server case))
+        (sslp (mew-nntp-ssl case))
+        (sslport (mew-nntp-ssl-port case))
+        process sshname sshpro sslname sslpro lport tls)
     (cond
      (sshsrv
       (setq sshpro (mew-open-ssh-stream case server port sshsrv))
       (when sshpro
-	(setq sshname (process-name sshpro))
-	(setq lport (mew-ssh-pnm-to-lport sshname))
-	(when lport
-	  (setq process (mew-nntp2-open pnm "localhost" lport)))))
+        (setq sshname (process-name sshpro))
+        (setq lport (mew-ssh-pnm-to-lport sshname))
+        (when lport
+          (setq process (mew-nntp2-open pnm "localhost" lport)))))
      (sslp
       (if (mew-port-equal port sslport) (setq tls mew-tls-nntp))
       (setq sslpro (mew-open-ssl-stream case server sslport tls))
       (when sslpro
-	(setq sslname (process-name sslpro))
-	(setq lport (mew-ssl-pnm-to-lport sslname))
-	(when lport
-	  (setq process (mew-nntp2-open pnm mew-ssl-localhost lport)))))
+        (setq sslname (process-name sslpro))
+        (setq lport (mew-ssl-pnm-to-lport sslname))
+        (when lport
+          (setq process (mew-nntp2-open pnm mew-ssl-localhost lport)))))
      (t
       (setq process (mew-nntp2-open pnm server port))))
     (if (null process)
-	(cond
-	 ((and sshsrv (null sshpro))
-	  (message "Cannot create to the SSH connection"))
-	 ((and sslp (null sslpro))
-	  (message "Cannot create to the SSL/TLS connection"))
-	 (t
-	  (message "Cannot connect to the NNTP server")))
+        (cond
+         ((and sshsrv (null sshpro))
+          (message "Cannot create to the SSH connection"))
+         ((and sslp (null sslpro))
+          (message "Cannot create to the SSL/TLS connection"))
+         (t
+          (message "Cannot connect to the NNTP server")))
       (mew-info-clean-up pnm mew-nntp2-info-list-clean-length)
       (mew-nntp2-set-case pnm case)
       (mew-nntp2-set-qfld pnm qfld)
@@ -262,13 +262,13 @@
   (let (msgs)
     (unless qfld (setq qfld (mew-postq-folder case)))
     (if (mew-nntp2-get-server (mew-nntp2-info-name case)) ;; lock
-	(message "%s is locked" qfld)
+        (message "%s is locked" qfld)
       (setq msgs (mew-folder-messages qfld))
       (when msgs
-	(mew-summary-folder-cache-clean qfld)
-	(run-hooks 'mew-nntp2-flush-hook)
-	(message "Flushing %s..." qfld)
-	(mew-nntp2-send-message case qfld msgs)))))
+        (mew-summary-folder-cache-clean qfld)
+        (run-hooks 'mew-nntp2-flush-hook)
+        (message "Flushing %s..." qfld)
+        (mew-nntp2-send-message case qfld msgs)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -283,10 +283,10 @@
 
 (defun mew-nntp2-filter (process string)
   (let* ((pnm (process-name process))
-	 (status (mew-nntp2-get-status pnm))
-	 (str (concat (mew-nntp2-get-string pnm) string))
-	 (buf (process-buffer process))
-	 next func code)
+         (status (mew-nntp2-get-status pnm))
+         (str (concat (mew-nntp2-get-string pnm) string))
+         (buf (process-buffer process))
+         next func code)
     (save-excursion
       (mew-nntp2-debug (upcase status) string)
       (if (and buf (get-buffer buf)) (set-buffer buf))
@@ -294,59 +294,59 @@
       (mew-nntp2-set-string pnm str)
       (cond
        ((and (string-match "\n$" str)
-	     (string-match "^\\([0-9][0-9][0-9]\\) " str))
-	(setq code (match-string 1 str))
-	(setq next (mew-nntp2-fsm-next status code))
-	(cond
-	 (next
-	  (mew-nntp2-set-status pnm next)
-	  (setq func (intern-soft (concat "mew-nntp2-command-" next)))
-	  (and func (funcall func process pnm))
-	  (mew-nntp2-set-string pnm nil))
-	 (t
-	  (if (string-match "^pwd-" status)
-	      (mew-nntp2-set-error pnm "NNTP password is wrong!")
-	    (if (string-match "\n$" str)
-		(setq str (substring str 0 -1)))
-	    (unless (string-match "[.!]$" str)
-	      (setq str (concat str "."))))
-	  (mew-nntp2-set-error pnm str)
-	  (mew-nntp2-command-quit2 process pnm))))
+             (string-match "^\\([0-9][0-9][0-9]\\) " str))
+        (setq code (match-string 1 str))
+        (setq next (mew-nntp2-fsm-next status code))
+        (cond
+         (next
+          (mew-nntp2-set-status pnm next)
+          (setq func (intern-soft (concat "mew-nntp2-command-" next)))
+          (and func (funcall func process pnm))
+          (mew-nntp2-set-string pnm nil))
+         (t
+          (if (string-match "^pwd-" status)
+              (mew-nntp2-set-error pnm "NNTP password is wrong!")
+            (if (string-match "\n$" str)
+                (setq str (substring str 0 -1)))
+            (unless (string-match "[.!]$" str)
+              (setq str (concat str "."))))
+          (mew-nntp2-set-error pnm str)
+          (mew-nntp2-command-quit2 process pnm))))
        (t ()))))) ;; stay
 
 (defun mew-nntp2-sentinel (process event)
   (let* ((pnm (process-name process))
-	 (buf (process-buffer process))
-	 (qfld (mew-nntp2-get-qfld pnm))
-	 (case (mew-nntp2-get-case pnm))
-	 (done (mew-nntp2-get-done pnm))
-	 (imapp (mew-nntp2-get-imapp pnm))
-	 (error (mew-nntp2-get-error pnm))
-	 (sshpro (mew-nntp2-get-ssh-process pnm))
-	 (sslpro (mew-nntp2-get-ssl-process pnm)))
+         (buf (process-buffer process))
+         (qfld (mew-nntp2-get-qfld pnm))
+         (case (mew-nntp2-get-case pnm))
+         (done (mew-nntp2-get-done pnm))
+         (imapp (mew-nntp2-get-imapp pnm))
+         (error (mew-nntp2-get-error pnm))
+         (sshpro (mew-nntp2-get-ssh-process pnm))
+         (sslpro (mew-nntp2-get-ssl-process pnm)))
     (save-excursion
       (mew-nntp2-debug "NNTP SENTINEL" event)
       (cond
        (error
-	(when buf
-	  ;; A message file is not inserted at the beginning of the NNTP
-	  ;; session.
-	  (set-buffer buf)
-	  (mew-nntp2-queue case error))
-	(mew-nntp2-log pnm error)
-	(message-box (format "%s  This mail has been queued to %s" error qfld)))
+        (when buf
+          ;; A message file is not inserted at the beginning of the NNTP
+          ;; session.
+          (set-buffer buf)
+          (mew-nntp2-queue case error))
+        (mew-nntp2-log pnm error)
+        (message-box (format "%s  This mail has been queued to %s" error qfld)))
        (done
-	(message "Posting in background...done"))
+        (message "Posting in background...done"))
        (t
-	(if (null buf)
-	    (message "NNTP connection is lost")
-	  (set-buffer buf)
-	  (mew-nntp2-queue case "NNTP connection is lost"))))
+        (if (null buf)
+            (message "NNTP connection is lost")
+          (set-buffer buf)
+          (mew-nntp2-queue case "NNTP connection is lost"))))
       (mew-info-clean-up pnm)
       (if (and (processp sshpro) (not mew-ssh-keep-connection))
-	  (process-send-string sshpro "exit\n"))
+          (process-send-string sshpro "exit\n"))
       (if (and (processp sslpro) (not mew-ssl-keep-connection))
-	  (delete-process sslpro))
+          (delete-process sslpro))
       (run-hooks 'mew-nntp2-sentinel-hook)
       (if imapp (mew-imap2-fcc case))
       (when buf (mew-remove-buffer buf)))))
@@ -359,22 +359,22 @@
 (defun mew-nntp2-queue (case err)
   ;; Must be in a buffer where a message is contained.
   (let* ((pnm (mew-nntp2-info-name case))
-	 (qfld (mew-postq-folder case))
-	 (oname (buffer-name))
-	 (work (buffer-file-name))
-	 file-info file info nname)
+         (qfld (mew-postq-folder case))
+         (oname (buffer-name))
+         (work (buffer-file-name))
+         file-info file info nname)
     (mew-local-folder-check qfld)
     (setq file-info (mew-queue-enqueue work qfld))
     (mew-set '(file info) file-info)
     (setq file (file-name-nondirectory file))
     (setq nname (mew-concat-folder qfld file))
     (if (mew-draft-p)
-	(mew-nntp2-set-case pnm (mew-tinfo-get-case)))
+        (mew-nntp2-set-case pnm (mew-tinfo-get-case)))
     ;;
     (let* ((n mew-nntp2-info-list-save-length)
-	   (data (make-vector n nil)))
+           (data (make-vector n nil)))
       (dotimes (i n)
-	(aset data i (aref (mew-info pnm) i)))
+        (aset data i (aref (mew-info pnm) i)))
       (mew-lisp-save info data))
     ;;
     (mew-remove-buffer (current-buffer))
@@ -389,11 +389,11 @@
 
 (defun mew-nntp2-log (pnm &optional err)
   (let ((logtime (mew-nntp2-get-logtime pnm))
-	(msgid (mew-nntp2-get-msgid pnm))
-	(newsgroups (mew-nntp2-get-newsgroups pnm))
-	(server (mew-nntp2-get-server pnm))
-	(sshsrv (mew-nntp2-get-ssh-server pnm))
-	(sslp (mew-nntp2-get-ssl-process pnm)))
+        (msgid (mew-nntp2-get-msgid pnm))
+        (newsgroups (mew-nntp2-get-newsgroups pnm))
+        (server (mew-nntp2-get-server pnm))
+        (sshsrv (mew-nntp2-get-ssh-server pnm))
+        (sslp (mew-nntp2-get-ssl-process pnm)))
     (with-temp-buffer
       (and logtime (insert logtime))
       (and msgid (insert " id=" msgid))
@@ -402,14 +402,14 @@
       (and sslp (insert " SSL/TLS"))
       (and newsgroups (insert " newsgroups=" newsgroups))
       (if err
-	  (insert " status=" "("
+          (insert " status=" "("
                   (substring err 0 (string-match "\n+$" err))
                   ")")
-	(insert " status=sent"))
+        (insert " status=sent"))
       (insert "\n")
       (write-region (point-min) (point-max)
-		    (expand-file-name mew-nntp-log-file mew-conf-path)
-		    'append 'no-msg))))
+                    (expand-file-name mew-nntp-log-file mew-conf-path)
+                    'append 'no-msg))))
 
 (provide 'mew-nntp2)
 

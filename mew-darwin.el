@@ -41,7 +41,7 @@
 (defvar mew-prog-rtf             mew-darwin-exec)
 
 (defvar mew-prog-xml2            '(mew-mime-application/xml
-				   mew-mime-application/xml-ext))
+                                   mew-mime-application/xml-ext))
 (defvar mew-prog-unzip           mew-darwin-exec)
 
 ;;;
@@ -53,14 +53,14 @@
 
 (defvar mew-prog-text/html
   (if (and (fboundp 'shr-render-region)
-	   (fboundp 'libxml-parse-html-region))
+           (fboundp 'libxml-parse-html-region))
       'shr-render-region
     'mew-mime-text/html-w3m)) ;; See w3m.el
 (defvar mew-prog-text/html-ext       mew-darwin-exec)
 
 (defvar mew-prog-text/xml
   (if (and (fboundp 'shr-render-region)
-	   (fboundp 'libxml-parse-html-region))
+           (fboundp 'libxml-parse-html-region))
       'shr-render-region
     'mew-mime-text/html-w3m)) ;; See w3m.el
 (defvar mew-prog-text/xml-ext        mew-darwin-exec)

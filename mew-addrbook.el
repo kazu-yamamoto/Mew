@@ -106,18 +106,18 @@
       (setq mew-alias-auto-alist (mew-lisp-load mew-alias-auto-file)))
   (if mew-use-full-alias
       (if (mew-autoent-addr (car mew-alias-auto-alist))
-	  (setq mew-alias-auto-alist
-		(mew-alias-short-to-full mew-alias-auto-alist)))
+          (setq mew-alias-auto-alist
+                (mew-alias-short-to-full mew-alias-auto-alist)))
     (if (null (mew-autoent-addr (car mew-alias-auto-alist)))
-	(setq mew-alias-auto-alist
-	      (mew-alias-full-to-short mew-alias-auto-alist))))
+        (setq mew-alias-auto-alist
+              (mew-alias-full-to-short mew-alias-auto-alist))))
   (setq mew-addrbook-orig-alist (mew-addrbook-make-alist))
   (mew-addrbook-concat-uniq)
   (add-hook 'kill-emacs-hook 'mew-addrbook-clean-up))
 
 (defun mew-addrbook-concat-uniq ()
   (setq mew-addrbook-alist
-	(append mew-addrbook-orig-alist (copy-sequence mew-alias-auto-alist)))
+        (append mew-addrbook-orig-alist (copy-sequence mew-alias-auto-alist)))
   (setq mew-addrbook-alist (mew-uniq-alist mew-addrbook-alist)))
 
 (defun mew-addrbook-clean-up ()
@@ -137,19 +137,19 @@
 ;; for completion
 (defun mew-addrbook-alias-get (key alist)
   (let* ((mew-alias-expand-prefix nil)
-	 (addrs (mew-alias-expand key alist 0))
-	 (addrx (mapcar 'mew-addrstr-append-domain addrs))
-	 (ret (mapconcat 'identity addrx ", ")))
+         (addrs (mew-alias-expand key alist 0))
+         (addrx (mapcar 'mew-addrstr-append-domain addrs))
+         (ret (mapconcat 'identity addrx ", ")))
     (if mew-alias-expand-prefix
-	(concat mew-alias-expand-prefix ":" ret ";")
+        (concat mew-alias-expand-prefix ":" ret ";")
       ret)))
 
 (defun mew-alias-expand-addrs (key alist count)
   (let ((keys (delete "" (mapcar 'mew-chop (mew-split key ?,))))
-	ret)
-   (dolist (key keys)
-     (setq ret (nconc ret (mew-alias-expand key alist count))))
-   ret))
+        ret)
+    (dolist (key keys)
+      (setq ret (nconc ret (mew-alias-expand key alist count))))
+    ret))
 
 (defun mew-alias-expand (key alist count)
   "Expand KEY to a list of addresses according to ALIST.
@@ -171,16 +171,16 @@ returned."
        ((null crnt) (list key))
        ((listp crnt) (list (car crnt)))
        ((string-match "[^:]+:[^;]+;" crnt)
-	(mew-alias-expand crnt alist (1+ count)))
+        (mew-alias-expand crnt alist (1+ count)))
        ((string-match "," crnt)
-	(mew-alias-expand-addrs crnt alist (1+ count)))
+        (mew-alias-expand-addrs crnt alist (1+ count)))
        (t (list crnt)))))))
 
 (defun mew-addrbook-alias-next (key alist)
   (let* ((addrs (mew-adbkent-addrs
-		 (mew-adbkent-by-addr-with-alist key alist))))
+                 (mew-adbkent-by-addr-with-alist key alist))))
     (if (and addrs (listp addrs))
-	(mew-get-next addrs key))))
+        (mew-get-next addrs key))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -191,37 +191,37 @@ returned."
   ;; Let's downcase user-name for .mew-alias since it is automatically
   ;; maintained.
   (when (and (stringp addr) (string-match "@" addr)
-	     (or (null mew-addrbook-alias-not-learn-list)
-		 (not (mew-member-match addr mew-addrbook-alias-not-learn-list))))
+             (or (null mew-addrbook-alias-not-learn-list)
+                 (not (mew-member-match addr mew-addrbook-alias-not-learn-list))))
     (if mew-use-full-alias
-	(unless (member (list addr) mew-alias-auto-alist)
-	  (mew-addrbook-alias-cons (list addr)))
+        (unless (member (list addr) mew-alias-auto-alist)
+          (mew-addrbook-alias-cons (list addr)))
       (let* ((user (downcase (mew-addrstr-extract-user addr)))
-	     (match-auto (mew-autoent-by-shortname user))
-	     (match-adbk-orig (mew-adbkorigent-by-shortname user)))
-	(cond
-	 ((string= user "")
-	  ;; do nothing
-	  )
-	 (match-adbk-orig
-	  ;; do nothing
-	  )
-	 (match-auto
-	  (cond
-	   ((string= addr (mew-autoent-addr match-auto))
-	    ;; Move the entry to the top for the recent-used-first.
-	    (setq mew-alias-auto-alist (delq match-auto mew-alias-auto-alist))
-	    (setq mew-alias-auto-alist (cons match-auto mew-alias-auto-alist)))
-	   (mew-addrbook-override-by-newone
-	    ;; override match-auto by (user addr)
-	    (setq mew-alias-auto-alist (delq match-auto mew-alias-auto-alist))
-	    (setq mew-addrbook-alist (delete match-auto mew-addrbook-alist))
-	    (mew-addrbook-alias-cons (list user addr)))
-	   (t
-	    ;; the old entry remains
-	    )))
-	 (t
-	  (mew-addrbook-alias-cons (list user addr))))))))
+             (match-auto (mew-autoent-by-shortname user))
+             (match-adbk-orig (mew-adbkorigent-by-shortname user)))
+        (cond
+         ((string= user "")
+          ;; do nothing
+          )
+         (match-adbk-orig
+          ;; do nothing
+          )
+         (match-auto
+          (cond
+           ((string= addr (mew-autoent-addr match-auto))
+            ;; Move the entry to the top for the recent-used-first.
+            (setq mew-alias-auto-alist (delq match-auto mew-alias-auto-alist))
+            (setq mew-alias-auto-alist (cons match-auto mew-alias-auto-alist)))
+           (mew-addrbook-override-by-newone
+            ;; override match-auto by (user addr)
+            (setq mew-alias-auto-alist (delq match-auto mew-alias-auto-alist))
+            (setq mew-addrbook-alist (delete match-auto mew-addrbook-alist))
+            (mew-addrbook-alias-cons (list user addr)))
+           (t
+            ;; the old entry remains
+            )))
+         (t
+          (mew-addrbook-alias-cons (list user addr))))))))
 
 (defun mew-addrbook-alias-cons (user-addr)
   (setq mew-alias-auto-alist (cons user-addr mew-alias-auto-alist))
@@ -236,10 +236,10 @@ returned."
 (defun mew-addrbook-alias-delete (addr)
   (when (and (stringp addr) (string-match "@" addr))
     (let* ((user (downcase (mew-addrstr-extract-user addr)))
-	   (ent (mew-autoent-by-shortname user)))
+           (ent (mew-autoent-by-shortname user)))
       (when (and ent (string= addr (mew-autoent-addr addr)))
-	(setq mew-addrbook-alist (delete ent mew-addrbook-alist))
-	(setq mew-alias-auto-alist (delq ent mew-alias-auto-alist))))))
+        (setq mew-addrbook-alist (delete ent mew-addrbook-alist))
+        (setq mew-alias-auto-alist (delq ent mew-alias-auto-alist))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -248,24 +248,24 @@ returned."
 
 (defun mew-addrbook-insert-file (file cregex &optional unquote)
   (let* ((case-fold-search t)
-	 (pars (mew-split file ?,)) ;; parents
-	 (files pars) ;; included
-	 par chr path beg end qchar ret)
+         (pars (mew-split file ?,)) ;; parents
+         (files pars) ;; included
+         par chr path beg end qchar ret)
     ;; include parents files
     (dolist (ent pars)
       (setq par (expand-file-name ent mew-conf-path))
       (when (file-readable-p par)
-	(setq ret t)
-	(mew-insert-file-contents par)
-	(setq path (file-name-directory par))
-	;; include children files
-	(while (re-search-forward "^<[ \t]*\\([^ \t\n]+\\).*$" nil t)
-	  (setq chr (expand-file-name (mew-match-string 1) path))
-	  (replace-match "" nil t)
-	  (when (and (file-readable-p chr) (not (member chr files)))
-	    (mew-insert-file-contents chr)
-	    (setq files (cons chr files))))
-	(goto-char (point-max))))
+        (setq ret t)
+        (mew-insert-file-contents par)
+        (setq path (file-name-directory par))
+        ;; include children files
+        (while (re-search-forward "^<[ \t]*\\([^ \t\n]+\\).*$" nil t)
+          (setq chr (expand-file-name (mew-match-string 1) path))
+          (replace-match "" nil t)
+          (when (and (file-readable-p chr) (not (member chr files)))
+            (mew-insert-file-contents chr)
+            (setq files (cons chr files))))
+        (goto-char (point-max))))
     ;; remove comments
     (goto-char (point-min))
     (while (re-search-forward cregex nil t)
@@ -273,9 +273,9 @@ returned."
       (setq end (match-end 0))
       (beginning-of-line)
       (if (/= (point) beg)
-	  (forward-line)
-	(forward-line)
-	(setq end (point)))
+          (forward-line)
+        (forward-line)
+        (setq end (point)))
       (delete-region beg end))
     ;; concat continuation lines
     ;; "\" must locate on the end of line
@@ -295,21 +295,21 @@ returned."
     ;; unquote, replace white spaces to "\0".
     (goto-char (point-min))
     (if unquote
-	(catch 'quote
-	  (while (re-search-forward "[\"']" nil t)
-	    (setq qchar (char-before (point)))
-	    ;; (point) is for backward compatibility
-	    (backward-delete-char 1) ;; delete quote
-	    (setq beg (point))
-	    (if (not (re-search-forward (char-to-string qchar) nil t))
-		(throw 'quote nil) ;; error
-	      (backward-delete-char 1) ;; delete quote
-	      (save-restriction
-		(narrow-to-region beg (point))
-		(goto-char (point-min))
-		(while (re-search-forward "[ \t]+" nil t)
-		  (replace-match "\0" nil t))
-		(goto-char (point-max))))))) ;; just in case
+        (catch 'quote
+          (while (re-search-forward "[\"']" nil t)
+            (setq qchar (char-before (point)))
+            ;; (point) is for backward compatibility
+            (backward-delete-char 1) ;; delete quote
+            (setq beg (point))
+            (if (not (re-search-forward (char-to-string qchar) nil t))
+                (throw 'quote nil) ;; error
+              (backward-delete-char 1) ;; delete quote
+              (save-restriction
+                (narrow-to-region beg (point))
+                (goto-char (point-min))
+                (while (re-search-forward "[ \t]+" nil t)
+                  (replace-match "\0" nil t))
+                (goto-char (point-max))))))) ;; just in case
     ;; remove optional white spaces
     (goto-char (point-min))
     (while (re-search-forward "[ \t]+" nil t)
@@ -325,22 +325,22 @@ returned."
   (let (alias colon addrs nick name alist)
     (with-temp-buffer
       (when (mew-addrbook-insert-file
-	     mew-addrbook-file mew-addrbook-comment-regex 'unquote)
-	(goto-char (point-min))
-	(while (re-search-forward "^ ?\\([^ \n:]+\\) ?\\(:?\\) ?\\([^ \t\n]+\\)" nil t)
-	  (setq alias (mew-addrbook-strsafe (mew-match-string 1)))
-	  (setq colon (mew-match-string 2))
-	  (setq addrs (mew-addrbook-strsafe (mew-match-string 3)))
-	  (if (string= colon ":")
-	      (setq alist (cons (list alias addrs) alist))
-	    (and addrs (setq addrs (mapcar 'mew-chop (mew-split addrs ?,))))
-	    (if (looking-at " ?\\([^ \n]*\\) ?\\([^ \n]*\\)")
-		(progn
-		  (setq nick (mew-addrbook-strsafe (mew-match-string 1)))
-		  (setq name (mew-addrbook-strsafe (mew-match-string 2))))
-	      (setq nick nil)
-	      (setq name nil))
-	    (setq alist (cons (list alias addrs nick name) alist))))))
+             mew-addrbook-file mew-addrbook-comment-regex 'unquote)
+        (goto-char (point-min))
+        (while (re-search-forward "^ ?\\([^ \n:]+\\) ?\\(:?\\) ?\\([^ \t\n]+\\)" nil t)
+          (setq alias (mew-addrbook-strsafe (mew-match-string 1)))
+          (setq colon (mew-match-string 2))
+          (setq addrs (mew-addrbook-strsafe (mew-match-string 3)))
+          (if (string= colon ":")
+              (setq alist (cons (list alias addrs) alist))
+            (and addrs (setq addrs (mapcar 'mew-chop (mew-split addrs ?,))))
+            (if (looking-at " ?\\([^ \n]*\\) ?\\([^ \n]*\\)")
+                (progn
+                  (setq nick (mew-addrbook-strsafe (mew-match-string 1)))
+                  (setq name (mew-addrbook-strsafe (mew-match-string 2))))
+              (setq nick nil)
+              (setq name nil))
+            (setq alist (cons (list alias addrs nick name) alist))))))
     (nreverse alist)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -354,33 +354,33 @@ executed with '\\[universal-argument]', it will add personal information.  Other
 it will add an alias."
   (interactive "P")
   (let ((fld (mew-summary-folder-name))
-	(msg (mew-summary-message-number2))
-	from shortname addrs name)
+        (msg (mew-summary-message-number2))
+        from shortname addrs name)
     (save-excursion
       (mew-summary-set-message-buffer fld msg)
       (setq from (mew-header-get-value mew-from:)))
     (if (null from)
-	(message "No address to be registered")
+        (message "No address to be registered")
       ;; assuming From: contains just one address
       (setq addrs (mew-addrstr-parse-address from))
       (if (mew-is-my-address mew-regex-my-address-list addrs)
-	  (if personalinfo
-	      (setq addrs (car (mew-header-parse-address-list
-				(list mew-to:))))
-	    (setq addrs (mapconcat 'identity
-				   (mew-header-parse-address-list
-				    (list mew-to: mew-cc:))
-				   ",")))
-	(when (string-match "\\(.*\\)<.*>" from)
-	  (setq name (match-string 1 from))
-	  (setq name (mew-chop name)))
-	(if mew-addrbook-strip-domainpart
-	    (setq shortname (downcase (mew-addrstr-extract-user addrs)))
-	  (setq shortname (downcase addrs))))
+          (if personalinfo
+              (setq addrs (car (mew-header-parse-address-list
+                                (list mew-to:))))
+            (setq addrs (mapconcat 'identity
+                                   (mew-header-parse-address-list
+                                    (list mew-to: mew-cc:))
+                                   ",")))
+        (when (string-match "\\(.*\\)<.*>" from)
+          (setq name (match-string 1 from))
+          (setq name (mew-chop name)))
+        (if mew-addrbook-strip-domainpart
+            (setq shortname (downcase (mew-addrstr-extract-user addrs)))
+          (setq shortname (downcase addrs))))
       (if (not addrs)
-	  (message "No address to be registered")
-	(mew-addrbook-prepare-template
-	 personalinfo shortname addrs nil name)))))
+          (message "No address to be registered")
+        (mew-addrbook-prepare-template
+         personalinfo shortname addrs nil name)))))
 
 (defun mew-addrbook-prepare-template (personalinfop shortname addrs &optional nickname name)
   (delete-other-windows)
@@ -433,75 +433,75 @@ it will add an alias."
   "Register information in Addrbook mode to Addrbook."
   (interactive)
   (let ((shortname (mew-header-get-value "Shortname:"))
-	(addrs     (mew-header-get-value "Addresses:"))
-	(nickname  (mew-header-get-value "Nickname:"))
-	(name      (mew-header-get-value "Name:"))
-	(comments  (mew-header-get-value "Comments:"))
-	(mode mode-name)
-	(uniqp t)
-	buf addrsl errmsg)
+        (addrs     (mew-header-get-value "Addresses:"))
+        (nickname  (mew-header-get-value "Nickname:"))
+        (name      (mew-header-get-value "Name:"))
+        (comments  (mew-header-get-value "Comments:"))
+        (mode mode-name)
+        (uniqp t)
+        buf addrsl errmsg)
     (cond
      ((string= mode mew-addrbook-mode-alias)
       (cond
        ((and (null shortname) (null addrs))
-	(setq errmsg "Must fill both Shortname and Addresses"))
+        (setq errmsg "Must fill both Shortname and Addresses"))
        ((null shortname)
-	(setq errmsg "Must fill Shortname"))
+        (setq errmsg "Must fill Shortname"))
        ((null addrs)
-	(setq errmsg "Must fill Addresses"))))
+        (setq errmsg "Must fill Addresses"))))
      (t
       (cond
        ((null addrs)
-	(setq errmsg "Must fill Addresses"))
+        (setq errmsg "Must fill Addresses"))
        ((and (null shortname) (null nickname) (null name))
-	(setq errmsg "Must fill Shortname or Nickname or Name"))
+        (setq errmsg "Must fill Shortname or Nickname or Name"))
        ((and name (string-match "^\"[^\"]*[^\000-\177]" name))
-	(setq errmsg "Remove quote around non-ASCII Name")))))
+        (setq errmsg "Remove quote around non-ASCII Name")))))
     (if errmsg
-	(message "%s" errmsg)
+        (message "%s" errmsg)
       (save-excursion
-	(setq buf (mew-find-file-noselect2
-		   (expand-file-name mew-addrbook-file mew-conf-path)))
-	(set-buffer buf)
-	(goto-char (point-min))
-	(if (and shortname
-		 (re-search-forward
-		  (concat "^" (regexp-quote shortname) "[ \t]*:?[ \t]+") nil t))
-	    (setq uniqp nil))
-	(when uniqp
-	  ;; All errors are checked.
-	  (goto-char (point-max))
-	  (unless (bolp) (insert "\n"))
-	  (cond
-	   ((string= mode mew-addrbook-mode-alias)
-	    (insert shortname ":\t" addrs)
-	    (mew-addrbook-nconc (list shortname addrs)))
-	   (t
-	    (setq addrsl (mew-addrstr-parse-address-list addrs))
-	    ;; Set mew-addrbook-orig-alist with unquoted strings.
-	    (mew-addrbook-nconc (list shortname addrsl nickname name))
-	    (unless shortname (setq shortname "*"))
-	    (if (and nickname (string-match "^[^\" \t]+[ \t]+.*$" nickname))
-		(setq nickname (concat "\"" nickname "\"")))
-	    (if (and name (string-match "^[^\" \t]+[ \t]+.*$" name))
-		(setq name (concat "\"" name "\"")))
-	    (if name
-		(insert shortname "\t" addrs "\t" (or nickname "*") "\t" name)
-	      (if nickname
-		  (insert shortname "\t" addrs "\t" nickname)
-		(insert shortname "\t" addrs)))))
-	  (if comments
-	      (insert "\t#" comments "\n")
-	    (insert "\n"))
-	  (save-buffer)))
+        (setq buf (mew-find-file-noselect2
+                   (expand-file-name mew-addrbook-file mew-conf-path)))
+        (set-buffer buf)
+        (goto-char (point-min))
+        (if (and shortname
+                 (re-search-forward
+                  (concat "^" (regexp-quote shortname) "[ \t]*:?[ \t]+") nil t))
+            (setq uniqp nil))
+        (when uniqp
+          ;; All errors are checked.
+          (goto-char (point-max))
+          (unless (bolp) (insert "\n"))
+          (cond
+           ((string= mode mew-addrbook-mode-alias)
+            (insert shortname ":\t" addrs)
+            (mew-addrbook-nconc (list shortname addrs)))
+           (t
+            (setq addrsl (mew-addrstr-parse-address-list addrs))
+            ;; Set mew-addrbook-orig-alist with unquoted strings.
+            (mew-addrbook-nconc (list shortname addrsl nickname name))
+            (unless shortname (setq shortname "*"))
+            (if (and nickname (string-match "^[^\" \t]+[ \t]+.*$" nickname))
+                (setq nickname (concat "\"" nickname "\"")))
+            (if (and name (string-match "^[^\" \t]+[ \t]+.*$" name))
+                (setq name (concat "\"" name "\"")))
+            (if name
+                (insert shortname "\t" addrs "\t" (or nickname "*") "\t" name)
+              (if nickname
+                  (insert shortname "\t" addrs "\t" nickname)
+                (insert shortname "\t" addrs)))))
+          (if comments
+              (insert "\t#" comments "\n")
+            (insert "\n"))
+          (save-buffer)))
       ;; Addrbook buffer
       (mew-remove-buffer buf)
       (cond
        (uniqp
-	(mew-addrbook-kill 'no-msg)
-	(message "Registered to Addrbook"))
+        (mew-addrbook-kill 'no-msg)
+        (message "Registered to Addrbook"))
        (t
-	(message "Shortname is already used. Change Shortname"))))))
+        (message "Shortname is already used. Change Shortname"))))))
 
 (defun mew-addrbook-kill (&optional no-msg)
   "Kill Addrbook mode."
@@ -531,14 +531,14 @@ reflected."
   (interactive)
   (let ((file mew-alias-auto-file))
     (setq mew-alias-auto-alist
-	  (sort mew-alias-auto-alist (lambda (x y) (string< (car x) (car y)))))
+          (sort mew-alias-auto-alist (lambda (x y) (string< (car x) (car y)))))
     (mew-lisp-save mew-alias-auto-file mew-alias-auto-alist)
     (unless (file-name-absolute-p file)
       (setq file (expand-file-name file mew-conf-path)))
     (switch-to-buffer (mew-find-file-noselect file))
     (emacs-lisp-mode)
     (if (boundp 'write-file-functions)
-	(add-hook 'write-file-functions 'mew-summary-alias-read-buffer nil 'local)
+        (add-hook 'write-file-functions 'mew-summary-alias-read-buffer nil 'local)
       (add-hook 'local-write-file-hooks 'mew-summary-alias-read-buffer))))
 
 (provide 'mew-addrbook)

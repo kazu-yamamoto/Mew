@@ -69,19 +69,19 @@
       (goto-char (point-min))
       (re-search-forward "(GnuPG) " nil t)
       (if (looking-at "\\([0-9]+\\)\\.\\([0-9]+\\)")
-	  (list
-	   (string-to-number (match-string 1))
-	   (string-to-number (match-string 2)))))))
+          (list
+           (string-to-number (match-string 1))
+           (string-to-number (match-string 2)))))))
 
 (defun mew-passwd-check-agent-hack ()
   (let ((ver (mew-passwd-gpg-version)))
     (when ver
       (let ((major (nth 0 ver))
-	    (minor (nth 1 ver)))
-	(cond
-	 ((= major 1) nil)
-	 ((= major 2) (>= minor 1))
-	 (t t))))))
+            (minor (nth 1 ver)))
+        (cond
+         ((= major 1) nil)
+         ((= major 2) (>= minor 1))
+         (t t))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -92,16 +92,16 @@
   (when (and mew-use-cached-passwd (not mew-use-master-passwd))
     (if mew-passwd-timer-id (cancel-timer mew-passwd-timer-id))
     (setq mew-passwd-timer-id
-	  (mew-timer (* mew-passwd-timer-unit 60) 'mew-passwd-timer))))
+          (mew-timer (* mew-passwd-timer-unit 60) 'mew-passwd-timer))))
 
 (defun mew-passwd-setup-master ()
   (when (and (not mew-passwd-master) mew-use-master-passwd)
     (setq mew-passwd-agent-hack (mew-passwd-check-agent-hack))
     (let ((file (expand-file-name mew-passwd-file mew-conf-path)))
       (if (file-exists-p file)
-	  (setq mew-passwd-alist (mew-passwd-load))
-	;; save nil and ask master twice
-	(mew-passwd-save)))
+          (setq mew-passwd-alist (mew-passwd-load))
+        ;; save nil and ask master twice
+        (mew-passwd-save)))
     (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))
 
 (defun mew-passwd-clean-up ()
@@ -123,10 +123,10 @@
   (let ((keys (mew-passwd-get-keys)))
     (dolist (key keys)
       (if (< (mew-passwd-get-counter key) mew-passwd-lifetime)
-	  (mew-passwd-set-counter key (1+ (mew-passwd-get-counter key)))
-	;; time out
-	(mew-passwd-set-passwd key nil)
-	(mew-passwd-set-counter key 0)))))
+          (mew-passwd-set-counter key (1+ (mew-passwd-get-counter key)))
+        ;; time out
+        (mew-passwd-set-passwd key nil)
+        (mew-passwd-set-counter key 0)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -136,24 +136,24 @@
 (defun mew-input-passwd (prompt key)
   (if (and key (or mew-use-cached-passwd mew-use-master-passwd))
       (progn
-	(mew-passwd-setup-master)
-	(if (mew-passwd-get-passwd key)
-	    (progn
-	      (mew-timing)
-	      (if mew-passwd-reset-timer (mew-passwd-set-counter key 0))
-	      (mew-passwd-get-passwd key))
-	  (let ((pass (mew-read-passwd prompt)))
-	    (mew-passwd-set-passwd key pass)
-	    (mew-passwd-set-counter key 0)
-	    pass)))
+        (mew-passwd-setup-master)
+        (if (mew-passwd-get-passwd key)
+            (progn
+              (mew-timing)
+              (if mew-passwd-reset-timer (mew-passwd-set-counter key 0))
+              (mew-passwd-get-passwd key))
+          (let ((pass (mew-read-passwd prompt)))
+            (mew-passwd-set-passwd key pass)
+            (mew-passwd-set-counter key 0)
+            pass)))
     (mew-read-passwd prompt)))
 
 (defun mew-read-passwd (prompt)
   (let (;; A process filter sets inhibit-quit to t to prevent quitting.
-	;; Set inhibit-quit to nil so that C-g can be used
-	(inhibit-quit nil))
+        ;; Set inhibit-quit to nil so that C-g can be used
+        (inhibit-quit nil))
     (condition-case nil
-	(read-passwd prompt)
+        (read-passwd prompt)
       ;; If read-passwd causes an error, let's return "" so that
       ;; the password process will safely fail.
       (quit "")
@@ -162,8 +162,8 @@
 (defun mew-passwd-read-passwd (prompt &optional encrypt-p)
   (if mew-passwd-master
       (progn
-	(mew-timing)
-	mew-passwd-master)
+        (mew-timing)
+        mew-passwd-master)
     (let ((pass (mew-read-passwd prompt)))
       (unless encrypt-p (setq mew-passwd-master pass))
       pass)))
@@ -182,77 +182,77 @@
 (defmacro mew-passwd-rendezvous (pro)
   `(condition-case nil
        (let ((inhibit-quit nil))
-	 (setq mew-passwd-rendezvous t)
-	 (while mew-passwd-rendezvous
-	   (accept-process-output ,pro 0.1 nil t)))
+         (setq mew-passwd-rendezvous t)
+         (while mew-passwd-rendezvous
+           (accept-process-output ,pro 0.1 nil t)))
      (quit
       (setq mew-passwd-rendezvous nil))))
 
 (defun mew-passwd-load ()
   (let* ((process-connection-type mew-connection-type2)
-	 (file (expand-file-name mew-passwd-file mew-conf-path))
-	 (tfile (mew-make-temp-name "gpg-load"))
-	 (args (mew-passwd-adjust-args (list "-d" "--yes" "--output" tfile file)))
-	 (N mew-passwd-repeat)
-	 pwds pro)
+         (file (expand-file-name mew-passwd-file mew-conf-path))
+         (tfile (mew-make-temp-name "gpg-load"))
+         (args (mew-passwd-adjust-args (list "-d" "--yes" "--output" tfile file)))
+         (N mew-passwd-repeat)
+         pwds pro)
     (unwind-protect
-	(with-temp-buffer
-	  (catch 'loop
-	    (dotimes (_i N) ;; prevent byte-compile warning
-	      (when mew-passwd-agent-hack (mew-passwd-clear-passphrase file))
-	      (setq pro (apply 'mew-start-process-lang
-			       mew-passwd-decryption-name
-			       (current-buffer)
-			       mew-prog-passwd
-			       args))
-	      (set-process-filter   pro 'mew-passwd-filter)
-	      (set-process-sentinel pro 'mew-passwd-sentinel)
-	      (mew-passwd-rendezvous pro)
-	      (unless (file-exists-p tfile)
-		(setq mew-passwd-master nil))
-	      (when mew-passwd-master
-		(let ((coding-system-for-read 'undecided))
-		  (insert-file-contents tfile))
-		(condition-case nil
-		    (setq pwds (read (current-buffer)))
-		  (error ()))
-		(throw 'loop nil)))
-	    (message "Master password is wrong!")
-	    (mew-let-user-read)))
+        (with-temp-buffer
+          (catch 'loop
+            (dotimes (_i N) ;; prevent byte-compile warning
+              (when mew-passwd-agent-hack (mew-passwd-clear-passphrase file))
+              (setq pro (apply 'mew-start-process-lang
+                               mew-passwd-decryption-name
+                               (current-buffer)
+                               mew-prog-passwd
+                               args))
+              (set-process-filter   pro 'mew-passwd-filter)
+              (set-process-sentinel pro 'mew-passwd-sentinel)
+              (mew-passwd-rendezvous pro)
+              (unless (file-exists-p tfile)
+                (setq mew-passwd-master nil))
+              (when mew-passwd-master
+                (let ((coding-system-for-read 'undecided))
+                  (insert-file-contents tfile))
+                (condition-case nil
+                    (setq pwds (read (current-buffer)))
+                  (error ()))
+                (throw 'loop nil)))
+            (message "Master password is wrong!")
+            (mew-let-user-read)))
       (mew-passwd-delete-file tfile))
     pwds))
 
 (defun mew-passwd-save ()
   (let* ((process-connection-type mew-connection-type2)
-	 (file (expand-file-name mew-passwd-file mew-conf-path))
-	 (tfile (mew-make-temp-name "gpg-save"))
-	 (args (mew-passwd-adjust-args (list "-c"
-					     "--cipher-algo" mew-passwd-cipher
-					     "--yes" "--output" file tfile)))
-	 (N mew-passwd-repeat)
-	 pro)
+         (file (expand-file-name mew-passwd-file mew-conf-path))
+         (tfile (mew-make-temp-name "gpg-save"))
+         (args (mew-passwd-adjust-args (list "-c"
+                                             "--cipher-algo" mew-passwd-cipher
+                                             "--yes" "--output" file tfile)))
+         (N mew-passwd-repeat)
+         pro)
     (if (file-exists-p file)
-	(rename-file file (concat file mew-backup-suffix) 'override))
+        (rename-file file (concat file mew-backup-suffix) 'override))
     (unwind-protect
-	(with-temp-buffer
-	  (pp mew-passwd-alist (current-buffer))
-	  (write-region (point-min) (point-max) tfile nil 'no-msg)
-	  (catch 'loop
-	    (dotimes (_i N) ;; prevent byte-compile warning
-	      (setq pro (apply
-			 'mew-start-process-lang
-			 mew-passwd-encryption-name
-			 (current-buffer)
-			 mew-prog-passwd
-			 args))
-	      (set-process-filter   pro 'mew-passwd-filter)
-	      (set-process-sentinel pro 'mew-passwd-sentinel)
-	      (mew-passwd-rendezvous pro)
-	      (if (file-exists-p file) (throw 'loop nil)))
-	    (message "Master password is wrong! Passwords not saved")
-	    (mew-let-user-read)))
+        (with-temp-buffer
+          (pp mew-passwd-alist (current-buffer))
+          (write-region (point-min) (point-max) tfile nil 'no-msg)
+          (catch 'loop
+            (dotimes (_i N) ;; prevent byte-compile warning
+              (setq pro (apply
+                         'mew-start-process-lang
+                         mew-passwd-encryption-name
+                         (current-buffer)
+                         mew-prog-passwd
+                         args))
+              (set-process-filter   pro 'mew-passwd-filter)
+              (set-process-sentinel pro 'mew-passwd-sentinel)
+              (mew-passwd-rendezvous pro)
+              (if (file-exists-p file) (throw 'loop nil)))
+            (message "Master password is wrong! Passwords not saved")
+            (mew-let-user-read)))
       (unless (file-exists-p file)
-	(rename-file (concat file mew-backup-suffix) file))
+        (rename-file (concat file mew-backup-suffix) file))
       (mew-passwd-delete-file tfile))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -262,24 +262,24 @@
 
 (defun mew-passwd-filter (process string)
   (let* ((name (process-name process))
-	 (regex (concat "^" (regexp-quote mew-passwd-encryption-name)))
-	 (encrypt-p (string-match regex name)))
+         (regex (concat "^" (regexp-quote mew-passwd-encryption-name)))
+         (encrypt-p (string-match regex name)))
     (with-current-buffer (process-buffer process)
       (cond
        ((string-match "invalid passphrase" string)
-	(mew-warn "Master password mismatch!")
-	(setq mew-passwd-master nil))
+        (mew-warn "Master password mismatch!")
+        (setq mew-passwd-master nil))
        ((string-match "[bB]ad \\(?:session \\)?key" string)
-	(mew-warn "Master password is wrong!")
-	(setq mew-passwd-master nil))
+        (mew-warn "Master password is wrong!")
+        (setq mew-passwd-master nil))
        ((string-match "Enter passphrase:" string)
-	(process-send-string process (mew-passwd-read-passwd (if encrypt-p "New master password: " "Master password: ") encrypt-p))
-	(process-send-string process "\n"))
+        (process-send-string process (mew-passwd-read-passwd (if encrypt-p "New master password: " "Master password: ") encrypt-p))
+        (process-send-string process "\n"))
        ((string-match "Repeat passphrase:" string)
-	(process-send-string process (mew-passwd-read-passwd "New master password again: "))
-	(process-send-string process "\n"))
+        (process-send-string process (mew-passwd-read-passwd "New master password again: "))
+        (process-send-string process "\n"))
        ((string-match "exiting" string)
-	(setq mew-passwd-rendezvous nil))))))
+        (setq mew-passwd-rendezvous nil))))))
 
 (defun mew-passwd-sentinel (_process _event)
   (setq mew-passwd-rendezvous nil))
@@ -293,10 +293,10 @@
   (when (file-exists-p file)
     (with-temp-buffer
       (let ((coding-system-for-write 'binary)
-	    (size (mew-file-get-size file)))
-	(dotimes (_i size) ;; prevent byte-compile warning
-	  (insert 0))
-	(write-region (point-min) (point-max) file nil 'no-msg)))
+            (size (mew-file-get-size file)))
+        (dotimes (_i size) ;; prevent byte-compile warning
+          (insert 0))
+        (write-region (point-min) (point-max) file nil 'no-msg)))
     (delete-file file)))
 
 (defun mew-passwd-get-cache-id (file)
@@ -310,8 +310,8 @@
   (when (file-exists-p file)
     (let ((cache-id (mew-passwd-get-cache-id file)))
       (with-temp-buffer
-	(insert "CLEAR_PASSPHRASE " cache-id "\n")
-	(call-process-region (point-min) (point-max) "gpg-connect-agent")))))
+        (insert "CLEAR_PASSPHRASE " cache-id "\n")
+        (call-process-region (point-min) (point-max) "gpg-connect-agent")))))
 
 (defun mew-passwd-adjust-args (args)
   (if mew-passwd-agent-hack

@@ -45,41 +45,41 @@
   (mw32script-init))
  ((condition-case nil
       (progn
-	(require 'mw32script)
-	(load "mw32misc"))
+        (require 'mw32script)
+        (load "mw32misc"))
     (file-error nil)) ;; NTEmacs
   (mw32script-make-pathext-regexp)
   (defun mew-w32-argument-editing-function (program args)
     (let ((default-process-argument-editing-function 'identity)
-	  (process-argument-editing-alist nil)
-	  prog sargs)
+          (process-argument-editing-alist nil)
+          prog sargs)
       (setq prog (mw32script-openp program))
       (if (and (null prog)
-	       (setq prog (mew-which-exec program))
-	       (setq sargs (mw32script-argument-editing-function (list prog))))
-	  (cons (car sargs) (cons prog args))
-	(cons program args))))
+               (setq prog (mew-which-exec program))
+               (setq sargs (mw32script-argument-editing-function (list prog))))
+          (cons (car sargs) (cons prog args))
+        (cons program args))))
   (defadvice call-process
-    (before mew-w32-call-process
-	    (program &optional infile buffer display &rest args)
-	    activate)
+      (before mew-w32-call-process
+              (program &optional infile buffer display &rest args)
+              activate)
     (let ((sargs (mew-w32-argument-editing-function program args)))
       (setq program (car sargs)
-	    args (cdr sargs))))
+            args (cdr sargs))))
   (defadvice call-process-region
-    (before mew-w32-call-process-region
-	    (start end program &optional infile buffer display &rest args)
-	    activate)
+      (before mew-w32-call-process-region
+              (start end program &optional infile buffer display &rest args)
+              activate)
     (let ((sargs (mew-w32-argument-editing-function program args)))
       (setq program (car sargs)
-	    args (cdr sargs))))
+            args (cdr sargs))))
   (defadvice start-process
-    (before mew-w32-start-process
-	    (name buffer program &rest program-args)
-	    activate)
+      (before mew-w32-start-process
+              (name buffer program &rest program-args)
+              activate)
     (let ((sargs (mew-w32-argument-editing-function program program-args)))
       (setq program (car sargs)
-	    program-args (cdr sargs))))))
+            program-args (cdr sargs))))))
 
 ;; printing
 (defun mew-w32-print-buffer ()
@@ -103,9 +103,9 @@
 (defvar mew-w32-exec           "fiber.exe")
 (defvar mew-default-external-program mew-w32-exec)
 (setq mew-which-exec-suffixes (if (and (boundp 'exec-suffixes)
-				       exec-suffixes)
-				  exec-suffixes
-				'(".exe" ".com" ".bat" ".cmd" "")))
+                                       exec-suffixes)
+                                  exec-suffixes
+                                '(".exe" ".com" ".bat" ".cmd" "")))
 
 (defvar mew-w32-prog-print     "notepad.exe")
 (defvar mew-w32-prog-print-arg nil)
@@ -138,7 +138,7 @@
 (defvar mew-prog-application/rtf nil)
 
 (defvar mew-prog-xml2            '(mew-mime-application/xml
-				   mew-mime-application/xml-ext))
+                                   mew-mime-application/xml-ext))
 (defvar mew-prog-oasys           mew-w32-exec)
 (defvar mew-prog-octet-stream    mew-w32-exec)
 (defvar mew-prog-rtf             mew-w32-exec)
@@ -153,14 +153,14 @@
 
 (defvar mew-prog-text/html
   (if (and (fboundp 'shr-render-region)
-	   (fboundp 'libxml-parse-html-region))
+           (fboundp 'libxml-parse-html-region))
       'shr-render-region
     'mew-mime-text/html-w3m)) ;; See w3m.el
 (defvar mew-prog-text/html-ext       mew-w32-exec)
 
 (defvar mew-prog-text/xml
   (if (and (fboundp 'shr-render-region)
-	   (fboundp 'libxml-parse-html-region))
+           (fboundp 'libxml-parse-html-region))
       'shr-render-region
     'mew-mime-text/html-w3m)) ;; See w3m.el
 (defvar mew-prog-text/xml-ext        mew-w32-exec)
@@ -201,7 +201,7 @@
 
 (setq mew-cs-database-for-arg
       '((iso-2022-jp . shift_jis-unix)
-	(iso-2022-kr . euc-kr-unix)))
+        (iso-2022-kr . euc-kr-unix)))
 
 (setq mew-prog-grep-max-msgs 2000) ;; for external grep (pick & virtual)
 
@@ -211,23 +211,23 @@
   (interactive "e")
   (when (eq (posn-window (event-start event)) (selected-window))
     (let ((files (car (cdr (cdr event))))
-	  to)
+          to)
       (if (stringp files)
-	  (setq files (list files)))
+          (setq files (list files)))
       (dolist (from files)
-	(setq from (dos-to-unix-filename from))
-	(when (file-exists-p from)
-	  (setq to (file-name-nondirectory from))
-	  (unless (mew-attach-p)
-	    (mew-draft-prepare-attachments))
-	  (goto-char (point-max))
-	  (forward-line -2)
-	  (mew-attach-next)
-	  (cond
-	   ((file-directory-p from)
-	    (message "Directory cannot be attached"))
-	   (t
-	    (mew-attach-copy from to))))))))
+        (setq from (dos-to-unix-filename from))
+        (when (file-exists-p from)
+          (setq to (file-name-nondirectory from))
+          (unless (mew-attach-p)
+            (mew-draft-prepare-attachments))
+          (goto-char (point-max))
+          (forward-line -2)
+          (mew-attach-next)
+          (cond
+           ((file-directory-p from)
+            (message "Directory cannot be attached"))
+           (t
+            (mew-attach-copy from to))))))))
 
 ;;
 

@@ -15,16 +15,16 @@ Execute mew-dinfo-set before calling this."
   (mew-xinfo-set-text-body t)
   (mew-set-buffer-multibyte t)
   (let ((mew-header-max-length nil)
-	(mew-header-max-depth nil))
+        (mew-header-max-depth nil))
     (if (mew-debug 'decode)
-	(let ((debug-on-error t))
-	  (setq mew-decode-syntax
-		(mew-decode-message (mew-decode-syntax-rfc822-head) 0)))
+        (let ((debug-on-error t))
+          (setq mew-decode-syntax
+                (mew-decode-message (mew-decode-syntax-rfc822-head) 0)))
       (condition-case nil
-	  (setq mew-decode-syntax
-		(mew-decode-message (mew-decode-syntax-rfc822-head) 0))
-	(error
-	 (error "MIME decoding error: %s" (mew-xinfo-get-decode-err)))))))
+          (setq mew-decode-syntax
+                (mew-decode-message (mew-decode-syntax-rfc822-head) 0))
+        (error
+         (error "MIME decoding error: %s" (mew-xinfo-get-decode-err)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -55,10 +55,10 @@ Execute mew-dinfo-set before calling this."
     (mew-summary-display 'redisplay)
     (mew-current-set-window-config)
     (let* ((draft (mew-folder-new-message mew-draft-folder))
-	   (attachdir (mew-attachdir draft))
-	   (fid (mew-frame-id))
-	   (fld (mew-current-get-fld fid))
-	   (msg (mew-current-get-msg fid)))
+           (attachdir (mew-attachdir draft))
+           (fid (mew-frame-id))
+           (fld (mew-current-get-fld fid))
+           (msg (mew-current-get-msg fid)))
       (mew-summary-prepare-draft
        (mew-draft-find-and-switch draft)
        (mew-delete-directory-recursively attachdir)
@@ -103,104 +103,104 @@ by a header re-write."
   (if (not (file-readable-p (mew-tinfo-get-hdr-file)))
       (message "No corresponding message!")
     (if (mew-header-existp mew-newsgroups:)
-	(mew-header-nntp-process-message action)
+        (mew-header-nntp-process-message action)
       (mew-header-smtp-process-message action))))
 
 (defun mew-header-smtp-process-message (action)
   (let* ((buf (current-buffer))
-	 (case (mew-tinfo-get-case))
-	 (pnm (mew-smtp-info-name case))
-	 (queue (mew-queue-folder case))
-	 sendit resentp fcc msg err)
+         (case (mew-tinfo-get-case))
+         (pnm (mew-smtp-info-name case))
+         (queue (mew-queue-folder case))
+         sendit resentp fcc msg err)
     (if (get-process pnm)
-	(message "Another message is being sent. Try later")
+        (message "Another message is being sent. Try later")
       (mew-draft-remove-invalid-fields)
       (goto-char (point-min))
       (setq resentp (mew-draft-resent-p (mew-header-end)))
       (setq fcc (mew-encode-ask-fcc resentp))
       (if (and (eq action 'send) mew-ask-send)
-	  (setq sendit (y-or-n-p "Really send this message? "))
-	(setq sendit t))
+          (setq sendit (y-or-n-p "Really send this message? "))
+        (setq sendit t))
       (when sendit
-	(mew-current-get-window-config)
-	(mew-redraw)
-	(save-excursion
-	  (with-current-buffer buf
-	    (mew-encode-make-backup)
-	    (mew-header-clear)
-	    ;; the end of the header
-	    (save-restriction
-	      (narrow-to-region (point) (point))
-	      (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
-		(mew-insert-file-contents (mew-tinfo-get-hdr-file)))
-	      (goto-char (point-min))
-	      (mew-header-goto-end)
-	      (mew-header-set mew-header-separator)
-	      (mew-header-delete-lines mew-field-delete-common)
-	      (mew-header-delete-lines (mew-tinfo-get-field-del)))
-	    (if (mew-smtp-encode pnm case resentp fcc nil nil 'header)
-		(let ((mdi (concat (buffer-file-name) mew-draft-info-suffix)))
-		  (mew-delete-file mdi)
-		  (setq msg (mew-smtp-queue case "from Draft mode"))
-		  (mew-remove-buffer buf)
-		  (if (eq action 'send)
-		      (mew-smtp-send-message case queue (list msg))))
-	      (setq err t))))
-	(if err
-	    (progn
-	      (mew-current-set-window-config)
-	      (switch-to-buffer buf)
-	      (delete-other-windows))
-	  (if (and (eq action 'queue) mew-visit-queue-after-sending)
-	      (mew-summary-visit-folder queue)))))))
+        (mew-current-get-window-config)
+        (mew-redraw)
+        (save-excursion
+          (with-current-buffer buf
+            (mew-encode-make-backup)
+            (mew-header-clear)
+            ;; the end of the header
+            (save-restriction
+              (narrow-to-region (point) (point))
+              (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
+                (mew-insert-file-contents (mew-tinfo-get-hdr-file)))
+              (goto-char (point-min))
+              (mew-header-goto-end)
+              (mew-header-set mew-header-separator)
+              (mew-header-delete-lines mew-field-delete-common)
+              (mew-header-delete-lines (mew-tinfo-get-field-del)))
+            (if (mew-smtp-encode pnm case resentp fcc nil nil 'header)
+                (let ((mdi (concat (buffer-file-name) mew-draft-info-suffix)))
+                  (mew-delete-file mdi)
+                  (setq msg (mew-smtp-queue case "from Draft mode"))
+                  (mew-remove-buffer buf)
+                  (if (eq action 'send)
+                      (mew-smtp-send-message case queue (list msg))))
+              (setq err t))))
+        (if err
+            (progn
+              (mew-current-set-window-config)
+              (switch-to-buffer buf)
+              (delete-other-windows))
+          (if (and (eq action 'queue) mew-visit-queue-after-sending)
+              (mew-summary-visit-folder queue)))))))
 
 (defun mew-header-nntp-process-message (action)
   (let* ((buf (current-buffer))
-	 (case (mew-tinfo-get-case))
-	 (pnm (mew-nntp2-info-name case))
-	 (postq (mew-postq-folder case))
-	 sendit resentp fcc msg err)
+         (case (mew-tinfo-get-case))
+         (pnm (mew-nntp2-info-name case))
+         (postq (mew-postq-folder case))
+         sendit resentp fcc msg err)
     (if (get-process pnm)
-	(message "Another message is being posted. Try later")
+        (message "Another message is being posted. Try later")
       (mew-draft-remove-invalid-fields)
       (goto-char (point-min))
       (setq resentp (mew-draft-resent-p (mew-header-end)))
       (setq fcc (mew-encode-ask-fcc resentp))
       (if (and (eq action 'send) mew-ask-send)
-	  (setq sendit (y-or-n-p "Really post this message? "))
-	(setq sendit t))
+          (setq sendit (y-or-n-p "Really post this message? "))
+        (setq sendit t))
       (when sendit
-	(mew-current-get-window-config)
-	(mew-redraw)
-	(save-excursion
-	  (with-current-buffer buf
-	    (mew-encode-make-backup)
-	    (mew-header-clear)
-	    ;; the end of the header
-	    (save-restriction
-	      (narrow-to-region (point) (point))
-	      (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
-		(mew-insert-file-contents (mew-tinfo-get-hdr-file)))
-	      (goto-char (point-min))
-	      (mew-header-goto-end)
-	      (mew-header-set mew-header-separator)
-	      (mew-header-delete-lines mew-field-delete-common)
-	      (mew-header-delete-lines (mew-tinfo-get-field-del)))
-	    (if (mew-nntp2-encode pnm case fcc nil nil 'header)
-		(let ((mdi (concat (buffer-file-name) mew-draft-info-suffix)))
-		  (mew-delete-file mdi)
-		  (setq msg (mew-nntp2-queue case "from Draft mode"))
-		  (mew-remove-buffer buf)
-		  (if (eq action 'send)
-		      (mew-nntp2-send-message  case postq (list msg))))
-	      (setq err t))))
-	(if err
-	    (progn
-	      (mew-current-set-window-config)
-	      (switch-to-buffer buf)
-	      (delete-other-windows))
-	  (if (and (eq action 'queue) mew-visit-queue-after-sending)
-	      (mew-summary-visit-folder postq)))))))
+        (mew-current-get-window-config)
+        (mew-redraw)
+        (save-excursion
+          (with-current-buffer buf
+            (mew-encode-make-backup)
+            (mew-header-clear)
+            ;; the end of the header
+            (save-restriction
+              (narrow-to-region (point) (point))
+              (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
+                (mew-insert-file-contents (mew-tinfo-get-hdr-file)))
+              (goto-char (point-min))
+              (mew-header-goto-end)
+              (mew-header-set mew-header-separator)
+              (mew-header-delete-lines mew-field-delete-common)
+              (mew-header-delete-lines (mew-tinfo-get-field-del)))
+            (if (mew-nntp2-encode pnm case fcc nil nil 'header)
+                (let ((mdi (concat (buffer-file-name) mew-draft-info-suffix)))
+                  (mew-delete-file mdi)
+                  (setq msg (mew-nntp2-queue case "from Draft mode"))
+                  (mew-remove-buffer buf)
+                  (if (eq action 'send)
+                      (mew-nntp2-send-message  case postq (list msg))))
+              (setq err t))))
+        (if err
+            (progn
+              (mew-current-set-window-config)
+              (switch-to-buffer buf)
+              (delete-other-windows))
+          (if (and (eq action 'queue) mew-visit-queue-after-sending)
+              (mew-summary-visit-folder postq)))))))
 
 (defun mew-header-make-message ()
   "Compose a MIME message from the header and its body
@@ -231,16 +231,16 @@ a text object to be saved can be specified."
    (mew-summary-toggle-disp-msg 'on)
    (mew-summary-display)
    (let* ((fld (mew-summary-folder-name))
-	  (msg (mew-summary-message-number2))
-	  (num (mew-syntax-number))
-	  (nums (mew-syntax-number-to-nums num))
-	  (cbuf (mew-cache-hit fld msg))
-	  (alt  (mew-cache-dinfo-get-use-alt cbuf))
-	  (cache (or cbuf (mew-buffer-message)))
-	  (syntax (mew-syntax-get-entry (mew-cache-decode-syntax cache) nums))
-	  (action "Save")
-	  PLUS1P limit have-hdrp bodyp beg end cdpl file ct ctl
-	  doit append-p)
+          (msg (mew-summary-message-number2))
+          (num (mew-syntax-number))
+          (nums (mew-syntax-number-to-nums num))
+          (cbuf (mew-cache-hit fld msg))
+          (alt  (mew-cache-dinfo-get-use-alt cbuf))
+          (cache (or cbuf (mew-buffer-message)))
+          (syntax (mew-syntax-get-entry (mew-cache-decode-syntax cache) nums))
+          (action "Save")
+          PLUS1P limit have-hdrp bodyp beg end cdpl file ct ctl
+          doit append-p)
      ;; Due to mew-decode-broken, the filename may be changed.
      ;; So, save it here.
      (and syntax (setq cdpl (mew-syntax-get-cdp syntax)))
@@ -255,26 +255,26 @@ a text object to be saved can be specified."
      ;; in the cache buffer due to the PGP/MIME dilemma.
      ;; We need the correct LIMIT.
      (if (mew-syntax-message-p syntax)
-	 (let ((bodyname "the body") body bct plus1p)
-	   (setq body (mew-syntax-get-part syntax))
-	   (when (mew-syntax-multipart-p body)
-	     (setq plus1p t)
-	     (setq bodyname "the part 1 text")
-	     (setq body (mew-syntax-get-entry body '(1))))
-	   (setq bct (mew-syntax-get-value (mew-syntax-get-ct body) 'cap))
-	   (if (mew-ct-textp bct)
-	       (if (y-or-n-p (format "Save the entire message (y) or %s (n)? " bodyname))
-		   (setq have-hdrp t)
-		 (if plus1p
-		     (setq nums (nconc nums '(1)))
-		   (setq bodyp t))
-		 (setq PLUS1P (mew-syntax-get-privacy body)))
-	     (setq have-hdrp t))))
+         (let ((bodyname "the body") body bct plus1p)
+           (setq body (mew-syntax-get-part syntax))
+           (when (mew-syntax-multipart-p body)
+             (setq plus1p t)
+             (setq bodyname "the part 1 text")
+             (setq body (mew-syntax-get-entry body '(1))))
+           (setq bct (mew-syntax-get-value (mew-syntax-get-ct body) 'cap))
+           (if (mew-ct-textp bct)
+               (if (y-or-n-p (format "Save the entire message (y) or %s (n)? " bodyname))
+                   (setq have-hdrp t)
+                 (if plus1p
+                     (setq nums (nconc nums '(1)))
+                   (setq bodyp t))
+                 (setq PLUS1P (mew-syntax-get-privacy body)))
+             (setq have-hdrp t))))
      ;; Now, let's analyze the message in the burst buffer.
      ;; This is lengthy, though, avoidable.
      (setq limit (length nums))
      (if (or PLUS1P bodyp) ;; VERY important for PGP/MIME
-	 (setq limit (1+ limit)))
+         (setq limit (1+ limit)))
      ;;
      (with-temp-buffer
        (mew-insert-message fld msg mew-cs-text-for-read nil)
@@ -285,66 +285,66 @@ a text object to be saved can be specified."
        (if bodyp (setq syntax (mew-syntax-get-part syntax)))
        (setq beg (mew-syntax-get-begin syntax))
        (if (mew-syntax-message-p syntax)
-	   (setq end (mew-syntax-get-end (mew-syntax-get-part syntax)))
-	 (setq end (mew-syntax-get-end syntax)))
+           (setq end (mew-syntax-get-end (mew-syntax-get-part syntax)))
+         (setq end (mew-syntax-get-end syntax)))
        (setq ctl (mew-syntax-get-ct syntax))
        (setq cdpl (mew-syntax-get-cdp syntax))
        (setq file (mew-syntax-get-filename cdpl ctl))
        ;;
        (if (and mew-use-samba-encoding
-		file
-		(string-match mew-regex-nonascii file))
-	   (setq file (mew-samba-encoding file)))
+                file
+                (string-match mew-regex-nonascii file))
+           (setq file (mew-samba-encoding file)))
        (setq file (mew-summary-input-file-name nil file))
        (let ((dir (mew-parent-directory file)))
          (if (and (not (file-exists-p dir))
                   (y-or-n-p (format "Make directory %s? " dir)))
              (mew-make-directory dir)))
        (if (not (file-exists-p file))
-	   (setq doit t)
-	 (if (null mew-file-append-p)
-	     (setq action "Overwrite")
-	   (setq action "Append")
-	   (setq append-p t))
-	 (if (y-or-n-p (format "File exists. %s it to %s? " action file))
-	     (setq doit t)))
+           (setq doit t)
+         (if (null mew-file-append-p)
+             (setq action "Overwrite")
+           (setq action "Append")
+           (setq append-p t))
+         (if (y-or-n-p (format "File exists. %s it to %s? " action file))
+             (setq doit t)))
        ;;
        (if (not doit)
-	   (message "Did not save anything")
-	 (let (linebasep fromcs tocs charset writecs)
-	   (save-restriction
-	     (narrow-to-region beg end)
-	     (goto-char (point-min))
-	     (setq ct (mew-syntax-get-value ctl 'cap))
-	     ;; Allow Message/Rfc822. It's user's risk.
-	     (setq linebasep (or (mew-ct-textp ct) (mew-ct-linebasep ct)))
-	     (if linebasep
-		 (setq writecs mew-cs-text-for-write)
-	       (setq writecs mew-cs-binary))
-	     (when (and askcs linebasep)
-	       (setq tocs (read-coding-system "Coding-system: "))
-	       (if (mew-cs-raw-p tocs)
-		   (setq writecs tocs tocs nil)))
-	     (when have-hdrp
-	       (goto-char (point-min))
-	       (mew-header-delete-lines mew-field-delete-common)
-	       (mew-header-delete-lines mew-field-delete-for-saving))
-	     (when tocs
-	       (setq charset (mew-syntax-get-param ctl "charset"))
-	       (if charset (setq fromcs (mew-charset-to-cs charset)))
-	       ;; When saving an entire message or its body,
-	       ;; its charset is unknown since it is not analyzed.
-	       ;; So, we make use of mew-cs-autoconv.
-	       (unless (mew-coding-system-p fromcs)
-		 (error "Unknown coding system %s" (symbol-name fromcs)))
-	       (unless (mew-coding-system-p tocs)
-		 (error "Unknown coding system %s" (symbol-name tocs)))
-	       (mew-cs-decode-region
-		(point-min) (point-max) (or fromcs mew-cs-autoconv))
-	       (mew-cs-encode-region (point-min) (point-max) tocs))
-	     (mew-frwlet mew-cs-dummy writecs
-	       ;; do not specify 'no-msg
-	       (write-region (point-min) (point-max) file append-p)))))))))
+           (message "Did not save anything")
+         (let (linebasep fromcs tocs charset writecs)
+           (save-restriction
+             (narrow-to-region beg end)
+             (goto-char (point-min))
+             (setq ct (mew-syntax-get-value ctl 'cap))
+             ;; Allow Message/Rfc822. It's user's risk.
+             (setq linebasep (or (mew-ct-textp ct) (mew-ct-linebasep ct)))
+             (if linebasep
+                 (setq writecs mew-cs-text-for-write)
+               (setq writecs mew-cs-binary))
+             (when (and askcs linebasep)
+               (setq tocs (read-coding-system "Coding-system: "))
+               (if (mew-cs-raw-p tocs)
+                   (setq writecs tocs tocs nil)))
+             (when have-hdrp
+               (goto-char (point-min))
+               (mew-header-delete-lines mew-field-delete-common)
+               (mew-header-delete-lines mew-field-delete-for-saving))
+             (when tocs
+               (setq charset (mew-syntax-get-param ctl "charset"))
+               (if charset (setq fromcs (mew-charset-to-cs charset)))
+               ;; When saving an entire message or its body,
+               ;; its charset is unknown since it is not analyzed.
+               ;; So, we make use of mew-cs-autoconv.
+               (unless (mew-coding-system-p fromcs)
+                 (error "Unknown coding system %s" (symbol-name fromcs)))
+               (unless (mew-coding-system-p tocs)
+                 (error "Unknown coding system %s" (symbol-name tocs)))
+               (mew-cs-decode-region
+                (point-min) (point-max) (or fromcs mew-cs-autoconv))
+               (mew-cs-encode-region (point-min) (point-max) tocs))
+             (mew-frwlet mew-cs-dummy writecs
+               ;; do not specify 'no-msg
+               (write-region (point-min) (point-max) file append-p)))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -361,18 +361,18 @@ If executed with '\\[universal-argument]', coding-system is asked."
    (mew-summary-toggle-disp-msg 'on)
    (mew-summary-display)
    (let* ((fld (mew-summary-folder-name))
-	  (msg (mew-summary-message-number2))
-	  (num (mew-syntax-number))
-	  (nums (mew-syntax-number-to-nums num))
-	  (cbuf (mew-cache-hit fld msg))
-	  (alt  (mew-cache-dinfo-get-use-alt cbuf))
-	  (cache (or cbuf (mew-buffer-message)))
-	  (syntax (mew-syntax-get-entry (mew-cache-decode-syntax cache) nums))
-	  (buf (generate-new-buffer mew-buffer-prefix))
-	  (win (selected-window))
-	  (orig-lang current-language-environment)
-	  PLUS1P limit bodyp hbeg hend beg end start
-	  lang prompt tocs cs-env)
+          (msg (mew-summary-message-number2))
+          (num (mew-syntax-number))
+          (nums (mew-syntax-number-to-nums num))
+          (cbuf (mew-cache-hit fld msg))
+          (alt  (mew-cache-dinfo-get-use-alt cbuf))
+          (cache (or cbuf (mew-buffer-message)))
+          (syntax (mew-syntax-get-entry (mew-cache-decode-syntax cache) nums))
+          (buf (generate-new-buffer mew-buffer-prefix))
+          (win (selected-window))
+          (orig-lang current-language-environment)
+          PLUS1P limit bodyp hbeg hend beg end start
+          lang prompt tocs cs-env)
      (save-excursion
        ;; First of all, we should determine which part the user want to
        ;; save due to the ambiguity.
@@ -383,43 +383,43 @@ If executed with '\\[universal-argument]', coding-system is asked."
        ;; in the cache buffer due to the PGP/MIME dilemma.
        ;; We need the correct LIMIT.
        (when (mew-syntax-message-p syntax)
-	 (let (body plus1p)
-	   (setq body (mew-syntax-get-part syntax))
-	   (when (mew-syntax-multipart-p body)
-	     (setq plus1p t)
-	     (setq body (mew-syntax-get-entry body '(1))))
-	   (if plus1p
-	       (setq nums (nconc nums '(1)))
-	     (setq bodyp t))
-	   (setq PLUS1P (mew-syntax-get-privacy body))))
+         (let (body plus1p)
+           (setq body (mew-syntax-get-part syntax))
+           (when (mew-syntax-multipart-p body)
+             (setq plus1p t)
+             (setq body (mew-syntax-get-entry body '(1))))
+           (if plus1p
+               (setq nums (nconc nums '(1)))
+             (setq bodyp t))
+           (setq PLUS1P (mew-syntax-get-privacy body))))
        ;; Now, let's analyze the message in the burst buffer.
        ;; This is lengthy, though, avoidable.
        (setq limit (length nums))
        (if (or PLUS1P bodyp) ;; VERY important for PGP/MIME
-	   (setq limit (1+ limit)))
+           (setq limit (1+ limit)))
        ;;
        (set-buffer buf)
        (mew-erase-buffer)
        (mew-insert-message fld msg mew-cs-text-for-read nil)
        ;;
        (cond
-	(askcs
-	 (setq prompt
-	       (format "Coding-system (autoconv for %s): " orig-lang))
-	 (setq tocs (or (read-coding-system prompt) mew-cs-autoconv)))
-	(t
-	 (setq tocs mew-cs-autoconv)
-	 (setq prompt (format "Language (%s): " orig-lang))
-	 (setq lang (read-language-name nil prompt orig-lang))
-	 (setq cs-env (mew-set-language-environment-coding-systems lang))))
+        (askcs
+         (setq prompt
+               (format "Coding-system (autoconv for %s): " orig-lang))
+         (setq tocs (or (read-coding-system prompt) mew-cs-autoconv)))
+        (t
+         (setq tocs mew-cs-autoconv)
+         (setq prompt (format "Language (%s): " orig-lang))
+         (setq lang (read-language-name nil prompt orig-lang))
+         (setq cs-env (mew-set-language-environment-coding-systems lang))))
        (mew-dinfo-set limit 'no-cs-conv t alt)
        (mew-decode-for-edit)
        ;;
        (setq syntax (mew-syntax-get-entry mew-decode-syntax nums))
        (when bodyp
-	 (setq hbeg (mew-syntax-get-begin syntax))
-	 (setq hend (mew-syntax-get-end syntax))
-	 (setq syntax (mew-syntax-get-part syntax)))
+         (setq hbeg (mew-syntax-get-begin syntax))
+         (setq hend (mew-syntax-get-end syntax))
+         (setq syntax (mew-syntax-get-part syntax)))
        (setq beg (mew-syntax-get-begin syntax))
        (setq end (mew-syntax-get-end syntax))
        ;;
@@ -427,22 +427,22 @@ If executed with '\\[universal-argument]', coding-system is asked."
        (select-window (get-buffer-window (current-buffer)))
        (widen)
        (mew-elet
-	(delete-region (point-min) (point-max))
-	(when bodyp
-	  ;; This must be "insert-buffer-substring".
-	  (insert-buffer-substring buf hbeg hend)
-	  (mew-header-arrange (point-min) (point-max)))
-	(setq start (point))
-	(save-excursion
-	  (mew-insert-buffer-substring buf beg end)
-	  (mew-cs-decode-region start (point-max) tocs)
-	  (mew-highlight-body-region start (point-max)))
-	;; Page breaks
-	(when mew-break-pages
-	  (goto-char (point-min))
-	  (mew-message-narrow-to-page))
-	(when (and (not askcs) cs-env)
-	  (mew-reset-coding-systems (car cs-env) (cdr cs-env))))
+        (delete-region (point-min) (point-max))
+        (when bodyp
+          ;; This must be "insert-buffer-substring".
+          (insert-buffer-substring buf hbeg hend)
+          (mew-header-arrange (point-min) (point-max)))
+        (setq start (point))
+        (save-excursion
+          (mew-insert-buffer-substring buf beg end)
+          (mew-cs-decode-region start (point-max) tocs)
+          (mew-highlight-body-region start (point-max)))
+        ;; Page breaks
+        (when mew-break-pages
+          (goto-char (point-min))
+          (mew-message-narrow-to-page))
+        (when (and (not askcs) cs-env)
+          (mew-reset-coding-systems (car cs-env) (cdr cs-env))))
        (mew-summary-display-postscript 'no-hook)
        (select-window win))
      (mew-remove-buffer buf))))
@@ -456,11 +456,11 @@ If executed with '\\[universal-argument]', coding-system is asked."
 
 (defun mew-input-burst-folder ()
   (let (default)
-     (if (and mew-use-burst-folder-history mew-burst-last-folder)
-	 (setq default mew-burst-last-folder)
-       (setq default (mew-inbox-folder))) ;; local folder
-     (setq mew-burst-last-folder (mew-input-local-folder default))
-     mew-burst-last-folder))
+    (if (and mew-use-burst-folder-history mew-burst-last-folder)
+        (setq default mew-burst-last-folder)
+      (setq default (mew-inbox-folder))) ;; local folder
+    (setq mew-burst-last-folder (mew-input-local-folder default))
+    mew-burst-last-folder))
 
 (defun mew-summary-burst-part (part folder newmsg &optional num)
   (let (n len nums entry file)
@@ -476,19 +476,19 @@ If executed with '\\[universal-argument]', coding-system is asked."
       (setq entry (mew-syntax-get-entry part nums))
       (cond
        ((mew-syntax-multipart-p entry)
-	(setq newmsg (mew-summary-burst-part entry folder newmsg)))
+        (setq newmsg (mew-summary-burst-part entry folder newmsg)))
        ((string= (mew-syntax-get-value (mew-syntax-get-ct entry) 'cap)
-		 mew-ct-msg)
-	(setq file (mew-expand-new-msg folder (number-to-string newmsg)))
-	(mew-frwlet mew-cs-dummy mew-cs-text-for-write
-	  (write-region
-	   (mew-syntax-get-begin entry)
-	   ;; This is RFC 822 message.
-	   ;; So, body is a single text/plain.
-	   (mew-syntax-get-end (mew-syntax-get-part entry))
-	   file nil 'no-msg))
-	(mew-set-file-modes file)
-	(setq newmsg (1+ newmsg))))
+                 mew-ct-msg)
+        (setq file (mew-expand-new-msg folder (number-to-string newmsg)))
+        (mew-frwlet mew-cs-dummy mew-cs-text-for-write
+          (write-region
+           (mew-syntax-get-begin entry)
+           ;; This is RFC 822 message.
+           ;; So, body is a single text/plain.
+           (mew-syntax-get-end (mew-syntax-get-part entry))
+           file nil 'no-msg))
+        (mew-set-file-modes file)
+        (setq newmsg (1+ newmsg))))
       (setq n (1+ n))
       (setq nums (list n)))
     newmsg))
@@ -501,16 +501,16 @@ If executed with '\\[universal-argument]', coding-system is asked."
       (mew-decode-for-edit)
       (cond
        ((not (mew-syntax-multipart-p (mew-syntax-get-part mew-decode-syntax)))
-	(message "Cannot burst"))
+        (message "Cannot burst"))
        ((not (setq mstr (mew-folder-new-message folder 'num-only)))
-	(setq errmsg (format "Error in %s. Nothing was processed" folder)))
+        (setq errmsg (format "Error in %s. Nothing was processed" folder)))
        (t
-	(setq m (mew-summary-burst-part (mew-syntax-get-part mew-decode-syntax)
-					folder (string-to-number mstr) num))
-	(if (= m (string-to-number mstr))
-	    (message "Nothing was processed")
-	  (mew-touch-folder folder)
-	  (setq ret (list mstr (number-to-string (1- m)))))))
+        (setq m (mew-summary-burst-part (mew-syntax-get-part mew-decode-syntax)
+                                        folder (string-to-number mstr) num))
+        (if (= m (string-to-number mstr))
+            (message "Nothing was processed")
+          (mew-touch-folder folder)
+          (setq ret (list mstr (number-to-string (1- m)))))))
       (if errmsg (error "%s" errmsg))
       ret)))
 
@@ -523,25 +523,25 @@ If executed with '\\[universal-argument]', coding-system is asked."
       (mew-decode-for-edit)
       (setq syntax (mew-syntax-get-part mew-decode-syntax))
       (if (mew-syntax-singlepart-p syntax)
-	  (progn
-	    (mew-syntax-set-cdp syntax (mew-syntax-cdp-format mew-ct-txt mew-draft-coverpage))
-	    (mew-d2e-singlepart syntax dir))
-	(setq cnt mew-syntax-magic)
-	(setq len (length syntax))
-	(while (< cnt len)
-	  (setq stx (aref syntax cnt))
-	  (setq ctl (mew-syntax-get-ct stx))
-	  (setq ct (mew-syntax-get-value ctl 'cap))
-	  (cond
-	   ((string= mew-ct-msg ct)
-	    (mew-d2e-message stx dir))
-	   ((mew-ct-multipartp ct)
-	    (mew-d2e-multipart stx (mew-random-filename dir 1 nil)))
-	   (t
-	    (if (= cnt mew-syntax-magic)
-		(mew-syntax-set-cdp stx (mew-syntax-cdp-format mew-ct-txt mew-draft-coverpage)))
-	    (mew-d2e-singlepart stx dir)))
-	  (setq cnt (1+ cnt)))))))
+          (progn
+            (mew-syntax-set-cdp syntax (mew-syntax-cdp-format mew-ct-txt mew-draft-coverpage))
+            (mew-d2e-singlepart syntax dir))
+        (setq cnt mew-syntax-magic)
+        (setq len (length syntax))
+        (while (< cnt len)
+          (setq stx (aref syntax cnt))
+          (setq ctl (mew-syntax-get-ct stx))
+          (setq ct (mew-syntax-get-value ctl 'cap))
+          (cond
+           ((string= mew-ct-msg ct)
+            (mew-d2e-message stx dir))
+           ((mew-ct-multipartp ct)
+            (mew-d2e-multipart stx (mew-random-filename dir 1 nil)))
+           (t
+            (if (= cnt mew-syntax-magic)
+                (mew-syntax-set-cdp stx (mew-syntax-cdp-format mew-ct-txt mew-draft-coverpage)))
+            (mew-d2e-singlepart stx dir)))
+          (setq cnt (1+ cnt)))))))
 
 (defun mew-summary-burst (&optional arg)
   "Decompose messages embedded in this message.
@@ -555,14 +555,14 @@ are decomposed. You are asked a new directory name for the decomposition."
   (interactive "P")
   (mew-summary-msg-or-part
    (let ((fld (mew-summary-folder-name))
-	 (msg (mew-summary-message-number2))
-	 (num (mew-syntax-number))
-	 folder dir ret)
+         (msg (mew-summary-message-number2))
+         (num (mew-syntax-number))
+         folder dir ret)
      (cond
       (arg ;; file decomposition
        (setq dir (read-file-name "New directory: " mew-home))
        (while (file-exists-p dir)
-	 (setq dir (read-file-name (format "\"%s\" exists. New directory: " dir) mew-home)))
+         (setq dir (read-file-name (format "\"%s\" exists. New directory: " dir) mew-home)))
        (mew-make-directory dir)
        (message "Bursting...")
        (mew-summary-burst-files fld msg dir)
@@ -570,30 +570,30 @@ are decomposed. You are asked a new directory name for the decomposition."
       (t
        (setq folder (mew-input-burst-folder))
        (when (and folder (mew-local-folder-check folder 'ask))
-	 (message "Bursting...")
-	 (setq ret (mew-summary-burst-body fld msg folder num))
-	 (when ret
-	   (message "Bursting...done")
-	   (when mew-ask-folder-after-burst
-	     (if (y-or-n-p (format "Go to %s? " folder))
-		 (mew-summary-visit-folder folder 'goend)))
-	   (message "Messages from %s to %s were extracted in %s"
-		    (nth 0 ret) (nth 1 ret) folder))))))))
+         (message "Bursting...")
+         (setq ret (mew-summary-burst-body fld msg folder num))
+         (when ret
+           (message "Bursting...done")
+           (when mew-ask-folder-after-burst
+             (if (y-or-n-p (format "Go to %s? " folder))
+                 (mew-summary-visit-folder folder 'goend)))
+           (message "Messages from %s to %s were extracted in %s"
+                    (nth 0 ret) (nth 1 ret) folder))))))))
 
 (defun mew-summary-burst-multi ()
   "Decompose messages embedded in the messages marked with '*'."
   (interactive)
   (mew-summary-multi-msgs
    (let ((folder (mew-input-burst-folder))
-	 (targets FLD-MSG-LIST))
+         (targets FLD-MSG-LIST))
      (when (and folder (mew-local-folder-check folder 'ask))
        (message "Bursting...")
        (dolist (target targets)
-	 (mew-summary-burst-body (car target) (cdr target) folder))
+         (mew-summary-burst-body (car target) (cdr target) folder))
        (message "Bursting...done")
        (when mew-ask-folder-after-burst
-	 (if (y-or-n-p (format "Go to %s? " folder))
-	     (mew-summary-visit-folder folder 'goend)))))))
+         (if (y-or-n-p (format "Go to %s? " folder))
+             (mew-summary-visit-folder folder 'goend)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -605,43 +605,43 @@ are decomposed. You are asked a new directory name for the decomposition."
   (interactive)
   (mew-summary-msg
    (let ((fld (mew-summary-folder-name))
-	 (msg (mew-summary-message-number))
-	 (sep1 (make-string 70 ?-))
-	 (sep2 (make-string 30 ?-))
-	 (folder (mew-input-burst-folder))
-	 start mstr m done)
+         (msg (mew-summary-message-number))
+         (sep1 (make-string 70 ?-))
+         (sep2 (make-string 30 ?-))
+         (folder (mew-input-burst-folder))
+         start mstr m done)
      (with-temp-buffer
        (mew-insert-message fld msg mew-cs-text-for-read nil)
        (mew-set-buffer-multibyte t)
        (if (not (re-search-forward sep1 nil t))
-	   (message "Cannot burst this message")
-	 (message "Bursting...")
-	 (forward-line 2)
-	 (setq start (point))
-	 (setq mstr (mew-folder-new-message folder 'num-only))
-	 (setq m (string-to-number mstr))
-	 (while (re-search-forward sep2 nil t)
-	   (save-excursion
-	     (beginning-of-line)
-	     (save-restriction
-	       (narrow-to-region start (1- (point)))
-	       (goto-char (point-min))
-	       (while (re-search-forward "^- " nil t)
-		 (replace-match "" nil t))
-	       (mew-frwlet mew-cs-dummy mew-cs-text-for-write
-		 (write-region (point-min) (point-max)
-			       (mew-expand-new-msg folder mstr)
-			       nil 'no-msg))))
-	   (forward-line 2)
-	   (setq start (point))
-	   (setq m (1+ m))
-	   (setq mstr (number-to-string m)))
-	 (message "Bursting...done")
-	 (mew-touch-folder folder)
-	 (setq done t)))
+           (message "Cannot burst this message")
+         (message "Bursting...")
+         (forward-line 2)
+         (setq start (point))
+         (setq mstr (mew-folder-new-message folder 'num-only))
+         (setq m (string-to-number mstr))
+         (while (re-search-forward sep2 nil t)
+           (save-excursion
+             (beginning-of-line)
+             (save-restriction
+               (narrow-to-region start (1- (point)))
+               (goto-char (point-min))
+               (while (re-search-forward "^- " nil t)
+                 (replace-match "" nil t))
+               (mew-frwlet mew-cs-dummy mew-cs-text-for-write
+                 (write-region (point-min) (point-max)
+                               (mew-expand-new-msg folder mstr)
+                               nil 'no-msg))))
+           (forward-line 2)
+           (setq start (point))
+           (setq m (1+ m))
+           (setq mstr (number-to-string m)))
+         (message "Bursting...done")
+         (mew-touch-folder folder)
+         (setq done t)))
      (when mew-ask-folder-after-burst
        (if (and done (y-or-n-p (format "Go to %s? " folder)))
-	   (mew-summary-visit-folder folder 'goend))))))
+           (mew-summary-visit-folder folder 'goend))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -665,35 +665,35 @@ See also mew-summary-edit-again."
   (interactive "P")
   (mew-summary-msg-or-part
    (let ((fld (mew-summary-folder-name))
-	 (msg (mew-summary-message-number2))
-	 (part (mew-syntax-nums))
-	 draftname)
+         (msg (mew-summary-message-number2))
+         (part (mew-syntax-nums))
+         draftname)
      (cond
       ((string= fld mew-draft-folder)
        (setq draftname (mew-path-to-folder (mew-expand-msg fld msg)))
        (if (get-buffer draftname)
-	   (progn
-	     (mew-current-set-window-config) ;; xxx necessary?
-	     (mew-window-configure 'draft)
-	     (switch-to-buffer draftname))
-	 (mew-summary-reedit-for-draft fld msg)
-	 (run-hooks 'mew-draft-mode-reedit-draft-hook)))
+           (progn
+             (mew-current-set-window-config) ;; xxx necessary?
+             (mew-window-configure 'draft)
+             (switch-to-buffer draftname))
+         (mew-summary-reedit-for-draft fld msg)
+         (run-hooks 'mew-draft-mode-reedit-draft-hook)))
       ((and (or (mew-folder-queuep fld) (mew-folder-postqp fld)) (null part))
        (mew-summary-reedit-for-queue fld msg)
        (run-hooks 'mew-draft-mode-reedit-queue-hook))
       (t
        (if part
-	   (let* ((cache (mew-cache-hit fld msg 'must-hit))
-		  (alt nil)
-		  (syntax (mew-cache-decode-syntax cache))
-		  (stx (mew-syntax-get-entry syntax part))
-		  (ct (mew-syntax-get-value (mew-syntax-get-ct stx) 'cap)))
-	     (if (not (string= mew-ct-msg ct))
-		 (message "Cannot reedit here")
-	       (mew-summary-reedit-for-message fld msg part keep-hdr alt)
-	       (run-hooks 'mew-draft-mode-reedit-hook)))
-	 (mew-summary-reedit-for-message fld msg nil keep-hdr nil)
-	 (run-hooks 'mew-draft-mode-reedit-hook)))))))
+           (let* ((cache (mew-cache-hit fld msg 'must-hit))
+                  (alt nil)
+                  (syntax (mew-cache-decode-syntax cache))
+                  (stx (mew-syntax-get-entry syntax part))
+                  (ct (mew-syntax-get-value (mew-syntax-get-ct stx) 'cap)))
+             (if (not (string= mew-ct-msg ct))
+                 (message "Cannot reedit here")
+               (mew-summary-reedit-for-message fld msg part keep-hdr alt)
+               (run-hooks 'mew-draft-mode-reedit-hook)))
+         (mew-summary-reedit-for-message fld msg nil keep-hdr nil)
+         (run-hooks 'mew-draft-mode-reedit-hook)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -727,7 +727,7 @@ See also mew-summary-edit-again."
    (mew-header-sort mew-field-order-for-reediting)
    (unless keep-hdr
      (if mew-case-guess-when-prepared
-	 (mew-draft-set-case-by-guess))
+         (mew-draft-set-case-by-guess))
      (mew-draft-replace-fields nil))
    (mew-summary-edit-header-common)))
 
@@ -775,19 +775,19 @@ The message is assumed to be a valid MIME message."
   (mew-summary-prepare-draft
    (mew-summary-edit-message fld msg nil nil)
    (let* ((file (mew-expand-msg fld msg))
-	  (work (concat file mew-queue-work-suffix))
-	  (info (concat file mew-queue-info-suffix))
-	  inf hdr)
+          (work (concat file mew-queue-work-suffix))
+          (info (concat file mew-queue-info-suffix))
+          inf hdr)
      (when (file-readable-p file)
        (rename-file file work 'override)
        (setq inf (mew-lisp-load info))
        (cond
-	((mew-folder-queuep fld)
-	 (setq hdr (mew-smtp-get-raw-header inf))
-	 (mew-tinfo-set-case (mew-smtp-get-case inf)))
-	((mew-folder-postqp fld)
-	 (setq hdr (mew-nntp2-get-raw-header inf))
-	 (mew-tinfo-set-case (mew-nntp2-get-case inf))))
+        ((mew-folder-queuep fld)
+         (setq hdr (mew-smtp-get-raw-header inf))
+         (mew-tinfo-set-case (mew-smtp-get-case inf)))
+        ((mew-folder-postqp fld)
+         (setq hdr (mew-nntp2-get-raw-header inf))
+         (mew-tinfo-set-case (mew-nntp2-get-case inf))))
        (mew-queue-backup work mew-queue-info-suffix)
        (and hdr (mew-summary-edit-header-for-queue hdr))))
    (mew-draft-mode)
@@ -831,10 +831,10 @@ mew-summary-reedit."
   (interactive)
   (mew-summary-msg
    (let* ((fld (mew-summary-folder-name))
-	  (msg (mew-summary-message-number))
-	  (nfld mew-temp-dir)
-	  (nmsg (mew-folder-new-message nfld 'num-only))
-	  nfile)
+          (msg (mew-summary-message-number))
+          (nfld mew-temp-dir)
+          (nmsg (mew-folder-new-message nfld 'num-only))
+          nfile)
      (with-temp-buffer
        ;; First, let's remove garbage and make a valid message
        ;; into a file.
@@ -842,18 +842,18 @@ mew-summary-reedit."
        (mew-set-buffer-multibyte t)
        (goto-char (point-min))
        (if (not (re-search-forward mew-summary-edit-again-regex nil t))
-	   (message "Cannot edit this message again")
-	 (forward-line)
-	 ;; skip blank lines
-	 (while (looking-at "^$") (forward-line))
-	 (delete-region (point-min) (point))
-	 (setq nfile (mew-expand-new-msg nfld nmsg))
-	 (mew-frwlet mew-cs-dummy mew-cs-text-for-write
-	   (write-region (point-min) (point-max) nfile nil 'no-msg))
-	 ;; A new message is stored in the temporary directory
-	 (mew-summary-reedit-for-message nfld nmsg nil nil nil)
-	 (run-hooks 'mew-draft-mode-edit-again-hook)
-	 (mew-delete-file nfile))))))
+           (message "Cannot edit this message again")
+         (forward-line)
+         ;; skip blank lines
+         (while (looking-at "^$") (forward-line))
+         (delete-region (point-min) (point))
+         (setq nfile (mew-expand-new-msg nfld nmsg))
+         (mew-frwlet mew-cs-dummy mew-cs-text-for-write
+           (write-region (point-min) (point-max) nfile nil 'no-msg))
+         ;; A new message is stored in the temporary directory
+         (mew-summary-reedit-for-message nfld nmsg nil nil nil)
+         (run-hooks 'mew-draft-mode-edit-again-hook)
+         (mew-delete-file nfile))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -863,29 +863,29 @@ mew-summary-reedit."
 (defun mew-ct-suffix (ct)
   "Get an appropriate suffix from content type."
   (let* ((base (mew-ctdb-regex (mew-ctdb-by-ct ct)))
-	 (len (length base))
-	 (ret (mew-make-string len))
-	 (j 0) char)
+         (len (length base))
+         (ret (mew-make-string len))
+         (j 0) char)
     (if (not (stringp base))
-	nil
+        nil
       (dotimes (i len)
-	(setq char (aref base i))
-	(if (or (char-equal char ?.)
-		(and (>= char ?a) (<= char ?z)))
-	    (progn
-	      (aset ret j char)
-	      (setq j (1+ j)))))
+        (setq char (aref base i))
+        (if (or (char-equal char ?.)
+                (and (>= char ?a) (<= char ?z)))
+            (progn
+              (aset ret j char)
+              (setq j (1+ j)))))
       (setq ret (substring ret 0 j))
       (if (string-match "^\\.[a-z]+$" ret)
-	  ret
-	nil))))
+          ret
+        nil))))
 
 (defun mew-summary-edit-message (fld msg part alt)
   "Prepare a header and a body, optionally attachments."
   (let* ((draft (mew-folder-new-message mew-draft-folder))
-	 (attachdir (mew-attachdir draft))
-	 (buf (generate-new-buffer mew-buffer-prefix))
-	 syntax hbeg hend beg end len cnt stx ctl ct charset start cs)
+         (attachdir (mew-attachdir draft))
+         (buf (generate-new-buffer mew-buffer-prefix))
+         syntax hbeg hend beg end len cnt stx ctl ct charset start cs)
     ;; prepare draft file
     (mew-draft-find-and-switch draft)
     (mew-delete-directory-recursively attachdir)
@@ -906,50 +906,50 @@ mew-summary-reedit."
       ;; syntax is now for the multipart
       (setq syntax (mew-syntax-get-part syntax))
       (if (mew-syntax-singlepart-p syntax)
-	  (progn
-	    (setq beg (mew-syntax-get-begin syntax))
-	    (setq end (mew-syntax-get-end syntax))
-	    (setq ctl (mew-syntax-get-ct syntax))
-	    (setq charset (mew-syntax-get-param ctl "charset"))
-	    (setq syntax nil))
-	;; Let's store each part
-	(setq cnt mew-syntax-magic)
-	(unless (string= mew-ct-txt
-			 (mew-syntax-get-value
-			  (mew-syntax-get-ct (aref syntax cnt)) 'cap))
-	  (setq syntax (mew-syntax-insert-entry
-			syntax '(1) (mew-encode-syntax-text))))
-	(setq len (length syntax))
-	(mew-make-directory attachdir)
-	(while (< cnt len)
-	  (setq stx (aref syntax cnt))
-	  (setq ctl (mew-syntax-get-ct stx))
-	  (setq ct (mew-syntax-get-value ctl 'cap))
-	  (cond
-	   ((string= mew-ct-msg ct)
-	    (mew-d2e-message stx attachdir))
-	   ((mew-ct-multipartp ct)
-	    (mew-d2e-multipart stx (mew-random-filename attachdir 1 nil)))
-	   (t
-	    (if (/= cnt mew-syntax-magic)
-		(mew-d2e-singlepart stx attachdir)
-	      (setq beg (mew-syntax-get-begin stx))
-	      (setq end (mew-syntax-get-end stx))
-	      (setq charset (mew-syntax-get-param ctl "charset"))
-	      (mew-delete "charset" ctl)
-	      (mew-syntax-set-file stx mew-draft-coverpage)
-	      (mew-syntax-set-decrypters stx nil))))
-	  (setq cnt (1+ cnt)))
-	(mew-syntax-set-file
-	 syntax
-	 (file-name-as-directory (file-name-nondirectory attachdir)))
-	(mew-syntax-set-decrypters syntax nil)
-	(mew-syntax-set-privacy syntax nil)
-	(mew-syntax-set-ct syntax mew-type-mlm)
-	(mew-syntax-set-cte syntax nil)
-	(mew-syntax-set-cd syntax nil)
-	(mew-syntax-set-cid syntax nil)
-	(mew-syntax-set-cdp syntax nil)))
+          (progn
+            (setq beg (mew-syntax-get-begin syntax))
+            (setq end (mew-syntax-get-end syntax))
+            (setq ctl (mew-syntax-get-ct syntax))
+            (setq charset (mew-syntax-get-param ctl "charset"))
+            (setq syntax nil))
+        ;; Let's store each part
+        (setq cnt mew-syntax-magic)
+        (unless (string= mew-ct-txt
+                         (mew-syntax-get-value
+                          (mew-syntax-get-ct (aref syntax cnt)) 'cap))
+          (setq syntax (mew-syntax-insert-entry
+                        syntax '(1) (mew-encode-syntax-text))))
+        (setq len (length syntax))
+        (mew-make-directory attachdir)
+        (while (< cnt len)
+          (setq stx (aref syntax cnt))
+          (setq ctl (mew-syntax-get-ct stx))
+          (setq ct (mew-syntax-get-value ctl 'cap))
+          (cond
+           ((string= mew-ct-msg ct)
+            (mew-d2e-message stx attachdir))
+           ((mew-ct-multipartp ct)
+            (mew-d2e-multipart stx (mew-random-filename attachdir 1 nil)))
+           (t
+            (if (/= cnt mew-syntax-magic)
+                (mew-d2e-singlepart stx attachdir)
+              (setq beg (mew-syntax-get-begin stx))
+              (setq end (mew-syntax-get-end stx))
+              (setq charset (mew-syntax-get-param ctl "charset"))
+              (mew-delete "charset" ctl)
+              (mew-syntax-set-file stx mew-draft-coverpage)
+              (mew-syntax-set-decrypters stx nil))))
+          (setq cnt (1+ cnt)))
+        (mew-syntax-set-file
+         syntax
+         (file-name-as-directory (file-name-nondirectory attachdir)))
+        (mew-syntax-set-decrypters syntax nil)
+        (mew-syntax-set-privacy syntax nil)
+        (mew-syntax-set-ct syntax mew-type-mlm)
+        (mew-syntax-set-cte syntax nil)
+        (mew-syntax-set-cd syntax nil)
+        (mew-syntax-set-cid syntax nil)
+        (mew-syntax-set-cdp syntax nil)))
     ;; draft buffer
     ;; header
     (mew-insert-buffer-substring buf hbeg hend)
@@ -959,7 +959,7 @@ mew-summary-reedit."
     ;; The first part may not be Text/Plain.
     (if (and beg end) (mew-insert-buffer-substring buf beg end))
     (if (or (null charset) (string= charset mew-us-ascii))
-	(setq cs mew-cs-autoconv) ;; for RFC822
+        (setq cs mew-cs-autoconv) ;; for RFC822
       (setq cs (mew-charset-to-cs charset)))
     (unless (mew-coding-system-p cs)
       (error "Unknown coding system %s" (symbol-name cs)))
@@ -970,20 +970,20 @@ mew-summary-reedit."
 (defun mew-d2e-singlepart (syntax dir)
   "De-compose singlepart"
   (let* ((ctl (mew-syntax-get-ct syntax))
-	 (ct  (mew-syntax-get-value ctl 'cap))
-	 (cdpl (mew-syntax-get-cdp syntax))
-	 (file (mew-syntax-get-filename cdpl ctl))
-	 (beg (mew-syntax-get-begin syntax))
-	 (end (mew-syntax-get-end syntax))
-	 (linebasep (or (mew-ct-textp ct) (mew-ct-linebasep ct))))
+         (ct  (mew-syntax-get-value ctl 'cap))
+         (cdpl (mew-syntax-get-cdp syntax))
+         (file (mew-syntax-get-filename cdpl ctl))
+         (beg (mew-syntax-get-begin syntax))
+         (end (mew-syntax-get-end syntax))
+         (linebasep (or (mew-ct-textp ct) (mew-ct-linebasep ct))))
     (if (stringp file)
-	(setq file (expand-file-name file dir))
+        (setq file (expand-file-name file dir))
       (setq file (mew-random-filename dir 2 nil (mew-ct-suffix ct)))
       (mew-syntax-set-cdp syntax nil))
     (mew-frwlet mew-cs-dummy (if linebasep mew-cs-text-for-write mew-cs-binary)
       (write-region beg end file nil 'no-msg))
     (if (and (mew-ct-textp ct) (mew-syntax-get-param ctl "charset"))
-	(mew-delete "charset" ctl)) ;; side effect
+        (mew-delete "charset" ctl)) ;; side effect
     (mew-syntax-set-file syntax (file-name-nondirectory file))
     (mew-syntax-set-decrypters syntax nil)
     (mew-syntax-set-privacy syntax nil)
@@ -992,19 +992,19 @@ mew-summary-reedit."
 (defun mew-d2e-multipart (syntax dir)
   "De-compose multipart"
   (let ((len (length syntax))
-	(cnt mew-syntax-magic)
-	ct part)
+        (cnt mew-syntax-magic)
+        ct part)
     (mew-make-directory dir)
     (while (< cnt len)
       (setq part (aref syntax cnt))
       (setq ct (mew-syntax-get-value (mew-syntax-get-ct part) 'cap))
       (cond
        ((string= mew-ct-msg ct)
-	(mew-d2e-message part dir))
+        (mew-d2e-message part dir))
        ((mew-ct-multipartp ct)
-	(mew-d2e-multipart part (mew-random-filename dir 1 nil)))
+        (mew-d2e-multipart part (mew-random-filename dir 1 nil)))
        (t
-	(mew-d2e-singlepart part dir)))
+        (mew-d2e-singlepart part dir)))
       (setq cnt (1+ cnt)))
     (mew-syntax-set-file
      syntax
@@ -1020,8 +1020,8 @@ mew-summary-reedit."
 (defun mew-d2e-message (syntax dir)
   "De-compose message like singlepart"
   (let ((file (mew-random-filename dir 2 t))
-	(beg (mew-syntax-get-begin syntax))
-	(end (mew-syntax-get-end (mew-syntax-get-part syntax))))
+        (beg (mew-syntax-get-begin syntax))
+        (end (mew-syntax-get-end (mew-syntax-get-part syntax))))
     (mew-frwlet mew-cs-dummy mew-cs-text-for-write
       (write-region beg end file nil 'no-msg))
     (mew-syntax-set-key syntax 'single)
@@ -1043,22 +1043,22 @@ mew-summary-reedit."
    (mew-summary-not-in-draft
     (mew-summary-msg-or-part
      (let ((fld (mew-summary-folder-name))
-	   (msg (mew-summary-message-number2))
-	   (part (mew-syntax-nums)))
+           (msg (mew-summary-message-number2))
+           (part (mew-syntax-nums)))
        (if part
-	   (let* ((cache (mew-cache-hit fld msg 'must-hit))
-		  (alt nil)
-		  (syntax (mew-cache-decode-syntax cache))
-		  (stx (mew-syntax-get-entry syntax part))
-		  (ct (mew-syntax-get-value (mew-syntax-get-ct stx) 'cap)))
-	     (if (not (string= mew-ct-msg ct))
-		 (message "Cannot edit here")
-	       (mew-summary-edit-for-message fld msg part alt)
-	       (run-hooks 'mew-draft-mode-edit-hook)))
-	 (mew-summary-edit-for-message fld msg nil nil)
-	 (setq mode-name "Edit")
-	 (force-mode-line-update)
-	 (run-hooks 'mew-draft-mode-edit-hook)))))))
+           (let* ((cache (mew-cache-hit fld msg 'must-hit))
+                  (alt nil)
+                  (syntax (mew-cache-decode-syntax cache))
+                  (stx (mew-syntax-get-entry syntax part))
+                  (ct (mew-syntax-get-value (mew-syntax-get-ct stx) 'cap)))
+             (if (not (string= mew-ct-msg ct))
+                 (message "Cannot edit here")
+               (mew-summary-edit-for-message fld msg part alt)
+               (run-hooks 'mew-draft-mode-edit-hook)))
+         (mew-summary-edit-for-message fld msg nil nil)
+         (setq mode-name "Edit")
+         (force-mode-line-update)
+         (run-hooks 'mew-draft-mode-edit-hook)))))))
 
 (defun mew-summary-edit-for-message (fld msg part alt)
   (mew-current-set-window-config)
@@ -1092,14 +1092,14 @@ mew-summary-reedit."
     (save-excursion
       (mew-header-goto-end)
       (save-restriction
-	(narrow-to-region (point-min) (point))
-	(goto-char (point-min))
-	(while (not (eobp))
-	  (if (not (looking-at mew-keyval))
-	      (forward-line)
-	    (setq fields (cons (mew-match-string 1) fields))
+        (narrow-to-region (point-min) (point))
+        (goto-char (point-min))
+        (while (not (eobp))
+          (if (not (looking-at mew-keyval))
+              (forward-line)
+            (setq fields (cons (mew-match-string 1) fields))
             (forward-line)
-	    (mew-header-goto-next))))
+            (mew-header-goto-next))))
       fields)))
 
 (defun mew-summary-edit-obtain-fields (fld msg fields)
@@ -1122,35 +1122,35 @@ mew-summary-reedit."
   (let (multip)
     (save-excursion
       (save-window-excursion
-	(set-buffer buf)
-	(mew-set-buffer-multibyte t)
-	(if (buffer-modified-p) (save-buffer)) ;; to make backup
-	(widen)
-	(if (mew-attach-p)
-	    (progn
-	      (setq multip t)
-	      (mew-attach-clear))
-	  (unless mew-encode-syntax
-	    (setq mew-encode-syntax
-		  (mew-encode-syntax-single "text.txt" (list mew-ct-txt)))))
-	(goto-char (mew-header-end))
-	(forward-line)
-	(if multip
-	    (mew-encode-make-multi)
-	  (mew-encode-make-single))
-	(mew-encode-make-header)
-	(mew-encode-save-draft)
-	(mew-overlay-delete-buffer)
-	(goto-char (point-min))
-	(insert (mew-tinfo-get-preserved-header))
-	(save-buffer)
-	(buffer-file-name)))))
+        (set-buffer buf)
+        (mew-set-buffer-multibyte t)
+        (if (buffer-modified-p) (save-buffer)) ;; to make backup
+        (widen)
+        (if (mew-attach-p)
+            (progn
+              (setq multip t)
+              (mew-attach-clear))
+          (unless mew-encode-syntax
+            (setq mew-encode-syntax
+                  (mew-encode-syntax-single "text.txt" (list mew-ct-txt)))))
+        (goto-char (mew-header-end))
+        (forward-line)
+        (if multip
+            (mew-encode-make-multi)
+          (mew-encode-make-single))
+        (mew-encode-make-header)
+        (mew-encode-save-draft)
+        (mew-overlay-delete-buffer)
+        (goto-char (point-min))
+        (insert (mew-tinfo-get-preserved-header))
+        (save-buffer)
+        (buffer-file-name)))))
 
 (defun mew-edit-make-refile (case:srcfld srcfile)
   (let* ((case:dstfld (car (mew-input-folders case:srcfld)))
-	 (dstfld (mew-case:folder-folder case:dstfld))
-	 (case (mew-case:folder-case case:dstfld))
-	 dstfile)
+         (dstfld (mew-case:folder-folder case:dstfld))
+         (case (mew-case:folder-case case:dstfld))
+         dstfile)
     (cond
      ((mew-folder-imapp dstfld)
       (mew-imap2-copy-message case 'move (list srcfile) dstfld))
@@ -1164,8 +1164,8 @@ mew-summary-reedit."
 (defun mew-edit-make ()
   (interactive)
   (let ((buf (current-buffer))
-	(case:srcfld (mew-tinfo-get-src-folder))
-	srcfile)
+        (case:srcfld (mew-tinfo-get-src-folder))
+        srcfile)
     (mew-edit-make-delete-window buf)
     (setq srcfile (mew-edit-make-message buf))
     (mew-remove-buffer buf)

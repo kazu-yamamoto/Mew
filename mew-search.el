@@ -18,43 +18,43 @@
 (defvar mew-prog-est       "estcmd")
 
 (mew-defstruct search
-	       key name prog
-	       func-search func-virtual
-	       func-index-folder func-index-all
-	       func-canonicalize-pattern
-	       func-register func-unregister func-filter)
+               key name prog
+               func-search func-virtual
+               func-index-folder func-index-all
+               func-canonicalize-pattern
+               func-register func-unregister func-filter)
 
 (defvar mew-search-switch
   `((spotlight "Spotlight" ,mew-prog-spotlight
-     mew-search-with-spotlight mew-search-virtual-with-spotlight
-     mew-spotlight-index-folder mew-spotlight-index-all
-     mew-pick-canonicalize-pattern-spotlight
-     nil nil)
+               mew-search-with-spotlight mew-search-virtual-with-spotlight
+               mew-spotlight-index-folder mew-spotlight-index-all
+               mew-pick-canonicalize-pattern-spotlight
+               nil nil)
     (wds "WDS" ,mew-prog-wds
-     mew-search-with-wds mew-search-virtual-with-wds
-     mew-wds-index-folder mew-wds-index-all
-     mew-pick-canonicalize-pattern-wds
-     mew-wds-register mew-wds-unregister)
+         mew-search-with-wds mew-search-virtual-with-wds
+         mew-wds-index-folder mew-wds-index-all
+         mew-pick-canonicalize-pattern-wds
+         mew-wds-register mew-wds-unregister)
     (google "Google" ,mew-prog-google
-     mew-search-with-google mew-search-virtual-with-google
-     mew-google-index-folder mew-google-index-all
-     mew-pick-canonicalize-pattern-google
-     mew-google-register mew-google-unregister)
+            mew-search-with-google mew-search-virtual-with-google
+            mew-google-index-folder mew-google-index-all
+            mew-pick-canonicalize-pattern-google
+            mew-google-register mew-google-unregister)
     (est "Hyper Estraier" ,mew-prog-est
-     mew-search-with-est mew-search-virtual-with-est
-     mew-est-index-folder mew-est-index-all
-     mew-pick-canonicalize-pattern-est
-     nil nil
-     mew-est-input-filter)))
+         mew-search-with-est mew-search-virtual-with-est
+         mew-est-index-folder mew-est-index-all
+         mew-pick-canonicalize-pattern-est
+         nil nil
+         mew-est-input-filter)))
 
 (defun mew-search-get-list (func)
   (let ((sw mew-search-switch)
-	ent ret)
+        ent ret)
     (while sw
       (setq ent (car sw))
       (setq sw (cdr sw))
       (if (mew-which-exec (mew-search-get-prog ent))
-	  (setq ret (cons (funcall func ent) ret))))
+          (setq ret (cons (funcall func ent) ret))))
     (nreverse ret)))
 
 (defun mew-search-get-ent (method)
@@ -71,14 +71,14 @@
   "Change a search method."
   (interactive)
   (let* ((names (mew-search-get-list 'mew-search-get-name))
-	 (ent (mew-search-get-ent mew-search-method))
-	 (default (mew-search-get-name ent))
-	 name)
+         (ent (mew-search-get-ent mew-search-method))
+         (default (mew-search-get-name ent))
+         name)
     (if (not names)
-	(message "No search method")
+        (message "No search method")
       (setq names (mapcar (lambda (x) (list x)) names))
       (setq name (completing-read (format "Search method (%s): " default)
-				  names nil t nil nil default))
+                                  names nil t nil nil default))
       (setq mew-search-method (nth 0 (mew-assoc-equal name mew-search-switch 1))))))
 
 (defun mew-summary-search ()
@@ -89,25 +89,25 @@ with a search method. Then put the '*' mark onto them. "
    (if (not mew-search-method)
        (message "No search method")
      (let* ((ent (mew-search-get-ent mew-search-method))
-	    (func (mew-search-get-func-search ent))
-	    (name (mew-search-get-name ent))
-	    (canon-func (mew-search-get-func-canonicalize-pattern ent))
-	    (flt-func (mew-search-get-func-filter ent))
-	    (folder (mew-summary-physical-folder))
-	    pattern msgs filter)
+            (func (mew-search-get-func-search ent))
+            (name (mew-search-get-name ent))
+            (canon-func (mew-search-get-func-canonicalize-pattern ent))
+            (flt-func (mew-search-get-func-filter ent))
+            (folder (mew-summary-physical-folder))
+            pattern msgs filter)
        (if (not (fboundp func))
-	   (message "This command cannot be used")
-	 (setq pattern (if flt-func
-			   (read-string (concat name " pick pattern: "))
-			 (mew-input-pick-pattern (concat name " pick"))))
-	 (if (and (string= pattern "") (not (fboundp flt-func)))
-	     (message (mew-substitute-for-summary "Keyword must be specified. You may use '\\[mew-summary-pick]' instead"))
-	   (when (and canon-func (fboundp canon-func))
-	     (setq pattern (funcall canon-func pattern)))
-	   (if (fboundp flt-func)
-	       (setq filter (funcall flt-func)))
-	   (setq msgs (funcall func pattern folder filter))
-	   (mew-summary-pick-ls folder msgs)))))))
+           (message "This command cannot be used")
+         (setq pattern (if flt-func
+                           (read-string (concat name " pick pattern: "))
+                         (mew-input-pick-pattern (concat name " pick"))))
+         (if (and (string= pattern "") (not (fboundp flt-func)))
+             (message (mew-substitute-for-summary "Keyword must be specified. You may use '\\[mew-summary-pick]' instead"))
+           (when (and canon-func (fboundp canon-func))
+             (setq pattern (funcall canon-func pattern)))
+           (if (fboundp flt-func)
+               (setq filter (funcall flt-func)))
+           (setq msgs (funcall func pattern folder filter))
+           (mew-summary-pick-ls folder msgs)))))))
 
 (defun mew-summary-selection-by-search (&optional ask-folder)
   "Making selection according to a specified pick pattern
@@ -116,52 +116,52 @@ with a search method."
   (if (not mew-search-method)
       (message "No search method")
     (let* ((ofolder (mew-summary-folder-name 'ext))
-	   (ent (mew-search-get-ent mew-search-method))
-	   (func (mew-search-get-func-virtual ent))
-	   (name (mew-search-get-name ent))
-	   (canon-func (mew-search-get-func-canonicalize-pattern ent))
-	   (flt-func (mew-search-get-func-filter ent))
-	   vfolder opattern pattern dfunc file opts rttl file-rttl flds filter)
+           (ent (mew-search-get-ent mew-search-method))
+           (func (mew-search-get-func-virtual ent))
+           (name (mew-search-get-name ent))
+           (canon-func (mew-search-get-func-canonicalize-pattern ent))
+           (flt-func (mew-search-get-func-filter ent))
+           vfolder opattern pattern dfunc file opts rttl file-rttl flds filter)
       (if (not (fboundp func))
-	  (message "This command cannot be used")
-	(if ask-folder
-	    (setq flds (mew-input-folders
-			(or (mew-summary-folder-name)
-			    (mew-case-folder
-			     mew-case
-			     (mew-proto-inbox-folder (mew-proto mew-case)))))))
-	(setq opattern (if flt-func
-			   (read-string (concat name " virtual pattern: "))
-			 (mew-input-pick-pattern (concat name " virtual"))))
-	(if (and (string= opattern "") (not (fboundp flt-func)))
-	    (message (mew-substitute-for-summary "Keyword must be specified"))
-	  (if (string= opattern "") (setq opattern " "))
-	  (if (and canon-func (fboundp canon-func))
-	      (setq pattern (funcall canon-func opattern))
-	    (setq pattern opattern))
-	  (when (fboundp flt-func)
-	    (setq filter (funcall flt-func))
-	    (if (string= opattern " ") (setq opattern ""))
-	    (setq opattern (concat opattern filter)))
-	  (setq vfolder (mew-folder-to-selection opattern))
-	  (mew-summary-switch-to-folder vfolder)
-	  (mew-vinfo-set-mode 'selection)
-	  (mew-vinfo-set-physical-folder nil)
-	  (mew-vinfo-set-original-folder ofolder)
-	  (mew-sinfo-set-find-key opattern)
-	  (make-local-variable 'mew-summary-form-mark-delete)
-	  (setq mew-summary-form-mark-delete nil)
-	  (make-local-variable 'mew-summary-form-mark-spam)
-	  (setq mew-summary-form-mark-spam nil)
-	  (when (mew-summary-exclusive-p)
-	    (with-temp-buffer
-	      (mew-set-buffer-multibyte t)
-	      (mew-piolet mew-cs-text-for-read mew-cs-text-for-write
-		(setq file-rttl (funcall func pattern flds filter)))))
-	  (mew-set '(file rttl) file-rttl)
-	  (setq dfunc `(lambda () (mew-delete-file ,file)))
-	  (setq opts (list "-i" file))
-	  (mew-local-retrieve 'vir opts dfunc nil nil rttl))))))
+          (message "This command cannot be used")
+        (if ask-folder
+            (setq flds (mew-input-folders
+                        (or (mew-summary-folder-name)
+                            (mew-case-folder
+                             mew-case
+                             (mew-proto-inbox-folder (mew-proto mew-case)))))))
+        (setq opattern (if flt-func
+                           (read-string (concat name " virtual pattern: "))
+                         (mew-input-pick-pattern (concat name " virtual"))))
+        (if (and (string= opattern "") (not (fboundp flt-func)))
+            (message (mew-substitute-for-summary "Keyword must be specified"))
+          (if (string= opattern "") (setq opattern " "))
+          (if (and canon-func (fboundp canon-func))
+              (setq pattern (funcall canon-func opattern))
+            (setq pattern opattern))
+          (when (fboundp flt-func)
+            (setq filter (funcall flt-func))
+            (if (string= opattern " ") (setq opattern ""))
+            (setq opattern (concat opattern filter)))
+          (setq vfolder (mew-folder-to-selection opattern))
+          (mew-summary-switch-to-folder vfolder)
+          (mew-vinfo-set-mode 'selection)
+          (mew-vinfo-set-physical-folder nil)
+          (mew-vinfo-set-original-folder ofolder)
+          (mew-sinfo-set-find-key opattern)
+          (make-local-variable 'mew-summary-form-mark-delete)
+          (setq mew-summary-form-mark-delete nil)
+          (make-local-variable 'mew-summary-form-mark-spam)
+          (setq mew-summary-form-mark-spam nil)
+          (when (mew-summary-exclusive-p)
+            (with-temp-buffer
+              (mew-set-buffer-multibyte t)
+              (mew-piolet mew-cs-text-for-read mew-cs-text-for-write
+                (setq file-rttl (funcall func pattern flds filter)))))
+          (mew-set '(file rttl) file-rttl)
+          (setq dfunc `(lambda () (mew-delete-file ,file)))
+          (setq opts (list "-i" file))
+          (mew-local-retrieve 'vir opts dfunc nil nil rttl))))))
 
 (defun mew-summary-make-index-folder ()
   "Make index for this folder."
@@ -170,11 +170,11 @@ with a search method."
    (if (not mew-search-method)
        (message "No search method")
      (let* ((ent (mew-search-get-ent mew-search-method))
-	    (func (mew-search-get-func-index-folder ent))
-	    (folder (mew-summary-folder-name 'ext)))
+            (func (mew-search-get-func-index-folder ent))
+            (folder (mew-summary-folder-name 'ext)))
        (if (not (fboundp func))
-	   (message "This command cannot be used")
-	 (funcall func folder))))))
+           (message "This command cannot be used")
+         (funcall func folder))))))
 
 (defun mew-summary-make-index-all ()
   "Make index for all folders."
@@ -182,30 +182,30 @@ with a search method."
   (if (not mew-search-method)
       (message "No search method")
     (let* ((ent (mew-search-get-ent mew-search-method))
-	   (func (mew-search-get-func-index-all ent)))
+           (func (mew-search-get-func-index-all ent)))
       (if (fboundp func)
-	  (funcall func)
-	(message "This command cannot be used")))))
+          (funcall func)
+        (message "This command cannot be used")))))
 
 (defun mew-summary-search-register ()
   (interactive)
   (if (not mew-search-method)
       (message "No search method")
     (let* ((ent (mew-search-get-ent mew-search-method))
-	   (func (mew-search-get-func-register ent)))
-       (if (not (fboundp func))
-	   (message "This command cannot be used")
-	 (funcall func)))))
+           (func (mew-search-get-func-register ent)))
+      (if (not (fboundp func))
+          (message "This command cannot be used")
+        (funcall func)))))
 
 (defun mew-summary-search-unregister ()
   (interactive)
   (if (not mew-search-method)
       (message "No search method")
     (let* ((ent (mew-search-get-ent mew-search-method))
-	   (func (mew-search-get-func-unregister ent)))
-       (if (not (fboundp func))
-	   (message "This command cannot be used")
-	 (funcall func)))))
+           (func (mew-search-get-func-unregister ent)))
+      (if (not (fboundp func))
+          (message "This command cannot be used")
+        (funcall func)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -218,8 +218,8 @@ with a search method."
       (setq a (car alist))
       (setq n (nth nth a))
       (if (or (and (stringp n) (string-match key n))
-	      (equal n key) (eq n t))
-	  (setq ret (cons a ret)))
+              (equal n key) (eq n t))
+          (setq ret (cons a ret)))
       (setq alist (cdr alist)))
     ret)) ;; not reversed
 
@@ -231,51 +231,51 @@ with a search method."
       (setq case (mew-case:folder-case ent))
       (setq fld (mew-case:folder-folder ent))
       (if (not (string-match "\\*$" fld))
-	  (setq ret (cons ent ret))
-	(setq regex (substring fld 0 -1))
-	(setq regex (concat "^" (regexp-quote regex)))
-	(cond
-	 ((mew-folder-popp fld)
-	  (setq alist (mew-pop-folder-alist)))
-	 ((mew-folder-nntpp fld)
-	  (setq alist (mew-nntp-folder-alist case)))
-	 ((mew-folder-imapp fld)
-	  (setq alist (mew-imap-folder-alist case)))
-	 (t
-	  (setq alist (mew-local-folder-alist))))
-	(setq flds (mew-assoc-match-list regex alist 0))
-	(setq flds (mapcar (lambda (x) (mew-case-folder case (nth 0 x))) flds))
-	(setq ret (nconc flds ret))))
+          (setq ret (cons ent ret))
+        (setq regex (substring fld 0 -1))
+        (setq regex (concat "^" (regexp-quote regex)))
+        (cond
+         ((mew-folder-popp fld)
+          (setq alist (mew-pop-folder-alist)))
+         ((mew-folder-nntpp fld)
+          (setq alist (mew-nntp-folder-alist case)))
+         ((mew-folder-imapp fld)
+          (setq alist (mew-imap-folder-alist case)))
+         (t
+          (setq alist (mew-local-folder-alist))))
+        (setq flds (mew-assoc-match-list regex alist 0))
+        (setq flds (mapcar (lambda (x) (mew-case-folder case (nth 0 x))) flds))
+        (setq ret (nconc flds ret))))
     (nreverse ret)))
 
 (defun mew-search-spotlight (pattern path)
   (setq pattern (mew-cs-encode-string pattern 'utf-8))
   (let* ((ent (mew-search-get-ent mew-search-method))
-	 (prog (mew-search-get-prog ent)))
+         (prog (mew-search-get-prog ent)))
     (mew-plet
      (mew-alet
       (call-process prog nil t nil "-onlyin" path pattern)))))
 
 (defun mew-search-with-spotlight (pattern folder &optional _dummy)
   (let ((path (mew-expand-folder folder))
-	msgs)
+        msgs)
     (with-temp-buffer
       (mew-set-buffer-multibyte t)
       (mew-search-spotlight pattern path)
       (goto-char (point-min))
       (while (re-search-forward mew-regex-message-files5 nil t)
-	(setq msgs (cons (mew-match-string 1) msgs))
-	(forward-line))
+        (setq msgs (cons (mew-match-string 1) msgs))
+        (forward-line))
       (setq msgs (nreverse msgs))
       (setq msgs (sort (mapcar 'string-to-number msgs) '<))
       (mapcar 'number-to-string msgs))))
 
 (defun mew-search-virtual-with-spotlight (pattern flds &optional _dummy)
   (let* ((mpath (mew-expand-folder mew-folder-local))
-	 (mail-regex (regexp-quote (file-name-as-directory mpath)))
-	 (regex (format "^%s%s\\([0-9]+\\)\\(%s\\)?$" mail-regex (file-name-as-directory "\\(.*\\)") mew-suffix))
-	 (file (mew-make-temp-name))
-	 (prev "") (rttl 0) (n 1) crnt path)
+         (mail-regex (regexp-quote (file-name-as-directory mpath)))
+         (regex (format "^%s%s\\([0-9]+\\)\\(%s\\)?$" mail-regex (file-name-as-directory "\\(.*\\)") mew-suffix))
+         (file (mew-make-temp-name))
+         (prev "") (rttl 0) (n 1) crnt path)
     (unless flds (setq flds (list mew-folder-local)))
     (setq flds (mew-expand-wildcard-folder flds))
     (while flds
@@ -284,41 +284,41 @@ with a search method."
       (mew-search-spotlight pattern path)
       (goto-char (point-min))
       (while (not (eobp))
-	(when (looking-at regex)
-	  (setq rttl (1+ rttl))
-	  (setq crnt (match-string 1))
-	  (delete-region (match-beginning 0) (match-beginning 2))
-	  (when (not (string= crnt prev))
-	    (beginning-of-line)
-	    (insert "CD:" mew-folder-local crnt "\n"))
-	  (setq prev crnt)
-	  (forward-line)))
+        (when (looking-at regex)
+          (setq rttl (1+ rttl))
+          (setq crnt (match-string 1))
+          (delete-region (match-beginning 0) (match-beginning 2))
+          (when (not (string= crnt prev))
+            (beginning-of-line)
+            (insert "CD:" mew-folder-local crnt "\n"))
+          (setq prev crnt)
+          (forward-line)))
       (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
-	(write-region (point-min) (point-max) file (> n 1) 'no-msg))
+        (write-region (point-min) (point-max) file (> n 1) 'no-msg))
       (mew-erase-buffer)
       (setq n (1+ n)))
     (list file rttl)))
 
 (defun mew-spotlight-index (dir)
   (let* ((default-directory dir)
-	 (msgs (mew-dir-messages dir mew-regex-message-files3 'full))
-	 dirent subdir)
+         (msgs (mew-dir-messages dir mew-regex-message-files3 'full))
+         dirent subdir)
     (while msgs
       (mew-set-file-type (car msgs))
       (setq msgs (cdr msgs)))
     (when (/= (mew-file-get-links dir) 2)
       (setq dirent (directory-files "." nil mew-regex-folder-candidate))
       (while dirent
-	(setq subdir (car dirent))
-	(setq dirent (cdr dirent))
-	(when (and (file-directory-p subdir)
-		   (not (file-symlink-p subdir)))
-	  (mew-spotlight-index (expand-file-name subdir dir)))))))
+        (setq subdir (car dirent))
+        (setq dirent (cdr dirent))
+        (when (and (file-directory-p subdir)
+                   (not (file-symlink-p subdir)))
+          (mew-spotlight-index (expand-file-name subdir dir)))))))
 
 (defun mew-spotlight-index-folder (folder)
   "Making spotlight index for this folder."
   (let* ((dir (mew-expand-folder folder))
-	 (msgs (mew-dir-messages dir mew-regex-message-files3 'full)))
+         (msgs (mew-dir-messages dir mew-regex-message-files3 'full)))
     (message "Spotlight indexing for %s..." folder)
     (while msgs
       (mew-set-file-type (car msgs))
@@ -331,11 +331,11 @@ with a search method."
   (when (y-or-n-p "Make Spotlight index for all folders? ")
     (message "Spotlight indexing for all folders...")
     (let ((flds '("+" "+#imap" "+#pop" "+#nntp"))
-	  dir)
+          dir)
       (while flds
-	(setq dir (mew-expand-folder (car flds)))
-	(setq flds (cdr flds))
-	(if (file-directory-p dir) (mew-spotlight-index dir))))
+        (setq dir (mew-expand-folder (car flds)))
+        (setq flds (cdr flds))
+        (if (file-directory-p dir) (mew-spotlight-index dir))))
     (message "Spotlight indexing for all folders...done")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -346,21 +346,21 @@ with a search method."
 (defun mew-search-google (pattern path)
   (setq pattern (mew-cs-encode-string pattern 'shift_jis))
   (let* ((ent (mew-search-get-ent mew-search-method))
-	 (prog (mew-search-get-prog ent)))
+         (prog (mew-search-get-prog ent)))
     (mew-plet
      (mew-alet
       (call-process prog nil t nil "-m" "-p" path "-s" "-q" pattern)))))
 
 (defun mew-search-with-google (pattern folder &optional _dummy)
   (let* ((path (mew-expand-folder folder))
-	 msgs)
+         msgs)
     (with-temp-buffer
       (mew-set-buffer-multibyte t)
       (mew-search-google pattern path)
       (goto-char (point-min))
       (while (re-search-forward mew-regex-message-files5 nil t)
-	(setq msgs (cons (mew-match-string 1) msgs))
-	(forward-line))
+        (setq msgs (cons (mew-match-string 1) msgs))
+        (forward-line))
       (setq msgs (nreverse msgs))
       (setq msgs (sort (mapcar 'string-to-number msgs) '<))
       (mapcar 'number-to-string msgs))))
@@ -368,23 +368,23 @@ with a search method."
 ;; xxx flds are not used at this moment
 (defun mew-search-virtual-with-google (pattern _flds &optional _dummy)
   (let* ((path (mew-expand-folder mew-folder-local))
-	 (mail-regex (regexp-quote (file-name-as-directory path)))
-	 (regex (concat "^" mail-regex "\\(.*\\)/" "\\([0-9]+\\)"))
-	 (file (mew-make-temp-name))
-	 (prev "") (rttl 0)
-	 crnt)
+         (mail-regex (regexp-quote (file-name-as-directory path)))
+         (regex (concat "^" mail-regex "\\(.*\\)/" "\\([0-9]+\\)"))
+         (file (mew-make-temp-name))
+         (prev "") (rttl 0)
+         crnt)
     (mew-search-google pattern path)
     (goto-char (point-min))
     (while (not (eobp))
       (when (looking-at regex)
-	(setq rttl (1+ rttl))
-	(setq crnt (match-string 1))
-	(delete-region (match-beginning 0) (match-beginning 2))
-	(when (not (string= crnt prev))
-	  (beginning-of-line)
-	  (insert "CD:" mew-folder-local crnt "\n"))
-	(setq prev crnt)
-	(forward-line)))
+        (setq rttl (1+ rttl))
+        (setq crnt (match-string 1))
+        (delete-region (match-beginning 0) (match-beginning 2))
+        (when (not (string= crnt prev))
+          (beginning-of-line)
+          (insert "CD:" mew-folder-local crnt "\n"))
+        (setq prev crnt)
+        (forward-line)))
     (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
       (write-region (point-min) (point-max) file nil 'no-msg))
     (list file rttl)))
@@ -392,7 +392,7 @@ with a search method."
 (defun mew-google-index-folder (folder)
   "Make Google index for this folder."
   (let* ((ent (mew-search-get-ent mew-search-method))
-	 (prog (mew-search-get-prog ent)))
+         (prog (mew-search-get-prog ent)))
     (start-process prog nil prog "-m" "-i" (mew-expand-folder folder))
     (message "Google indexing for %s in background..." folder)))
 
@@ -400,7 +400,7 @@ with a search method."
   "Make Google index for all folders."
   (interactive)
   (let* ((ent (mew-search-get-ent mew-search-method))
-	 (prog (mew-search-get-prog ent)))
+         (prog (mew-search-get-prog ent)))
     (start-process prog nil prog "-m" "-r" "-i" (mew-expand-folder "+"))
     (message "Google indexing for all folders in background...")))
 
@@ -427,21 +427,21 @@ with a search method."
 (defun mew-search-wds (pattern path)
   (setq pattern (mew-cs-encode-string pattern default-file-name-coding-system))
   (let* ((ent (mew-search-get-ent mew-search-method))
-	 (prog (mew-search-get-prog ent)))
+         (prog (mew-search-get-prog ent)))
     (mew-plet
      (mew-alet
       (call-process prog nil t nil "-e" mew-suffix "-p" path "-s" pattern)))))
 
 (defun mew-search-with-wds (pattern folder &optional _dummy)
   (let* ((path (mew-expand-folder folder))
-	 msgs)
+         msgs)
     (with-temp-buffer
       (mew-set-buffer-multibyte t)
       (mew-search-wds pattern path)
       (goto-char (point-min))
       (while (re-search-forward mew-regex-message-files5 nil t)
-	(setq msgs (cons (mew-match-string 1) msgs))
-	(forward-line))
+        (setq msgs (cons (mew-match-string 1) msgs))
+        (forward-line))
       (setq msgs (nreverse msgs))
       (setq msgs (sort (mapcar 'string-to-number msgs) '<))
       (mapcar 'number-to-string msgs))))
@@ -449,22 +449,22 @@ with a search method."
 ;; xxx flds are not used at this moment
 (defun mew-search-virtual-with-wds (pattern _flds &optional _dummy)
   (let* ((path (mew-expand-folder mew-folder-local))
-	 (mail-regex (regexp-quote (file-name-as-directory path)))
-	 (regex (concat "^" mail-regex "\\(.*\\)/" "\\([0-9]+\\)"))
-	 (file (mew-make-temp-name))
-	 (prev "") (rttl 0)
-	 crnt)
+         (mail-regex (regexp-quote (file-name-as-directory path)))
+         (regex (concat "^" mail-regex "\\(.*\\)/" "\\([0-9]+\\)"))
+         (file (mew-make-temp-name))
+         (prev "") (rttl 0)
+         crnt)
     (mew-search-wds pattern path)
     (goto-char (point-min))
     (while (not (eobp))
       (when (looking-at regex)
-	(setq rttl (1+ rttl))
-	(setq crnt (match-string 1))
-	(delete-region (match-beginning 0) (match-beginning 2))
-	(when (not (string= crnt prev))
-	  (beginning-of-line)
-	  (insert "CD:" mew-folder-local crnt "\n"))
-	(setq prev crnt))
+        (setq rttl (1+ rttl))
+        (setq crnt (match-string 1))
+        (delete-region (match-beginning 0) (match-beginning 2))
+        (when (not (string= crnt prev))
+          (beginning-of-line)
+          (insert "CD:" mew-folder-local crnt "\n"))
+        (setq prev crnt))
       (forward-line))
     (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
       (write-region (point-min) (point-max) file nil 'no-msg))
@@ -478,7 +478,7 @@ with a search method."
   "Make WDS index for all folders."
   (interactive)
   (let* ((ent (mew-search-get-ent mew-search-method))
-	 (prog (mew-search-get-prog ent)))
+         (prog (mew-search-get-prog ent)))
     (start-process prog nil prog "-R" (format "%s=%s" mew-suffix ".eml"))
     (message "WDS indexing for all folders in background...")))
 
@@ -511,65 +511,65 @@ with a search method."
       (setq filter nil)
     (setq filter (mew-cs-encode-string filter mew-cs-est))
     (setq filter (let ((mew-inherit-pick-omit-and t))
-		   (mew-pick-parse (mew-pick-lex filter))))
+                   (mew-pick-parse (mew-pick-lex filter))))
     (setq filter (mapcar 'mew-pick-filter-est-kyvl filter)))
   (let* ((ent (mew-search-get-ent mew-search-method))
-	 (prog (mew-search-get-prog ent))
-	 (casket (expand-file-name mew-search-est-db mew-conf-path))
-	 ;; mew-home is not good for Zaurus
-	 (pregex (concat "^"
-			 (regexp-quote
-			  (file-name-directory
-			   (directory-file-name
-			    (file-truename
-			     (expand-file-name mew-mail-path)))))))
-	 attr args)
+         (prog (mew-search-get-prog ent))
+         (casket (expand-file-name mew-search-est-db mew-conf-path))
+         ;; mew-home is not good for Zaurus
+         (pregex (concat "^"
+                         (regexp-quote
+                          (file-name-directory
+                           (directory-file-name
+                            (file-truename
+                             (expand-file-name mew-mail-path)))))))
+         attr args)
     (setq path (file-truename (file-name-as-directory path)))
     (when (string-match pregex path)
       (setq path (substring path (match-end 0)))
       (mew-plet
        (mew-alet
-	(setq attr (format "@uri STRINC %s" (mew-q-encode-string path ?%)))
-	(cond
-	 ((string-match "^ *ANDNOT " pattern)
-	  (setq pattern (concat "[UVSET] " pattern)))
-	 ((string-match "^ *$" pattern)
-	  (setq pattern "[UVSET]")))
-	(setq args (list "-vu" "-max" "-1" "-ord" "@cdate NUMA" casket pattern))
-	(unless (eq mew-cs-est 'utf-8)
-	  (setq args (cons (mew-cs-to-charset mew-cs-est) args))
-	  (setq args (cons "-ic" args)))
-	(setq filter (nreverse filter))
-	(while filter
-	  (setq args (cons "-attr" (cons (car filter) args)))
-	  (setq filter (cdr filter)))
-	(setq args (cons "-attr" (cons attr args)))
-	(apply 'call-process prog nil t nil "search" args))))))
+        (setq attr (format "@uri STRINC %s" (mew-q-encode-string path ?%)))
+        (cond
+         ((string-match "^ *ANDNOT " pattern)
+          (setq pattern (concat "[UVSET] " pattern)))
+         ((string-match "^ *$" pattern)
+          (setq pattern "[UVSET]")))
+        (setq args (list "-vu" "-max" "-1" "-ord" "@cdate NUMA" casket pattern))
+        (unless (eq mew-cs-est 'utf-8)
+          (setq args (cons (mew-cs-to-charset mew-cs-est) args))
+          (setq args (cons "-ic" args)))
+        (setq filter (nreverse filter))
+        (while filter
+          (setq args (cons "-attr" (cons (car filter) args)))
+          (setq filter (cdr filter)))
+        (setq args (cons "-attr" (cons attr args)))
+        (apply 'call-process prog nil t nil "search" args))))))
 
 (defun mew-search-with-est (pattern folder filter)
   (let* ((path (mew-expand-folder folder))
-	 (regex (format "file://.*/%s/.*/\\([0-9]+\\)\\(%s\\)?$"
-			(file-name-nondirectory mew-mail-path)
-			(regexp-quote mew-suffix)))
-	 msgs)
+         (regex (format "file://.*/%s/.*/\\([0-9]+\\)\\(%s\\)?$"
+                        (file-name-nondirectory mew-mail-path)
+                        (regexp-quote mew-suffix)))
+         msgs)
     (with-temp-buffer
       (mew-set-buffer-multibyte t)
       (mew-search-est pattern path filter)
       (goto-char (point-min))
       (while (re-search-forward regex nil t)
-	(setq msgs (cons (mew-match-string 1) msgs))
-	(forward-line))
+        (setq msgs (cons (mew-match-string 1) msgs))
+        (forward-line))
       (setq msgs (nreverse msgs))
       (setq msgs (sort (mapcar 'string-to-number msgs) '<))
       (mapcar 'number-to-string msgs))))
 
 (defun mew-search-virtual-with-est (pattern flds filter)
   (let* ((regex (format "file://.*/%s/\\(.*\\)/\\([0-9]+\\)\\(%s\\)?$"
-			(file-name-nondirectory mew-mail-path)
-			(regexp-quote mew-suffix)))
-	 (file (mew-make-temp-name))
-	 (prev "") (rttl 0) (n 1)
-	 path crnt start)
+                        (file-name-nondirectory mew-mail-path)
+                        (regexp-quote mew-suffix)))
+         (file (mew-make-temp-name))
+         (prev "") (rttl 0) (n 1)
+         path crnt start)
     (unless flds (setq flds (list mew-folder-local)))
     (setq flds (mew-expand-wildcard-folder flds))
     (while flds
@@ -579,18 +579,18 @@ with a search method."
       (goto-char (point-min))
       (setq start (point))
       (while (re-search-forward regex nil t)
-	(setq rttl (1+ rttl))
-	(setq crnt (match-string 1))
-	(delete-region start (match-beginning 2))
-	(when (not (string= crnt prev))
-	  (beginning-of-line)
-	  (insert "CD:" mew-folder-local (mew-q-decode-string crnt ?%) "\n"))
-	(setq prev crnt)
-	(forward-line)
-	(setq start (point)))
+        (setq rttl (1+ rttl))
+        (setq crnt (match-string 1))
+        (delete-region start (match-beginning 2))
+        (when (not (string= crnt prev))
+          (beginning-of-line)
+          (insert "CD:" mew-folder-local (mew-q-decode-string crnt ?%) "\n"))
+        (setq prev crnt)
+        (forward-line)
+        (setq start (point)))
       (delete-region start (point-max))
       (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
-	(write-region (point-min) (point-max) file (> n 1) 'no-msg))
+        (write-region (point-min) (point-max) file (> n 1) 'no-msg))
       (mew-erase-buffer)
       (setq n (1+ n)))
     (list file rttl)))
@@ -602,7 +602,7 @@ with a search method."
       (message "\"%s\" does not exist" mew-prog-est-update)
     (message "Hyper Estraier indexing for %s..." folder)
     (let* ((path (file-truename (mew-expand-folder folder)))
-	   (pro (start-process "*Mew EST*" nil mew-prog-est-update "-s" mew-suffix "-b" (mew-expand-folder mew-mail-path) path)))
+           (pro (start-process "*Mew EST*" nil mew-prog-est-update "-s" mew-suffix "-b" (mew-expand-folder mew-mail-path) path)))
       (set-process-filter pro 'mew-est-index-filter)
       (set-process-sentinel pro 'mew-est-index-sentinel))))
 
@@ -650,7 +650,7 @@ with a search method."
       ((not (mew-which-exec mew-prog-smew))
        (message "%s not found" mew-prog-smew))
       (t
-      ,@body))))
+       ,@body))))
 
 (defun mew-summary-selection-by-msgid ()
   "Creating Virtual mode with messages relating to the current message"
@@ -658,16 +658,16 @@ with a search method."
   (mew-msgid-check
    (mew-summary-msg
     (let* ((ofolder (mew-summary-folder-name 'ext))
-	   (subj (or (mew-summary-get-subject) mew-error-no-subject))
-	   (str (mew-subject-simplify2 subj))
-	   (vfolder (mew-folder-to-selection
-		     (if (string= str "") mew-error-no-subject subj)))
-	   (regex (format "\\(.*\\)/\\([0-9]+\\)\\(%s\\)?$" (regexp-quote mew-suffix)))
-	   (rttl 0)
-	   (file (mew-make-temp-name))
-	   (db (mew-expand-file "+" mew-id-db-file))
-	   (mydir (substring (mew-path-to-folder (mew-expand-folder (mew-summary-folder-name))) 1))
-	   crnt start prev opts dfunc myid)
+           (subj (or (mew-summary-get-subject) mew-error-no-subject))
+           (str (mew-subject-simplify2 subj))
+           (vfolder (mew-folder-to-selection
+                     (if (string= str "") mew-error-no-subject subj)))
+           (regex (format "\\(.*\\)/\\([0-9]+\\)\\(%s\\)?$" (regexp-quote mew-suffix)))
+           (rttl 0)
+           (file (mew-make-temp-name))
+           (db (mew-expand-file "+" mew-id-db-file))
+           (mydir (substring (mew-path-to-folder (mew-expand-folder (mew-summary-folder-name))) 1))
+           crnt start prev opts dfunc myid)
       (mew-sumsyn-match mew-regex-sumsyn-long)
       (setq myid (mew-sumsyn-my-id))
       ;;
@@ -682,44 +682,44 @@ with a search method."
       (make-local-variable 'mew-summary-form-mark-spam)
       (setq mew-summary-form-mark-spam nil)
       (when (mew-summary-exclusive-p)
-	(message "Creating selection by message-id...")
-	(mew-redraw)
-	(with-temp-buffer
-	  (mew-set-buffer-multibyte t)
-	  (mew-piolet mew-cs-text-for-read mew-cs-text-for-write
-	    (call-process mew-prog-smew nil t nil myid db mydir)
-	    (goto-char (point-min))
-	    (setq start (point))
-	    (while (re-search-forward regex nil t)
-	      (setq rttl (1+ rttl))
-	      (setq crnt (match-string 1))
-	      (delete-region start (match-beginning 2))
-	      (when (not (string= crnt prev))
-		(beginning-of-line)
-		(insert "CD:" mew-folder-local crnt "\n"))
-	      (setq prev crnt)
-	      (forward-line)
-	      (setq start (point)))
-	    (delete-region start (point-max))
-	    (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
-	      (write-region (point-min) (point-max) file nil 'no-msg))))
-	(setq dfunc `(lambda () (mew-delete-file ,file)))
-	(setq opts (list "-i" file))
-	(mew-local-retrieve 'vir opts dfunc nil nil rttl))))))
+        (message "Creating selection by message-id...")
+        (mew-redraw)
+        (with-temp-buffer
+          (mew-set-buffer-multibyte t)
+          (mew-piolet mew-cs-text-for-read mew-cs-text-for-write
+            (call-process mew-prog-smew nil t nil myid db mydir)
+            (goto-char (point-min))
+            (setq start (point))
+            (while (re-search-forward regex nil t)
+              (setq rttl (1+ rttl))
+              (setq crnt (match-string 1))
+              (delete-region start (match-beginning 2))
+              (when (not (string= crnt prev))
+                (beginning-of-line)
+                (insert "CD:" mew-folder-local crnt "\n"))
+              (setq prev crnt)
+              (forward-line)
+              (setq start (point)))
+            (delete-region start (point-max))
+            (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
+              (write-region (point-min) (point-max) file nil 'no-msg))))
+        (setq dfunc `(lambda () (mew-delete-file ,file)))
+        (setq opts (list "-i" file))
+        (mew-local-retrieve 'vir opts dfunc nil nil rttl))))))
 
 (defun mew-summary-get-subject ()
   (let* ((fld (mew-summary-folder-name))
-	 (msg (mew-summary-message-number))
-	 (cache (mew-cache-hit fld msg))
-	 subj)
+         (msg (mew-summary-message-number))
+         (cache (mew-cache-hit fld msg))
+         subj)
     (if (and cache (get-buffer cache))
-	(with-current-buffer cache
-	  (setq subj (mew-header-get-value mew-subj:)))
+        (with-current-buffer cache
+          (setq subj (mew-header-get-value mew-subj:)))
       (with-temp-buffer
-	(mew-insert-message
-	 fld msg mew-cs-text-for-read mew-header-reasonable-size)
-	(mew-refile-decode-subject)
-	(setq subj (mew-header-get-value mew-subj:))))
+        (mew-insert-message
+         fld msg mew-cs-text-for-read mew-header-reasonable-size)
+        (mew-refile-decode-subject)
+        (setq subj (mew-header-get-value mew-subj:))))
     subj))
 
 (defun mew-summary-make-id-index-folder ()
@@ -733,14 +733,14 @@ with a search method."
      (message "%s not found" mew-prog-cmew))
     (t
      (let* ((dbfile (expand-file-name mew-id-db-file mew-mail-path))
-	    (path (expand-file-name mew-mail-path))
-	    (regex mew-id-db-ignore-regex)
-	    (target (mew-folder-string
-		     (mew-path-to-folder
-		      (mew-expand-folder (mew-summary-folder-name 'ext)))))
-	    (options (list dbfile path regex target))
-	    (buf (generate-new-buffer (concat mew-buffer-prefix "cmew")))
-	    pro)
+            (path (expand-file-name mew-mail-path))
+            (regex mew-id-db-ignore-regex)
+            (target (mew-folder-string
+                     (mew-path-to-folder
+                      (mew-expand-folder (mew-summary-folder-name 'ext)))))
+            (options (list dbfile path regex target))
+            (buf (generate-new-buffer (concat mew-buffer-prefix "cmew")))
+            pro)
        (message "Updating ID database...")
        (setq pro (apply 'start-process "cmew" buf mew-prog-cmew options))
        (set-process-filter pro 'mew-summary-make-id-index-filter)
@@ -754,10 +754,10 @@ from scratch."
   (if (not (mew-which-exec mew-prog-cmew))
       (message "%s not found" mew-prog-cmew)
     (let* ((dbfile (expand-file-name mew-id-db-file mew-mail-path))
-	   (path (expand-file-name mew-mail-path))
-	   (options (list dbfile path mew-id-db-ignore-regex))
-	   (buf (generate-new-buffer (concat mew-buffer-prefix "cmew")))
-	   pro)
+           (path (expand-file-name mew-mail-path))
+           (options (list dbfile path mew-id-db-ignore-regex))
+           (buf (generate-new-buffer (concat mew-buffer-prefix "cmew")))
+           pro)
       (if full-update (setq options (cons "-f" options)))
       (message "Updating ID database...")
       (setq pro (apply 'start-process "cmew" buf mew-prog-cmew options))
@@ -776,8 +776,8 @@ from scratch."
       (goto-char (point-max))
       (forward-line -1)
       (let ((str (mew-buffer-substring (line-beginning-position)
-				       (line-end-position))))
-	(message "Updating ID database...done (%s)" str)))
+                                       (line-end-position))))
+        (message "Updating ID database...done (%s)" str)))
     (mew-remove-buffer buf)))
 
 (provide 'mew-search)

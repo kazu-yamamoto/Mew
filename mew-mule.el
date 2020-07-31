@@ -12,16 +12,16 @@
 (defun mew-charset-m17n ()
   (if (string= mew-charset-m17n mew-utf-8)
       (if mew-internal-utf-8p
-	  mew-utf-8
-	(if (condition-case nil (require 'un-define) (file-error nil))
-	    mew-utf-8
-	  mew-iso-2022-jp-2))
+          mew-utf-8
+        (if (condition-case nil (require 'un-define) (file-error nil))
+            mew-utf-8
+          mew-iso-2022-jp-2))
     mew-iso-2022-jp-2))
 
 (defun mew-charset-guess-string (str)
   (let ((ecsdb (mew-ecsdb-guess-string str)))
     (if ecsdb
-	(mew-cs-to-charset (mew-ecsdb-get-cs ecsdb)) ;; not hcs, take care
+        (mew-cs-to-charset (mew-ecsdb-get-cs ecsdb)) ;; not hcs, take care
       (mew-charset-m17n))))
 
 (defun mew-ecsdb-guess-string (str)
@@ -33,30 +33,30 @@
   "Guess charset for the region."
   (interactive "r")
   (let ((ecsdb (mew-ecsdb-guess-region beg end))
-	ret)
+        ret)
     (if (null ecsdb)
-	(setq ret (mew-charset-m17n))
+        (setq ret (mew-charset-m17n))
       (setq ret (mew-cs-to-charset (mew-ecsdb-get-cs ecsdb)))) ;; not hcs
     (if (mew-called-interactively-p) (message "%s" ret)) ;; for debug
     ret))
 
 (defun mew-ecsdb-guess-region (beg end)
   (let* ((tcsl (mew-find-cs-region beg end))
-	 (N (length tcsl))
-	 (alst mew-cs-database-for-encoding)
-	 acsl csl ret)
+         (N (length tcsl))
+         (alst mew-cs-database-for-encoding)
+         acsl csl ret)
     (dolist (ecsdb alst)
       (setq acsl (mew-ecsdb-get-lcs ecsdb))
       (catch 'loop
-	(dotimes (i N)
-	  (unless (member (nth i tcsl) acsl)
-	    (setq ecsdb nil)
-	    (setq acsl nil)
-	    (throw 'loop nil))))
+        (dotimes (i N)
+          (unless (member (nth i tcsl) acsl)
+            (setq ecsdb nil)
+            (setq acsl nil)
+            (throw 'loop nil))))
       (if (null ret)
-	  (setq ret ecsdb)
-	(if (and acsl (< (length acsl) (length csl)))
-	    (setq ret ecsdb csl acsl))))
+          (setq ret ecsdb)
+        (if (and acsl (< (length acsl) (length csl)))
+            (setq ret ecsdb csl acsl))))
     ret))
 
 (autoload 'mew-zenkaku-katakana-region "mew-lang-jp" nil)
@@ -70,7 +70,7 @@
      ((member mew-lc-kana lcs)
       (mew-zenkaku-katakana-region beg end))
      ((and (not (fboundp 'set-charset-priority))
-	   (memq 'latin-iso8859-1 lcs) (memq 'latin-iso8859-15 lcs)) ;; xxx
+           (memq 'latin-iso8859-1 lcs) (memq 'latin-iso8859-15 lcs)) ;; xxx
       (mew-latin0-region beg end)))))
 
 ;;;
@@ -87,7 +87,7 @@
 (defun mew-cs-strip-lineinfo (cs)
   (let ((str (symbol-name cs)))
     (if (string-match "-\\(unix\\|mac\\|dos\\)$" str)
-	(intern (substring str 0 (match-beginning 0)))
+        (intern (substring str 0 (match-beginning 0)))
       cs)))
 
 ;;;
@@ -103,15 +103,15 @@
 (defun mew-cs-to-charset (cs)
   (let ((dcsdb (mew-assoc-equal cs mew-cs-database-for-decoding 1 'mew-coding-system-equal)))
     (if (null dcsdb)
-	(mew-charset-m17n)
+        (mew-charset-m17n)
       (mew-dcsdb-get-charset dcsdb))))
 
 (defun mew-charset-to-cs (charset)
   (when charset
     (let ((dcsdb (assoc (downcase charset) mew-cs-database-for-decoding)))
       (if (null dcsdb)
-	  mew-cs-unknown
-	(mew-dcsdb-get-cs dcsdb)))))
+          mew-cs-unknown
+        (mew-dcsdb-get-cs dcsdb)))))
 
 (defun mew-charset-to-ecsdb (charset)
   (mew-assoc-equal (mew-charset-to-cs charset) mew-cs-database-for-encoding 1))
@@ -132,7 +132,7 @@
 (defun mew-cs-encode-arg (arg)
   (let ((cs (mew-ecsdb-cs-for-arg (mew-ecsdb-guess-string arg))))
     (if (mew-coding-system-p cs)
-	(mew-cs-encode-string arg cs)
+        (mew-cs-encode-string arg cs)
       arg)))
 
 (provide 'mew-mule)
