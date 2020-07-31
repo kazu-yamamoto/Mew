@@ -44,7 +44,7 @@
 (defun mew-sort-key-date (key folder msg)
   (if (string= key "")
       (let ((time (mew-file-get-time (mew-expand-msg folder msg))))
-	(mew-time-ctz-to-sortkey time))
+        (mew-time-ctz-to-sortkey time))
     (mew-time-rfc-to-sortkey key)))
 
 (defun mew-sort-key-num (key _folder _msg)
@@ -100,51 +100,51 @@
      (cond
       (lastp
        (when pos
-	 (goto-char pos)
-	 (mew-sort-insert mew-sort-line dst)
-	 nil))
+         (goto-char pos)
+         (mew-sort-insert mew-sort-line dst)
+         nil))
       ((null pos) ;; first
        (when (mew-summary-search-msg src)
-	 (setq beg (point))
-	 (forward-line)
-	 (setq end (point))
-	 ;; We need to keep properties in Summary mode.
-	 ;; This must be "buffer-substring".
-	 (setq mew-sort-line (buffer-substring beg end))
-	 (delete-region beg end)
-	 beg))
+         (setq beg (point))
+         (forward-line)
+         (setq end (point))
+         ;; We need to keep properties in Summary mode.
+         ;; This must be "buffer-substring".
+         (setq mew-sort-line (buffer-substring beg end))
+         (delete-region beg end)
+         beg))
       (t
        (when (mew-summary-search-msg src)
-	 (setq beg (point))
-	 (forward-line)
-	 (setq end (point))
-	 (cond
-	  ((< pos beg)
-	   ;; We need to keep properties in Summary mode.
-	   ;; This must be "buffer-substring".
-	   (setq line (buffer-substring beg end))
-	   (goto-char end)
-	   (delete-region beg end)
-	   (save-excursion
-	     (goto-char pos)
-	     (mew-sort-insert line dst))
-	   (point))
-	  ((= pos beg)
-	   ;; We need to keep properties in Summary mode.
-	   ;; This must be "buffer-substring".
-	   (setq line (buffer-substring beg end))
-	   (delete-region beg end)
-	   (goto-char pos)
-	   (mew-sort-insert line dst)
-	   (point))
-	  (t
-	   ;; We need to keep properties in Summary mode.
-	   ;; This must be "buffer-substring".
-	   (setq line (buffer-substring beg end))
-	   (goto-char pos)
-	   (mew-sort-insert line dst)
-	   (delete-region beg end)
-	   beg))))))))
+         (setq beg (point))
+         (forward-line)
+         (setq end (point))
+         (cond
+          ((< pos beg)
+           ;; We need to keep properties in Summary mode.
+           ;; This must be "buffer-substring".
+           (setq line (buffer-substring beg end))
+           (goto-char end)
+           (delete-region beg end)
+           (save-excursion
+             (goto-char pos)
+             (mew-sort-insert line dst))
+           (point))
+          ((= pos beg)
+           ;; We need to keep properties in Summary mode.
+           ;; This must be "buffer-substring".
+           (setq line (buffer-substring beg end))
+           (delete-region beg end)
+           (goto-char pos)
+           (mew-sort-insert line dst)
+           (point))
+          (t
+           ;; We need to keep properties in Summary mode.
+           ;; This must be "buffer-substring".
+           (setq line (buffer-substring beg end))
+           (goto-char pos)
+           (mew-sort-insert line dst)
+           (delete-region beg end)
+           beg))))))))
 
 (defun mew-summary-sort-move-for-debug (src dst _pos &optional _lastp)
   (mew-elet
@@ -158,11 +158,11 @@
 (defun mew-sort-get-range (arg)
   (let (region beg end range rbeg rend)
     (if arg
-	(progn
-	  (setq region (mew-summary-get-region))
-	  (setq beg (car region))
-	  (setq end (cdr region))
-	  (if (= beg end) (error "No region")))
+        (progn
+          (setq region (mew-summary-get-region))
+          (setq beg (car region))
+          (setq end (cdr region))
+          (if (= beg end) (error "No region")))
       (setq beg (point-min))
       (setq end (point-max)))
     (save-excursion
@@ -173,15 +173,15 @@
       (setq rend (mew-summary-message-number))
       (forward-line)
       (if (and rbeg rend)
-	  (setq range (concat rbeg "-" rend))
-	(error "No region")))
+          (setq range (concat rbeg "-" rend))
+        (error "No region")))
     (list range beg end)))
 
 (defun mew-sort-ask-key (folder)
   (let* ((sort-key (or (mew-alist-get-value
-			(assoc folder mew-sort-default-key-alist))
-		       mew-sort-default-key))
-	 key type funcs newkey)
+                        (assoc folder mew-sort-default-key-alist))
+                       mew-sort-default-key))
+         key type funcs newkey)
     (mew-set '(key type) (mew-input-sort-key sort-key))
     (setq funcs (assoc type mew-sort-switch))
     (setq newkey (concat (capitalize key) ":"))
@@ -189,28 +189,28 @@
 
 (defun mew-sort-get-file-index (folder range key func1 func2)
   (let* ((i 0)
-	 (fld (mew-expand-folder2 folder))
-	 num med value ent files idx)
+         (fld (mew-expand-folder2 folder))
+         num med value ent files idx)
     (with-temp-buffer
       (apply 'call-process
-	     mew-prog-mewl nil t nil
-	     (append (list "-b" mew-mail-path "-l" "0"
-			   "-x" mew-suffix
-			   "-d" key)
-		     (mew-scan-mewl-src fld range)))
+             mew-prog-mewl nil t nil
+             (append (list "-b" mew-mail-path "-l" "0"
+                           "-x" mew-suffix
+                           "-d" key)
+                     (mew-scan-mewl-src fld range)))
       (goto-char (point-min))
       (while (not (eobp))
-	(if (not (looking-at "^\\([0-9]+\\)[ \t]*:[ \t]*"))
-	    (forward-line)
-	  (setq num (mew-match-string 1))
-	  (setq med (match-end 0))
-	  (forward-line)
-	  (mew-header-goto-next)
-	  (mew-header-decode-region key med (point))
-	  (setq value (mew-buffer-substring med (1- (point))))
-	  (setq files (cons num files))
-	  (setq ent (cons (cons i (funcall func1 value folder num)) ent))
-	  (setq i (1+ i)))))
+        (if (not (looking-at "^\\([0-9]+\\)[ \t]*:[ \t]*"))
+            (forward-line)
+          (setq num (mew-match-string 1))
+          (setq med (match-end 0))
+          (forward-line)
+          (mew-header-goto-next)
+          (mew-header-decode-region key med (point))
+          (setq value (mew-buffer-substring med (1- (point))))
+          (setq files (cons num files))
+          (setq ent (cons (cons i (funcall func1 value folder num)) ent))
+          (setq i (1+ i)))))
     (setq files (vconcat (nreverse files)))
     (setq ent (sort ent func2))
     (setq idx (vconcat (mapcar 'mew-sort-index ent)))
@@ -238,25 +238,25 @@
   ;;     files[src] is 31 (new tmp file)
   ;;
   (let* ((dir (mew-expand-folder folder))
-	 (default-directory dir)
-	 (len (length idx)) ;; not (length files)
-	 (tmp (mew-folder-new-message folder 'num-only))
-	 src dst pos)
+         (default-directory dir)
+         (len (length idx)) ;; not (length files)
+         (tmp (mew-folder-new-message folder 'num-only))
+         src dst pos)
     (dotimes (i len)
       (setq mew-sort-line nil)
       (unless (= i (aref idx i))
-	(setq dst len)
-	(setq src i)
-	(setq pos (funcall func (aref files src) tmp nil))
-	(catch 'loop
-	  (while t
-	    (setq dst src)
-	    (setq src (aref idx dst))
-	    (if (= src i) (throw 'loop nil))
-	    (setq pos (funcall func (aref files src) (aref files dst) pos))
-	    (aset idx dst dst)))
-	(funcall func tmp (aref files dst) pos 'last)
-	(aset idx dst dst)))))
+        (setq dst len)
+        (setq src i)
+        (setq pos (funcall func (aref files src) tmp nil))
+        (catch 'loop
+          (while t
+            (setq dst src)
+            (setq src (aref idx dst))
+            (if (= src i) (throw 'loop nil))
+            (setq pos (funcall func (aref files src) (aref files dst) pos))
+            (aset idx dst dst)))
+        (funcall func tmp (aref files dst) pos 'last)
+        (aset idx dst dst)))))
 
 (defun mew-sort-push-mark ()
   (unless (eobp)
@@ -268,17 +268,17 @@
   (let ((orig (next-single-property-change (point-min) 'mew-sort-orig)))
     ;; 'mew-sort-orig may start with bob.
     (if (null orig)
-	(mew-push-mark)
+        (mew-push-mark)
       (save-excursion
-	(goto-char orig)
-	(beginning-of-line)
-	(setq orig (point)))
+        (goto-char orig)
+        (beginning-of-line)
+        (setq orig (point)))
       (mew-elet
        ;; 'mew-sort-orig is copied onto the entire message
        ;; number. (window-width) is long enough to remove
        ;; it.
        (remove-text-properties
-	orig (+ orig (window-width)) '(mew-sort-orig nil)))
+        orig (+ orig (window-width)) '(mew-sort-orig nil)))
       (mew-push-mark))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -299,27 +299,27 @@
     (message "Sorting %s..." diag)
     (mew-summary-lock t "Sorting")
     (unwind-protect
-	(progn
-	  (mew-set '(files idx) (mew-sort-get-file-index folder range key func1 func2))
-	  ;;
-	  (mew-sort-push-mark)
-	  (if arg (narrow-to-region beg end))
-	  ;;
-	  (mew-sort-files folder files idx 'mew-summary-sort-move-rename)
-	  ;;
-	  (goto-char (point-min))
-	  (if arg (widen))
-	  (mew-sort-pop-mark)
-	  ;;
-	  (run-hooks 'mew-sort-hook)
-	  (message "Sorting %s...done. Type '%s' to update ID database" diag (mew-substitute-for-summary "\\[mew-summary-make-id-index-folder]")))
+        (progn
+          (mew-set '(files idx) (mew-sort-get-file-index folder range key func1 func2))
+          ;;
+          (mew-sort-push-mark)
+          (if arg (narrow-to-region beg end))
+          ;;
+          (mew-sort-files folder files idx 'mew-summary-sort-move-rename)
+          ;;
+          (goto-char (point-min))
+          (if arg (widen))
+          (mew-sort-pop-mark)
+          ;;
+          (run-hooks 'mew-sort-hook)
+          (message "Sorting %s...done. Type '%s' to update ID database" diag (mew-substitute-for-summary "\\[mew-summary-make-id-index-folder]")))
       (mew-summary-folder-cache-save)
       (set-buffer-modified-p nil)
       (mew-summary-unlock))))
 
 (defun mew-summary-sort-body-for-debug (folder arg)
   (let ((win (selected-window))
-	key idx files range func1 func2 diag)
+        key idx files range func1 func2 diag)
     (mew-set '(range beg end) (mew-sort-get-range arg))
     (mew-set '(key func1 func2) (mew-sort-ask-key folder))
     (setq diag (if arg folder (format "%s: %s" folder range)))
@@ -327,7 +327,7 @@
     (message "Sorting %s..." diag)
     (mew-summary-lock t "Sorting")
     (unwind-protect
-	(mew-set '(files idx) (mew-sort-get-file-index folder range key func1 func2))
+        (mew-set '(files idx) (mew-sort-get-file-index folder range key func1 func2))
       (mew-summary-unlock))
     (when (and files idx)
       (mew-window-configure 'message)
@@ -337,13 +337,13 @@
        (insert "Sort as follows:\n"))
       ;;
       (unwind-protect
-	  (progn
-	    (mew-sort-files folder files idx 'mew-summary-sort-move-for-debug)
-	    (message "Sorting %s...done" diag))
-	(mew-message-clear-end-of)
-	(set-buffer-modified-p nil)
-	(goto-char (point-min))
-	(select-window win)))))
+          (progn
+            (mew-sort-files folder files idx 'mew-summary-sort-move-for-debug)
+            (message "Sorting %s...done" diag))
+        (mew-message-clear-end-of)
+        (set-buffer-modified-p nil)
+        (goto-char (point-min))
+        (select-window win)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -362,13 +362,13 @@ or the region. "
      (mew-summary-not-in-draft
       (mew-summary-with-mewl
        (when (mew-summary-exclusive-p)
-	 (let ((folder (mew-summary-folder-name)))
-	   (if (null folder)
-	       (message "No message")
-	     (if (mew-mark-active-p) (setq arg t))
-	     (if (mew-debug 'sort)
-		 (mew-summary-sort-body-for-debug folder arg)
-	       (mew-summary-sort-body folder arg)))))))))))
+         (let ((folder (mew-summary-folder-name)))
+           (if (null folder)
+               (message "No message")
+             (if (mew-mark-active-p) (setq arg t))
+             (if (mew-debug 'sort)
+                 (mew-summary-sort-body-for-debug folder arg)
+               (mew-summary-sort-body folder arg)))))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -377,10 +377,10 @@ or the region. "
 
 (defun mew-summary-selection-by-sort-body (arg)
   (let* ((buf (current-buffer))
-	 (ofolder (mew-summary-folder-name 'ext))
-	 (vfolder (mew-folder-to-selection ofolder))
-	 (pfolder (mew-summary-physical-folder))
-	 key idx files range beg end func1 func2 diag)
+         (ofolder (mew-summary-folder-name 'ext))
+         (vfolder (mew-folder-to-selection ofolder))
+         (pfolder (mew-summary-physical-folder))
+         key idx files range beg end func1 func2 diag)
     (mew-set '(range beg end) (mew-sort-get-range arg))
     (mew-set '(key func1 func2) (mew-sort-ask-key ofolder))
     (setq diag (if arg ofolder (format "%s: %s" ofolder range)))
@@ -388,7 +388,7 @@ or the region. "
     (message "Sorting %s..." diag)
     (mew-summary-lock t "Sorting")
     (unwind-protect
-	(mew-set '(files idx) (mew-sort-get-file-index ofolder range key func1 func2))
+        (mew-set '(files idx) (mew-sort-get-file-index ofolder range key func1 func2))
       (mew-summary-unlock))
     (when (and files idx)
       (mew-summary-switch-to-folder vfolder)
@@ -396,15 +396,15 @@ or the region. "
       (mew-vinfo-set-physical-folder pfolder)
       (mew-vinfo-set-original-folder ofolder)
       (unwind-protect
-	  (progn
-	    (mew-erase-buffer)
-	    (mew-elet
-	     (insert (with-current-buffer buf (buffer-substring beg end)))
-	     (mew-sort-files ofolder files idx 'mew-summary-sort-move-for-selection)
-	     (mew-summary-set-count-line)
-	     (goto-char (point-min))
-	     (message "Sorting %s...done" diag)))
-	(set-buffer-modified-p nil)))))
+          (progn
+            (mew-erase-buffer)
+            (mew-elet
+             (insert (with-current-buffer buf (buffer-substring beg end)))
+             (mew-sort-files ofolder files idx 'mew-summary-sort-move-for-selection)
+             (mew-summary-set-count-line)
+             (goto-char (point-min))
+             (message "Sorting %s...done" diag)))
+        (set-buffer-modified-p nil)))))
 
 (defun mew-summary-selection-by-sort (&optional arg)
   (interactive "P")
@@ -413,8 +413,8 @@ or the region. "
     (mew-summary-not-in-draft
      (mew-summary-with-mewl
       (when (mew-summary-exclusive-p)
-	(if (mew-mark-active-p) (setq arg t))
-	(mew-summary-selection-by-sort-body arg)))))))
+        (if (mew-mark-active-p) (setq arg t))
+        (mew-summary-selection-by-sort-body arg)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -437,24 +437,24 @@ local cache messages are packed."
   (interactive "P")
   (if (not force)
       (message (mew-substitute-for-summary
-		"Pack breaks search index, so pack was obsoleted. Type '\\[universal-argument]\\[mew-summary-pack]' to force pack."))
+                "Pack breaks search index, so pack was obsoleted. Type '\\[universal-argument]\\[mew-summary-pack]' to force pack."))
     (mew-summary-only
      (mew-summary-local-only
       (mew-summary-not-in-queue
        (mew-summary-not-in-draft
-	(when (mew-summary-exclusive-p)
-	  (let ((folder (mew-summary-folder-name)))
-	    (cond
-	     ((null folder)
-	      (message "No message"))
-	     ((or (not mew-ask-pack) (y-or-n-p (format "Pack %s? " folder)))
-	      (mew-summary-pack-body folder)))))))))))
+        (when (mew-summary-exclusive-p)
+          (let ((folder (mew-summary-folder-name)))
+            (cond
+             ((null folder)
+              (message "No message"))
+             ((or (not mew-ask-pack) (y-or-n-p (format "Pack %s? " folder)))
+              (mew-summary-pack-body folder)))))))))))
 
 (defun mew-summary-pack-body (folder)
   (let* ((dir (mew-expand-folder folder))
-	 (default-directory dir)
-	 (n 1)
-	 msgs src dst)
+         (default-directory dir)
+         (n 1)
+         msgs src dst)
     ;;
     (mew-summary-reset)
     (mew-summary-retrieve-gap folder)
@@ -462,32 +462,32 @@ local cache messages are packed."
     (message "Packing %s..." folder)
     (mew-summary-lock t "Packing")
     (condition-case nil
-	(progn
-	  (setq msgs (mew-dir-messages "."))
-	  (setq msgs (mapcar 'string-to-number msgs))
-	  (setq msgs (sort msgs '<)) ;; sort is inevitable
-	  ;; the cursor stays the current position.
-	  (save-excursion
-	    (goto-char (point-min))
-	    (dolist (msg msgs)
-	      (setq src (number-to-string msg))
-	      (cond
-	       ((= msg n);; including src is a directory
-		(setq n (1+ n)))
-	       ((file-directory-p src)
-		)
-	       (t
-		(setq dst (number-to-string n))
-		(while (file-exists-p dst)
-		  (setq n (1+ n))
-		  (setq dst (number-to-string n)))
-		(mew-summary-pack-rename src dst)
-		(setq n (1+ n))))))
-	  (mew-summary-folder-cache-save)
-	  (set-buffer-modified-p nil)
-	  (mew-summary-unlock)
-	  (run-hooks 'mew-pack-hook)
-	  (message "Packing %s...done (the last is %d). Type '%s' to update ID database" folder (1- n) (mew-substitute-for-summary "\\[mew-summary-make-id-index-folder]")))
+        (progn
+          (setq msgs (mew-dir-messages "."))
+          (setq msgs (mapcar 'string-to-number msgs))
+          (setq msgs (sort msgs '<)) ;; sort is inevitable
+          ;; the cursor stays the current position.
+          (save-excursion
+            (goto-char (point-min))
+            (dolist (msg msgs)
+              (setq src (number-to-string msg))
+              (cond
+               ((= msg n);; including src is a directory
+                (setq n (1+ n)))
+               ((file-directory-p src)
+                )
+               (t
+                (setq dst (number-to-string n))
+                (while (file-exists-p dst)
+                  (setq n (1+ n))
+                  (setq dst (number-to-string n)))
+                (mew-summary-pack-rename src dst)
+                (setq n (1+ n))))))
+          (mew-summary-folder-cache-save)
+          (set-buffer-modified-p nil)
+          (mew-summary-unlock)
+          (run-hooks 'mew-pack-hook)
+          (message "Packing %s...done (the last is %d). Type '%s' to update ID database" folder (1- n) (mew-substitute-for-summary "\\[mew-summary-make-id-index-folder]")))
       (quit
        (set-buffer-modified-p nil)
        (mew-summary-unlock)))))

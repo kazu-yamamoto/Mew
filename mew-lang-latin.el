@@ -27,31 +27,31 @@
     (save-restriction
       (narrow-to-region beg end)
       (setq conflict0
-	    (save-excursion
-	      (goto-char (point-min))
-	      (re-search-forward mew-latin0-regex nil t)))
+            (save-excursion
+              (goto-char (point-min))
+              (re-search-forward mew-latin0-regex nil t)))
       (setq conflict1
-	    (save-excursion
-	      (goto-char (point-min))
-	      (re-search-forward mew-latin1-regex nil t)))
+            (save-excursion
+              (goto-char (point-min))
+              (re-search-forward mew-latin1-regex nil t)))
       (unless (and conflict0 conflict1) ;; mew-charset-m17n
-	(cond
-	 (conflict0
-	  (setq charset "iso-8859-15"))
-	 (conflict1
-	  (setq charset "iso-8859-1"))
-	 (t
-	  (setq charset mew-charset-latin)))
-	(setq ent (assoc charset mew-charset-latin-alist))
-	(mew-set '(nil to from) ent)
-	(save-excursion
-	  (goto-char (point-min))
-	  (while (re-search-forward "\\cl" nil t)
-	    (setq ch (split-char (preceding-char)))
-	    (setq lc (car ch))
-	    (when (eq lc from)
-	      (delete-char -1)
-	      (insert (make-char to (nth 1 ch))))))))))
+        (cond
+         (conflict0
+          (setq charset "iso-8859-15"))
+         (conflict1
+          (setq charset "iso-8859-1"))
+         (t
+          (setq charset mew-charset-latin)))
+        (setq ent (assoc charset mew-charset-latin-alist))
+        (mew-set '(nil to from) ent)
+        (save-excursion
+          (goto-char (point-min))
+          (while (re-search-forward "\\cl" nil t)
+            (setq ch (split-char (preceding-char)))
+            (setq lc (car ch))
+            (when (eq lc from)
+              (delete-char -1)
+              (insert (make-char to (nth 1 ch))))))))))
 
 (provide 'mew-lang-latin)
 

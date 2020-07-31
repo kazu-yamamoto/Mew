@@ -111,14 +111,14 @@
     ((ascii latin-iso8859-15)   iso-8859-15 "quoted-printable" "Q" nil)
     ((ascii thai-tis620)        tis-620     "base64"           "B" t)
     ((ascii latin-jisx0201 japanese-jisx0208 japanese-jisx0208-1978)
-                               iso-2022-jp "7bit"             "B" t)
+     iso-2022-jp "7bit"             "B" t)
     ((ascii korean-ksc5601)     euc-kr     "8bit"             "B" t)
     ((ascii chinese-gbk)        gbk        "base64"           "B" t)
     ((ascii chinese-gb2312)     cn-gb-2312 "base64"           "B" t)
     ((ascii chinese-big5-1 chinese-big5-2)
-                              chinese-big5 "base64"           "B" t)
-;;    ((ascii japanese-jisx0208 japanese-jisx0213-1 japanese-jisx0213-2)
-;;                             iso-2022-jp-3 "7bit"             "B" t)
+     chinese-big5 "base64"           "B" t)
+    ;;    ((ascii japanese-jisx0208 japanese-jisx0213-1 japanese-jisx0213-2)
+    ;;                             iso-2022-jp-3 "7bit"             "B" t)
     (nil utf-7 "7bit" "Q" t) ;; xxx
     (nil utf-8 ,mew-charset-utf-8-encoding ,mew-charset-utf-8-header-encoding t)
     (nil iso-2022-jp-2 "7bit" "B" t)))
@@ -129,11 +129,11 @@
 
 (defun mew-ecsdb-cs-for-arg (ecsdb)
   (let* ((cs (mew-ecsdb-get-cs ecsdb))
-	 (acs (cdr (assoc cs mew-cs-database-for-arg))))
+         (acs (cdr (assoc cs mew-cs-database-for-arg))))
     (or acs cs)))
 
 (if (and (not (mew-coding-system-p 'chinese-big5))
-	 (mew-coding-system-p 'big5))
+         (mew-coding-system-p 'big5))
     (define-coding-system-alias 'chinese-big5 'big5))
 
 (mew-defstruct dcsdb charset cs)
@@ -176,77 +176,77 @@
     ("unicode-1-1-utf-7" utf-7) ;; the old UTF-7 name, RFC 1642
     ("utf-8"             utf-8)
     ,@(if (mew-coding-system-p 'windows-1251)
-	  '(("windows-1250" windows-1250)
-	    ("windows-1251" windows-1251)
-	    ("windows-1252" windows-1252)
-	    ("windows-1253" windows-1253)
-	    ("windows-1254" windows-1254)
-	    ("windows-1255" windows-1255)
-	    ("windows-1256" windows-1256)
-	    ("windows-1257" windows-1257)
-	    ("windows-1258" windows-1258))
-	'(("windows-1250" cp1250)
-	  ("windows-1251" cp1251)
-	  ("windows-1252" cp1252)
-	  ("windows-1253" cp1253)
-	  ("windows-1254" cp1254)
-	  ("windows-1255" cp1255)
-	  ("windows-1256" cp1256)
-	  ("windows-1257" cp1257)
-	  ("windows-1258" cp1258)))))
+          '(("windows-1250" windows-1250)
+            ("windows-1251" windows-1251)
+            ("windows-1252" windows-1252)
+            ("windows-1253" windows-1253)
+            ("windows-1254" windows-1254)
+            ("windows-1255" windows-1255)
+            ("windows-1256" windows-1256)
+            ("windows-1257" windows-1257)
+            ("windows-1258" windows-1258))
+        '(("windows-1250" cp1250)
+          ("windows-1251" cp1251)
+          ("windows-1252" cp1252)
+          ("windows-1253" cp1253)
+          ("windows-1254" cp1254)
+          ("windows-1255" cp1255)
+          ("windows-1256" cp1256)
+          ("windows-1257" cp1257)
+          ("windows-1258" cp1258)))))
 
 ;;
 ;; CS
 ;;
 
 (defvar mew-charset-priority-list '(japanese-jisx0208
-				    korean-ksc5601
-				    latin-iso8859-2
-				    latin-iso8859-3
-				    latin-iso8859-4
-				    hebrew-iso8859-8
-				    latin-iso8859-9
-				    ;; for accent characters
-				    cyrillic-iso8859-5
-				    greek-iso8859-7
-				    latin-iso8859-14
-				    thai-tis620
-				    latin-jisx0201
-				    japanese-jisx0208-1978
-				    japanese-jisx0213-1
-				    japanese-jisx0213-2
-				    katakana-jisx0201
-				    unicode))
+                                    korean-ksc5601
+                                    latin-iso8859-2
+                                    latin-iso8859-3
+                                    latin-iso8859-4
+                                    hebrew-iso8859-8
+                                    latin-iso8859-9
+                                    ;; for accent characters
+                                    cyrillic-iso8859-5
+                                    greek-iso8859-7
+                                    latin-iso8859-14
+                                    thai-tis620
+                                    latin-jisx0201
+                                    japanese-jisx0208-1978
+                                    japanese-jisx0213-1
+                                    japanese-jisx0213-2
+                                    katakana-jisx0201
+                                    unicode))
 
 (if (fboundp 'set-charset-priority)
     (defun mew-find-cs-region (beg end)
       (let ((charset-list (charset-priority-list))
-	    ret)
-	(catch 'find
-	  (set-charset-priority 'latin-iso8859-1)
-	  (setq ret (find-charset-region beg end))
-	  (if (equal ret '(ascii latin-iso8859-1))
-	      (throw 'find nil))
-	  ;;
-	  (set-charset-priority 'latin-iso8859-15)
-	  (setq ret (find-charset-region beg end))
-	  (if (equal ret '(ascii latin-iso8859-15))
-	      (throw 'find nil))
-	  ;;
-	  (set-charset-priority 'cyrillic-iso8859-5)
-	  (setq ret (find-charset-region beg end))
-	  (if (equal ret '(ascii cyrillic-iso8859-5))
-	      (throw 'find nil))
-	  ;;
-	  (set-charset-priority 'greek-iso8859-7)
-	  (setq ret (find-charset-region beg end))
-	  (if (equal ret '(ascii greek-iso8859-7))
-	      (throw 'find nil))
-	  ;;
-	  (apply 'set-charset-priority mew-charset-priority-list)
-	  (setq ret (find-charset-region beg end)))
-	(apply 'set-charset-priority charset-list)
-	ret))
+            ret)
+        (catch 'find
+          (set-charset-priority 'latin-iso8859-1)
+          (setq ret (find-charset-region beg end))
+          (if (equal ret '(ascii latin-iso8859-1))
+              (throw 'find nil))
+          ;;
+          (set-charset-priority 'latin-iso8859-15)
+          (setq ret (find-charset-region beg end))
+          (if (equal ret '(ascii latin-iso8859-15))
+              (throw 'find nil))
+          ;;
+          (set-charset-priority 'cyrillic-iso8859-5)
+          (setq ret (find-charset-region beg end))
+          (if (equal ret '(ascii cyrillic-iso8859-5))
+              (throw 'find nil))
+          ;;
+          (set-charset-priority 'greek-iso8859-7)
+          (setq ret (find-charset-region beg end))
+          (if (equal ret '(ascii greek-iso8859-7))
+              (throw 'find nil))
+          ;;
+          (apply 'set-charset-priority mew-charset-priority-list)
+          (setq ret (find-charset-region beg end)))
+        (apply 'set-charset-priority charset-list)
+        ret))
   (defalias 'mew-find-cs-region 'find-charset-region))
 
 ;; to internal
@@ -278,39 +278,39 @@
 (defmacro mew-plet (&rest body)
   (declare (debug (&rest form)))
   `(let ((coding-system-for-read  'binary)
-	 (coding-system-for-write 'binary))
+         (coding-system-for-write 'binary))
      ,@body))
 
 (defmacro mew-piolet (read write &rest body)
   ;; (declare (indent 2))
   `(let ((coding-system-for-read  ,read)
-	 (coding-system-for-write ,write))
+         (coding-system-for-write ,write))
      ,@body))
 (put 'mew-piolet 'lisp-indent-function 2)
 
 (defmacro mew-flet (&rest body)
   (declare (debug (&rest form)))
   `(let ((coding-system-for-read  'binary)
-	 (coding-system-for-write 'binary)
-	 (format-alist nil)
-	 (auto-image-file-mode nil)
-	 (jka-compr-inhibit t))
+         (coding-system-for-write 'binary)
+         (format-alist nil)
+         (auto-image-file-mode nil)
+         (jka-compr-inhibit t))
      ,@body))
 
 (defmacro mew-frwlet (read write &rest body)
   ;; (declare (indent 2))
   `(let ((coding-system-for-read  ,read)
-	 (coding-system-for-write ,write)
-	 (format-alist nil)
-	 (auto-image-file-mode nil)
-	 (jka-compr-inhibit t))
+         (coding-system-for-write ,write)
+         (format-alist nil)
+         (auto-image-file-mode nil)
+         (jka-compr-inhibit t))
      ,@body))
 (put 'mew-frwlet 'lisp-indent-function 2)
 
 (defmacro mew-alet (&rest body)
   (declare (debug (&rest form)))
   `(let ((default-file-name-coding-system nil)
-	 (file-name-coding-system nil))
+         (file-name-coding-system nil))
      ,@body))
 
 ;;
@@ -319,40 +319,40 @@
 
 (defun mew-substring (str width &optional cnt nopad)
   (let ((sw (if (null str) 0 (string-width str)))
-	(i 0) (w 0) cw wid)
+        (i 0) (w 0) cw wid)
     (condition-case nil
-	(cond
-	 ((= sw width)
-	  str)
-	 ((< sw width)
+        (cond
+         ((= sw width)
+          str)
+         ((< sw width)
           (if nopad
               str
             (concat str (make-string (- width sw) mew-sp))))
-	 (t
-	  (if cnt (setq width (- width 2)))
-	  (catch 'loop
-	    (while t
-	      (setq cw (char-width (aref str i)))
-	      (if (get-text-property i 'composition str) ;; for Emacs 21
-		  (setq i (1+ i)))
-	      (if (> (+ w cw) width)
-		  (throw 'loop t))
-	      (setq w (+ w cw))
-	      (setq i (+ i 1))))
-	  (cond
-	   ((= w width)
-	    (if cnt
-		(concat (substring str 0 i) "..")
-	      (substring str 0 i)))
-	   (t
-	    (setq wid (- width w))
-	    (if cnt
-		(concat (substring str 0 i) (make-string wid mew-sp) "..")
-	      (concat (substring str 0 i) (make-string wid mew-sp)))))))
+         (t
+          (if cnt (setq width (- width 2)))
+          (catch 'loop
+            (while t
+              (setq cw (char-width (aref str i)))
+              (if (get-text-property i 'composition str) ;; for Emacs 21
+                  (setq i (1+ i)))
+              (if (> (+ w cw) width)
+                  (throw 'loop t))
+              (setq w (+ w cw))
+              (setq i (+ i 1))))
+          (cond
+           ((= w width)
+            (if cnt
+                (concat (substring str 0 i) "..")
+              (substring str 0 i)))
+           (t
+            (setq wid (- width w))
+            (if cnt
+                (concat (substring str 0 i) (make-string wid mew-sp) "..")
+              (concat (substring str 0 i) (make-string wid mew-sp)))))))
       (error
        (if (> (length mew-error-broken-string) width)
-	   (substring mew-error-broken-string 0 width)
-	 mew-error-broken-string)))))
+           (substring mew-error-broken-string 0 width)
+         mew-error-broken-string)))))
 
 ;;
 ;; Language specific
@@ -374,17 +374,17 @@
       (set (car rest-ctgs) pri)
       (setq rest-ctgs (cdr rest-ctgs)))
     (if (fboundp 'update-coding-systems-internal)
-	(update-coding-systems-internal))
+        (update-coding-systems-internal))
     (mew-set-coding-priority categories)))
 
 (defun mew-set-language-environment-coding-systems (language-name)
   (let ((priority (get-language-info language-name 'coding-priority)))
     (when priority
       (let* ((categories (mapcar 'coding-system-category priority))
-	     (orig-ctg (mew-coding-category-list))
-	     (orig-pri (mapcar 'mew-coding-category-system orig-ctg)))
-	(mew-reset-coding-systems priority categories)
-	(cons orig-pri orig-ctg)))))
+             (orig-ctg (mew-coding-category-list))
+             (orig-pri (mapcar 'mew-coding-category-system orig-ctg)))
+        (mew-reset-coding-systems priority categories)
+        (cons orig-pri orig-ctg)))))
 
 ;;
 ;;

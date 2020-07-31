@@ -17,21 +17,21 @@
       (cond
        ((null n) ())
        ((null preference)
-	(setq preference n)
-	(setq strongest auth))
+        (setq preference n)
+        (setq strongest auth))
        ((< n preference)
-	(setq preference n)
-	(setq strongest auth))))
+        (setq preference n)
+        (setq strongest auth))))
     strongest))
 
 (defun mew-md5-raw (str)
   (let* ((md5str (mew-md5 str))
-	 (len (length md5str))
-	 (md5raw (make-string (/ len 2) 0))
-	 (i 0) (j 0))
+         (len (length md5str))
+         (md5raw (make-string (/ len 2) 0))
+         (i 0) (j 0))
     (while (< i len)
       (aset md5raw j (+ (* (mew-hexchar-to-int (aref md5str i)) 16)
-			(mew-hexchar-to-int (aref md5str (1+ i)))))
+                        (mew-hexchar-to-int (aref md5str (1+ i)))))
       (setq i (+ i 2))
       (setq j (1+ j)))
     md5raw))
@@ -42,13 +42,13 @@
 (defun mew-hmac-md5 (message key)
   "HMAC-MD5 defined in RFC 2104"
   (let* ((keylen (length key))
-	 (ipad 54) ;; 0x36
-	 (opad 92) ;; 0x5c
-	 (ikey (make-string 64 0))
-	 okey digest)
+         (ipad 54) ;; 0x36
+         (opad 92) ;; 0x5c
+         (ikey (make-string 64 0))
+         okey digest)
     (when (< keylen 64)
       (dotimes (i keylen)
-	(aset ikey i (aref key i))))
+        (aset ikey i (aref key i))))
     (setq okey (copy-sequence ikey))
     (dotimes (i 64)
       (aset ikey i (logxor (aref ikey i) ipad))
@@ -59,7 +59,7 @@
 (defun mew-cram-md5 (user passwd b64-challenge)
   "CRAM-MD5 defined in RFC 2195"
   (let* ((challenge (mew-base64-decode-string b64-challenge))
-	 (response (mew-hmac-md5 challenge passwd)))
+         (response (mew-hmac-md5 challenge passwd)))
     (mew-base64-encode-string (format "%s %s" user response))))
 
 ;;

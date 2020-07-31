@@ -12,7 +12,7 @@
 (defconst mew-icon-mew "Mew.png")
 
 (defconst mew-hello-message
-"
+  "
 
 Welcome to Mew world.
 
@@ -25,58 +25,58 @@ Copyright (C) 1994-2018 Kazu Yamamoto
 Please send comments to Kazu@Mew.org.
 
 "
-)
+  )
 
 (defconst mew-demo-string
-'(
- "/\\\\ - \\\\/"
+  '(
+    "/\\\\ - \\\\/"
 
- "-\\\\ - \\\\/" "\\\\\\ - \\\\/" "|\\\\ - \\\\/" "/\\\\ - \\\\/"
- "-\\\\ - \\\\/" "\\\\\\ - \\\\/" "|\\\\ - \\\\/" "/\\\\ - \\\\/"
+    "-\\\\ - \\\\/" "\\\\\\ - \\\\/" "|\\\\ - \\\\/" "/\\\\ - \\\\/"
+    "-\\\\ - \\\\/" "\\\\\\ - \\\\/" "|\\\\ - \\\\/" "/\\\\ - \\\\/"
 
- "/|\\ - \\\\/"  "//\\ - \\\\/" "/-\\ - \\\\/" "/\\\\ - \\\\/"
- "/|\\ - \\\\/"  "//\\ - \\\\/"  "/-\\ - \\\\/" "/\\\\ - \\\\/"
+    "/|\\ - \\\\/"  "//\\ - \\\\/" "/-\\ - \\\\/" "/\\\\ - \\\\/"
+    "/|\\ - \\\\/"  "//\\ - \\\\/"  "/-\\ - \\\\/" "/\\\\ - \\\\/"
 
- "/\\| - \\\\/" "/\\/ - \\\\/" "/\\- - \\\\/" "/\\\\ - \\\\/"
- "/\\| - \\\\/" "/\\/ - \\\\/" "/\\- - \\\\/" "/\\\\ - \\\\/"
+    "/\\| - \\\\/" "/\\/ - \\\\/" "/\\- - \\\\/" "/\\\\ - \\\\/"
+    "/\\| - \\\\/" "/\\/ - \\\\/" "/\\- - \\\\/" "/\\\\ - \\\\/"
 
- "/\\\\ - |\\/" "/\\\\ - /\\/" "/\\\\ - -\\/" "/\\\\ - \\\\/"
- "/\\\\ - |\\/" "/\\\\ - /\\/" "/\\\\ - -\\/" "/\\\\ - \\\\/"
+    "/\\\\ - |\\/" "/\\\\ - /\\/" "/\\\\ - -\\/" "/\\\\ - \\\\/"
+    "/\\\\ - |\\/" "/\\\\ - /\\/" "/\\\\ - -\\/" "/\\\\ - \\\\/"
 
- "/\\\\ - \\|/" "/\\\\ - \\//" "/\\\\ - \\-/" "/\\\\ - \\\\/"
- "/\\\\ - \\|/" "/\\\\ - \\//" "/\\\\ - \\-/" "/\\\\ - \\\\/"
+    "/\\\\ - \\|/" "/\\\\ - \\//" "/\\\\ - \\-/" "/\\\\ - \\\\/"
+    "/\\\\ - \\|/" "/\\\\ - \\//" "/\\\\ - \\-/" "/\\\\ - \\\\/"
 
- "/\\\\ - \\\\-" "/\\\\ - \\\\\\" "/\\\\ - \\\\|" "/\\\\ - \\\\/"
- "/\\\\ - \\\\-" "/\\\\ - \\\\\\" "/\\\\ - \\\\|" "/\\\\ - \\\\/"
- )
-)
+    "/\\\\ - \\\\-" "/\\\\ - \\\\\\" "/\\\\ - \\\\|" "/\\\\ - \\\\/"
+    "/\\\\ - \\\\-" "/\\\\ - \\\\\\" "/\\\\ - \\\\|" "/\\\\ - \\\\/"
+    )
+  )
 
 (defun mew-hello ()
   (let ((time mew-demo-sit-for)
-	(left-margin 0)
-	(fill-column (window-width))
-	indent)
+        (left-margin 0)
+        (fill-column (window-width))
+        indent)
     (if (not (integerp time)) (setq time 0))
     (insert (format mew-hello-message mew-version))
     (center-region (point-min) (point-max))
     (if (null mew-demo-picture)
-	(mew-hello-text time)
+        (mew-hello-text time)
       (cond
        ((and window-system
-	     (fboundp 'image-type-available-p)
-	     (image-type-available-p 'png))
-	(goto-char (point-max))
-	(setq mew-logo (mew-create-image
-			(expand-file-name mew-icon-mew mew-icon-directory)))
-	(setq indent (/ (- (window-width)
-			   (truncate (car (image-size mew-logo)))) 2))
-	(setq indent (max 0 indent))
-	(insert (make-string indent mew-sp))
-	(insert-image mew-logo)
-	(goto-char (point-min))
-	(mew-redraw time))
+             (fboundp 'image-type-available-p)
+             (image-type-available-p 'png))
+        (goto-char (point-max))
+        (setq mew-logo (mew-create-image
+                        (expand-file-name mew-icon-mew mew-icon-directory)))
+        (setq indent (/ (- (window-width)
+                           (truncate (car (image-size mew-logo)))) 2))
+        (setq indent (max 0 indent))
+        (insert (make-string indent mew-sp))
+        (insert-image mew-logo)
+        (goto-char (point-min))
+        (mew-redraw time))
        (t
-	(mew-hello-text time)))
+        (mew-hello-text time)))
       (set-buffer-modified-p nil))))
 
 (defun mew-hello-text (time)
@@ -90,15 +90,15 @@ Please send comments to Kazu@Mew.org.
 
 (defun mew-demo (&optional string)
   (let* ((strs (or string mew-demo-string))
-	 (wl (window-width))
-	 (ul (length (regexp-quote "/\\ - \\/")))
-	 (pl (/ (- wl ul) 2))
-	 (pre (make-string pl mew-sp))
-	 (suf (make-string (1- (- (- wl pl) ul)) mew-sp)))
+         (wl (window-width))
+         (ul (length (regexp-quote "/\\ - \\/")))
+         (pl (/ (- wl ul) 2))
+         (pre (make-string pl mew-sp))
+         (suf (make-string (1- (- (- wl pl) ul)) mew-sp)))
     (save-window-excursion
       (dolist (str strs)
-	(mew-demo-print str pre suf)
-	(mew-demo-loop)))))
+        (mew-demo-print str pre suf)
+        (mew-demo-loop)))))
 
 (defun mew-demo-print (string prefix suffix)
   (goto-char (point-max))

@@ -40,10 +40,10 @@
 
 (defvar mew-prog-application/rtf "rtf2html")
 (defvar mew-prog-rtf             '(mew-mime-application/rtf
-				   mew-mime-application/rtf-ext))
+                                   mew-mime-application/rtf-ext))
 
 (defvar mew-prog-xml2            '(mew-mime-application/xml
-				   mew-mime-application/xml-ext))
+                                   mew-mime-application/xml-ext))
 (defvar mew-prog-unzip           'mew-mime-application/octet-stream)
 
 ;;;
@@ -59,14 +59,14 @@
 
 (defvar mew-prog-text/html
   (if (and (fboundp 'shr-render-region)
-	   (fboundp 'libxml-parse-html-region))
+           (fboundp 'libxml-parse-html-region))
       'shr-render-region
     'mew-mime-text/html-w3m)) ;; See w3m.el
 (defvar mew-prog-text/html-ext       mew-unix-browser-form)
 
 (defvar mew-prog-text/xml
   (if (and (fboundp 'shr-render-region)
-	   (fboundp 'libxml-parse-html-region))
+           (fboundp 'libxml-parse-html-region))
       'shr-render-region
     'mew-mime-text/html-w3m)) ;; See w3m.el
 (defvar mew-prog-text/xml-ext        mew-unix-browser-form)
@@ -103,7 +103,7 @@
 
 (defvar mew-prog-visio           'mew-mime-application/octet-stream)
 (defvar mew-prog-mstnef          '(mew-mime-application-ms-tnef
-				   mew-mime-application-ms-tnef-ext))
+                                   mew-mime-application-ms-tnef-ext))
 
 ;;;
 ;;; Misc

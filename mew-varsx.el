@@ -160,7 +160,7 @@
    ("application/pgp-keys"          "\\.pka$"  nil
     mew-prog-pgp-keys               mew-icon-unknown)
    ("application/x-pkcs7-signature" "\\.p7s$"  mew-b64
-    nil			     mew-icon-unknown)
+    nil                      mew-icon-unknown)
    ("application/vnd.fujitsu.oasys" "\\.oas$"  mew-b64
     mew-prog-oasys                  mew-icon-text)
    ("application/vnd.fujitsu.oasys2" "\\.oa2$" mew-b64
@@ -229,11 +229,11 @@
 
 (when mew-mime-content-type-for-ooffice
   (setq mew-mime-content-type
-	(nconc
-	 (mapcar
-	  (lambda (x) (list (nth 0 x) (nth 1 x) 'mew-b64 'mew-prog-ooffice 'mew-icon-text))
-	  mew-mime-content-type-for-ooffice)
-	 mew-mime-content-type)))
+        (nconc
+         (mapcar
+          (lambda (x) (list (nth 0 x) (nth 1 x) 'mew-b64 'mew-prog-ooffice 'mew-icon-text))
+          mew-mime-content-type-for-ooffice)
+         mew-mime-content-type)))
 
 (provide 'mew-varsx)
 

@@ -39,21 +39,21 @@
 
 (mapc 'make-variable-buffer-local
       (list 'mew-summary-buffer-process
-	    'mew-summary-buffer-process-status
-	    'mew-summary-buffer-process-error
-	    'mew-summary-buffer-secure-process
-	    'mew-summary-buffer-left-msgs
-	    'mew-summary-buffer-raw
-	    'mew-decode-syntax
-	    'mew-encode-syntax
-	    'mew-ainfo
-	    'mew-cinfo
-	    'mew-dinfo
-	    'mew-minfo
-	    'mew-sinfo
-	    'mew-tinfo
-	    'mew-vinfo
-	    'mew-xinfo))
+            'mew-summary-buffer-process-status
+            'mew-summary-buffer-process-error
+            'mew-summary-buffer-secure-process
+            'mew-summary-buffer-left-msgs
+            'mew-summary-buffer-raw
+            'mew-decode-syntax
+            'mew-encode-syntax
+            'mew-ainfo
+            'mew-cinfo
+            'mew-dinfo
+            'mew-minfo
+            'mew-sinfo
+            'mew-tinfo
+            'mew-vinfo
+            'mew-xinfo))
 
 (provide 'mew-blvs)
 

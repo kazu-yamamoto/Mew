@@ -46,7 +46,7 @@ requires PTY.")
 
 (defvar mew-internal-utf-8p nil)
 (if (or (fboundp 'utf-translate-cjk-mode) ;; Emacs 22.1 or later
-	(coding-system-p 'utf-8-emacs))
+        (coding-system-p 'utf-8-emacs))
     (setq mew-internal-utf-8p t))
 
 (require 'mew-key)
@@ -151,27 +151,27 @@ requires PTY.")
  ((fboundp 'make-symbolic-link)
   (defun mew-symbolic-link (filename newname &optional OK-IF-ALREADY-EXISTS)
     (if (file-directory-p (file-chase-links filename))
-	(error "Cannot make a symbolic link to directory")
+        (error "Cannot make a symbolic link to directory")
       (make-symbolic-link filename newname OK-IF-ALREADY-EXISTS)))
   (defun mew-link (filename newname &optional OK-IF-ALREADY-EXISTS)
     (if (file-directory-p (file-chase-links filename))
-	(error "Cannot make a link to directory")
+        (error "Cannot make a link to directory")
       (condition-case nil
-	  (add-name-to-file filename newname OK-IF-ALREADY-EXISTS)
-	(file-error
-	 (copy-file filename newname OK-IF-ALREADY-EXISTS 'keepdate))))))
+          (add-name-to-file filename newname OK-IF-ALREADY-EXISTS)
+        (file-error
+         (copy-file filename newname OK-IF-ALREADY-EXISTS 'keepdate))))))
  (t
   (defun mew-symbolic-link (filename newname &optional OK-IF-ALREADY-EXISTS)
     (if (file-directory-p filename)
-	(error "Cannot make a copy of directory")
+        (error "Cannot make a copy of directory")
       (copy-file filename newname OK-IF-ALREADY-EXISTS 'keepdate)))
   (defun mew-link (filename newname &optional OK-IF-ALREADY-EXISTS)
     (if (file-directory-p filename)
-	(error "Cannot make a copy of directory")
+        (error "Cannot make a copy of directory")
       (copy-file filename newname OK-IF-ALREADY-EXISTS 'keepdate)))))
 
 (if (and (fboundp 'set-file-times)
-	 (memq system-type '(darwin windows-nt cygwin)))
+         (memq system-type '(darwin windows-nt cygwin)))
     (defalias 'mew-set-file-times 'set-file-times)
   (defmacro mew-set-file-times (&rest _args) nil))
 
@@ -239,22 +239,22 @@ requires PTY.")
   (defalias 'mew-face-spec-func 'cons)
   (defun mew-face-spec-primitive (col bold)
     (if col
-	(if bold
-	    (list :foreground col :weight 'bold)
-	  (list :foreground col :weight 'normal))
+        (if bold
+            (list :foreground col :weight 'bold)
+          (list :foreground col :weight 'normal))
       (if bold
-	  (list :weight 'bold)
-	(list :weight 'normal)))))
+          (list :weight 'bold)
+        (list :weight 'normal)))))
  (t
   (defalias 'mew-face-spec-func 'list)
   (defun mew-face-spec-primitive (col bold)
     (if col
-	(if bold
-	    (list :foreground col :bold t)
-	  (list :foreground col))
+        (if bold
+            (list :foreground col :bold t)
+          (list :foreground col))
       (if bold
-	  (list :bold t)
-	nil)))))
+          (list :bold t)
+        nil)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -266,13 +266,13 @@ requires PTY.")
   ;; Emacs 21.4
   (defun mew-fill-match-adaptive-prefix ()
     (let ((str (or
-		(and adaptive-fill-function (funcall adaptive-fill-function))
-		(and adaptive-fill-regexp (looking-at adaptive-fill-regexp)
-		     (match-string-no-properties 0)))))
+                (and adaptive-fill-function (funcall adaptive-fill-function))
+                (and adaptive-fill-regexp (looking-at adaptive-fill-regexp)
+                     (match-string-no-properties 0)))))
       (if (>= (+ (current-left-margin) (length str)) (current-fill-column))
-	  ;; Death to insanely long prefixes.
-	  nil
-	str))))
+          ;; Death to insanely long prefixes.
+          nil
+        str))))
 
 (if (fboundp 'create-animated-image)
     (defalias 'mew-create-image 'create-animated-image)

@@ -21,12 +21,12 @@
        (unless (bolp) (insert "\n"))
        (mew-message-clear-end-of)
        (when (or mew-end-of-message-string mew-end-of-part-string)
-	 (move-overlay (mew-minfo-get-eom) (point-max) (point-max))
-	 (if (mew-decode-syntax-p)
-	     (if (mew-summary-end-of-message-p)
-		 (mew-message-set-end-of-message)
-	       (mew-message-set-end-of-part))
-	   (mew-message-set-end-of-message)))))))
+         (move-overlay (mew-minfo-get-eom) (point-max) (point-max))
+         (if (mew-decode-syntax-p)
+             (if (mew-summary-end-of-message-p)
+                 (mew-message-set-end-of-message)
+               (mew-message-set-end-of-part))
+           (mew-message-set-end-of-message)))))))
 
 (defun mew-message-clear-end-of ()
   (unless (overlayp (mew-minfo-get-eom))
@@ -40,29 +40,29 @@
 
 (defun mew-summary-cache-prefetch ()
   (let ((mew-inherit-prefetching t)
-	fld next)
+        fld next)
     (save-excursion
       (mew-redraw) ;; need to display
       (mew-summary-goto-message)
       (cond
        ((eq (mew-sinfo-get-direction) 'up)
-	(when (re-search-backward mew-regex-msg-show nil t)
-	  (setq fld (mew-summary-folder-name))
-	  (setq next (mew-summary-message-number))))
+        (when (re-search-backward mew-regex-msg-show nil t)
+          (setq fld (mew-summary-folder-name))
+          (setq next (mew-summary-message-number))))
        ((eq (mew-sinfo-get-direction) 'down)
-	(if (mew-decode-syntax-end)
-	    (goto-char (mew-decode-syntax-end))
-	  (forward-line))
-	(when (re-search-forward mew-regex-msg-show nil t)
-	  (setq fld (mew-summary-folder-name))
-	  (setq next (mew-summary-message-number))))))
+        (if (mew-decode-syntax-end)
+            (goto-char (mew-decode-syntax-end))
+          (forward-line))
+        (when (re-search-forward mew-regex-msg-show nil t)
+          (setq fld (mew-summary-folder-name))
+          (setq next (mew-summary-message-number))))))
     ;; should get the cursor back for display
     (save-excursion
       (if (and fld next
-	       (not (mew-cache-hit fld next))
-	       (not (string= fld mew-draft-folder))
-	       (not (mew-summary-message-toobig fld next)))
-	  (mew-cache-message fld next nil 'no-err)))))
+               (not (mew-cache-hit fld next))
+               (not (string= fld mew-draft-folder))
+               (not (mew-summary-message-toobig fld next)))
+          (mew-cache-message fld next nil 'no-err)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -83,9 +83,9 @@ If nodisplay is non-nil, displays the cached message."
      ;; Must print the syntax before mew-summary-display-postscript
      ;; to tell the end of message.
      (mew-decode-syntax-print sumbuf
-			      mew-decode-syntax
-			      (mew-xinfo-get-multi-form)
-			      (mew-xinfo-get-icon-spec))
+                              mew-decode-syntax
+                              (mew-xinfo-get-multi-form)
+                              (mew-xinfo-get-icon-spec))
      (unless nodisplay
        (mew-summary-display-postscript))
      cache)))
@@ -141,11 +141,11 @@ If nodisplay is non-nil, displays the cached message."
   (mew-thread-move-cursor)
   (mew-highlight-cursor-line)
   (when (and mew-use-unread-mark
-	     (mew-summary-message-number)
-	     ;; mark would be nil. MUST be equal
-	     (equal (mew-summary-get-mark) mew-mark-unread))
+             (mew-summary-message-number)
+             ;; mark would be nil. MUST be equal
+             (equal (mew-summary-get-mark) mew-mark-unread))
     (unless (and mew-inherit-after-marking
-		 (not mew-delete-unread-mark-by-mark))
+                 (not mew-delete-unread-mark-by-mark))
       (mew-mark-put-mark mew-mark-read 'no-msg)))
   (set-buffer-modified-p nil))
 
@@ -157,7 +157,7 @@ If nodisplay is non-nil, displays the cached message."
 (defun mew-summary-message-toobig (fld msg)
   (let ((file (mew-expand-msg fld msg)))
     (and (file-readable-p file)
-	 (> (mew-file-get-size file) mew-file-max-size))))
+         (> (mew-file-get-size file) mew-file-max-size))))
 
 (defun mew-summary-display (&optional redisplay)
   " (1) If called interactively, this command lets you read
@@ -186,85 +186,85 @@ to the beginning."
   (when (or redisplay (mew-sinfo-get-disp-msg) (mew-called-interactively-p))
     (mew-summary-msg-or-part
      (let* ((fld (mew-summary-folder-name))
-	    (vfld (mew-summary-folder-name 'ext))
-	    (msg (mew-summary-message-number))
-	    (part (mew-syntax-nums))
-	    (fid (mew-frame-id))
-	    (ofld (mew-current-get-fld fid))
-	    (omsg (mew-current-get-msg fid))
-	    (opart (mew-current-get-part fid))
-	    (cache (mew-cache-hit fld (or msg omsg)))
-	    (win (selected-window))
-	    (read-through (mew-called-interactively-p))
-	    (sumbuf (current-buffer))
-	    next prefetch)
+            (vfld (mew-summary-folder-name 'ext))
+            (msg (mew-summary-message-number))
+            (part (mew-syntax-nums))
+            (fid (mew-frame-id))
+            (ofld (mew-current-get-fld fid))
+            (omsg (mew-current-get-msg fid))
+            (opart (mew-current-get-part fid))
+            (cache (mew-cache-hit fld (or msg omsg)))
+            (win (selected-window))
+            (read-through (mew-called-interactively-p))
+            (sumbuf (current-buffer))
+            next prefetch)
        (unwind-protect
-	   (progn
-	     (mew-summary-toggle-disp-msg 'on)
-	     (mew-window-configure 'message)
-	     ;; message buffer
-	     (mew-current-set fld (or msg omsg) part)
-	     (mew-minfo-set-summary vfld)
-	     (cond
-	      ((null cache)
-	       (mew-decode-syntax-delete)
-	       (cond
-		((string= fld mew-draft-folder)
-		 (if (and (string= fld ofld) (string= msg omsg)
-			  (not redisplay))
-		     (if read-through
-			 (if (mew-message-next-page)
-			     (setq next t)))
-		   (mew-decode-syntax-clear)
-		   (mew-summary-display-draft fld msg)
-		   (setq prefetch t)))
-		((mew-summary-message-toobig fld msg)
-		 (if (and (string= fld ofld) (string= msg omsg)
-			  (not redisplay))
-		     (if read-through
-			 (if (mew-message-next-page)
-			     (setq next t)))
-		   (mew-decode-syntax-clear)
-		   (mew-summary-display-raw fld msg mew-file-max-size)
-		   (setq prefetch t)
-		   (mew-message-for-summary
-		    "Too large, truncated. To see the entire message, type '\\[mew-summary-analyze-again]'")))
-		(t
-		 (mew-decode-syntax-clear)
-		 (mew-summary-cache-message fld msg sumbuf)
-		 (setq prefetch t))))
-	      (msg
-	       (cond
-		((or (null ofld)
-		     (not (and (string= fld ofld) (string= msg omsg)))
-		     opart redisplay)
-		 (mew-decode-syntax-clear)
-		 (mew-decode-syntax-delete)
-		 (mew-summary-display-message cache sumbuf)
-		 (setq prefetch t))
-		(read-through
-		 (if (mew-message-next-page)
-		     (setq next t)))))
-	      (part
-	       (cond
-		((or (null opart)
-		     (not (equal opart part))
-		     redisplay)
-		 (mew-summary-display-part cache part))
-		;; If called internally, never match below
-		(read-through
-		 (if (mew-message-next-page)
-		     (setq next t)))))))
-	 (if (mew-xinfo-get-decode-err)
-	     (message "MIME decoding error: %s" (mew-xinfo-get-decode-err)))
-	 (if (mew-xinfo-get-action)
-	     (message "%s" (mew-xinfo-get-action)))
-	 (mew-message-mode-line fld msg)
-	 (select-window win)
-	 ;; summary buffer
-	 (mew-summary-cursor-postscript)
-	 (if prefetch (mew-summary-cache-prefetch))
-	 (if next (mew-summary-display-after mew-summary-show-direction)))))))
+           (progn
+             (mew-summary-toggle-disp-msg 'on)
+             (mew-window-configure 'message)
+             ;; message buffer
+             (mew-current-set fld (or msg omsg) part)
+             (mew-minfo-set-summary vfld)
+             (cond
+              ((null cache)
+               (mew-decode-syntax-delete)
+               (cond
+                ((string= fld mew-draft-folder)
+                 (if (and (string= fld ofld) (string= msg omsg)
+                          (not redisplay))
+                     (if read-through
+                         (if (mew-message-next-page)
+                             (setq next t)))
+                   (mew-decode-syntax-clear)
+                   (mew-summary-display-draft fld msg)
+                   (setq prefetch t)))
+                ((mew-summary-message-toobig fld msg)
+                 (if (and (string= fld ofld) (string= msg omsg)
+                          (not redisplay))
+                     (if read-through
+                         (if (mew-message-next-page)
+                             (setq next t)))
+                   (mew-decode-syntax-clear)
+                   (mew-summary-display-raw fld msg mew-file-max-size)
+                   (setq prefetch t)
+                   (mew-message-for-summary
+                    "Too large, truncated. To see the entire message, type '\\[mew-summary-analyze-again]'")))
+                (t
+                 (mew-decode-syntax-clear)
+                 (mew-summary-cache-message fld msg sumbuf)
+                 (setq prefetch t))))
+              (msg
+               (cond
+                ((or (null ofld)
+                     (not (and (string= fld ofld) (string= msg omsg)))
+                     opart redisplay)
+                 (mew-decode-syntax-clear)
+                 (mew-decode-syntax-delete)
+                 (mew-summary-display-message cache sumbuf)
+                 (setq prefetch t))
+                (read-through
+                 (if (mew-message-next-page)
+                     (setq next t)))))
+              (part
+               (cond
+                ((or (null opart)
+                     (not (equal opart part))
+                     redisplay)
+                 (mew-summary-display-part cache part))
+                ;; If called internally, never match below
+                (read-through
+                 (if (mew-message-next-page)
+                     (setq next t)))))))
+         (if (mew-xinfo-get-decode-err)
+             (message "MIME decoding error: %s" (mew-xinfo-get-decode-err)))
+         (if (mew-xinfo-get-action)
+             (message "%s" (mew-xinfo-get-action)))
+         (mew-message-mode-line fld msg)
+         (select-window win)
+         ;; summary buffer
+         (mew-summary-cursor-postscript)
+         (if prefetch (mew-summary-cache-prefetch))
+         (if next (mew-summary-display-after mew-summary-show-direction)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -281,9 +281,9 @@ to the beginning."
    ;; Must print the syntax before mew-summary-display-postscript
    ;; to tell the end of message.
    (mew-decode-syntax-print sumbuf
-			    mew-decode-syntax
-			    (mew-xinfo-get-multi-form)
-			    (mew-xinfo-get-icon-spec))
+                            mew-decode-syntax
+                            (mew-xinfo-get-multi-form)
+                            (mew-xinfo-get-icon-spec))
    (mew-summary-display-postscript)))
 
 (defun mew-summary-display-part (cache nums)
@@ -333,11 +333,11 @@ This function does not create a cache."
    (goto-char (point-min))
    (condition-case nil
        (progn
-	 (mew-decode-rfc822-header) ;; xxx limit..
-	 (mew-decode-syntax-arrange-warning)
-	 (mew-header-goto-end)
-	 (mew-header-arrange (point-min) (point))
-	 (setq mew-decode-syntax (mew-decode-syntax-rfc822)))
+         (mew-decode-rfc822-header) ;; xxx limit..
+         (mew-decode-syntax-arrange-warning)
+         (mew-header-goto-end)
+         (mew-header-arrange (point-min) (point))
+         (setq mew-decode-syntax (mew-decode-syntax-rfc822)))
      (error ()))
    (mew-summary-display-postscript 'no-hook)))
 
@@ -352,7 +352,7 @@ This function does not create a cache."
   (interactive "P")
   (mew-summary-goto-message)
   (let ((mew-use-alternative (not mew-use-alternative))
-	(mew-use-text-body   (not mew-use-text-body)))
+        (mew-use-text-body   (not mew-use-text-body)))
     (mew-summary-analyze-again arg)))
 
 (defun mew-summary-analyze-again (&optional arg)
@@ -390,38 +390,38 @@ displays it."
    (if (mew-folder-draftp (mew-summary-folder-name))
        (mew-summary-display 'redisplay)
      (let ((mew-decode-broken
-	    (if arg (not mew-decode-broken) mew-decode-broken))
-	   (mew-use-text/html t)
-	   (mew-use-text/xml t)
-	   (fld (mew-summary-folder-name))
-	   (vfld (mew-summary-folder-name 'ext))
-	   (msg (mew-summary-message-number2))
-	   (part (mew-syntax-nums))
-	   (win (selected-window))
-	   (sumbuf (current-buffer))
-	   cache)
+            (if arg (not mew-decode-broken) mew-decode-broken))
+           (mew-use-text/html t)
+           (mew-use-text/xml t)
+           (fld (mew-summary-folder-name))
+           (vfld (mew-summary-folder-name 'ext))
+           (msg (mew-summary-message-number2))
+           (part (mew-syntax-nums))
+           (win (selected-window))
+           (sumbuf (current-buffer))
+           cache)
        (unwind-protect
-	   (progn
-	     (mew-summary-toggle-disp-msg 'on)
-	     (mew-window-configure 'message)
-	     ;; message buffer
-	     (if part
-		 (progn
-		   (setq cache (mew-cache-hit fld msg))
-		   (mew-summary-display-part cache part))
-	       (mew-cache-delete2 fld msg)
-	       (mew-summary-goto-message)
-	       (mew-current-set fld msg part)
-	       (mew-minfo-set-summary vfld)
-	       (mew-decode-syntax-clear)
-	       (mew-decode-syntax-delete)
-	       (mew-summary-cache-message fld msg sumbuf 'unlimit)))
-	 (if (mew-xinfo-get-decode-err)
-	     (message "MIME decoding error: %s" (mew-xinfo-get-decode-err)))
-	 (mew-message-mode-line fld msg)
-	 (select-window win)
-	 ;; summary buffer
-	 (mew-summary-cursor-postscript))))))
+           (progn
+             (mew-summary-toggle-disp-msg 'on)
+             (mew-window-configure 'message)
+             ;; message buffer
+             (if part
+                 (progn
+                   (setq cache (mew-cache-hit fld msg))
+                   (mew-summary-display-part cache part))
+               (mew-cache-delete2 fld msg)
+               (mew-summary-goto-message)
+               (mew-current-set fld msg part)
+               (mew-minfo-set-summary vfld)
+               (mew-decode-syntax-clear)
+               (mew-decode-syntax-delete)
+               (mew-summary-cache-message fld msg sumbuf 'unlimit)))
+         (if (mew-xinfo-get-decode-err)
+             (message "MIME decoding error: %s" (mew-xinfo-get-decode-err)))
+         (mew-message-mode-line fld msg)
+         (select-window win)
+         ;; summary buffer
+         (mew-summary-cursor-postscript))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -437,16 +437,16 @@ a decrypted/verified body is displayed."
   (interactive)
   (mew-summary-msg-or-part
    (let* ((fld (mew-summary-folder-name))
-	  (vfld (mew-summary-folder-name 'ext))
-	  (msg (mew-summary-message-number2))
-	  (nums (mew-syntax-nums))
-	  (win (selected-window))
-	  (buf (generate-new-buffer mew-buffer-prefix))
-	  (cbuf (mew-cache-hit fld msg))
-	  (alt (if cbuf
-		   (mew-cache-dinfo-get-use-alt cbuf)
-		 mew-use-alternative))
-	  syntax ct begin end)
+          (vfld (mew-summary-folder-name 'ext))
+          (msg (mew-summary-message-number2))
+          (nums (mew-syntax-nums))
+          (win (selected-window))
+          (buf (generate-new-buffer mew-buffer-prefix))
+          (cbuf (mew-cache-hit fld msg))
+          (alt (if cbuf
+                   (mew-cache-dinfo-get-use-alt cbuf)
+                 mew-use-alternative))
+          syntax ct begin end)
      (with-current-buffer buf
        (mew-erase-buffer)
        (mew-insert-message fld msg mew-cs-text-for-read nil)
@@ -457,36 +457,36 @@ a decrypted/verified body is displayed."
      (setq begin (mew-syntax-get-begin syntax))
      (setq end (mew-syntax-get-end syntax))
      (unwind-protect
-	 (progn
-	   (mew-summary-toggle-disp-msg 'on)
-	   (mew-window-configure 'message)
-	   ;; message buffer
-	   (mew-current-set fld msg nums)
-	   (mew-minfo-set-summary vfld)
-	   ;; The following codes are not necessary.
-	   ;; (mew-decode-syntax-clear)
-	   ;; (mew-decode-syntax-delete)
-	   (mew-elet
-	    (mew-summary-display-preamble)
-	    (mew-decode-syntax-copy buf)
-	    (cond
-	     ((string= ct mew-ct-msg)
-	      (if nums
-		  (setq end (mew-syntax-get-end (mew-syntax-get-part syntax)))
-		(setq end nil))
-	      ;; We need to keep properties of a header.
-	      ;; This must be "insert-buffer-substring".
-	      (insert-buffer-substring buf begin end)
-	      (goto-char (point-min))
-	      (mew-header-goto-end)
-	      (mew-header-arrange (point-min) (point))
-	      (setq mew-decode-syntax (mew-decode-syntax-rfc822)))
-	     (t
-	      ;; We need to keep composite properties of charset.
-	      ;; This must be "insert-buffer-substring".
-	      (insert-buffer-substring buf begin end)
-	      (goto-char (point-min)))))
-	   (mew-summary-display-postscript 'no-hook))
+         (progn
+           (mew-summary-toggle-disp-msg 'on)
+           (mew-window-configure 'message)
+           ;; message buffer
+           (mew-current-set fld msg nums)
+           (mew-minfo-set-summary vfld)
+           ;; The following codes are not necessary.
+           ;; (mew-decode-syntax-clear)
+           ;; (mew-decode-syntax-delete)
+           (mew-elet
+            (mew-summary-display-preamble)
+            (mew-decode-syntax-copy buf)
+            (cond
+             ((string= ct mew-ct-msg)
+              (if nums
+                  (setq end (mew-syntax-get-end (mew-syntax-get-part syntax)))
+                (setq end nil))
+              ;; We need to keep properties of a header.
+              ;; This must be "insert-buffer-substring".
+              (insert-buffer-substring buf begin end)
+              (goto-char (point-min))
+              (mew-header-goto-end)
+              (mew-header-arrange (point-min) (point))
+              (setq mew-decode-syntax (mew-decode-syntax-rfc822)))
+             (t
+              ;; We need to keep composite properties of charset.
+              ;; This must be "insert-buffer-substring".
+              (insert-buffer-substring buf begin end)
+              (goto-char (point-min)))))
+           (mew-summary-display-postscript 'no-hook))
        (mew-remove-buffer buf)
        (mew-message-mode-line fld msg)
        (select-window win)
@@ -499,14 +499,14 @@ If called with '\\[universal-argument]', it stays writable."
   (interactive "P")
   (mew-summary-msg-or-part
    (let* ((fld (mew-summary-folder-name))
-	  (msg (mew-summary-message-number2))
-	  (file (mew-expand-msg fld msg)))
+          (msg (mew-summary-message-number2))
+          (file (mew-expand-msg fld msg)))
      (when (mew-sinfo-get-disp-msg)
        (mew-summary-toggle-disp-msg))
      (mew-frwlet (if (mew-folder-draftp fld) mew-cs-m17n mew-cs-autoconv) mew-cs-dummy
        (if arg
-	   (switch-to-buffer (mew-find-file-noselect2 file))
-	 (view-buffer (mew-find-file-noselect2 file) 'kill-buffer))))))
+           (switch-to-buffer (mew-find-file-noselect2 file))
+         (view-buffer (mew-find-file-noselect2 file) 'kill-buffer))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -518,9 +518,9 @@ If called with '\\[universal-argument]', it stays writable."
   (interactive)
   (mew-summary-msg-or-part
    (let* ((win (selected-window))
-	  (fld (mew-summary-folder-name))
-	  (msg (mew-summary-message-number2))
-	  lst svr-date (snd "?") (rcv "?") last svr date tmp)
+          (fld (mew-summary-folder-name))
+          (msg (mew-summary-message-number2))
+          lst svr-date (snd "?") (rcv "?") last svr date tmp)
      (mew-summary-set-message-buffer fld msg)
      ;; message buffer or cache buffer
      (setq lst (nreverse (mew-header-get-value mew-received: 'as-list)))
@@ -529,54 +529,54 @@ If called with '\\[universal-argument]', it stays writable."
      (mew-summary-display-preamble)
      (save-excursion
        (dolist (ent lst)
-	 (while (string-match "\n" ent)
-	   (setq ent (replace-match "" nil t ent)))
-	 (setq svr-date (mew-split ent ?\;))
-	 (mew-set '(svr date) svr-date)
-	 (unless date
-	   ;; for broken MTAs
-	   (if (string-match "Mon\\|Tue\\|Wed\\|Thu\\|Fri\\|Sat\\|Sun" ent)
-	       (setq date (substring ent (match-beginning 0)))))
-	 (if date (setq date (mew-time-rfc-to-sortkey date 'tzadj)))
-	 (unless date (setq date "19700101000000"))
-	 (setq tmp (cons (list date svr) tmp))
-	 (cond
-	  ((string-match "(\\(qmail [0-9]+\\)" svr)
-	   (setq rcv (match-string 1 svr)))
-	  ((string-match "by[ \t]+\\([^() \t\n]+\\)" svr)
-	   (setq rcv (match-string 1 svr))
-	   (if (string-match "from[ \t]+\\([^() \t\n]+\\).*\\([[][.0-9]+[]]\\)" svr)
-	       (setq snd (format "%s %s" (match-string 1 svr) (match-string 2 svr)))
-	     (if (string-match "from[ \t]+\\([^() \t\n]+\\)" svr)
-		 (setq snd (match-string 1 svr))))
-	   (when (and (string= snd "unknown")
-		      (string-match "from unknown (HELO \\([^() \t\n]+\\))" svr))
-	     (setq snd (concat (match-string 1 svr) "(unknown)"))))
-	  ((string-match "[ \t]*\\([^() \t\n]+\\)" svr)
-	   (setq rcv (match-string 1 svr))
-	   (if (string-match "from[ \t]*\\([^() \t\n]+\\)" svr)
-	       (setq snd (match-string 1 svr)))))
-	 (mew-elet
-	  (insert date)
-	  (beginning-of-line)
-	  (forward-char 4)
-	  (insert "/")
-	  (forward-char 2)
-	  (insert "/")
-	  (forward-char 2)
-	  (insert " ")
-	  (forward-char 2)
-	  (insert ":")
-	  (forward-char 2)
-	  (insert ":")
-	  (forward-char 2)
-	  (insert " (" (mew-time-tmzn-int) ") ")
-	  (if (and snd (not (string= snd last))) (insert snd))
-	  (insert " => ")
-	  (if rcv (insert rcv))
-	  (insert "\n")
-	  (setq last rcv)
-	  (setq snd "?" rcv "?"))))
+         (while (string-match "\n" ent)
+           (setq ent (replace-match "" nil t ent)))
+         (setq svr-date (mew-split ent ?\;))
+         (mew-set '(svr date) svr-date)
+         (unless date
+           ;; for broken MTAs
+           (if (string-match "Mon\\|Tue\\|Wed\\|Thu\\|Fri\\|Sat\\|Sun" ent)
+               (setq date (substring ent (match-beginning 0)))))
+         (if date (setq date (mew-time-rfc-to-sortkey date 'tzadj)))
+         (unless date (setq date "19700101000000"))
+         (setq tmp (cons (list date svr) tmp))
+         (cond
+          ((string-match "(\\(qmail [0-9]+\\)" svr)
+           (setq rcv (match-string 1 svr)))
+          ((string-match "by[ \t]+\\([^() \t\n]+\\)" svr)
+           (setq rcv (match-string 1 svr))
+           (if (string-match "from[ \t]+\\([^() \t\n]+\\).*\\([[][.0-9]+[]]\\)" svr)
+               (setq snd (format "%s %s" (match-string 1 svr) (match-string 2 svr)))
+             (if (string-match "from[ \t]+\\([^() \t\n]+\\)" svr)
+                 (setq snd (match-string 1 svr))))
+           (when (and (string= snd "unknown")
+                      (string-match "from unknown (HELO \\([^() \t\n]+\\))" svr))
+             (setq snd (concat (match-string 1 svr) "(unknown)"))))
+          ((string-match "[ \t]*\\([^() \t\n]+\\)" svr)
+           (setq rcv (match-string 1 svr))
+           (if (string-match "from[ \t]*\\([^() \t\n]+\\)" svr)
+               (setq snd (match-string 1 svr)))))
+         (mew-elet
+          (insert date)
+          (beginning-of-line)
+          (forward-char 4)
+          (insert "/")
+          (forward-char 2)
+          (insert "/")
+          (forward-char 2)
+          (insert " ")
+          (forward-char 2)
+          (insert ":")
+          (forward-char 2)
+          (insert ":")
+          (forward-char 2)
+          (insert " (" (mew-time-tmzn-int) ") ")
+          (if (and snd (not (string= snd last))) (insert snd))
+          (insert " => ")
+          (if rcv (insert rcv))
+          (insert "\n")
+          (setq last rcv)
+          (setq snd "?" rcv "?"))))
      (mew-summary-display-postscript 'no-hook)
      (select-window win))))
 
@@ -598,13 +598,13 @@ ad-hoc solution for putting the review mark on a thread.")
   (catch 'loop
     (while (re-search-forward regex nil t)
       (unless (eq (get-text-property (point) 'invisible) t)
-	(throw 'loop t)))))
+        (throw 'loop t)))))
 
 (defun mew-re-search-backward-visible (regex)
   (catch 'loop
     (while (re-search-backward regex nil t)
       (unless (eq (get-text-property (point) 'invisible) t)
-	(throw 'loop t)))))
+        (throw 'loop t)))))
 
 (defun mew-summary-down ()
   (funcall mew-summary-down-function)
@@ -688,21 +688,21 @@ over the window. Type '\\[mew-summary-prev-page]' to see them when a message is 
   (interactive)
   (mew-summary-msg-or-part
    (let* ((win (selected-window))
-	  (msg (mew-summary-message-number))
-	  (part (mew-syntax-nums))
-	  (fid (mew-frame-id))
-	  (omsg (mew-current-get-msg fid))
-	  (opart (mew-current-get-part fid)))
+          (msg (mew-summary-message-number))
+          (part (mew-syntax-nums))
+          (fid (mew-frame-id))
+          (omsg (mew-current-get-msg fid))
+          (opart (mew-current-get-part fid)))
      ;; xxx how about folder check?
      (if (or (and msg (string= msg omsg) (null part) (null opart))
-	     (and part (equal part opart))) ;; MUST be equal
-	 (unwind-protect
-	     (progn
-	       (mew-summary-toggle-disp-msg 'on)
-	       (mew-window-configure 'message)
-	       ;; message buffer
-	       (mew-message-next-page 1))
-	   (select-window win))
+             (and part (equal part opart))) ;; MUST be equal
+         (unwind-protect
+             (progn
+               (mew-summary-toggle-disp-msg 'on)
+               (mew-window-configure 'message)
+               ;; message buffer
+               (mew-message-next-page 1))
+           (select-window win))
        (call-interactively 'mew-summary-display)))))
 
 (defun mew-summary-scroll-down (&optional fullpage)
@@ -710,21 +710,21 @@ over the window. Type '\\[mew-summary-prev-page]' to see them when a message is 
   (interactive)
   (mew-summary-msg-or-part
    (let* ((win (selected-window))
-	  (msg (mew-summary-message-number))
-	  (part (mew-syntax-nums))
-	  (fid (mew-frame-id))
-	  (omsg (mew-current-get-msg fid))
-	  (opart (mew-current-get-part fid)))
+          (msg (mew-summary-message-number))
+          (part (mew-syntax-nums))
+          (fid (mew-frame-id))
+          (omsg (mew-current-get-msg fid))
+          (opart (mew-current-get-part fid)))
      ;; xxx how about folder check?
      (if (or (and msg (string= msg omsg) (null part) (null opart))
-	     (and part (equal part opart))) ;; MUST be equal
-	 (unwind-protect
-	     (progn
-	       (mew-summary-toggle-disp-msg 'on)
-	       (mew-window-configure 'message)
-	       ;; message buffer
-	       (mew-message-prev-page (if fullpage nil 1)))
-	   (select-window win))
+             (and part (equal part opart))) ;; MUST be equal
+         (unwind-protect
+             (progn
+               (mew-summary-toggle-disp-msg 'on)
+               (mew-window-configure 'message)
+               ;; message buffer
+               (mew-message-prev-page (if fullpage nil 1)))
+           (select-window win))
        (call-interactively 'mew-summary-display)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -740,16 +740,16 @@ over the window. Type '\\[mew-summary-prev-page]' to see them when a message is 
       (mew-summary-previous-line (- arg))
     (let (col)
       (if (eq last-command this-command)
-	  (setq col (mew-sinfo-get-column)))
+          (setq col (mew-sinfo-get-column)))
       (unless col
-	(setq col (current-column))
-	(mew-sinfo-set-column col))
+        (setq col (current-column))
+        (mew-sinfo-set-column col))
       (while (> arg 0)
-	(forward-line)
-	(while (or (looking-at mew-regex-thread-separator)
-		   (eq (get-text-property (point) 'invisible) t))
-	  (forward-line))
-	(setq arg (1- arg)))
+        (forward-line)
+        (while (or (looking-at mew-regex-thread-separator)
+                   (eq (get-text-property (point) 'invisible) t))
+          (forward-line))
+        (setq arg (1- arg)))
       (move-to-column col))))
 
 (defun mew-summary-previous-line (&optional arg)
@@ -760,16 +760,16 @@ over the window. Type '\\[mew-summary-prev-page]' to see them when a message is 
       (mew-summary-next-line (- arg))
     (let (col)
       (if (eq last-command this-command)
-	  (setq col (mew-sinfo-get-column)))
+          (setq col (mew-sinfo-get-column)))
       (unless col
-	(setq col (current-column))
-	(mew-sinfo-set-column col))
+        (setq col (current-column))
+        (mew-sinfo-set-column col))
       (while (> arg 0)
-	(forward-line -1) ;; for invisible
-	(while (or (looking-at mew-regex-thread-separator)
-		   (eq (get-text-property (point) 'invisible) t))
-	  (forward-line -1))
-	(setq arg (1- arg)))
+        (forward-line -1) ;; for invisible
+        (while (or (looking-at mew-regex-thread-separator)
+                   (eq (get-text-property (point) 'invisible) t))
+          (forward-line -1))
+        (setq arg (1- arg)))
       (move-to-column col))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

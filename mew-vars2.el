@@ -55,21 +55,21 @@
   `(;; (REGEXP . NEW) --- NEW may be nil for deletion (same to "")
     ;; replace multiple Re: and Fw: into single Re:
     (,(concat "^" ;; regexp
-	      mew-reply-regex
-	      "\\("
-	      mew-reply-regex
-	      "\\|"
-	      mew-forward-regex
-	      "\\)*")
+              mew-reply-regex
+              "\\("
+              mew-reply-regex
+              "\\|"
+              mew-forward-regex
+              "\\)*")
      mew-reply-string) ;; new text
     ;; replace multiple Fw: and Re: into single Fw:
     (,(concat "^" ;; regexp
-	      mew-forward-regex
-	      "\\("
-	      mew-reply-regex
-	      "\\|"
-	      mew-forward-regex
-	      "\\)*")
+              mew-forward-regex
+              "\\("
+              mew-reply-regex
+              "\\|"
+              mew-forward-regex
+              "\\)*")
      mew-forward-string) ;; new text
     ;; delete extra string (no new text means delete)
     (,mew-was-regex nil)) ;; regexp
@@ -292,7 +292,7 @@ This is a list of entries which consist of <content-type>,
 
 Here is an example:
 
-	(\"image/png\" \"\\\\.png$\" mew-b64 mew-prog-image mew-icon-image png)
+        (\"image/png\" \"\\\\.png$\" mew-b64 mew-prog-image mew-icon-image png)
 
 This database is used both when visualizing and composing. For
 example, when visualizing, a visualizer is chosen according to
@@ -309,43 +309,43 @@ Each symbol specified at <symbol for visualizer> should have a value
 whose format is one of followings:
 
 - \"prog\"
-	\"prog\" is an external program.
-	(1) The program name is displayed.
-	(2) \"prog\" is executed asynchronously.
+        \"prog\" is an external program.
+        (1) The program name is displayed.
+        (2) \"prog\" is executed asynchronously.
 - func
-	<func> is a function.
-	(1) <func> is called.
-	(2) <func> is called.
+        <func> is a function.
+        (1) <func> is called.
+        (2) <func> is called.
 - (\"prog\" args async)
-	\"prog\" is an external program.
-	<args> is a list of arguments for the external program.
-	<async>
-		If nil, the external program is called synchronously.
-		If t, the external program is called asynchronously.
-	(1) The program name is displayed.
-	(2) \"prog\" is executed asynchronously with <args>.
+        \"prog\" is an external program.
+        <args> is a list of arguments for the external program.
+        <async>
+                If nil, the external program is called synchronously.
+                If t, the external program is called asynchronously.
+        (1) The program name is displayed.
+        (2) \"prog\" is executed asynchronously with <args>.
 - (nil \"prog\")
-	Equivalent to \"prog\".
+        Equivalent to \"prog\".
 - (nil (\"prog\" args async))
-	Equivalent to (\"prog\" args async).
+        Equivalent to (\"prog\" args async).
 - (nil func2)
-	(1) Displayed 'type \\[mew-summary-execute-external]'.
-	(2) <func2> is called.
+        (1) Displayed 'type \\[mew-summary-execute-external]'.
+        (2) <func2> is called.
 - (func1 func2)
-	(1) <func1> is called.
-	(2) <func2> is called.
-	    If the original content-type is Application/Octet-Stream,
-	    you are asked to choose <func1> or <func2>.
+        (1) <func1> is called.
+        (2) <func2> is called.
+            If the original content-type is Application/Octet-Stream,
+            you are asked to choose <func1> or <func2>.
 - (func1 \"prog\")
-	(1) <func1> is called.
-	(2) \"prog\" is executed asynchronously.
-	    If the original content-type is Application/Octet-Stream,
-	    you are asked to choose <func1> or \"prog\".
+        (1) <func1> is called.
+        (2) \"prog\" is executed asynchronously.
+            If the original content-type is Application/Octet-Stream,
+            you are asked to choose <func1> or \"prog\".
 - (func1 (\"prog\" args async))
-	(1) <func1> is called.
-	(2) \"prog\" is executed asynchronously with <args>.
-	    If the original content-type is Application/Octet-Stream,
-	    you are asked to choose <func1> or \"prog\".
+        (1) <func1> is called.
+        (2) \"prog\" is executed asynchronously with <args>.
+            If the original content-type is Application/Octet-Stream,
+            you are asked to choose <func1> or \"prog\".
 
 Note that (1) indicates the action for '\\[mew-summary-display]' and
 \(2) indicates the action for '\\[mew-summary-execute-external]'.
@@ -372,7 +372,7 @@ the next version of Mew.")
 (defun mew-ctdb-prog (attr)
   (let ((val (symbol-value (nth 3 attr))))
     (if (and (listp val) (eq 'if (car val)))
-	(eval val)
+        (eval val)
       val)))
 
 (defun mew-ctdb-icon (attr)
@@ -458,10 +458,10 @@ the next version of Mew.")
 
 (defun mew-mime-external-body-preference (part)
   (let* ((ctl (mew-syntax-get-ct part))
-	 (ct (mew-syntax-get-value ctl 'cap))
-	 (access-type (mew-syntax-get-param ctl "access-type")))
+         (ct (mew-syntax-get-value ctl 'cap))
+         (access-type (mew-syntax-get-param ctl "access-type")))
     (if (and (string= ct mew-ct-ext) (stringp access-type))
-	(mew-member-match access-type mew-mime-external-body-list))))
+        (mew-member-match access-type mew-mime-external-body-list))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -487,7 +487,7 @@ the next version of Mew.")
     (,mew-message-id:    unstruct   unstruct)
     (,mew-references:    unstruct   unstruct)
     (,mew-in-reply-to:   unstruct   unstruct)
-    (,mew-x-face:	 unstruct   unstruct)
+    (,mew-x-face:        unstruct   unstruct)
     (,mew-face:          unstruct   unstruct)
     ("Authentication-Results:" unstruct struct2) ;; capitalized
     ("Domainkey-Signature:"    unstruct unstruct) ;; capitalized
@@ -559,7 +559,7 @@ the next version of Mew.")
       "softfail" mew-face-header-xmew-bad))
     ("^Delivered-" nil)
     ("^List-" nil) ;; RFC 2369
-;;    ("^Content-" t)
+    ;;    ("^Content-" t)
     ("^\\(Mime-Version\\|Lines\\):$" nil)
     ("^From$" nil)
     ("^Status:$" nil)
@@ -581,8 +581,8 @@ present, mew-face-header-marginal is used."
   :group 'mew-highlight
   :type '(alist :key-type regexp
                 :value-type
-                  (choice (list boolean)
-                          (list boolean face face))))
+                (choice (list boolean)
+                        (list boolean face face))))
 
 ;; cons the position to the spec.
 (defun mew-nspec-by-key (key)
@@ -606,8 +606,8 @@ present, mew-face-header-marginal is used."
 (defun mew-authentication-results (val)
   (save-match-data
     (or (string-match "=hardfail" val)
-	(string-match "=fail" val)
-	(string-match "=softfail" val))))
+        (string-match "=fail" val)
+        (string-match "=softfail" val))))
 
 (mew-defstruct header-color field key val)
 (defvar mew-header-color-alist nil)
@@ -617,7 +617,7 @@ present, mew-face-header-marginal is used."
 (defun mew-header-color-base (field key-color val-color bold)
   (unless val-color (setq val-color key-color))
   (let ((face-key (intern (concat "mew-face-color-" key-color (if bold "-bold"))))
-	(face-val (intern (concat "mew-face-color-" val-color (if bold "-bold")))))
+        (face-val (intern (concat "mew-face-color-" val-color (if bold "-bold")))))
     (unless (facep face-key)
       (make-empty-face face-key)
       (face-spec-set face-key (list (mew-face-spec-func t (mew-face-spec-primitive key-color bold)))))
@@ -625,7 +625,7 @@ present, mew-face-header-marginal is used."
       (make-empty-face face-val)
       (face-spec-set face-val (list (mew-face-spec-func t (mew-face-spec-primitive val-color bold)))))
     (setq mew-header-color-alist
-	  (cons (list (capitalize field) face-key face-val) mew-header-color-alist))))
+          (cons (list (capitalize field) face-key face-val) mew-header-color-alist))))
 
 (defun mew-header-color (field key-color &optional val-color)
   "Set the color of FIELD key to KEY-COLOR.
@@ -725,10 +725,10 @@ Seven values following a mark value means as follows:
 
 The value of cursor actions means as follows:
 
-	0 means staying.
-	1 means moving according to the direction,
-	2 means moving according to the direction
-	  then displaying the next message.
+        0 means staying.
+        1 means moving according to the direction,
+        2 means moving according to the direction
+          then displaying the next message.
 
 For more detail, see mew-mark-put-mark and mew-mark-afterstep.")
 
@@ -743,7 +743,7 @@ For more detail, see mew-mark-put-mark and mew-mark-afterstep.")
     (,mew-mark-delete "delete" 2 nil t   nil mew-mark-exec-delete nil)
     (,mew-mark-unlink "unlink" 2 nil t   nil mew-mark-exec-unlink nil)
     (,mew-mark-refile "refile" 2 t   mew-mark-kill-refile mew-mark-unrefile
-		                     mew-mark-exec-refile mew-mark-sanity-refile))
+                      mew-mark-exec-refile mew-mark-sanity-refile))
   "*A list of lists which consists of
 mark, name, level, statefullp, kill-line-p,
 undo-func, exec-func, and sanity-fucn.")
@@ -804,10 +804,10 @@ marks messages whose Content-Type: contains \"gb2312\" with 'D'.
 
 \(setq mew-inbox-action-alist
       '((\"Subject:\"
-	 (?D \"adult\" \"money\")
-	 (\"+log\" \"daily log\"))
-	(\"Content-Type:\"
-	 (?D \"gb2312\"))))
+         (?D \"adult\" \"money\")
+         (\"+log\" \"daily log\"))
+        (\"Content-Type:\"
+         (?D \"gb2312\"))))
 
 If the second element of the entry is a symbol, it will be called as a
 function which returns nil or a mark or a string.
@@ -917,7 +917,7 @@ to messages and puts them to your mailbox, configure as follows:
 
 (defcustom mew-config-alist nil
   "*Alist of config. This is a list of
-	(<case> (<key> <value>) (<key> <value>) ...).
+        (<case> (<key> <value>) (<key> <value>) ...).
   - <case> is a string of case.
   - <key> is a symbol of Mew value with the 'mew-' prefix removed.
   - <value> is a string.
@@ -958,17 +958,17 @@ An example is as follows:
 
 \(setq mew-config-alist
       '((mew
-	 (mail-domain  \"example.org\")
-	 (inbox-folder \"+inbox-mew\"))
-	(keio
-	 (cc           \"kazu@example.jp\")
-	 (user         \"pooh\")
-	 (mail-domain  \"example.net\"))
-	(default
-	 (name         \"Kazu Yamamoto\")
-	 (mail-domain  \"example.jp\"))))
+         (mail-domain  \"example.org\")
+         (inbox-folder \"+inbox-mew\"))
+        (keio
+         (cc           \"kazu@example.jp\")
+         (user         \"pooh\")
+         (mail-domain  \"example.net\"))
+        (default
+         (name         \"Kazu Yamamoto\")
+         (mail-domain  \"example.jp\"))))
 "
-;; bcc can be used but not recommended
+  ;; bcc can be used but not recommended
   :group 'mew-env
   :type '(alist :key-type string
                 :value-type (repeat (cons string string))))
@@ -976,9 +976,9 @@ An example is as follows:
 (defun mew-cfent-by-case (case)
   (if (null case)
       (or (assoc mew-case-default mew-config-alist)
-	  (assoc (intern mew-case-default) mew-config-alist))
+          (assoc (intern mew-case-default) mew-config-alist))
     (or (assoc case mew-config-alist)
-	(assoc (intern case) mew-config-alist))))
+        (assoc (intern case) mew-config-alist))))
 
 (provide 'mew-vars2)
 

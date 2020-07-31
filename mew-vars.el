@@ -197,14 +197,14 @@ removed or refiled to 'mew-imap-spam-folder' or 'mew-imap-trash-folder'
 \(if defined) while scanning %inbox."
   :group 'mew-imap
   :type '(choice (const :tag "Not use" nil)
-		 (string :tag "Spam field")))
+                 (string :tag "Spam field")))
 
 (defcustom mew-imap-spam-word nil
   "*The word of anti spam information to be used for IMAP spam filter.
 See 'mew-imap-spam-field'."
   :group 'mew-imap
   :type '(choice (const :tag "Not use" nil)
-		 (string :tag "Spam word")))
+                 (string :tag "Spam word")))
 
 (defcustom mew-imap-spam-pattern nil
   "*IMAP SEARCH pattern to filter spams.
@@ -212,14 +212,14 @@ If non-nil, 'mew-imap-spam-field' and 'mew-imap-spam-field'
 treated as 'nil'."
   :group 'mew-imap
   :type '(choice (const :tag "Not use" nil)
-		 (string :tag "Spam word")))
+                 (string :tag "Spam word")))
 
 (defcustom mew-imap-spam-folder nil
   "*A folder to be used for IMAP spam filter.
 See 'mew-imap-spam-field'."
   :group 'mew-imap
   :type '(choice (const :tag "Not use" nil)
-		 (string :tag "Spam folder")))
+                 (string :tag "Spam folder")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -510,8 +510,8 @@ i.e. \"Friendly name <user@mail-domain>\"."
   :type 'string)
 
 (defcustom mew-mail-domain (or (car mew-mail-domain-list)
-			       mail-host-address
-			       (system-name))
+                               mail-host-address
+                               (system-name))
   "*Your e-mail address domain."
   :group 'mew-basic
   :type 'string)
@@ -589,7 +589,7 @@ server, set an appropriate value."
   "*The name of SSH server which forwards the SMTP port."
   :group 'mew-smtp
   :type '(choice (const :tag "Not use" nil)
-		 (string :tag "Ssh server")))
+                 (string :tag "Ssh server")))
 
 (defcustom mew-smtp-ssl nil
   "*If non-nil, SMTP connections are made over SSL/TLS."
@@ -738,9 +738,9 @@ number N, delete the messages N days after the first access.
 Otherwise they are not deleted."
   :group 'mew-pop
   :type '(choice
-	  (const :tag "Delete immediately" t)
-	  (const :tag "Retain the messages" nil)
-	  (integer :tag "Delete N days after")))
+          (const :tag "Delete immediately" t)
+          (const :tag "Retain the messages" nil)
+          (integer :tag "Delete N days after")))
 
 (defcustom mew-pop-size (* 54 1024) ;; 4K hdr + 50K bdy
   "*The limit size of messages to be retrieved by POP. The default is
@@ -765,7 +765,7 @@ If non-nil, only header is retrieved."
   "*The name of POP proxy server."
   :group 'mew-pop
   :type '(choice (const :tag "Not use" nil)
-		 (string :tag "Pop proxy server")))
+                 (string :tag "Pop proxy server")))
 
 (defcustom mew-pop-proxy-port nil
   "*The port for POP proxy."
@@ -850,7 +850,7 @@ If non-nil, only header is retrieved."
 For example, the WU IMAP server returns the following value
 for the NAMESPACE command.
 
-	((\"\" \"/\")(\"#mhinbox\" NIL)(\"#mh/\" \"/\")) ((\"/\" \"/\")) ((\"#shared/\" \"/\")(\"#ftp/\" \"/\")(\"#news.\" \".\")(\"#public/\" \"/\"))
+        ((\"\" \"/\")(\"#mhinbox\" NIL)(\"#mh/\" \"/\")) ((\"/\" \"/\")) ((\"#shared/\" \"/\")(\"#ftp/\" \"/\")(\"#news.\" \".\")(\"#public/\" \"/\"))
 
 The first list is prefixes of user mailboxes. Each element consists
 of a prefix and a separator.
@@ -865,12 +865,12 @@ is nil, the prefix is added to mailbox alist as a mailbox.
 If you want to used your home directory with WU, configure as
 follows:
 
-	(setq mew-imap-prefix-list '(\"\"))
+        (setq mew-imap-prefix-list '(\"\"))
 
 If you want to used the MH directory with WU, configure as
 follows:
 
-	(setq mew-imap-prefix-list '(\"#mh/\" \"#mhinbox\"))
+        (setq mew-imap-prefix-list '(\"#mh/\" \"#mhinbox\"))
 
 Note that %inbox means /var/mail/<user> while %#mhinbox refers to
 Mail/inbox.
@@ -882,7 +882,7 @@ Mail/inbox.
   "*The name of IMAP proxy server."
   :group 'mew-imap
   :type '(choice (const :tag "Not use" nil)
-		 (string :tag "Imap proxy server")))
+                 (string :tag "Imap proxy server")))
 
 (defcustom mew-imap-proxy-port nil
   "*The port for IMAP proxy."
@@ -927,7 +927,7 @@ server, set an appropriate value."
 used."
   :group 'mew-nntp
   :type '(choice (const :tag "Not use" nil)
-		 (string :tag "Nntp user")))
+                 (string :tag "Nntp user")))
 
 (defcustom mew-nntp-newsgroup "-fj.mail.reader.mew"
   "*The name of default Newsgroup."
@@ -983,27 +983,27 @@ the corresponding RANGE is returned.
 Candidate values for 'mew-rage-list-string-type' and
 'mew-range-list-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
-			not only a folder specified but all so
-			all sub-folders are matched.
-	'string		String comparison.
+        'regex          Regular expression.
+        'recursive      Initial substring match. That is,
+                        not only a folder specified but all so
+                        all sub-folders are matched.
+        'string         String comparison.
 
 An example is as follows:
-	'(((\"+queue\" \"+postq\" \"+draft\") \"all\")
-	  ((\"$inbox\") \"sync\")
-	  (t \"update\"))
+        '(((\"+queue\" \"+postq\" \"+draft\") \"all\")
+          ((\"$inbox\") \"sync\")
+          (t \"update\"))
 
 If this value is nil, an appropriate value is set when Mew is booting.
 "
   :group 'mew-summary
   :type '(choice
-	  (const nil)
-	  (repeat
-	   (list (choice (string :tag "Folder")
-			 (repeat :tag "Folders" (string :tag "Folder"))
-			 (const :tag "Other" t))
-		 string))))
+          (const nil)
+          (repeat
+           (list (choice (string :tag "Folder")
+                         (repeat :tag "Folders" (string :tag "Folder"))
+                         (const :tag "Other" t))
+                 string))))
 
 (defcustom mew-range-list-string-type 'regex
   "*A value to specify an action if the key is a string in
@@ -1044,31 +1044,31 @@ the corresponding VALUE is returned.
 Candidate values for 'mew-rage-list-string-type' and
 'mew-unread-mark-list-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
-			not only a folder specified but all so
-			all sub-folders are matched.
-	'string		String comparison.
+        'regex          Regular expression.
+        'recursive      Initial substring match. That is,
+                        not only a folder specified but all so
+                        all sub-folders are matched.
+        'string         String comparison.
 
 The default value is:
-	'(((\"+inbox\" \"$inbox\" \"%inbox\" \"-\") t)
-	  (t nil))
+        '(((\"+inbox\" \"$inbox\" \"%inbox\" \"-\") t)
+          (t nil))
 
 An example for the case where messages are marked as unread in any
 folders:
-	'((t t))
+        '((t t))
 
 Note that this variable is effective only when 'mew-use-unread-mark'
 is non-nil.
 "
   :group 'mew-summary
   :type '(choice
-	  (const nil)
-	  (repeat
-	   (list (choice (string :tag "Folder")
-			 (repeat :tag "Folders" (string :tag "Folder"))
-			 (const :tag "Other" t))
-		 string))))
+          (const nil)
+          (repeat
+           (list (choice (string :tag "Folder")
+                         (repeat :tag "Folders" (string :tag "Folder"))
+                         (const :tag "Other" t))
+                 string))))
 
 (defcustom mew-unread-mark-list-string-type 'regex
   "*A value to specify an action if the key is a string in
@@ -1096,49 +1096,49 @@ MUST be '(mark).")
 (defconst mew-custom-type-of-summary-form
   '(choice
     (cons :tag "Setup message number column"
-	  (integer :tag "Message number column" )
-	  (repeat (choice (string :tag "Insert string")
-			  (const :tag "Thread indent" t)
-			  (list :tag "Width and symbol"
-				:value (0 type)
-				(integer :tag "Display width")
-				(choice :tag "Symbol"
-					:value type
-					(const type) (const time)
-					(const date) (const year)
-					(const size) (const from)
-					(const subj) (symbol :tag "Other")))
-			  (choice :tag "Symbol"
-				  :value type
-				  (const type) (const time)
-				  (const date) (const year)
-				  (const size) (const from)
-				  (const subj) (symbol :tag "Other")))))
+          (integer :tag "Message number column" )
+          (repeat (choice (string :tag "Insert string")
+                          (const :tag "Thread indent" t)
+                          (list :tag "Width and symbol"
+                                :value (0 type)
+                                (integer :tag "Display width")
+                                (choice :tag "Symbol"
+                                        :value type
+                                        (const type) (const time)
+                                        (const date) (const year)
+                                        (const size) (const from)
+                                        (const subj) (symbol :tag "Other")))
+                          (choice :tag "Symbol"
+                                  :value type
+                                  (const type) (const time)
+                                  (const date) (const year)
+                                  (const size) (const from)
+                                  (const subj) (symbol :tag "Other")))))
     (repeat :tag "Use default number column"
-	    (choice (integer :tag "Message number column")
-		    (string :tag "Insert string")
-		    (const :tag "Thread indent" t)
-		    (list :tag "Width and symbol"
-			  :value (0 type)
-			  (integer :tag "Display width")
-			  (choice :tag "Symbol"
-				  :value type
-				  (const type) (const time)
-				  (const date) (const year)
-				  (const size) (const from)
-				  (const subj) (symbol :tag "Other")))
-		    (choice :tag "Symbol"
-			    :value type
-			    (const type) (const time)
-			    (const date) (const year)
-			    (const size) (const from)
-			    (const subj) (symbol :tag "Other"))))))
+            (choice (integer :tag "Message number column")
+                    (string :tag "Insert string")
+                    (const :tag "Thread indent" t)
+                    (list :tag "Width and symbol"
+                          :value (0 type)
+                          (integer :tag "Display width")
+                          (choice :tag "Symbol"
+                                  :value type
+                                  (const type) (const time)
+                                  (const date) (const year)
+                                  (const size) (const from)
+                                  (const subj) (symbol :tag "Other")))
+                    (choice :tag "Symbol"
+                            :value type
+                            (const type) (const time)
+                            (const date) (const year)
+                            (const size) (const from)
+                            (const subj) (symbol :tag "Other"))))))
 
 (defvar mew-summary-form-body-starter "|")
 
 (defcustom mew-summary-form
   `(type (5 date) " " (14 from) " " t (30 subj)
-	 ,mew-summary-form-body-starter (0 body))
+         ,mew-summary-form-body-starter (0 body))
   "*The format in Summary mode, called summary-form. summary-form is a list
 of list, symbol, and string.
 
@@ -1172,7 +1172,7 @@ summary-form when used. See also 'mew-summary-form-header'.
 \(e) 't' means the position where thread indentation is inserted.
 
 An example is as follows:
-	'(type (5 date) \" \" (-4 size) \" \" (14 from) \" \" t (30 subj) \"|\" (0 body))
+        '(type (5 date) \" \" (-4 size) \" \" (14 from) \" \" t (30 subj) \"|\" (0 body))
 
 You can also set this value in 'mew-summary-form-list'."
   :group 'mew-summary
@@ -1196,30 +1196,30 @@ the corresponding SUMMARY-FORM is returned.
 Candidate values for 'mew-summary-form-list-string-type' and
 'mew-summary-form-list-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
-			not only a folder specified but all so
-			all sub-folders are matched.
-	'string		String comparison.
+        'regex          Regular expression.
+        'recursive      Initial substring match. That is,
+                        not only a folder specified but all so
+                        all sub-folders are matched.
+        'string         String comparison.
 
 SUMMARY-FORM is a list. See 'mew-summary-form' for more information.
 
 An example is as follows:
       '(((\"+inbox\")
-	 (type (5 date) \" \" (-4 size) \" \" (14 from) \" \" t (30 subj) \"|\" (0 body)))
-	(t
-	 (type (5 date) \" \" (14 from) \" \" t (30 subj) \"|\" (0 body))))
+         (type (5 date) \" \" (-4 size) \" \" (14 from) \" \" t (30 subj) \"|\" (0 body)))
+        (t
+         (type (5 date) \" \" (14 from) \" \" t (30 subj) \"|\" (0 body))))
 "
   :group 'mew-summary
   :type `(choice
-	  (const nil)
-	  (repeat
-	   (list (choice (string :tag "Folder")
-			 (repeat :tag "Folders" (string :tag "Folder"))
-			 (const :tag "Other" t))
-		 ,mew-custom-type-of-summary-form
-		 (choice (integer :tag "Thread indent column")
-			 (const nil))))))
+          (const nil)
+          (repeat
+           (list (choice (string :tag "Folder")
+                         (repeat :tag "Folders" (string :tag "Folder"))
+                         (const :tag "Other" t))
+                 ,mew-custom-type-of-summary-form
+                 (choice (integer :tag "Thread indent column")
+                         (const nil))))))
 
 (defcustom mew-summary-form-list-string-type 'regex
   "*A value to specify an action if the key is a string in
@@ -1246,33 +1246,33 @@ element must be 'name, 'comment, 'address, 'nickname, or appropriate
 
 Consider the following examples:
 
-	A: Kazu Yamamoto <kazu@example.org>
-	B: kazu@example.org (Kazu Yamamoto)
-	C: Kazuhiko Yamamoto (Kazu) <kazu@example.org>
+        A: Kazu Yamamoto <kazu@example.org>
+        B: kazu@example.org (Kazu Yamamoto)
+        C: Kazuhiko Yamamoto (Kazu) <kazu@example.org>
 
 Each element returns the following value:
 
-	'name		Name part, if any
-				A: Kazu Yamamoto
-				B: (No match)
-				C: Kazuhiko Yamamoto (Kazu)
-	'comment	Comment part, if any
-				A: (No match)
-				B: Kazu Yamamoto
-				C: (Kazu)
-	'address	Address part
-				A: kazu@example.org
-				B: kazu@example.org
-				C: kazu@example.org
+        'name           Name part, if any
+                                A: Kazu Yamamoto
+                                B: (No match)
+                                C: Kazuhiko Yamamoto (Kazu)
+        'comment        Comment part, if any
+                                A: (No match)
+                                B: Kazu Yamamoto
+                                C: (Kazu)
+        'address        Address part
+                                A: kazu@example.org
+                                B: kazu@example.org
+                                C: kazu@example.org
 
-	'nickname       One element of personal information in
+        'nickname       One element of personal information in
                         Addrbook according to 'mew-addrbook-for-summary'.
                         The default value of 'mew-addrbook-for-summary'
                         is 'nickname. So, From: is converted a nickname
                         by default. For more information, see
                         'mew-addrbook-switch'.
 
-	(regex)		The substring first matched
+        (regex)         The substring first matched
 
 If a element does not match, the next element is applied. If no
 element matches to the From: field, or this value is nil, the whole
@@ -1287,8 +1287,8 @@ duplicated messages. If a character, use it as a mark
 instead of the 'D' mark."
   :group 'mew-summary
   :type '(choice (const :tag "Use mew-mark-delete" t)
-		 (const :tag "Not use" nil)
-		 (character :tag "Use another character")))
+                 (const :tag "Not use" nil)
+                 (character :tag "Use another character")))
 
 (defcustom mew-summary-form-mark-spam nil
   "*If non-nil, the 'D' mark automatically is put onto
@@ -1297,8 +1297,8 @@ if the MD5 checksum of its body is duplicated in a scan.
 If a character, use it as a mark instead of the 'D' mark."
   :group 'mew-summary
   :type '(choice (const :tag "Use mew-mark-delete" t)
-		 (const :tag "Not use" nil)
-		 (character :tag "Use another character")))
+                 (const :tag "Not use" nil)
+                 (character :tag "Use another character")))
 
 (defcustom mew-summary-form-mark-review nil
   "*If non-nil, the '*' mark automatically is put onto
@@ -1306,8 +1306,8 @@ messages destined to me. If a character, use it as a mark
 instead of the '*' mark."
   :group 'mew-summary
   :type '(choice (const :tag "Use mew-mark-review" t)
-		 (const :tag "Not use" nil)
-		 (character :tag "Use another character")))
+                 (const :tag "Not use" nil)
+                 (character :tag "Use another character")))
 
 (defcustom mew-summary-form-size-0k nil
   "*If non-nil, the size of message is displayed as '0k'
@@ -1325,8 +1325,8 @@ quantization by 'mew-summary-form-size-unit'."
 (defcustom mew-spam: "X-Bogosity:"
   "*The field name which your spam filter inserts.
 E.g.
-	\"X-Spam-Flag:\" for 'spamassassin'
-	\"X-Bogosity:\" for 'bogofilter'"
+        \"X-Spam-Flag:\" for 'spamassassin'
+        \"X-Bogosity:\" for 'bogofilter'"
   :group 'mew-summary
   :type 'string)
 
@@ -1354,7 +1354,7 @@ Functions called MEW-FOO will be defined according to this variable.")
 
 (defvar mew-draft-address-warning-fields
   (list mew-to: mew-cc: mew-dcc: mew-bcc:
-	mew-resent-to: mew-resent-cc: mew-resent-dcc: mew-resent-bcc:))
+        mew-resent-to: mew-resent-cc: mew-resent-dcc: mew-resent-bcc:))
 
 (defcustom mew-thread-column 28
   "A position where thread indentation is inserted
@@ -1419,7 +1419,7 @@ See also 'mew-header-max-length'."
 Non-integer means no limit."
   :group 'mew-reply
   :type '(choice (integer :tag "Max count")
-		 (const :tag "No limit" nil)))
+                 (const :tag "No limit" nil)))
 
 (defcustom mew-lisp-max-length 2000
   "*Mew saves an internal lisp structure to a file truncating
@@ -1542,9 +1542,9 @@ invalid. Otherwise, 'update is used for range in the case."
 (defcustom mew-ask-charset nil
   "*Mew asks a user whether or not the charset chosen on composing
 is appropriate.
-	nil:               not ask
-	A list of charset: ask if the charset is not a member of the list
-	t:                 ask if 'mew-charset-m17n' is used."
+        nil:               not ask
+        A list of charset: ask if the charset is not a member of the list
+        t:                 ask if 'mew-charset-m17n' is used."
   :group 'mew-draft
   :type '(choice (const nil) (const t) (repeat string)))
 
@@ -1615,20 +1615,20 @@ strings, the corresponding boolean is returned.
 Candidate values for 'mew-use-text/html-string-type' and
 'mew-use-text/html-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
-			not only a folder specified but all so
-			all sub-folders are matched.
-	'string		String comparison.
+        'regex          Regular expression.
+        'recursive      Initial substring match. That is,
+                        not only a folder specified but all so
+                        all sub-folders are matched.
+        'string         String comparison.
 "
   :group 'mew-summary
   :type '(choice
-	  (const nil)
-	  (repeat
-	   (list (choice (string :tag "Folder")
-			 (repeat :tag "Folders" (string :tag "Folder"))
-			 (const :tag "Other" t))
-		 boolean))))
+          (const nil)
+          (repeat
+           (list (choice (string :tag "Folder")
+                         (repeat :tag "Folders" (string :tag "Folder"))
+                         (const :tag "Other" t))
+                 boolean))))
 
 (defcustom mew-use-text/html-string-type 'regex
   "*A value to specify an action if the key is a string in
@@ -1831,9 +1831,9 @@ returns the AUTH capability."
 
 (defcustom mew-smtp-auth-plain-authorize-id nil
   "*If nil, SMTP AUTH PLAIN is created as follow:
-	NUL authenticate-id NUL password
+        NUL authenticate-id NUL password
 If non-nil, it is created as follow:
-	authorize-id NUL authenticate-id NUL password
+        authorize-id NUL authenticate-id NUL password
 For more information, see RFC 2595."
   :group 'mew-smtp
   :type 'boolean)
@@ -1867,9 +1867,9 @@ If you cite a message, the citation style of format=flowed is used. "
   "*Ratio of windows"
   :group 'mew-env
   :type '(list
-           (list (const summary) (list integer integer))
-           (list (const message) (list integer integer))
-           (list (const draft) (list integer integer))))
+          (list (const summary) (list integer integer))
+          (list (const message) (list integer integer))
+          (list (const draft) (list integer integer))))
 
 (defcustom mew-mode-line-id "Mew: %12b"
   "*A default value of mode-line-buffer-identification for each Mew mode."
@@ -1975,8 +1975,8 @@ where the cursor jumped to the bottom."
 to a region."
   :group 'mew-summary
   :type '(choice (const :tag "Include if the cursor is not on the beginning of the line" nil)
-		 (const :tag "Include if the cursor is on the end of the line" end)
-		 (const :tag "Include always" t)))
+                 (const :tag "Include if the cursor is on the end of the line" end)
+                 (const :tag "Include always" t)))
 
 (defvar mew-highlight-timer-interval 3)
 
@@ -2243,7 +2243,7 @@ selected. An example configuration is as follows:
 
 \(setq mew-charset-input-method-alist
       '((\"iso-8859-1\" \"latin-1-postfix\")
-	(\"iso-8859-2\" \"latin-2-postfix\")))
+        (\"iso-8859-2\" \"latin-2-postfix\")))
 "
   :group 'mew-draft
   :type '(list (list string string)))
@@ -2252,7 +2252,7 @@ selected. An example configuration is as follows:
   (if (stringp charset)
       (mew-alist-get-value
        (mew-assoc-case-equal
-	charset mew-charset-input-method-alist 0))))
+        charset mew-charset-input-method-alist 0))))
 
 (defcustom mew-charset-m17n "utf-8"
   "*A charset to be used if multiple character set are found and
@@ -2267,15 +2267,15 @@ If characters of both Latin 1 and Lain 9 exist in a draft, Mew takes
 the following step to decide a charset.
 
 1. If 'unify-8859-on-decoding-mode' is used:
-	1.1. Use \"iso-8859-1\" if no loss.
-	1.2. Otherwise, use \"utf-8\".
+        1.1. Use \"iso-8859-1\" if no loss.
+        1.2. Otherwise, use \"utf-8\".
 2. If 'unify-8859-on-decoding-mode' is not used:
 
-	2.1. If both ISO-8859-1 and ISO-8859-15 can be used with no
+        2.1. If both ISO-8859-1 and ISO-8859-15 can be used with no
              loss, 'mew-charset-latin' is used.
-	2.2. Use \"iso-8859-1\" if no loss.
-	2.3. Use \"iso-8859-15\" if no loss.
-	2.3. Otherwise, use \"utf-8\".
+        2.2. Use \"iso-8859-1\" if no loss.
+        2.3. Use \"iso-8859-15\" if no loss.
+        2.3. Otherwise, use \"utf-8\".
 "
   :group 'mew-draft
   :type '(choice (const "iso-8859-1") (const "iso-8859-15")))
@@ -2353,9 +2353,9 @@ in Attachments."
 
 (defcustom mew-fields
   (list mew-from: mew-to: mew-cc: mew-dcc: mew-fcc: mew-bcc: mew-subj:
-	mew-reply-to: mew-followup-to: mew-newsgroups: mew-distribution:
-	mew-resent-from: mew-resent-to: mew-resent-cc:
-	mew-resent-dcc: mew-resent-fcc: mew-resent-bcc:)
+        mew-reply-to: mew-followup-to: mew-newsgroups: mew-distribution:
+        mew-resent-from: mew-resent-to: mew-resent-cc:
+        mew-resent-dcc: mew-resent-fcc: mew-resent-bcc:)
   "*Completion field list in Draft mode."
   :group 'mew-complete
   :type '(repeat string))
@@ -2411,17 +2411,17 @@ circular domain completion."
   "*A field list to be deleted for reediting/resending/forwarding/saving."
   :group 'mew-draft
   :type '(choice (const nil)
-		 (repeat :tag "Field list" (string :tag "Field"))))
+                 (repeat :tag "Field list" (string :tag "Field"))))
 
 (defvar mew-field-delete nil) ;; backward compatibility
 
 (defcustom mew-field-delete-for-editing
   (list mew-received: "Return-Path:" "Delivery-Date:" "Delivered-To:"
-	mew-message-id: mew-mv: "Content-"
-	"Precedence:" mew-organization: "X-"
-	"Lines:" "Status:" "Posted:" "Forwarded:" "Replied:" "X-UIDL:"
-	"DomainKey-Signature:" "DKIM-Signature:"
-	"Authentication-Results:" "List-.*:" "Errors-To:")
+        mew-message-id: mew-mv: "Content-"
+        "Precedence:" mew-organization: "X-"
+        "Lines:" "Status:" "Posted:" "Forwarded:" "Replied:" "X-UIDL:"
+        "DomainKey-Signature:" "DKIM-Signature:"
+        "Authentication-Results:" "List-.*:" "Errors-To:")
   "*A field list to be deleted in Edit mode."
   :group 'mew-draft
   :type '(choice (const nil)
@@ -2430,47 +2430,47 @@ circular domain completion."
 (defcustom mew-field-delete-for-reediting
   (or mew-field-delete
       (list mew-received: "Return-Path:" "Delivery-Date:" "Delivered-To:"
-	    mew-date: mew-message-id: mew-mv: "Content-"
-	    "Precedence:" mew-organization: "X-"
-	    "Lines:" "Status:" "Posted:" "Forwarded:" "Replied:" "X-UIDL:"
-	    "DomainKey-Signature:" "DKIM-Signature:"
-	    "Authentication-Results:" "List-.*:" "Errors-To:" "Sender:"))
+            mew-date: mew-message-id: mew-mv: "Content-"
+            "Precedence:" mew-organization: "X-"
+            "Lines:" "Status:" "Posted:" "Forwarded:" "Replied:" "X-UIDL:"
+            "DomainKey-Signature:" "DKIM-Signature:"
+            "Authentication-Results:" "List-.*:" "Errors-To:" "Sender:"))
   "*A field list to be deleted when edit again."
   :group 'mew-draft
   :type '(choice (const nil)
-		 (repeat :tag "Field list" (string :tag "Field"))))
+                 (repeat :tag "Field list" (string :tag "Field"))))
 
 (defcustom mew-field-delete-for-others
   (list mew-received: "Return-Path:" "Delivery-Date:" "Delivered-To:"
-	mew-to: mew-cc: mew-from: mew-organization:
-	"Lines:" "Status:" "Posted:" "Forwarded:" "Replied:" "X-UIDL:"
-	"DomainKey-Signature:" "DKIM-Signature:")
+        mew-to: mew-cc: mew-from: mew-organization:
+        "Lines:" "Status:" "Posted:" "Forwarded:" "Replied:" "X-UIDL:"
+        "DomainKey-Signature:" "DKIM-Signature:")
   "*A field list to be deleted when send with different To: and Cc:."
   :group 'mew-draft
   :type '(choice (const nil)
-		 (repeat :tag "Field list" (string :tag "Field"))))
+                 (repeat :tag "Field list" (string :tag "Field"))))
 
 (defcustom mew-field-delete-for-resending
   (list mew-received: "Return-Path:" "Delivery-Date:" "Delivered-To:"
-	"Resent-" "X-Resent-"
-	"Lines:" "Status:" "Posted:" "Forwarded:" "Replied:" "X-UIDL:")
+        "Resent-" "X-Resent-"
+        "Lines:" "Status:" "Posted:" "Forwarded:" "Replied:" "X-UIDL:")
   "*A field list to be deleted when resending."
   :group 'mew-draft
   :type '(choice (const nil)
-		 (repeat :tag "Field list" (string :tag "Field"))))
+                 (repeat :tag "Field list" (string :tag "Field"))))
 
 (defcustom mew-field-delete-for-forwarding
   '("Lines:" "Status:" "Posted:" "Forwarded:" "Replied:" "X-UIDL:")
   "*A field list to be deleted when forwarding."
   :group 'mew-draft
   :type '(choice (const nil)
-		 (repeat :tag "Field list" (string :tag "Field"))))
+                 (repeat :tag "Field list" (string :tag "Field"))))
 
 (defcustom mew-field-delete-for-saving ()
   "*A field list to be deleted when saving a message to a file."
   :group 'mew-summary
   :type '(choice (const nil)
-		 (repeat :tag "Field list" (string :tag "Field"))))
+                 (repeat :tag "Field list" (string :tag "Field"))))
 
 (defcustom mew-field-delete-for-joining
   (list mew-mv: mew-subj: mew-message-id: "Encrypted" "Content-")
@@ -2660,10 +2660,10 @@ Otherwise, the old cases are overridden."
 
 (defcustom mew-temp-file-initial
   (expand-file-name (user-login-name) (if (fboundp 'temp-directory)
-					  (temp-directory)
-					(if (boundp 'temporary-file-directory)
-					    temporary-file-directory
-					  "/tmp")))
+                                          (temp-directory)
+                                        (if (boundp 'temporary-file-directory)
+                                            temporary-file-directory
+                                          "/tmp")))
   "*Hint to make a secure directory on the local file system. On
 setup phase Mew make a secure directory from this variable and set
 mew-temp-file a file name prefix contained the directory name. The
@@ -2973,11 +2973,11 @@ appropriate for this value."
   :type '(choice (const pgp-signature)
                  (const pgp-encryption)
                  (const pgp-signature-encryption)
-		 (const pgp-encryption-signature)
-		 (const smime-signature)
+                 (const pgp-encryption-signature)
+                 (const smime-signature)
                  (const smime-encryption)
                  (const smime-signature-encryption)
-		 (const smime-encryption-signature)
+                 (const smime-encryption-signature)
                  (other :tag "nil" nil)))
 
 (defcustom mew-protect-privacy-encrypted nil
@@ -2995,11 +2995,11 @@ and nil are available."
   :type '(choice (const pgp-signature)
                  (const pgp-encryption)
                  (const pgp-signature-encryption)
-		 (const pgp-encryption-signature)
-		 (const smime-signature)
-		 (const smime-encryption)
-		 (const smime-signature-encryption)
-		 (const smime-encryption-signature)
+                 (const pgp-encryption-signature)
+                 (const smime-signature)
+                 (const smime-encryption)
+                 (const smime-signature-encryption)
+                 (const smime-encryption-signature)
                  (other :tag "nil" nil)))
 
 (defcustom mew-protect-privacy-with-old-pgp-signature nil
@@ -3185,56 +3185,56 @@ your public key as well as receivers' one."
 \(1) Decode quoted encoded-words, which violates RFC 2047.
 
 Good example:
-	From: Kazu Yamamoto (=?ISO-2022-JP?B?GyRCOzNLXE9CSScbKEI=?=)
-		<kazu@example.org>
+        From: Kazu Yamamoto (=?ISO-2022-JP?B?GyRCOzNLXE9CSScbKEI=?=)
+                <kazu@example.org>
 Bad example:
-	From: Kazu Yamamoto (\"=?ISO-2022-JP?B?GyRCOzNLXE9CSScbKEI=?=\")
-		<kazu@example.org>
+        From: Kazu Yamamoto (\"=?ISO-2022-JP?B?GyRCOzNLXE9CSScbKEI=?=\")
+                <kazu@example.org>
 
 \(2) Decode raw non-ASCII text, which violates RFC 822.
 This is typically found in Subject: field.
 
 Good example:
-	Subject: =?iso-2022-jp?B?GyRCJEYkOSRIGyhC?=
+        Subject: =?iso-2022-jp?B?GyRCJEYkOSRIGyhC?=
 Bad example:
-	Subject: Raw non-ASCII text.
+        Subject: Raw non-ASCII text.
 
 \(3) Decode invalid MIME parameters, which violates RFC 2231.
 \(i)  Raw text.
 \(ii) Encorded-word defined in RFC 2047.
 
 Good example:
-	Content-Disposition: attachment;
-	 filename*=iso-2022-jp''%1B%24B%24F%249%24H%1B%28B
+        Content-Disposition: attachment;
+         filename*=iso-2022-jp''%1B%24B%24F%249%24H%1B%28B
 
 Bad example
-	Content-Disposition: attachment;
-	 filename=\"=?iso-2022-jp?B?GyRCJEYkOSRIGyhC?=\"
+        Content-Disposition: attachment;
+         filename=\"=?iso-2022-jp?B?GyRCJEYkOSRIGyhC?=\"
 
 =(4) Decode invalid non-ASCII MIME body, whose charset is US-ASCII or
 not present.
 
 Good example:
-	Content-Type: text/plain; charset=ISO-2022-jp
+        Content-Type: text/plain; charset=ISO-2022-jp
 
-	ISO-2022-JP text
+        ISO-2022-JP text
 
 Bad example:
-	Content-Type: text/plain
+        Content-Type: text/plain
 
-	ISO-2022-JP text
+        ISO-2022-JP text
 
 \(5) Decode invalid non-ASCII text, whose charset is UTF-8 or not present.
 
 Good example:
-	Content-Type: text/plain; charset=ISO-8859-15
+        Content-Type: text/plain; charset=ISO-8859-15
 
-	ISO-8859-15 text
+        ISO-8859-15 text
 
 Bad example:
-	Content-Type: text/plain; charset=UTF-8
+        Content-Type: text/plain; charset=UTF-8
 
-	ISO-8859-15 text
+        ISO-8859-15 text
 "
   :group 'mew-message
   :type 'boolean)

@@ -35,16 +35,16 @@ The other is to see if the link count of a directory is 2. If so, the
 directory does not have subdirectories. So, it is not necessary to
 trace down. This technique can be used on UNIX variants."
   (let* ((default-directory (expand-file-name dir default-directory))
-	 (dirent (directory-files "." nil mew-regex-folder-candidate)) ;; MUST sort
-	 dirs ent subdirs)
+         (dirent (directory-files "." nil mew-regex-folder-candidate)) ;; MUST sort
+         dirs ent subdirs)
     (dolist (file dirent)
       (setq ent (mew-file-chase-links file))
       (when (file-directory-p ent)
-	(setq dirs (cons file dirs))
-	(when (and (mew-file-get-links ent) ;; necessary
-		   (/= (mew-file-get-links ent) 2))
-	  (setq subdirs (mew-dir-list-with-link-count file))
-	  (if subdirs (setq dirs (cons subdirs dirs))))))
+        (setq dirs (cons file dirs))
+        (when (and (mew-file-get-links ent) ;; necessary
+                   (/= (mew-file-get-links ent) 2))
+          (setq subdirs (mew-dir-list-with-link-count file))
+          (if subdirs (setq dirs (cons subdirs dirs))))))
     (nreverse dirs)))
 
 (defun mew-dir-list-without-link-count (dir)
@@ -58,14 +58,14 @@ It is to gather candidates of directory by matching
 numeric are not gathered. This makes it faster to check whether or not
 each candidate is a directory in 'while' loop."
   (let* ((default-directory (expand-file-name dir default-directory))
-	 (dirent (directory-files "." nil mew-regex-folder-candidate)) ;; MUST sort
-	 dirs ent subdirs)
+         (dirent (directory-files "." nil mew-regex-folder-candidate)) ;; MUST sort
+         dirs ent subdirs)
     (dolist (file dirent)
       (setq ent (mew-file-chase-links file))
       (when (file-directory-p ent)
-	(setq dirs (cons file dirs))
-	(setq subdirs (mew-dir-list-without-link-count file))
-	(if subdirs (setq dirs (cons subdirs dirs)))))
+        (setq dirs (cons file dirs))
+        (setq subdirs (mew-dir-list-without-link-count file))
+        (if subdirs (setq dirs (cons subdirs dirs)))))
     (nreverse dirs)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -81,7 +81,7 @@ each candidate is a directory in 'while' loop."
 (defun mew-local-folder-make-alist (dirs prefix &optional make-list)
   (let (fldpfx dir ret ent)
     (if (= (length prefix) 1)
-	(setq fldpfx prefix)
+        (setq fldpfx prefix)
       (setq fldpfx (file-name-as-directory prefix)))
     (while dirs
       (setq dir (car dirs))
@@ -89,18 +89,18 @@ each candidate is a directory in 'while' loop."
       (setq ent (concat fldpfx dir))
       (cond
        ((consp (car dirs)) ;; not listp because nil is a list.
-	(cond
-	 ((or (equal mew-attach-folder ent) (equal mew-draft-folder ent))
-	  (setq ret (cons (mew-local-folder-entry ent nil make-list) ret))
-	  (setq dirs (cdr dirs))) ;; skip subfolder
-	 (t
-	  (setq ret (cons (mew-local-folder-entry (file-name-as-directory ent) dir make-list) ret))
-	  (setq ret (nconc (mew-local-folder-make-alist (car dirs) ent make-list) ret))
-	  (setq dirs (cdr dirs)))))
+        (cond
+         ((or (equal mew-attach-folder ent) (equal mew-draft-folder ent))
+          (setq ret (cons (mew-local-folder-entry ent nil make-list) ret))
+          (setq dirs (cdr dirs))) ;; skip subfolder
+         (t
+          (setq ret (cons (mew-local-folder-entry (file-name-as-directory ent) dir make-list) ret))
+          (setq ret (nconc (mew-local-folder-make-alist (car dirs) ent make-list) ret))
+          (setq dirs (cdr dirs)))))
        (t
-	(if (string-match mew-regex-ignore-folders ent)
-	    (setq ret (cons (mew-local-folder-entry ent nil make-list) ret))
-	  (setq ret (cons (mew-local-folder-entry ent dir make-list) ret))))))
+        (if (string-match mew-regex-ignore-folders ent)
+            (setq ret (cons (mew-local-folder-entry ent nil make-list) ret))
+          (setq ret (cons (mew-local-folder-entry ent dir make-list) ret))))))
     ret))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -114,10 +114,10 @@ each candidate is a directory in 'while' loop."
 
 (defun mew-local-folder-alist ()
   (let* ((file (expand-file-name mew-local-folder-alist-file mew-conf-path))
-	 (t1 (mew-file-get-time file))
-	 (t2 mew-local-folder-alist-time))
+         (t1 (mew-file-get-time file))
+         (t2 mew-local-folder-alist-time))
     (if (mew-compare-times t1 t2)
-	(mew-local-folder-load))
+        (mew-local-folder-load))
     mew-local-folder-alist))
 
 (defun mew-local-friend-folder-list ()
@@ -126,18 +126,18 @@ each candidate is a directory in 'while' loop."
 (defun mew-local-folder-load ()
   (let ((file (expand-file-name mew-local-folder-alist-file mew-conf-path)))
     (setq mew-local-folder-alist
-	  (mew-lisp-load mew-local-folder-alist-file))
+          (mew-lisp-load mew-local-folder-alist-file))
     (setq mew-local-folder-alist-time (mew-file-get-time file))
     (setq mew-local-friend-folder-list
-	  (mew-lisp-load mew-local-friend-folder-list-file))))
+          (mew-lisp-load mew-local-friend-folder-list-file))))
 
 (defun mew-local-folder-save ()
   (let ((file (expand-file-name mew-local-folder-alist-file mew-conf-path)))
     (mew-lisp-save mew-local-folder-alist-file
-		   mew-local-folder-alist)
+                   mew-local-folder-alist)
     (setq mew-local-folder-alist-time (mew-file-get-time file))
     (mew-lisp-save mew-local-friend-folder-list-file
-		   mew-local-friend-folder-list)))
+                   mew-local-friend-folder-list)))
 
 (defun mew-local-folder-set (folders friends)
   (setq mew-local-folder-alist folders)
@@ -154,9 +154,9 @@ each candidate is a directory in 'while' loop."
   (when (or interactivep (null mew-local-folder-alist))
     (message "Collecting local folders...")
     (let* ((mail-dirs (mew-dir-list mew-mail-path))
-	   (from-dirs (mew-dir-list (mew-expand-folder mew-friend-folder)))
-	   (folders (mew-local-folder-make-alist mail-dirs mew-folder-local))
-	   (friends (mew-local-folder-make-alist from-dirs mew-friend-folder t)))
+           (from-dirs (mew-dir-list (mew-expand-folder mew-friend-folder)))
+           (folders (mew-local-folder-make-alist mail-dirs mew-folder-local))
+           (friends (mew-local-folder-make-alist from-dirs mew-friend-folder t)))
       (setq folders (nreverse folders))
       (setq friends (nreverse friends))
       (mew-local-folder-set folders friends))
@@ -181,30 +181,30 @@ Binary search is used for speed reasons."
       )
     (mew-folder-insert folder mew-local-folder-alist subdir)
     (if (and (string-match (concat "^" (regexp-quote mew-friend-folder)) folder)
-	     (not (member folder mew-local-friend-folder-list)))
-	(setq mew-local-friend-folder-list
-	      (cons folder mew-local-friend-folder-list)))
+             (not (member folder mew-local-friend-folder-list)))
+        (setq mew-local-friend-folder-list
+              (cons folder mew-local-friend-folder-list)))
     (mew-local-folder-save)))
 
 (defun mew-local-folder-delete (folder)
   (mew-folder-delete folder mew-local-folder-alist)
   (setq mew-local-friend-folder-list
-	(delete folder mew-local-friend-folder-list))
+        (delete folder mew-local-friend-folder-list))
   (mew-local-folder-save))
 
 (defun mew-local-folder-check (folder &optional ask)
   (let ((absdir (mew-expand-folder folder)))
     (if (file-directory-p absdir)
-	t
+        t
       (if (or (not ask)
-	      (y-or-n-p (format "%s does not exist. Create it? " folder)))
-	  (progn
-	    (mew-make-directory absdir)
-	    ;; may be called by IMAP...
-	    (if (mew-folder-localp folder)
-		(mew-local-folder-insert folder))
-	    folder)
-	nil))))
+              (y-or-n-p (format "%s does not exist. Create it? " folder)))
+          (progn
+            (mew-make-directory absdir)
+            ;; may be called by IMAP...
+            (if (mew-folder-localp folder)
+                (mew-local-folder-insert folder))
+            folder)
+        nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -250,10 +250,10 @@ Binary search is used for speed reasons."
   ;; 'vir  opts func lra erase
   (mew-summary-with-mewl
    (let* ((process-connection-type mew-connection-type1)
-	  (bnm (mew-summary-folder-name 'ext))
-	  (pnm (mew-local-info-name bnm))
-	  (buf (get-buffer-create (mew-local-buffer-name bnm)))
-	  range pro opts)
+          (bnm (mew-summary-folder-name 'ext))
+          (pnm (mew-local-info-name bnm))
+          (buf (get-buffer-create (mew-local-buffer-name bnm)))
+          range pro opts)
      (message "Scanning %s..." bnm)
      (mew-sinfo-set-summary-form (mew-get-summary-form bnm))
      (mew-sinfo-set-summary-column (mew-get-summary-column bnm))
@@ -273,12 +273,12 @@ Binary search is used for speed reasons."
       ((eq directive 'scan)
        (setq range (nth 1 args))
        (if (nth 2 args)
-	   (progn
-	     (mew-local-set-mdb pnm (mew-summary-mark-collect4))
-	     (mew-erase-buffer)
-	     (setq mew-summary-buffer-raw nil)
-	     (mew-summary-folder-cache-save))
-	 (mew-sinfo-set-unread-mark (mew-get-unread-mark bnm)))
+           (progn
+             (mew-local-set-mdb pnm (mew-summary-mark-collect4))
+             (mew-erase-buffer)
+             (setq mew-summary-buffer-raw nil)
+             (mew-summary-folder-cache-save))
+         (mew-sinfo-set-unread-mark (mew-get-unread-mark bnm)))
        (setq opts (mew-scan-mewl-src (nth 0 args) range)))
       ((eq directive 'vir)
        (mew-sinfo-set-unread-mark (mew-get-unread-mark bnm))
@@ -292,14 +292,14 @@ Binary search is used for speed reasons."
      (with-current-buffer buf
        (mew-erase-buffer))
      (setq opts (append (list "-b" mew-mail-path
-			      "-l" (number-to-string mew-scan-max-field-length)
-			      "-c" (number-to-string mew-scan-max-body-length)
-			      "-w"
-			      "-x" mew-suffix
-			      "-f" (mapconcat 'identity
-					      (nthcdr 2 mew-scan-fields)
-					      ","))
-			opts))
+                              "-l" (number-to-string mew-scan-max-field-length)
+                              "-c" (number-to-string mew-scan-max-body-length)
+                              "-w"
+                              "-x" mew-suffix
+                              "-f" (mapconcat 'identity
+                                              (nthcdr 2 mew-scan-fields)
+                                              ","))
+                        opts))
      (setq pro (apply 'start-process pnm buf mew-prog-mewl opts))
      (mew-summary-lock pro "Scanning")
      (mew-set-process-cs pro mew-cs-text-for-net mew-cs-text-for-write)
@@ -310,13 +310,13 @@ Binary search is used for speed reasons."
 
 (defun mew-local-filter (process string)
   (let* ((width (1- (mew-scan-width)))
-	 (pnm (process-name process))
-	 (bnm (mew-local-get-bnm pnm))
-	 (first (mew-local-get-first pnm))
-	 (draftp (mew-folder-draftp bnm))
-	 (directive (mew-local-get-directive pnm))
-	 (case (mew-local-get-case pnm))
-	 vec rttl mark)
+         (pnm (process-name process))
+         (bnm (mew-local-get-bnm pnm))
+         (first (mew-local-get-first pnm))
+         (draftp (mew-folder-draftp bnm))
+         (directive (mew-local-get-directive pnm))
+         (case (mew-local-get-case pnm))
+         vec rttl mark)
     (mew-local-debug "FILTER" string)
     (mew-filter
      (mew-set-buffer-multibyte nil)
@@ -328,12 +328,12 @@ Binary search is used for speed reasons."
        (mew-dot-delete)
        (goto-char (point-min))
        (unless first
-	 (when (looking-at "NumOfMsg: \\([0-9]+\\)")
-	   (setq rttl (string-to-number (match-string 1)))
-	   (mew-local-set-rttl pnm rttl)
-	   (forward-line)
-	   (delete-region (point-min) (point)))
-	 (mew-local-set-first pnm t))
+         (when (looking-at "NumOfMsg: \\([0-9]+\\)")
+           (setq rttl (string-to-number (match-string 1)))
+           (mew-local-set-rttl pnm rttl)
+           (forward-line)
+           (delete-region (point-min) (point)))
+         (mew-local-set-first pnm t))
        (mew-net-status3 bnm (mew-local-get-rttl pnm) (mew-local-get-rcnt pnm))
        (mew-local-set-rcnt pnm (1+ (mew-local-get-rcnt pnm)))
        (mew-set-buffer-multibyte t)
@@ -346,11 +346,11 @@ Binary search is used for speed reasons."
 
 (defun mew-local-sentinel (process event)
   (let* ((pnm (process-name process))
-	 (bnm (mew-local-get-bnm pnm))
-	 (buf (mew-local-get-buf pnm))
-	 (virtualp (mew-folder-virtualp bnm))
-	 (mdb (mew-local-get-mdb pnm))
-	 (flush (mew-local-get-flush pnm)))
+         (bnm (mew-local-get-bnm pnm))
+         (buf (mew-local-get-buf pnm))
+         (virtualp (mew-folder-virtualp bnm))
+         (mdb (mew-local-get-mdb pnm))
+         (flush (mew-local-get-flush pnm)))
     (save-excursion
       (mew-local-debug "SENTINEL" event)
       (mew-filter
@@ -358,33 +358,33 @@ Binary search is used for speed reasons."
        (set-buffer bnm)
        (mew-summary-mark-recover mdb)
        (if (and virtualp (mew-vinfo-get-func))
-	   (funcall (mew-vinfo-get-func)))
+           (funcall (mew-vinfo-get-func)))
        (mew-vinfo-set-func nil)
        (mew-info-clean-up pnm)
        (if virtualp
-	   (progn
-	     (mew-summary-set-count-line)
-	     (mew-virtual-set-cache-time))
-	 (mew-summary-folder-cache-save))
+           (progn
+             (mew-summary-set-count-line)
+             (mew-virtual-set-cache-time))
+         (mew-summary-folder-cache-save))
        (set-buffer-modified-p nil)
        (mew-summary-unlock)
        (if (and (mew-folder-imapp bnm)
-		(not (mew-folder-imap-queuep)))
-	   (if (mew-local-get-rttl pnm)
-	       (message "Type '\\[mew-summary-ls]' to override invalid messages")
-	     ;; This folder has been just created.
-	     ;; Ideally scan should not be called. But there is no way
-	     ;; to avoid the call.
-	     (message ""))
-	 (message "Scanning %s...done" bnm))
+                (not (mew-folder-imap-queuep)))
+           (if (mew-local-get-rttl pnm)
+               (message "Type '\\[mew-summary-ls]' to override invalid messages")
+             ;; This folder has been just created.
+             ;; Ideally scan should not be called. But there is no way
+             ;; to avoid the call.
+             (message ""))
+         (message "Scanning %s...done" bnm))
        (run-hooks 'mew-scan-sentinel-hook)
        (when (and mew-auto-flush-queue flush)
-	 (mew-smtp-flush-queue mew-case))
+         (mew-smtp-flush-queue mew-case))
        (mew-remove-buffer buf)))))
 
 (defun mew-virtual-set-cache-time ()
   (let* ((ctime (current-time))
-	 (cache-time (list (nth 0 ctime) (nth 1 ctime))))
+         (cache-time (list (nth 0 ctime) (nth 1 ctime))))
     (mew-sinfo-set-cache-time cache-time)))
 
 ;;; Code:

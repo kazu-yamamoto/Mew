@@ -41,18 +41,18 @@
       (or no-msg (message "No message"))
     (let (mark func fld msg)
       (save-excursion
-	(mew-summary-goto-message)
-	(setq mark (mew-summary-get-mark))
-	(if (null mark)
-	    (or no-msg (message "No mark"))
-	  (setq func (mew-markdb-func-undo mark))
-	  (or (fboundp func) (setq func nil))
-	  (setq fld (mew-summary-folder-name))
-	  (setq msg (mew-summary-message-number))
-	  (mew-mark-unmark)
-	  (if func (funcall func fld msg))
-	  (if (mew-virtual-for-one-summary)
-	      (mew-summary-unmark-in-physical fld msg func)))))))
+        (mew-summary-goto-message)
+        (setq mark (mew-summary-get-mark))
+        (if (null mark)
+            (or no-msg (message "No mark"))
+          (setq func (mew-markdb-func-undo mark))
+          (or (fboundp func) (setq func nil))
+          (setq fld (mew-summary-folder-name))
+          (setq msg (mew-summary-message-number))
+          (mew-mark-unmark)
+          (if func (funcall func fld msg))
+          (if (mew-virtual-for-one-summary)
+              (mew-summary-unmark-in-physical fld msg func)))))))
 
 ;;
 
@@ -68,22 +68,22 @@ If optional argument NO-MSG is non-nil, no message is displayed."
   (or no-msg (message "Unmarking..."))
   (mew-decode-syntax-delete)
   (let* ((regex (mew-mark-regex mark))
-	 (func (mew-markdb-func-undo mark))
-	 (case-fold-search nil)
-	 (reviewp (char-equal mark mew-mark-review))
-	 (one-summary (and (not virtual-only) (mew-virtual-for-one-summary)))
-	 alist fld msg reviews)
+         (func (mew-markdb-func-undo mark))
+         (case-fold-search nil)
+         (reviewp (char-equal mark mew-mark-review))
+         (one-summary (and (not virtual-only) (mew-virtual-for-one-summary)))
+         alist fld msg reviews)
     (or (fboundp func) (setq func nil))
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward regex nil t)
-	(setq fld (mew-summary-folder-name))
-	(setq msg (mew-summary-message-number))
-	(mew-mark-remove)
-	(if one-summary (mew-mark-alist-set alist fld msg))
-	(when reviewp (setq reviews (cons msg reviews)))
-	(if func (funcall func fld msg))
-	(forward-line))
+        (setq fld (mew-summary-folder-name))
+        (setq msg (mew-summary-message-number))
+        (mew-mark-remove)
+        (if one-summary (mew-mark-alist-set alist fld msg))
+        (when reviewp (setq reviews (cons msg reviews)))
+        (if func (funcall func fld msg))
+        (forward-line))
       (set-buffer-modified-p nil)
       (mew-sinfo-set-mark-review (nreverse reviews))
       (if one-summary (mew-summary-unmark-in-physical-alist alist func))))
@@ -105,14 +105,14 @@ If optional argument NO-MSG is non-nil, no message is displayed."
   "\\<mew-summary-mode-map>Recover the `*' marks which are canceled by the last `\\[mew-summary-undo-all]*'."
   (interactive)
   (let ((mark mew-mark-review)
-	(reviews (mew-sinfo-get-mark-review)))
+        (reviews (mew-sinfo-get-mark-review)))
     (save-excursion
       (mew-mark-undo-mark mark 'no-msg)
       (goto-char (point-min))
       (dolist (msg reviews)
-	(when (re-search-forward (mew-regex-sumsyn-msg msg) nil t)
-	  (mew-mark-put mark)
-	  (forward-line))))
+        (when (re-search-forward (mew-regex-sumsyn-msg msg) nil t)
+          (mew-mark-put mark)
+          (forward-line))))
     (set-buffer-modified-p nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -129,7 +129,7 @@ If optional argument NO-MSG is non-nil, no message is displayed."
 
 (defun mew-summary-markable ()
   (let ((mark (mew-summary-get-mark))
-	(case-fold-search nil))
+        (case-fold-search nil))
     (or (null mark) (char-equal mark mew-mark-unread))))
 
 (defun mew-summary-mark-as (mark)
@@ -155,7 +155,7 @@ If optional argument NO-MSG is non-nil, no message is displayed."
   (save-excursion
     (mew-summary-goto-mark)
     (let* ((mark mew-mark-read)
-	   (beg (point)) (end (1+ beg)))
+           (beg (point)) (end (1+ beg)))
       (mew-elet
        ;; This code is awkward but for invisible.
        (forward-char 1)
@@ -182,11 +182,11 @@ If optional argument NO-MSG is non-nil, no message is displayed."
   "This function returns a list of message number."
   (save-excursion
     (let ((regex (mew-mark-regex mark))
-	  (msglist nil)
-	  (case-fold-search nil))
+          (msglist nil)
+          (case-fold-search nil))
       (goto-char (if begin begin (point-min)))
       (while (re-search-forward regex end t)
-	(setq msglist (cons (mew-summary-message-number) msglist)))
+        (setq msglist (cons (mew-summary-message-number) msglist)))
       (nreverse msglist))))
 
 (defun mew-summary-mark-collect2 (mark)
@@ -195,7 +195,7 @@ cons pairs of folder name and message number."
   (save-excursion
     (let ((regex (mew-mark-regex mark))
           (msglist nil)
-	  (case-fold-search nil))
+          (case-fold-search nil))
       (goto-char (point-min))
       (while (re-search-forward regex nil t)
         (setq msglist (cons
@@ -210,43 +210,43 @@ cons pairs of folder name and message number."
     (let (ret mrk msg)
       (goto-char (point-min))
       (while (re-search-forward mew-regex-mark nil t)
-	(setq mrk (mew-sumsyn-mark))
-	(setq msg (mew-summary-message-number))
-	(setq ret (cons (list msg mrk) ret))
-	(forward-line))
+        (setq mrk (mew-sumsyn-mark))
+        (setq msg (mew-summary-message-number))
+        (setq ret (cons (list msg mrk) ret))
+        (forward-line))
       (nreverse ret))))
 
 (defun mew-summary-mark-collect5 ()
   (save-excursion
     (let ((beg (mew-net-invalid-cache-start))
-	  ret mrk msg)
+          ret mrk msg)
       (when beg
-	(goto-char beg)
-	(while (re-search-forward mew-regex-mark nil t)
-	  (setq mrk (mew-sumsyn-mark))
-	  (setq msg (mew-summary-message-number))
-	  (setq msg (number-to-string (string-to-number msg)))
-	  (setq ret (cons (list msg mrk) ret))
-	  (forward-line))
-	(nreverse ret)))))
+        (goto-char beg)
+        (while (re-search-forward mew-regex-mark nil t)
+          (setq mrk (mew-sumsyn-mark))
+          (setq msg (mew-summary-message-number))
+          (setq msg (number-to-string (string-to-number msg)))
+          (setq ret (cons (list msg mrk) ret))
+          (forward-line))
+        (nreverse ret)))))
 
 (defun mew-summary-mark-recover (mdb &optional refdb refs)
   (let ((opos (point))
-	(case-fold-search nil)
-	msg mrk new-ref ref-ent)
+        (case-fold-search nil)
+        msg mrk new-ref ref-ent)
     (goto-char (point-min))
     (dolist (ent mdb)
       (mew-set '(msg mrk) ent)
       (when (re-search-forward (mew-regex-sumsyn-msg msg) nil t)
-	(if (or (not (char-equal mrk mew-mark-refile)) (null refdb))
-	    (mew-mark-put mrk)
-	  (when (setq ref-ent (assoc msg refdb))
-	    (mew-mark-put mrk)
-	    (setq new-ref (cons ref-ent new-ref))))
-	(forward-line)))
+        (if (or (not (char-equal mrk mew-mark-refile)) (null refdb))
+            (mew-mark-put mrk)
+          (when (setq ref-ent (assoc msg refdb))
+            (mew-mark-put mrk)
+            (setq new-ref (cons ref-ent new-ref))))
+        (forward-line)))
     (dolist (ref refs)
       (when (setq ref-ent (assoc ref refdb))
-	(setq new-ref (cons ref-ent new-ref))))
+        (setq new-ref (cons ref-ent new-ref))))
     (goto-char opos)
     (nreverse new-ref)))
 
@@ -267,28 +267,28 @@ See also mew-mark-afterstep-spec."
       (mew-decode-syntax-delete)
       (cond
        ((eq mew-summary-mark-direction 'up)
-	(forward-line -1))
+        (forward-line -1))
        ((eq mew-summary-mark-direction 'down)
-	(forward-line))
+        (forward-line))
        ((eq mew-summary-mark-direction 'next)
-	(if (eq (mew-sinfo-get-direction) 'up)
-	    (forward-line -1)
-	  (forward-line)))))
+        (if (eq (mew-sinfo-get-direction) 'up)
+            (forward-line -1)
+          (forward-line)))))
      ((eq action 2)
       (mew-summary-goto-message)
       (mew-decode-syntax-delete)
       (beginning-of-line)
       (mew-push-mark)
       (let ((mew-inherit-after-marking t))
-	(mew-summary-display-after mew-summary-mark-direction))))))
+        (mew-summary-display-after mew-summary-mark-direction))))))
 
 (mew-defstruct mark-hist msg mark)
 
 (defun mew-mark-hist-set (msg mark)
   (let* ((hist (mew-sinfo-get-mark-hist))
-	 (ent (assoc msg hist))
-	 (num (string-to-number msg))
-	 curr prev)
+         (ent (assoc msg hist))
+         (num (string-to-number msg))
+         curr prev)
     (cond
      (ent
       (if mark (setcar (nthcdr 1 ent) mark)))
@@ -296,16 +296,16 @@ See also mew-mark-afterstep-spec."
       (setq ent (mew-make-mark-hist :msg msg :mark mark))
       (setq curr hist)
       (catch 'loop
-	(while curr
-	  (if (> (string-to-number (nth 0 (car curr))) num)
-	      (progn
-		(if (null prev)
-		    (setq hist (cons ent hist))
-		  (setcdr prev (cons ent (cdr prev))))
-		(throw 'loop nil)))
-	  (setq prev curr)
-	  (setq curr (cdr curr)))
-	(setq hist (nconc hist (list ent))))
+        (while curr
+          (if (> (string-to-number (nth 0 (car curr))) num)
+              (progn
+                (if (null prev)
+                    (setq hist (cons ent hist))
+                  (setcdr prev (cons ent (cdr prev))))
+                (throw 'loop nil)))
+          (setq prev curr)
+          (setq curr (cdr curr)))
+        (setq hist (nconc hist (list ent))))
       (mew-sinfo-set-mark-hist hist)))))
 
 (defun mew-mark-put-mark (newmark &optional no-msg valid-only)
@@ -317,55 +317,55 @@ NO-MSG also means that this function is being called in loop."
      (save-excursion
        (mew-summary-goto-message)
        (when (mew-sumsyn-match mew-regex-sumsyn-short)
-	 (setq msg (mew-sumsyn-message-number))
-	 (setq fld (mew-sumsyn-folder-name))
-	 (setq validp (or (not valid-only) (mew-msg-validp msg))))
+         (setq msg (mew-sumsyn-message-number))
+         (setq fld (mew-sumsyn-folder-name))
+         (setq validp (or (not valid-only) (mew-msg-validp msg))))
        (if (not validp)
-	   (unless no-msg (message "Cannot mark this invalid message with '%c'" newmark))
-	 (setq oldmark (mew-summary-get-mark))
-	 (setq oldlevel (mew-markdb-level oldmark))
-	 (setq oldname (mew-markdb-name oldmark))
-	 (setq newlevel (mew-markdb-level newmark))
-	 (setq newname (mew-markdb-name newmark))
-	 (cond
-	  ((null oldmark);; no mark
-	   (setq case 1)
-	   (mew-mark-put newmark)
-	   (setq marked t))
-	  ((eq oldmark newmark)
-	   (setq case 2)
-	   (or no-msg
-	       (mew-markdb-statefullp oldmark)
-	       (message "Already marked as '%s'" oldname)))
-	  ((< oldlevel newlevel)
-	   (setq case 3)
-	   (mew-summary-undo-one no-msg)
-	   (mew-mark-put newmark)
-	   (setq marked t))
-	  ((= oldlevel newlevel)
-	   (cond
-	    ((mew-markdb-statefullp oldmark)
-	     (if (or no-msg
-		     (y-or-n-p (format "Already marked as '%s'. %s it? "
-				       oldname (mew-capitalize newname))))
-		 (progn
-		   (setq case 4)
-		   (mew-summary-undo-one no-msg)
-		   (mew-mark-put newmark)
-		   (setq marked t))
-	       (setq case 5)))
-	    (t
-	     (setq case 6)
-	     (mew-summary-undo-one no-msg)
-	     (mew-mark-put newmark)
-	     (setq marked t))))
-	  (t ;; > oldlevel newlevel
-	   (setq case 7)
-	   (message "Cannot mark here because '%s' is stronger than '%s'"
-		    oldname newname)))))
+           (unless no-msg (message "Cannot mark this invalid message with '%c'" newmark))
+         (setq oldmark (mew-summary-get-mark))
+         (setq oldlevel (mew-markdb-level oldmark))
+         (setq oldname (mew-markdb-name oldmark))
+         (setq newlevel (mew-markdb-level newmark))
+         (setq newname (mew-markdb-name newmark))
+         (cond
+          ((null oldmark);; no mark
+           (setq case 1)
+           (mew-mark-put newmark)
+           (setq marked t))
+          ((eq oldmark newmark)
+           (setq case 2)
+           (or no-msg
+               (mew-markdb-statefullp oldmark)
+               (message "Already marked as '%s'" oldname)))
+          ((< oldlevel newlevel)
+           (setq case 3)
+           (mew-summary-undo-one no-msg)
+           (mew-mark-put newmark)
+           (setq marked t))
+          ((= oldlevel newlevel)
+           (cond
+            ((mew-markdb-statefullp oldmark)
+             (if (or no-msg
+                     (y-or-n-p (format "Already marked as '%s'. %s it? "
+                                       oldname (mew-capitalize newname))))
+                 (progn
+                   (setq case 4)
+                   (mew-summary-undo-one no-msg)
+                   (mew-mark-put newmark)
+                   (setq marked t))
+               (setq case 5)))
+            (t
+             (setq case 6)
+             (mew-summary-undo-one no-msg)
+             (mew-mark-put newmark)
+             (setq marked t))))
+          (t ;; > oldlevel newlevel
+           (setq case 7)
+           (message "Cannot mark here because '%s' is stronger than '%s'"
+                    oldname newname)))))
      (when validp
        (if (and marked (mew-virtual-for-one-summary))
-	   (mew-summary-mark-in-physical fld msg newmark))
+           (mew-summary-mark-in-physical fld msg newmark))
        (or no-msg (mew-mark-afterstep newmark case))
        (set-buffer-modified-p nil)))))
 
@@ -378,32 +378,32 @@ If COUNT is numeric and STAYP is non-nil, the cursor stays in the
 original position."
   (if (and (not (integerp count)) (mew-mark-active-p))
       (let ((begend (mew-summary-get-region)))
-	(goto-char (car begend))
-	(setq stayp nil)
-	(setq count (count-lines (point) (cdr begend)))
-	(mew-mark-put-mark-loop1 func count stayp))
+        (goto-char (car begend))
+        (setq stayp nil)
+        (setq count (count-lines (point) (cdr begend)))
+        (mew-mark-put-mark-loop1 func count stayp))
     (mew-mark-put-mark-loop1 func count stayp)))
 
 (defun mew-mark-put-mark-loop1 (func count stayp)
   (when (and func (fboundp func))
     (mew-summary-msg-or-part
      (if (integerp count)
-	 (let ((start (point)))
-	   (mew-decode-syntax-delete)
-	   ;; positive loop
-	   (while (and (> count 0) (not (eobp)))
-	     (setq count (1- count))
-	     (funcall func 'no-msg)
-	     (forward-line))
-	   ;; negative loop
-	   (while (< count 0)
-	     (if (bobp)
-		 ;; need to call the func
-		 (setq count 0)
-	       (setq count (1+ count)))
-	     (funcall func 'no-msg)
-	     (forward-line -1))
-	   (and stayp (goto-char start)))
+         (let ((start (point)))
+           (mew-decode-syntax-delete)
+           ;; positive loop
+           (while (and (> count 0) (not (eobp)))
+             (setq count (1- count))
+             (funcall func 'no-msg)
+             (forward-line))
+           ;; negative loop
+           (while (< count 0)
+             (if (bobp)
+                 ;; need to call the func
+                 (setq count 0)
+               (setq count (1+ count)))
+             (funcall func 'no-msg)
+             (forward-line -1))
+           (and stayp (goto-char start)))
        ;; just one
        (funcall func))
      (set-buffer-modified-p nil))))
@@ -418,62 +418,62 @@ original position."
     (when (get-buffer fld)
       (set-buffer fld)
       (save-excursion
-	(when (mew-summary-search-msg msg)
-	  (mew-mark-put new-mark)
-	  (set-buffer-modified-p nil))))))
+        (when (mew-summary-search-msg msg)
+          (mew-mark-put new-mark)
+          (set-buffer-modified-p nil))))))
 
 (defun mew-summary-unmark-in-physical (fld msg &optional func)
   (save-excursion
     (when (get-buffer fld)
       (set-buffer fld)
       (save-excursion
-	(when (mew-summary-search-msg msg)
-	  (mew-mark-remove)
-	  (if func (funcall func fld msg))
-	  (set-buffer-modified-p nil))))))
+        (when (mew-summary-search-msg msg)
+          (mew-mark-remove)
+          (if func (funcall func fld msg))
+          (set-buffer-modified-p nil))))))
 
 (defmacro mew-mark-alist-set (alist fld msg)
   `(let ((imsg (string-to-number ,msg))
-	 (fld-msgs (assoc ,fld ,alist)))
+         (fld-msgs (assoc ,fld ,alist)))
      (if fld-msgs
-	 (nconc fld-msgs (list imsg))
+         (nconc fld-msgs (list imsg))
        (setq ,alist (cons (list ,fld imsg) ,alist)))))
 
 (defun mew-summary-mark-in-physical-alist (alist mark &optional func)
   (save-excursion
     (let (fld msg msgs)
       (dolist (ent alist)
-	(setq fld (car ent))
-	(setq msgs (sort (copy-sequence (cdr ent)) '<)) ;; sort has side effect
-	(when (get-buffer fld)
-	  (set-buffer fld)
-	  (save-excursion
-	    (goto-char (point-min))
-	    (dolist (m msgs)
-	      (setq msg (number-to-string m))
-	      (when (re-search-forward (mew-regex-sumsyn-msg msg) nil t)
-		(if func (funcall func))
-		(mew-mark-put mark)
-		(forward-line)))
-	    (set-buffer-modified-p nil)))))))
+        (setq fld (car ent))
+        (setq msgs (sort (copy-sequence (cdr ent)) '<)) ;; sort has side effect
+        (when (get-buffer fld)
+          (set-buffer fld)
+          (save-excursion
+            (goto-char (point-min))
+            (dolist (m msgs)
+              (setq msg (number-to-string m))
+              (when (re-search-forward (mew-regex-sumsyn-msg msg) nil t)
+                (if func (funcall func))
+                (mew-mark-put mark)
+                (forward-line)))
+            (set-buffer-modified-p nil)))))))
 
 (defun mew-summary-unmark-in-physical-alist (alist func)
   (save-excursion
     (let (fld msg msgs)
       (dolist (ent alist)
-	(setq fld (car ent))
-	(setq msgs (sort (copy-sequence (cdr ent)) '<)) ;; sort has side effect
-	(when (get-buffer fld)
-	  (set-buffer fld)
-	  (save-excursion
-	    (goto-char (point-min))
-	    (dolist (m msgs)
-	      (setq msg (number-to-string m))
-	      (when (re-search-forward (mew-regex-sumsyn-msg msg) nil t)
-		(mew-mark-remove)
-		(if func (funcall func fld msg))
-		(forward-line)))
-	    (set-buffer-modified-p nil)))))))
+        (setq fld (car ent))
+        (setq msgs (sort (copy-sequence (cdr ent)) '<)) ;; sort has side effect
+        (when (get-buffer fld)
+          (set-buffer fld)
+          (save-excursion
+            (goto-char (point-min))
+            (dolist (m msgs)
+              (setq msg (number-to-string m))
+              (when (re-search-forward (mew-regex-sumsyn-msg msg) nil t)
+                (mew-mark-remove)
+                (if func (funcall func fld msg))
+                (forward-line)))
+            (set-buffer-modified-p nil)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -564,7 +564,7 @@ Put the unread mark (default is 'U') in COUNT times."
   (if (mew-mark-active-p) (setq arg t))
   (if arg
       (let ((begend (mew-summary-get-region)))
-	(mew-summary-mark-all-region (car begend) (cdr begend)))
+        (mew-summary-mark-all-region (car begend) (cdr begend)))
     (mew-summary-mark-all-region (point-min) (point-max))))
 
 (defun mew-summary-mark-all-region (beg end)
@@ -572,18 +572,18 @@ Put the unread mark (default is 'U') in COUNT times."
 BEG and END."
   (interactive "r")
   (let ((regex (mew-mark-regex mew-sp)) ;; not marked
-	(mark mew-mark-review) ;; someday ...
-	(one-summary (mew-virtual-for-one-summary))
-	fld msg alist)
+        (mark mew-mark-review) ;; someday ...
+        (one-summary (mew-virtual-for-one-summary))
+        fld msg alist)
     (save-excursion
       (goto-char beg)
       (while (re-search-forward regex end t)
-	(mew-summary-mark-as mark)
-	(when one-summary
-	  (setq fld (mew-summary-folder-name))
-	  (setq msg (mew-summary-message-number))
-	  (mew-mark-alist-set alist fld msg))
-	(forward-line))
+        (mew-summary-mark-as mark)
+        (when one-summary
+          (setq fld (mew-summary-folder-name))
+          (setq msg (mew-summary-message-number))
+          (mew-mark-alist-set alist fld msg))
+        (forward-line))
       (set-buffer-modified-p nil))
     (if one-summary (mew-summary-mark-in-physical-alist alist mark))))
 
@@ -597,7 +597,7 @@ BEG and END."
     (while (re-search-forward regex nil t)
       (beginning-of-line)
       (unless (search-forward "\r" (match-end 0) t)
-	(throw 'loop t))
+        (throw 'loop t))
       (forward-line))))
 
 (defun mew-summary-mark-regexp (&optional args)
@@ -605,26 +605,26 @@ BEG and END."
   (interactive "P")
   (mew-decode-syntax-delete)
   (let ((regex (read-string "Regexp: "))
-	(mark mew-mark-review) ;; someday ...
-	(one-summary (mew-virtual-for-one-summary))
+        (mark mew-mark-review) ;; someday ...
+        (one-summary (mew-virtual-for-one-summary))
         (n 0)
-	fld msg alist)
+        fld msg alist)
     (while (string= regex "")
       (setq regex (read-string "Regexp: ")))
     (save-excursion
       (goto-char (point-min))
       (while (if args
-		 (re-search-forward regex nil t)
-	       (mew-summary-search-regexp-visible regex))
-	(when (and (mew-summary-markable)
-		   (mew-sumsyn-match mew-regex-sumsyn-short))
-	  (when one-summary
-	    (setq fld (mew-sumsyn-folder-name))
-	    (setq msg (mew-sumsyn-message-number))
-	    (mew-mark-alist-set alist fld msg))
-	  (mew-mark-put mark)
-	  (setq n (1+ n)))
-	(forward-line))
+                 (re-search-forward regex nil t)
+               (mew-summary-search-regexp-visible regex))
+        (when (and (mew-summary-markable)
+                   (mew-sumsyn-match mew-regex-sumsyn-short))
+          (when one-summary
+            (setq fld (mew-sumsyn-folder-name))
+            (setq msg (mew-sumsyn-message-number))
+            (mew-mark-alist-set alist fld msg))
+          (mew-mark-put mark)
+          (setq n (1+ n)))
+        (forward-line))
       (set-buffer-modified-p nil))
     (if one-summary (mew-summary-mark-in-physical-alist alist mark))
     (cond
@@ -642,53 +642,53 @@ BEG and END."
 
 (defun mew-summary-exchange-mark (oldmark newmark &optional valid-only)
   (let ((regex (mew-mark-regex oldmark))
-	(case-fold-search nil)
-	(one-summary (mew-virtual-for-one-summary))
-	(i 0)
-	fld msg alist)
+        (case-fold-search nil)
+        (one-summary (mew-virtual-for-one-summary))
+        (i 0)
+        fld msg alist)
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward regex nil t)
-	(when (mew-sumsyn-match mew-regex-sumsyn-short)
-	  (setq fld (mew-sumsyn-folder-name))
-	  (setq msg (mew-sumsyn-message-number))
-	  (when (or (not valid-only) (mew-msg-validp msg))
-	    (mew-mark-put newmark)
-	    (if one-summary (mew-mark-alist-set alist fld msg))))
-	(forward-line)
-	(setq i (1+ i))))
+        (when (mew-sumsyn-match mew-regex-sumsyn-short)
+          (setq fld (mew-sumsyn-folder-name))
+          (setq msg (mew-sumsyn-message-number))
+          (when (or (not valid-only) (mew-msg-validp msg))
+            (mew-mark-put newmark)
+            (if one-summary (mew-mark-alist-set alist fld msg))))
+        (forward-line)
+        (setq i (1+ i))))
     (if (= i 0)
-	(message "No marked messages")
+        (message "No marked messages")
       (set-buffer-modified-p nil)
       (if one-summary (mew-summary-mark-in-physical-alist alist newmark)))))
 
-(defun mew-summary-mark-delete ()	;; * -> D
+(defun mew-summary-mark-delete ()       ;; * -> D
   "Put the delete mark onto all messages marked with '*'."
   (interactive)
   (mew-summary-not-in-nntp
    (mew-summary-exchange-mark mew-mark-review mew-mark-delete 'valid-only)))
 
-(defun mew-summary-mark-unlink ()	;; * -> X
+(defun mew-summary-mark-unlink ()       ;; * -> X
   "Put the delete mark onto all messages marked with '*'."
   (interactive)
   (mew-summary-exchange-mark mew-mark-review mew-mark-unlink 'valid-only))
 
-(defun mew-summary-mark-escape ()	;; * -> $
+(defun mew-summary-mark-escape ()       ;; * -> $
   "Change the '*' mark into the '$' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-review mew-mark-escape))
 
-(defun mew-summary-mark-review ()	;; $ -> *
+(defun mew-summary-mark-review ()       ;; $ -> *
   "Change the '$' mark into the '*' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-escape mew-mark-review))
 
-(defun mew-summary-mark-unread ()	;; * -> U
+(defun mew-summary-mark-unread ()       ;; * -> U
   "Change the '*' mark into the 'U' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-review mew-mark-unread))
 
-(defun mew-summary-mark-swap ()		;; $ <-> *
+(defun mew-summary-mark-swap ()         ;; $ <-> *
   "Swap the '$' mark and the '*' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-escape mew-mark-tmp)
@@ -708,75 +708,75 @@ region."
   (mew-summary-not-in-queue
    (mew-summary-not-in-draft
     (if (and (or (eq mew-mark-duplicated mew-mark-delete)
-		 (eq mew-mark-duplicated mew-mark-unlink))
-	     (eq mew-summary-mark-duplicated-skip nil))
-	(message "Cannot mark because messages may lost by this setting")
+                 (eq mew-mark-duplicated mew-mark-unlink))
+             (eq mew-summary-mark-duplicated-skip nil))
+        (message "Cannot mark because messages may lost by this setting")
       (let ((reversep (eq mew-summary-mark-duplicated-skip 'last))
-	    (count 0) my-id dup-id size ids beg end region)
-	(if (mew-mark-active-p) (setq arg t))
-	(cond
-	 (arg
-	  (setq region (mew-summary-get-region))
-	  (setq beg (car region))
-	  (setq end (cdr region)))
-	 (t
-	  (setq beg (point-min))
-	  (setq end (point-max))))
-	(message "Marking duplications...")
-	(save-excursion
-	  ;; from mew-summary-thread-region in mew-threaed.el
-	  (setq size (count-lines beg end))
-	  (cond
-	   ((<= size 211)
-	    (setq size 211))
-	   ((<= size 1511)
-	    (setq size 1511))
-	   ((<= size 7211)
-	    (setq size 7211))
-	   (t
-	    (setq size 18211)))
-	  (setq ids (make-vector size 0)) ;; hash
-	  (save-restriction
-	    (narrow-to-region beg end)
-	    (goto-char (if reversep (point-max) (point-min)))
-	    (catch 'loop
-	      (while t
-		(when (and (mew-summary-message-number)
-			   (mew-summary-markable))
-		  (setq my-id (mew-summary-my-id))
-		  (when (> (length my-id) 0)
-		    (setq dup-id (intern-soft my-id ids))
-		    (if (null dup-id)
-			;; first time (no duplication)
-			(set (intern my-id ids) t)
-		      (when (symbol-value dup-id)
-			;; second time (first duplication)
-			(unless mew-summary-mark-duplicated-skip
-			  (save-excursion
-			    (when (re-search-backward
-				   (mew-regex-sumsyn-my-id my-id) nil t)
-			      (mew-mark-put-mark mew-mark-duplicated 'no-msg)
-			      (setq count (1+ count))))
-			  (set (intern my-id ids) nil)))
-		      (mew-mark-put-mark mew-mark-duplicated 'no-msg)
-		      (setq count (1+ count)))))
-		(cond
-		 (reversep
-		  (beginning-of-line)
-		  (if (bobp)
-		      (throw 'loop t)
-		    (forward-line -1)))
-		 (t
-		  (forward-line 1)
-		  (if (eobp)
-		      (throw 'loop t))))))))
-	(cond
-	 ((= count 0)
-	  (message "Marking duplications...done  (no duplication)"))
-	 ((= count 1)
-	  (message "Marking duplications...done  (1 msg is marked)"))
-	 (t
-	  (message "Marking duplications...done  (%d msgs are marked)" count))))))))
+            (count 0) my-id dup-id size ids beg end region)
+        (if (mew-mark-active-p) (setq arg t))
+        (cond
+         (arg
+          (setq region (mew-summary-get-region))
+          (setq beg (car region))
+          (setq end (cdr region)))
+         (t
+          (setq beg (point-min))
+          (setq end (point-max))))
+        (message "Marking duplications...")
+        (save-excursion
+          ;; from mew-summary-thread-region in mew-threaed.el
+          (setq size (count-lines beg end))
+          (cond
+           ((<= size 211)
+            (setq size 211))
+           ((<= size 1511)
+            (setq size 1511))
+           ((<= size 7211)
+            (setq size 7211))
+           (t
+            (setq size 18211)))
+          (setq ids (make-vector size 0)) ;; hash
+          (save-restriction
+            (narrow-to-region beg end)
+            (goto-char (if reversep (point-max) (point-min)))
+            (catch 'loop
+              (while t
+                (when (and (mew-summary-message-number)
+                           (mew-summary-markable))
+                  (setq my-id (mew-summary-my-id))
+                  (when (> (length my-id) 0)
+                    (setq dup-id (intern-soft my-id ids))
+                    (if (null dup-id)
+                        ;; first time (no duplication)
+                        (set (intern my-id ids) t)
+                      (when (symbol-value dup-id)
+                        ;; second time (first duplication)
+                        (unless mew-summary-mark-duplicated-skip
+                          (save-excursion
+                            (when (re-search-backward
+                                   (mew-regex-sumsyn-my-id my-id) nil t)
+                              (mew-mark-put-mark mew-mark-duplicated 'no-msg)
+                              (setq count (1+ count))))
+                          (set (intern my-id ids) nil)))
+                      (mew-mark-put-mark mew-mark-duplicated 'no-msg)
+                      (setq count (1+ count)))))
+                (cond
+                 (reversep
+                  (beginning-of-line)
+                  (if (bobp)
+                      (throw 'loop t)
+                    (forward-line -1)))
+                 (t
+                  (forward-line 1)
+                  (if (eobp)
+                      (throw 'loop t))))))))
+        (cond
+         ((= count 0)
+          (message "Marking duplications...done  (no duplication)"))
+         ((= count 1)
+          (message "Marking duplications...done  (1 msg is marked)"))
+         (t
+          (message "Marking duplications...done  (%d msgs are marked)" count))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -785,8 +785,8 @@ region."
 
 (defun mew-summary-set-walk-mark ()
   (let* ((msg (format "Input mark(%c): " mew-mark-default-walk))
-	 (mew-mark-spec (cons (list 13) mew-mark-spec)) ;; adding \r
-	 (char (mew-input-mark msg)))
+         (mew-mark-spec (cons (list 13) mew-mark-spec)) ;; adding \r
+         (char (mew-input-mark msg)))
     (cond
      ((null char)
       ;; mew-input-mark displays a message.
@@ -819,7 +819,7 @@ the specified mark."
   (if arg
       (mew-summary-set-walk-mark)
     (if (mew-summary-down-mark mew-mark-walk)
-	(mew-summary-display))))
+        (mew-summary-display))))
 
 (defun mew-summary-up-mark (mark)
   (let ((case-fold-search nil))
@@ -839,7 +839,7 @@ the specified mark."
   (if arg
       (mew-summary-set-walk-mark)
     (if (mew-summary-up-mark mew-mark-walk)
-	(mew-summary-display))))
+        (mew-summary-display))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -850,32 +850,32 @@ the specified mark."
   (let (mark)
     (catch 'loop
       (while t
-	(setq mark (mew-input-mark msg))
-	(cond
-	 ((null mark)
-	  (message "That is not a mark")
-	  (mew-let-user-read))
-	 ((mew-markdb-statefullp mark)
-	  (message "'%c' cannot be exchanged" mark)
-	  (mew-let-user-read))
-	 (t
-	  (throw 'loop mark)))))))
+        (setq mark (mew-input-mark msg))
+        (cond
+         ((null mark)
+          (message "That is not a mark")
+          (mew-let-user-read))
+         ((mew-markdb-statefullp mark)
+          (message "'%c' cannot be exchanged" mark)
+          (mew-let-user-read))
+         (t
+          (throw 'loop mark)))))))
 
 (defun mew-summary-exchange-marks ()
   "Exchange the first input mark to the second one.
 The 'o' mark is not exchangeable."
   (interactive)
   (let* ((from (mew-summary-input-exchangeable-mark "Input mark from: "))
-	 (to  (mew-summary-input-exchangeable-mark "Input mark to: "))
-	 (regex (mew-mark-regex from))
-	 (case-fold-search nil))
+         (to  (mew-summary-input-exchangeable-mark "Input mark to: "))
+         (regex (mew-mark-regex from))
+         (case-fold-search nil))
     (unless (char-equal from to)
       (save-excursion
-	(goto-char (point-min))
-	(while (re-search-forward regex nil t)
-	  (mew-summary-undo-one 'nomsg)
-	  (mew-mark-put-mark to 'nomsg))
-	(forward-line)))))
+        (goto-char (point-min))
+        (while (re-search-forward regex nil t)
+          (mew-summary-undo-one 'nomsg)
+          (mew-mark-put-mark to 'nomsg))
+        (forward-line)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -892,9 +892,9 @@ The 'o' mark is not exchangeable."
   (save-excursion
     (dolist (buf mew-buffers)
       (when (bufferp (get-buffer buf))
-	(set-buffer buf)
-	(when (mew-summary-p)
-	  (mew-sinfo-save))))))
+        (set-buffer buf)
+        (when (mew-summary-p)
+          (mew-sinfo-save))))))
 
 (provide 'mew-mark)
 

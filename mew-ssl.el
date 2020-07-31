@@ -93,44 +93,44 @@ insert no extra text.")
   (setq server (mew-ssl-server server))
   (if (= mew-ssl-ver 3)
       (let (args)
-	(setq args
-	      `("-c" "-f"
-		"-a" ,(expand-file-name (mew-ssl-cert-directory case))
-		"-d" ,(format "%s:%d" mew-ssl-localhost localport)
-		"-v" ,(number-to-string (mew-ssl-verify-level case))
-		"-D" "debug"
-		"-P" ""
-		"-r" ,(format "%s:%d" server remoteport)
-		,@mew-prog-ssl-arg))
-	(if tls (setq args (cons "-n" (cons tls args))))
-	args)
+        (setq args
+              `("-c" "-f"
+                "-a" ,(expand-file-name (mew-ssl-cert-directory case))
+                "-d" ,(format "%s:%d" mew-ssl-localhost localport)
+                "-v" ,(number-to-string (mew-ssl-verify-level case))
+                "-D" "debug"
+                "-P" ""
+                "-r" ,(format "%s:%d" server remoteport)
+                ,@mew-prog-ssl-arg))
+        (if tls (setq args (cons "-n" (cons tls args))))
+        args)
     (let ((file (mew-make-temp-name)))
       (with-temp-buffer
-	(insert "client=yes\n")
-	(if mew-ssl-unixlike
-	    (insert "pid=\n"))
-	(insert (format "verify=%d\n" (mew-ssl-verify-level case)))
-	(if (and (> (mew-ssl-verify-level case) 0) mew-ssl-checkhost)
-	    (insert (format "checkHost=%s\n" server)))
-	(if mew-ssl-unixlike
-	    (insert "foreground=yes\n"))
-	(insert "debug=debug\n")
-	(if (and mew-ssl-libwrap (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 45)))
-	    (insert "libwrap=no\n"))
-	(if (and (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 22))
-		 mew-ssl-unixlike)
-	    (insert "syslog=no\n"))
-	(insert "CApath=" (expand-file-name (mew-ssl-cert-directory case)) "\n")
-	(if mew-prog-ssl-arg
-	    (insert mew-prog-ssl-arg))
-	(insert (format "[%d]\n" localport))
-	(insert (format "accept=%s:%d\n" mew-ssl-localhost localport))
-	(insert (format "connect=%s:%d\n" server remoteport))
-	(if tls (insert (format "protocol=%s\n" tls)))
-	(mew-frwlet mew-cs-dummy mew-cs-text-for-write
-	  ;; NEVER use call-process-region for privacy reasons
-	  (write-region (point-min) (point-max) file nil 'no-msg))
-	(list file)))))
+        (insert "client=yes\n")
+        (if mew-ssl-unixlike
+            (insert "pid=\n"))
+        (insert (format "verify=%d\n" (mew-ssl-verify-level case)))
+        (if (and (> (mew-ssl-verify-level case) 0) mew-ssl-checkhost)
+            (insert (format "checkHost=%s\n" server)))
+        (if mew-ssl-unixlike
+            (insert "foreground=yes\n"))
+        (insert "debug=debug\n")
+        (if (and mew-ssl-libwrap (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 45)))
+            (insert "libwrap=no\n"))
+        (if (and (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 22))
+                 mew-ssl-unixlike)
+            (insert "syslog=no\n"))
+        (insert "CApath=" (expand-file-name (mew-ssl-cert-directory case)) "\n")
+        (if mew-prog-ssl-arg
+            (insert mew-prog-ssl-arg))
+        (insert (format "[%d]\n" localport))
+        (insert (format "accept=%s:%d\n" mew-ssl-localhost localport))
+        (insert (format "connect=%s:%d\n" server remoteport))
+        (if tls (insert (format "protocol=%s\n" tls)))
+        (mew-frwlet mew-cs-dummy mew-cs-text-for-write
+          ;; NEVER use call-process-region for privacy reasons
+          (write-region (point-min) (point-max) file nil 'no-msg))
+        (list file)))))
 
 (defun mew-open-ssl-stream (case server serv tls)
   "Open an SSL/TLS stream for SERVER's SERV.
@@ -145,73 +145,73 @@ A local port number can be obtained the process name after ':'. "
     nil)
    (t
     (let* ((remoteport (mew-serv-to-port serv))
-	   (localport (+ 8000 (% (mew-random) 4000)))
-	   (process-connection-type mew-connection-type2)
-	   (N mew-ssl-process-exec-cnt)
-	   (pros (process-list))
-	   (regex (mew-ssl-info-name-regex server remoteport))
-	   name pnm pro dummy bound opts)
+           (localport (+ 8000 (% (mew-random) 4000)))
+           (process-connection-type mew-connection-type2)
+           (N mew-ssl-process-exec-cnt)
+           (pros (process-list))
+           (regex (mew-ssl-info-name-regex server remoteport))
+           name pnm pro dummy bound opts)
       (catch 'find
-	(dolist (pr pros)
-	  (when (string-match regex (process-name pr))
-	    (if (memq (process-status pr) '(run))
-		(setq pro pr)
-	      (delete-process pr))
-	    (throw 'find nil))))
+        (dolist (pr pros)
+          (when (string-match regex (process-name pr))
+            (if (memq (process-status pr) '(run))
+                (setq pro pr)
+              (delete-process pr))
+            (throw 'find nil))))
       (if pro
-	  pro
-	(message "Creating an SSL/TLS connection...")
-	(setq pro nil)
-	(catch 'loop
-	  (dotimes (_i N) ;; prevent byte-compile warning
-	    (setq name (mew-ssl-info-name server remoteport localport))
-	    (setq opts (mew-ssl-options case server remoteport localport tls))
-	    (setq pro (apply 'start-process name nil mew-prog-ssl opts))
-	    ;; An error would occur. So, let's exit in the case.
-	    (cond
-	     ((not (processp pro))
-	      (message "Creating an SSL/TLS connection...FAILED")
-	      (throw 'loop nil))
-	     ((not (memq (process-status pro) '(run)))
-	      (delete-process pro)
-	      (message "Creating an SSL/TLS connection...FAILED")
-	      (throw 'loop nil)))
-	    ;; stunnel is now running.
-	    (mew-process-silent-exit pro)
-	    (setq pnm (process-name pro))
-	    (mew-info-clean-up pnm)
-	    (mew-ssl-set-try pnm 0)
-	    (if (>= mew-ssl-ver 4) (mew-ssl-set-file pnm (car opts)))
-	    (mew-set-process-cs pro mew-cs-text-for-read mew-cs-text-for-write)
-	    (set-process-filter pro 'mew-ssl-filter1)
-	    (set-process-sentinel pro 'mew-ssl-sentinel)
-	    (mew-rendezvous (null (mew-ssl-get-status pnm)))
-	    (if (eq (mew-ssl-get-status pnm) t)
-		(throw 'loop (setq bound t)))
-	    ;; bind-failure
-	    (setq localport (1+ localport))))
-	(mew-ssl-set-status pnm nil)
-	(if (not bound)
-	    (progn
-	      (message "Creating an SSL/TLS connection...FAILED")
-	      nil)
-	  ;; "stunnel" does not gain access to the remote port
-	  ;; until a tunneled connection is created.
-	  ;; So, we need to check the SSL/TLS tunnel with a dummy
-	  ;; tunneled connection here.
-	  (set-process-filter pro 'mew-ssl-filter2)
-	  (setq dummy (open-network-stream " *Mew dummy*" nil mew-ssl-localhost localport))
-	  (mew-rendezvous (null (mew-ssl-get-status pnm)))
-	  (if (processp dummy) (delete-process dummy))
-	  (if (eq (mew-ssl-get-status pnm) t)
-	      (progn
-		(message "Creating an SSL/TLS connection...done")
-		(set-process-filter pro 'mew-ssl-filter3)
-		pro)
-	    ;; verify-failure
-	    (delete-process pro)
-	    (message "Creating an SSL/TLS connection...FAILED (cert verify failure)")
-	    nil)))))))
+          pro
+        (message "Creating an SSL/TLS connection...")
+        (setq pro nil)
+        (catch 'loop
+          (dotimes (_i N) ;; prevent byte-compile warning
+            (setq name (mew-ssl-info-name server remoteport localport))
+            (setq opts (mew-ssl-options case server remoteport localport tls))
+            (setq pro (apply 'start-process name nil mew-prog-ssl opts))
+            ;; An error would occur. So, let's exit in the case.
+            (cond
+             ((not (processp pro))
+              (message "Creating an SSL/TLS connection...FAILED")
+              (throw 'loop nil))
+             ((not (memq (process-status pro) '(run)))
+              (delete-process pro)
+              (message "Creating an SSL/TLS connection...FAILED")
+              (throw 'loop nil)))
+            ;; stunnel is now running.
+            (mew-process-silent-exit pro)
+            (setq pnm (process-name pro))
+            (mew-info-clean-up pnm)
+            (mew-ssl-set-try pnm 0)
+            (if (>= mew-ssl-ver 4) (mew-ssl-set-file pnm (car opts)))
+            (mew-set-process-cs pro mew-cs-text-for-read mew-cs-text-for-write)
+            (set-process-filter pro 'mew-ssl-filter1)
+            (set-process-sentinel pro 'mew-ssl-sentinel)
+            (mew-rendezvous (null (mew-ssl-get-status pnm)))
+            (if (eq (mew-ssl-get-status pnm) t)
+                (throw 'loop (setq bound t)))
+            ;; bind-failure
+            (setq localport (1+ localport))))
+        (mew-ssl-set-status pnm nil)
+        (if (not bound)
+            (progn
+              (message "Creating an SSL/TLS connection...FAILED")
+              nil)
+          ;; "stunnel" does not gain access to the remote port
+          ;; until a tunneled connection is created.
+          ;; So, we need to check the SSL/TLS tunnel with a dummy
+          ;; tunneled connection here.
+          (set-process-filter pro 'mew-ssl-filter2)
+          (setq dummy (open-network-stream " *Mew dummy*" nil mew-ssl-localhost localport))
+          (mew-rendezvous (null (mew-ssl-get-status pnm)))
+          (if (processp dummy) (delete-process dummy))
+          (if (eq (mew-ssl-get-status pnm) t)
+              (progn
+                (message "Creating an SSL/TLS connection...done")
+                (set-process-filter pro 'mew-ssl-filter3)
+                pro)
+            ;; verify-failure
+            (delete-process pro)
+            (message "Creating an SSL/TLS connection...FAILED (cert verify failure)")
+            nil)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -226,35 +226,35 @@ A local port number can be obtained the process name after ':'. "
 
 (defun mew-ssl-filter1 (process string)
   (let* ((pnm (process-name process))
-	 (prev-str (mew-ssl-get-string pnm)))
+         (prev-str (mew-ssl-get-string pnm)))
     (save-excursion
       (mew-ssl-debug "SSL/TLS: " string)
       (mew-ssl-set-string pnm string)
       (setq string (concat prev-str string))
       (cond
        ((string-match "bound \\(\\|FD=[0-9]+ \\)to" string)
-	(mew-ssl-set-status pnm t))
+        (mew-ssl-set-status pnm t))
        ((string-match "gethostbyname: Valid name, no data record of requested type" string)
-	(mew-ssl-set-status pnm 'gethostbyname-failure))
+        (mew-ssl-set-status pnm 'gethostbyname-failure))
        ((string-match "gethostbyname: Host not found" string)
-	(mew-ssl-set-status pnm 'gethostbyname-failure))
+        (mew-ssl-set-status pnm 'gethostbyname-failure))
        ((string-match "Local: bind: Address already in use" string)
-	(mew-ssl-set-status pnm 'bind-failure))))))
+        (mew-ssl-set-status pnm 'bind-failure))))))
 
 (defun mew-ssl-filter2 (process string)
   (let* ((pnm (process-name process))
-	 (prev-str (mew-ssl-get-string pnm)))
+         (prev-str (mew-ssl-get-string pnm)))
     (save-excursion
       (mew-ssl-debug "SSL/TLS: " string)
       (mew-ssl-set-string pnm string)
       (setq string (concat prev-str string))
       (cond
        ((string-match "Negotiated \\| ciphersuite:\\|opened with SSL" string)
-	(mew-ssl-set-status pnm t))
+        (mew-ssl-set-status pnm t))
        ((string-match "Failed to initialize" string)
-	(mew-ssl-set-status pnm t)) ;; xxx
+        (mew-ssl-set-status pnm t)) ;; xxx
        ((string-match "verify failed" string)
-	(mew-ssl-set-status pnm 'verify-failure))))))
+        (mew-ssl-set-status pnm 'verify-failure))))))
 
 (defun mew-ssl-filter3 (_process string)
   (save-excursion
@@ -262,7 +262,7 @@ A local port number can be obtained the process name after ':'. "
 
 (defun mew-ssl-sentinel (process _event)
   (let* ((pnm (process-name process))
-	 (file (mew-ssl-get-file pnm)))
+         (file (mew-ssl-get-file pnm)))
     (save-excursion
       (mew-delete-file file))))
 
@@ -279,16 +279,16 @@ A local port number can be obtained the process name after ':'. "
       (goto-char (point-min))
       (re-search-forward "^stunnel " nil t 1)
       (if (looking-at "\\([45]\\)\\.\\([0-9]+\\)")
-	  (progn
-	    (setq mew-ssl-ver (string-to-number (mew-match-string 1)))
-	    (setq mew-ssl-minor-ver (string-to-number (mew-match-string 2))))
-	(setq mew-ssl-ver 3))
+          (progn
+            (setq mew-ssl-ver (string-to-number (mew-match-string 1)))
+            (setq mew-ssl-minor-ver (string-to-number (mew-match-string 2))))
+        (setq mew-ssl-ver 3))
       (when (re-search-forward "LIBWRAP" nil t)
-	(setq mew-ssl-libwrap t))
+        (setq mew-ssl-libwrap t))
       (when (re-search-forward "foreground" nil t)
-	(setq mew-ssl-unixlike t))
+        (setq mew-ssl-unixlike t))
       (when (re-search-forward "checkHost" nil t)
-	(setq mew-ssl-checkhost t)))))
+        (setq mew-ssl-checkhost t)))))
 
 (provide 'mew-ssl)
 

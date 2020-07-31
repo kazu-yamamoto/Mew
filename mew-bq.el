@@ -55,7 +55,7 @@
       str
     (let ((regex mew-regex-ctls))
       (while (string-match regex str)
-	(setq str (replace-match "" nil t str)))
+        (setq str (replace-match "" nil t str)))
       str)))
 
 (defun mew-header-sanity-check-string2 (str key)
@@ -63,12 +63,12 @@
       str
     (let ((regex mew-regex-ctls-wo-tab))
       (if (not (string-match regex str))
-	  str
-	(mew-decode-warning-fields key 'ctl)
-	(setq str (replace-match "" nil t str))
-	(while (string-match regex str)
-	  (setq str (replace-match "" nil t str)))
-	str))))
+          str
+        (mew-decode-warning-fields key 'ctl)
+        (setq str (replace-match "" nil t str))
+        (while (string-match regex str)
+          (setq str (replace-match "" nil t str)))
+        str))))
 
 (defun mew-header-sanity-check-region (beg end &optional key)
   (let ((regex mew-regex-ctls-wo-tab-lf))
@@ -77,10 +77,10 @@
       (narrow-to-region beg end)
       (goto-char (point-min))
       (when (re-search-forward regex nil t)
-	(if key (mew-decode-warning-fields key 'ctl))
-	(replace-match "" nil t)
-	(while (re-search-forward regex nil t)
-	  (replace-match "" nil t))))))
+        (if key (mew-decode-warning-fields key 'ctl))
+        (replace-match "" nil t)
+        (while (re-search-forward regex nil t)
+          (replace-match "" nil t))))))
 
 (defun mew-header-encode (charset b-or-q fun hcs str)
   ;; sanity check should be done
@@ -89,10 +89,10 @@
 
 (defun mew-header-decode (charset b-or-q estr &optional key)
   (let* ((fun (mew-header-decode-get-func b-or-q))
-	 (cs (mew-charset-to-cs charset))
-	 str)
+         (cs (mew-charset-to-cs charset))
+         str)
     (when (and mew-use-autoconv-when-unknown
-	       (not (mew-coding-system-p cs)))
+               (not (mew-coding-system-p cs)))
       (setq cs mew-cs-autoconv))
     (cond
      ((not (mew-coding-system-p cs))
@@ -101,17 +101,17 @@
       (setq str (funcall fun estr))
       (unless str (setq str (mew-header-decode-error key b-or-q estr)))
       (if (null str)
-	  (mew-header-decode-get-error-str b-or-q)
-	(when (and mew-decode-broken
-		   (not (eq cs mew-cs-autoconv))
-		   (or (null charset)
-		       (mew-case-equal charset mew-us-ascii)
-		       (mew-case-equal charset mew-utf-8))
-		   (string-match mew-regex-singlebyte-nonascii str))
-	  (setq cs mew-cs-autoconv))
-	(if (null cs)
-	    str
-	  (mew-cs-decode-string str cs))))
+          (mew-header-decode-get-error-str b-or-q)
+        (when (and mew-decode-broken
+                   (not (eq cs mew-cs-autoconv))
+                   (or (null charset)
+                       (mew-case-equal charset mew-us-ascii)
+                       (mew-case-equal charset mew-utf-8))
+                   (string-match mew-regex-singlebyte-nonascii str))
+          (setq cs mew-cs-autoconv))
+        (if (null cs)
+            str
+          (mew-cs-decode-string str cs))))
      (t estr))))
 
 (defun mew-header-decode-error (key b-or-q estr)
@@ -143,34 +143,34 @@
 
 (defun mew-q-encode-string (str &optional prefix)
   (let* ((len (length str))
-	 (ret (mew-make-string (* len 3)))
-	 (j 0) char)
+         (ret (mew-make-string (* len 3)))
+         (j 0) char)
     (dotimes (i len)
       (setq char (aref str i))
       (cond
        ((char-equal char mew-sp)
-	(aset ret j ?_))
+        (aset ret j ?_))
        ((and (> char mew-sp)
-	     (< char 126)
-	     (not (char-equal char ?=))
-	     (not (char-equal char ??))
-	     (not (char-equal char ?_)) ;; space
-	     (or (not prefix) (not (memq char '(?# ?@)))))
-	(aset ret j char))
+             (< char 126)
+             (not (char-equal char ?=))
+             (not (char-equal char ??))
+             (not (char-equal char ?_)) ;; space
+             (or (not prefix) (not (memq char '(?# ?@)))))
+        (aset ret j char))
        (t
-	(aset ret j (or prefix ?=))
-	(setq j (1+ j))
-	(aset ret j (aref "0123456789ABCDEF" (lsh char -4)))
-	(setq j (1+ j))
-	(aset ret j (aref "0123456789ABCDEF" (logand char 15)))))
+        (aset ret j (or prefix ?=))
+        (setq j (1+ j))
+        (aset ret j (aref "0123456789ABCDEF" (lsh char -4)))
+        (setq j (1+ j))
+        (aset ret j (aref "0123456789ABCDEF" (logand char 15)))))
       (setq j (1+ j)))
     (substring ret 0 j)))
 
 (defun mew-samba-encoding (str)
   (setq str (mew-cs-encode-string str mew-cs-samba))
   (let* ((len (length str))
-	 (ret (mew-make-string (* len 3)))
-	 (j 0) char type)
+         (ret (mew-make-string (* len 3)))
+         (j 0) char type)
     (cond
      ((eq mew-use-samba-encoding-type 'cap)
       (setq type 'cap))
@@ -179,12 +179,12 @@
     (dotimes (i len)
       (setq char (aref str i))
       (if (and (eq type 'cap) (< char 128))
-	  (aset ret j char)
-	(aset ret j ?:)
-	(setq j (1+ j))
-	(aset ret j (aref "0123456789abcdef" (lsh char -4)))
-	(setq j (1+ j))
-	(aset ret j (aref "0123456789abcdef" (logand char 15))))
+          (aset ret j char)
+        (aset ret j ?:)
+        (setq j (1+ j))
+        (aset ret j (aref "0123456789abcdef" (lsh char -4)))
+        (setq j (1+ j))
+        (aset ret j (aref "0123456789abcdef" (logand char 15))))
       (setq j (1+ j)))
     (substring ret 0 j)))
 
@@ -203,22 +203,22 @@
 (defun mew-q-decode-string (qpstr &optional okey)
   (condition-case nil
       (let* ((len (length qpstr))
-	     (ret (mew-make-string len))
-	     (j 0) char key)
-	(setq key (or okey ?=))
-	(dotimes (i len)
-	  (setq char (aref qpstr i))
-	  (cond
-	   ((and (not okey) (char-equal char ?_))
-	    (aset ret j mew-sp))
-	   ((char-equal char key)
-	    (aset ret j (+ (* (mew-hexchar-to-int (aref qpstr (1+ i))) 16)
-			   (mew-hexchar-to-int (aref qpstr (+ i 2)))))
-	    (setq i (+ i 2)))
-	   (t
-	    (aset ret j char)))
-	  (setq j (1+ j)))
-	(substring ret 0 j))
+             (ret (mew-make-string len))
+             (j 0) char key)
+        (setq key (or okey ?=))
+        (dotimes (i len)
+          (setq char (aref qpstr i))
+          (cond
+           ((and (not okey) (char-equal char ?_))
+            (aset ret j mew-sp))
+           ((char-equal char key)
+            (aset ret j (+ (* (mew-hexchar-to-int (aref qpstr (1+ i))) 16)
+                           (mew-hexchar-to-int (aref qpstr (+ i 2)))))
+            (setq i (+ i 2)))
+           (t
+            (aset ret j char)))
+          (setq j (1+ j)))
+        (substring ret 0 j))
     (error nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -248,32 +248,32 @@
 
 (defun mew-header-encode-string (str &optional key-len)
   (let* ((ecsdb (or (mew-ecsdb-guess-string str)
-		    (mew-charset-to-ecsdb (mew-charset-m17n))))
-	 (hcs (mew-ecsdb-hcs ecsdb))
-	 charset b-or-q fun)
+                    (mew-charset-to-ecsdb (mew-charset-m17n))))
+         (hcs (mew-ecsdb-hcs ecsdb))
+         charset b-or-q fun)
     (if (not (mew-coding-system-p hcs))
-	(mew-encode-error
-	 (format "Unknown coding system %s in the header" (symbol-name hcs)))
+        (mew-encode-error
+         (format "Unknown coding system %s in the header" (symbol-name hcs)))
       (setq charset (mew-cs-to-charset hcs))
       (setq b-or-q (mew-ecsdb-get-b-or-q ecsdb))
       (setq fun (mew-header-encode-get-func b-or-q))
       (if (null fun)
-	  (mew-encode-error
-	   (format "Unknown encoding function for %s" b-or-q))
-	(mew-header-encode-string1 charset b-or-q fun hcs str key-len)))))
+          (mew-encode-error
+           (format "Unknown encoding function for %s" b-or-q))
+        (mew-header-encode-string1 charset b-or-q fun hcs str key-len)))))
 
 (defun mew-header-encode-string1 (charset b-or-q fun hcs str &optional key-len)
   (let* ((max mew-encode-word-max-length)
-	 (encoded-word (mew-header-encode charset b-or-q fun hcs str)))
+         (encoded-word (mew-header-encode charset b-or-q fun hcs str)))
     (if key-len
-	(setq max (- max key-len)))
+        (setq max (- max key-len)))
     (if (> (length encoded-word) max)
         (let ((med (/ (length str) 2)))
           (append
            (mew-header-encode-string1
-	    charset b-or-q fun hcs (substring str 0 med) key-len)
+            charset b-or-q fun hcs (substring str 0 med) key-len)
            (mew-header-encode-string1
-	    charset b-or-q fun hcs (substring str med))))
+            charset b-or-q fun hcs (substring str med))))
       (list encoded-word))))
 
 (defun mew-header-encode-split-string (str)
@@ -283,12 +283,12 @@
       (setq beg (match-beginning 0))
       (setq end (match-end 0))
       (if (= start beg)
-	  (setq ret (cons (substring str beg end) ret))
-	(setq ret (cons (substring str beg end)
-			(cons (substring str start beg) ret))))
+          (setq ret (cons (substring str beg end) ret))
+        (setq ret (cons (substring str beg end)
+                        (cons (substring str start beg) ret))))
       (setq start end))
     (if (/= start (length str))
-	(setq ret (cons (substring str start) ret)))
+        (setq ret (cons (substring str start) ret)))
     (nreverse ret)))
 
 (defun mew-header-encode-comma-text (str)
@@ -340,8 +340,8 @@
 
 (defun mew-header-encode-addr (str)
   (let* ((len (length str))
-	 (i 0) (bound 0) (status 'space)
-	 SBOUND open c I)
+         (i 0) (bound 0) (status 'space)
+         SBOUND open c I)
     ;; status space, ascii, non-ascii, non-ascii-space
     ;; assumptions:
     ;;  <> does not contain non-ascii characters.
@@ -352,89 +352,89 @@
       (cond
        ;; quote
        ((char-equal c ?\")
-	(setq I (1+ i))
-	(setq open t)
-	(catch 'quote
-	  (while (< I len)
-	    (setq c (aref str I))
-	    (cond
-	     ((char-equal c ?\")
-	      (setq open nil)
-	      (throw 'quote nil))
-	     ((> c 127)
-	      (mew-encode-error
-	       "Only ASCII is allowed in quoted-string in the header")))
-	    (setq I (1+ I))))
-	(if open
-	    (mew-encode-error "Quote string must be closed in the header"))
-	(mew-header-encode-cond ?a)
-	(setq i I))
+        (setq I (1+ i))
+        (setq open t)
+        (catch 'quote
+          (while (< I len)
+            (setq c (aref str I))
+            (cond
+             ((char-equal c ?\")
+              (setq open nil)
+              (throw 'quote nil))
+             ((> c 127)
+              (mew-encode-error
+               "Only ASCII is allowed in quoted-string in the header")))
+            (setq I (1+ I))))
+        (if open
+            (mew-encode-error "Quote string must be closed in the header"))
+        (mew-header-encode-cond ?a)
+        (setq i I))
        ;; end of quote
        ;; comment
        ((char-equal c ?\()
-	(mew-header-encode-cond2 nil)
-	(insert "(")
-	(setq i (1+ i))
-	(setq bound i)
-	(setq status 'ascii)
-	(setq open t)
-	(let (qp)
-	  (catch 'comment
-	    (while (< i len)
-	      (setq c (aref str i))
-	      (cond
-	       ((char-equal c ?\))
-		(setq open nil)
-		(throw 'comment nil))
-	       ((char-equal c ?\")
-		(setq qp t))
-	       ((> c 127)
-		(setq status 'non-ascii)))
-	      (setq i (1+ i))))
-	  (if (and qp (eq status 'non-ascii))
-	      (mew-encode-error
-	       "Only ASCII is allowed in quoted-string in the header")))
-	(if open
-	    (mew-encode-error "Comment must be closed in the header"))
-	(mew-header-encode-cond2 'comment)
-	(if (= i len)
-	    ()
-	  (insert ")")
-	  (setq bound (1+ i)))
-	(setq status 'space))
+        (mew-header-encode-cond2 nil)
+        (insert "(")
+        (setq i (1+ i))
+        (setq bound i)
+        (setq status 'ascii)
+        (setq open t)
+        (let (qp)
+          (catch 'comment
+            (while (< i len)
+              (setq c (aref str i))
+              (cond
+               ((char-equal c ?\))
+                (setq open nil)
+                (throw 'comment nil))
+               ((char-equal c ?\")
+                (setq qp t))
+               ((> c 127)
+                (setq status 'non-ascii)))
+              (setq i (1+ i))))
+          (if (and qp (eq status 'non-ascii))
+              (mew-encode-error
+               "Only ASCII is allowed in quoted-string in the header")))
+        (if open
+            (mew-encode-error "Comment must be closed in the header"))
+        (mew-header-encode-cond2 'comment)
+        (if (= i len)
+            ()
+          (insert ")")
+          (setq bound (1+ i)))
+        (setq status 'space))
        ;; end of ()
        ;; route
        ((char-equal c ?<)
-	(mew-header-encode-cond2 nil)
-	(if (or (char-equal (char-before (point)) mew-sp)
-		(char-equal (char-before (point)) ?\t))
-	    (insert "<")
-	  (insert " <"))
-	(setq i (1+ i))
-	(setq bound i)
-	(setq status 'ascii)
-	(setq open t)
-	(catch 'route
-	  (while (< i len)
-	    (setq c (aref str i))
-	    (cond
-	     ((char-equal c ?>)
-	      (setq open nil)
-	      (throw 'route nil))
-	     ((> c 127)
-	      (mew-encode-error "<> must contain ASCII only"))
-	     (t
-	      (insert c)))
-	    (setq i (1+ i))))
-	(if open
-	    (mew-encode-error "<> must be closed in the header"))
-	(if (= i len)
-	    ()
-	  (insert ">")
-	  (setq bound (1+ i)))
-	(setq status 'space))
+        (mew-header-encode-cond2 nil)
+        (if (or (char-equal (char-before (point)) mew-sp)
+                (char-equal (char-before (point)) ?\t))
+            (insert "<")
+          (insert " <"))
+        (setq i (1+ i))
+        (setq bound i)
+        (setq status 'ascii)
+        (setq open t)
+        (catch 'route
+          (while (< i len)
+            (setq c (aref str i))
+            (cond
+             ((char-equal c ?>)
+              (setq open nil)
+              (throw 'route nil))
+             ((> c 127)
+              (mew-encode-error "<> must contain ASCII only"))
+             (t
+              (insert c)))
+            (setq i (1+ i))))
+        (if open
+            (mew-encode-error "<> must be closed in the header"))
+        (if (= i len)
+            ()
+          (insert ">")
+          (setq bound (1+ i)))
+        (setq status 'space))
        ((char-equal c ?>)
-	(mew-encode-error "Unbalanced <> in the header"))
+        (mew-encode-error "Unbalanced <> in the header"))
        ;; end of <>
 
        ;; group
@@ -442,51 +442,51 @@
        ;; not be 'phrase route-addr' in Mew because they are to be
        ;; removed.
        ((char-equal c ?:)
-	(mew-header-encode-cond2 nil)
-	;; RFC 2047 says:
-	;;   An 'encoded-word' that appears within a
-	;;   'phrase' MUST be separated from any adjacent 'word', 'text' or
-	;;   'special' by 'linear-white-space'.
-	;; However, we do not care if an 'encoded-word' is followed by
-	;; ":". The spec is believed too strict. 'encoded-word' can be
-	;; recognized because of the token rule.
-	(insert ":")
-	(setq i (1+ i))
-	(unless (char-equal (aref str i) ?\;)
-	  (mew-encode-error ": must be followed by ; in the header"))
-	(insert ";")
-	(setq bound (1+ i))
-	(setq status 'space))
+        (mew-header-encode-cond2 nil)
+        ;; RFC 2047 says:
+        ;;   An 'encoded-word' that appears within a
+        ;;   'phrase' MUST be separated from any adjacent 'word', 'text' or
+        ;;   'special' by 'linear-white-space'.
+        ;; However, we do not care if an 'encoded-word' is followed by
+        ;; ":". The spec is believed too strict. 'encoded-word' can be
+        ;; recognized because of the token rule.
+        (insert ":")
+        (setq i (1+ i))
+        (unless (char-equal (aref str i) ?\;)
+          (mew-encode-error ": must be followed by ; in the header"))
+        (insert ";")
+        (setq bound (1+ i))
+        (setq status 'space))
        ;; end of group
 
        ;; space
        ((or (char-equal c mew-sp) (char-equal c ?\t))
-	(cond
-	 ((or (eq status 'ascii) (eq status 'space))
-	  (insert (substring str bound i)) ;; 'ascii
-	  (setq bound i)
-	  (setq status 'space))
-	 ((eq status 'non-ascii)
-	  (setq status 'non-ascii-space)
-	  (setq SBOUND i))))
+        (cond
+         ((or (eq status 'ascii) (eq status 'space))
+          (insert (substring str bound i)) ;; 'ascii
+          (setq bound i)
+          (setq status 'space))
+         ((eq status 'non-ascii)
+          (setq status 'non-ascii-space)
+          (setq SBOUND i))))
        ;; end of white space
        ;; comma
        ((char-equal c ?,)
-	(mew-header-encode-cond2 nil)
-	(insert ", ")
-	(setq i (1+ i))
-	(catch 'comma
-	  (while (< i len)
-	    (setq c (aref str i))
-	    (if (or (char-equal c mew-sp) (char-equal c ?\t) (char-equal c ?\n))
-		() ;; loop
-	      (throw 'comma nil))
-	    (setq i (1+ i))))
-	;; get back to the end of white spaces
-	(setq bound i)
-	(setq c mew-sp)
-	(setq i (1- i))
-	(setq status 'space))
+        (mew-header-encode-cond2 nil)
+        (insert ", ")
+        (setq i (1+ i))
+        (catch 'comma
+          (while (< i len)
+            (setq c (aref str i))
+            (if (or (char-equal c mew-sp) (char-equal c ?\t) (char-equal c ?\n))
+                () ;; loop
+              (throw 'comma nil))
+            (setq i (1+ i))))
+        ;; get back to the end of white spaces
+        (setq bound i)
+        (setq c mew-sp)
+        (setq i (1- i))
+        (setq status 'space))
        ;; end of comma
        ;; the others
        (t (mew-header-encode-cond c)))
@@ -498,26 +498,26 @@
 (defun mew-header-encode-text (str &optional _comment key-len)
   ;; 'comment' means that we are in RFC822 comment "(...)".
   (let ((str-list (mew-header-encode-split-string str))
-	head-is-e e-list)
+        head-is-e e-list)
     (if (string-match "^[\t -~]+$" (car str-list))
-	(progn
-	  ;; ascii
-	  (insert (car str-list))
-	  (setq str-list (cdr str-list)))
+        (progn
+          ;; ascii
+          (insert (car str-list))
+          (setq str-list (cdr str-list)))
       (setq head-is-e t))
     (while str-list
       ;; encoded-words
       (if (and key-len head-is-e)
-	  (progn
-	    (setq e-list (mew-header-encode-string (car str-list) key-len))
-	    (setq head-is-e nil))
-	(setq e-list (mew-header-encode-string (car str-list))))
+          (progn
+            (setq e-list (mew-header-encode-string (car str-list) key-len))
+            (setq head-is-e nil))
+        (setq e-list (mew-header-encode-string (car str-list))))
       (insert (mapconcat 'identity e-list " "))
       ;; ascii
       (setq str-list (cdr str-list))
       (when (car str-list)
-	(insert (car str-list))
-	(setq str-list (cdr str-list))))))
+        (insert (car str-list))
+        (setq str-list (cdr str-list))))))
 
 (defun mew-header-fold-region (beg end med &optional use-tab)
   (let ((limit1 med) limit2)
@@ -525,30 +525,30 @@
       (narrow-to-region beg end)
       (goto-char beg)
       (while (not (eobp))
-	(while (> (- (setq limit2 (save-excursion (end-of-line) (point)))
-		     (point))
-		  mew-field-max-length)
-	  (forward-char mew-field-max-length)
-	  (if (re-search-backward "[ \t]" limit1 t)
-	      (progn
-		(insert "\n")
-		(if use-tab
-		    (progn
-		      (delete-char 1)
-		      (insert "\t"))))
-	    ;; Ugh!
-	    (if (re-search-forward "[ \t]" limit2 t) ;; hold on anyway
-		(progn
-		  (backward-char)
-		  (insert "\n")
-		  (if use-tab
-		      (progn
-			(delete-char 1)
-			(insert "\t"))))
-	      (forward-line))) ;; give up this line
-	  (setq limit1 (1+ (point))))
-	(forward-line)
-	(setq limit1 (1+ (point)))))))
+        (while (> (- (setq limit2 (save-excursion (end-of-line) (point)))
+                     (point))
+                  mew-field-max-length)
+          (forward-char mew-field-max-length)
+          (if (re-search-backward "[ \t]" limit1 t)
+              (progn
+                (insert "\n")
+                (if use-tab
+                    (progn
+                      (delete-char 1)
+                      (insert "\t"))))
+            ;; Ugh!
+            (if (re-search-forward "[ \t]" limit2 t) ;; hold on anyway
+                (progn
+                  (backward-char)
+                  (insert "\n")
+                  (if use-tab
+                      (progn
+                        (delete-char 1)
+                        (insert "\t"))))
+              (forward-line))) ;; give up this line
+          (setq limit1 (1+ (point))))
+        (forward-line)
+        (setq limit1 (1+ (point)))))))
 
 (defun mew-header-resent-p (field)
   (let ((case-fold-search t))
@@ -562,43 +562,43 @@
       (mew-charset-sanity-check (point-min) (point-max))
       (goto-char (point-min))
       (while (not (eobp))
-	(setq start (point))
-	(if (not (looking-at mew-keyval))
-	    (forward-line)
-	  (setq key (mew-match-string 1))
-	  (setq med (match-end 0))
-	  (setq type (mew-field-type-for-encoding key))
-	  (setq fast-path t)
-	  (if (eq type 'mailbox)
-	      (if resentp
-		  (if (mew-header-resent-p key)
-		      (setq fast-path nil))
-		(if (not (mew-header-resent-p key))
-		    (setq fast-path nil))))
-	  (forward-line)
-	  (mew-header-goto-next)
-	  (setq last (1- (point)))
-	  (unless (= last med)
-	    (if (and (string= (mew-charset-guess-region med last) mew-us-ascii)
-		     fast-path)
-		() ;; fast path
-	      ;; if us-ascii AND mailbox, need to check syntax
-	      (setq str (mew-buffer-substring med (1- (point))))
-	      ;; excluding \n
-	      (delete-region med (point))
-	      (cond
-	       ((eq type 'mailbox)
-		(mew-header-encode-addr str))
-	       ((eq type 'mime)
-		(mew-header-encode-addr str))
-	       ((eq type 'comma-text)
-		(mew-header-encode-comma-text str))
-	       ((eq type 'text)
-		(mew-header-encode-text str nil (length key)))
-	       ((eq type 'unstruct)
-		(mew-header-encode-text str nil (length key))))
-	      (insert "\n")) ;; previously deleted, so insert here
-	    (mew-header-fold-region start (point) med)))))))
+        (setq start (point))
+        (if (not (looking-at mew-keyval))
+            (forward-line)
+          (setq key (mew-match-string 1))
+          (setq med (match-end 0))
+          (setq type (mew-field-type-for-encoding key))
+          (setq fast-path t)
+          (if (eq type 'mailbox)
+              (if resentp
+                  (if (mew-header-resent-p key)
+                      (setq fast-path nil))
+                (if (not (mew-header-resent-p key))
+                    (setq fast-path nil))))
+          (forward-line)
+          (mew-header-goto-next)
+          (setq last (1- (point)))
+          (unless (= last med)
+            (if (and (string= (mew-charset-guess-region med last) mew-us-ascii)
+                     fast-path)
+                () ;; fast path
+              ;; if us-ascii AND mailbox, need to check syntax
+              (setq str (mew-buffer-substring med (1- (point))))
+              ;; excluding \n
+              (delete-region med (point))
+              (cond
+               ((eq type 'mailbox)
+                (mew-header-encode-addr str))
+               ((eq type 'mime)
+                (mew-header-encode-addr str))
+               ((eq type 'comma-text)
+                (mew-header-encode-comma-text str))
+               ((eq type 'text)
+                (mew-header-encode-text str nil (length key)))
+               ((eq type 'unstruct)
+                (mew-header-encode-text str nil (length key))))
+              (insert "\n")) ;; previously deleted, so insert here
+            (mew-header-fold-region start (point) med)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -631,8 +631,8 @@
     (while (search-forward ";" nil t)
       (insert "\n")
       (if (looking-at "[\t ]+")
-	  (replace-match "\t")
-	(insert "\t"))))
+          (replace-match "\t")
+        (insert "\t"))))
    ((eq type 'text)
     ;; In Page 5 of RFC822 says, "Unfolding is accomplished by
     ;; regarding CRLF immediately followed by a LWSP-char as
@@ -644,11 +644,11 @@
 
 (defun mew-header-decode-string (key)
   (let ((beg (match-beginning 0))
-	(end (match-end 0))
-	(css (mew-header-decode (mew-match-string 1)
-				(mew-match-string 2)
-				(mew-match-string 3)
-				key)))
+        (end (match-end 0))
+        (css (mew-header-decode (mew-match-string 1)
+                                (mew-match-string 2)
+                                (mew-match-string 3)
+                                key)))
     (setq css (mew-header-sanity-check-string2 css key))
     (delete-region beg end)
     (insert css)))
@@ -669,8 +669,8 @@
       (format "Charset (%s) for body is not supported.\n" msg))
      ((eq err 'no-charset)
       (if msg
-	  (format "Charset (%s) for body is mis-matched.\n" msg)
-	"Charset for body is not specified.\n"))
+          (format "Charset (%s) for body is mis-matched.\n" msg)
+        "Charset for body is not specified.\n"))
      ((eq err 'multi)
       (format "Invalid encoding (%s) for multipart.\n" msg)))
     (mew-xinfo-get-warning))))
@@ -680,22 +680,22 @@
     (let (wmsg level)
       (cond
        ((eq err 'spc)
-	(setq level 1)
-	(setq wmsg (concat "tab/spc characters on " key " are simplified.\n")))
+        (setq level 1)
+        (setq wmsg (concat "tab/spc characters on " key " are simplified.\n")))
        ((eq err 'ctl)
-	(setq level 1)
-	(setq wmsg (concat "some control code on " key " are removed.\n")))
+        (setq level 1)
+        (setq wmsg (concat "some control code on " key " are removed.\n")))
        ((eq err 'raw)
-	(setq level 2)
-	(setq wmsg (concat key " has raw text strings.\n")))
+        (setq level 2)
+        (setq wmsg (concat key " has raw text strings.\n")))
        ((eq err 'padding)
-	(setq level 2)
-	(setq wmsg (concat key " has illegal padding in encoded text.\n")))
+        (setq level 2)
+        (setq wmsg (concat key " has illegal padding in encoded text.\n")))
        ((eq err 'quoted)
-	(setq level 2)
-	(setq wmsg (concat key " has encoded-words in quoted text.\n"))))
+        (setq level 2)
+        (setq wmsg (concat key " has encoded-words in quoted text.\n"))))
       (if (>= level mew-warning-field-level)
-	  (mew-xinfo-set-warning (cons wmsg (mew-xinfo-get-warning)))))))
+          (mew-xinfo-set-warning (cons wmsg (mew-xinfo-get-warning)))))))
 
 (defun mew-decode-warning-params (param err)
   (unless (and param (member (downcase param) mew-no-warning-params))
@@ -703,13 +703,13 @@
      (cons
       (cond
        ((eq err 'raw)
-	(concat "The '" param "' parameter has raw text.\n"))
+        (concat "The '" param "' parameter has raw text.\n"))
        ((eq err 'ctl)
-	(concat "The '" param "' has invalid control codes.\n"))
+        (concat "The '" param "' has invalid control codes.\n"))
        ((eq err 'enc)
-	(concat "The '" param "' parameter has encoded-word.\n"))
+        (concat "The '" param "' parameter has encoded-word.\n"))
        ((eq err 'char)
-	(concat "The '" param "' has invalid characters.\n")))
+        (concat "The '" param "' has invalid characters.\n")))
       (mew-xinfo-get-warning)))))
 
 (defun mew-header-decode-region (key rbeg rend &optional draftp)
@@ -722,104 +722,104 @@ That is, each line may be more than 75."
       ;; Handling invalid raw text.
       (goto-char (point-min))
       (if draftp
-	  (mew-cs-decode-region (point-min) (point-max) mew-cs-m17n)
-	(when (and mew-decode-broken
-		   (re-search-forward mew-regex-esc-or-nonascii nil t))
-	  (mew-decode-warning-fields key 'raw)
-	  (mew-cs-decode-region (point-min) (point-max) mew-cs-autoconv)))
+          (mew-cs-decode-region (point-min) (point-max) mew-cs-m17n)
+        (when (and mew-decode-broken
+                   (re-search-forward mew-regex-esc-or-nonascii nil t))
+          (mew-decode-warning-fields key 'raw)
+          (mew-cs-decode-region (point-min) (point-max) mew-cs-autoconv)))
       ;;
       (mew-header-unfold-region type)
       ;;
       (goto-char (point-min))
       (when (re-search-forward mew-header-decode-regex nil t)
-	;; In Page 10 of RFC 2047 says, "When displaying a particular
-	;; header field that contains multiple 'encoded-word's, any
-	;; 'linear-white-space' that separates a pair of adjacent
-	;; 'encoded-word's is ignored". So, use looking-at.
-	(cond
-	 ((memq type '(text comma-text))
-	  ;; This is text field. We do not care quote!
-	  ;; make use of the search above
-	  (mew-header-decode-string key)
-	  (while (looking-at mew-header-decode-regex2)
-	    (mew-header-decode-string key))
-	  ;;
-	  (while (re-search-forward mew-header-decode-regex nil t)
-	    (mew-header-decode-string key)
-	    (while (looking-at mew-header-decode-regex2)
-	      (mew-header-decode-string key))))
-	 (t
-	  ;; This is structured field.
-	  ;; encoded-word in quoted-string should not be decoded
-	  ;; according to RFC 2047. However, if users wish
-	  ;; (ie mew-decode-broken is *non-nil*), decode it.
-	  ;; Regular expression cannot express a quoted string in
-	  ;; general case. So, canonicalize as follows:
-	  ;;     Not quoted line (may be null line)
+        ;; In Page 10 of RFC 2047 says, "When displaying a particular
+        ;; header field that contains multiple 'encoded-word's, any
+        ;; 'linear-white-space' that separates a pair of adjacent
+        ;; 'encoded-word's is ignored". So, use looking-at.
+        (cond
+         ((memq type '(text comma-text))
+          ;; This is text field. We do not care quote!
+          ;; make use of the search above
+          (mew-header-decode-string key)
+          (while (looking-at mew-header-decode-regex2)
+            (mew-header-decode-string key))
+          ;;
+          (while (re-search-forward mew-header-decode-regex nil t)
+            (mew-header-decode-string key)
+            (while (looking-at mew-header-decode-regex2)
+              (mew-header-decode-string key))))
+         (t
+          ;; This is structured field.
+          ;; encoded-word in quoted-string should not be decoded
+          ;; according to RFC 2047. However, if users wish
+          ;; (ie mew-decode-broken is *non-nil*), decode it.
+          ;; Regular expression cannot express a quoted string in
+          ;; general case. So, canonicalize as follows:
+          ;;     Not quoted line (may be null line)
           ;;     "quoted line"
-	  ;;     Not quoted line
+          ;;     Not quoted line
           ;;     "quoted line"
           ;;     ...
-	  ;; For this purpose, "\n" is converted to ^\@(\0).
-	  (goto-char (point-min))
-	  (while (re-search-forward "\n" nil t)
-	    (replace-match nl nil t))
-	  ;;
-	  (goto-char (point-min))
-	  (while (re-search-forward mew-regex-id nil t)
-	    (put-text-property (match-beginning 0) (match-end 0)
-			       'mew-addr-spec t))
-	  ;;
-	  (goto-char (point-min))
-	  ;; Perfect regular expression for quoted strings.
-	  ;; See "Mastering Regular Expressions", O'REILLY
-	  (while (re-search-forward "\"\\([^\"\\\\]\\|\\\\.\\)*\"" nil t)
-	    (goto-char (match-beginning 0))
-	    (insert "\n")
-	    (goto-char (1+ (match-end 0)))
-	    (insert "\n"))
-	  ;;
-	  (goto-char (point-min)) ;; anyway
-	  ;;
-	  (while (re-search-forward mew-header-decode-regex nil t)
-	    (cond
-	     ((mew-header-decode-in-addr-spec)
-	      ) ;; do nothing
-	     ((mew-header-decode-in-quotedp)
-	      (when mew-decode-broken
-		(mew-decode-warning-fields key 'quoted)
-		(mew-header-decode-string key)
-		(while (looking-at mew-header-decode-regex2)
-		  (mew-header-decode-string key))))
-	     (t
-	      (mew-header-decode-string key)
-	      (while (looking-at mew-header-decode-regex2)
-		(mew-header-decode-string key)))))
-	  ;; Getting back to the original
-	  (goto-char (point-min))
-	  (while (re-search-forward "\n" nil t)
-	    (replace-match "" nil t))
-	  (goto-char (point-min))
-	  (while (re-search-forward nl nil t)
-	    (replace-match "\n" nil t))
-	  (remove-text-properties (point-min) (point-max) '(mew-addr-spec t)))))
+          ;; For this purpose, "\n" is converted to ^\@(\0).
+          (goto-char (point-min))
+          (while (re-search-forward "\n" nil t)
+            (replace-match nl nil t))
+          ;;
+          (goto-char (point-min))
+          (while (re-search-forward mew-regex-id nil t)
+            (put-text-property (match-beginning 0) (match-end 0)
+                               'mew-addr-spec t))
+          ;;
+          (goto-char (point-min))
+          ;; Perfect regular expression for quoted strings.
+          ;; See "Mastering Regular Expressions", O'REILLY
+          (while (re-search-forward "\"\\([^\"\\\\]\\|\\\\.\\)*\"" nil t)
+            (goto-char (match-beginning 0))
+            (insert "\n")
+            (goto-char (1+ (match-end 0)))
+            (insert "\n"))
+          ;;
+          (goto-char (point-min)) ;; anyway
+          ;;
+          (while (re-search-forward mew-header-decode-regex nil t)
+            (cond
+             ((mew-header-decode-in-addr-spec)
+              ) ;; do nothing
+             ((mew-header-decode-in-quotedp)
+              (when mew-decode-broken
+                (mew-decode-warning-fields key 'quoted)
+                (mew-header-decode-string key)
+                (while (looking-at mew-header-decode-regex2)
+                  (mew-header-decode-string key))))
+             (t
+              (mew-header-decode-string key)
+              (while (looking-at mew-header-decode-regex2)
+                (mew-header-decode-string key)))))
+          ;; Getting back to the original
+          (goto-char (point-min))
+          (while (re-search-forward "\n" nil t)
+            (replace-match "" nil t))
+          (goto-char (point-min))
+          (while (re-search-forward nl nil t)
+            (replace-match "\n" nil t))
+          (remove-text-properties (point-min) (point-max) '(mew-addr-spec t)))))
       ;;
       (if (and mew-decode-broken (member key mew-decode-ws-fields))
-	  (let (ws)
-	    ;; We want to warn only in the case of ^\t.
-	    (goto-char (point-min))
-	    ;; Because lines are already unfolded, we cannot tell
-	    ;; whether or not this TABs locate on the beginning
-	    ;; of a line. But this should be acceptable.
-	    (while (re-search-forward "\t+" nil t)
-	      (or ws (setq ws t))
-	      (replace-match " " nil t))
-	    (goto-char (point-min))
-	    ;; Continuous SPCs are not invalid, just for appearance.
-	    (while (re-search-forward "  +" nil t)
-	      (or ws (setq ws t))
-	      (replace-match " " nil t))
-	    (if ws (mew-decode-warning-fields key 'spc))))
+          (let (ws)
+            ;; We want to warn only in the case of ^\t.
+            (goto-char (point-min))
+            ;; Because lines are already unfolded, we cannot tell
+            ;; whether or not this TABs locate on the beginning
+            ;; of a line. But this should be acceptable.
+            (while (re-search-forward "\t+" nil t)
+              (or ws (setq ws t))
+              (replace-match " " nil t))
+            (goto-char (point-min))
+            ;; Continuous SPCs are not invalid, just for appearance.
+            (while (re-search-forward "  +" nil t)
+              (or ws (setq ws t))
+              (replace-match " " nil t))
+            (if ws (mew-decode-warning-fields key 'spc))))
       ;;
       (mew-header-sanity-check-region (point-min) (point-max) key)
       (goto-char (point-max)))))
@@ -831,85 +831,85 @@ That is, each line may be more than 75."
 
 (defun mew-param-encode (str)
   (let* ((ecsdb (or (mew-ecsdb-guess-string str)
-		    (mew-charset-to-ecsdb (mew-charset-m17n))))
+                    (mew-charset-to-ecsdb (mew-charset-m17n))))
          (hcs (mew-ecsdb-hcs ecsdb))
-	 (charset (mew-cs-to-charset hcs))
+         (charset (mew-cs-to-charset hcs))
          (estr (mew-cs-encode-string str hcs))
-	 (len (length estr))
-	 (ret (mew-make-string (* len 3)))
-	 (j 0) char)
+         (len (length estr))
+         (ret (mew-make-string (* len 3)))
+         (j 0) char)
     (dotimes (i len)
       (setq char (aref estr i))
       (if (or (and (<= ?0 char) (<= char ?9))
-	      (and (<= ?a char) (<= char ?z))
-	      (and (<= ?A char) (<= char ?Z)))
-	  (aset ret j char)
-	(aset ret j ?%)
-	(setq j (1+ j))
-	(aset ret j (aref "0123456789ABCDEF" (lsh char -4)))
-	(setq j (1+ j))
-	(aset ret j (aref "0123456789ABCDEF" (logand char 15))))
+              (and (<= ?a char) (<= char ?z))
+              (and (<= ?A char) (<= char ?Z)))
+          (aset ret j char)
+        (aset ret j ?%)
+        (setq j (1+ j))
+        (aset ret j (aref "0123456789ABCDEF" (lsh char -4)))
+        (setq j (1+ j))
+        (aset ret j (aref "0123456789ABCDEF" (logand char 15))))
       (setq j (1+ j)))
     (concat charset "''" (substring ret 0 j))))
 
 (defun mew-param-decode (whole-value)
   (let* ((value-params (mew-addrstr-parse-value-list whole-value))
-	 (value (car value-params))
-	 (params (cdr value-params))
-	 (max 0) num
-	 ret ext ext-sort entry charset cs
-	 paramname-value paramname paramvalue)
+         (value (car value-params))
+         (params (cdr value-params))
+         (max 0) num
+         ret ext ext-sort entry charset cs
+         paramname-value paramname paramvalue)
     (dolist (param params)
       (setq paramname-value (mew-param-analyze param))
       (when paramname-value
-	(setcar paramname-value (downcase (nth 0 paramname-value)))
-	(if (= (length paramname-value) 2)
-	    (setq ret (cons paramname-value ret))
-	  (setq ext (cons paramname-value ext))
-	  (setq num (nth 2 paramname-value))
-	  (if (> num max) (setq max num)))))
+        (setcar paramname-value (downcase (nth 0 paramname-value)))
+        (if (= (length paramname-value) 2)
+            (setq ret (cons paramname-value ret))
+          (setq ext (cons paramname-value ext))
+          (setq num (nth 2 paramname-value))
+          (if (> num max) (setq max num)))))
     (if (null ext)
-	(cons value (nreverse ret)) ;; fast return
+        (cons value (nreverse ret)) ;; fast return
       (setq max (1+ max))
       (dolist (ea ext)
-	(mew-set '(paramname paramvalue num) ea)
-	(if (setq entry (assoc paramname ext-sort))
-	    (progn
-	      (aset (nth 1 entry) num paramvalue)
-	      (when (= num 0)
-		(setcar (nthcdr 2 entry) (nth 3 ea)) ;; charset
-		(setcar (nthcdr 3 entry) (nth 4 ea)))) ;; lang
-	  (setq entry (make-vector max nil))
-	  (aset entry num paramvalue)
-	  (setq ext-sort
-		(cons (list paramname entry (nth 3 ea) (nth 4 ea))
-		      ext-sort))))
+        (mew-set '(paramname paramvalue num) ea)
+        (if (setq entry (assoc paramname ext-sort))
+            (progn
+              (aset (nth 1 entry) num paramvalue)
+              (when (= num 0)
+                (setcar (nthcdr 2 entry) (nth 3 ea)) ;; charset
+                (setcar (nthcdr 3 entry) (nth 4 ea)))) ;; lang
+          (setq entry (make-vector max nil))
+          (aset entry num paramvalue)
+          (setq ext-sort
+                (cons (list paramname entry (nth 3 ea) (nth 4 ea))
+                      ext-sort))))
       (dolist (ea ext-sort)
-	(setq paramvalue nil)
-	(mew-set '(paramname entry charset) ea)
-	(setq num 0)
-	(catch 'concat-loop
-	  (while (< num max)
-	    (if (aref entry num)
-		(setq paramvalue (concat paramvalue (aref entry num))) ;; xxx
-	      (throw 'concat-loop nil))
-	    (setq num (1+ num))))
-	(when charset
-	  (setq cs (mew-charset-to-cs charset))
-	  (when (and mew-use-autoconv-when-unknown
-		     (not (mew-coding-system-p cs)))
-	    (setq cs mew-cs-autoconv))
-	  (when (and mew-decode-broken
-		     (not (eq cs mew-cs-autoconv))
-		     (or (null charset)
-			 (mew-case-equal charset mew-us-ascii)
-			 (mew-case-equal charset mew-utf-8))
-		     (string-match mew-regex-singlebyte-nonascii paramvalue))
-	    (setq cs mew-cs-autoconv))
-	  (if (mew-coding-system-p cs)
-	      (setq paramvalue (mew-cs-decode-string paramvalue cs))
-	    (setq paramvalue mew-error-unknown-charset)))
-	(setq ret (cons (list paramname paramvalue) ret)))
+        (setq paramvalue nil)
+        (mew-set '(paramname entry charset) ea)
+        (setq num 0)
+        (catch 'concat-loop
+          (while (< num max)
+            (if (aref entry num)
+                (setq paramvalue (concat paramvalue (aref entry num))) ;; xxx
+              (throw 'concat-loop nil))
+            (setq num (1+ num))))
+        (when charset
+          (setq cs (mew-charset-to-cs charset))
+          (when (and mew-use-autoconv-when-unknown
+                     (not (mew-coding-system-p cs)))
+            (setq cs mew-cs-autoconv))
+          (when (and mew-decode-broken
+                     (not (eq cs mew-cs-autoconv))
+                     (or (null charset)
+                         (mew-case-equal charset mew-us-ascii)
+                         (mew-case-equal charset mew-utf-8))
+                     (string-match mew-regex-singlebyte-nonascii paramvalue))
+            (setq cs mew-cs-autoconv))
+          (if (mew-coding-system-p cs)
+              (setq paramvalue (mew-cs-decode-string paramvalue cs))
+            (setq paramvalue mew-error-unknown-charset)))
+        (setq ret (cons (list paramname paramvalue) ret)))
       (setq ret (mapcar 'mew-param-sanity-check ret))
       (cons value (nreverse ret))))) ;; late return
 
@@ -923,55 +923,55 @@ That is, each line may be more than 75."
       (setq asterisk (string= (match-string 3 param) "*"))
       (setq value (match-string 4 param))
       (if (string= section "")
-	  (if asterisk
-	      (setq section 0)
-	    (setq section nil))
-	(setq section (string-to-number (substring section 1))))
+          (if asterisk
+              (setq section 0)
+            (setq section nil))
+        (setq section (string-to-number (substring section 1))))
       (if (null asterisk)
-	  ;; delete quote
-	  (progn
-	    (if (and (< 1 (length value))
-		     (char-equal (aref value 0) 34)
-		     (char-equal (aref value (1- (length value))) 34))
-		(setq value (substring value 1 -1)))
-	    (if mew-decode-broken
-		(setq value (mew-param-analyze-broken value name))))
-	(when (and (= section 0)
-		   ;; broken UAs quote extended-value, sigh
-		   (string-match "^\"?\\([^']*\\)'\\([^']*\\)'\\([^\"]*\\)\"?$" value))
-	  (setq charset (match-string 1 value))
-	  (setq lang (match-string 2 value))
-	  (if (string= lang "") (setq lang nil))
-	  (setq value (match-string 3 value))
-	  (if (string= value "") (setq value nil)))
-	;; broken UAs quote extended-value, sigh
-	(if (string-match "^\"\\([^\"]*\\)\"$" value)
-	    (setq value (mew-match-string 1 value)))
-	(setq value (mew-q-decode-string value ?%)))
+          ;; delete quote
+          (progn
+            (if (and (< 1 (length value))
+                     (char-equal (aref value 0) 34)
+                     (char-equal (aref value (1- (length value))) 34))
+                (setq value (substring value 1 -1)))
+            (if mew-decode-broken
+                (setq value (mew-param-analyze-broken value name))))
+        (when (and (= section 0)
+                   ;; broken UAs quote extended-value, sigh
+                   (string-match "^\"?\\([^']*\\)'\\([^']*\\)'\\([^\"]*\\)\"?$" value))
+          (setq charset (match-string 1 value))
+          (setq lang (match-string 2 value))
+          (if (string= lang "") (setq lang nil))
+          (setq value (match-string 3 value))
+          (if (string= value "") (setq value nil)))
+        ;; broken UAs quote extended-value, sigh
+        (if (string-match "^\"\\([^\"]*\\)\"$" value)
+            (setq value (mew-match-string 1 value)))
+        (setq value (mew-q-decode-string value ?%)))
       (if section
-	  (list name value section charset lang)
-	(list name value)))))
+          (list name value section charset lang)
+        (list name value)))))
 
 (defun mew-param-analyze-broken (value name)
   ;; broken message handling
   (when (and (mew-member-case-equal name mew-broken-parameter-list)
-	     (string-match mew-regex-esc-or-nonascii value))
+             (string-match mew-regex-esc-or-nonascii value))
     (mew-decode-warning-params name 'raw)
     (setq value (mew-cs-decode-string value mew-cs-autoconv)))
   (when (string-match mew-header-decode-regex value)
     (let (pre med pst)
       (mew-decode-warning-params name 'enc)
       (while (string-match mew-header-decode-regex value)
-	;; We cannot ensure that sub-function does not use match functions.
-	;; So, pre/pst prevents infinite loop.
-	(setq pre (substring value 0 (match-beginning 0)))
-	(setq pst (substring value (match-end 0)))
-	(setq med (mew-header-decode (match-string 1 value)
-				     (match-string 2 value)
-				     (match-string 3 value)))
-	(if (string-match mew-header-decode-regex3 pst)
-	    (setq pst (substring pst (match-end 1))))
-	(setq value (concat pre med pst)))))
+        ;; We cannot ensure that sub-function does not use match functions.
+        ;; So, pre/pst prevents infinite loop.
+        (setq pre (substring value 0 (match-beginning 0)))
+        (setq pst (substring value (match-end 0)))
+        (setq med (mew-header-decode (match-string 1 value)
+                                     (match-string 2 value)
+                                     (match-string 3 value)))
+        (if (string-match mew-header-decode-regex3 pst)
+            (setq pst (substring pst (match-end 1))))
+        (setq value (concat pre med pst)))))
   value)
 
 (defun mew-param-sanity-check (ent)
@@ -998,7 +998,7 @@ That is, each line may be more than 75."
 (defun mew-puny-adapt (delta numpoints firsttime)
   (let ((k 0))
     (if firsttime
-	(setq delta (/ delta mew-puny-damp))
+        (setq delta (/ delta mew-puny-damp))
       (setq delta (/ delta 2)))
     (setq delta (+ delta (/ delta numpoints)))
     (while (> delta (/ (* (- mew-puny-base mew-puny-tmin) mew-puny-tmax) 2))
@@ -1010,10 +1010,10 @@ That is, each line may be more than 75."
   (if (< (- cp 48) 10)
       (- cp 22)
     (if (< (- cp 65) 26)
-	(- cp 65)
+        (- cp 65)
       (if (< (- cp 97) 26)
-	  (- cp 97)
-	mew-puny-base))))
+          (- cp 97)
+        mew-puny-base))))
 
 (defun mew-puny-encode-digit (d)
   (if (< d 26)
@@ -1023,18 +1023,18 @@ That is, each line may be more than 75."
 (defun mew-puny-decode (input)
   (when mew-cs-utf-16be
     (condition-case nil
-	(mew-cs-decode-string
-	 (mew-puny-decode1 (substring input 4)) ;; xn--
-	 mew-cs-utf-16be)
+        (mew-cs-decode-string
+         (mew-puny-decode1 (substring input 4)) ;; xn--
+         mew-cs-utf-16be)
       (error nil))))
 
 (defun mew-puny-decode1 (input)
   (let* ((n mew-puny-initial-n)
-	 (bias mew-puny-initial-bias)
-	 (len (length input))
-	 (in 0) (out 0)
-	 (i 0) (b 0)
-	 digit thr oldi w k output ret)
+         (bias mew-puny-initial-bias)
+         (len (length input))
+         (in 0) (out 0)
+         (i 0) (b 0)
+         digit thr oldi w k output ret)
     (dotimes (j len)
       (if (= (aref input j) mew-puny-delimiter) (setq b j)))
     (dotimes (j b)
@@ -1047,58 +1047,58 @@ That is, each line may be more than 75."
       (setq w 1)
       (setq k mew-puny-base)
       (catch 'loop
-	(while t
-	  (if (>= in len) (error "punycode bad input"))
-	  (setq digit (mew-puny-decode-digit (aref input in)))
-	  (if (>= digit mew-puny-base) (error "punycode bad input"))
-	  (setq in (1+ in))
-	  (setq i (+ i (* digit w)))
-	  (if (<= k bias)
-	      (setq thr mew-puny-tmin)
-	    (if (>= k (+ bias mew-puny-tmax))
-		(setq thr mew-puny-tmax)
-	      (setq thr (- k bias))))
-	  (if (< digit thr) (throw 'loop nil))
-	  (setq w (* w (- mew-puny-base thr)))
-	  (setq k (+ k mew-puny-base))))
+        (while t
+          (if (>= in len) (error "punycode bad input"))
+          (setq digit (mew-puny-decode-digit (aref input in)))
+          (if (>= digit mew-puny-base) (error "punycode bad input"))
+          (setq in (1+ in))
+          (setq i (+ i (* digit w)))
+          (if (<= k bias)
+              (setq thr mew-puny-tmin)
+            (if (>= k (+ bias mew-puny-tmax))
+                (setq thr mew-puny-tmax)
+              (setq thr (- k bias))))
+          (if (< digit thr) (throw 'loop nil))
+          (setq w (* w (- mew-puny-base thr)))
+          (setq k (+ k mew-puny-base))))
       (setq out (1+ out))
       (setq bias (mew-puny-adapt (- i oldi) out (= oldi 0)))
       (setq n (+ n (/ i out)))
       (setq i (% i out))
       (if (= i 0)
-	  (setq output (cons n (nthcdr i output)))
-	(setcdr (nthcdr (1- i) output) (cons n (nthcdr i output))))
+          (setq output (cons n (nthcdr i output)))
+        (setcdr (nthcdr (1- i) output) (cons n (nthcdr i output))))
       (setq i (1+ i)))
     (setq ret (mew-make-string (* out 2)))
     (let ((j 0))
       (dolist (op output)
-	(aset ret j (/ op 256))
-	(setq j (1+ j))
-	(aset ret j (% op 256))
-	(setq j (1+ j))))
+        (aset ret j (/ op 256))
+        (setq j (1+ j))
+        (aset ret j (% op 256))
+        (setq j (1+ j))))
     ret))
 
 (defun mew-puny-encode (input)
   (when mew-cs-utf-16be
     (condition-case nil
-	(concat "xn--" (mew-puny-encode1 (mew-cs-encode-string input mew-cs-utf-16be)))
+        (concat "xn--" (mew-puny-encode1 (mew-cs-encode-string input mew-cs-utf-16be)))
       (error nil))))
 
 (defun mew-puny-encode1 (input)
   (let* ((len (length input))
-	 (h-len (/ len 2))
-	 (n mew-puny-initial-n)
-	 (bias mew-puny-initial-bias)
-	 (delta 0) (out 0)
-	 (output (mew-make-string (* len 4)))
-	 h b m q k thr uni)
+         (h-len (/ len 2))
+         (n mew-puny-initial-n)
+         (bias mew-puny-initial-bias)
+         (delta 0) (out 0)
+         (output (mew-make-string (* len 4)))
+         h b m q k thr uni)
     (dotimes (j len)
       (setq uni (aref input j))
       (setq j (1+ j))
       (setq uni (+ (* uni 256) (aref input j)))
       (when (< uni 128) ;; basic
-	(aset output out uni)
-	(setq out (1+ out))))
+        (aset output out uni)
+        (setq out (1+ out))))
     (setq h out)
     (setq b out)
     (when (> b 0)
@@ -1107,39 +1107,39 @@ That is, each line may be more than 75."
     (while (< h h-len)
       (setq m 65536) ;; 17bits
       (dotimes (j len)
-	(setq uni (aref input j))
-	(setq j (1+ j))
-	(setq uni (+ (* uni 256) (aref input j)))
-	(if (and (>= uni n) (< uni m)) (setq m uni)))
+        (setq uni (aref input j))
+        (setq j (1+ j))
+        (setq uni (+ (* uni 256) (aref input j)))
+        (if (and (>= uni n) (< uni m)) (setq m uni)))
       (setq delta (+ delta (* (- m n) (1+ h))))
       (setq n m)
       (dotimes (j len)
-	(setq uni (aref input j))
-	(setq j (1+ j))
-	(setq uni (+ (* uni 256) (aref input j)))
-	(when (< uni n)
-	  (setq delta (1+ delta))
-	  (if (= delta 0) (error "punycode overflow")))
-	(when (= uni n)
-	  (setq q delta)
-	  (setq k mew-puny-base)
-	  (catch 'loop
-	    (while t
-	      (if (<= k bias)
-		  (setq thr mew-puny-tmin)
-		(if (>= k (+ bias mew-puny-tmax))
-		    (setq thr mew-puny-tmax)
-		  (setq thr (- k bias))))
-	      (if (< q thr) (throw 'loop nil))
-	      (aset output out (mew-puny-encode-digit (+ thr (% (- q thr) (- mew-puny-base thr)))))
-	      (setq out (1+ out))
-	      (setq q (/ (- q thr) (- mew-puny-base thr)))
-	      (setq k (+ k mew-puny-base))))
-	  (aset output out (mew-puny-encode-digit q))
-	  (setq out (1+ out))
-	  (setq bias (mew-puny-adapt delta (1+ h) (= h b)))
-	  (setq delta 0)
-	  (setq h (1+ h))))
+        (setq uni (aref input j))
+        (setq j (1+ j))
+        (setq uni (+ (* uni 256) (aref input j)))
+        (when (< uni n)
+          (setq delta (1+ delta))
+          (if (= delta 0) (error "punycode overflow")))
+        (when (= uni n)
+          (setq q delta)
+          (setq k mew-puny-base)
+          (catch 'loop
+            (while t
+              (if (<= k bias)
+                  (setq thr mew-puny-tmin)
+                (if (>= k (+ bias mew-puny-tmax))
+                    (setq thr mew-puny-tmax)
+                  (setq thr (- k bias))))
+              (if (< q thr) (throw 'loop nil))
+              (aset output out (mew-puny-encode-digit (+ thr (% (- q thr) (- mew-puny-base thr)))))
+              (setq out (1+ out))
+              (setq q (/ (- q thr) (- mew-puny-base thr)))
+              (setq k (+ k mew-puny-base))))
+          (aset output out (mew-puny-encode-digit q))
+          (setq out (1+ out))
+          (setq bias (mew-puny-adapt delta (1+ h) (= h b)))
+          (setq delta 0)
+          (setq h (1+ h))))
       (setq delta (1+ delta))
       (setq n (1+ n)))
     (substring output 0 out)))
@@ -1150,18 +1150,18 @@ That is, each line may be more than 75."
       (insert url)
       (goto-char (point-min))
       (if (search-forward "://" nil t)
-	  (setq beg (point))
-	(setq beg (point-min)))
+          (setq beg (point))
+        (setq beg (point-min)))
       (if (search-forward "/" nil t)
-	  (setq end (1- (point)))
-	(setq end (point-max)))
+          (setq end (1- (point)))
+        (setq end (point-max)))
       (save-restriction
-	(narrow-to-region beg end)
-	(goto-char (point-min))
-	(while (re-search-forward "[^.]?[^.\000-\177][^.]*" nil t)
-	  (setq idn (mew-match-string 0))
-	  (delete-region (match-beginning 0) (match-end 0))
-	  (insert (mew-puny-encode idn))))
+        (narrow-to-region beg end)
+        (goto-char (point-min))
+        (while (re-search-forward "[^.]?[^.\000-\177][^.]*" nil t)
+          (setq idn (mew-match-string 0))
+          (delete-region (match-beginning 0) (match-end 0))
+          (insert (mew-puny-encode idn))))
       (mew-buffer-substring (point-min) (point-max)))))
 
 (provide 'mew-bq)

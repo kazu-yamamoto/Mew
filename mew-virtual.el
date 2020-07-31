@@ -64,52 +64,52 @@
   (mew-pickable
    (mew-summary-with-mewl
     (let* ((ofolder (mew-summary-folder-name 'ext))
-	   (vfolder (mew-folder-to-selection ofolder))
-	   (pfolder (mew-summary-physical-folder))
-	   (msgs (mew-summary-pick-msgs pfolder regionp))
-	   (prompt (format "%s/%s virtual" mew-prog-mewl mew-prog-grep))
-	   (prog mew-prog-grep)
-	   (opts mew-prog-grep-opts)
-	   mew-inherit-pick-mewlp
-	   grepp pattern prog-opts-pat
-	   rfolder lra)
+           (vfolder (mew-folder-to-selection ofolder))
+           (pfolder (mew-summary-physical-folder))
+           (msgs (mew-summary-pick-msgs pfolder regionp))
+           (prompt (format "%s/%s virtual" mew-prog-mewl mew-prog-grep))
+           (prog mew-prog-grep)
+           (opts mew-prog-grep-opts)
+           mew-inherit-pick-mewlp
+           grepp pattern prog-opts-pat
+           rfolder lra)
       (if (not msgs)
-	  (message "No message")
-	(setq pattern (mew-input-pick-pattern prompt))
-	(cond
-	 ((string= pattern "")
-	  (setq prog-opts-pat (mew-input-pick-command prog opts))
-	  (mew-set '(prog opts pattern) prog-opts-pat)
-	  (setq grepp t))
-	 (t
-	  (setq pattern (mew-pick-canonicalize-pattern pattern))
-	  (unless mew-inherit-pick-mewlp (setq grepp t))))
-	(if (and grepp (not (mew-which-exec prog)))
-	    (message "'%s' not found" prog)
-	  (setq rfolder (mew-expand-folder2 pfolder))
-	  (setq lra (list (cons rfolder pfolder)))
-	  (mew-summary-switch-to-folder vfolder)
-	  (when (mew-summary-exclusive-p)
-	    (mew-vinfo-set-mode 'selection)
-	    (mew-vinfo-set-physical-folder pfolder)
-	    (mew-vinfo-set-original-folder ofolder)
-	    (cond
-	     (grepp
-	      (mew-sinfo-set-find-key pattern)
-	      (message "Picking messages in %s..." pfolder)
-	      (mew-summary-selection-by-pick-with-grep prog opts pattern pfolder msgs rfolder lra))
-	     (t
-	      (mew-sinfo-set-find-key nil)
-	      (message "Picking messages in %s..." pfolder)
-	      (mew-summary-selection-by-pick-with-mewl pattern pfolder msgs rfolder lra))))))))))
+          (message "No message")
+        (setq pattern (mew-input-pick-pattern prompt))
+        (cond
+         ((string= pattern "")
+          (setq prog-opts-pat (mew-input-pick-command prog opts))
+          (mew-set '(prog opts pattern) prog-opts-pat)
+          (setq grepp t))
+         (t
+          (setq pattern (mew-pick-canonicalize-pattern pattern))
+          (unless mew-inherit-pick-mewlp (setq grepp t))))
+        (if (and grepp (not (mew-which-exec prog)))
+            (message "'%s' not found" prog)
+          (setq rfolder (mew-expand-folder2 pfolder))
+          (setq lra (list (cons rfolder pfolder)))
+          (mew-summary-switch-to-folder vfolder)
+          (when (mew-summary-exclusive-p)
+            (mew-vinfo-set-mode 'selection)
+            (mew-vinfo-set-physical-folder pfolder)
+            (mew-vinfo-set-original-folder ofolder)
+            (cond
+             (grepp
+              (mew-sinfo-set-find-key pattern)
+              (message "Picking messages in %s..." pfolder)
+              (mew-summary-selection-by-pick-with-grep prog opts pattern pfolder msgs rfolder lra))
+             (t
+              (mew-sinfo-set-find-key nil)
+              (message "Picking messages in %s..." pfolder)
+              (mew-summary-selection-by-pick-with-mewl pattern pfolder msgs rfolder lra))))))))))
 
 (defun mew-summary-selection-by-pick-with-mewl (pattern _folder src-msgs rfolder lra)
   "Create selection with 'mewl'"
   (let ((opts (list "-a" "-p" pattern "-b" mew-mail-path))
-	(range (mew-summary-pick-range src-msgs)))
+        (range (mew-summary-pick-range src-msgs)))
     (setq rfolder (mew-scan-mewl-folder rfolder))
     (if range
-	(setq opts (nconc opts (list rfolder range)))
+        (setq opts (nconc opts (list rfolder range)))
       (setq opts (nconc opts (list rfolder))))
     (mew-local-retrieve 'vir opts nil lra)))
 
@@ -117,7 +117,7 @@
   "Create selection with 'grep'"
   (interactive)
   (let ((file-rttl (mew-summary-selection-by-pick-with-grep1 prog opts pattern rfolder msgs))
-	file rttl func args)
+        file rttl func args)
     (mew-set '(file rttl) file-rttl)
     (setq func `(lambda () (mew-delete-file ,file)))
     (setq args (list "-i" file))
@@ -125,37 +125,37 @@
 
 (defun mew-summary-selection-by-pick-with-grep1 (prog opts pattern folder msgs)
   (let ((dir (mew-expand-folder folder))
-	(file (mew-make-temp-name))
-	(rttl 0) nxt)
+        (file (mew-make-temp-name))
+        (rttl 0) nxt)
     (if (= (length msgs) 1) (setq msgs (cons null-device msgs)))
     (if pattern (setq pattern (mew-cs-encode-arg pattern)))
     (with-temp-buffer
       (mew-set-buffer-multibyte t)
       (cd dir)
       (mew-piolet mew-cs-text-for-read mew-cs-text-for-write
-	(mew-alet ;; xxx
-	 (while msgs
-	   (goto-char (point-max))
-	   (setq nxt (nthcdr mew-prog-grep-max-msgs msgs))
-	   (if nxt (mew-ntake mew-prog-grep-max-msgs msgs))
-	   (apply 'call-process prog nil t nil
-		  (append opts (and pattern (list pattern)) msgs))
-	   (setq msgs nxt)))
-	(setq msgs nil)
-	(goto-char (point-min))
-	(while (re-search-forward mew-regex-message-files2 nil t)
-	  (setq msgs (cons (mew-match-string 1) msgs))
-	  (forward-line))
-	(setq msgs (mew-uniq-list msgs))
-	(setq msgs (mapcar 'string-to-number msgs))
-	(setq msgs (sort msgs '<))
-	(setq msgs (mapcar 'number-to-string msgs)))
+        (mew-alet ;; xxx
+         (while msgs
+           (goto-char (point-max))
+           (setq nxt (nthcdr mew-prog-grep-max-msgs msgs))
+           (if nxt (mew-ntake mew-prog-grep-max-msgs msgs))
+           (apply 'call-process prog nil t nil
+                  (append opts (and pattern (list pattern)) msgs))
+           (setq msgs nxt)))
+        (setq msgs nil)
+        (goto-char (point-min))
+        (while (re-search-forward mew-regex-message-files2 nil t)
+          (setq msgs (cons (mew-match-string 1) msgs))
+          (forward-line))
+        (setq msgs (mew-uniq-list msgs))
+        (setq msgs (mapcar 'string-to-number msgs))
+        (setq msgs (sort msgs '<))
+        (setq msgs (mapcar 'number-to-string msgs)))
       (mew-erase-buffer)
       (setq rttl (length msgs))
       (insert "CD: " folder "\n")
       (mapc (lambda (x) (insert (mew-msg-get-filename x) "\n")) msgs)
       (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
-	(write-region (point-min) (point-max) file nil 'no-msg))
+        (write-region (point-min) (point-max) file nil 'no-msg))
       (list file rttl))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -170,12 +170,12 @@ If called with '\\[universal-argument]', you can specify a target mark."
   (if (not (mew-pickable))
       (message "This command cannot be used in this folder")
     (let* ((ofolder (mew-summary-folder-name 'ext))
-	   (vfolder (mew-folder-to-selection ofolder))
-	   (pfolder (mew-summary-physical-folder))
-	   (mark mew-mark-review)
-	   (start (point))
-	   (case-fold-search nil)
-	   beg line med regex)
+           (vfolder (mew-folder-to-selection ofolder))
+           (pfolder (mew-summary-physical-folder))
+           (mark mew-mark-review)
+           (start (point))
+           (case-fold-search nil)
+           beg line med regex)
       (if ask-mark (setq mark (mew-input-mark)))
       (setq regex (mew-mark-regex mark))
       ;;
@@ -188,27 +188,27 @@ If called with '\\[universal-argument]', you can specify a target mark."
       (set-buffer pfolder)
       (goto-char (point-min))
       (while (re-search-forward regex nil t)
-	(beginning-of-line)
-	(setq beg (point))
-	(forward-line)
-	;; This must be buffer-substring
-	(setq line (buffer-substring beg (point)))
-	(with-current-buffer vfolder
-	  (mew-elet
-	   (insert line)
-	   (save-excursion
-	     (when (and (search-backward "\r")
-			(setq med (point))
-			(looking-at mew-regex-sumsyn-short))
-	       (goto-char (match-beginning 1))
-	       (insert pfolder)
-	       (put-text-property med (point) 'invisible t))))))
+        (beginning-of-line)
+        (setq beg (point))
+        (forward-line)
+        ;; This must be buffer-substring
+        (setq line (buffer-substring beg (point)))
+        (with-current-buffer vfolder
+          (mew-elet
+           (insert line)
+           (save-excursion
+             (when (and (search-backward "\r")
+                        (setq med (point))
+                        (looking-at mew-regex-sumsyn-short))
+               (goto-char (match-beginning 1))
+               (insert pfolder)
+               (put-text-property med (point) 'invisible t))))))
       (goto-char start)
       (set-buffer vfolder)
       (mew-summary-set-count-line)
       ;; Unmarking in both Summary and Thread
       (if (char-equal mark mew-mark-review)
-	  (mew-mark-undo-mark mark 'no-msg 'virtual-only)))))
+          (mew-mark-undo-mark mark 'no-msg 'virtual-only)))))
 
 (provide 'mew-virtual)
 

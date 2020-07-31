@@ -34,67 +34,67 @@
   ;; maybe called in narrowed region.
   ;; we cannot widen for citation.
   (let ((case-fold-search t)
-	(regex (format "^%s[ \t]*" field))
-	start match ret)
+        (regex (format "^%s[ \t]*" field))
+        start match ret)
     (save-excursion
       (mew-header-goto-end)
       (save-restriction
-	(narrow-to-region (point-min) (point))
-	(goto-char (point-min))
-	(catch 'only-one
-	  (while (re-search-forward regex nil t)
-	    (setq start (match-end 0))
-	    (forward-line)
-	    (mew-header-goto-next)
-	    (setq match (mew-buffer-substring start (1- (point))))
-	    (unless (string= "" match)
-	      (if ret
-		  (if as-list
-		      (setq ret (cons match ret))
-		    (setq ret (concat ret "," match)))
-		(if as-list
-		    (setq ret (list match))
-		  (setq ret match))
-		(if (string= field mew-from:) (throw 'only-one nil))))))))
+        (narrow-to-region (point-min) (point))
+        (goto-char (point-min))
+        (catch 'only-one
+          (while (re-search-forward regex nil t)
+            (setq start (match-end 0))
+            (forward-line)
+            (mew-header-goto-next)
+            (setq match (mew-buffer-substring start (1- (point))))
+            (unless (string= "" match)
+              (if ret
+                  (if as-list
+                      (setq ret (cons match ret))
+                    (setq ret (concat ret "," match)))
+                (if as-list
+                    (setq ret (list match))
+                  (setq ret match))
+                (if (string= field mew-from:) (throw 'only-one nil))))))))
     (if as-list
-	(nreverse ret)
+        (nreverse ret)
       ret)))
 
 (defalias 'mew-header-existp 'mew-header-get-value)
 
 (defun mew-header-replace-value (field value)
   (let ((case-fold-search t)
-	(regex (format "^%s[ \t]*" field))
-	start)
+        (regex (format "^%s[ \t]*" field))
+        start)
     (save-excursion
       (mew-header-goto-end)
       (save-restriction
-	(narrow-to-region (point-min) (point))
-	(goto-char (point-min))
-	;; make value with evaluating
-	(if (and (listp value)
-		 (stringp (car value)))
-	    (setq value (cons 'format value)))
-	(setq value
-	      (condition-case e
-		  (eval value)
-		(error
-		 (format "*** ERROR: %s: %s ***" (car e) (car (cdr e))))))
-	(unless (or (stringp value)
-		    (null value))
-	  (setq value (format "%s" value)))
-	;; at this time, value is string or nil
-	(cond
-	 ((re-search-forward regex nil t)
-	  (setq start (match-beginning 0))
-	  (forward-line)
-	  (mew-header-goto-next)
-	  (delete-region start (point))
-	  (if value
-	      (mew-draft-header-insert field value)))
-	 (value ;; insert when value is exist
-	  (mew-header-goto-end)
-	  (mew-draft-header-insert field value)))))))
+        (narrow-to-region (point-min) (point))
+        (goto-char (point-min))
+        ;; make value with evaluating
+        (if (and (listp value)
+                 (stringp (car value)))
+            (setq value (cons 'format value)))
+        (setq value
+              (condition-case e
+                  (eval value)
+                (error
+                 (format "*** ERROR: %s: %s ***" (car e) (car (cdr e))))))
+        (unless (or (stringp value)
+                    (null value))
+          (setq value (format "%s" value)))
+        ;; at this time, value is string or nil
+        (cond
+         ((re-search-forward regex nil t)
+          (setq start (match-beginning 0))
+          (forward-line)
+          (mew-header-goto-next)
+          (delete-region start (point))
+          (if value
+              (mew-draft-header-insert field value)))
+         (value ;; insert when value is exist
+          (mew-header-goto-end)
+          (mew-draft-header-insert field value)))))))
 
 (defun mew-make-field-regex (fields)
   (concat "^\\(" (mapconcat 'identity fields "\\|") "\\)"))
@@ -102,48 +102,48 @@
 (defun mew-header-delete-lines (fields)
   (when fields
     (let ((case-fold-search t)
-	  (regex (mew-make-field-regex fields))
-	  start)
+          (regex (mew-make-field-regex fields))
+          start)
       (mew-header-goto-end)
       (save-restriction
-	(narrow-to-region (point-min) (point))
-	(goto-char (point-min))
-	(while (re-search-forward regex nil t)
-	  (setq start (match-beginning 0))
-	  (forward-line)
-	  (mew-header-goto-next)
-	  (delete-region start (point)))))))
+        (narrow-to-region (point-min) (point))
+        (goto-char (point-min))
+        (while (re-search-forward regex nil t)
+          (setq start (match-beginning 0))
+          (forward-line)
+          (mew-header-goto-next)
+          (delete-region start (point)))))))
 
 (defun mew-header-delete-other-lines (fields)
   (when fields
     (let ((case-fold-search t)
-	  (regex (mew-make-field-regex fields))
-	  start)
+          (regex (mew-make-field-regex fields))
+          start)
       (mew-header-goto-end)
       (save-restriction
-	(narrow-to-region (point-min) (point))
-	(goto-char (point-min))
-	(while (not (eobp))
-	  (if start (delete-region start (point)))
-	  (if (looking-at regex)
-	      (setq start nil)
-	    (setq start (point)))
-	  (forward-line)
-	  (mew-header-goto-next))
-	(if start (delete-region start (point)))))))
+        (narrow-to-region (point-min) (point))
+        (goto-char (point-min))
+        (while (not (eobp))
+          (if start (delete-region start (point)))
+          (if (looking-at regex)
+              (setq start nil)
+            (setq start (point)))
+          (forward-line)
+          (mew-header-goto-next))
+        (if start (delete-region start (point)))))))
 
 (defun mew-header-replace-lines (fields prefix)
   (when fields
     (let ((case-fold-search t)
-	  (regex (mew-make-field-regex fields)))
+          (regex (mew-make-field-regex fields)))
       (mew-header-goto-end)
       (save-restriction
-	(narrow-to-region (point-min) (point))
-	(goto-char (point-min))
-	(while (re-search-forward regex nil t)
-	  (beginning-of-line)
-	  (insert prefix)
-	  (forward-line))))))
+        (narrow-to-region (point-min) (point))
+        (goto-char (point-min))
+        (while (re-search-forward regex nil t)
+          (beginning-of-line)
+          (insert prefix)
+          (forward-line))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -153,29 +153,29 @@
 (defun mew-header-sort (order)
   (when order
     (let* ((case-fold-search t)
-	   (len (length order))
-	   (vec (make-vector len nil))
-	   key beg n line other)
+           (len (length order))
+           (vec (make-vector len nil))
+           key beg n line other)
       (mew-header-goto-end)
       (save-restriction
-	(narrow-to-region (point-min) (point))
-	(goto-char (point-min))
-	(while (not (eobp))
-	  (if (not (looking-at mew-keyval))
-	      (forward-line)
-	    (setq key (mew-match-string 1))
-	    (setq beg (match-beginning 0))
-	    (forward-line)
-	    (mew-header-goto-next)
-	    (setq line (mew-buffer-substring beg (point)))
-	    (delete-region beg (point))
-	    (setq n (mew-member-case-equal key order))
-	    (if n
-		(aset vec n (concat (aref vec n) line))
-	      (setq other (concat other line)))))
-	(dotimes (i len)
-	  (and (aref vec i) (insert (aref vec i))))
-	(and other (insert other))))))
+        (narrow-to-region (point-min) (point))
+        (goto-char (point-min))
+        (while (not (eobp))
+          (if (not (looking-at mew-keyval))
+              (forward-line)
+            (setq key (mew-match-string 1))
+            (setq beg (match-beginning 0))
+            (forward-line)
+            (mew-header-goto-next)
+            (setq line (mew-buffer-substring beg (point)))
+            (delete-region beg (point))
+            (setq n (mew-member-case-equal key order))
+            (if n
+                (aset vec n (concat (aref vec n) line))
+              (setq other (concat other line)))))
+        (dotimes (i len)
+          (and (aref vec i) (insert (aref vec i))))
+        (and other (insert other))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -192,31 +192,31 @@
 (defun mew-header-insert (key value &optional no-fold)
   (if (and value (stringp key))
       (let ((beg (point)) params med parname parval)
-	(when (listp value)
-	  (setq params (cdr value))
-	  (setq value (car value)))
-	(insert key)
-	(insert " ")
-	(setq med (point))
-	(if (string-match "^[\t -~]*$" value)
-	    (insert value)
-	  (mew-header-encode-text value nil (length key)))
-	(dolist (par params)
-	  (mew-set '(parname parval) par)
-	  (insert ";")
-	  (cond
-	   ((string-match "^[-a-zA-Z0-9]+$" parval)
-	    ) ;; do nothing
-	   ((and (string= (mew-charset-guess-string parval) mew-us-ascii)
-		 (not (string-match "\"" parval)))
-	    (setq parval (concat "\"" parval "\"")))
-	   (t
-	    (setq parval (mew-param-encode parval))
-	    (setq parname (concat parname "*"))))
-	  (insert " " parname "=" parval))
-	(insert "\n")
-	(unless no-fold
-	  (mew-header-fold-region beg (point) med)))))
+        (when (listp value)
+          (setq params (cdr value))
+          (setq value (car value)))
+        (insert key)
+        (insert " ")
+        (setq med (point))
+        (if (string-match "^[\t -~]*$" value)
+            (insert value)
+          (mew-header-encode-text value nil (length key)))
+        (dolist (par params)
+          (mew-set '(parname parval) par)
+          (insert ";")
+          (cond
+           ((string-match "^[-a-zA-Z0-9]+$" parval)
+            ) ;; do nothing
+           ((and (string= (mew-charset-guess-string parval) mew-us-ascii)
+                 (not (string-match "\"" parval)))
+            (setq parval (concat "\"" parval "\"")))
+           (t
+            (setq parval (mew-param-encode parval))
+            (setq parname (concat parname "*"))))
+          (insert " " parname "=" parval))
+        (insert "\n")
+        (unless no-fold
+          (mew-header-fold-region beg (point) med)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -260,9 +260,9 @@
   `(progn
      (setq sep-cnt (1+ sep-cnt))
      (if (and ,depth (>= sep-cnt ,depth))
-	 (throw 'max nil))
+         (throw 'max nil))
      (when (and (integerp mew-header-max-depth)
-		(>= sep-cnt mew-header-max-depth))
+                (>= sep-cnt mew-header-max-depth))
        (mew-warn "Too many values. Truncate values over mew-header-max-depth")
        (throw 'max nil))))
 
@@ -271,133 +271,133 @@
 
 (defun mew-addrstr-parse-syntax-list1 (str sep addrp depth allow-spc)
   (let* ((i 0) (len (length str))
-	 (par-cnt 0) (tmp-cnt 0) (sep-cnt 0)
-	 ;; Emacs 23 has non-safe aset.
-	 (tmp (mew-set-string-multibyte (mew-make-string len)))
-	 c ret prevc
-	 (do-clear
-	  (lambda ()
-	    (setq tmp-cnt 0)
-	    (mew-addrstr-parse-syntax-list-check-depth depth)))
-	 (do-cons-ret
-	  (lambda ()
-	    (setq ret (cons (substring tmp 0 tmp-cnt) ret))))
-	 (do-copy
-	  (lambda ()
-	    (aset tmp tmp-cnt c)
-	    (setq tmp-cnt (1+ tmp-cnt))))
-	 (in-fold-quote
-	  (lambda ()
-	    (setq i (1+ i))
-	    (catch 'fold-quote
-	      (while (< i len)
-		(setq c (aref str i))
-		(cond
-		 ;; ((or (char-equal c ?\t) (char-equal c mew-sp))
-		 ;; (setq i (1+ i)))
-		 ((char-equal c ?\")
-		  (funcall do-copy)
-		  (throw 'quote nil))
-		 (t
-		  (funcall do-copy)
-		  (throw 'fold-quote nil)))))))
-	 (in-quote
-	  (lambda ()
-	    (funcall do-copy)
-	    (setq i (1+ i))
-	    (catch 'quote
-	      (while (< i len)
-		(setq prevc c)
-		(setq c (aref str i))
-		(cond
-		 ((and (char-equal c ?\") (not (char-equal prevc ?\\)))
-		  (funcall do-copy)
-		  (throw 'quote nil))
-		 ((char-equal c ?\n)
-		  (funcall in-fold-quote))
-		 (t
-		  (funcall do-copy)))
-		(setq i (1+ i))))))
-	 (in-comment
-	  (lambda ()
-	    (setq par-cnt 1)
-	    (setq i (1+ i))
-	    (catch 'comment
-	      (while (< i len)
-		(setq c (aref str i))
-		(cond
-		 ((char-equal c ?\()
-		  (setq par-cnt (1+ par-cnt)))
-		 ((char-equal c ?\))
-		  (setq par-cnt (1- par-cnt))
-		  (if (eq par-cnt 0) (throw 'comment nil))))
-		(setq i (1+ i))))))
-	 (do-skip-until
-	  (lambda (target)
-	    (while (and (< i len) (not (char-equal (aref str i) target)))
-	      (setq i (1+ i)))))
-	 (in-addr
-	  (lambda ()
-	    (cond
-	     (addrp
-	      (let (rbeg rend)
-		(setq i (1+ i))
-		(setq rbeg i)
-		(funcall do-skip-until ?>)
-		(when (> i rbeg)
-		  (setq rend i)
-		  ;; note: to be used for substring, so not 1-.
-		  ;; should not be nested but easy to implement...
-		  (setq ret (cons (car (mew-addrstr-parse-syntax-list (substring str rbeg rend) sep t)) ret))))
-	      (funcall do-skip-until sep)
-	      (funcall do-clear))
-	     (t
-	      ;; just ignore
-	      (funcall do-skip-until ?>)))))
-	 (do-sep
-	  (lambda ()
-	    ;; broken quoted string cannot be rescued because
-	    ;; the separator cannot be distinguished
-	    (if (> tmp-cnt 0) (funcall do-cons-ret))
-	    (funcall do-clear)))
-	 (do-rescue
-	  (lambda (var)
-	    (save-match-data
-	      (if (and addrp (string-match "<\\([^>]+\\)>" var))
-		  (setq ret (cons (mew-match-string 1 var) ret))
-		(funcall do-cons-ret))))))
+         (par-cnt 0) (tmp-cnt 0) (sep-cnt 0)
+         ;; Emacs 23 has non-safe aset.
+         (tmp (mew-set-string-multibyte (mew-make-string len)))
+         c ret prevc
+         (do-clear
+          (lambda ()
+            (setq tmp-cnt 0)
+            (mew-addrstr-parse-syntax-list-check-depth depth)))
+         (do-cons-ret
+          (lambda ()
+            (setq ret (cons (substring tmp 0 tmp-cnt) ret))))
+         (do-copy
+          (lambda ()
+            (aset tmp tmp-cnt c)
+            (setq tmp-cnt (1+ tmp-cnt))))
+         (in-fold-quote
+          (lambda ()
+            (setq i (1+ i))
+            (catch 'fold-quote
+              (while (< i len)
+                (setq c (aref str i))
+                (cond
+                 ;; ((or (char-equal c ?\t) (char-equal c mew-sp))
+                 ;; (setq i (1+ i)))
+                 ((char-equal c ?\")
+                  (funcall do-copy)
+                  (throw 'quote nil))
+                 (t
+                  (funcall do-copy)
+                  (throw 'fold-quote nil)))))))
+         (in-quote
+          (lambda ()
+            (funcall do-copy)
+            (setq i (1+ i))
+            (catch 'quote
+              (while (< i len)
+                (setq prevc c)
+                (setq c (aref str i))
+                (cond
+                 ((and (char-equal c ?\") (not (char-equal prevc ?\\)))
+                  (funcall do-copy)
+                  (throw 'quote nil))
+                 ((char-equal c ?\n)
+                  (funcall in-fold-quote))
+                 (t
+                  (funcall do-copy)))
+                (setq i (1+ i))))))
+         (in-comment
+          (lambda ()
+            (setq par-cnt 1)
+            (setq i (1+ i))
+            (catch 'comment
+              (while (< i len)
+                (setq c (aref str i))
+                (cond
+                 ((char-equal c ?\()
+                  (setq par-cnt (1+ par-cnt)))
+                 ((char-equal c ?\))
+                  (setq par-cnt (1- par-cnt))
+                  (if (eq par-cnt 0) (throw 'comment nil))))
+                (setq i (1+ i))))))
+         (do-skip-until
+          (lambda (target)
+            (while (and (< i len) (not (char-equal (aref str i) target)))
+              (setq i (1+ i)))))
+         (in-addr
+          (lambda ()
+            (cond
+             (addrp
+              (let (rbeg rend)
+                (setq i (1+ i))
+                (setq rbeg i)
+                (funcall do-skip-until ?>)
+                (when (> i rbeg)
+                  (setq rend i)
+                  ;; note: to be used for substring, so not 1-.
+                  ;; should not be nested but easy to implement...
+                  (setq ret (cons (car (mew-addrstr-parse-syntax-list (substring str rbeg rend) sep t)) ret))))
+              (funcall do-skip-until sep)
+              (funcall do-clear))
+             (t
+              ;; just ignore
+              (funcall do-skip-until ?>)))))
+         (do-sep
+          (lambda ()
+            ;; broken quoted string cannot be rescued because
+            ;; the separator cannot be distinguished
+            (if (> tmp-cnt 0) (funcall do-cons-ret))
+            (funcall do-clear)))
+         (do-rescue
+          (lambda (var)
+            (save-match-data
+              (if (and addrp (string-match "<\\([^>]+\\)>" var))
+                  (setq ret (cons (mew-match-string 1 var) ret))
+                (funcall do-cons-ret))))))
     ;; main
     (catch 'max
       (while (< i len)
-	(setq c (aref str i))
-	(cond
-	 ((char-equal c ?\")
-	  (funcall in-quote))
-	 ((char-equal c ?\()
-	  (funcall in-comment))
-	 ((char-equal c ?<)
-	  (funcall in-addr))
-	 ((or (char-equal c ?\n) (char-equal c ?\t)
-	      (and (not allow-spc) (char-equal c mew-sp)))
-	  ) ;; do nothing
-	 ((char-equal c sep)
-	  (funcall do-sep))
-	 (t
-	  (funcall do-copy)))
-	(setq i (1+ i)))
+        (setq c (aref str i))
+        (cond
+         ((char-equal c ?\")
+          (funcall in-quote))
+         ((char-equal c ?\()
+          (funcall in-comment))
+         ((char-equal c ?<)
+          (funcall in-addr))
+         ((or (char-equal c ?\n) (char-equal c ?\t)
+              (and (not allow-spc) (char-equal c mew-sp)))
+          ) ;; do nothing
+         ((char-equal c sep)
+          (funcall do-sep))
+         (t
+          (funcall do-copy)))
+        (setq i (1+ i)))
       ;; broken quoted string can be rescued if it appears solely
       (cond
        ((> par-cnt 0)
-	(funcall do-rescue str))
+        (funcall do-rescue str))
        ((> tmp-cnt 0)
-	(funcall do-rescue tmp))))
+        (funcall do-rescue tmp))))
     (setq ret (delete nil ret))
     (when allow-spc
       (setq ret (mapcar (lambda (str)
-			  (if (string-match "^ +\\(.*\\)" str)
-			      (mew-match-string 1 str)
-			    str))
-			ret)))
+                          (if (string-match "^ +\\(.*\\)" str)
+                              (mew-match-string 1 str)
+                            str))
+                        ret)))
     (nreverse ret)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -440,12 +440,12 @@
   "Collect addresses from FIELD-LIST.
 Remove anonymous addresses."
   (let ((vals (mew-addrstr-parse-syntax-list
-	       (mapconcat 'mew-header-get-value field-list ",")
-	       ?, t))
-	ret)
+               (mapconcat 'mew-header-get-value field-list ",")
+               ?, t))
+        ret)
     (dolist (val vals)
       (unless (string-match mew-anonymous-recipients val)
-	(setq ret (cons val ret))))
+        (setq ret (cons val ret))))
     (nreverse ret)))
 
 ;;
@@ -470,8 +470,8 @@ Remove anonymous addresses."
 (defun mew-addrstr-append-domain (addr)
   (if mew-addrbook-append-domain-p
       (if (string-match "@" addr)
-	  addr
-	(concat addr "@" (mew-mail-domain))) ;; xxx
+          addr
+        (concat addr "@" (mew-mail-domain))) ;; xxx
     addr))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -482,34 +482,34 @@ Remove anonymous addresses."
 (defun mew-idstr-get-first-id (idstr)
   (when (stringp idstr)
     (if (string-match mew-regex-id idstr)
-	(mew-replace-white-space2 (match-string 0 idstr)))))
+        (mew-replace-white-space2 (match-string 0 idstr)))))
 
 (defun mew-idstr-get-last-id (idstr)
   (when (stringp idstr)
     (let (beg end start)
       (while (string-match mew-regex-id idstr start)
-	(setq beg (match-beginning 0))
-	(setq end (match-end 0))
-	(setq start (match-end 0)))
+        (setq beg (match-beginning 0))
+        (setq end (match-end 0))
+        (setq start (match-end 0)))
       (if (and beg end)
-	  (mew-replace-white-space2 (substring idstr beg end))))))
+          (mew-replace-white-space2 (substring idstr beg end))))))
 
 (defun mew-idstr-to-id-list (idstr &optional rev)
   (when (stringp idstr)
     (let (ret start)
       (while (string-match mew-regex-id idstr start)
-	(setq start (match-end 0))
-	(setq ret (cons (mew-replace-white-space2 (match-string 0 idstr)) ret)))
+        (setq start (match-end 0))
+        (setq ret (cons (mew-replace-white-space2 (match-string 0 idstr)) ret)))
       (if rev
-	  ret
-	(nreverse ret)))))
+          ret
+        (nreverse ret)))))
 
 (defun mew-id-list-to-idstr (id-list)
   (let (skip)
     (if (integerp mew-references-max-count)
-	(setq skip (- (length id-list) mew-references-max-count)))
+        (setq skip (- (length id-list) mew-references-max-count)))
     (if (and (integerp skip) (> skip 0))
-	(setq id-list (nthcdr skip id-list)))
+        (setq id-list (nthcdr skip id-list)))
     (mew-join "\n\t" id-list)))
 
 (provide 'mew-header)

@@ -17,40 +17,40 @@
 ;;;
 
 (easy-menu-define
- mew-summary-mode-menu
- mew-summary-mode-map
- "Menu used in Summary mode."
- mew-summary-mode-menu-spec)
+  mew-summary-mode-menu
+  mew-summary-mode-map
+  "Menu used in Summary mode."
+  mew-summary-mode-menu-spec)
 
 (easy-menu-define
- mew-message-mode-menu
- mew-message-mode-map
- "Menu used in Message mode."
- mew-message-mode-menu-spec)
+  mew-message-mode-menu
+  mew-message-mode-map
+  "Menu used in Message mode."
+  mew-message-mode-menu-spec)
 
 (easy-menu-define
- mew-draft-mode-menu
- mew-draft-mode-map
- "Menu used in Draft mode."
- mew-draft-mode-menu-spec)
+  mew-draft-mode-menu
+  mew-draft-mode-map
+  "Menu used in Draft mode."
+  mew-draft-mode-menu-spec)
 
 (easy-menu-define
- mew-header-mode-menu
- mew-header-mode-map
- "Menu used in Header mode."
- mew-header-mode-menu-spec)
+  mew-header-mode-menu
+  mew-header-mode-map
+  "Menu used in Header mode."
+  mew-header-mode-menu-spec)
 
 (easy-menu-define
- mew-draft-header-menu
- mew-draft-header-map
- "Menu used in Draft mode."
- mew-draft-mode-menu-spec)
+  mew-draft-header-menu
+  mew-draft-header-map
+  "Menu used in Draft mode."
+  mew-draft-mode-menu-spec)
 
 (easy-menu-define
- mew-draft-attach-menu
- mew-draft-attach-map
- "Menu used in Draft mode."
- mew-draft-mode-menu-spec)
+  mew-draft-attach-menu
+  mew-draft-attach-map
+  "Menu used in Draft mode."
+  mew-draft-mode-menu-spec)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -62,35 +62,35 @@
 
 (defun mew-toolbar-make (map alist)
   (let ((tool-bar-map (make-sparse-keymap)) ;; for tool-bar-add-item-from-menu
-	(data-directory mew-icon-directory))
+        (data-directory mew-icon-directory))
     (dolist (a alist)
       (if (fboundp 'tool-bar-local-item-from-menu)
-	  ;; Emacs 21.3.50 or later
-	  (tool-bar-local-item-from-menu (car a) (cdr a) tool-bar-map map)
-	;; Emacs 21.3 or earlier
-	;; The target map is tool-bar-map
-	(tool-bar-add-item-from-menu (car a) (cdr a) map)))
+          ;; Emacs 21.3.50 or later
+          (tool-bar-local-item-from-menu (car a) (cdr a) tool-bar-map map)
+        ;; Emacs 21.3 or earlier
+        ;; The target map is tool-bar-map
+        (tool-bar-add-item-from-menu (car a) (cdr a) map)))
     tool-bar-map))
 
 (defun mew-summary-setup-decoration ()
   (if mew-icon-p
       (set (make-local-variable 'tool-bar-map)
-	   (mew-toolbar-make mew-summary-mode-map mew-summary-toolbar-spec))))
+           (mew-toolbar-make mew-summary-mode-map mew-summary-toolbar-spec))))
 
 (defun mew-message-setup-decoration ()
   (if mew-icon-p
       (set (make-local-variable 'tool-bar-map)
-	   (mew-toolbar-make mew-message-mode-map mew-message-toolbar-spec))))
+           (mew-toolbar-make mew-message-mode-map mew-message-toolbar-spec))))
 
 (defun mew-draft-setup-decoration ()
   (if mew-icon-p
       (set (make-local-variable 'tool-bar-map)
-	   (mew-toolbar-make mew-draft-mode-map mew-draft-toolbar-spec))))
+           (mew-toolbar-make mew-draft-mode-map mew-draft-toolbar-spec))))
 
 (defun mew-header-setup-decoration ()
   (if mew-icon-p
       (set (make-local-variable 'tool-bar-map)
-	   (mew-toolbar-make mew-header-mode-map mew-header-toolbar-spec))))
+           (mew-toolbar-make mew-header-mode-map mew-header-toolbar-spec))))
 
 (defun mew-summary-toolbar-update ())
 (defun mew-message-toolbar-update ())
@@ -169,47 +169,47 @@
   ;; display-graphic-p
   (or (and window-system (image-type-available-p format))
       (let* ((ent (mew-image-format-ent format))
-	     (prog (mew-image-get-prog ent)))
-	(and prog (mew-which-exec prog) t))))
+             (prog (mew-image-get-prog ent)))
+        (and prog (mew-which-exec prog) t))))
 
 (defun mew-img-get-n (op len)
   (let* ((size 0))
     (if (eq op ?\x49)   ; I(?\x49) or M(?\x4d)
-	(dotimes (n len)
-	  (setq size (+ size (* (char-after) (expt ?\x100 n))))
-	  (forward-char))
+        (dotimes (n len)
+          (setq size (+ size (* (char-after) (expt ?\x100 n))))
+          (forward-char))
       (while (< 0 len)
-	  (setq len (- len 1))
-	  (setq size (+ size (* (char-after) (expt ?\x100 len))))
-	  (forward-char)))
+        (setq len (- len 1))
+        (setq size (+ size (* (char-after) (expt ?\x100 len))))
+        (forward-char)))
     size))
 
 (defun mew-jpeg-size ()
   (let (c size width height)
     (save-excursion
       (catch 'loop
-	(while t
-	  (setq c (char-after))
-	  (forward-char)
-	  (unless (eq c ?\xff)
-	    (throw 'loop nil))
-	  (setq c (char-after))
-	  (forward-char)
-	  (cond
-	   ((or (eq c ?\xd8)                      ;; SOI
-		(eq c ?\xd9)                      ;; EOI
-		(and (>= c ?\xd0) (<= c ?\xd7)))) ;; RSTm
-	   ((or (eq c ?\xc0) (eq c ?\xc2))
-	    (forward-char 3)
-	    (setq height (mew-img-get-n mew-image-b-endian 2))
-	    (setq width (mew-img-get-n mew-image-b-endian 2))
-	    (backward-char)
-	    (throw 'loop nil))
-	   ((and (>= c ?\xc1) (<= c ?\xfe))
-	    (setq size (mew-img-get-n mew-image-b-endian 2))
-	    (forward-char (- size 2)))
-	   (t
-	    (throw 'loop nil))))))
+        (while t
+          (setq c (char-after))
+          (forward-char)
+          (unless (eq c ?\xff)
+            (throw 'loop nil))
+          (setq c (char-after))
+          (forward-char)
+          (cond
+           ((or (eq c ?\xd8)                      ;; SOI
+                (eq c ?\xd9)                      ;; EOI
+                (and (>= c ?\xd0) (<= c ?\xd7)))) ;; RSTm
+           ((or (eq c ?\xc0) (eq c ?\xc2))
+            (forward-char 3)
+            (setq height (mew-img-get-n mew-image-b-endian 2))
+            (setq width (mew-img-get-n mew-image-b-endian 2))
+            (backward-char)
+            (throw 'loop nil))
+           ((and (>= c ?\xc1) (<= c ?\xfe))
+            (setq size (mew-img-get-n mew-image-b-endian 2))
+            (forward-char (- size 2)))
+           (t
+            (throw 'loop nil))))))
     (cons width height)))
 
 (defun mew-png-size ()
@@ -241,22 +241,22 @@
       ;; IFD
       (setq entry (mew-img-get-n endian 2))
       (catch 'loop
-	(while t
-	  (setq entry (- entry 1))
-	  (setq tag (mew-img-get-n endian 2))
-	  (cond
-	   ((eq tag 256)
-	    (forward-char 6)
-	    (setq width (mew-img-get-n endian 2))
-	    (forward-char 2))
-	   ((eq tag 257)
-	    (forward-char 6)
-	    (setq height (mew-img-get-n endian 2))
-	    (forward-char 2))
-	   (t
-	    (forward-char 10)))
-	  (unless (< 1 entry)
-	    (throw 'loop nil)))))
+        (while t
+          (setq entry (- entry 1))
+          (setq tag (mew-img-get-n endian 2))
+          (cond
+           ((eq tag 256)
+            (forward-char 6)
+            (setq width (mew-img-get-n endian 2))
+            (forward-char 2))
+           ((eq tag 257)
+            (forward-char 6)
+            (setq height (mew-img-get-n endian 2))
+            (forward-char 2))
+           (t
+            (forward-char 10)))
+          (unless (< 1 entry)
+            (throw 'loop nil)))))
     (cons width height)))
 
 (defun mew-bmp-size ()
@@ -274,14 +274,14 @@
   (let (width height)
     (save-excursion
       (cond ((looking-at "^P[1-6][\t\n\v\f\r ]*\\(#[^\r\n]*[\r\n][\t\n\v\f\r ]*\\)*\\([0-9]+\\)[\t\n\v\f\r ]*\\(#[^\r\n]*[\r\n][\t\n\v\f\r ]*\\)*\\([0-9]+\\)[\t\n\v\f\r #]")  ;; PBM, PGM, PPM, PNM
-	     (setq width (string-to-number (match-string 2)))
-	     (setq height (string-to-number (match-string 4))))
-	    ((looking-at "^P7$")  ;; PAM
-	     (when (re-search-forward "^WIDTH[ \t]+\\([0-9]+\\)[ \t]*$" nil t)
-	       (setq width (string-to-number (match-string 1))))
-	     (goto-char (point-min))
-	     (when (re-search-forward "^HEIGHT[ \t]+\\([0-9]+\\)[ \t]*$" nil t)
-	       (setq height (string-to-number (match-string 1))))))
+             (setq width (string-to-number (match-string 2)))
+             (setq height (string-to-number (match-string 4))))
+            ((looking-at "^P7$")  ;; PAM
+             (when (re-search-forward "^WIDTH[ \t]+\\([0-9]+\\)[ \t]*$" nil t)
+               (setq width (string-to-number (match-string 1))))
+             (goto-char (point-min))
+             (when (re-search-forward "^HEIGHT[ \t]+\\([0-9]+\\)[ \t]*$" nil t)
+               (setq height (string-to-number (match-string 1))))))
       (cons width height))))
 
 (defvar mew-image-alist
@@ -315,63 +315,63 @@
   (message "Loading image...")
   (set-buffer (mew-buffer-message))
   (let* ((width (- (frame-pixel-width (selected-frame)) mew-image-width-margin))
-	 (height (- (frame-pixel-height (selected-frame)) mew-image-height-margin))
-	 (ent (mew-image-format-ent format))
-	 (prog (mew-image-get-prog ent))
-	 (func-size (mew-image-get-func ent))
-	 image-size image-width image-height image)
+         (height (- (frame-pixel-height (selected-frame)) mew-image-height-margin))
+         (ent (mew-image-format-ent format))
+         (prog (mew-image-get-prog ent))
+         (func-size (mew-image-get-func ent))
+         image-size image-width image-height image)
     (with-temp-buffer
       (mew-plet
        (insert-buffer-substring cache begin end)
        (mew-set-buffer-multibyte nil)
        (goto-char (point-min))
        (cond ((and mew-image-display-resize
-		   (not mew-image-display-resize-always)
-		   func-size)
-	      (setq image-size (funcall func-size))
-	      (setq image-width (car image-size))
-	      (setq image-height (cdr image-size)))
-	     (t
-	      (setq image-width nil)
-	      (setq image-height nil)))
+                   (not mew-image-display-resize-always)
+                   func-size)
+              (setq image-size (funcall func-size))
+              (setq image-width (car image-size))
+              (setq image-height (cdr image-size)))
+             (t
+              (setq image-width nil)
+              (setq image-height nil)))
        (when (and (not (image-type-available-p format))
-		  prog (mew-which-exec prog))
-	 (message "Converting image...")
-	 (call-process-region (point-min) (point-max) prog
-			      t '(t nil) nil)
-	 (setq format 'pbm)
-	 (unless (or image-width image-height)
-	   (goto-char (point-min))
-	   (setq image-size (mew-pbm-size))
-	   (setq image-width (car image-size))
-	   (setq image-height (cdr image-size)))
-	 (message "Converting image...done"))
+                  prog (mew-which-exec prog))
+         (message "Converting image...")
+         (call-process-region (point-min) (point-max) prog
+                              t '(t nil) nil)
+         (setq format 'pbm)
+         (unless (or image-width image-height)
+           (goto-char (point-min))
+           (setq image-size (mew-pbm-size))
+           (setq image-width (car image-size))
+           (setq image-height (cdr image-size)))
+         (message "Converting image...done"))
        (when (and mew-image-display-resize
-		  (or mew-image-display-resize-always
-		      (and image-width image-height
-			   (or (< width image-width)
-			       (and mew-image-display-resize-care-height
-				    (< height image-height)))))
-		  (or (eq format 'pbm) (mew-which-exec prog)))
-	 (message "Resizing image...")
-	 (unless (eq format 'pbm)
-	   (call-process-region (point-min) (point-max) prog
-				t '(t nil) nil)
-	   (setq format 'pbm))
-	 (if mew-image-display-resize-care-height
-	     (call-process-region (point-min) (point-max) mew-prog-pamscale 
-				  t '(t nil) nil
-				  mew-prog-pamscale-opt
-				  (format "%d" width)
-				  (format "%d" height))
-	   (call-process-region (point-min) (point-max) mew-prog-pamscale
-				t '(t nil) nil
-				"-xsize" (format "%d" width)))
-	 (message "Resizing image...done"))
+                  (or mew-image-display-resize-always
+                      (and image-width image-height
+                           (or (< width image-width)
+                               (and mew-image-display-resize-care-height
+                                    (< height image-height)))))
+                  (or (eq format 'pbm) (mew-which-exec prog)))
+         (message "Resizing image...")
+         (unless (eq format 'pbm)
+           (call-process-region (point-min) (point-max) prog
+                                t '(t nil) nil)
+           (setq format 'pbm))
+         (if mew-image-display-resize-care-height
+             (call-process-region (point-min) (point-max) mew-prog-pamscale
+                                  t '(t nil) nil
+                                  mew-prog-pamscale-opt
+                                  (format "%d" width)
+                                  (format "%d" height))
+           (call-process-region (point-min) (point-max) mew-prog-pamscale
+                                t '(t nil) nil
+                                "-xsize" (format "%d" width)))
+         (message "Resizing image...done"))
        (setq image (mew-buffer-substring (point-min) (point-max)))))
     (mew-elet
      (condition-case nil
-	 (insert-image (mew-create-image image format t))
+         (insert-image (mew-create-image image format t))
        (error ()))))
   (goto-char (point-min))
   (message "Loading image...done"))
@@ -399,8 +399,8 @@
     (goto-char (point-min))
     (let ((regex2 (concat "^\\(" mew-from: "\\).*")))
       (when (re-search-forward regex2 nil t)
-	(goto-char (match-end 1))
-	(insert-image xface)))))
+        (goto-char (match-end 1))
+        (insert-image xface)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -415,8 +415,8 @@
 (defvar mew-secure-format2
   (if (display-graphic-p)
       (let ((data-directory mew-icon-directory))
-	(concat " " (propertize "Sec" 'display
-				(find-image '((:type xpm :file "mew-lock.xpm" :ascent center))))))
+        (concat " " (propertize "Sec" 'display
+                                (find-image '((:type xpm :file "mew-lock.xpm" :ascent center))))))
     " [Sec]"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -426,7 +426,7 @@
 
 (define-key mew-message-mode-map [mouse-2] 'mew-browse-url-at-mouse)
 (if (and (featurep 'emacs) ;; preventing XEmacs's byte compiler from hanging
-	 (eq system-type 'darwin))
+         (eq system-type 'darwin))
     ;; for Mac
     (define-key mew-message-mode-map [M-down-mouse-1] 'mew-browse-url-at-mouse))
 
