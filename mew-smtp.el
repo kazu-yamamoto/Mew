@@ -623,7 +623,10 @@
 	  (set-buffer buf)
 	  (mew-smtp-queue case error pnm))
 	(mew-smtp-log pnm error)
-	(message-box (format "%s  This mail has been queued to %s" error qfld)))
+
+	(if (memq system-type '(windows-nt ms-dos cygwin))
+	    (message (format "%s  This mail has been queued to %s" error qfld))
+	  (message-box (format "%s  This mail has been queued to %s" error qfld))))
        (done
 	(message "Sending in background...done"))
        (t
