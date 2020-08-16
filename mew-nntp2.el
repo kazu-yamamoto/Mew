@@ -334,7 +334,9 @@
 	  (set-buffer buf)
 	  (mew-nntp2-queue case error))
 	(mew-nntp2-log pnm error)
-	(message-box (format "%s  This mail has been queued to %s" error qfld)))
+	(if (memq system-type '(windows-nt ms-dos cygwin))
+	    (message (format "%s  This mail has been queued to %s" error qfld))
+	  (message-box (format "%s  This mail has been queued to %s" error qfld))))
        (done
 	(message "Posting in background...done"))
        (t
