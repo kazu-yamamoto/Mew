@@ -99,7 +99,8 @@ requires PTY.")
 
 (with-no-warnings
   (defun mew-set-coding-priority (pri)
-    (set-coding-priority pri)))
+    (apply 'set-coding-system-priority
+	   (mapcar (lambda (x) (symbol-value x)) pri))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
