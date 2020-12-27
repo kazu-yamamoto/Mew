@@ -56,6 +56,7 @@
 (defvar mew-imap-fsm
   '(("greeting"      ("OK" . "capability"))
     ("capability"    ("OK" . "post-capability"))
+    ("auth-xoauth2"  ("OK" .  "next") ("NO" . "xoauth2-wpwd"))
     ("auth-cram-md5" ("OK" . "pwd-cram-md5") ("NO" . "wpwd"))
     ("pwd-cram-md5"  ("OK" . "next") ("NO" . "wpwd"))
     ("auth-login"    ("OK" . "user-login") ("NO" . "wpwd"))
@@ -969,7 +970,8 @@
 
 (defvar mew-imap-auth-alist
   '(("CRAM-MD5" mew-imap-command-auth-cram-md5)
-    ("LOGIN"    mew-imap-command-auth-login)))
+    ("LOGIN"    mew-imap-command-auth-login)
+    ("XOAUTH2"  mew-imap-command-auth-xoauth2)))
 
 (defun mew-imap-auth-get-func (auth)
   (nth 1 (mew-assoc-case-equal auth mew-imap-auth-alist 0)))
@@ -1006,6 +1008,43 @@
          (passwd (mew-imap-input-passwd prompt pnm))
 	 (epasswd (mew-base64-encode-string passwd)))
     (mew-imap-process-send-string2 pro epasswd)))
+
+;;;;;;;;;;;;;;;;
+;; XOAUTH2
+
+(defun mew-imap-command-auth-xoauth2 (pro pnm)
+  (let* ((user (mew-imap-get-user pnm))
+         (token (mew-auth-oauth2-token-access-token))
+         (auth-string (mew-auth-xoauth2-auth-string user token)))
+    ;; XXX: need to reset satus if token is nil.
+    (mew-imap-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
+    (mew-imap-set-status pnm "auth-xoauth2")))
+
+;; XXX: defalias does not work!
+;; (defalias 'mew-imap2-command-auth-xoauth2 'mew-imap-command-auth-xoauth2)
+(defun mew-imap2-command-auth-xoauth2 (pro pnm)
+  (let* ((user (mew-imap2-get-user pnm))
+         (token (mew-auth-oauth2-token-access-token))
+         (auth-string (mew-auth-xoauth2-auth-string user token)))
+    ;; XXX: need to reset satus if token is nil.
+    (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
+    (mew-imap2-set-status pnm "auth-xoauth2")))
+
+(defun mew-imap-command-xoauth2-wpwd (pro pnm)
+  (mew-imap-set-done pnm t)
+  (mew-passwd-set-passwd (mew-imap-passtag pnm) nil)
+  (delete-process pro)
+  ;; XXX: Should be cared more! Clear process and filter without sending LOGOUT.
+  (error "IMAP XOAUTH2 token is wrong!"))
+
+;; XXX: defalias does not work!
+;; (defalias 'mew-imap2-command-xoauth2-wpwd 'mew-imap-command-xoauth2-wpwd)
+(defun mew-imap2-command-xoauth2-wpwd (pro pnm)
+  (mew-imap2-set-done pnm t)
+  (mew-passwd-set-passwd (mew-imap2-passtag pnm) nil)
+  (delete-process pro)
+  ;; XXX: Should be cared more! Clear process and filter without sending LOGOUT.
+  (error "IMAP XOAUTH2 token is wrong!"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1477,8 +1516,12 @@
        (if (string= status "greeting")
 	   (setq next (mew-imap-fsm-next "greeting" "OK"))
 	 (setq stay t)))
-      ((and (goto-char (point-min)) (looking-at "\\+"))
-       (setq next (mew-imap-fsm-next status "OK")))
+      ((and (goto-char (point-min)) (looking-at "\\+ *\\(.*\\)"))
+       (setq next (mew-imap-fsm-next
+                   status
+                   (if (string= status "auth-xoauth2")
+                       (mew-auth-xoauth2-json-status (mew-match-string 1))
+                     "OK"))))
       ((and (goto-char (point-max)) (= (forward-line -1) 0) (looking-at eos))
        (mew-imap-set-tag pnm nil)
        (setq code (mew-match-string 1))

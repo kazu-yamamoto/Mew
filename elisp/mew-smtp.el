@@ -48,6 +48,10 @@
     ("user-login"    ("334" . "pwd-login") (t . "wpwd"))
     ("pwd-login"     ("235" . "next") (t . "wpwd"))
     ("auth-plain"    ("235" . "next") (t . "wpwd"))
+    ;; This is checked only for Gmail https://developers.google.com/gmail/imap/xoauth2-protocol
+    ;; XXX: MS Exchange Returns 334 like CRAM-MD5?
+    ;;  https://docs.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth
+    ("auth-xoauth2"  ("235" . "next") (t . "wpwd"))
 ;; See blow
 ;;    ("auth-plain"    ("334" . "pwd-plain") (t . "wpwd"))
 ;;    ("pwd-plain"     ("235" . "next") (t . "wpwd"))
@@ -249,7 +253,8 @@
 (defvar mew-smtp-auth-alist
   '(("CRAM-MD5" mew-smtp-command-auth-cram-md5)  ;; RFC 2195
     ("PLAIN"    mew-smtp-command-auth-plain)     ;; RFC 2595
-    ("LOGIN"    mew-smtp-command-auth-login)))   ;; No spec
+    ("LOGIN"    mew-smtp-command-auth-login)     ;; No spec
+    ("XOAUTH2"  mew-smtp-command-auth-xoauth2)))
 
 (defun mew-smtp-auth-get-func (auth)
   (nth 1 (mew-assoc-case-equal auth mew-smtp-auth-alist 0)))
@@ -307,6 +312,13 @@
 		   (format "\0%s\0%s" user passwd)))))
     (mew-smtp-process-send-string pro "AUTH PLAIN %s" plain)
     (mew-smtp-set-status pnm "auth-plain")))
+
+(defun mew-smtp-command-auth-xoauth2 (pro pnm)
+  (let* ((user (mew-smtp-get-auth-user pnm))
+         (token (mew-auth-oauth2-token-access-token))
+         (auth-string (mew-auth-xoauth2-auth-string user token)))
+    (mew-smtp-process-send-string pro "AUTH XOAUTH2 %s" auth-string)
+    (mew-smtp-set-status pnm "auth-xoauth2")))
 
 ;; (defun mew-smtp-command-auth-plain (pro pnm)
 ;;   (mew-smtp-process-send-string pro "AUTH PLAIN")

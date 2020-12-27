@@ -41,6 +41,7 @@
 (defvar mew-pop-fsm
   '(("greeting"      nil ("\\+OK" . "capa"))
     ("capa"          t   ("\\+OK" . "auth") ("-ERR" . "pswd"))
+    ("xoauth2"       nil ("\\+OK" . "list") ("-ERR" . "wpwd"))
     ("auth-cram-md5" nil ("\\+OK" . "pwd-cram-md5") ("-ERR" . "wpwd"))
     ("pwd-cram-md5"  nil ("\\+OK" . "list") ("-ERR" . "wpwd"))
     ("auth-plain"    nil ("\\+OK" . "pwd-plain") ("-ERR" . "wpwd"))
@@ -503,10 +504,18 @@
 
 (defvar mew-pop-auth-alist
   '(("CRAM-MD5" mew-pop-command-auth-cram-md5)
-    ("PLAIN"    mew-pop-command-auth-plain)))
+    ("PLAIN"    mew-pop-command-auth-plain)
+    ("XOAUTH2"  mew-pop-command-auth-xoauth2)))
 
 (defun mew-pop-auth-get-func (auth)
   (nth 1 (mew-assoc-case-equal auth mew-pop-auth-alist 0)))
+
+(defun mew-pop-command-auth-xoauth2 (pro pnm)
+  (let* ((user (mew-pop-get-user pnm))
+         (token (mew-auth-oauth2-token-access-token))
+         (auth-string (mew-auth-xoauth2-auth-string user token)))
+    (mew-pop-process-send-string pro "AUTH XOAUTH2 %s" auth-string)
+    (mew-smtp-set-status pnm "auth-xoauth2")))
 
 (defun mew-pop-command-auth-cram-md5 (pro pnm)
   (mew-pop-process-send-string pro "AUTH CRAM-MD5")
