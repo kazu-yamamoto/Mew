@@ -43,8 +43,8 @@ sub print_entry {
 
     $comment =~ s/\n([ \t]*\n.*)+/\n/g;
     $comment =~ s/\n+$//;
+    $comment =~ s/^[-*] //mg;
     $comment =~ s/\n/\n  /g;
-    $comment =~ s/^[-*] //;
     $comment =~ s/\.(  |\n).*/./s;
     print "$comment\n";
 
