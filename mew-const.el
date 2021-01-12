@@ -161,7 +161,7 @@
   (+ (length [key beg end pri]) (length mew-mime-fields)))
 
 (defconst mew-x-mailer
-  (format "%s on Emacs %d.%d" mew-version emacs-major-version emacs-minor-version)
+  (format "%s on Emacs %s" mew-version emacs-version)
   "*A value inserted into X-Mailer: field in Draft mode if *non-nil*.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
