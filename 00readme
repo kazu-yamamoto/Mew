@@ -6,7 +6,7 @@ This is stable releases of Mew 6.8.
 
 			     <Platforms>
 
-Mew now supports Emacs 24.3 or later only.
+Mew now supports Emacs 26.1 or later only.
 
 			      <Web Site>
 
@@ -20,7 +20,7 @@ Useful information may be found from the following web page:
 
 (2) Type 'make'.
 
-(2.1) Mew's info is formatted by Emacs 24.x. So, the info could not be
+(2.1) Mew's info is formatted by Emacs 27.x. So, the info could not be
 visible with other Emacsen. In this case, type 'make info' to format
 the info.
 
