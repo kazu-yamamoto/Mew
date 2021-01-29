@@ -441,7 +441,7 @@
 	(pnm (mew-smtp-info-name case fallbacked))
 	(sshsrv (mew-smtp-ssh-server case))
 	(sslp (mew-smtp-ssl case))
-	(sslport (mew-smtp-ssl-port case))
+	(sslport (mew-*-to-string (mew-smtp-ssl-port case)))
 	mew-inherit-submission
 	process sshname sshpro sslname sslpro lport tlsp tls fallback)
     (when (and sslp (mew-port-equal port sslport))
@@ -502,7 +502,9 @@
       (mew-smtp-set-qfld pnm qfld)
       (mew-smtp-set-messages pnm msgs)
       (mew-smtp-set-server pnm server)
-      (mew-smtp-set-port pnm port)
+      (if sslp
+	  (mew-smtp-set-port pnm sslport)
+	(mew-smtp-set-port pnm port))
       (mew-smtp-set-process pnm process)
       (mew-smtp-set-ssh-server pnm sshsrv)
       (mew-smtp-set-ssh-process pnm sshpro)
