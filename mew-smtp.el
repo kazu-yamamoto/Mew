@@ -21,7 +21,7 @@
     "server" "port" "ssh-server"
     "user" "auth-user" "auth-list"
     "helo-domain"
-    "status" "process" "ssh-process" "ssl-process"
+    "status" "process" "ssh-process" "ssl-process" "ssl-p"
     "qfld" "messages"
     ;; parameters used internally and should be initialized
     "string" "error" "auth-selected" "timer" "cont" "from" "sender"
@@ -507,6 +507,7 @@
       (mew-smtp-set-ssh-server pnm sshsrv)
       (mew-smtp-set-ssh-process pnm sshpro)
       (mew-smtp-set-ssl-process pnm sslpro)
+      (mew-smtp-set-ssl-p pnm sslp)
       (mew-smtp-set-helo-domain pnm (mew-smtp-helo-domain case))
       (mew-smtp-set-user pnm user)
       (mew-smtp-set-auth-user pnm (mew-smtp-user case))
@@ -735,7 +736,7 @@
 	(server (mew-smtp-get-server pnm))
 	(port (mew-smtp-get-port pnm))
 	(sshsrv (mew-smtp-get-ssh-server pnm))
-	(sslp (mew-smtp-get-ssl-process pnm)))
+	(sslp (mew-smtp-get-ssl-p pnm)))
     (with-temp-buffer
       (and logtime (insert logtime))
       (and msgid (insert " id=" msgid))
