@@ -76,12 +76,13 @@
 
 (defun mew-auth-xoauth2-json-status (status-string)
   ;; https://developers.google.com/gmail/imap/xoauth2-protocol#error_response_2
+  (require 'json)
   (let ((json-status
          (ignore-errors
-           (json-parse-string
+           (json-read-from-string
             (base64-decode-string status-string)))))
     (if json-status
-        (if (string-match "^2" (gethash "status" json-status))
+        (if (string-match "^2" (cdr (assoc 'status json-status)))
             "OK" ;; 2XX
           "NO" ;; XXX: Anyway NO?
           )
