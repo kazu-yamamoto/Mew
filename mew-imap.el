@@ -1449,7 +1449,7 @@
 			(mew-imap-secure-p pnm))
        (goto-char (point-min))
        (when (and (null bytes)
-		  (looking-at "^\\*[^{]*{\\([0-9]+\\)}"))
+		  (looking-at "^\\*[^{]*{\\([0-9]+\\)}.*\n"))
 	 (setq bytes (string-to-number (mew-match-string 1)))
 	 (mew-imap-set-bytes pnm bytes))
        (when (looking-at "^\\* .*X-GM-THRID +\\([0-9]+\\)")
