@@ -129,19 +129,31 @@
     mew-default-external-program    mew-icon-application/octet-stream)
    ("application/octet-stream"      "\\.numbers$"  mew-b64
     mew-default-external-program    mew-icon-application/octet-stream)
-   ("application/msword"            "\\.doc$"  mew-b64
+   ("application/msword"            "\\.do[ct]$"  mew-b64
     mew-prog-msword                 mew-icon-text)
-   ("application/vnd.ms-excel"      "\\.xl[st]$" mew-b64
+   ("application/vnd.ms-excel"      "\\.xl[ast]$" mew-b64
     mew-prog-msexcel                mew-icon-text)
-   ("application/vnd.ms-powerpoint" "\\.ppt$"  mew-b64
+   ("application/vnd.ms-powerpoint" "\\.p\\([op]t\\|p[as]\\)$" mew-b64
     mew-prog-mspowerpoint           mew-icon-text)
    ("application/vnd.openxmlformats-officedocument.wordprocessingml.document" "\\.docx$" mew-b64
     mew-prog-msword                 mew-icon-text)
    ("application/vnd.openxmlformats-officedocument.wordprocessingml.template" "\\.dotx$" mew-b64
     mew-prog-msword                 mew-icon-text)
+   ("application/vnd.ms-word.document.macroEnabled.12" "\\.docm$" mew-b64
+    mew-prog-msword                 mew-icon-text)
+   ("application/vnd.ms-word.template.macroEnabled.12" "\\.dotm$" mew-b64
+    mew-prog-msword                 mew-icon-text)
    ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" "\\.xlsx$" mew-b64
     mew-prog-msexcel                mew-icon-text)
    ("application/vnd.openxmlformats-officedocument.spreadsheetml.template" "\\.xltx$" mew-b64
+    mew-prog-msexcel                mew-icon-text)
+   ("application/vnd.ms-excel.sheet.macroEnabled.12" "\\.xlsm$" mew-b64
+    mew-prog-msexcel                mew-icon-text)
+   ("application/vnd.ms-excel.template.macroEnabled.12" "\\.xltm$" mew-b64
+    mew-prog-msexcel                mew-icon-text)
+   ("application/vnd.ms-excel.addin.macroEnabled.12" "\\.xlam$" mew-b64
+    mew-prog-msexcel                mew-icon-text)
+   ("application/vnd.ms-excel.sheet.binary.macroEnabled.12" "\\.xlsb$" mew-b64
     mew-prog-msexcel                mew-icon-text)
    ("application/vnd.openxmlformats-officedocument.presentationml.presentation" "\\.pptx$" mew-b64
     mew-prog-mspowerpoint           mew-icon-text)
@@ -150,6 +162,14 @@
    ("application/vnd.openxmlformats-officedocument.presentationml.template" "\\.potx$" mew-b64
     mew-prog-mspowerpoint           mew-icon-text)
    ("application/vnd.openxmlformats-officedocument.presentationml.slide" "\\.sldx$" mew-b64
+    mew-prog-mspowerpoint           mew-icon-text)
+   ("application/vnd.ms-powerpoint.addin.macroEnabled.12" "\\.ppam$" mew-b64
+    mew-prog-mspowerpoint           mew-icon-text)
+   ("application/vnd.ms-powerpoint.presentation.macroEnabled.12" "\\.pptm$" mew-b64
+    mew-prog-mspowerpoint           mew-icon-text)
+   ("application/vnd.ms-powerpoint.presentation.macroEnabled.12" "\\.potm$" mew-b64
+    mew-prog-mspowerpoint           mew-icon-text)
+   ("application/vnd.ms-powerpoint.slideshow.macroEnabled.12" "\\.ppsm$" mew-b64
     mew-prog-mspowerpoint           mew-icon-text)
    ("application/vnd.visio"         "\\.vsd$"  mew-b64
     mew-prog-visio                  mew-icon-text)
