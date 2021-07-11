@@ -468,7 +468,7 @@
       (setq proto (mew-proto case)))
      (t ;; Summary
       (setq case (or (mew-sinfo-get-case)   ;; remote
-		     mew-case))	            ;; local
+		     mew-case))             ;; local
       (setq proto (mew-folder-prefix (mew-sinfo-get-folder)))))
     (list case proto)))
 
@@ -772,7 +772,7 @@ The messages in the server side is always retained."
 		    ((eq mailbox 'pop)
 		     (setq del (eq (mew-pop-delete case) t))) ;; delete may be number
 		    ((eq mailbox 'imap)
-		     (setq del (eq (mew-imap-delete case) t))))	;; delete may be number
+		     (setq del (eq (mew-imap-delete case) t)))) ;; delete may be number
 		   (if rev-del (setq del (not del)))
 		   (setq rtr (mew-make-refileinfo :uid uid
 						  :size siz
@@ -785,15 +785,15 @@ The messages in the server side is always retained."
 	     (setq case-rtrs (nreverse case-rtrs)))
 	 (while (re-search-forward mew-regex-msg-review nil t)
 	   (when (mew-sumsyn-match mew-regex-sumsyn-long)
-	   (setq uid (mew-sumsyn-message-uid))
-	   (setq msg (mew-sumsyn-message-number))
-	   (setq siz (mew-sumsyn-message-size))
-	   (when (and (mew-msg-validp msg) (mew-msg-truncatedp siz))
-	     (setq rtr (mew-make-refileinfo :uid uid
-					    :size siz
-					    :delete del
-					    :folders (list bnm msg)))
-	     (setq rtrs (cons rtr rtrs))))
+	     (setq uid (mew-sumsyn-message-uid))
+	     (setq msg (mew-sumsyn-message-number))
+	     (setq siz (mew-sumsyn-message-size))
+	     (when (and (mew-msg-validp msg) (mew-msg-truncatedp siz))
+	       (setq rtr (mew-make-refileinfo :uid uid
+					      :size siz
+					      :delete del
+					      :folders (list bnm msg)))
+	       (setq rtrs (cons rtr rtrs))))
 	   (forward-line))
 	 (setq rtrs (nreverse rtrs))))
      (if (and (not rtrs) (not case-rtrs))

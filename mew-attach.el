@@ -264,10 +264,10 @@ attachments region.
 	;; attachdir / {subdir/} name
 	(when (y-or-n-p (format msg ename))
 	  (message "Deleting %s..." ename)
-          (if (file-exists-p fullname)
-              (if dirp
-                  (mew-delete-directory-recursively fullname)
-                (mew-delete-file fullname)))
+	  (if (file-exists-p fullname)
+	      (if dirp
+		  (mew-delete-directory-recursively fullname)
+		(mew-delete-file fullname)))
 	  (message "Deleting %s...done" ename)
 	  (setq mew-encode-syntax
 		(mew-syntax-remove-entry mew-encode-syntax nums))
@@ -661,9 +661,9 @@ is not effective other objects. For example, JPEG is already compressed."
 		;; variety of zip versions.
 		(call-process mew-prog-zip nil nil nil "-P" password zname name)
 		(if (not (file-exists-p zfullname))
-                    (if (string= password "")
-                        (message "\"zip\" does not allow zero length password")
-                      (message "\"zip\" does not support encryption"))
+		    (if (string= password "")
+			(message "\"zip\" does not allow zero length password")
+		      (message "\"zip\" does not support encryption"))
 		  (mew-syntax-set-ct syntax (list zct))
 		  (mew-syntax-set-cte syntax mew-b64)
 		  (mew-syntax-set-file syntax zname)
@@ -789,7 +789,7 @@ Input decrypters' addresses."
     (let* ((nums (mew-syntax-nums))
 	   (subdir (mew-attach-expand-path mew-encode-syntax nums))
 	   (attachdir (mew-attachdir))
-	   (syntax (mew-syntax-get-entry mew-encode-syntax nums))	
+	   (syntax (mew-syntax-get-entry mew-encode-syntax nums))
 	   (file (mew-syntax-get-file syntax))
 	   efile FILE)
       (setq efile (if (string= subdir "") file (concat subdir file)))

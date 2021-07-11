@@ -186,7 +186,7 @@ if decode fails."
       ;; in cache buffer
       (mew-erase-buffer)
       (condition-case errmsg
-	  (setq tim-siz	(mew-insert-message fld msg mew-cs-text-for-read nil))
+	  (setq tim-siz (mew-insert-message fld msg mew-cs-text-for-read nil))
 	(error
 	 ;; file not exist
 	 (mew-cache-delete)

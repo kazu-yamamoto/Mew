@@ -45,7 +45,7 @@
     ("authinfo"    nil ("381"    . "authpass"))
     ("authpass"    nil ("281"    . "group") (t . "wpwd"))
     ("group"       nil ("211"    . "xover"))
-    ("xover"	   t   ("224"    . "pre-article"))
+    ("xover"       t   ("224"    . "pre-article"))
     ("article"     t   ("22[01]" . "post-article") (t . "next-article"))
     ("list"        t   ("215"    . "post-list"))
     ("pre-quit"    nil (t        . "quit2"))
@@ -84,7 +84,7 @@
 
 (defun mew-nntp-command-authpass (pro pnm)
   (let* ((prompt (format "NNTP password (%s): " (mew-nntp-get-account pnm)))
-         (pass (mew-nntp-input-passwd prompt pnm)))
+	 (pass (mew-nntp-input-passwd prompt pnm)))
     (mew-nntp-process-send-string pro "AUTHINFO PASS %s" pass)))
 
 (defun mew-nntp-command-wpwd (_pro pnm)
@@ -377,8 +377,8 @@
 
 (defun mew-nntp-input-passwd (prompt pnm)
   (let* ((tag (mew-nntp-passtag pnm))
-         (pro (mew-nntp-get-process pnm))
-         (pass (mew-input-passwd prompt tag)))
+	 (pro (mew-nntp-get-process pnm))
+	 (pass (mew-input-passwd prompt tag)))
     (unless (and (processp pro) (eq (process-status pro) 'open))
       (mew-passwd-set-passwd tag nil))
     pass))
@@ -418,7 +418,7 @@
 
 (defun mew-nntp-retrieve (case directive bnm &rest args)
   (let* ((server (mew-nntp-server case))
-         (user (mew-nntp-user case))
+	 (user (mew-nntp-user case))
 	 (port (mew-*-to-string (mew-nntp-port case)))
 	 (sshsrv (mew-nntp-ssh-server case))
 	 (sslp (mew-nntp-ssl case))
@@ -465,7 +465,7 @@
 	(mew-nntp-set-server pnm server)
 	(mew-nntp-set-port pnm port)
 	(mew-nntp-set-user pnm user)
-        (mew-nntp-set-account pnm (format "%s@%s" user server))
+	(mew-nntp-set-account pnm (format "%s@%s" user server))
 	(mew-nntp-set-status pnm "greeting")
 	(mew-nntp-set-directive pnm directive)
 	(mew-nntp-set-bnm pnm bnm)

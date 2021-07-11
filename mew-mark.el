@@ -194,15 +194,15 @@ If optional argument NO-MSG is non-nil, no message is displayed."
 cons pairs of folder name and message number."
   (save-excursion
     (let ((regex (mew-mark-regex mark))
-          (msglist nil)
+	  (msglist nil)
 	  (case-fold-search nil))
       (goto-char (point-min))
       (while (re-search-forward regex nil t)
-        (setq msglist (cons
-                       (cons
-                        (mew-summary-folder-name)
-                        (mew-summary-message-number))
-                       msglist)))
+	(setq msglist (cons
+		       (cons
+			(mew-summary-folder-name)
+			(mew-summary-message-number))
+		       msglist)))
       (nreverse msglist))))
 
 (defun mew-summary-mark-collect4 ()
@@ -607,7 +607,7 @@ BEG and END."
   (let ((regex (read-string "Regexp: "))
 	(mark mew-mark-review) ;; someday ...
 	(one-summary (mew-virtual-for-one-summary))
-        (n 0)
+	(n 0)
 	fld msg alist)
     (while (string= regex "")
       (setq regex (read-string "Regexp: ")))
@@ -662,33 +662,33 @@ BEG and END."
       (set-buffer-modified-p nil)
       (if one-summary (mew-summary-mark-in-physical-alist alist newmark)))))
 
-(defun mew-summary-mark-delete ()	;; * -> D
+(defun mew-summary-mark-delete ()       ;; * -> D
   "Put the delete mark onto all messages marked with '*'."
   (interactive)
   (mew-summary-not-in-nntp
    (mew-summary-exchange-mark mew-mark-review mew-mark-delete 'valid-only)))
 
-(defun mew-summary-mark-unlink ()	;; * -> X
+(defun mew-summary-mark-unlink ()       ;; * -> X
   "Put the delete mark onto all messages marked with '*'."
   (interactive)
   (mew-summary-exchange-mark mew-mark-review mew-mark-unlink 'valid-only))
 
-(defun mew-summary-mark-escape ()	;; * -> $
+(defun mew-summary-mark-escape ()       ;; * -> $
   "Change the '*' mark into the '$' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-review mew-mark-escape))
 
-(defun mew-summary-mark-review ()	;; $ -> *
+(defun mew-summary-mark-review ()       ;; $ -> *
   "Change the '$' mark into the '*' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-escape mew-mark-review))
 
-(defun mew-summary-mark-unread ()	;; * -> U
+(defun mew-summary-mark-unread ()       ;; * -> U
   "Change the '*' mark into the 'U' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-review mew-mark-unread))
 
-(defun mew-summary-mark-swap ()		;; $ <-> *
+(defun mew-summary-mark-swap ()         ;; $ <-> *
   "Swap the '$' mark and the '*' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-escape mew-mark-tmp)

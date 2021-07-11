@@ -350,7 +350,7 @@ values."
 (defun mew-refile-guess-by-newsgroups ()
   ;; Guess folders by the Newsgroups field with folder alist.
   (let* ((newsgroups (mew-addrstr-parse-value-list2
-		     (mew-header-get-value mew-newsgroups:)))
+		      (mew-header-get-value mew-newsgroups:)))
 	 (proto mew-inherit-refile-proto)
 	 (case mew-inherit-refile-case)
 	 (alist (mew-proto-folder-alist proto case)) ;; local folders
@@ -578,11 +578,11 @@ Return t if exists or created. Otherwise, return nil."
 (defun mew-summary-copy ()
   "Put the refile mark(default is 'o') on this message with
 the current folder as a candidate in addition to guessed folders."
- (interactive)
- (mew-summary-msg-or-part
-  (mew-summary-refilable
-   (mew-summary-refile-body
-    nil nil nil nil (mew-summary-folder-name)))))
+  (interactive)
+  (mew-summary-msg-or-part
+   (mew-summary-refilable
+    (mew-summary-refile-body
+     nil nil nil nil (mew-summary-folder-name)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -593,15 +593,15 @@ the current folder as a candidate in addition to guessed folders."
   (concat mew-buffer-prefix "refile " fld))
 
 (defun mew-summary-refile (&optional report)
- "Put the refile mark(default is 'o') on this message. If already
+  "Put the refile mark(default is 'o') on this message. If already
 marked with 'o', it prints where this message will be refiled. This
 can overlay other marks. When it overlays, the cursor stays on the
 message. If it marks newly, displays the next message. If executed
 with '\\[universal-argument]', it displays how the refile rules work in Message mode."
- (interactive "P")
- (mew-summary-msg-or-part
-  (mew-summary-refilable
-   (if report (mew-summary-refile-report) (mew-summary-refile-body)))))
+  (interactive "P")
+  (mew-summary-msg-or-part
+   (mew-summary-refilable
+    (if report (mew-summary-refile-report) (mew-summary-refile-body)))))
 
 (defvar mew-override-body-open "<")
 (defvar mew-override-body-close "> ")

@@ -17,40 +17,40 @@
 ;;;
 
 (easy-menu-define
- mew-summary-mode-menu
- mew-summary-mode-map
- "Menu used in Summary mode."
- mew-summary-mode-menu-spec)
+  mew-summary-mode-menu
+  mew-summary-mode-map
+  "Menu used in Summary mode."
+  mew-summary-mode-menu-spec)
 
 (easy-menu-define
- mew-message-mode-menu
- mew-message-mode-map
- "Menu used in Message mode."
- mew-message-mode-menu-spec)
+  mew-message-mode-menu
+  mew-message-mode-map
+  "Menu used in Message mode."
+  mew-message-mode-menu-spec)
 
 (easy-menu-define
- mew-draft-mode-menu
- mew-draft-mode-map
- "Menu used in Draft mode."
- mew-draft-mode-menu-spec)
+  mew-draft-mode-menu
+  mew-draft-mode-map
+  "Menu used in Draft mode."
+  mew-draft-mode-menu-spec)
 
 (easy-menu-define
- mew-header-mode-menu
- mew-header-mode-map
- "Menu used in Header mode."
- mew-header-mode-menu-spec)
+  mew-header-mode-menu
+  mew-header-mode-map
+  "Menu used in Header mode."
+  mew-header-mode-menu-spec)
 
 (easy-menu-define
- mew-draft-header-menu
- mew-draft-header-map
- "Menu used in Draft mode."
- mew-draft-mode-menu-spec)
+  mew-draft-header-menu
+  mew-draft-header-map
+  "Menu used in Draft mode."
+  mew-draft-mode-menu-spec)
 
 (easy-menu-define
- mew-draft-attach-menu
- mew-draft-attach-map
- "Menu used in Draft mode."
- mew-draft-mode-menu-spec)
+  mew-draft-attach-menu
+  mew-draft-attach-map
+  "Menu used in Draft mode."
+  mew-draft-mode-menu-spec)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -179,9 +179,9 @@
 	  (setq size (+ size (* (char-after) (expt ?\x100 n))))
 	  (forward-char))
       (while (< 0 len)
-	  (setq len (- len 1))
-	  (setq size (+ size (* (char-after) (expt ?\x100 len))))
-	  (forward-char)))
+	(setq len (- len 1))
+	(setq size (+ size (* (char-after) (expt ?\x100 len))))
+	(forward-char)))
     size))
 
 (defun mew-jpeg-size ()
@@ -359,7 +359,7 @@
 				t '(t nil) nil)
 	   (setq format 'pbm))
 	 (if mew-image-display-resize-care-height
-	     (call-process-region (point-min) (point-max) mew-prog-pamscale 
+	     (call-process-region (point-min) (point-max) mew-prog-pamscale
 				  t '(t nil) nil
 				  mew-prog-pamscale-opt
 				  (format "%d" width)

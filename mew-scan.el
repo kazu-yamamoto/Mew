@@ -464,7 +464,7 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	  (setq med (match-end 0))
 	  ;; Three lines should be enough for Summary mode.
 	  (forward-line)
-          (setq i 0)
+	  (setq i 0)
 	  (while (and (< i lim) (looking-at mew-lwsp))
 	    (forward-line)
 	    (setq i (1+ i)))
@@ -551,7 +551,7 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 	;; (setq ct (mew-syntax-get-value ctl 'cap))
 	;; So, this hard coding is used.
 	(while (and (string-match "^Multipart/" ctr)
-		   (string-match "boundary=\"?\\([^\"\n\t;]+\\)\"?" ctr))
+		    (string-match "boundary=\"?\\([^\"\n\t;]+\\)\"?" ctr))
 	  (setq boundary (mew-match-string 1 ctr))
 	  (setq boundary (concat "^--" (regexp-quote boundary)))
 	  (setq found nil)

@@ -214,7 +214,7 @@
 	    (setq insl nil)
 	    (forward-line))))
       ret)))
-	
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Dcc:, Bcc:
@@ -561,17 +561,17 @@
 (defun mew-encode-mime-body (ctl cte file no-encoding)
   ;; If file is 't', target is buffered.
   ;; text should be buffered
-  ;;	- specified charset is a rare case
-  ;;	- copy overhead may be small
+  ;;    - specified charset is a rare case
+  ;;    - copy overhead may be small
   (let* ((ct (mew-syntax-get-value ctl 'cap))
-         (textp (mew-ct-textp ct))
+	 (textp (mew-ct-textp ct))
 	 (charset (if textp (mew-syntax-get-param ctl "charset")))
 	 (icharset (if textp (mew-syntax-get-param ctl "icharset")))
-         (linebasep (or textp (mew-ct-linebasep ct)))
-         (switch (if linebasep
-                     mew-prog-mime-encode-text-switch
-                   mew-prog-mime-encode-switch))
-         (beg (point))
+	 (linebasep (or textp (mew-ct-linebasep ct)))
+	 (switch (if linebasep
+		     mew-prog-mime-encode-text-switch
+		   mew-prog-mime-encode-switch))
+	 (beg (point))
 	 buffer cs opt last flowed delsp flowed-delsp)
     (if (and (stringp file)
 	     (setq buffer (get-file-buffer file))
@@ -800,10 +800,10 @@
   ;; path is nil if called make-single or security multipart
   ;; buffered is t if called make-single
   (run-hook-with-args 'mew-encode-singlepart-hook
-                      syntax path depth buffered)
+		      syntax path depth buffered)
   (let* ((file (expand-file-name (mew-syntax-get-file syntax) path))
 	 (ctl (mew-syntax-get-ct syntax))
-         (ct (mew-syntax-get-value ctl 'cap))
+	 (ct (mew-syntax-get-value ctl 'cap))
 	 (cte (mew-syntax-get-cte syntax))
 	 (cd (mew-syntax-get-cd syntax))
 	 (cdpl (mew-syntax-get-cdp syntax))
@@ -898,7 +898,7 @@
 	  (setq first (mew-syntax-get-part mew-encode-syntax))
 	  (setq ct (mew-syntax-get-value (mew-syntax-get-ct first) 'cap))
 	  (if (not (mew-ct-textp ct))
-	      (setq multip t)		
+	      (setq multip t)
 	    (setq path (expand-file-name
 			(mew-syntax-get-file mew-encode-syntax) path))
 	    (setq privacy (mew-syntax-get-privacy mew-encode-syntax))
@@ -989,9 +989,9 @@
 	  (mew-encode-smime proto cte decrypters)))))))
 
 (defun mew-security-multipart-boundary (depth)
-   (if depth
-       (mew-boundary-get (format "Security_Multipart%s" (number-to-string depth)))
-     (mew-boundary-get "Security_Multipart")))
+  (if depth
+      (mew-boundary-get (format "Security_Multipart%s" (number-to-string depth)))
+    (mew-boundary-get "Security_Multipart")))
 
 (defun mew-save-transfer-form (beg end retain &optional cte)
   ;; called in the narrowed region
@@ -1127,8 +1127,8 @@
 
 (defun mew-convert-mime-body (beg end cte linebasep)
   (let* ((switch (if linebasep
-                     mew-prog-mime-encode-text-switch
-                   mew-prog-mime-encode-switch))
+		     mew-prog-mime-encode-text-switch
+		   mew-prog-mime-encode-switch))
 	 file opt)
     (save-restriction
       (narrow-to-region beg end)

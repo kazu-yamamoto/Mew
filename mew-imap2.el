@@ -100,9 +100,9 @@
 
 (defun mew-imap2-command-login (pro pnm)
   (let* ((user (mew-imap2-get-user pnm))
-         (prompt (format "IMAP password (%s): "
-                         (mew-imap2-get-account pnm)))
-         (pass (mew-input-passwd prompt (mew-imap2-passtag pnm))))
+	 (prompt (format "IMAP password (%s): "
+			 (mew-imap2-get-account pnm)))
+	 (pass (mew-input-passwd prompt (mew-imap2-passtag pnm))))
     (setq user (mew-quote-string user ?\\ '(?\\ ?\")))
     (setq pass (mew-quote-string pass ?\\ '(?\\ ?\")))
     (mew-imap2-process-send-string pro pnm "LOGIN \"%s\" \"%s\"" user pass)))
@@ -252,8 +252,8 @@
 
 (defun mew-imap2-command-pwd-cram-md5 (pro pnm)
   (let ((user (mew-imap2-get-user pnm))
-        (prompt (format "IMAP CRAM-MD5 password (%s): "
-                        (mew-imap2-get-account pnm)))
+	(prompt (format "IMAP CRAM-MD5 password (%s): "
+			(mew-imap2-get-account pnm)))
 	(aux (mew-imap2-get-aux pnm))
 	challenge passwd cram-md5)
     (if (string-match " \\([a-zA-Z0-9+/]+=*\\)" aux)
@@ -273,9 +273,9 @@
 
 (defun mew-imap2-command-pwd-login (pro pnm)
   (let* ((prompt (format "IMAP LOGIN password (%s): "
-                        (mew-imap2-get-account pnm)))
-         (passwd (mew-imap2-input-passwd prompt pnm))
-         (epasswd (mew-base64-encode-string passwd)))
+			 (mew-imap2-get-account pnm)))
+	 (passwd (mew-imap2-input-passwd prompt pnm))
+	 (epasswd (mew-base64-encode-string passwd)))
     (mew-imap2-process-send-string2 pro epasswd)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -390,7 +390,7 @@
 
 (defun mew-imap2-copy-message (case directive src-list &optional dst)
   (let* ((server (mew-imap-server case))
-         (user (mew-imap-user case))
+	 (user (mew-imap-user case))
 	 (port (mew-*-to-string (mew-imap-port case)))
 	 (pnm (mew-imap2-info-name case))
 	 (sshsrv (mew-imap-ssh-server case))

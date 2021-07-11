@@ -46,8 +46,8 @@
     'mew-summary-analyze-again-alternative)
   (define-key mew-summary-mode-map ","    'mew-summary-display-asis)
   (define-key mew-summary-mode-map ";"    'mew-summary-trace-path)
-;;  (define-key mew-summary-mode-map "\e<"  'mew-summary-jump-top)
-;;  (define-key mew-summary-mode-map "\e>"  'mew-summary-jump-bottom)
+  ;;  (define-key mew-summary-mode-map "\e<"  'mew-summary-jump-top)
+  ;;  (define-key mew-summary-mode-map "\e>"  'mew-summary-jump-bottom)
   (define-key mew-summary-mode-map "<"    'mew-summary-scroll-right)
   (define-key mew-summary-mode-map ">"    'mew-summary-scroll-left)
   (define-key mew-summary-mode-map "\d"   'mew-summary-prev-page)
@@ -80,7 +80,7 @@
   (define-key mew-summary-mode-map "\C-n" 'mew-summary-next-line)
   (define-key mew-summary-mode-map "\C-p" 'mew-summary-previous-line)
   (define-key mew-summary-mode-map "e"    'mew-summary-exchange-marks)
-  (define-key mew-summary-mode-map "M"	  (make-sparse-keymap))
+  (define-key mew-summary-mode-map "M"    (make-sparse-keymap))
   (define-key mew-summary-mode-map "Md"   'mew-summary-mark-duplicated)
   (define-key mew-summary-mode-map "M*"   'mew-summary-redo)
   (define-key mew-summary-mode-map "N"    'mew-summary-display-review-down)
@@ -128,7 +128,7 @@
   (define-key mew-summary-mode-map "&"    'mew-summary-child)
   (define-key mew-summary-mode-map "("    'mew-summary-thread-sibling-up)
   (define-key mew-summary-mode-map ")"    'mew-summary-thread-sibling-down)
-  (define-key mew-summary-mode-map "m"	  (make-sparse-keymap))
+  (define-key mew-summary-mode-map "m"    (make-sparse-keymap))
   (define-key mew-summary-mode-map "md"   'mew-summary-mark-delete)
   (define-key mew-summary-mode-map "m\ed" 'mew-summary-mark-unlink)
   (define-key mew-summary-mode-map "m$"   'mew-summary-mark-escape)
@@ -141,7 +141,7 @@
   (define-key mew-summary-mode-map "ma"   'mew-summary-mark-all)
   (define-key mew-summary-mode-map "mu"   'mew-summary-mark-undo-all)
   (define-key mew-summary-mode-map "mI"   'mew-summary-mark-retrieve-message)
-  (define-key mew-summary-mode-map "ml"	  (make-sparse-keymap))
+  (define-key mew-summary-mode-map "ml"   (make-sparse-keymap))
   (define-key mew-summary-mode-map "mlc"  'mew-summary-mark-local-copy)
   (define-key mew-summary-mode-map "mli"  'mew-summary-mark-imap-copy)
   (define-key mew-summary-mode-map "/"    'mew-summary-selection-by-pick)
@@ -177,14 +177,14 @@
   (define-key mew-summary-mode-map "zi"   'mew-summary-toggle-invisible)
   (define-key mew-summary-mode-map "z "   'mew-summary-toggle-mark-regex)
   (define-key mew-summary-mode-map "zz"   'mew-summary-unzip)
-  (define-key mew-summary-mode-map "l"	  (make-sparse-keymap))
+  (define-key mew-summary-mode-map "l"    (make-sparse-keymap))
   (define-key mew-summary-mode-map "lc"   'mew-summary-local-copy)
   (define-key mew-summary-mode-map "li"   'mew-summary-imap-copy)
   (define-key mew-summary-mode-map "lh"   'mew-summary-learn-ham)
   (define-key mew-summary-mode-map "ls"   'mew-summary-learn-spam)
   (define-key mew-summary-mode-map "="    'mew-summary-info)
   (define-key mew-summary-mode-map "_"    'mew-summary-line)
-  (define-key mew-summary-mode-map "k"	  (make-sparse-keymap))
+  (define-key mew-summary-mode-map "k"    (make-sparse-keymap))
   (define-key mew-summary-mode-map "kc"   'mew-summary-search-change-method)
   (define-key mew-summary-mode-map "k?"   'mew-summary-search)
   (define-key mew-summary-mode-map "k/"   'mew-summary-selection-by-search)
@@ -213,7 +213,7 @@
   (define-key mew-summary-mode-map "S"    'mew-summary-selection-by-sort)
   (define-key mew-summary-mode-map "\C-c\C-b" 'mew-summary-exchange-point)
   (define-key mew-summary-mode-map "\eo"  'mew-summary-auto-refile)
-  (define-key mew-summary-mode-map "R"	  (make-sparse-keymap))
+  (define-key mew-summary-mode-map "R"    (make-sparse-keymap))
   (define-key mew-summary-mode-map "Rd"   'mew-summary-delete-folder)
   (define-key mew-summary-mode-map "Rr"   'mew-summary-rename-folder)
   ;;
@@ -411,7 +411,7 @@
      (mew-attach-not-line0-1-dot)]
     ["Encode with Base64"
      mew-attach-base64
-     (mew-attach-not-line0-1-dot)]	
+     (mew-attach-not-line0-1-dot)]
     ["Encode with Quoted-Printable"
      mew-attach-quoted-printable
      (mew-attach-not-line0-1-dot)]
@@ -437,7 +437,7 @@
    ["Queue Message"       mew-draft-make-message        t]
    ["Send Message"        mew-draft-send-message        t]
    ["Prepare Attachments" mew-draft-prepare-attachments (not (mew-attach-p))]
-   ["Set cases"	          mew-draft-set-case		t]
+   ["Set cases"           mew-draft-set-case            t]
    ["Insert Signature"    mew-draft-insert-signature    t]
    ["Kill Draft"          mew-draft-kill                t]
    "----"
@@ -449,7 +449,7 @@
    '("Privacy"
      ["All messages"               mew-draft-toggle-privacy-always    t]
      ["Msgs replying to encrypted" mew-draft-toggle-privacy-encrypted t]
-     ["This message"		   mew-draft-set-privacy-type         t])
+     ["This message"               mew-draft-set-privacy-type         t])
    '("FIB"
      ["FIB next item"     mew-fib-next-item     (not (mew-attach-p))]
      ["FIB previous item" mew-fib-previous-item (not (mew-attach-p))]
@@ -552,10 +552,10 @@
     (cons "Mew" (make-sparse-keymap "Mew")))
   (define-key mew-input-map [menu-bar minibuf quit]
     (list 'menu-item "Quit" 'keyboard-escape-quit
-          :help "Abort input and exit minibuffer"))
+	  :help "Abort input and exit minibuffer"))
   (define-key mew-input-map [menu-bar minibuf return]
     (list 'menu-item "Enter" 'exit-minibuffer
-          :help "Terminate input and exit minibuffer")))
+	  :help "Terminate input and exit minibuffer")))
 
 (unless mew-input-folder-map
   (setq mew-input-folder-map (copy-keymap mew-input-map))

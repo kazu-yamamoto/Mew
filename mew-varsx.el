@@ -160,7 +160,7 @@
    ("application/pgp-keys"          "\\.pka$"  nil
     mew-prog-pgp-keys               mew-icon-unknown)
    ("application/x-pkcs7-signature" "\\.p7s$"  mew-b64
-    nil			     mew-icon-unknown)
+    nil                      mew-icon-unknown)
    ("application/vnd.fujitsu.oasys" "\\.oas$"  mew-b64
     mew-prog-oasys                  mew-icon-text)
    ("application/vnd.fujitsu.oasys2" "\\.oa2$" mew-b64

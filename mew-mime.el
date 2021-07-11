@@ -258,7 +258,7 @@
 					mew-use-text/html-list-type)))
 	      (progn
 		(funcall mew-prog-text/html start (point-max))
-                (delete-trailing-whitespace start (point-max))
+		(delete-trailing-whitespace start (point-max))
 		(mew-highlight-body-region start (point-max)))
 	    (mew-message-for-summary "To parse HTML, type '\\[mew-summary-analyze-again]'"))))
     (insert " #     # ####### #     # #\n"
@@ -606,7 +606,7 @@
 	  (insert-file-contents file2)))
       (if (file-exists-p file1) (delete-file file1))
       (if (file-exists-p file2) (delete-file file2))
-  (message "Displaying a PDF document...done"))))
+      (message "Displaying a PDF document...done"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -892,7 +892,7 @@ See 'mew-mime-content-type' to know how actions can be defined."
 	  (mew-decode-syntax-print (current-buffer)
 				   mew-decode-syntax
 				   (mew-xinfo-get-multi-form)
-				 (mew-xinfo-get-icon-spec))
+				   (mew-xinfo-get-icon-spec))
 	  (goto-char current)
 	  (mew-summary-display 'redisplay))))))
 
@@ -917,19 +917,19 @@ See 'mew-mime-content-type' to know how actions can be defined."
 
 (defun mew-decode-syntax-adjust-multi (syntax threshold inc)
   (mew-decode-syntax-adjust-single syntax threshold inc)
-    (let ((i mew-syntax-magic)
-	  (len (length syntax))
-	  part)
-      (while (< i len)
-	(setq part (aref syntax i))
-	(cond
-	 ((mew-syntax-singlepart-p part)
-	  (mew-decode-syntax-adjust-single part threshold inc))
-	 ((mew-syntax-multipart-p part)
-	  (mew-decode-syntax-adjust-multi part threshold inc))
-	 ((mew-syntax-message-p part)
-	  (mew-decode-syntax-adjust-message part threshold inc)))
-	(setq i (1+ i)))))
+  (let ((i mew-syntax-magic)
+	(len (length syntax))
+	part)
+    (while (< i len)
+      (setq part (aref syntax i))
+      (cond
+       ((mew-syntax-singlepart-p part)
+	(mew-decode-syntax-adjust-single part threshold inc))
+       ((mew-syntax-multipart-p part)
+	(mew-decode-syntax-adjust-multi part threshold inc))
+       ((mew-syntax-message-p part)
+	(mew-decode-syntax-adjust-message part threshold inc)))
+      (setq i (1+ i)))))
 
 (defun mew-unzip-file (buf beg end dir file)
   (let* ((zipfile (expand-file-name file dir))

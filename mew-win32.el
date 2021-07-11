@@ -60,23 +60,23 @@
 	  (cons (car sargs) (cons prog args))
 	(cons program args))))
   (defadvice call-process
-    (before mew-w32-call-process
-	    (program &optional infile buffer display &rest args)
-	    activate)
+      (before mew-w32-call-process
+	      (program &optional infile buffer display &rest args)
+	      activate)
     (let ((sargs (mew-w32-argument-editing-function program args)))
       (setq program (car sargs)
 	    args (cdr sargs))))
   (defadvice call-process-region
-    (before mew-w32-call-process-region
-	    (start end program &optional infile buffer display &rest args)
-	    activate)
+      (before mew-w32-call-process-region
+	      (start end program &optional infile buffer display &rest args)
+	      activate)
     (let ((sargs (mew-w32-argument-editing-function program args)))
       (setq program (car sargs)
 	    args (cdr sargs))))
   (defadvice start-process
-    (before mew-w32-start-process
-	    (name buffer program &rest program-args)
-	    activate)
+      (before mew-w32-start-process
+	      (name buffer program &rest program-args)
+	      activate)
     (let ((sargs (mew-w32-argument-editing-function program program-args)))
       (setq program (car sargs)
 	    program-args (cdr sargs))))))

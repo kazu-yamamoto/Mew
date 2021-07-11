@@ -50,15 +50,15 @@
   (interactive)
   (if (save-excursion
 	(goto-char (window-end))
-        (and (pos-visible-in-window-p) (eobp)))
+	(and (pos-visible-in-window-p) (eobp)))
       ;; Nothing in this page.
       (if (or (null mew-break-pages)
 	      (save-excursion
 		(goto-char (window-end))
 		(save-restriction
 		  (widen) (forward-line) (eobp)))) ;; Real end of buffer?
-          (if mew-summary-show-pause
-              (prog1
+	  (if mew-summary-show-pause
+	      (prog1
 		  (mew-minfo-get-reob)
 		(unless (mew-minfo-get-reob)
 		  (message "End of buffer")
@@ -107,7 +107,7 @@ Otherwise, return 't'."
       (beginning-of-buffer ()))
     (widen)
     (cond
-     ((> arg 0)	(forward-page arg))
+     ((> arg 0) (forward-page arg))
      ((< arg 0) (forward-page (1- arg))))
     (forward-page)
     (let* ((end (point)))
@@ -195,13 +195,13 @@ confused. Please use '\\[mew-message-forward]' instead."
 (defun mew-message-goto-next-url (&optional arg)
   (interactive "P")
   (let ((next (if arg
-                   'previous-single-property-change
-                 'next-single-property-change))
-        pos)
+		  'previous-single-property-change
+		'next-single-property-change))
+	pos)
     (setq pos (funcall next (point) 'mew-url))
     (if pos
-        (if (not (get-text-property pos 'mew-url))
-            (setq pos (funcall next pos 'mew-url))))
+	(if (not (get-text-property pos 'mew-url))
+	    (setq pos (funcall next pos 'mew-url))))
     (when pos
       (goto-char pos))))
 

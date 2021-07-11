@@ -224,10 +224,10 @@ the Body: field."
 ;;;
 
 (defun mew-draft-header (&optional subject nl to cc newsgroups in-reply-to references other-headers fromme)
-;; to -- string or list
-;; cc -- string or list
-;; nl -- one empty line under "----", which is necessary if
-;;      attachment is prepared
+  ;; to -- string or list
+  ;; cc -- string or list
+  ;; nl -- one empty line under "----", which is necessary if
+  ;;      attachment is prepared
   (let ((del (unless fromme mew-regex-my-address-list)) ;; deleting list
 	case body)
     (goto-char (point-min))
@@ -322,8 +322,8 @@ citation prefix and label.
 2. If called with '\\[universal-argument]', the header is also copied if exists.
 3. If an Emacs mark exists, the target is the region between the mark and
    the cursor."
-;; MUST take care of C-x C-x
-;; MUST be able to cancel by C-x u
+  ;; MUST take care of C-x C-x
+  ;; MUST be able to cancel by C-x u
   (interactive "P")
   (if (and (not force) (or (mew-in-header-p) (mew-in-attach-p)))
       (message "Cannot cite a message here")
@@ -373,8 +373,8 @@ citation prefix and label.
 2. If called with '\\[universal-argument]', the header is also copied if exists.
 3. If an Emacs mark exists, the target is the region between the mark and
    the cursor."
-;; MUST take care of C-x C-x
-;; MUST be able to cancel by C-x u
+  ;; MUST take care of C-x C-x
+  ;; MUST be able to cancel by C-x u
   (interactive "P")
   (if (and (not force) (or (mew-in-header-p) (mew-in-attach-p)))
       (message "Cannot cite a message here")
@@ -432,7 +432,7 @@ citation prefix and label.
 	  (mew-header-goto-end)
 	  (setq cite (concat (mew-buffer-substring (point-min) (point))
 			     "\n" cite))
-          (setq irt-msgid (mew-idstr-get-first-id
+	  (setq irt-msgid (mew-idstr-get-first-id
 			   (mew-header-get-value mew-message-id:)))))
       ;;
       ;; Draft mode, insert the header and the body.
@@ -440,8 +440,8 @@ citation prefix and label.
 
       ;; Append message-id to In-Reply-To:
       (if (and irt-msgid (mew-msghdr-p))
-          (save-excursion
-            (let* ((mew-references-max-count nil)
+	  (save-excursion
+	    (let* ((mew-references-max-count nil)
 		   (irt (mew-header-get-value mew-in-reply-to:))
 		   (irtl (mew-idstr-to-id-list irt 'rev))
 		   irtstr)
@@ -473,12 +473,12 @@ citation prefix and label.
   (if (< (marker-position (mark-marker)) (point))
       (exchange-point-and-mark))
   (let ((beg (point)) (end (marker-position (mark-marker)))
-        label prefix)
+	label prefix)
     (save-restriction
       (narrow-to-region beg end)
       (condition-case nil
-          (setq label (funcall mew-cite-strings-function))
-        (error
+	  (setq label (funcall mew-cite-strings-function))
+	(error
 	 (error "Syntax of mew-cite-format was changed. Read explanation of mew-cite-fields")))
       (cond
        (mew-cite-prefix-function
@@ -488,9 +488,9 @@ citation prefix and label.
        (t
 	(setq prefix mew-cite-default-prefix)))
       (if (and mew-cite-prefix-confirmp (not mew-use-format-flowed))
-          (let ((ask (read-string
-                      (format "Prefix (\"%s\"): " prefix) "")))
-            (if (not (string= ask "")) (setq prefix ask))))
+	  (let ((ask (read-string
+		      (format "Prefix (\"%s\"): " prefix) "")))
+	    (if (not (string= ask "")) (setq prefix ask))))
       ;; C-u C-c C-y cites body with header.
       (if (eq arg nil)
 	  ;; header has been already cited. So, delete it.
@@ -619,8 +619,8 @@ flowed or not.  Here is an example:
 	      (auto-fill-mode 0)
 	      (visual-line-mode 1))
 	  (progn
-            (auto-fill-mode 1)
-            (visual-line-mode 0)))
+	    (auto-fill-mode 1)
+	    (visual-line-mode 0)))
 	))"
   (interactive "P")
   (set (make-local-variable 'mew-use-format-flowed)

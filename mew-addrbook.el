@@ -147,9 +147,9 @@
 (defun mew-alias-expand-addrs (key alist count)
   (let ((keys (delete "" (mapcar 'mew-chop (mew-split key ?,))))
 	ret)
-   (dolist (key keys)
-     (setq ret (nconc ret (mew-alias-expand key alist count))))
-   ret))
+    (dolist (key keys)
+      (setq ret (nconc ret (mew-alias-expand key alist count))))
+    ret))
 
 (defun mew-alias-expand (key alist count)
   "Expand KEY to a list of addresses according to ALIST.

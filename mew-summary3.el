@@ -97,10 +97,10 @@ the current message is copied to To: in a draft."
 	     (mew-folder-nntpp (mew-summary-physical-folder)))
 	(if (null newsgroups) (setq newsgroups ""))
       (when (and mew-ask-to (null to))
-        (setq to (mew-input-address (concat mew-to: " ")))
+	(setq to (mew-input-address (concat mew-to: " ")))
 	(setq asked t))
       (when (and mew-ask-cc (null cc))
-        (setq cc (mew-input-address (concat mew-cc: " ")))
+	(setq cc (mew-input-address (concat mew-cc: " ")))
 	(setq asked t)))
     (mew-current-set-window-config)
     (mew-window-configure 'draft)
@@ -227,7 +227,7 @@ The default value of 'mew-reply-sender-alist' is as follows:
 This is read as follows:
 
 	(1.1) If Reply-To: exists, copy the values of Reply-To:
-              and From: to new To:.
+	      and From: to new To:.
 	(1.2) Otherwise, copy the value of From: to To:.
 
 If you would like to reply only to the address on Reply-To: (if any),
@@ -248,8 +248,8 @@ The default value of 'mew-reply-fromme-alist' is as follows:
 This is read as follows:
 
 	(2.1) Copying the value of To: to new To: and
-              copying the value of Cc: to new Cc: and
-              copying the value of Newsgroups: to new Newsgroups:.
+	      copying the value of Cc: to new Cc: and
+	      copying the value of Newsgroups: to new Newsgroups:.
 
 The default value of 'mew-reply-all-alist' is as follows:
 
@@ -269,18 +269,18 @@ The default value of 'mew-reply-all-alist' is as follows:
 This is read as follows:
 
 	(3.1) If the value of Followup-To: is \"poster\", copying the
-              value of From: to new To:.
+	      value of From: to new To:.
 	(3.2) If Followup-To: exists, copying the values of
-              Followup-To: and Newsgroups: to new Newsgroups:.
+	      Followup-To: and Newsgroups: to new Newsgroups:.
 	(3.3) If Newsgroups: exists, copying the value of Newsgroups:
-              to Newsgroups:.
+	      to Newsgroups:.
 	(3.4) If Reply-To: exists, copying the values of Reply-To: and
-              From: to new To:. And copying the values of To:, Cc: and
-              Apparently-To: to new Cc:.
+	      From: to new To:. And copying the values of To:, Cc: and
+	      Apparently-To: to new Cc:.
 
 	(3.5) Otherwise, copying the value of From: to new To:. And
-              copying the values of To:, Cc: and Apparently-To: to
-              new Cc:.
+	      copying the values of To:, Cc: and Apparently-To: to
+	      new Cc:.
 
 You may want to set 'mew-reply-all-alist' to:
 
