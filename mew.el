@@ -29,6 +29,8 @@
 (require 'mew-vars) ;; mew-env && mew-key
 (require 'mew-vars2)
 (require 'mew-vars3)
+(eval-when-compile
+  (require 'mew-env0))
 
 (defun mew-version-show ()
   "Show mew-version in minibuffer."

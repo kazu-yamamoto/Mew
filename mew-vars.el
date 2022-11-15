@@ -6,6 +6,8 @@
 ;;; Code:
 
 (require 'mew-env)
+(eval-when-compile
+  (require 'mew-env0))
 
 ;;;
 ;;; User option variables which are easy to set.

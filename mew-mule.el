@@ -5,6 +5,9 @@
 
 ;;; Code:
 
+(eval-when-compile
+  (require 'mew-env0))
+
 ;;
 ;; Charset
 ;;

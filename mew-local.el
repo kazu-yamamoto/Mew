@@ -3,6 +3,9 @@
 ;; Author:  Kazu Yamamoto <Kazu@Mew.org>
 ;; Created: Dec 12, 2001
 
+(eval-when-compile
+  (require 'mew-summary))
+
 (defvar mew-local-folder-alist-file ".mew-folder-alist")
 (defvar mew-local-folder-alist nil)
 (defvar mew-local-folder-alist-time nil)

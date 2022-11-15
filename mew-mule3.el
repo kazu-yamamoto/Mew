@@ -6,6 +6,10 @@
 ;;; Code:
 
 (eval-when-compile
+  (require 'mew-env0)
+  (require 'mew-func))
+
+(eval-when-compile
   (mew-no-warning-defun charset-priority-list))
 
 ;; must be here
