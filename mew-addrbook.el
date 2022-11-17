@@ -537,9 +537,7 @@ reflected."
       (setq file (expand-file-name file mew-conf-path)))
     (switch-to-buffer (mew-find-file-noselect file))
     (emacs-lisp-mode)
-    (if (boundp 'write-file-functions)
-	(add-hook 'write-file-functions 'mew-summary-alias-read-buffer nil 'local)
-      (add-hook 'local-write-file-hooks 'mew-summary-alias-read-buffer))))
+    (add-hook 'write-file-functions 'mew-summary-alias-read-buffer nil 'local)))
 
 (provide 'mew-addrbook)
 

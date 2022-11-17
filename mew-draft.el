@@ -48,9 +48,7 @@
   (make-local-variable 'comment-start-skip)
   (setq comment-start-skip mew-comment-start-skip)
   (add-hook 'after-change-functions 'mew-draft-dynamic-highlight nil 'local)
-  (if (boundp 'write-file-functions)
-      (add-hook 'write-file-functions 'mew-encode-make-backup nil 'local)
-    (add-hook 'local-write-file-hooks 'mew-encode-make-backup))
+  (add-hook 'write-file-functions 'mew-encode-make-backup nil 'local)
   (make-local-variable 'after-save-hook)
   (when mew-require-final-newline
     (make-local-variable 'require-final-newline)
