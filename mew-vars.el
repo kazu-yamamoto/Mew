@@ -120,7 +120,8 @@
   :type 'directory)
 
 (defcustom mew-suffix ".mew"
-  "*Suffix of message files.  This suffix will be added if `mew-use-suffix` is non-nil."
+  "*Suffix of message files.  This suffix will be added if
+`mew-use-suffix` is non-nil."
   :group 'mew-env
   :type 'string)
 
@@ -419,7 +420,8 @@ Eash function is called with a deleted folder as the argument."
 
 (defcustom mew-summary-rename-folder-hook nil
   "*Hook called when a folder renamed.
-Each function is called with a source folder and a destination folder as the argument."
+Each function is called with a source folder and a destination
+folder as the argument."
   :group 'mew-summary
   :type 'hook)
 
@@ -2703,7 +2705,9 @@ reversed."
 
 (defcustom mew-auto-flush-queue t
   "If *non-nil* and if there are queued messages in +queue,
-they are flushed after getting message (i.e. '\\<mew-summary-mode-map>\\[mew-summary-retrieve]'). This idea saves money in dial up environment."
+they are flushed after getting
+message (i.e. '\\<mew-summary-mode-map>\\[mew-summary-retrieve]'). This
+idea saves money in dial up environment."
   :group 'mew-draft
   :type 'boolean)
 

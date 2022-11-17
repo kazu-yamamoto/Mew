@@ -143,7 +143,8 @@
   :type 'boolean)
 
 (defcustom mew-image-display-resize-always nil
-  "*If nil, only a larger image than frame size will be displayed with fitting to frame size"
+  "*If nil, only a larger image than frame size will be displayed
+with fitting to frame size"
   :group 'mew-message
   :type 'boolean)
 
