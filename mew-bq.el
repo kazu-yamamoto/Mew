@@ -204,9 +204,9 @@
   (condition-case nil
       (let* ((len (length qpstr))
 	     (ret (mew-make-string len))
-	     (j 0) char key)
+	     (i 0) (j 0) char key)
 	(setq key (or okey ?=))
-	(dotimes (i len)
+	(while (< i len) ;; cannot use non-lexbind dotimes since Emacs 29 does not support it
 	  (setq char (aref qpstr i))
 	  (cond
 	   ((and (not okey) (char-equal char ?_))
@@ -217,7 +217,8 @@
 	    (setq i (+ i 2)))
 	   (t
 	    (aset ret j char)))
-	  (setq j (1+ j)))
+	  (setq j (1+ j))
+	  (setq i (1+ i)))
 	(substring ret 0 j))
     (error nil)))
 
@@ -1091,14 +1092,16 @@ That is, each line may be more than 75."
 	 (bias mew-puny-initial-bias)
 	 (delta 0) (out 0)
 	 (output (mew-make-string (* len 4)))
-	 h b m q k thr uni)
-    (dotimes (j len)
+	 j h b m q k thr uni)
+    (setq j 0)
+    (while (< j len) ;; cannot use non-lexbind dotimes since Emacs 29 does not support it
       (setq uni (aref input j))
       (setq j (1+ j))
       (setq uni (+ (* uni 256) (aref input j)))
       (when (< uni 128) ;; basic
 	(aset output out uni)
-	(setq out (1+ out))))
+	(setq out (1+ out)))
+      (setq j (1+ j)))
     (setq h out)
     (setq b out)
     (when (> b 0)
@@ -1106,14 +1109,17 @@ That is, each line may be more than 75."
       (setq out (1+ out)))
     (while (< h h-len)
       (setq m 65536) ;; 17bits
-      (dotimes (j len)
+      (setq j 0)
+      (while (< j len) ;; cannot use non-lexbind dotimes since Emacs 29 does not support it
 	(setq uni (aref input j))
 	(setq j (1+ j))
 	(setq uni (+ (* uni 256) (aref input j)))
-	(if (and (>= uni n) (< uni m)) (setq m uni)))
+	(if (and (>= uni n) (< uni m)) (setq m uni))
+	(setq j (1+ j)))
       (setq delta (+ delta (* (- m n) (1+ h))))
       (setq n m)
-      (dotimes (j len)
+      (setq j 0)
+      (while (< j len) ;; cannot use non-lexbind dotimes since Emacs 29 does not support it
 	(setq uni (aref input j))
 	(setq j (1+ j))
 	(setq uni (+ (* uni 256) (aref input j)))
@@ -1139,7 +1145,8 @@ That is, each line may be more than 75."
 	  (setq out (1+ out))
 	  (setq bias (mew-puny-adapt delta (1+ h) (= h b)))
 	  (setq delta 0)
-	  (setq h (1+ h))))
+	  (setq h (1+ h)))
+	(setq j (1+ j)))
       (setq delta (1+ delta))
       (setq n (1+ n)))
     (substring output 0 out)))
