@@ -55,7 +55,8 @@ OBJS =	mew-addrbook.elc	mew-attach.elc		mew-auth.elc	\
 	mew-blvs.elc		mew-bq.elc		mew-cache.elc	\
 	mew-complete.elc	mew-config.elc		mew-const.elc	\
 	mew-decode.elc		mew-demo.elc		mew-draft.elc	\
-	mew-edit.elc		mew-encode.elc		mew-env.elc	\
+	mew-edit.elc		mew-encode.elc		\
+	mew-env.elc		mew-env0.elc	\
 	mew-ext.elc		mew-fib.elc		mew-func.elc	\
 	mew-gemacs.elc		mew-header.elc		mew-highlight.elc \
 	mew-imap.elc		mew-imap2.elc		mew-key.elc	\
@@ -80,7 +81,8 @@ SRCS =	mew-addrbook.el	mew-attach.el	mew-auth.el	\
 	mew-blvs.el	mew-bq.el	mew-cache.el	\
 	mew-complete.el	mew-config.el	mew-const.el	\
 	mew-decode.el	mew-demo.el	mew-draft.el	\
-	mew-edit.el	mew-encode.el	mew-env.el	\
+	mew-edit.el	mew-encode.el	\
+	mew-env.el	mew-env0.el	\
 	mew-ext.el	mew-fib.el	mew-func.el	\
 	mew-gemacs.el	mew-header.el	mew-highlight.el \
 	mew-imap.el	mew-imap2.el	mew-key.el	\

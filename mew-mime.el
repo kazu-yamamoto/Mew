@@ -7,6 +7,9 @@
 
 (require 'mew)
 (eval-when-compile
+  (require 'mew-env0))
+
+(eval-when-compile
   (cond
    ((memq system-type '(windows-nt cygwin))
     (require 'mew-win32))
