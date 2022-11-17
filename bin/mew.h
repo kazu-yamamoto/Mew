@@ -119,13 +119,6 @@
 # endif
 #endif
 
-#ifdef HAVE_VFORK
-# define FORK()	vfork()
-# define HAVE_FORK 1
-#elif defined(HAVE_FORK)
-# define FORK()	fork()
-#endif
-
 /*
  * External functions and variables
  */

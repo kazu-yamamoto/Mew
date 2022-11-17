@@ -90,9 +90,6 @@
 /* Define if you have the usleep function.  */
 #undef HAVE_USLEEP
 
-/* Define if you have the vfork function.  */
-#undef HAVE_VFORK
-
 /* Define if you have the <dir.h> header file.  */
 #undef HAVE_DIR_H
 

@@ -834,7 +834,7 @@ exec_init(unsigned int num) { /* num == 0 */
 	ch_folder(Current_folder);
 
 	if (pipe(pipes) != 0) warn_exit("can't open pipe.");
-	childpid = FORK();
+	childpid = fork();
 	if (childpid < 0) warn_exit("can't fork.");
 
 	if (childpid == 0) { /* I'm the child. */
