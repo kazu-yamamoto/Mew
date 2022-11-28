@@ -5,6 +5,8 @@
 
 ;;; Code:
 
+(require 'mew)
+
 (defvar mew-prog-pamscale (or (executable-find "pamscale") "pnmscale"))
 (defvar mew-prog-pamscale-opt
   (cond
