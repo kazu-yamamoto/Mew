@@ -3,6 +3,7 @@
 ;; Author:  Shuichi Kitaguchi <kit@Mew.org>
 ;; Created: Dec 05, 1997
 
+(require 'mew)
 (eval-when-compile
   (require 'mew-env0))
 
