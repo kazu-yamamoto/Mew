@@ -68,9 +68,9 @@ Example2: [\"  \" \"  \" \"  \" \"  \"] makes thread view below.
 
     Message 1
       Message 2
-        Message 3
+	Message 3
       Message 4
-        Message 5
+	Message 5
 
 All members must have the same length."
   :group 'mew-summary
@@ -371,7 +371,7 @@ threads are created, see 'mew-use-complete-thread'."
 	(mew-summary-thread-print-top (mew-vinfo-get-top) column)
 	(setq tm6 (current-time))
 	;;
-	(mew-thread-postscript mark disp-msg)	
+	(mew-thread-postscript mark disp-msg)
 	;;
 	(message "Displaying thread...done")
 	(run-hooks 'mew-thread-display-hook)
@@ -559,7 +559,7 @@ with the current folder as a candidate in addition to guessed folders."
 	(catch 'loop
 	  (while (not (eobp))
 	    (move-to-column column)
-	    (when (setq cindent	(mew-thread-get-property (point)))
+	    (when (setq cindent (mew-thread-get-property (point)))
 	      (if (>= indent cindent)
 		  (throw 'loop nil)
 		(when (mew-sumsyn-match regex)
@@ -772,7 +772,7 @@ a top node, move onto the top of the previous thread."
      ((mew-summary-child-local my-id)
       (message "Child found"))
      ((and (y-or-n-p "No child in this folder. Find in others? ")
-           (setq result (mew-summary-child-global my-id)))
+	   (setq result (mew-summary-child-global my-id)))
       (if (eq result t)
 	  (message "Child found")
 	(message "%s" result)))
@@ -781,15 +781,15 @@ a top node, move onto the top of the previous thread."
 
 (defun mew-summary-child-local (my-id)
   (let ((pos (point))
-        (key (mew-regex-sumsyn-par-id my-id)))
-  (if (or (re-search-forward  key nil t)
-          (re-search-backward key nil t))
-      (progn
-        (mew-thread-move-cursor)
-        (mew-summary-display)
-        t)
-    (goto-char pos)
-    nil)))
+	(key (mew-regex-sumsyn-par-id my-id)))
+    (if (or (re-search-forward  key nil t)
+	    (re-search-backward key nil t))
+	(progn
+	  (mew-thread-move-cursor)
+	  (mew-summary-display)
+	  t)
+      (goto-char pos)
+      nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -903,11 +903,11 @@ If the children are hidden, they will appear."
        (mew-decode-syntax-delete)
        (while (setq here (mew-thread-next-property2 (point) (point-max) 0))
 	 (goto-char here)
-       (beginning-of-line)
-       (if (looking-at (concat "^." (regexp-quote (char-to-string mew-mark-thread-root))))
-	   (mew-thread-graft)
-	 (mew-thread-prune))
-       (forward-line))
+	 (beginning-of-line)
+	 (if (looking-at (concat "^." (regexp-quote (char-to-string mew-mark-thread-root))))
+	     (mew-thread-graft)
+	   (mew-thread-prune))
+	 (forward-line))
        (mew-thread-move-cursor)
        (set-buffer-modified-p nil)))))
 

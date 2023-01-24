@@ -61,7 +61,7 @@ Summary mode."
   (interactive "P")
   (let* ((proto (mew-proto-to-go (mew-summary-folder-name 'ext)))
 	 (case1 (car (mew-summary-case-proto)))
-	 (inbox (mew-proto-inbox-folder	proto case1))
+	 (inbox (mew-proto-inbox-folder proto case1))
 	 (case:folder (mew-input-folder case1 inbox))
 	 case folder buf win frame folder-alist)
     (if (null case:folder)
@@ -107,7 +107,7 @@ Summary mode."
 		  (mew-summary-switch-to-folder folder)
 		(message "%s is old" folder))
 	    (mew-summary-switch-to-folder folder))
-        (message "No such virtual folder: %s" folder)))
+	(message "No such virtual folder: %s" folder)))
      (t ;; local/remote folders
       (if (null dir)
 	  (message "Folder is wrong")
@@ -193,9 +193,9 @@ the message is then displayed."
 (defun mew-max-draft-buffer ()
   (let* ((draft-dir (file-name-as-directory mew-draft-folder))
 	 (regex (mew-folder-regex draft-dir))
-         (bufs (mew-buffer-list regex))
+	 (bufs (mew-buffer-list regex))
 	 (msgregex (format "\\([0-9]+\\)\\(%s\\)?$" mew-suffix))
-         nums n)
+	 nums n)
     (setq nums (mapcar (lambda (x) (string-match msgregex x) (string-to-number (mew-match-string 1 x))) bufs))
     (dolist (num nums)
       (if (or (null n) (< n num))
@@ -303,7 +303,7 @@ If called with '\\[universal-argument]', the body of the message
 	 (read-string "Shell command on message: " mew-last-shell-command)))
   (mew-summary-display 'redisplay)
   (when (or (not mew-ask-pipe)
-            (y-or-n-p "Send this message to pipe? "))
+	    (y-or-n-p "Send this message to pipe? "))
     (with-current-buffer (mew-buffer-message)
       (save-restriction
 	(widen)
@@ -810,7 +810,7 @@ message."
   "Copy messages marked with '*' to a local folder.  If called
 with '\\[universal-argument]', only messages marked with '*' in
 the region are handled."
- (interactive "P")
+  (interactive "P")
   (mew-summary-not-in-draft
    (let ((mew-use-highlight-x-face nil)
 	 (fld (mew-summary-folder-name))

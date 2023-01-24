@@ -414,13 +414,13 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   (let (ret) ;; this should be nil
     (goto-char (point-min))
     (if (re-search-forward (mew-pgp-get mew-pgp-msg-no-validkey) nil t)
-        (setq ret mew-pgp-result-invalid)
+	(setq ret mew-pgp-result-invalid)
       (goto-char (point-min))
       (if (search-forward (mew-pgp-get mew-pgp-msg-no-enckey) nil t)
-          (setq ret mew-pgp-result-pubkey)
-        (goto-char (point-min))
-        (if (search-forward (mew-pgp-get mew-pgp-msg-no-keyring) nil t)
-            (setq ret mew-pgp-result-pubring)
+	  (setq ret mew-pgp-result-pubkey)
+	(goto-char (point-min))
+	(if (search-forward (mew-pgp-get mew-pgp-msg-no-keyring) nil t)
+	    (setq ret mew-pgp-result-pubring)
 	  (goto-char (point-min))
 	  (if (search-forward (mew-pgp-get mew-pgp-msg-pubkey-expired) nil t)
 	      (setq ret mew-pgp-result-expired)))))
@@ -521,7 +521,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 	(insert mew-pgp-string)
 	(goto-char (point-min))
 	(if (re-search-forward "SIG_CREATED [A-Z] [0-9]+ \\([0-9]+\\)" nil t)
-	   (setq alg (cdr (assoc (mew-match-string 1) mew-pgp-hash-alist)))))
+	    (setq alg (cdr (assoc (mew-match-string 1) mew-pgp-hash-alist)))))
       (or alg micalg))))
 
 (defun mew-pgp-sign (file1)
@@ -969,7 +969,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 	 ;; We need MIME-decoded buffer to check PGP boundaries.
 	 (setq type (mew-old-pgp-check))
 	 (if type
-	    (mew-old-pgp-decode fld msg type)
+	     (mew-old-pgp-decode fld msg type)
 	   (message "No PGP data found")))))))
 
 (defun mew-old-pgp-decode (fld msg type)
@@ -1236,11 +1236,11 @@ according to a URL in a field specified by 'mew-x-pgp-key-list'."
 ;; You do not have the secret key needed to decrypt this file.
 ;;
 ;;    <Verify> <2>
-;;	Keyring file 'pubring.pgp' does not exist.
-;;	Enter public key filename:
+;;      Keyring file 'pubring.pgp' does not exist.
+;;      Enter public key filename:
 ;;
-;;	Key matching expected Key ID 1B8BF431 not found in file 'pubring.pgp'.
-;;	Enter public key filename:
+;;      Key matching expected Key ID 1B8BF431 not found in file 'pubring.pgp'.
+;;      Enter public key filename:
 ;;
 ;; <Sign> <1>
 ;;

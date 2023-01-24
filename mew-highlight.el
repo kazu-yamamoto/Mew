@@ -194,7 +194,7 @@
 	   (while (and (<= (point) END) (re-search-forward cmt-regex END t))
 	     (setq beg (match-beginning 0))
 	     (setq end (match-end 0))
-	     (put-text-property	beg end 'face 'mew-face-body-comment)))
+	     (put-text-property beg end 'face 'mew-face-body-comment)))
 	 (when mew-use-highlight-url
 	   (goto-char BEG)
 	   (while (and (<= (point) END) (re-search-forward url-regex END t))

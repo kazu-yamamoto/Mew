@@ -238,13 +238,13 @@ in the context of FUNC."
     (setq next (car LIST))
     (if (equal frst MEM)
 	(if next next frst)
-    (catch 'loop
-      (while LIST ;; cannot use dolist
-	(setq crnt next)
-	(setq LIST (cdr LIST))
-	(setq next (car LIST))
-	(if (equal crnt MEM)
-	    (throw 'loop (if next next frst))))))))
+      (catch 'loop
+	(while LIST ;; cannot use dolist
+	  (setq crnt next)
+	  (setq LIST (cdr LIST))
+	  (setq next (car LIST))
+	  (if (equal crnt MEM)
+	      (throw 'loop (if next next frst))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -448,8 +448,8 @@ also ignored."
 (defun mew-quote-string (str qchar targets)
   "If characters in STR is a member of TARGETS, QCHAR is prepended to them."
   (let* ((len (length str))
-	(ret (mew-make-string (* len 2)))
-	(j 0) c)
+	 (ret (mew-make-string (* len 2)))
+	 (j 0) c)
     (dotimes (i len)
       (setq c (aref str i))
       (when (member c targets)
@@ -1016,7 +1016,7 @@ and sets buffer-file-coding-system."
   (let ((auto-image-file-mode nil)
 	(format-alist nil)
 	(auto-mode-alist nil)
-        (enable-local-variables nil)
+	(enable-local-variables nil)
 	(find-file-hook nil)
 	(large-file-warning-threshold nil))
     (apply 'find-file-noselect args)))
@@ -1497,11 +1497,11 @@ by side-effect."
 		(- (nth 1 new) (nth 1 old))))
 	(usec (- (nth 2 new) (nth 2 old))))
     (if (< usec 0)
-        (setq sec (1- sec)
-              usec (+ usec million))
+	(setq sec (1- sec)
+	      usec (+ usec million))
       (if (>= usec million)
-          (setq sec (1+ sec)
-                usec (- usec million))))
+	  (setq sec (1+ sec)
+		usec (- usec million))))
     (+ sec (/ usec (float million)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -27,7 +27,7 @@
       (setq dsts (cdr msg-dsts))
       (if dsts ;; sanity check
 	  (if (setq tmp (assoc dsts dsts-msgses))
-	      (nconc tmp (list msg))	
+	      (nconc tmp (list msg))
 	    (setq dsts-msgses (cons (list dsts msg) dsts-msgses))))
       (mew-refile-reset msg))
     ;; refile at once
@@ -435,7 +435,7 @@ destination is the same as that of the current message are processed."
 	  (setq msg (mew-sumsyn-message-number))
 	  (setq uid (mew-sumsyn-message-uid))
 	  (setq siz (mew-sumsyn-message-size))
-	  (when (or (not func-decide) (funcall func-decide msg))	
+	  (when (or (not func-decide) (funcall func-decide msg))
 	    (setq refinfo (mew-refile-get msg))
 	    (setq refile-back (cons refinfo refile-back))
 	    (setq flds (cdr refinfo))
@@ -647,15 +647,15 @@ the queue, type '\\[mew-summary-send-message]' in the queue online."
     (mew-decode-syntax-delete)
     (save-window-excursion
       (let (beg end)
-        (save-excursion
-          (beginning-of-line)
-          (setq beg (if arg (point-min) (point)))
-          (end-of-line)
-          (setq end (1+ (point))))
-        (if (> end (point-max))
-            (message "No message")
+	(save-excursion
+	  (beginning-of-line)
+	  (setq beg (if arg (point-min) (point)))
+	  (end-of-line)
+	  (setq end (1+ (point))))
+	(if (> end (point-max))
+	    (message "No message")
 	  (force-mode-line-update) ;; xxx
-          (mew-summary-exec-offline-region beg end))))))
+	  (mew-summary-exec-offline-region beg end))))))
 
 (provide 'mew-exec)
 

@@ -48,9 +48,9 @@
     ("user-login"    ("334" . "pwd-login") (t . "wpwd"))
     ("pwd-login"     ("235" . "next") (t . "wpwd"))
     ("auth-plain"    ("235" . "next") (t . "wpwd"))
-;; See blow
-;;    ("auth-plain"    ("334" . "pwd-plain") (t . "wpwd"))
-;;    ("pwd-plain"     ("235" . "next") (t . "wpwd"))
+    ;; See blow
+    ;;    ("auth-plain"    ("334" . "pwd-plain") (t . "wpwd"))
+    ;;    ("pwd-plain"     ("235" . "next") (t . "wpwd"))
     ;;
     ("helo"          ("250" . "next"))
     ("mail-from"     ("250" . "rcpt-to"))
@@ -187,7 +187,7 @@
   (save-excursion
     (let ((cont (mew-smtp-get-cont pnm))
 	  (sender (mew-smtp-get-sender pnm))
-          (inc 1000) (i 0) (N 10))
+	  (inc 1000) (i 0) (N 10))
       (set-buffer (process-buffer pro))
       ;; Sender:
       (when sender
@@ -195,22 +195,22 @@
 	(mew-smtp-set-sender pnm nil))
       ;;
       (while (and (< cont (point-max)) (not (input-pending-p)) (< i N))
-        (let ((next (min (point-max) (+ cont inc))))
+	(let ((next (min (point-max) (+ cont inc))))
 	  (if (and (processp pro) (eq (process-status pro) 'open))
 	      (process-send-region pro cont next))
-          (setq cont next)
-          (setq i (1+ i))))
+	  (setq cont next)
+	  (setq i (1+ i))))
       (mew-smtp-set-cont pnm cont)
       (if (< cont (point-max))
-          (let ((timer
-                 (if (input-pending-p)
-                     (run-with-idle-timer
+	  (let ((timer
+		 (if (input-pending-p)
+		     (run-with-idle-timer
 		      0.01 nil 'mew-smtp-command-content pro pnm)
-                   (run-at-time 0.05 nil 'mew-smtp-command-content pro pnm))))
-            (mew-smtp-set-timer pnm timer))
-        (mew-smtp-set-cont pnm nil)
-        (mew-smtp-set-timer pnm nil)
-        (mew-smtp-process-send-string pro ".")))))
+		   (run-at-time 0.05 nil 'mew-smtp-command-content pro pnm))))
+	    (mew-smtp-set-timer pnm timer))
+	(mew-smtp-set-cont pnm nil)
+	(mew-smtp-set-timer pnm nil)
+	(mew-smtp-process-send-string pro ".")))))
 
 (defun mew-smtp-command-done (pro pnm)
   (let ((fcc (mew-smtp-get-fcc pnm))
@@ -279,13 +279,13 @@
 
 (defun mew-smtp-command-user-login (pro pnm)
   (let* ((user (mew-smtp-get-auth-user pnm))
-         (euser (mew-base64-encode-string user)))
-     (mew-smtp-process-send-string pro "%s" euser)))
+	 (euser (mew-base64-encode-string user)))
+    (mew-smtp-process-send-string pro "%s" euser)))
 
 (defun mew-smtp-command-pwd-login (pro pnm)
   (let* ((user (mew-smtp-get-auth-user pnm))
 	 (prompt (format "SMTP LOGIN password (%s): " user))
-         (passwd (mew-smtp-input-passwd prompt pnm))
+	 (passwd (mew-smtp-input-passwd prompt pnm))
 	 (epasswd (mew-base64-encode-string passwd)))
     (mew-smtp-process-send-string pro epasswd)))
 
@@ -314,14 +314,14 @@
 
 ;; (defun mew-smtp-command-pwd-plain (pro pnm)
 ;;   (let* ((case (mew-smtp-get-case pnm))
-;;	 (user (mew-smtp-get-auth-user pnm))
-;;	 (authorize-id (mew-smtp-auth-plain-authorize-id case))
-;;	 (prompt (format "SMTP PLAIN password (%s): " user))
-;;	 (passwd (mew-smtp-input-passwd prompt pnm))
-;;	 (plain (mew-base64-encode-string
-;;		 (if authorize-id
-;;		     (format "%s\0%s\0%s" user user passwd)
-;;		   (format "\0%s\0%s" user passwd)))))
+;;       (user (mew-smtp-get-auth-user pnm))
+;;       (authorize-id (mew-smtp-auth-plain-authorize-id case))
+;;       (prompt (format "SMTP PLAIN password (%s): " user))
+;;       (passwd (mew-smtp-input-passwd prompt pnm))
+;;       (plain (mew-base64-encode-string
+;;               (if authorize-id
+;;                   (format "%s\0%s\0%s" user user passwd)
+;;                 (format "\0%s\0%s" user passwd)))))
 ;;     (mew-smtp-process-send-string pro "%s" plain)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -436,7 +436,7 @@
 
 (defun mew-smtp-send-message (case qfld msgs &optional fallbacked)
   (let ((server (mew-smtp-server case))
-        (user (mew-smtp-user-only case))
+	(user (mew-smtp-user-only case))
 	(port (mew-*-to-string (mew-smtp-port case)))
 	(pnm (mew-smtp-info-name case fallbacked))
 	(sshsrv (mew-smtp-ssh-server case))
@@ -750,8 +750,8 @@
       (and recipients (insert " recipients=" recipients))
       (if err
 	  (insert " status=" "("
-                  (substring err 0 (string-match "\n+$" err))
-                  ")")
+		  (substring err 0 (string-match "\n+$" err))
+		  ")")
 	(insert " status=sent"))
       (insert "\n")
       (write-region (point-min) (point-max)

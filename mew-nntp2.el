@@ -65,7 +65,7 @@
 
 (defun mew-nntp2-command-authpass (pro pnm)
   (let* ((prompt (format "NNTP password (%s): " (mew-nntp2-get-account pnm)))
-         (pass (mew-nntp2-input-passwd prompt pnm)))
+	 (pass (mew-nntp2-input-passwd prompt pnm)))
     (mew-nntp2-process-send-string pro "AUTHINFO PASS %s" pass)))
 
 (defun mew-nntp2-command-wpwd (pro pnm)
@@ -166,8 +166,8 @@
 
 (defun mew-nntp2-input-passwd (prompt pnm)
   (let* ((tag (mew-nntp2-passtag pnm))
-         (pro (mew-nntp2-get-process pnm))
-         (pass (mew-input-passwd prompt tag)))
+	 (pro (mew-nntp2-get-process pnm))
+	 (pass (mew-input-passwd prompt tag)))
     (unless (and (processp pro) (eq (process-status pro) 'open))
       (mew-passwd-set-passwd tag nil))
     pass))
@@ -207,7 +207,7 @@
 
 (defun mew-nntp2-send-message (case qfld msgs)
   (let ((server (mew-nntp-server case))
-        (user (mew-nntp-user case))
+	(user (mew-nntp-user case))
 	(port (mew-*-to-string (mew-nntp-port case)))
 	(pnm (mew-nntp2-info-name case))
 	(sshsrv (mew-nntp-ssh-server case))
@@ -405,8 +405,8 @@
       (and newsgroups (insert " newsgroups=" newsgroups))
       (if err
 	  (insert " status=" "("
-                  (substring err 0 (string-match "\n+$" err))
-                  ")")
+		  (substring err 0 (string-match "\n+$" err))
+		  ")")
 	(insert " status=sent"))
       (insert "\n")
       (write-region (point-min) (point-max)

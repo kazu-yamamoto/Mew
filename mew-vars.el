@@ -992,11 +992,11 @@ the corresponding RANGE is returned.
 Candidate values for 'mew-rage-list-string-type' and
 'mew-range-list-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
+	'regex          Regular expression.
+	'recursive      Initial substring match. That is,
 			not only a folder specified but all so
 			all sub-folders are matched.
-	'string		String comparison.
+	'string         String comparison.
 
 An example is as follows:
 	'(((\"+queue\" \"+postq\" \"+draft\") \"all\")
@@ -1053,11 +1053,11 @@ the corresponding VALUE is returned.
 Candidate values for 'mew-rage-list-string-type' and
 'mew-unread-mark-list-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
+	'regex          Regular expression.
+	'recursive      Initial substring match. That is,
 			not only a folder specified but all so
 			all sub-folders are matched.
-	'string		String comparison.
+	'string         String comparison.
 
 The default value is:
 	'(((\"+inbox\" \"$inbox\" \"%inbox\" \"-\") t)
@@ -1205,11 +1205,11 @@ the corresponding SUMMARY-FORM is returned.
 Candidate values for 'mew-summary-form-list-string-type' and
 'mew-summary-form-list-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
+	'regex          Regular expression.
+	'recursive      Initial substring match. That is,
 			not only a folder specified but all so
 			all sub-folders are matched.
-	'string		String comparison.
+	'string         String comparison.
 
 SUMMARY-FORM is a list. See 'mew-summary-form' for more information.
 
@@ -1261,34 +1261,34 @@ Consider the following examples:
 
 Each element returns the following value:
 
-	'name		Name part, if any
+	'name           Name part, if any
 				A: Kazu Yamamoto
 				B: (No match)
 				C: Kazuhiko Yamamoto (Kazu)
-	'comment	Comment part, if any
+	'comment        Comment part, if any
 				A: (No match)
 				B: Kazu Yamamoto
 				C: (Kazu)
-	'address	Address part
+	'address        Address part
 				A: kazu@example.org
 				B: kazu@example.org
 				C: kazu@example.org
 
 	'nickname       One element of personal information in
-                        Addrbook according to 'mew-addrbook-for-summary'.
-                        The default value of 'mew-addrbook-for-summary'
-                        is 'nickname. So, From: is converted a nickname
-                        by default. For more information, see
-                        'mew-addrbook-switch'.
+			Addrbook according to 'mew-addrbook-for-summary'.
+			The default value of 'mew-addrbook-for-summary'
+			is 'nickname. So, From: is converted a nickname
+			by default. For more information, see
+			'mew-addrbook-switch'.
 
-	(regex)		The substring first matched
+	(regex)         The substring first matched
 
 If a element does not match, the next element is applied. If no
 element matches to the From: field, or this value is nil, the whole
 of the From: field is used."
   :group 'mew-summary
   :type '(repeat (choice regexp (const name) (const comment)
-                         (const address) (const nickname))))
+			 (const address) (const nickname))))
 
 (defcustom mew-summary-form-mark-delete nil
   "*If non-nil, the 'D' mark automatically is put onto
@@ -1347,8 +1347,8 @@ Both \"In-Reply-To:\" and \"References:\" MUST be included for thread.
 The last MUST be \"Body\"."
   :group 'mew-summary
   :type '(cons (const "Folder:")
-               (cons (const "Filename:")
-                     (repeat string))))
+	       (cons (const "Filename:")
+		     (repeat string))))
 
 (defvar mew-scan-fields-alias nil
   "*A list of aliases for 'mew-scan-fields'.
@@ -1624,11 +1624,11 @@ strings, the corresponding boolean is returned.
 Candidate values for 'mew-use-text/html-string-type' and
 'mew-use-text/html-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
+	'regex          Regular expression.
+	'recursive      Initial substring match. That is,
 			not only a folder specified but all so
 			all sub-folders are matched.
-	'string		String comparison.
+	'string         String comparison.
 "
   :group 'mew-summary
   :type '(choice
@@ -1876,9 +1876,9 @@ If you cite a message, the citation style of format=flowed is used. "
   "*Ratio of windows"
   :group 'mew-env
   :type '(list
-           (list (const summary) (list integer integer))
-           (list (const message) (list integer integer))
-           (list (const draft) (list integer integer))))
+	  (list (const summary) (list integer integer))
+	  (list (const message) (list integer integer))
+	  (list (const draft) (list integer integer))))
 
 (defcustom mew-mode-line-id "Mew: %12b"
   "*A default value of mode-line-buffer-identification for each Mew mode."
@@ -2191,8 +2191,8 @@ If 'wrap, format with fill-region.
 If 'truncate, cut over fill-column and insert 'mew-draft-cite-ellipses'."
   :group 'mew-draft
   :type '(choice (symbol :tag "Wrap" wrap)
-                 (symbol :tag "Truncate" truncate)
-                 (symbol :tag "Asis" nil)))
+		 (symbol :tag "Truncate" truncate)
+		 (symbol :tag "Asis" nil)))
 
 (defcustom mew-draft-cite-ellipses " .."
   "String that is inserted a truncated line when
@@ -2281,7 +2281,7 @@ the following step to decide a charset.
 2. If 'unify-8859-on-decoding-mode' is not used:
 
 	2.1. If both ISO-8859-1 and ISO-8859-15 can be used with no
-             loss, 'mew-charset-latin' is used.
+	     loss, 'mew-charset-latin' is used.
 	2.2. Use \"iso-8859-1\" if no loss.
 	2.3. Use \"iso-8859-15\" if no loss.
 	2.3. Otherwise, use \"utf-8\".
@@ -2434,7 +2434,7 @@ circular domain completion."
   "*A field list to be deleted in Edit mode."
   :group 'mew-draft
   :type '(choice (const nil)
-                 (repeat :tag "Field list" (string :tag "Field"))))
+		 (repeat :tag "Field list" (string :tag "Field"))))
 
 (defcustom mew-field-delete-for-reediting
   (or mew-field-delete
@@ -2560,15 +2560,15 @@ folders whose name is alphabet only."
 The format is like this:
 
     (setq mew-refile-guess-alist
-          '((\"To:\"
-              (\"wide@wide\" \"+wide/wide\")
-              (\"adam\"      \"+labo/adam\"))
-            (\"Newsgroups:\"
-              (\"^nifty\\\\.\\\\([^ ]+\\\\)\" \"+Nifty/\\\\1\"))
-            (\"From:\"
-              (\"uucp\" \"+adm/uucp\")
-              (\".*\"   \"+misc\"))
-            ))
+	  '((\"To:\"
+	      (\"wide@wide\" \"+wide/wide\")
+	      (\"adam\"      \"+labo/adam\"))
+	    (\"Newsgroups:\"
+	      (\"^nifty\\\\.\\\\([^ ]+\\\\)\" \"+Nifty/\\\\1\"))
+	    (\"From:\"
+	      (\"uucp\" \"+adm/uucp\")
+	      (\".*\"   \"+misc\"))
+	    ))
 "
   :group 'mew-refile
   :type mew-custom-type-of-guess-alist)
@@ -2740,7 +2740,7 @@ Its format is key:mode where more is found in 'mew-sort-mode'."
 of a specific folder. An example is follows:
 \(setq mew-sort-default-key-alist
       '((\"+tmp/beginners\" \"x-sequence\")
-        (\"+tmp/elips\" \"x-mail-count\")))"
+	(\"+tmp/elips\" \"x-mail-count\")))"
   :group 'mew-summary
   :type '(list (list string string)))
 
@@ -2751,11 +2751,11 @@ of a specific folder. An example is follows:
   "*List of fields for 'mew-summary-sort'.
 Each element is (FIELD-NAME) or (FIELD-NAME . MODE).
 MODE is one of \"date\" (by chronological order) or
-               \"num\"  (by numerical order) or
-               \"postnum\" (by numerical order of postfix numeric) or
-               \"text\" (by alphabetical order) or
-               \"ml\"   (by alphabetical order with ml prefix removed) or
-               \"mlnum\" (by numerical order of ml number).
+	       \"num\"  (by numerical order) or
+	       \"postnum\" (by numerical order of postfix numeric) or
+	       \"text\" (by alphabetical order) or
+	       \"ml\"   (by alphabetical order with ml prefix removed) or
+	       \"mlnum\" (by numerical order of ml number).
 \(nil means \"text\")."
   :group 'mew-summary
   :type 'sexp)
@@ -2982,14 +2982,14 @@ does not require receiver's public key, signature service may be
 appropriate for this value."
   :group 'mew-privacy
   :type '(choice (const pgp-signature)
-                 (const pgp-encryption)
-                 (const pgp-signature-encryption)
+		 (const pgp-encryption)
+		 (const pgp-signature-encryption)
 		 (const pgp-encryption-signature)
 		 (const smime-signature)
-                 (const smime-encryption)
-                 (const smime-signature-encryption)
+		 (const smime-encryption)
+		 (const smime-signature-encryption)
 		 (const smime-encryption-signature)
-                 (other :tag "nil" nil)))
+		 (other :tag "nil" nil)))
 
 (defcustom mew-protect-privacy-encrypted nil
   "*If non-nil, a draft replying a encrypted message is to be protected
@@ -3004,14 +3004,14 @@ messages. Currently, 'pgp-signature, 'pgp-encryption,
 and nil are available."
   :group 'mew-privacy
   :type '(choice (const pgp-signature)
-                 (const pgp-encryption)
-                 (const pgp-signature-encryption)
+		 (const pgp-encryption)
+		 (const pgp-signature-encryption)
 		 (const pgp-encryption-signature)
 		 (const smime-signature)
 		 (const smime-encryption)
 		 (const smime-signature-encryption)
 		 (const smime-encryption-signature)
-                 (other :tag "nil" nil)))
+		 (other :tag "nil" nil)))
 
 (defcustom mew-protect-privacy-with-old-pgp-signature nil
   "*If non-nil and 'mew-use-old-pgp' is non-nil,
