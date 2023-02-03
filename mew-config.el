@@ -151,6 +151,9 @@
 
 ;;
 
+(defun mew-prog-ssl-arg (&optional case)
+  (mew-cfent-value case "prog-ssl-arg" mew-prog-ssl-arg))
+
 (defun mew-ssl-cert-directory (&optional case)
   (mew-cfent-value case "ssl-cert-directory" mew-ssl-cert-directory))
 
