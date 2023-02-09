@@ -29,12 +29,16 @@
   (mew-header-goto-end)
   (forward-line))
 
+(defvar mew-header-single-fields
+  (list mew-date: mew-from: mew-sender: mew-reply-to: mew-to: mew-cc: mew-bcc: mew-message-id: mew-references: mew-subj:))
+
 (defun mew-header-get-value (field &optional as-list)
   "currently, when no match, it returns nil."
   ;; maybe called in narrowed region.
   ;; we cannot widen for citation.
   (let ((case-fold-search t)
 	(regex (format "^%s[ \t]*" field))
+	(singlep (member field mew-header-single-fields))
 	start match ret)
     (save-excursion
       (mew-header-goto-end)
@@ -55,7 +59,7 @@
 		(if as-list
 		    (setq ret (list match))
 		  (setq ret match))
-		(if (string= field mew-from:) (throw 'only-one nil))))))))
+		(if singlep (throw 'only-one nil))))))))
     (if as-list
 	(nreverse ret)
       ret)))

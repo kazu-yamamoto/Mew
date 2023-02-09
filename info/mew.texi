@@ -10606,8 +10606,8 @@ To add Message-ID: to citation label, take this way.
 @end ifset
 
 @lisp
-(setq mew-cite-fields '("From:" "Subject:" "Date:" "Message-ID:"))
-(setq mew-cite-format "From: %s\nSubject: %s\nDate: %s\nMessage-ID: %s\n\n")
+(setq mew-cite-fields '("From:" "Subject:" "Date:" "Message-Id:"))
+(setq mew-cite-format "From: %s\nSubject: %s\nDate: %s\nMessage-Id: %s\n\n")
 @end lisp
 
 @ifset ja
