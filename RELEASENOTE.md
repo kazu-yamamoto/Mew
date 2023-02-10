@@ -20,6 +20,11 @@
     - `mew-inbox-action-alist`
     - `All above in mew-config-alist`
 
+## Differences between Mew 6.9 and Mew 6.8
+
+* Mew now supports Emacs 26.1 or later only.
+* TBD
+
 ## Differences between Mew 6.8 and Mew 6.7
 
 * Mew now supports Emacs 24.3 or later only.
