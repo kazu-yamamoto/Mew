@@ -25,7 +25,10 @@ This is stable releases of Mew 6.9.
 ## Differences between Mew 6.9 and Mew 6.8
 
 * Mew now supports Emacs 26.1 or later only.
-* TBD
+* Supporting coming Emacs 29.
+* Supporting "stunnel" 5.15.
+* Supporting native compilation.
+* Some bug fixes.
 
 ## Differences between Mew 6.8 and Mew 6.7
 
