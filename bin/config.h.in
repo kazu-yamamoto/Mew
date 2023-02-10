@@ -1,129 +1,184 @@
-/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+/* config.h.in.  Generated from configure.in by autoheader.  */
 
-#ifndef __CONFIG_H__
-#define __CONFIG_H__
-
-/* Define to empty if the keyword does not work.  */
-#undef const
-
-/* Define to `int' if <sys/types.h> doesn't define.  */
-#undef gid_t
-
-/* Define to `int' if <sys/types.h> doesn't define.  */
-#undef pid_t
-
-/* Define as the return type of signal handlers (int or void).  */
-#undef RETSIGTYPE
-
-/* Define to `unsigned' if <sys/types.h> doesn't define.  */
-#undef size_t
-
-/* Define if you have the ANSI C header files.  */
-#undef STDC_HEADERS
-
-/* Define if you can safely include both <sys/time.h> and <time.h>.  */
-#undef TIME_WITH_SYS_TIME
-
-/* Define to `int' if <sys/types.h> doesn't define.  */
-#undef uid_t
-
-/* Define useconds_t as int if you don't have useconds_t */
-#undef useconds_t
-
-/* Define ssize_t as int if you don't have ssize_t */
-#undef ssize_t
-
-/* Define if you have the Sleep function.  */
-#undef HAVE_SLEEP
-
-/* Define if you have the _chdir2 function.  */
-#undef HAVE__CHDIR2
-
-/* Define if you have the _setmode function.  */
-#undef HAVE__SETMODE
-
-/* Define if you have the chdir function.  */
+/* Define to 1 if you have the `chdir' function. */
 #undef HAVE_CHDIR
 
-/* Define if you have the fchmod function.  */
-#undef HAVE_FCHMOD
+/* Define to 1 if you have the `chmod' function. */
+#undef HAVE_CHMOD
 
-/* Define if you have the fgetln function.  */
-#undef HAVE_FGETLN
-
-/* Define if you have the flock function.  */
-#undef HAVE_FLOCK
-
-/* Define if you have the fork function.  */
-#undef HAVE_FORK
-
-/* Define if you have the futimes function.  */
-#undef HAVE_FUTIMES
-
-/* Define if you have the getlogin function.  */
-#undef HAVE_GETLOGIN
-
-/* Define if you have the getpwuid function.  */
-#undef HAVE_GETPWUID
-
-/* Define if you have the lockf function.  */
-#undef HAVE_LOCKF
-
-/* Define if you have the memmove function.  */
-#undef HAVE_MEMMOVE
-
-/* Define if you have the poll function.  */
-#undef HAVE_POLL
-
-/* Define if you have the setmode function.  */
-#undef HAVE_SETMODE
-
-/* Define if you have the snprintf function.  */
-#undef HAVE_SNPRINTF
-
-/* Define if you have the strncasecmp function.  */
-#undef HAVE_STRNCASECMP
-
-/* Define if you have the strnicmp function.  */
-#undef HAVE_STRNICMP
-
-/* Define if you have the usleep function.  */
-#undef HAVE_USLEEP
-
-/* Define if you have the <dir.h> header file.  */
-#undef HAVE_DIR_H
-
-/* Define if you have the <dirent.h> header file.  */
+/* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
+   */
 #undef HAVE_DIRENT_H
 
-/* Define if you have the <fcntl.h> header file.  */
+/* Define to 1 if you have the <dir.h> header file. */
+#undef HAVE_DIR_H
+
+/* Define to 1 if you have the `fchmod' function. */
+#undef HAVE_FCHMOD
+
+/* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 
-/* Define if you have the <io.h> header file.  */
+/* Define to 1 if you have the `fgetln' function. */
+#undef HAVE_FGETLN
+
+/* Define to 1 if you have the `flock' function. */
+#undef HAVE_FLOCK
+
+/* Define to 1 if you have the `fork' function. */
+#undef HAVE_FORK
+
+/* Define to 1 if you have the `futimes' function. */
+#undef HAVE_FUTIMES
+
+/* Define to 1 if you have the `getlogin' function. */
+#undef HAVE_GETLOGIN
+
+/* Define to 1 if you have the `getpwuid' function. */
+#undef HAVE_GETPWUID
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <io.h> header file. */
 #undef HAVE_IO_H
 
-/* Define if you have the <ndir.h> header file.  */
-#undef HAVE_NDIR_H
-
-/* Define if you have the <pwd.h> header file.  */
-#undef HAVE_PWD_H
-
-/* Define if you have the <sys/dir.h> header file.  */
-#undef HAVE_SYS_DIR_H
-
-/* Define if you have the <sys/file.h> header file.  */
-#undef HAVE_SYS_FILE_H
-
-/* Define if you have the <sys/ndir.h> header file.  */
-#undef HAVE_SYS_NDIR_H
-
-/* Define if you have the <sys/time.h> header file.  */
-#undef HAVE_SYS_TIME_H
-
-/* Define if you have the <unistd.h> header file.  */
-#undef HAVE_UNISTD_H
-
-/* Define if you have the z library (-lz).  */
+/* Define to 1 if you have the `z' library (-lz). */
 #undef HAVE_LIBZ
 
-#endif /* !__CONFIG_H__ */
+/* Define to 1 if you have the `lockf' function. */
+#undef HAVE_LOCKF
+
+/* Define to 1 if you have the `memmove' function. */
+#undef HAVE_MEMMOVE
+
+/* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
+#undef HAVE_NDIR_H
+
+/* Define to 1 if you have the `poll' function. */
+#undef HAVE_POLL
+
+/* Define to 1 if you have the <pwd.h> header file. */
+#undef HAVE_PWD_H
+
+/* Define to 1 if you have the `setmode' function. */
+#undef HAVE_SETMODE
+
+/* Define to 1 if SIGALRM is defined */
+#undef HAVE_SIGALRM
+
+/* Define to 1 if SIGHUP is defined */
+#undef HAVE_SIGHUP
+
+/* Define to 1 if you have the `Sleep' function. */
+#undef HAVE_SLEEP
+
+/* Define to 1 if you have the `snprintf' function. */
+#undef HAVE_SNPRINTF
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdio.h> header file. */
+#undef HAVE_STDIO_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strncasecmp' function. */
+#undef HAVE_STRNCASECMP
+
+/* Define to 1 if you have the `strnicmp' function. */
+#undef HAVE_STRNICMP
+
+/* Define to 1 if you have the <sys/dir.h> header file, and it defines `DIR'.
+   */
+#undef HAVE_SYS_DIR_H
+
+/* Define to 1 if you have the <sys/file.h> header file. */
+#undef HAVE_SYS_FILE_H
+
+/* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'.
+   */
+#undef HAVE_SYS_NDIR_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the `usleep' function. */
+#undef HAVE_USLEEP
+
+/* Define to 1 if you have the `utimes' function. */
+#undef HAVE_UTIMES
+
+/* Define to 1 if you have the `_chdir2' function. */
+#undef HAVE__CHDIR2
+
+/* Define to 1 if you have the `_setmode' function. */
+#undef HAVE__SETMODE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define as the return type of signal handlers (`int' or `void'). */
+#undef RETSIGTYPE
+
+/* Define to 1 if all of the C90 standard headers exist (not just the ones
+   required in a freestanding environment). This macro is provided for
+   backward compatibility; new code need not use it. */
+#undef STDC_HEADERS
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. This
+   macro is obsolete. */
+#undef TIME_WITH_SYS_TIME
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const
+
+/* Define to `int' if <sys/types.h> doesn't define. */
+#undef gid_t
+
+/* Define as a signed integer type capable of holding a process identifier. */
+#undef pid_t
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#undef size_t
+
+/* Define to `int' if <sys/types.h> does not define. */
+#undef ssize_t
+
+/* Define to `int' if <sys/types.h> doesn't define. */
+#undef uid_t
+
+/* Define to `int' if <sys/types.h> does not define. */
+#undef useconds_t
