@@ -1,5 +1,6 @@
-AC_INIT(mew.el)
-AC_CONFIG_SUBDIRS(bin)
+AC_INIT
+AC_CONFIG_SRCDIR([elisp/mew.el])
+AC_CONFIG_SUBDIRS([elisp bin])
 AC_ARG_WITH(emacs,
     [  --with-emacs=EMACS      use EMACS],
     emacsbin="${withval}")
@@ -29,8 +30,8 @@ if test "${chk_prefix}"; then
     AC_MSG_CHECKING(for prefix of ${emacsbin})
     AC_CACHE_VAL(emacsbin_cv_emacs_prefix,[
 	OUTPUT=./conftest-$$
-	echo ${emacsbin}' -q -no-site-file -batch -eval '\''(write-region (princ (expand-file-name ".." invocation-directory)) nil "'${OUTPUT}'" nil 5)'\' >& AC_FD_CC 2>&1
-	eval ${emacsbin}' -q -no-site-file -batch -eval '\''(write-region (princ (expand-file-name ".." invocation-directory)) nil "'${OUTPUT}'" nil 5)'\' >& AC_FD_CC 2>&1
+	echo ${emacsbin}' -q -no-site-file -batch -eval '\''(write-region (princ (expand-file-name ".." invocation-directory)) nil "'${OUTPUT}'" nil 5)'\' >& AS_MESSAGE_LOG_FD 2>&1
+	eval ${emacsbin}' -q -no-site-file -batch -eval '\''(write-region (princ (expand-file-name ".." invocation-directory)) nil "'${OUTPUT}'" nil 5)'\' >& AS_MESSAGE_LOG_FD 2>&1
 	retval="`cat ${OUTPUT}`"
 	rm -f ${OUTPUT}
 	emacsbin_cv_emacs_prefix="${retval}"])
@@ -68,7 +69,8 @@ if test -z "${etcdir}"; then
    etcdir="\${datadir}/emacs/site-lisp/mew/etc"
 fi
 
-AC_OUTPUT(Makefile)
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
 
 echo_value () {
     case "$1" in
