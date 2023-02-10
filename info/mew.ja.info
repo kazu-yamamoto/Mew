@@ -1,6 +1,6 @@
 Info file: mew.ja.info,    -*-Text-*-
 produced by ‘texinfo-format-buffer’
-from file ‘mew.texi’
+from file ‘tmpj.texi’
 using ‘texinfmt.el’ version 2.42 of  7 Jul 2006.
 
 INFO-DIR-SECTION Message User Agent
@@ -15,14 +15,14 @@ END-INFO-DIR-ENTRY
 
 File: mew.ja.info, Node: Top, Next: Overview, Prev: (dir), Up: (dir)
 
-Mew 6.8 マニュアル
+Mew 6.9 マニュアル
 ******************
 
                                                               山本和彦
                                                        作成 1996/02/19
-                                                       更新 2018/06/07
+                                                       更新 2023/02/11
 
-このマニュアルでは、Mew バージョン 6.8 について解説します。このマニュ
+このマニュアルでは、Mew バージョン 6.9 について解説します。このマニュ
 アルの他に、Mew に関する有益な情報は Mew の公式ホームページ
 (http://www.Mew.org/)から得られるかもしれません。
 
@@ -80,7 +80,7 @@ File: mew.ja.info, Node: characteristic, Next: Emacsen, Prev: Overview, Up: Over
 Mew の特長
 ==========
 
-Mew バージョン 6.8 の特長を以下に示します。
+Mew バージョン 6.9 の特長を以下に示します。
 
    - 複雑な構造を持つメッセージを簡単に表示できます。メッセージを表示
      する作業は、`SPC' を押すだけです。
@@ -118,7 +118,7 @@ File: mew.ja.info, Node: Emacsen, Next: modes, Prev: characteristic, Up: Overvie
 Emacs のバージョン
 ==================
 
-Emacs 24.3 以降を使って下さい。これらより前のバージョンや XEmacs は、
+Emacs 26.1 以降を使って下さい。これらより前のバージョンや XEmacs は、
 サポートしていません。
 
 
@@ -1183,7 +1183,7 @@ File: mew.ja.info, Node: Composing, Next: header, Prev: invalid, Up: Top
      To:
      Subject:
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      ----
 
 これを Draft モードといいます。Draft モードにおいて、"----" より上をヘッ
@@ -1666,7 +1666,7 @@ File: mew.ja.info, Node: send, Next: cite, Prev: addr-comp2, Up: Composing
      To: pooh
      Subject: 明日の日曜日
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      ----
      明日の日曜日、遊びませんか？
 
@@ -1680,7 +1680,7 @@ File: mew.ja.info, Node: send, Next: cite, Prev: addr-comp2, Up: Composing
      To: winnie-the-pooh@example.net
      Subject: =?iso-2022-jp?B?GyRCTEBGfCRORnxNS0Z8GyhC?=
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      Mime-Version: 1.0
      Content-Type: Text/Plain; charset=iso-2022-jp
      Content-Transfer-Encoding: 7bit
@@ -1808,7 +1808,7 @@ File: mew.ja.info, Node: mime-comp, Next: charset-guess, Prev: cite, Up: Composi
      To: mew-dist
      Subject: ここがヘッダ
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      ----
      本文だよ。
 
@@ -4221,8 +4221,8 @@ Draft mode
 
 引用ラベルに Message-ID: を加えるには以下のようにします。
 
-     (setq mew-cite-fields '("From:" "Subject:" "Date:" "Message-ID:"))
-     (setq mew-cite-format "From: %s\nSubject: %s\nDate: %s\nMessage-ID: %s\n\n")
+     (setq mew-cite-fields '("From:" "Subject:" "Date:" "Message-Id:"))
+     (setq mew-cite-format "From: %s\nSubject: %s\nDate: %s\nMessage-Id: %s\n\n")
 
 引用記号にアドレスのユーザ部分が付くようにするには以下のようにします。
 
@@ -4376,7 +4376,7 @@ Message モードでアイコン化されます。初期値は `t' です。こ�
 利用するには、"netpbm" と "compface" パッケージをインストールして下
 さい。
 
-色を変更するには、Mew のソースと一緒に配布されている "dot.theme" を
+色を変更するには、Mew のソースと一緒に配布されている "conf/dot.theme" を
 適当な名前でコピーし内容を変更します。ここでは、そのファイル名を
 "~/.mew-theme.el" としましょう。まず、この名前を ".mew.el" で
 `mew-theme-file' に指定して下さい。
@@ -4399,7 +4399,7 @@ Message モードでアイコン化されます。初期値は `t' です。こ�
      (mew-setface-bold header-subject
        :tty "green" :light "ForestGreen" :dark "LimeGreen")
 
-シンボルに何があるのかは、"dot.mew" を見て下さい。
+シンボルに何があるのかは、"conf/dot.mew" を見て下さい。
 
 上記の方法では、ヘッダのすべてのフィールド名やフィールド値に対してシン
 ボルが定義されている訳ではありません。そこで、どんなフィールドの色でも
@@ -4681,7 +4681,10 @@ Mew では、メッセージを送信する際に SMTP を利用します。SMTP
 `mew-smtp-server'
      SMTP サーバの名前。
 `mew-smtp-port'
-     SMTP ポート番号。
+     SMTP ポート番号。絶対パス名を指定すると Unix ドメインソケットを使
+     用する。
+`mew-smtp-submission-family'
+     SMTP サーバと接続する際に用いるアドレスファミリ。初期値は 'ipv4。
 `mew-smtp-ssh-server'
      SSH 経由でメッセージを送る際の SSH サーバの名前。
 `mew-smtp-ssl'
@@ -4718,6 +4721,16 @@ Message Submission (ポート番号が 587 である送信用の SMTP)を使い�
 合は、以下のように設定して下さい。
 
      (setq mew-smtp-port "submission")
+
+送信サーバとの接続に Unix ドメインソケットを使いたい場合は、以下のように
+`mew-smtp-port' に絶対パス名を設定して下さい。
+
+     (setq mew-smtp-port "/var/run/msp.sock")
+
+送信サーバとの接続に IPv6 を使いたい場合は、以下のように
+`mew-smtp-submission-family' に 'ipv6 を設定して下さい。
+
+     (setq mew-smtp-submission-family 'ipv6)
 
 SSL (*Note SSL::)や TLS (*Note TLS::) の章も参考にして下さい。
 
@@ -4798,7 +4811,7 @@ File: mew.ja.info, Node: config, Next: config2, Prev: smtp, Up: Customize
      nntp-server, nntp-port, nntp-ssh-server, nntp-ssl, nntp-ssl-port,
      nntp-user, nntp-size, nntp-header-only,
      nntp-msgid-user, nntp-msgid-domain,
-     ssl-cert-directory, ssl-verify-level,
+     prog-ssl-arg, ssl-cert-directory, ssl-verify-level,
      inbox-folder, queue-folder, postq-folder,
      mailbox-type, mbox-command, mbox-command-arg,
      signature-file, content-type, refile-guess-alist,
@@ -5725,6 +5738,7 @@ File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Copyright, Up: T
 * mew-smtp-ssl:                 SSL.                    (line   5)
 * mew-smtp-ssl-port:            smtp.
 * mew-smtp-ssl:                 smtp.
+* mew-smtp-submission-family:   smtp.
 * mew-smtp-user:                smtp.
 * mew-sort-default-key-alist:   sorting.                (line   5)
 * mew-sort-default-key:         sorting.                (line   5)
@@ -6063,111 +6077,111 @@ File: mew.ja.info, Node: Key Index, Prev: Variable Index, Up: Top
 * zz (Summary):                 message-mode.           (line   5)
 
 Tag table:
-Node: Top288
-Node: Overview1325
-Node: characteristic1968
-Node: Emacsen2980
-Node: modes3158
-Node: folder convention3668
-Node: configuration5541
-Node: password7870
-Node: start9449
-Node: Viewing10214
-Node: singlepart11193
-Node: multipart12097
-Node: analysis14362
-Node: cipher-viewing16623
-Node: retrieving19502
-Node: moving22065
-Node: sum-write23630
-Node: features25094
-Node: status-update26668
-Node: invalid27369
-Node: Composing28665
-Node: header30173
-Node: cheader30847
-Node: addr-comp32052
-Node: addrbook33047
-Node: auto-alias35186
-Node: addr-comp136196
-Node: addr-comp237889
-Node: send39250
-Node: cite41360
-Node: mime-comp42761
-Node: charset-guess48340
-Node: longline50560
-Node: reply51696
-Node: forward54701
-Node: resend55293
-Node: shortcut56474
-Node: mark-b-comp59886
-Node: pgp-key62300
-Node: anonymous62875
-Node: Marks63850
-Node: unread mark64993
-Node: delete mark65865
-Node: refile mark67450
-Node: target mark68443
-Node: escape mark69504
-Node: unmark70019
-Node: mark change70636
-Node: sync71501
-Node: off-line72194
-Node: mew-mark73461
-Node: Refile73989
-Node: by-folder75137
-Node: by-alist76318
-Node: by-thread77972
-Node: by-from-folder78588
-Node: by-from79541
-Node: by-newsgroups80752
-Node: by-default80987
-Node: guess-rule81344
-Node: auto-refile82872
-Node: copy-msg84573
-Node: Virtual85442
-Node: selection86560
-Node: sorting87066
-Node: dialog88344
-Node: search89010
-Node: condition89647
-Node: dbsearch91385
-Node: keyword92267
-Node: thread92766
-Node: thread-op93571
-Node: Quit94887
-Node: Customize95310
-Node: summary-mode95998
-Node: message-mode98787
-Node: draft-mode101380
-Node: charset103475
-Node: highlight105101
-Node: hooks107141
-Node: pop110547
-Node: imap111629
-Node: nntp112640
-Node: smtp113759
-Node: config115496
-Node: config2120010
-Node: custom-misc121166
-Node: Tips121883
-Node: region122410
-Node: visiting122919
-Node: SSH123281
-Node: SSL123878
-Node: TLS125429
-Node: spam126140
-Node: spam2127891
-Node: addr-warn129010
-Node: biff129783
-Node: edit130265
-Node: Convention131025
-Node: Implementation132065
-Node: Avail133524
-Node: obtain133773
-Node: ml133997
-Node: Copyright134188
-Node: Variable Index135196
-Node: Key Index150455
+Node: Top289
+Node: Overview1326
+Node: characteristic1969
+Node: Emacsen2981
+Node: modes3159
+Node: folder convention3669
+Node: configuration5542
+Node: password7871
+Node: start9450
+Node: Viewing10215
+Node: singlepart11194
+Node: multipart12098
+Node: analysis14363
+Node: cipher-viewing16624
+Node: retrieving19503
+Node: moving22066
+Node: sum-write23631
+Node: features25095
+Node: status-update26669
+Node: invalid27370
+Node: Composing28666
+Node: header30174
+Node: cheader30848
+Node: addr-comp32053
+Node: addrbook33048
+Node: auto-alias35187
+Node: addr-comp136197
+Node: addr-comp237890
+Node: send39251
+Node: cite41361
+Node: mime-comp42762
+Node: charset-guess48341
+Node: longline50561
+Node: reply51697
+Node: forward54702
+Node: resend55294
+Node: shortcut56475
+Node: mark-b-comp59887
+Node: pgp-key62301
+Node: anonymous62876
+Node: Marks63851
+Node: unread mark64994
+Node: delete mark65866
+Node: refile mark67451
+Node: target mark68444
+Node: escape mark69505
+Node: unmark70020
+Node: mark change70637
+Node: sync71502
+Node: off-line72195
+Node: mew-mark73462
+Node: Refile73990
+Node: by-folder75138
+Node: by-alist76319
+Node: by-thread77973
+Node: by-from-folder78589
+Node: by-from79542
+Node: by-newsgroups80753
+Node: by-default80988
+Node: guess-rule81345
+Node: auto-refile82873
+Node: copy-msg84574
+Node: Virtual85443
+Node: selection86561
+Node: sorting87067
+Node: dialog88345
+Node: search89011
+Node: condition89648
+Node: dbsearch91386
+Node: keyword92268
+Node: thread92767
+Node: thread-op93572
+Node: Quit94888
+Node: Customize95311
+Node: summary-mode95999
+Node: message-mode98788
+Node: draft-mode101381
+Node: charset103476
+Node: highlight105102
+Node: hooks107152
+Node: pop110558
+Node: imap111640
+Node: nntp112651
+Node: smtp113770
+Node: config115863
+Node: config2120391
+Node: custom-misc121547
+Node: Tips122264
+Node: region122791
+Node: visiting123300
+Node: SSH123662
+Node: SSL124259
+Node: TLS125810
+Node: spam126521
+Node: spam2128272
+Node: addr-warn129391
+Node: biff130164
+Node: edit130646
+Node: Convention131406
+Node: Implementation132446
+Node: Avail133905
+Node: obtain134154
+Node: ml134378
+Node: Copyright134569
+Node: Variable Index135577
+Node: Key Index150874
 
 End tag table

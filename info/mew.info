@@ -1,6 +1,6 @@
 Info file: mew.info,    -*-Text-*-
 produced by ‘texinfo-format-buffer’
-from file ‘mew.texi’
+from file ‘tmp.texi’
 using ‘texinfmt.el’ version 2.42 of  7 Jul 2006.
 
 INFO-DIR-SECTION Message User Agent
@@ -15,14 +15,14 @@ END-INFO-DIR-ENTRY
 
 File: mew.info, Node: Top, Next: Overview, Prev: (dir), Up: (dir)
 
-Mew 6.8 Manual
+Mew 6.9 Manual
 **************
 
                                                          Kazu YAMAMOTO
                                                     Created 1996/02/18
-                                                   Modified 2018/06/07
+                                                   Modified 2023/02/11
 
-This manual documents Mew version 6.8. In addition to this manual, you
+This manual documents Mew version 6.9. In addition to this manual, you
 may find useful information about Mew from Mew's official home page
 (http://www.Mew.org/).
 
@@ -80,7 +80,7 @@ File: mew.info, Node: characteristic, Next: Emacsen, Prev: Overview, Up: Overvie
 Mew's features
 ==============
 
-The features of Mew 6.8 are as follows:
+The features of Mew 6.9 are as follows:
 
    - You can easily display a very complicated structured
      message. What you should do to view messages is just type `SPC'.
@@ -117,7 +117,7 @@ File: mew.info, Node: Emacsen, Next: modes, Prev: characteristic, Up: Overview
 Supported Emacs versions
 ========================
 
-Please use Emacs 24.3 or later. Mew doesn't support earlier versions
+Please use Emacs 26.1 or later. Mew doesn't support earlier versions
 nor XEmacs.
 
 
@@ -1223,7 +1223,7 @@ Then a buffer like the following is prepared.
      To:
      Subject:
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      ----
 
 We call this "Draft mode". In Draft mode, we call the region above
@@ -1734,7 +1734,7 @@ following example:
      To: pooh
      Subject: the next Sunday
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      ----
      Would you like to play with me next Sunday?
 
@@ -1748,7 +1748,7 @@ This message is modified as follows, for example, if it is put into
      To: winnie-the-pooh@example.net
      Subject: the next Sunday
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      Mime-Version: 1.0
      Content-Type: Text/Plain; charset=us-ascii
      Content-Transfer-Encoding: 7bit
@@ -1882,7 +1882,7 @@ body. Now the entire draft looks like:
 
      To: mew-dist
      Subject: This is header
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      ----
      This is the body.
 
@@ -4347,8 +4347,8 @@ and format in `mew-cite-format'. Define citation prefix to
 
 To add Message-ID: to citation label, take this way.
 
-     (setq mew-cite-fields '("From:" "Subject:" "Date:" "Message-ID:"))
-     (setq mew-cite-format "From: %s\nSubject: %s\nDate: %s\nMessage-ID: %s\n\n")
+     (setq mew-cite-fields '("From:" "Subject:" "Date:" "Message-Id:"))
+     (setq mew-cite-format "From: %s\nSubject: %s\nDate: %s\nMessage-Id: %s\n\n")
 
 To add a user part of an address to the citation prefix, configure as
 follows:
@@ -4510,7 +4510,7 @@ If `mew-use-highlight-x-face' is `t', X-Face: in a header is iconified
 in Message mode. The default value is `t'. To use this feature,
 install the "netpbm" package and the "compface" package.
 
-To modify colors, copy "dot.theme" contained Mew's source file to
+To modify colors, copy "conf/dot.theme" contained Mew's source file to
 an appropriate place, say "~/.mew-theme.el". First, set
 `mew-theme-file' to this file name in ".mew.el" as follows:
 
@@ -4534,7 +4534,7 @@ configuration as follows:
      (mew-setface-bold header-subject
        :tty "green" :light "ForestGreen" :dark "LimeGreen")
 
-To know what kind of symbols are prepared, see the "dot.mew".
+To know what kind of symbols are prepared, see the "conf/dot.mew".
 
 The method above does not prepare symbols for all field names and
 field value. So, `mew-header-color' and `mew-header-color-bold' exist
@@ -4817,7 +4817,11 @@ password. This section describes following variables to control SMTP.
 `mew-smtp-server'
      The name of your SMTP server.
 `mew-smtp-port'
-     The port for SMTP.
+     The port for SMTP.  When an absolute pathname is specified, it
+     will be used as a Unix domain socket.
+`mew-smtp-submission-family'
+     The address family to be used for the SMTP server.  The default
+     value is 'ipv4.
 `mew-smtp-ssh-server'
      The name of SSH server which forwards the SMTP port.
 `mew-smtp-ssl'
@@ -4855,6 +4859,16 @@ If you want to use Message Submission (SMTP for submission whose port
 number is 587), configure as follows:
 
      (setq mew-smtp-port "submission")
+
+If you want to use a Unix domain socket to connect MTA, configure as
+follows:
+
+     (setq mew-smtp-port "/var/run/msp.sock")
+
+If you want to use IPv6 as the transport protocol to connect MTA,
+configure as follows:
+
+     (setq mew-smtp-submission-family 'ipv6)
 
 Please refer also to SSL (*Note SSL::) and TLS (*Note TLS::).
 
@@ -4940,7 +4954,7 @@ the variable `mew-"key"'. The following list enumerates such keys.
      nntp-server, nntp-port, nntp-ssh-server, nntp-ssl, nntp-ssl-port,
      nntp-user, nntp-size, nntp-header-only,
      nntp-msgid-user, nntp-msgid-domain,
-     ssl-cert-directory, ssl-verify-level,
+     prog-ssl-arg, ssl-cert-directory, ssl-verify-level,
      inbox-folder, queue-folder, postq-folder,
      mailbox-type, mbox-command, mbox-command-arg,
      signature-file, content-type, refile-guess-alist,
@@ -5888,6 +5902,7 @@ Variable Index
 * mew-smtp-ssl:                 SSL.                    (line   5)
 * mew-smtp-ssl-port:            smtp.
 * mew-smtp-ssl:                 smtp.
+* mew-smtp-submission-family:   smtp.
 * mew-smtp-user:                smtp.
 * mew-sort-default-key-alist:   sorting.                (line   5)
 * mew-sort-default-key:         sorting.                (line   5)
@@ -6305,32 +6320,32 @@ Node: message-mode147542
 Node: draft-mode151076
 Node: charset154043
 Node: highlight156249
-Node: hooks159213
-Node: pop163762
-Node: imap165441
-Node: nntp167009
-Node: smtp168370
-Node: config170855
-Node: config2176785
-Node: custom-misc178301
-Node: Tips179322
-Node: region179910
-Node: visiting180600
-Node: SSH181130
-Node: SSL182102
-Node: TLS184475
-Node: spam185374
-Node: spam2187663
-Node: addr-warn188997
-Node: biff190125
-Node: edit190883
-Node: Convention192158
-Node: Implementation194226
-Node: Avail196589
-Node: obtain196896
-Node: ml197188
-Node: Copyright197476
-Node: Variable Index199425
-Node: Key Index214736
+Node: hooks159223
+Node: pop163772
+Node: imap165451
+Node: nntp167019
+Node: smtp168380
+Node: config171332
+Node: config2177276
+Node: custom-misc178792
+Node: Tips179813
+Node: region180401
+Node: visiting181091
+Node: SSH181621
+Node: SSL182593
+Node: TLS184966
+Node: spam185865
+Node: spam2188154
+Node: addr-warn189488
+Node: biff190616
+Node: edit191374
+Node: Convention192649
+Node: Implementation194717
+Node: Avail197080
+Node: obtain197387
+Node: ml197679
+Node: Copyright197967
+Node: Variable Index199916
+Node: Key Index215265
 
 End tag table
