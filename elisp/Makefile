@@ -1,41 +1,9 @@
-###
+##
 ### Makefile.in for byte-compile
 ###
 ### Author:  Kazu Yamamoto <Kazu@Mew.org>
 ### Created: Nov 18, 1994
 ### Revised: Feb 10, 2023
-
-################################################################
-##
-## EDIT THE FOLLOWINGS
-##
-
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-libdir=@libdir@
-datadir=@datadir@
-infodir=@infodir@
-
-##
-## Compile engines
-##
-
-EMACS = @emacsbin@
-
-##
-## A directory where mew*.el[c] will be installed.
-##
-
-elispdir = @elispdir@
-#elispdir = $(prefix)/share/emacs/site-lisp/mew
-#elispdir = $(prefix)/lib/emacs
-
-##
-## A directory where etc file will be installed.
-##
-
-etcdir = @etcdir@
-#etcdir = $(prefix)/share/emacs/site-lisp/mew/etc
 
 ################################################################
 ##
@@ -150,6 +118,14 @@ $(TEMPFILE2):
 	@echo '(setq load-path (cons "." load-path))' >> $(TEMPFILE2)
 	@echo '(setq hack-local-variables-hook (lambda () (setq lexical-binding t)))' >> $(TEMPFILE2)
 	@echo "(defun mew-compile () (mapcar (lambda (x) (byte-compile-file (symbol-name x))) '($(SRCS))))" >> $(TEMPFILE2)
+
+################################################################
+
+clean:
+	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2)
+
+distclean:
+	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2)
 
 ##
 ## End of Makefile

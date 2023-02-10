@@ -68,15 +68,15 @@ install: install-elisp install-bin install-info install-etc
 ################################################################
 
 elisp::
-	cd elisp; $(MAKE)
+	cd elisp; $(MAKE) EMACS=$(EMACS)
 
 install-elisp:
-	cd elisp; $(MAKE) install DESTDIR=$(DESTDIR)
+	cd elisp; $(MAKE) install EMACS=$(EMACS) DESTDIR=$(DESTDIR)
 
 ################################################################
 
 detect::
-	cd elisp; $(MAKE) detect
+	cd elisp; $(MAKE) detect EMACS=$(EMACS)
 
 ################################################################
 
