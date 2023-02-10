@@ -2,9 +2,9 @@
 
 ## `"`
 
-A command specified by `"` is called with "Grep pattern" and file
-names of the messages in the directory of a target folder. "Grep
-pattern" is encoded according to `mew-cs-database-for-arg`.
+A command specified by `"` is called with _Grep pattern_ and file
+names of the messages in the directory of a target folder.
+_Grep pattern_ is encoded according to `mew-cs-database-for-arg`.
 
 The command must produce output whose lines start with a file name of
 matched messages. It's OK if the same file name appears multiple
@@ -16,14 +16,14 @@ times.
 21: zzz pattern zzz
 ```
 
-## mew-scan-form-*
+## `mew-scan-form-*`
 
-A symbol, say 'symb', in `mew-scan-form` means to call the function
+A symbol, say `symb`, in `mew-scan-form` means to call the function
 `mew-scan-form-symb`. Read the document of `mew-scan-form` for more
 information. This function MUST return a string.
 
-mew-scan-form-* can use some functions (MEW-FOO) and variables (TOTAL,
-WIDTH).
+`mew-scan-form-*` can use some functions
+`(MEW-FOO)` and variables (`TOTAL`, `WIDTH)`.
 
 Users customizable variables are `mew-scan-fields` and
 `mew-scan-fields-alias`.
@@ -36,32 +36,31 @@ Each element of `mew-scan-fields-alias` is corresponding to an element
 of `mew-scan-fields`, respectively. Functions called `MEW-FOO` is
 defined according to `mew-scan-fields-alias`.
 
-
-(MEW-SUBJ) returns the value of Subject:
-;; MEW-SUBJ is defined as (aref mew-vec 3)
+`(MEW-SUBJ)` returns the value of Subject:.
+`MEW-SUBJ` is defined as `(aref mew-vec 3)`
 
 Pre-defined functions are:
 
-- MEW-FLD  - Folder:
-- MEW-NUM  - Filename:
-- MEW-SUBJ - Subject:
-- MEW-DATE - Date:
-- MEW-FROM - From:
-- MEW-TO   - To:
-- MEW-CT   - Content-Type:
-- MEW-ID   - Message-ID:
-- MEW-UIDL - X-Mew-UIDL:
+- `MEW-FLD`  - Folder:
+- `MEW-NUM`  - Filename:
+- `MEW-SUBJ` - Subject:
+- `MEW-DATE` - Date:
+- `MEW-FROM` - From:
+- `MEW-TO`   - To:
+- `MEW-CT`   - Content-Type:
+- `MEW-ID`   - Message-ID:
+- `MEW-UIDL` - X-Mew-UIDL:
 
 To get a size in X-Mew-UIDL:, call `(mew-scan-get-size (MEW-UIDL))`.
 To get a uidl in X-Mew-UIDL:, call `(mew-scan-get-uidl (MEW-UIDL))`.
 
-Also, two local variables are available: 
+Also, two local variables are available:
 
-- TOTAL - the current total width
-- WIDTH - the width
+- `TOTAL` - the current total width
+- `WIDTH` - the width
 
 After you change both `mew-scan-fields` and `mew-scan-fields-alias`,
-call `mew-status-update` ("Z" in Summary mode).
+call `mew-status-update` (`Z` in Summary mode).
 
 ## Local mailbox
 
@@ -95,7 +94,7 @@ folder format. Just a path is enough.)
 
 `mew-mbox-command` MUST be move a message to the destination, then
 print its file name (a message number) to stdout. Repeat this cycle
-until the mailbox becomes empty. 
+until the mailbox becomes empty.
 
 "mewl" reads stdin, extracts a message number, opens the message,
 then prints necessary fields. The extraction of a message number is
