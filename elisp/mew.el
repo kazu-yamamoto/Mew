@@ -2,7 +2,7 @@
 
 ;; Author:  Kazu Yamamoto <Kazu@Mew.org>
 ;; Created: Mar 23, 1994
-;; Revised: Jun  7, 2018
+;; Revised: Feb 10, 2023
 
 ;;; Commentary:
 
@@ -18,7 +18,7 @@
 ;;; Mew version
 ;;;
 
-(defconst mew-version-number "6.8"
+(defconst mew-version-number "6.9"
   "Version number for this version of Mew.")
 (defconst mew-version (format "Mew version %s" mew-version-number)
   "Version string for this version of Mew.")

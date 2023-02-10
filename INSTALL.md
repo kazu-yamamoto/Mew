@@ -1,6 +1,4 @@
-# Readme for Mew 6.8
-
-This is stable releases of Mew 6.8.
+# Installing Mew 6.9
 
 ## Platforms
 

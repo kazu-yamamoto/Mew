@@ -1,5 +1,7 @@
 # Release note
 
+This is stable releases of Mew 6.9.
+
 ## Important note
 
 * `mew-smtp-port` now supports Unix domain socket.  If it is set to an

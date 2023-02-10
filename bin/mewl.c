@@ -9,7 +9,7 @@
 
 #include "mew.h"
 
-private char version_message[] = "version 6.8 20180607 Kazu Yamamoto";
+private char version_message[] = "version 6.9 20130210 Kazu Yamamoto";
 
 #ifdef HAVE_UNISTD_H
 # include <sys/types.h>
