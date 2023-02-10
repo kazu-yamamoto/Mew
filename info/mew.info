@@ -1,7 +1,7 @@
 Info file: mew.info,    -*-Text-*-
 produced by ‘texinfo-format-buffer’
-from file ‘tmp.texi’
-using ‘texinfmt.el’ on Emacs version 28.2.
+from file ‘mew.texi’
+using ‘texinfmt.el’ version 2.42 of  7 Jul 2006.
 
 INFO-DIR-SECTION Message User Agent
 START-INFO-DIR-ENTRY
@@ -15,14 +15,14 @@ END-INFO-DIR-ENTRY
 
 File: mew.info, Node: Top, Next: Overview, Prev: (dir), Up: (dir)
 
-Mew 6.9 Manual
+Mew 6.8 Manual
 **************
 
                                                          Kazu YAMAMOTO
                                                     Created 1996/02/18
-                                                   Modified 2023/02/10
+                                                   Modified 2018/06/07
 
-This manual documents Mew version 6.9. In addition to this manual, you
+This manual documents Mew version 6.8. In addition to this manual, you
 may find useful information about Mew from Mew's official home page
 (http://www.Mew.org/).
 
@@ -80,31 +80,34 @@ File: mew.info, Node: characteristic, Next: Emacsen, Prev: Overview, Up: Overvie
 Mew's features
 ==============
 
-The features of Mew 6.9 are as follows:
+The features of Mew 6.8 are as follows:
 
- - You can easily display a very complicated structuredmessage. What you should do to view messages is just type `SPC'.
-
- - If you know how to do file operations such as copy, you cancompose a very complicated message without any difficulty.
-
- - You can start to read messages before they are all fullylisted.
-
- - Since Mew preserves lists of messages in Summary mode, whenyou move messages to a new folder, they will automatically be
-     listed incrementally.
-
- - Mew neatly suggests default folders for refiling. Those whoreceive many messages cannot live without this feature.
-
- - In Draft mode, you can complete field names, e-mailaddresses, receiver's names, domain names, and folder names.
-
- - You can easily search messages with keywords etc.ew automatically decodes messages encrypted with PGP orS/MIME. It also automatically verifies signed messages.
-
- - You can easily encrypt or sign a message with PGP or S/MIME.t takes a bit of time to analyze MIME syntax or to verify aPGP or S/MIME signature. While the user is reading a message, Mew
+   - You can easily display a very complicated structured
+     message. What you should do to view messages is just type `SPC'.
+   - If you know how to do file operations such as copy, you can
+     compose a very complicated message without any difficulty.
+   - You can start to read messages before they are all fully listed.
+   - Since Mew preserves lists of messages in Summary mode, when you
+     move messages to a new folder, they will automatically be listed
+     incrementally.
+   - Mew neatly suggests default folders for refiling. Those who
+     receive many messages cannot live without this feature.
+   - In Draft mode, you can complete field names, e-mail addresses,
+     receiver's names, domain names, and folder names.
+   - You can easily search messages with keywords etc.
+   - Mew automatically decodes messages encrypted with PGP or
+     S/MIME. It also automatically verifies signed messages.
+   - You can easily encrypt or sign a message with PGP or S/MIME.
+   - It takes a bit of time to analyze MIME syntax or to verify a PGP
+     or S/MIME signature. While the user is reading a message, Mew
      processes the next message so that the next message can be
      displayed faster. Analyzed messages are cached briefly.
-
- - You can view multiple folders simultaneously.election/Thread, a mechanism to display the flow ofmessages, is supported. You can make Selection from messages
-     matched to a keyword and make Thread from the Selection.
-
- - When you input a folder name, you can search it with asubstring of the name.
+   - You can view multiple folders simultaneously.
+   - Selection/Thread, a mechanism to display the flow of messages, is
+     supported. You can make Selection from messages matched to a
+     keyword and make Thread from the Selection.
+   - When you input a folder name, you can search it with a substring
+     of the name.
 
 
 
@@ -129,24 +132,18 @@ Mew has the following seven modes:
 
 `Summary mode'
      A mode to list and select messages.
-
 `Virtual mode'
      A mode to list messages selected with a specific condition from
      one or more folders. This is similar to Summary mode. This mode
      is categorized to Selection or Thread.
-
 `Message mode'
      A mode to display the content of a message.
-
 `Draft mode'
      A mode to prepare a message to be sent, answered, and forwarded.
-
 `Header mode'
      A mode to edit the header of a message and to send it.
-
 `Edit mode'
      A mode to edit a message to generate another new message.
-
 `Addrbook mode'
      A mode to register an entry to the address book (Addrbook).
 
@@ -181,15 +178,12 @@ as follows:
      The first local folder to store messages which you fetch from
      your local mailbox or your POP server. To refile messages, what
      you do is to move the messages from "+inbox" to other folders.
-
 `+draft'
      A local folder where messages, which you have not completed yet,
      are stored.
-
 `+queue'
      A local folder where e-mail messages to be sent are stored. The
      messages in "+queue" will be eventually sent by SMTP.
-
 `+postq'
      A local folder where NetNews message to be sent are stored. The
      messages in "+postq" will be eventually sent by NNTP.
@@ -201,12 +195,10 @@ Here are a list of available proto of remote folders:
 
 `%'
      Folders on an IMAP servers. Example: "%inbox"
-
 `$'
      The folder on a POP server. Example: "$inbox" (Since there is
      only one folder in a POP server, "$inbox" is the only folder
      whose name starts with "$".)
-
 `-'
      Newsgroups of NetNews. Example: "-fj.mail.reader.mew"
 
@@ -329,7 +321,9 @@ When fetching/sending messages or using PGP or S/MIME, you may be
 required to input your password. Before you type your password, check
 carefully to see if either the following conditions is satisfied:
 
- - Emacs is running on a local computermacs is running on a remote computer, but an encryptionmechanism is being used for communication.
+   - Emacs is running on a local computer
+   - Emacs is running on a remote computer, but an encryption
+     mechanism is being used for communication.
 
 If neither of these conditions are satisfied, do not input a
 password. Your password could be accessed without your knowledge.
@@ -337,10 +331,10 @@ password. Your password could be accessed without your knowledge.
 If you get sick of inputting your password from time to time, please
 use one of two password-cache mechanisms.
 
- 1.  Storing passwords in memory temporarily. Not writing themto a file.
-
- 2.  Storing passwords in memory while Mew is running. WhenMew/Emacs quits, Mew encrypts the passwords and writes them to a
+  1. Storing passwords in memory temporarily. Not writing them to a
      file.
+  2. Storing passwords in memory while Mew is running. When Mew/Emacs
+     quits, Mew encrypts the passwords and writes them to a file.
 
 To use Feature 1., configure as follows:
 
@@ -409,13 +403,10 @@ To start Mew, you can choose one of the following:
 
      `mew-auto-get' is `nil', just visit to the folder determined by
      `proto'.
-
 `C-uM-x mew'
      Perform `M-x mew' with `mew-auto-get' reversed.
-
 `M-x mew-send'
      Enter Draft mode for message composing.
-
 `C-xm'
      Enter Draft mode for message composing if `mail-user-agent' is
      configured.
@@ -478,49 +469,36 @@ processing are listed as follows:
      Read through messages. That is, display a message, scroll it, and
      move-then-display another message. refer to *Note summary-mode::
      to know which direction the cursor moves.
-
 `C-uSPC'
      Redisplay the message from its header.
-
 `DEL'
      Back-scroll this message. Unnecessary header fields are hidden
      over the window. Type `DEL' to see them when a message is
      displayed.
-
 `RET'
      Make this message scroll up one line.
-
 `M-RET'
-     Make this message scroll down one line.
-
 `-'
      Make this message scroll down one line.
 
 `C-n'
      Go to the next line.
-
 `C-p'
      Go to the previous line.
-
 `n'
      Move down then display. Targets include parts, messages marked with
      `*', and non-marked messages.
-
 `C-un'
      Move down then display. Targets include messages marked with `*',
      and non-marked messages.
-
 `p'
      Move up then display. Targets include parts, messages marked with
      `*', and non-marked messages.
-
 `C-up'
      Move up then display. Targets include messages marked with `*',
      and non-marked messages.
-
 `j'
      Jump to a line according to the line number which you input.
-
 `C-uj'
      Jump to a message according to the message number which you
      input.
@@ -557,11 +535,14 @@ mode but the first part is displayed with its header in Message mode.
 
 Each line of multipart consists of
 
- - marks (Content-Transfer-Encoding:)art numberata type
-(Content-Type:)escription (Content-Description:)ile name
-(Content-Disposition:).ent-Description can be considered Subject: for
-each part. This format is very similar to that of the attachment
-region in Draft mode.
+   - marks (Content-Transfer-Encoding:)
+   - part number
+   - data type (Content-Type:)
+   - description (Content-Description:)
+   - file name (Content-Disposition:).
+
+Content-Description can be considered Subject: for each part. This
+format is very similar to that of the attachment region in Draft mode.
 
 If you type `SPC' or `n', the cursor moves onto part 2 and the content
 is displayed according to its data type. For instance, Text/Plain is
@@ -613,27 +594,23 @@ There are several variables for controlling message analysis.
      message is less than or equal to this value, it is analyzed and
      displayed.  Otherwise, the raw message is displayed without
      analysis. The default value is 10000 bytes.
-
 `mew-header-max-length'
      The length limit of header to be analyzed. If the length of a
      header is less than or equal to this value, it is analyzed and
      displayed.  Otherwise, the message is displayed as fragmentarily
      since the analysis is stopped. The default value is 100 lines.
-
 `mew-decode-broken'
      Whether Mew be liberal or conservative to invalid messages. If the value
      is `t', the setting is liberal. If the value is `nil', the
      setting is for conservative. If conservative and invalid portions are
      found, they are reported in the X-Mew: field. The default value is
      `t'.
-
 `mew-use-text-body'
      Whether or not the text part of a body is displayed with its
      header. If the value is `t', both the body which is a single part
      text and the first text part in a multipart body are displayed
      with its header. If the value is `nil', they are displayed as a
      single part in a multipart. The default value is `t'.
-
 `mew-use-alternative'
      How to treat Multipart/Alternative. Messages containing
      Multipart/Alternative are marked with `-'. If the value is
@@ -641,12 +618,10 @@ There are several variables for controlling message analysis.
      `mew-mime-multipart-alternative-list'. If the value is
      `nil', it is displayed as a multipart. The default value is
      `t'.
-
 `mew-use-text/html'
      How to treat Text/Html. If `nil', HTML is displayed as is
      (without parsing). Otherwise, HTML is parsed and displayed. The
      default value is `nil'.
-
 `mew-use-text/xml'
      How to treat Text/Xml. If `nil', XML is displayed as is (without
      parsing). Otherwise, XML is parsed and displayed. The default
@@ -686,25 +661,19 @@ In addition to `.', the following commands are prepared:
 
 `.'
      Analyze the message and re-display it.
-
 `C-u.'
      Analyze the message with `mew-decode-broken' reversed (see
      *Note invalid::).
-
 `:'
      The same as `.' with `mew-use-alternative' and
      `mew-use-text-body' reversed.
-
 `C-u:'
      The same as `C-u.' with `mew-use-alternative' and
      `mew-use-text-body' reversed.
-
 `,'
      Insert a message or a part into Message mode in raw format.
-
 `C-cTAB'
      Open an entire message as a file in read-only mode.
-
 `C-uC-cTAB'
      Open an entire message as a file.
 
@@ -835,10 +804,8 @@ the messages, use `i'. The mailbox is determined according to
      A local mailbox. "incm" is used to copy messages for the local
      mailbox by default. To know how to configure it, see *Note
      configuration::.
-
 `'pop'
      A POP server. To use POP as it is. (This is a default value.)
-
 `'imap'
      An IMAP server. This is not recommended.
 
@@ -856,13 +823,11 @@ ranges for Mew.
      From "the last message in the Summary mode + 1" to "the last
      message in the corresponding folder". That is, the gap between
      the Summary mode and the existing folder
-
 `all'
      All messages in the folder. When Summary mode in a local folder
      becomes inconsistent, use this range to flush the list. For a
      remote folder, this range results in retrieval of all messages
      again.
-
 `sync'
      Deleting cache messages whose originals were removed in the
      server side.  Valid for remote folders only.
@@ -877,13 +842,10 @@ following ranges:
 
 `<num1>-<num2>'
      From <num1> to <num2>. Valid for local folders only.
-
 `<num1>-'
      From <num1> to the last. Valid for local folders only.
-
 `-<num2>'
      From the first to <num2>. Valid for local folders only.
-
 `last:<num>'
      Last <num> messages.
 
@@ -911,7 +873,6 @@ Here is a summary of the commands concerned with message retrieval:
      `s' + `update'.
 `C-ui'
      Perform `i' with `mew-auto-flush-queue' reversed.
-
 `I'
      Retrieve the rest of a truncated(`T') message.
 
@@ -923,17 +884,13 @@ Here is a summary of the commands concerned with message retrieval:
      If you use this command in a remote folder, a "case" and protocol
      is determined by the folder. The message in the server side is
      always retained.
-
 `C-uI'
      Perform `I' with `mew-pop-delete' or `mew-imap-delete' reversed.
-
 `s'
      List up messages in Summary mode or flush them.
-
 `C-us'
      On a remote folder, list up messages in Summary mode by toggling
      "copying a header only" and "copying both a header and a body".
-
 `lc'
      Copy a cached message in a remote folder to a local folder.
 
@@ -1022,37 +979,29 @@ forwarding messages.
 `w'
      Write a message. A new draft is prepared in Draft mode. Please refer to
      *Note Composing::.
-
 `C-uw'
      Write a message. A new draft is prepared in Draft mode. The From:
      address of the current message is copied to the To: field in the
      draft.
-
 `W'
      Send a message by modifying a part of the header of another
      message.  Please refer to *Note resend::.
-
 `a'
      Answer to this message. A new draft is prepared in Draft
      mode. Mew automatically inserts the content of the fields To: and
      Cc:. Please refer to *Note reply::.
-
 `C-ua'
      Answer to this message only to the sender.
-
 `A'
      Answer to this message. A new draft is prepared in Draft
      mode. Mew automatically inserts the content of the fields To: and
      Cc: and cites the body. Please refer to *Note reply::.
-
 `C-uA'
      Answer to this message only to the sender with citation.
-
 `f'
      Forward this message to a third person. A new draft is prepared in Draft
      mode and this message is automatically attached. Please refer to
      *Note forward::.
-
 `F'
      Forward messages marked with `*' to a third person. A new draft is
      prepared in Draft mode and this message is automatically attached. For
@@ -1066,16 +1015,16 @@ commands.
      Edit this message again to retry sending. Or edit this RFC822
      part typically included in a MIME-encapsulated error message.
 
-      1.  In +draft, the message is just edited. In +queue or +postq, the message is moved to +draftand is edited.
-
-      3.  Otherwise, the message is copied to +draft and isedited.
+       1. In +draft, the message is just edited.
+       2. In +queue or +postq, the message is moved to +draft and is
+          edited.
+       3. Otherwise, the message is copied to +draft and is edited.
 
      For +draft, +queue, and +postq, the "case" revives.
 
      For the other folders, if `mew-case-guess-when-prepared' is `t',
      each field of the original header is replaced according to a
      guessed "case". For more information, see *Note config::.
-
 `C-uE'
      The same as `E'. But, when used for other folders than +draft,
      +queue, and +postq, the original header is retained even if
@@ -1094,89 +1043,66 @@ Mew provides you with the following useful commands in Summary mode:
      Toggle "Summary mode only" and "Summary & Message mode". If you
      choose "Summary mode only", you can quickly put the `D' mark
      since the next message is not displayed.
-
 `_'
      Toggle normal lines, wrapped lines and long lines.
-
 `zv'
      If `mew-use-header-veil' is non-nil, field lines of To: and Cc:
      over `mew-header-veil-count' are covered with invisible
      veils. This commands toggles visibility of these lines.
      `mew-use-header-veil' and `mew-header-veil-count' are default to
      `t' and 4, respectively.
-
 `M-l'
      Make the current line the center of the Summary mode.
-
 `C-cC-s'
      Incremental search forward in Message mode.
-
 `C-cC-r'
      Incremental search backward in Message mode.
-
 `y'
      Save this message or this part into the file whose name is
      specified by you.
-
 `b'
      Save the buffer of Message mode as is into the file whose name is
      specified by you.
-
 `C-uy'
      Save this message or this part into the file whose name is
      specified by you, specifying coding-system for text.
-
 `#'
      Print the content of Message mode according to
      `mew-print-function'.
-
 `C-u#'
      Print the content of Message mode with a specified printer name.
-
 `|'
      Send the content of Message buffer to a command via pipe.
-
 `C-u|'
      Send the body of Message buffer (excluding its header) to a
      command via pipe.
-
 `\'
      Executing an external command specifying this message as an
      argument.
-
 `B'
      De-capsulate embedded messages in MIME format.
-
 `C-uB'
      Decompose embedded files in this message.
-
 `C-cC-a'
      Register the information on the current message to Addrbook
      (*Note addrbook::).
-
 `C-cC-v'
      Select PGP version (*Note cipher-viewing::).
-
 `C-cC-z'
      Let PGP decrypt and/or verify old fashioned PGP messages (*Note
      cipher-viewing::).
-
 `C'
      Change the value of the "case". For more information, please refer to
      *Note config::.
-
 `='
      Display the folder name of this message and the message
      number. If this is a cache message, both the unique id and the
      size are also shown.  The full path to the message is set to the
      cut buffer of your window manager.
-
 `;'
      Parse the Received: fields and display them in Message mode.
-
 `Rd'
      Delete this folder.
-
 `Rr'
      Rename this folder.
 
@@ -1194,7 +1120,6 @@ commands:
 
 `Z'
      Update information including Addrbook (*Note addrbook::).
-
 `C-uZ'
      Update information about folders of the current world.
 
@@ -1202,24 +1127,18 @@ Here is a summary of toggle commands.
 
 `z8'
      Toggle 8bit mode (i.e. `mew-use-8bit').
-
 `zc'
      Clean-up caches of analyzed messages.
-
 `zd'
      Toggle `mew-debug'.
-
 `zo'
      Toggle PGP/MIME or old-fashioned PGP (`mew-use-old-pgp') when
      composing with shortcut methods.
-
 `zp'
      Toggle decode policy (i.e. `mew-decode-broken').
-
 `zv'
      Toggle whether or not veil is used in Message
      mode(`mew-use-header-veil').
-
 `zw'
      Toggle warning level. If `mew-warning-field-level' is 2, set it
      to 1. If `mew-warning-field-level' is 1, set it to 2.
@@ -1295,14 +1214,16 @@ This section explains how to compose a message.
 
 Methods to enter Draft mode to write a new message are given below.
 
- 1.  Type `M-x mew-send'. Type `C-xm' if `mail-user-agent' is
-configured. Press `w' in Summary mode.et jaすると、以下のようなバッファ
-が用意されます。Then a buffer like the following is prepared.
+  1. Type `M-x mew-send'.
+  2. Type `C-xm' if `mail-user-agent' is configured.
+  3. Press `w' in Summary mode.
+
+Then a buffer like the following is prepared.
 
      To:
      Subject:
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.8 on Emacs 26.1
      ----
 
 We call this "Draft mode". In Draft mode, we call the region above
@@ -1351,11 +1272,8 @@ Completions in a header
 In the header, completions for each field are assigned to `TAB' as
 follows:
 
-
    - Field completion
-
    - Address completion (To:, Cc:, etc) (see *Note addr-comp::)
-
    - Folder completion (Fcc:)
 
 <Field completion>
@@ -1405,9 +1323,7 @@ of the list. The end of the list is considered continuous to the top
 of the list. Circular completions in a header are different for each
 field as follows:
 
-
    - Circular completion of domain name (To:, Cc:, etc)
-
    - Circular completion of From: (From:)
 
 <Circular completion of domain name>
@@ -1476,12 +1392,12 @@ the entire address is completed as follows:
 There are three kinds of registered addresses to be used for the
 completion.
 
- 1.  The expansion rule in an address book The personal information in
-the address book Learned addresses when sendinget jaアドレスの補完には
-2 つの方法が提供されています。`mew-use-full-alias' によって選択します
-(初期値は `nil')。Mew provides two ways to complete addresses. You can
-select one of them with `mew-use-full-alias', which is default to
-`nil'.
+  1. The expansion rule in an address book
+  2. The personal information in the address book
+  3. Learned addresses when sending
+
+Mew provides two ways to complete addresses. You can select one of
+them with `mew-use-full-alias', which is default to `nil'.
 
 If `mew-use-full-alias' is `nil', the portion before `@', a user name
 or a short name, is a target of the completion. When you type `TAB',
@@ -1808,7 +1724,6 @@ choose one of the following two commands.
 `C-cC-m'
      Compose a message, put it into +queue or +postq, and leave it for
      later sending.
-
 `C-cC-c'
      Compose a message and send it. You receive the prompt: "Really
      send this message? (y or n) ". Type `y' to send it.
@@ -1819,7 +1734,7 @@ following example:
      To: pooh
      Subject: the next Sunday
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.8 on Emacs 26.1
      ----
      Would you like to play with me next Sunday?
 
@@ -1833,7 +1748,7 @@ This message is modified as follows, for example, if it is put into
      To: winnie-the-pooh@example.net
      Subject: the next Sunday
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.8 on Emacs 26.1
      Mime-Version: 1.0
      Content-Type: Text/Plain; charset=us-ascii
      Content-Transfer-Encoding: 7bit
@@ -1874,7 +1789,6 @@ that both of these are commands in Summary mode.
      This method is appropriate for dial-up environments, since one can save
      on connection fees and repeated authentication for sending.
      `mew-auto-flush-queue' is default to `t'.
-
 `C-cC-c'
      Send messages in +queue. Method is appropriate if you like to
      preview composed messages first in +queue and then send them. If
@@ -1909,16 +1823,15 @@ Here are the commands for citing text from Message mode to Draft mode.
 
 `C-cC-y'
      Copy and paste a part of a message from Message mode WITH
-     citation prefix and label.   1.  Roughly speaking, it
-          copies the body in Message mode. For example, if Text/Plain
-          is displayed, the entire Message mode is copied. If
-          Message/Rfc822 is displayed, the body without the header is
-          copied.
-
-      2.  If you type `C-uC-cC-y', the header is also copied ifexists.
-
-      3.  If an Emacs mark exists, the target is the regionbetween the mark and the cursor.
-
+     citation prefix and label.
+       1. Roughly speaking, it copies the body in Message mode. For
+          example, if Text/Plain is displayed, the entire Message mode
+          is copied. If Message/Rfc822 is displayed, the body without
+          the header is copied.
+       2. If you type `C-uC-cC-y', the header is also copied if
+          exists.
+       3. If an Emacs mark exists, the target is the region between
+          the mark and the cursor.
 `C-cC-t'
      Copy and paste a part of the message from Message mode WITHOUT
      citation prefix and label.
@@ -1969,7 +1882,7 @@ body. Now the entire draft looks like:
 
      To: mew-dist
      Subject: This is header
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.8 on Emacs 26.1
      ----
      This is the body.
 
@@ -1981,20 +1894,18 @@ body. Now the entire draft looks like:
 
 Here we designate three regions as follows:
 
+   * the region above "----" `header'
+   * the region from "----" to "attachments" `body'
+   * the region below "attachments" `attachments'
 
- * the region above "----" `header'he region from "----" to
-"attachments" `body'he region below "attachments" `attachments'et ja
-Draft モードでは、リージョンによってキー割当が違います。In Draft mode,
-the key bindings differ according to the region.
+In Draft mode, the key bindings differ according to the region.
 
 To `TAB', for instance, the following functions are assigned:
 
 header
      Completions.
-
 body
      Insert TAB.
-
 attachments
      Do nothing.
 
@@ -2002,10 +1913,8 @@ To `c', functions are assigned as follows:
 
 header
      Insert c.
-
 body
      Insert c.
-
 attachments
      Copy a file.
 
@@ -2013,64 +1922,45 @@ The following is a summary of commands in the attachments region.
 
 `C-p'
      Go to the previous file in the current directory.
-
 `C-n'
      Go to the next file in the current directory.
-
 `C-f'
      Go to the first subdirectory.
-
 `C-b'
      Go to the parent directory.
-
 `c'
      Copy a file (possibly via networks) on ".". To copy a remote
      file, use the "/[user@]hostname:/filepath" syntax.
-
 `l'
      Link a file with a symbolic link on ".". If you want to edit the
      attached file, you should `c' instead of `l' so that you do not
      edit the original file.
-
 `d'
      Delete this file or this directory.
-
 `m'
      Create a subdirectory (i.e. multipart) on ".".
-
 `f'
      Open this file into a buffer.
-
 `F'
      Open a new file into a buffer on ".".
-
 `y'
      Link the message which is displayed in Message mode on ".".
-
 `e'
      Input external-body on ".".
-
 `a'
      Sampling voice and insert as audio file on ".".
-
 `p'
      Extract the PGP key for the specified user on ".".
-
 `D'
      Input a description (Content-Description:).
-
 `T'
      Change the data type (Content-Type:).
-
 `t'
      Toggle text and binary for the data type.
-
 `I'
      Specify input coding-system for a Text/* object.
-
 `C'
      Specify output coding-system for a Text/* object.
-
 `P'
      Specify a file name (Content-Disposition:) to save this part in the
      receiver side. If you type just `RET' without any string, its value
@@ -2133,9 +2023,11 @@ For instance, if you copy files with `c', the part becomes as follows:
 
 Each line of a multipart message consists of
 
-
-
- - marks (Content-Transfer-Encoding:)art numberata type (Content-Type:)escription (Content-Description:)ile name (Content-Disposition:).ifset
+   - marks (Content-Transfer-Encoding:)
+   - part number
+   - data type (Content-Type:)
+   - description (Content-Description:)
+   - file name (Content-Disposition:).
 
 You can change data types (Content-Type:) by pressing `T' at any
 time. If the data type is either text (Text/Plain) or binary
@@ -2319,11 +2211,11 @@ When `a' and `A' is used in Summary mode, a new draft is prepared in
 Draft mode. Values of To:, Cc:, and Newsgroups: are prepared according
 to three alists.
 
- 1.  If called with `C-u', replying to the sender/posteronly. In this case, `mew-reply-sender-alist' is used.
-
- 2.  If this message is sent by ME, you probably intend toreply with the original header. In this case,
-     `mew-reply-fromme-alist' is used.
-
+  1. If called with `C-u', replying to the sender/poster only. In this
+     case, `mew-reply-sender-alist' is used.
+  2. If this message is sent by ME, you probably intend to reply with
+     the original header. In this case, `mew-reply-fromme-alist' is
+     used.
   3. Otherwise, replying to all people listed. In this case,
      `mew-reply-all-alist' is used.
 
@@ -2336,13 +2228,12 @@ The default value of `mew-reply-sender-alist' is as follows:
 
 This is read as follows:
 
- 1.  If Reply-To: exists, copy the values of Reply-To: andFrom: to new To:.
+  1. If Reply-To: exists, copy the values of Reply-To: and From: to
+     new To:.
+  2. Otherwise, copy the value of From: to To:.
 
- 2.  Otherwise, copy the value of From: to To:.et jaもし、Reply-To: で
-指定されたアドレスのみに返答したい場合は、`mew-reply-sender-alist' を
-以下のように設定するとよいでしょう。If you would like to reply only to
-the address on Reply-To: (if any), set `mew-reply-sender-alist' like
-this:
+If you would like to reply only to the address on Reply-To: (if any),
+set `mew-reply-sender-alist' like this:
 
      (setq mew-reply-sender-alist
            '(("Reply-To:"
@@ -2359,7 +2250,8 @@ The default value of `mew-reply-fromme-alist' is as follows:
 
 This is read as follows:
 
- 1.  Copying the value of To: to new To: and copying the valueof Cc: to new Cc: and copying the value of Newsgroups: to new
+  1. Copying the value of To: to new To: and copying the value of Cc:
+     to new Cc: and copying the value of Newsgroups: to new
      Newsgroups:.
 
 The default value of `mew-reply-all-alist' is as follows:
@@ -2379,16 +2271,17 @@ The default value of `mew-reply-all-alist' is as follows:
 
 This is read as follows:
 
- 1.  If the value of Followup-To: is "poster", copying thevalue of From: to new To:.
-
- 2.  If Followup-To: exists, copying the values of Followup-To:and Newsgroups: to new Newsgroups:.
-
- 3.  If Newsgroups: exists, copying the value of Newsgroups: toNewsgroups:.
-
- 4.  If Reply-To: exists, copying the values of Reply-To: andFrom: to new To:. And copying the values of To:, Cc:, and
-     Apparently-To: to new Cc:.
-
- 5.  Otherwise, copying the value of From: to new To:. Andcopying the values of To:, Cc:, and Apparently-To: to new Cc:.
+  1. If the value of Followup-To: is "poster", copying the value of
+     From: to new To:.
+  2. If Followup-To: exists, copying the values of Followup-To: and
+     Newsgroups: to new Newsgroups:.
+  3. If Newsgroups: exists, copying the value of Newsgroups: to
+     Newsgroups:.
+  4. If Reply-To: exists, copying the values of Reply-To: and From: to
+     new To:. And copying the values of To:, Cc:, and Apparently-To:
+     to new Cc:.
+  5. Otherwise, copying the value of From: to new To:. And copying the
+     values of To:, Cc:, and Apparently-To: to new Cc:.
 
 You may want to set `mew-reply-all-alist' like this:
 
@@ -2476,7 +2369,6 @@ mode.
      Recycle sending. Enter Header mode in order to modify To:, Cc:,
      From: of a target message. Typical usage is for messages in
      +queue or +postq.
-
 `r'
      Re-sending. Enter Header mode in order to add Resent-To:,
      Resent-Cc:, Resent-From: of a target message. Re-sending may
@@ -2492,7 +2384,6 @@ target message is certainly used.
 `C-cC-m'
      Compose a message, put it into +queue or +postq, and let it be
      waiting to be sent.
-
 `C-cC-c'
      Compose a message and send it. You are asked, "Really send this
      message?  (y or n) ". Type `y' to send it.
@@ -2509,13 +2400,10 @@ messages with PGP or S/MIME. The following commands are explained.
 
 `C-cC-s'
      Sign the entire draft. Input your pass-phrase.
-
 `C-cC-e'
      Encrypt the entire draft.
-
 `C-cC-b'
      Sign, and then encrypt the entire draft. Input your pass-phrase.
-
 `C-cC-r'
      Encrypt, and then sign the entire draft. Input your pass-phrase.
 
@@ -2581,25 +2469,18 @@ the symbols for each service. The service applied when typing
 
 pgp-signature (PS)
      Sign with PGP
-
 pgp-encryption (PE)
      Encrypt with PGP
-
 pgp-signature-encryption (PSPE)
      Sign then encrypt with PGP
-
 pgp-encryption-signature (PEPS)
      Encrypt then sign with PGP
-
 pgp-signature (SS)
      Sign with S/MIME
-
 pgp-encryption (sE)
      Encrypt with S/MIME
-
 pgp-signature-encryption (SSSE)
      Sign then encrypt with S/MIME
-
 pgp-encryption-signature (SESS)
      Encrypt then sign with S/MIME
 
@@ -2672,26 +2553,19 @@ At present, 8 marks are prepared.
 
 `" "'
      No encoding. But 8bit text would be encoded.
-
 `B'
      Base64
-
 `Q'
      Quoted-Printable
-
 `G'
      Gzip64 (compressed with gzip then encoded with Base64. This is
      experimental. Do not use this if receivers do not use Mew.)
-
 `PS'
      Sign with PGP
-
 `PE'
      Encrypt with PGP
-
 `SS'
      Sign with S/MIME
-
 `SE'
      Encrypt with S/MIME
 
@@ -2699,34 +2573,26 @@ Additional key binding for marks in attachments is as follows:
 
 `B'
      Put the `B' mark to encode with Base64.
-
 `Q'
      Put the `Q' mark to encode with Quoted-Printable.
-
 `G'
      Put the `G' mark to encode with Gzip64. This is applicable only
      to Text/Plain and Application/Postscript since compression is not
      effective with other objects. For example, JPEG is already
      compressed.
-
 `S'
      Put the `PS' mark to sign with PGP.
-
 `E'
      Put the `PE' mark to encrypt with PGP. Input decrypters'
      addresses.
-
 `M-s'
      Put the `SS' mark to sign with S/MIME.
-
 `M-e'
      Put the `SE' mark to encrypt with S/MIME. Input decrypters'
      addresses.
-
 `Z'
      Encrypt the part with ZIP immediately. After the encryption, the
      `B' mark appears.
-
 `U'
      Unmark. The original mark appears.
 
@@ -2827,19 +2693,14 @@ There are six marks at present.
 
 `U'
      The unread mark.
-
 `D'
      The delete mark.
-
 `X'
      The delete mark.
-
 `o'
      The refile mark, that is, to move a message to another folder.
-
 `*'
      The target mark.
-
 `$'
      The mark to save another mark temporarily.
 
@@ -2901,7 +2762,6 @@ The followings are summary of commands related to the `U' mark.
      Toggle the target of `SPC', `n', and `p'. Toggling means change
      one to the other out of "the `U' mark, the `*' mark, and
      non-mark" and "the `U' mark and the `*' mark".
-
 `M-u'
      Put the `U' mark to the current message.
 
@@ -2923,23 +2783,21 @@ For local folders, a trash is +trash. For IMAP, it is %trash.
 
 To really delete messages in the trashes, there are two methods:
 
- 1.  Type `D' in Summary mode. Put the `D' mark in the trashes then type `x'.et ja
-もう少し正確に言うと、ローカル・フォルダでは以下のルールが適用されます。
-(`mew-trash-folder' の初期値は +trash。
-`mew-trash-folder-list' の初期値は `nil'。)
+  1. Type `D' in Summary mode.
+  2. Put the `D' mark in the trashes then type `x'.
+
 Exactly speaking, the following rule is applied for local folders.
 (`mew-trash-folder' is default to +trash.
 `mew-trash-folder-list' is default to `nil'.)
 
-
    - If `mew-trash-folder' is `nil', messages marked with
      `D' are deleted.
-
- - If `mew-trash-folder-list' is defined, messages marked with`D' in one of the folders defined in it are deleted. Otherwise,
-     they are moved to the trash.
-
- - If `mew-trash-folder-list' is `nl', messages marked with `D'in `mew-trash-folder' are deleted.  Otherwise, they are moved to
-     the trash. (This is default.)
+   - If `mew-trash-folder-list' is defined, messages marked with `D'
+     in one of the folders defined in it are deleted. Otherwise, they
+     are moved to the trash.
+   - If `mew-trash-folder-list' is `nl', messages marked with `D' in
+     `mew-trash-folder' are deleted.  Otherwise, they are moved to the
+     trash. (This is default.)
 
 For IMAP, the same rule is applied according to both
 `mew-imap-trash-folder' and `mew-imap-trash-folder-list'
@@ -2963,28 +2821,20 @@ The following is a summary regarding with the `D' mark and the
 
 `d'
      Put the `D' mark.
-
 `M-d'
      Put the `X' mark.
-
 `md'
      Convert all `*' marks to `D'.
-
 `mM-d'
      Convert all `*' marks to `X'.
-
 `x'
      Process marked messages.
-
 `mxd'
      Process messages marked with `D' only.
-
 `mxM-d'
      Delete messages marked with `X' only.
-
 `D'
      Delete all messages in a trash.
-
 `C-uD'
      Delete all messages in a specified folder.
 
@@ -3022,18 +2872,14 @@ A summary about the `o' mark is here.
 
 `o'
      Put the `o' mark.
-
 `c'
      Put the `o' mark. Showing the current folder as a candidate in
      addition to guessed folders.
-
 `x'
      Refile messages marked with `o'.
-
 `mxo'
      Refile messages marked with `o' only. This command does not
      process other marks.
-
 `C-umxo'
      Refile messages marked with `o', whose destination is the same as
      that of the current message.
@@ -3054,16 +2900,12 @@ Here is a summary for `*' commands.
 
 `*'
      Put the `*' mark.
-
 `N'
      Jump to the message marked with `*' below and display it.
-
 `P'
      Jump to the message marked with `*' above and display it.
-
 `ma'
      Put the `*' mark to all unmarked messages.
-
 `mr'
      Put the `*' mark to all matching messages with specified regular
      expression.
@@ -3074,28 +2916,22 @@ list of commands which handle multiple messages.
 `F'
      Prepare a draft to forward multiple messages marked with `*' in
      MIME format.
-
 `J'
      A large message is occasionally fragmented into multiple messages
      whose Content-Type: is Message/Partial. Mew puts the `P' mark to
      these messages. Now a user marks these messages with `*' and
      executing this commands results in producing the original
      message.
-
 `mI'
      Retrieve the rest of truncated(`T') messages marked with
      `*'.
-
 `C-umI'
      Perform `mI'.
-
 `M-b'
      De-capsulate messages embedded in the messages marked with `*'.
-
 `M-\'
      Executing an external command specifying messages marked with `*'
      as arguments.
-
 `M-t'
      Apply "uudecode" on messages marked with `*'.
 
@@ -3118,15 +2954,16 @@ with `*' already, these messages are merged to the results of
 For this sake, the escape mark `$' is provided. A typical usage is as
 follows:
 
- 1.  Change the `*' marks to the `$' marks with `m$'. Put the `*' marks to messages, for instance, with `/' andprocess the messages marked with `*'.
+  1. Change the `*' marks to the `$' marks with `m$'.
+  2. Put the `*' marks to messages, for instance, with `/' and process
+     the messages marked with `*'.
+  3. Cancel the `*' marks with `U*'.
+  4. Get the old `*' marks back with `m*'.
 
- 3.  Cancel the `*' marks with `U*'. Get the old `*' marks back with
-`m*'.et ja `$' マークに関するコマンドを以下にまとめます。Here is
-summary of the commands related to the `$' mark.
+Here is summary of the commands related to the `$' mark.
 
 `m$'
      Change the `*' marks to the `$' marks.
-
 `m*'
      Change the `$' marks to the `*' marks.
 
@@ -3145,7 +2982,6 @@ Here is a summary for unmark commands.
 
 `u'
      Cancel the mark on this message.
-
 `U'
      Cancel all marks according to what you input.
 
@@ -3179,10 +3015,8 @@ The followings shows the marks in the strong order:
 `o', `D', and `X'
      After marking a message newly, the next message is shown. After
      overriding another mark, the cursor stays on the message.
-
 `*' and `$'
      After marking a message, the cursor stays on the message.
-
 `U'
      After marking a message, the cursor stays on the message.
 
@@ -3193,30 +3027,23 @@ You can exchange marks as follows:
 
 `m$'
      `*' -> `$' :: Preserve the `*' marks temporarily.
-
 `m*'
      `$' -> `*' :: Get the `*' marks back.
-
 `ms'
      `$' <-> `*'
-
 `mM-u'
      `*' -> `U' :: It is useful when you put `U' marks to messages
      picked by `?'.
-
 `md'
      `*' -> `D' :: It is useful when you put `D' marks to messages
      picked by `?'.
-
 `mM-d'
      `*' -> `X' :: It is useful when you put `X' marks to messages
      picked by `?'.
-
 `mo'
      `*' -> `o' :: It is useful when you put `o' marks to messages to
      be moved picked by `?'.  `*' -> `o' :: It is useful when you put
      `o' marks to messages to be copied picked by `?'.
-
 `e'
      Exchange the first input mark to the second one. The `o' mark is
      not exchangeable.
@@ -3234,7 +3061,6 @@ server:
 `U'
      Whether a message is read or not. This IMAP flag is \Seen. This
      is usually valid in %inbox only.
-
 `*'
      Review mark. This IMAP flag is \Flagged.
 
@@ -3244,28 +3070,17 @@ automatically synchronize marks repeatedly. The followings are how Mew
 synchronizes marks.
 
   1. `s' + 'update
-
-
         - Reflecting modified marks of the existing messages to the server
-
-      - For newly arrived messages, reflecting flags of theserver to the messages.
-
+        - For newly arrived messages, reflecting flags of the server
+          to the messages.
 
   2. `x'
-
-
         - Reflecting modified marks of the existing messages to the server
-
 
   3. `s' + 'sync
-
-
         - Reflecting modified marks of the existing messages to the server
-
         - Clearing `*',`U', `$', ` ' mark on the existing messages.
-
         - Reflecting flags of the server to the existing messages
-
         - Removing messages which were deleted in the server
 
 
@@ -3297,9 +3112,10 @@ Mew implements delayed jobs processing and viewing refiled messages
 without retrieval. If you want to process marks off-line, type `lx'.
 `lx' carries out the following jobs.
 
- 1.  Deleting messages marked with `o' and/or `D' from folderA.
-
- 2.  Queuing these jobs in %queue. Moving messages marked with `o' to folder B and markingthem invalid.
+  1. Deleting messages marked with `o' and/or `D' from folder A.
+  2. Queuing these jobs in %queue.
+  3. Moving messages marked with `o' to folder B and marking them
+     invalid.
 
 'invalid' means that you can read it but you cannot put the `o'/`D'
 mark on it. Invalid messages are marked with `#'. When you go to
@@ -3324,24 +3140,18 @@ Here is a summary of marks displayed by Mew.
 
 `M'
      This message is a multipart. Please refer to *Note multipart::.
-
 `-'
      This message contains a Multipart/Alternative content. Please refer to
      *Note analysis::.
-
 `T'
      This message was truncated by Mew. Please refer to *Note
      retrieving::.
-
 `S'
      This message is signed. Please refer to *Note cipher-viewing::.
-
 `E'
      This is a cipher message. Please refer to *Note cipher-viewing::.
-
 `P'
      This message is fragmented. Please refer to *Note target mark::.
-
 `#'
      This message is invalid. Please refer to *Note off-line::.
 
@@ -3683,10 +3493,8 @@ Let's see the following example of `mew-refile-guess-control' action.
 
 `mew-refile-guess-by-alist'
          guessed +aaa and +bbb.
-
 `mew-refile-guess-by-folder'
          guessed +ccc and +ddd.
-
 `mew-refile-guess-by-default'
          guessed +eee.
 
@@ -3789,13 +3597,10 @@ another.
 
 `lc'
      Copy a message to a local folder.
-
 `mlc'
      Copy messages marked with `*' to a local folder.
-
 `li'
      Copy a message to the server side of IMAP.
-
 `mli'
      Copy messages marked with `*' to the server side of IMAP.
 
@@ -3813,7 +3618,6 @@ Virtual mode is a virtual folder and it consists of "selection" and
 `Selection'
      A virtual folder collecting necessary messages from several
      folders.  Its folder name has "*" on the left side.
-
 `Thread'
      A virtual folder to visualize message flow with indentation,
      created from a folder or a virtual folder. Its folder name has
@@ -3860,19 +3664,15 @@ several folders. There are five ways to create selection:
 `m/'
      Listing messages marked with `*' on a folder. see *Note
      sorting::.
-
 `S'
      Sorting messages on a folder and display them. (No effect to the
      original folder.) see *Note dialog::.
-
 `V'
      Listing messages which have relationship with the current message. See
      *Note dialog::.
-
 `/'
      Listing messaged matched to a search condition on a folder. see
      *Note search::.
-
 `k/'
      Listing messaged matched to a search condition from all folders. See
      *Note search::.
@@ -3909,13 +3709,10 @@ Mew provides four modes for sorting:
 
 `text'
      String with preceding "Re: " and or "Fw: " removed.
-
 `ml'
      The same as text but preceding mailing-list-string removed.
-
 `num'
      Number.
-
 `date'
      Date.
 
@@ -3949,12 +3746,12 @@ Mew can list messages which have relationship with the current
 message. Let's call this "dialog". This is different from thread
 described later in the following points:
 
-
- - Thread can be made from one folder or one virtualfolder. Messages relating to dialog can ubiquitously exists in
+   - Thread can be made from one folder or one virtual
+     folder. Messages relating to dialog can ubiquitously exists in
      several folders.
 
-
- - Thread visualizes tree structres with indentation. whiledialog lists up messages in order of time.
+   - Thread visualizes tree structres with indentation. while dialog
+     lists up messages in order of time.
 
 To use the feature of dialog, execute `kI' to create database. New
 messages are not automatically registered in to the database, you
@@ -3981,15 +3778,12 @@ Mew provides the following method to search messages:
      Put the `*' mark onto messages in this folder, which are matched
      to a specified pattern. Either `mewl' or `grep' is called
      according to the specified pattern.
-
 `C-u?'
      `?' with a region specified.
-
 `/'
      Make selection with messages in this folder, which are matched to
      a specified pattern. Either `mewl' or `grep' is called according
      to the specified pattern.
-
 `C-u/'
      `/' with a region specified.
 
@@ -4000,11 +3794,9 @@ following commands.
 `k?'
      Put the `*' mark onto messages in this folder, which are matched
      to a specified pattern.
-
 `k/'
      Make selection with messages in all folders, which are matched to
      a specified pattern.
-
 `C-uk/'
      Make selection with messages in specified folders, which are
      matched to a specified pattern. If you want to specify multiple
@@ -4031,31 +3823,24 @@ Here is a list of expression elements. (In the strong order)
      Match if the "field" field contains the "string" string
      (case-insensitive). If you specify "head", it means the entire
      header.
-
 `field==string'
      Match if the "field" field contains the "string" string
      (case-sensitive). If you specify "head", it means the entire
      header.
-
 `field!=string'
      Match if the "field" field does not the "string" string
      (case-insensitive). If you specify "head", it means the entire
      header.
-
 `field!==string'
      Match if the "field" field does not the "string" string
      (case-sensitive). If you specify "head", it means the entire
      header.
-
 `( <pattern> )'
      Evaluate <pattern> first.
-
 `! <pattern>'
      Match if not <pattern>.
-
 `<pattern1> & <pattern2>'
      Match if <pattern1> AND <pattern2>. You can omit this.
-
 `<pattern1> | <pattern2>'
      Match if <pattern1> OR <pattern2>.
 
@@ -4104,10 +3889,8 @@ To operate search engines, the following commands are provided:
 
 `km'
      Make index for the current folder.
-
 `kM'
      Make index for all folders.
-
 `kc'
      Switch one search engine to another.
 
@@ -4119,14 +3902,11 @@ The followings are expiation of each search engines.
      current folder quickly, you can use `km'. Both `k?' and `k/' are
      available. When you specify folders with `C-uk/', sub-folders, if
      any, are included in the target.
-
 `Spotlight'
      Type `kM' just once. `km' is not necessary. Both `k?'  and `k/'
      are available.
-
 `Windows Desktop Search'
      Type `kM' just once. `km' is not necessary.
-
 `Google Desktop'
      Type `kM' just once. `km' is not necessary. Only `k/' is
      available.
@@ -4156,14 +3936,11 @@ enable this functionality are as follows:
      command, text around the keyword is displayed from one to
      another. If no key word is set to the variable, this command
      first asks you a keyword.
-
 `C-uM-n'
      The same as `M-n' except that you can change the stored keyword
      explicitly.
-
 `M-p'
      A reverse version of `M-n'.
-
 `C-uM-p'
      A reverse version of `C-uM-n'.
 
@@ -4194,13 +3971,10 @@ To make thread, the following commands exist.
      switch to the Virtual mode. When this command is executed on
      threads, switch to the original folder and move the cursor to the
      current message.
-
 `C-utt'
      Make threads for messages in the region.
-
 `mt'
      Make threads for messages marked with `*'.
-
 `tr'
      Make threads for messages matched to a regular expression.
 
@@ -4216,21 +3990,16 @@ Here are the commands used for moving to thread presentation.
 `tp'
      Move to the top of the current thread. If the current message is
      a top node, move to the top of the next thread.
-
 `tn'
      Move to the top of the next thread.
-
 `^'
      Move to the parent message of the current message. (Available in
      both Summary and Virtual)
-
 `&'
      Move to the child message of the current message. (Available in
      both Summary and Virtual)
-
 `('
      Search backward by one sibling message of the current message.
-
 `)'
      Search forward by one sibling message of the current message.
 
@@ -4240,19 +4009,15 @@ Here are commands to mark messages in a thread.
 `t*'
      Put the `*' mark all messages of the current sub-thread. Please
      refer to *Note target mark:: for more information.
-
 `t$'
      Put the `$' mark all messages of the current sub-thread. Please
      refer to *Note escape mark:: for more information.
-
 `td'
      Put the `D' mark all messages of the current sub-thread. Please
      refer to *Note delete mark:: for more information.
-
 `tM-d'
      Put the `X' mark all messages of the current sub-thread. Please
      refer to *Note delete mark:: for more information.
-
 `to'
      Put the `o' mark all messages of the current sub-thread. Please
      refer to *Note refile mark:: for more information.
@@ -4266,10 +4031,8 @@ Here are commands to manipulate a thread:
      Hide children and leave the parent only. If its children are
      hidden, "+" is displayed on the parent. Also, if this command is
      executed on a message whose children are hidden, they appear.
-
 `ta'
      Toggle appearance of children for all threads.
-
 `tg'
      Graft a thread to a message. To specify which thread is grafted,
      type `C-SPC' on the root of the thread. Then move onto your
@@ -4296,10 +4059,8 @@ Here are how to quit and suspend Mew and how to erase a mode (buffer).
 `q'
      Suspend Mew then switch to another buffer. All buffers of Mew
      remain, so you can resume with buffer operations.
-
 `Q'
      Quit Mew. All buffers of Mew are erased.
-
 `C-cC-q'
      Erase the current mode (buffer).
 
@@ -4354,21 +4115,23 @@ default value is as follows:
 
 Like this, `mew-summary-form' is a list of list, symbol, and string.
 
- 1.  A string is printed as it is. A list consists of an integer and a symbol. The symbolspecifies a function to be called. The name of the function is
-     produced by concatenating "mew-summary-form-" and the symbol
-     name.  (e.g. `mew-summary-form-date' for the symbol
-     'date'). Pre-defined symbols are 'type, 'time, 'date, 'year,
-     'size, 'from, 'subj and 'body. For more details, see the
-     explanation of the functions called
-     `mew-summary-form-<symbol>'. The integer specifies the width of
-     field which will be filled with a return string of the
+  1. A string is printed as it is.
+  2. A list consists of an integer and a symbol. The symbol specifies
+     a function to be called. The name of the function is produced by
+     concatenating "mew-summary-form-" and the symbol name.
+     (e.g. `mew-summary-form-date' for the symbol 'date'). Pre-defined
+     symbols are 'type, 'time, 'date, 'year, 'size, 'from, 'subj and
+     'body. For more details, see the explanation of the functions
+     called `mew-summary-form-<symbol>'. The integer specifies the
+     width of field which will be filled with a return string of the
      function. A positive value means padding SPCs on the right if
      necessary. A negative value means padding SPCs on the left if
      necessary. If a negative value is specified, the corresponding
      function must return an ASCII string. 0 means the remaining width
      of the line and is treated as a positive value.
-
- 3.  A symbol is equivalent to (1 symbol). '(mark) is appended to `mew-summary-form' when used. `t' means the position of thread indentation.
+  3. A symbol is equivalent to (1 symbol).
+  4. '(mark) is appended to `mew-summary-form' when used.
+  5. `t' means the position of thread indentation.
 
 An example is as follows:
 
@@ -4393,29 +4156,28 @@ Consider the following examples:
 
 Each element returns the following value:
 
- 1.  'name:: Name part, if any     A. Kazu Yamamoto
+  1. 'name:: Name part, if any
+          A. Kazu Yamamoto
           B. (No match)
           C. Kazuhiko Yamamoto (Kazu)
-
- 2.  'comment:: Comment part, if any     A: (No match)
+  2. 'comment:: Comment part, if any
+          A: (No match)
           B: Kazu Yamamoto
           C: (Kazu)
-
- 3.  'address:: Address part     A: kazu@example.org
+  3. 'address:: Address part
+          A: kazu@example.org
           B: kazu@example.org
           C: kazu@example.org
+  4. 'nickname:: one element of personal information in Addrbook
+     according to `mew-addrbook-for-summary'. The default value of
+     `mew-addrbook-for-summary' is `'nickname'. So, From: is converted
+     a nickname by default. To know what kind of value can be used,
+     refer to *Note draft-mode::.
+  5. (regex):: The substring first matched.
 
- 4.  'nickname:: one element of personal information inAddrbook according to `mew-addrbook-for-summary'. The default
-     value of `mew-addrbook-for-summary' is `'nickname'. So, From: is
-     converted a nickname by default. To know what kind of value can
-     be used, refer to *Note draft-mode::.
-
- 5.  (regex):: The substring first matched.et jaある要素が合致しない場
-合、次の要素が評価されます。どの要素も From: フィールドに合致しない場
-合か、この値が `nil' の場合、From: フィールド全体が利用されます。If a
-element does not match, the next element is applied. If no element
-matches to the From: field, or this value is `nil', the whole of the
-From: field is used.
+If a element does not match, the next element is applied. If no
+element matches to the From: field, or this value is `nil', the whole
+of the From: field is used.
 
 
 If `mew-summary-form-mark-delete' is `t', the `D' mark
@@ -4446,13 +4208,10 @@ candidates.
 
 `up'
      Display the message above.
-
 `down'
      Display the message below.
-
 `next'
      Display the next message in the direction.
-
 `stop'
      Do not display the next message.
 
@@ -4588,8 +4347,8 @@ and format in `mew-cite-format'. Define citation prefix to
 
 To add Message-ID: to citation label, take this way.
 
-     (setq mew-cite-fields '("From:" "Subject:" "Date:" "Message-Id:"))
-     (setq mew-cite-format "From: %s\nSubject: %s\nDate: %s\nMessage-Id: %s\n\n")
+     (setq mew-cite-fields '("From:" "Subject:" "Date:" "Message-ID:"))
+     (setq mew-cite-format "From: %s\nSubject: %s\nDate: %s\nMessage-ID: %s\n\n")
 
 To add a user part of an address to the citation prefix, configure as
 follows:
@@ -4618,16 +4377,12 @@ values.
 
 'shortname
      Short name
-
 'address
      Address
-
 'username
      User part of address
-
 'nickname
      Nickname
-
 'name
      Full name
 
@@ -4672,10 +4427,8 @@ If you want to check a chosen charset when composing, configure
 
 `nil'
      Not ask.
-
 `A list of charset'
      Ask if the charset is not a member of the list.
-
 `t'
      Ask if `mew-charset-m17n' is used.
 
@@ -4698,14 +4451,15 @@ sign, is getting more and more popular instead of Latin 1
 (ISO-8859-1). If characters of both Latin 1 and Lain 9 exist in a
 draft, Mew takes the following step to decide a charset.
 
- 1.  If `unify-8859-on-decoding-mode' is used:  1.  Use     "iso-8859-1" if no loss.
-
-      2.  Otherwise, use "utf-8".m If `unify-8859-on-decoding-mode' is
-     not used:
+  1. If `unify-8859-on-decoding-mode' is used:
+       1. Use "iso-8859-1" if no loss.
+       2. Otherwise, use "utf-8".
+  2. If `unify-8859-on-decoding-mode' is not used:
        1. If both ISO-8859-1 and ISO-8859-15 can be used with no loss,
           "ISO-8859-1" is used.
-
-      2.  Use "iso-8859-1" if no loss. Use "iso-8859-15" if no loss. Otherwise, use "utf-8".ifset
+       2. Use "iso-8859-1" if no loss.
+       3. Use "iso-8859-15" if no loss.
+       4. Otherwise, use "utf-8".
 
 The default value of `mew-charset-latin' is "iso-8859-15". If you want
 to set it to "iso-8859-1", configure like this:
@@ -4807,149 +4561,105 @@ Here is a summary of hooks used in Mew.
 
 `mew-env-hook'
      Hook called at initialize time before setting environment.
-
 `mew-init-hook'
      Hook called at initialize time.
-
 `mew-status-update-hook'
      Hook called at status update(`Z').
-
 `mew-summary-mode-hook'
      Hook called in Summary mode.
-
 `mew-virtual-mode-hook'
      Hook called in Virtual mode.
-
 `mew-thread-display-hook'
      Hook called after new threads are displayed.
-
 `mew-header-mode-hook'
      Hook called in Header mode.
-
 `mew-draft-mode-hook'
      Hook called in Draft mode.
-
 `mew-draft-mode-newdraft-hook'
      Hook called in Draft mode only when new draft is prepared.
-
 `mew-draft-mode-reedit-hook'
      Hook called in Draft mode when a message not in +draft is
      re-edited.
-
 `mew-draft-mode-reedit-draft-hook'
      Hook called in Draft mode when a message in +draft is re-edited.
-
 `mew-draft-mode-reedit-queue-hook'
      Hook called in Draft mode when a message in +queue or +postq is
      re-edited.
-
 `mew-draft-mode-edit-again-hook'
      Hook called in Draft mode when a message returned with the old
      style is edited again.
-
 `mew-message-mode-hook'
      Hook called in Message mode.
-
 `mew-message-hook'
      Hook called whenever message displayed.
-
 `mew-make-message-hook'
      Hook called before making a message in Draft mode. A good example
      is as follows: (add-hook 'mew-make-message-hook 'ispell-message)
-
 `mew-send-hook'
      Hook called before sending/queuing an e-mail message in Draft
      mode.  Note that this hook is called before composition of the
      message
-
 `mew-post-hook'
      Hook called before posting/queuing a NetNews message in Draft
      mode.  Note that this hook is called before composition of the
      message.
-
 `mew-real-send-hook'
      Hook called before sending/queuing an e-mail message in Draft
      mode.  Note that this hook is called after composition of the
      message.
-
 `mew-real-post-hook'
      Hook called before sending/queuing a NetNews message in Draft
      mode.  Note that this hook is called after composition of the
      message.
-
 `mew-smtp-flush-hook'
      Hook called before SMTP runs if messages exist in +queue.
-
 `mew-nntp2-flush-hook'
      Hook called before NNTP runs if messages exist in +postq.
-
 `mew-smtp-sentinel-hook'
      Hook called when a SMTP process finished.
-
 `mew-nntp-sentinel-hook'
      Hook called when a NNTP process to receive messages finished.
-
 `mew-nntp2-sentinel-hook'
      Hook called when a NNTP process to post messages finished.
-
 `mew-pop-sentinel-hook'
      Hook called when a POP process finished.
-
 `mew-pop-sentinel-non-biff-hook'
      Hook called when a non-Biff POP process finished.
-
 `mew-imap-sentinel-hook'
      Hook called when a NNTP process to post messages finished.
-
 `mew-imap-sentinel-hook'
      Hook called when an IMAP process finished.
-
 `mew-imap-sentinel-non-biff-hook'
      Hook called when a non-Biff IMAP process finished.
-
 `mew-scan-sentinel-hook'
      Hook called when scan finished.
-
 `mew-summary-ls-no-scan-hook'
      Hook called when mew-summary-ls does not scan a folder.
-
 `mew-summary-exec-hook'
      Hook called when `x' in Summary mode finished.
-
 `mew-refile-guess-by-from-learn-hook'
      Hook called in mew-refile-guess-by-from-learn.
-
 `mew-sort-hook'
      Hook called when `M-s' in Summary mode finished.
-
 `mew-pack-hook'
      Hook called when `O' in Summary mode finished.
-
 `mew-summary-delete-folder-hook'
      Hook called when a folder deleted.
-
 `mew-summary-rename-folder-hook'
      Hook called when a folder renamed.
-
 `mew-summary-toggle-disp-msg-hook'
      Hook called when `v' in Summary finished.
-
 `mew-syntax-format-hook'
      Hook called when mew-syntax-format is called.
-
 `mew-addrbook-mode-hook'
      Hook called in Addrbook mode.
-
 `mew-cite-hook'
      Hook for an external cite mechanism. If you want to use
      super-cite, (setq mew-cite-hook 'sc-cite-original).
-
 `mew-before-cite-hook'
      Called in mew-summary-reply-with-citation before citation.
-
 `mew-suspend-hook'
      Hook called on suspend.
-
 `mew-quit-hook'
      Hook called on quit.
 
@@ -4978,45 +4688,35 @@ variables to control POP.
 
 `mew-pop-server'
      The name of your POP server.
-
 `mew-pop-ssh-server'
      The name of SSH server which forwards the POP3 port.
-
 `mew-pop-ssl'
      If non-nil, POP connections are made over SSL.
-
 `mew-pop-ssl-port'
      The port for POP over SSL.
-
 `mew-pop-user'
      The user name on your POP server. The default is your login name.
-
 `mew-pop-auth'
      The authentication method for POP3. 'pass means the
      authentication with USER/PASS (i.e. plain password). 'apop means
      the authentication with APOP. `t' means SASL according to
      `mew-pop-auth-list'. The default is 'apop.
-
 `mew-pop-auth-list'
      A list of SASL methods in the preferred order. Currently,
      "CRAM-MD5" can be used.
-
 `mew-pop-delete'
      Whether or not delete messages on a POP server after retrieval by
      POP.  If `t', delete the messages. If `nil', retain the messages.
      If number N, delete the messages N days after the first
      access. The default is `t'.
-
 `mew-pop-size'
      The limit size of messages to be retrieved by POP. The default is
      55296 byte. 0 means unlimited, so you can get all messages from
      the POP server. To know how to retrieve the rest of a truncated
      message, please refer to *Note retrieving::.
-
 `mew-pop-body-lines'
      *The limit of body lines to get when the size of message exceeds
      `mew-pop-size'. The default is 40.
-
 `mew-pop-header-only'
      Whether or not the body of a message is retrieved by POP. If
      non-nil, only header is retrieved. The default is `nil'
@@ -5033,40 +4733,31 @@ following variables to control IMAP.
 
 `mew-imap-server'
      The name of your IMAP server.
-
 `mew-imap-ssh-server'
      The name of SSH server which forwards the IMAP4 port.
-
 `mew-imap-ssl'
      If non-nil, IMAP connections are made over SSL.
-
 `mew-imap-ssl-port'
      The port for IMAP over SSL.
-
 `mew-imap-user'
      The user name on the IMAP server. The default is your login name.
-
 `mew-imap-auth'
      The authentication method for IMAP4. `nil' means the authentication with
      LOGIN (i.e. plain password). `t' means SASL according to
      `mew-imap-auth-list'. The default is `t'.
-
 `mew-imap-auth-list'
      A list of SASL methods in the preferred order.  Currently,
      "CRAM-MD5" and "LOGIN" can be used.
-
 `mew-imap-delete'
      Whether or not delete messages on an IMAP server after retrieval
      by IMAP. If `t', delete the messages. If `nil', retain the
      messages. If number N, delete the messages N days after the first
      access. Otherwise they are not deleted. The default is `t'.
-
 `mew-imap-size'
      The limit size of messages to be retrieved by IMAP. The default
      is 55296 byte. 0 means unlimited, so you can get all messages
      from the IMAP server. To know how to retrieve the rest of a
      truncated message, please refer to *Note retrieving::.
-
 `mew-imap-header-only'
      Whether or not the body of a message is retrieved by IMAP. If
      non-nil, only header is retrieved. The default is `nil'
@@ -5083,36 +4774,27 @@ following variables to control NNTP.
 
 `mew-nntp-server'
      The name of your NNTP server.
-
 `mew-nntp-ssh-server'
      The name of SSH server which forwards the NNTP port.
-
 `mew-nntp-ssl'
      If non-nil, NNTP connections are made over SSL.
-
 `mew-nntp-ssl-port'
      The port for NNTP over SSL.
-
 `mew-nntp-user'
      The user name on the NNTP server. If non-nil, authentication is
      used.  (Note that mew-nntp-auth does not exist.)
-
 `mew-nntp-newsgroup'
      The name of default Newsgroup.
-
 `mew-nntp-size'
      The limit size of messages to be retrieved by NNTP. The default
      is 55296 byte. 0 means unlimited, so you can get all messages
      from the NNTP server.
-
 `mew-nntp-header-only'
      Whether or not the body of a message is retrieved by NNTP. If
      non-nil, only header is retrieved.
-
 `mew-nntp-msgid-user'
      A user name for creation of Message-Id:. If `nil', the value of
      `mew-user' is used. The default is `nil'.
-
 `mew-nntp-msgid-domain'
      A domain name for creation of Message-Id:. If `nil', the value of
      `mew-mail-domain' is used. The default is `nil'.
@@ -5134,49 +4816,33 @@ password. This section describes following variables to control SMTP.
 
 `mew-smtp-server'
      The name of your SMTP server.
-
 `mew-smtp-port'
-     The port for SMTP.  When an absolute pathname is specified, it
-     will be used as a Unix domain socket.
-
-`mew-smtp-submission-family'
-     The address family to be used for the SMTP server.  The default
-     value is 'ipv4.
-
+     The port for SMTP.
 `mew-smtp-ssh-server'
      The name of SSH server which forwards the SMTP port.
-
 `mew-smtp-ssl'
      If non-nil, SMTP connections are made over SSL.
-
 `mew-smtp-ssl-port'
      The port for SMTP over SSL.
-
 `mew-smtp-user'
      The user name on your SMTP server. If not configured, your e-mail
      address is automatically set.
-
 `mew-smtp-auth-list'
      A list of SMTP AUTH methods in the preferred order.  Currently,
      "CRAM-MD5", "PLAIN", and "LOGIN" can be used.
-
 `mew-smtp-helo-domain'
      An e-mail domain to tell a SMTP server with HELO/EHLO. The
      default is "localhost".
-
 `mew-smtp-mail-from'
      The default is `nil'. An e-mail address to tell a SMTP server
      with MAIL FROM:. If `nil', an address specified by the From:
      field is used.
-
 `mew-smtp-msgid-user'
      A user name for creation of Message-Id:. If `nil', the value of
      `mew-user' is used. The default is `nil'.
-
 `mew-smtp-msgid-domain'
      A domain name for creation of Message-Id:. If `nil', the value of
      `mew-mail-domain' is used. The default is `nil'.
-
 `mew-use-8bit'
      Whether or not send 8bit text without MIME encoding. If `nil', an
      appropriate MIME encoding is applied. The default is `nil'.
@@ -5189,16 +4855,6 @@ If you want to use Message Submission (SMTP for submission whose port
 number is 587), configure as follows:
 
      (setq mew-smtp-port "submission")
-
-If you want to use a Unix domain socket to connect MTA, configure as
-follows:
-
-     (setq mew-smtp-port "/var/run/msp.sock")
-
-If you want to use IPv6 as the transport protocol to connect MTA,
-configure as follows:
-
-     (setq mew-smtp-submission-family 'ipv6)
 
 Please refer also to SSL (*Note SSL::) and TLS (*Note TLS::).
 
@@ -5284,7 +4940,7 @@ the variable `mew-"key"'. The following list enumerates such keys.
      nntp-server, nntp-port, nntp-ssh-server, nntp-ssl, nntp-ssl-port,
      nntp-user, nntp-size, nntp-header-only,
      nntp-msgid-user, nntp-msgid-domain,
-     prog-ssl-arg, ssl-cert-directory, ssl-verify-level,
+     ssl-cert-directory, ssl-verify-level,
      inbox-folder, queue-folder, postq-folder,
      mailbox-type, mbox-command, mbox-command-arg,
      signature-file, content-type, refile-guess-alist,
@@ -5332,12 +4988,10 @@ You can automatically set the "case" in Draft mode.
      If this variable is `t', the "case" is automatically guessed
      according `mew-case-guess-alist' when a draft is prepared. The
      default is `t'.
-
 `mew-case-guess-when-composed'
      If this variable is `t', the "case" is automatically guessed
      according `mew-case-guess-alist' when a message is composed. The
      default is `nil'.
-
 `mew-case-guess-when-replied'
      If this variable is `t', the "case" is automatically guessed
      according `mew-case-guess-when-replied-alist' when a draft is
@@ -5360,7 +5014,6 @@ The following is a summary of commands concerned with the "case".
 
 `C'
      In Summary mode, set the "case".
-
 `C-cC-o'
      In Draft mode, set the "case" of a draft.
 
@@ -5374,16 +5027,16 @@ The format of configuration
 In Mew 6.1, configuration format of "mew.el" is improved. You can use
 a new format as well as the old format.
 
-
- - In the old format, sometime "." appears. In the new fomat,no "."  appears at all. For instance, you can write ("foo" "bar")
-     instead of ("foo" . "bar").
-
- - In the old format, a numeric port is specified as string. Anexample is "25". In the new format, you can write it as
+   - In the old format, sometime "." appears. In the new fomat, no "."
+     appears at all. For instance, you can write ("foo" "bar") instead
+     of ("foo" . "bar").
+   - In the old format, a numeric port is specified as string. An
+     example is "25". In the new format, you can write it as
      integer. An example is 25. The string is still valid. An example
      is "smtp".
-
- - In the old format, the cases and the keys of`mew-config-alist' are written as string. In the new format, you
-     can specify them as symbol.
+   - In the old format, the cases and the keys of `mew-config-alist'
+     are written as string. In the new format, you can specify them as
+     symbol.
 
 Here is an example of the new format:
 
@@ -5572,17 +5225,14 @@ default to 1. The meanings of the values are as follows:
 
 0
      No verification.
-
 1
      Verify server's certificate if present. If verification failed,
      an SSL/TLS connection is not created. If not present, an SSL/TLS
      connection is created.
-
 2
      Verify server's certificate. If verification failed, an SSL/TLS
      connection is not created. If not present, an SSL/TLS connection
      is not created.
-
 3
      Verify server's certificate which locally installed (not one from
      the server).
@@ -5754,17 +5404,16 @@ non-employee's addresses to red.
 There are four variables to decide which address should trun red.
 They are all a list of strings. Mew takes the following rules:
 
- 1.  If an address is specified in `mew-safe-addresses', nowarning.
+  1. If an address is specified in `mew-safe-addresses', no warning.
+  2. If the address is specified in `mew-warn-addresses', warning.
+  3. If its domain is specified in `mew-safe-domains', no warning.
+  4. If its domain is specified in `mew-warn-domains', warning.
+  5. If either `mew-warn-addresses' or `mew-safe-domains' defined,
+     warning.
+  6. No warning.
 
- 2.  If the address is specified in `mew-warn-addresses',warning.
-
- 3.  If its domain is specified in `mew-safe-domains', nowarning.
-
- 4.  If its domain is specified in `mew-warn-domains', warning. If either `mew-warn-addresses' or `mew-safe-domains'defined, warning.
-
- 6.  No warning.et ja以下に "@example.org" 以外のドメインを持つアドレ
-スを警告する例を示します。Here is an example that an address whose
-domain is not "@example.org" turns red.
+Here is an example that an address whose domain is not "@example.org"
+turns red.
 
      (setq mew-safe-domains '("example.org"))
 
@@ -5812,8 +5461,9 @@ Edit
 Edit mode is a mode to edit a message to generate another new message.
 The followings are typical examples:
 
-
- - Saving a new message with big attachments removedaving a decrypted message whose original one is encryptedwith PGP/MIME or S/MIME
+   - Saving a new message with big attachments removed
+   - Saving a decrypted message whose original one is encrypted with
+     PGP/MIME or S/MIME
 
 To edit a current message in Edit mode, type `M-e'. Then, a new draft
 is prepared like Draft mode. In Edit mode, you can edit a message as
@@ -5837,10 +5487,8 @@ The following is a summary of commands in Edit mode.
 
 `C-cC-c'
      Saving the edited message to a new message.
-
 `C-cC-m'
      The same as `C-cC-c'
-
 `Other commands'
      The same as the other commands in Edit mode
 
@@ -5866,33 +5514,27 @@ Fill To: and Cc: fields precisely
      skip to read the message. We should take care not to deliver to
      wrong people by mistaking the addresses.
 
-
 The number of addresses To: and Cc: should be small
      It is discouraged to specify a lot of mail addresses on To: and
      Cc:. You should create a mailing-list instead. Or, if necessary,
      you should make the destination anonymous (*Note anonymous::).
-
 
 Write a short and clear summary of body in Subject:
      There are people who decide to read contents from their
      Subject:. So, they might skip messages with improper Subject:. We
      should not write a long subject since it is hard to read.
 
-
 Cite only necessary sentences
      You should not bother to remove unnecessary sentences. With Mew,
      citation must be a piece of cake.
 
-
 Make your signature simple
      A long signature is just self-satisfaction.
-
 
 Do not send prank messages
      I do not want to warn this kind of stuff. Nonetheless, someone
      sends Happy or Unhappy messages to others. You should understand
      that people doubt your character.
-
 
 Attach data files that the receivers can read
      It is text only that you can send without any agreement with the
@@ -5926,7 +5568,6 @@ Why are "mewl" and "mewencode" necessary?
      decided to continue to use "mewencode". (If Base64 is implemented
      by Emacs, Mew uses the native function.)
 
-
 Why does the cursor jump onto the end of line when searching(`C-s', `C-r')?
      Thread informations are not displayed in Summary mode. This is
      because the "invisible" property is dynamically put onto them
@@ -5940,7 +5581,6 @@ Why does the cursor jump onto the end of line when searching(`C-s', `C-r')?
      inputs. When this word is finished, the `*' mark in the right
      side of the mode line in Summary mode disappears. In this
      situation, string search works exactly as you expect.
-
 
 MS's mailers can handle file names well if I attach files with Mew 4.3
      MS's mailers use "non-standard MS original" encoding to encode
@@ -6011,15 +5651,15 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
- 1.  Redistributions of source code must retain the abovecopyright notice, this list of conditions and the following
-     disclaimer.
-
- 2.  Redistributions in binary form must reproduce the abovecopyright notice, this list of conditions and the following
-     disclaimer in the documentation and/or other materials provided
-     with the distribution.
-
- 3.  Neither the name of the team nor the names of itscontributors may be used to endorse or promote products derived
-     from this software without specific prior written permission.
+  1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in
+     the documentation and/or other materials provided with the
+     distribution.
+  3. Neither the name of the team nor the names of its contributors
+     may be used to endorse or promote products derived from this
+     software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS "AS IS" AND ANY
 EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -6248,7 +5888,6 @@ Variable Index
 * mew-smtp-ssl:                 SSL.                    (line   5)
 * mew-smtp-ssl-port:            smtp.
 * mew-smtp-ssl:                 smtp.
-* mew-smtp-submission-family:   smtp.
 * mew-smtp-user:                smtp.
 * mew-sort-default-key-alist:   sorting.                (line   5)
 * mew-sort-default-key:         sorting.                (line   5)
@@ -6587,111 +6226,111 @@ Key Index
 * zz (Summary):                 message-mode.           (line   5)
 
 Tag table:
-Node: Top279
-Node: Overview1493
-Node: characteristic2386
-Node: Emacsen4025
-Node: modes4242
-Node: folder convention5015
-Node: configuration8072
-Node: password10845
-Node: start13347
-Node: Viewing14518
-Node: singlepart15814
-Node: multipart17360
-Node: analysis20554
-Node: cipher-viewing24515
-Node: retrieving29541
-Node: moving33562
-Node: sum-write36210
-Node: features38575
-Node: status-update41078
-Node: invalid42110
-Node: Composing44307
-Node: header46371
-Node: cheader47374
-Node: addr-comp49178
-Node: addrbook51119
-Node: auto-alias54311
-Node: addr-comp156030
-Node: addr-comp258452
-Node: send60669
-Node: cite63762
-Node: mime-comp65996
-Node: charset-guess73363
-Node: longline77050
-Node: reply78878
-Node: forward82733
-Node: resend83606
-Node: shortcut85681
-Node: mark-b-comp91125
-Node: pgp-key94105
-Node: anonymous94986
-Node: Marks96553
-Node: unread mark98202
-Node: delete mark99704
-Node: refile mark102049
-Node: target mark103664
-Node: escape mark105305
-Node: unmark106175
-Node: mark change107155
-Node: sync108608
-Node: off-line109786
-Node: mew-mark111625
-Node: Refile112353
-Node: by-folder114213
-Node: by-alist116110
-Node: by-thread118193
-Node: by-from-folder119047
-Node: by-from120404
-Node: by-newsgroups121983
-Node: by-default122318
-Node: guess-rule122772
-Node: auto-refile124545
-Node: copy-msg126757
-Node: Virtual128027
-Node: selection129688
-Node: sorting130412
-Node: dialog132258
-Node: search133371
-Node: condition134540
-Node: dbsearch136786
-Node: keyword138015
-Node: thread138876
-Node: thread-op140139
-Node: Quit142316
-Node: Customize142867
-Node: summary-mode143682
-Node: message-mode147903
-Node: draft-mode151437
-Node: charset154408
-Node: highlight156604
-Node: hooks159568
-Node: pop164161
-Node: imap165850
-Node: nntp167427
-Node: smtp168797
-Node: config171761
-Node: config2177708
-Node: custom-misc179204
-Node: Tips180225
-Node: region180813
-Node: visiting181503
-Node: SSH182033
-Node: SSL183005
-Node: TLS185381
-Node: spam186280
-Node: spam2188569
-Node: addr-warn189903
-Node: biff191070
-Node: edit191828
-Node: Convention193091
-Node: Implementation195165
-Node: Avail197530
-Node: obtain197837
-Node: ml198129
-Node: Copyright198417
-Node: Variable Index200355
-Node: Key Index215704
+Node: Top285
+Node: Overview1499
+Node: characteristic2392
+Node: Emacsen4118
+Node: modes4335
+Node: folder convention5102
+Node: configuration8154
+Node: password10927
+Node: start13450
+Node: Viewing14618
+Node: singlepart15914
+Node: multipart17403
+Node: analysis20633
+Node: cipher-viewing24582
+Node: retrieving29608
+Node: moving33617
+Node: sum-write36265
+Node: features38642
+Node: status-update41122
+Node: invalid42147
+Node: Composing44344
+Node: header46392
+Node: cheader47392
+Node: addr-comp49194
+Node: addrbook51072
+Node: auto-alias54264
+Node: addr-comp155983
+Node: addr-comp258405
+Node: send60622
+Node: cite63713
+Node: mime-comp65959
+Node: charset-guess73306
+Node: longline76993
+Node: reply78821
+Node: forward82639
+Node: resend83512
+Node: shortcut85585
+Node: mark-b-comp91019
+Node: pgp-key93984
+Node: anonymous94865
+Node: Marks96432
+Node: unread mark98076
+Node: delete mark99577
+Node: refile mark101819
+Node: target mark103430
+Node: escape mark105061
+Node: unmark105916
+Node: mark change106895
+Node: sync108339
+Node: off-line109517
+Node: mew-mark111367
+Node: Refile112089
+Node: by-folder113949
+Node: by-alist115846
+Node: by-thread117929
+Node: by-from-folder118783
+Node: by-from120140
+Node: by-newsgroups121719
+Node: by-default122054
+Node: guess-rule122508
+Node: auto-refile124279
+Node: copy-msg126491
+Node: Virtual127758
+Node: selection129418
+Node: sorting130138
+Node: dialog131981
+Node: search133108
+Node: condition134272
+Node: dbsearch136511
+Node: keyword137735
+Node: thread138593
+Node: thread-op139853
+Node: Quit142019
+Node: Customize142568
+Node: summary-mode143383
+Node: message-mode147542
+Node: draft-mode151076
+Node: charset154043
+Node: highlight156249
+Node: hooks159213
+Node: pop163762
+Node: imap165441
+Node: nntp167009
+Node: smtp168370
+Node: config170855
+Node: config2176785
+Node: custom-misc178301
+Node: Tips179322
+Node: region179910
+Node: visiting180600
+Node: SSH181130
+Node: SSL182102
+Node: TLS184475
+Node: spam185374
+Node: spam2187663
+Node: addr-warn188997
+Node: biff190125
+Node: edit190883
+Node: Convention192158
+Node: Implementation194226
+Node: Avail196589
+Node: obtain196896
+Node: ml197188
+Node: Copyright197476
+Node: Variable Index199425
+Node: Key Index214736
 
 End tag table
