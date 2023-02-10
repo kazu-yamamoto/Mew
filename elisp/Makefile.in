@@ -3,16 +3,7 @@
 ###
 ### Author:  Kazu Yamamoto <Kazu@Mew.org>
 ### Created: Nov 18, 1994
-### Revised: Sep  1, 2010
-
-###
-### (1)   Set the following variables as you like.
-### (2)   make
-### (2.1) make info
-### (2.2) make jinfo
-### (3)   make install
-### (3.1) make install-jinfo
-###
+### Revised: Feb 10, 2023
 
 ################################################################
 ##
@@ -120,9 +111,9 @@ DESTDIR =
 
 ################################################################
 
-all: $(OBJS) bin
+all: $(OBJS)
 
-install: install-el install-bin install-info install-etc
+install: install-elisp
 
 ################################################################
 
@@ -140,7 +131,7 @@ $(TEMPFILE):
 	@echo $(OBJS) | sed -e 's/\(mew[^ ]*\.el\)c/"\1"/g'  >> $(TEMPFILE)
 	@echo ')))' >> $(TEMPFILE)
 
-install-el: $(OBJS)
+install-elisp: $(OBJS)
 	-@if [ ! -d $(DESTDIR)$(elispdir) ]; then \
 		$(MKDIR) $(DESTDIR)$(elispdir); \
 	fi
@@ -159,74 +150,6 @@ $(TEMPFILE2):
 	@echo '(setq load-path (cons "." load-path))' >> $(TEMPFILE2)
 	@echo '(setq hack-local-variables-hook (lambda () (setq lexical-binding t)))' >> $(TEMPFILE2)
 	@echo "(defun mew-compile () (mapcar (lambda (x) (byte-compile-file (symbol-name x))) '($(SRCS))))" >> $(TEMPFILE2)
-
-################################################################
-
-bin::
-	cd bin; $(MAKE)
-
-install-bin:
-	cd bin; $(MAKE) install DESTDIR=$(DESTDIR)
-
-################################################################
-
-info::
-	cd info; $(MAKE) info EMACS=$(EMACS)
-
-install-info:
-	cd info; $(MAKE) install-info infodir=$(infodir) DESTDIR=$(DESTDIR)
-
-################################################################
-
-jinfo:
-	cd info; $(MAKE) jinfo EMACS=$(EMACS)
-
-install-jinfo:
-	cd info; $(MAKE) install-jinfo infodir=$(infodir) DESTDIR=$(DESTDIR)
-
-################################################################
-
-install-etc:
-	-@if [ ! -d $(DESTDIR)$(etcdir) ]; then \
-		$(MKDIR) $(DESTDIR)$(etcdir); \
-	fi
-	cd etc; $(CP) -r * $(DESTDIR)$(etcdir)/
-
-################################################################
-
-clean:
-	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2)
-	-@if [ -f bin/Makefile ]; then \
-		cd bin; $(MAKE) clean; \
-	fi
-
-distclean:
-	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2) $(CNF) $(MK)
-	-@if [ -f bin/Makefile ]; then \
-		cd bin; $(MAKE) distclean; \
-	fi
-
-################################################################
-##
-## For github users
-##
-
-# git fetch
-# make log     to see logs of updates
-# make diff    to see the updates
-# git pull
-
-log::
-	git log HEAD..FETCH_HEAD
-
-diff::
-	git diff HEAD..FETCH_HEAD
-
-VERSION = `git tag | tail -1 | sed -e 's/v//'`
-
-archive:
-	git archive master -o ~/mew-$(VERSION).tar --prefix=mew-$(VERSION)/
-	gzip ~/mew-$(VERSION).tar
 
 ##
 ## End of Makefile

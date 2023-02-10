@@ -1,6 +1,6 @@
 AC_INIT
 AC_CONFIG_SRCDIR([elisp/mew.el])
-AC_CONFIG_SUBDIRS(bin)
+AC_CONFIG_SUBDIRS([elisp bin])
 AC_ARG_WITH(emacs,
     [  --with-emacs=EMACS      use EMACS],
     emacsbin="${withval}")
