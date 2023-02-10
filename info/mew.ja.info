@@ -1,7 +1,7 @@
 Info file: mew.ja.info,    -*-Text-*-
 produced by ‘texinfo-format-buffer’
-from file ‘mew.texi’
-using ‘texinfmt.el’ version 2.42 of  7 Jul 2006.
+from file ‘tmpj.texi’
+using ‘texinfmt.el’ on Emacs version 28.2.
 
 INFO-DIR-SECTION Message User Agent
 START-INFO-DIR-ENTRY
@@ -15,14 +15,14 @@ END-INFO-DIR-ENTRY
 
 File: mew.ja.info, Node: Top, Next: Overview, Prev: (dir), Up: (dir)
 
-Mew 6.8 マニュアル
+Mew 6.9 マニュアル
 ******************
 
                                                               山本和彦
                                                        作成 1996/02/19
-                                                       更新 2018/06/07
+                                                       更新 2023/02/10
 
-このマニュアルでは、Mew バージョン 6.8 について解説します。このマニュ
+このマニュアルでは、Mew バージョン 6.9 について解説します。このマニュ
 アルの他に、Mew に関する有益な情報は Mew の公式ホームページ
 (http://www.Mew.org/)から得られるかもしれません。
 
@@ -80,35 +80,35 @@ File: mew.ja.info, Node: characteristic, Next: Emacsen, Prev: Overview, Up: Over
 Mew の特長
 ==========
 
-Mew バージョン 6.8 の特長を以下に示します。
+Mew バージョン 6.9 の特長を以下に示します。
 
-   - 複雑な構造を持つメッセージを簡単に表示できます。メッセージを表示
-     する作業は、`SPC' を押すだけです。
-   - コピー程度のファイルの操作を知っている人ならだれでも簡単に複雑な
-     メッセージを作成できます。
-   - メッセージの一覧表示が終了するまで待たなくても、メッセージを読み
-     始められます。
-   - Summary モードのメッセージの一覧を保存しているので、フォルダを移
-     動した場合は、更新された部分だけを一覧表示します。
-   - メッセージの整頓先を賢く推測します。たくさんメッセージを受け取る
-     人は、これがないと生きていけません。
-   - Draft モードでは、フィールド名、メールアドレス、氏名、ドメイン名、
-     フォルダ名を補完できます。
-   - キーワードなどによって、探したいメッセージを簡単に検索できます。
-   - PGP や S/MIME で暗号化されたメッセージを自動的に復号化します。ま
-     た、電子署名を自動的に検証します。
-   - MIME の構造を解析したり、PGP や S/MIME の署名を検証したりするのに
-     は少し時間がかかります。そこで、ユーザがあるメッセージを読んでい
-     る間に、次のメッセージをあらかじめ処理しておくことで高速性を実現
-     しています。解析されたメッセージは、しばらくの間保存されます。
-   - PGP や S/MIME を使って、メッセージを簡単に暗号化したり、署名した
-     りできます。
-   - 複数のフォルダを 1 つのフォルダに見せかけられます。
-   - メッセージのやり取りの流れを可視化するセレクションやスレッドの機
-     能を備えています。特定のキーワードに合致したメッセージでセレクショ
-     ンを作り、さらにそのスレッドを作成できます。
-   - フォルダ名を入力する場合、フォルダ名の一部をキーとして検索できま
+ - 複雑な構造を持つメッセージを簡単に表示できます。メッセージを表示する作業は、`SPC' を押すだけです。
+
+ - コピー程度のファイルの操作を知っている人ならだれでも簡単に複雑なメッセージを作成できます。
+
+ - メッセージの一覧表示が終了するまで待たなくても、メッセージを読み始められます。
+
+ - Summary モードのメッセージの一覧を保存しているので、フォルダを移動した場合は、更新された部分だけを一覧表示します。
+
+ - メッセージの整頓先を賢く推測します。たくさんメッセージを受け取る人は、これがないと生きていけません。
+
+ - Draft モードでは、フィールド名、メールアドレス、氏名、ドメイン名、フォルダ名を補完できます。
+
+ - キーワードなどによって、探したいメッセージを簡単に検索できます。
+
+ - PGP や S/MIME で暗号化されたメッセージを自動的に復号化します。また、電子署名を自動的に検証します。
+
+ - MIME の構造を解析したり、PGP や S/MIME の署名を検証したりするのには少し時間がかかります。そこで、ユーザがあるメッセージを読
+     んでいる間に、次のメッセージをあらかじめ処理しておくことで高速性
+     を実現しています。解析されたメッセージは、しばらくの間保存されま
      す。
+
+ - PGP や S/MIME を使って、メッセージを簡単に暗号化したり、署名したりできます。
+
+ - 複数のフォルダを 1 つのフォルダに見せかけられます。ッセージのやり取りの流れを可視化するセレクションやスレッドの機能を備えています。特定のキーワードに合致したメッセージでセレ
+     クションを作り、さらにそのスレッドを作成できます。
+
+ - フォルダ名を入力する場合、フォルダ名の一部をキーとして検索できます。
 
 
 
@@ -133,18 +133,24 @@ Mew には次の 7 つのモードがあります。
 
 `Summary モード'
      メッセージの一覧を表示し選択するモード。
+
 `Virtual モード'
      単数あるいは複数のフォルダからある条件に合致したメッセージを取り
      出し、仮想的に 1 つのフォルダにしたモード。Summary モードに似てい
      る。セレクションやスレッドと呼ばれる。
+
 `Message モード'
      メッセージの内容を表示するモード。
+
 `Draft モード'
      メッセージの送信、返答、転送を準備するためのモード。
+
 `Header モード'
      既存のメッセージのヘッダのみを編集し送信するためのモード。
+
 `Edit モード'
      既存のメッセージを編集し、新しいメッセージを作成するためのモード。
+
 `Addrbook モード'
      アドレス帳にエントリを登録するためのモード。
 
@@ -179,12 +185,15 @@ Mew のフォルダには、「ローカル・フォルダ」と「リモート�
      ルに移動させて最初に保存するためのローカル・フォルダ。メッセージ
      を整理する場合は、"+inbox" から他のローカル・フォルダに移動させる
      ことになる。
+
 `+draft'
      書きかけのメッセージを保存しておくローカル・フォルダ。
+
 `+queue'
      書き終ってメールの配送に適した書式に変換されたメッセージが溜るロー
      カル・フォルダ。"+queue" のメッセージは、いずれ SMTP によって送信
      さる。
+
 `+postq'
      書き終ってニュースに投稿するのに適した書式に変換されたメッセージ
      が溜るローカル・フォルダ。"+postq" のメッセージは、いずれ NNTP に
@@ -198,10 +207,12 @@ Mew のフォルダには、「ローカル・フォルダ」と「リモート�
 
 `%'
      IMAP のフォルダ。例："%inbox"
+
 `$'
      POP サーバのサーバ側のフォルダ。例："$inbox" (POP サーバのフォル
      ダは 1つしかないので、"$" で始まるリモート・フォルダは "$inbox"
      のみ。)
+
 `-'
      ニュースのニュースグループ。例："-fj.mail.reader.mew"
 
@@ -321,9 +332,7 @@ File: mew.ja.info, Node: password, Next: start, Prev: configuration, Up: Overvie
 ドを訊かれることがあります。パスワードを入力する前に以下の条件のどちら
 かが満たされていることを確認しましょう。
 
-   - Emacs が目の前のコンピュータで動いている
-   - Emacs が遠隔のコンピュータで動いているが、なんらかの暗号手段を使っ
-     て通信している。
+ - Emacs が目の前のコンピュータで動いているmacs が遠隔のコンピュータで動いているが、なんらかの暗号手段を使って通信している。
 
 どちらの条件も満たされない場合は、パスワードを入力しないで下さい。入力
 すると盗聴される恐れがあります。
@@ -331,9 +340,9 @@ File: mew.ja.info, Node: password, Next: start, Prev: configuration, Up: Overvie
 パスワードを何回も入力するのが面倒な人は、パスワードを保存する機能を利
 用して下さい。2 つの方法があります。
 
-  1. パスワードをメモリに一時的に蓄える。ファイルには書き出さない。
-  2. パスワードをメモリに Mew が起動している間中蓄える。Mew/Emacs の終
-     了時に、パスワードを暗号化しファイルに書き出す。
+ 1. パスワードをメモリに一時的に蓄える。ファイルには書き出さない。
+
+ 2. パスワードをメモリに Mew が起動している間中蓄える。Mew/Emacs の終了時に、パスワードを暗号化しファイルに書き出す。
 
 1. の機能を利用するには、以下のように設定します。
 
@@ -404,8 +413,10 @@ Mew を起動するには、以下の方法があります。
 
      `mew-auto-get' が `nil' なら、修飾子によって決定したデフォルトの
      フォルダへ単に移動する。
+
 `C-uM-x mew'
      `mew-auto-get' の値を逆だと考えて、`M-x mew' を実行する。
+
 `C-xm'
      `mail-user-agent' が設定されている場合、Draft モードへ移行する。
 
@@ -466,36 +477,49 @@ File: mew.ja.info, Node: singlepart, Next: multipart, Prev: Viewing, Up: Viewing
      メッセージを読み進める。つまり、メッセージを表示し、スクロールさせ、他の
      メッセージに移動して表示する。カーソルが移動する方向は、
      *Note summary-mode:: を参照のこと。
+
 `C-uSPC'
      メッセージを先頭から再表示。
+
 `DEL'
      現在のメッセージを下にスクロールさせる。不必要なヘッダフィールド
      は、ウインドウの上に隠れている。よって、`DEL' を入力すると、それ
      らが現れる。
+
 `RET'
      現在のメッセージを 1 行上にスクロールする。
+
 `M-RET'
+     現在のメッセージを 1 行下にスクロールする。
+
 `-'
      現在のメッセージを 1 行下にスクロールする。
 
 `C-n'
      下の行へ移動。
+
 `C-p'
      上の行へ移動。
+
 `n'
      下方向に移動し表示。対象となるのは、パート、`*' マークの付いたメッ
      セージ、マークの付いていないメッセージ。
+
 `C-un'
      下方向に移動し表示。対象となるのは、`*' マークの付いたメッセージ、
      マークの付いていないメッセージ。
+
 `p'
      上方向に移動し表示。対象となるのは、パート、`*' マークの付いたメッ
      セージ、マークの付いていないメッセージ。
+
 `C-up'
      上方向に移動し表示。対象となるのは、`*' マークの付いたメッセージ、
      マークの付いていないメッセージ。
+
 `j'
      入力された行番号に従ってその行へ移動。
+
 `C-uj'
      入力されたメッセージの番号に従ってその行へ移動。
 
@@ -531,15 +555,10 @@ MIME を表示する
 
 マルチパートの各行は
 
-   - マーク (Content-Transfer-Encoding:)
-   - パート番号
-   - データ型 (Content-Type:)
-   - 説明 (Content-Description:)
-   - ファイル名 (Content-Disposition:)
-
-から構成されています。Content-Description: はパートに対する Subject:
-と考えていいでしょう。この表示は Draft モードの添付領域とほとんど同じ
-です。
+ - マーク (Content-Transfer-Encoding:)ート番号ータ型 (Content-Type:)明
+(Content-Description:)ァイル名 (Content-Disposition:)されています。
+Content-Description: はパートに対する Subject: と考えていいでしょう。
+この表示は Draft モードの添付領域とほとんど同じです。
 
 `SPC' や `n' でパート 2 へ進めば、そのパートがデータ型に応じて
 表示されます。たとえば、Text/Plain なら Message モードで、PostScript な
@@ -591,28 +610,34 @@ MIME の解析を制御する
      解析するメッセージの大きさの上限。メッセージの大きさがこの値以下
      なら、解析し表示する。越えているなら、解析せずに生のまま表示する。
      初期値は 100000 バイト。
+
 `mew-header-max-length'
      解析するメッセージのヘッダ長の上限。ヘッダの行数がこの値以下なら、
      メッセージを解析して表示する。越えているなら、解析を途中で止めて
      メッセージを壊れた形で表示する。初期値は 100 行。
+
 `mew-decode-broken'
      規格違反のメッセージを解析する際に、寛容になるか否か。`t' なら寛
      容に、`nil' なら厳密に解析する。寛容に解析する際に規格違反があっ
      た場合は、X-Mew: フィールドに表示する。初期値は `t'。
+
 `mew-use-text-body'
      本文のテキストをヘッダと同時に表示するか否か。`t' なら、本文がシ
      ングルのテキスト、および、本文がマルチパートで最初のパートがテキ
      ストの場合、そのテキストをヘッダと同時に表示する。`nil' の場合は、
      マルチパート内のパートのように表示する。初期値は `t'。
+
 `mew-use-alternative'
      Multipart/Alternative の取り扱い。Multipart/Alternative であるメッ
      セージには`-' マークが付いている。`t' なら、
      `mew-mime-multipart-alternative-list' の優先順位に従って、1 つの
      パートを表示する。`nil' なら、通常のマルチパートとして表示する。
      初期値は `t'。
+
 `mew-use-text/html'
      Text/Html の取扱い。`nil' の場合は HTML を解析せずに表示。それ以
      外なら HTML を解析して表示。初期値は `nil'。
+
 `mew-use-text/xml'
      Text/Xml の取扱い。`nil' の場合は XML を解析せずに表示。それ以外
      なら XML を解析して表示。初期値は `nil'。
@@ -650,19 +675,25 @@ MIME の解析を制御する
 
 `.'
      メッセージを解析し、再表示する。
+
 `C-u.'
      `mew-decode-broken' を逆にしてメッセージを解析し直す。
      *Note invalid:: を参照のこと。
+
 `:'
      `mew-use-alternative' と `mew-use-text-body' を反転させた
      `.'.
+
 `C-u:'
      `mew-use-alternative' と `mew-use-text-body' を反転させた
      `C-u.'.
+
 `,'
      現在のメッセージやパートを生の書式で Message モードに表示する。
+
 `C-cTAB'
      メッセージ全体をファイルとして read only で開く。
+
 `C-uC-cTAB'
      メッセージ全体をファイルとして開く。
 
@@ -785,8 +816,10 @@ File: mew.ja.info, Node: retrieving, Next: moving, Prev: cipher-viewing, Up: Vie
      ローカルのメールボックス。デフォルトでは "incm" という外部コマン
      ドを使い、メッセージを取得する。設定方法は、*Note configuration::
      を参照のこと。
+
 `'pop'
      POP サーバ。POP を POP らしく使う方法。(初期値)
+
 `'imap'
      IMAP サーバ。IMAP らしくない利用方法なので、推奨されていない。
 
@@ -802,10 +835,12 @@ File: mew.ja.info, Node: retrieving, Next: moving, Prev: cipher-viewing, Up: Vie
      「Summary モードの最後のメッセージの次」から「フォルダ内の最後の
      メッセージ」まで。つまり、Summary モードと実際のフォルダ内のメッ
      セージの差分。
+
 `all'
      フォルダ内のメッセージすべて。ローカル・フォルダでは、Summary モー
      ドの表示がおかしくなったときに、内容を一新するために用いる。リモー
      ト・フォルダでは、すべてのメッセージの再取得。
+
 `sync'
      あるリモート・フォルダに対し、サーバ側では消えたメッセージのキャッ
      シュを削除する。リモート・フォルダに対してのみ有効。
@@ -819,10 +854,13 @@ Mew ではあまり重要ではありませんが、以下の範囲も指定で�
 
 `<num1>-<num2>'
      <num1> から <num2> まで。ローカル・フォルダに対してのみ有効。
+
 `<num1>-'
      <num1> から最後まで。ローカル・フォルダに対してのみ有効。
+
 `-<num2>'
      最初から <num2> まで。ローカル・フォルダに対してのみ有効。
+
 `last:<num>'
      最後の <num> 個。
 
@@ -848,8 +886,10 @@ POP、IMAP、NNTP に対し、それぞれ `mew-pop-header-only'、
      +queue にあるメッセージを送信する。詳しくは、*Note send:: を参照のこと。
      リモート・フォルダでは、そのデフォルトのフォルダに移動し、`s' +
      `update' を実行する。
+
 `C-ui'
      `mew-auto-flush-queue' の値を逆だと思って、`i' を実行する。
+
 `I'
      `T' マークの付いている一部だけが取得されたメッセージの全体を取得
      する。
@@ -863,11 +903,14 @@ POP、IMAP、NNTP に対し、それぞれ `mew-pop-header-only'、
 `C-uI'
      `mew-pop-delete' または `mew-imap-delete' を逆転させて `I' を実行
      する。
+
 `s'
      フォルダの一覧を取る。
+
 `C-us'
      リモート・フォルダにおいて、「ヘッダのみのコピー」と「ヘッダと本
      文の両方のコピー」を反転させて、一覧を取る。
+
 `lc'
      リモート・フォルダのメッセージをローカル・フォルダへコピーする。
 
@@ -953,27 +996,35 @@ File: mew.ja.info, Node: sum-write, Next: features, Prev: moving, Up: Viewing
 `w'
      メッセージを書く。新しい草稿が Draft モードに用意される。
      *Note Composing:: を参照のこと。
+
 `C-uw'
      メッセージを書く。新しい草稿が Draft モードに用意される。現在のメッ
      セージの From: にあるアドレスが、草稿の To: へコピーされる。
+
 `W'
      あるメッセージのヘッダの一部だけを編集しメッセージを送信するため
      に Header モードに入る。*Note resend:: を参照のこと。
+
 `a'
      現在のメッセージに返答する。Draft モードに草稿が用意され、To: や
      Cc: が自動的に決定される。*Note reply:: を参照のこと。
+
 `C-ua'
      現在のメッセージに対し送信者宛に返答する。
+
 `A'
      現在のメッセージに返答する。Draft モードに草稿が用意され、To: や
      Cc: が自動的に決定された後、本文が引用される。*Note reply:: を参
      照のこと。
+
 `C-uA'
      現在のメッセージに対し、引用付きで送信者宛に返答する。
+
 `f'
      現在のメッセージを第 3 者に転送する。Draft モードに草稿が用意され、
      現在のメッセージが自動的に添付される。*Note forward:: を参照のこ
      と。
+
 `F'
      `*' マークの付いたメッセージを第 3 者に転送する。Draft モードに草
      稿が用意され、`*' マークの付いたメッセージが自動的に添付される。
@@ -986,16 +1037,16 @@ File: mew.ja.info, Node: sum-write, Next: features, Prev: moving, Up: Viewing
      メッセージの再編集。または、MIME 形式でカプセル化されて戻ってきた
      メッセージの再編集。
 
-       1. +draft では、メッセージが単に編集される。
-       2. +queue と +postq では、メッセージが +draft に移動されて、編
-          集される。
-       3. それ以外では、メッセージが +draft にコピーされて、編集される。
+      1.  +draft では、メッセージが単に編集される。 +queue と +postq では、メッセージが +draft に移動されて、編集される。
+
+      3. それ以外では、メッセージが +draft にコピーされて、編集される。
 
      +draft、+queue、+postq では、ケースが復活する。
 
      他のフォルダでは、`mew-case-guess-when-prepared' が `t' なら、
      ヘッダのそれぞれのフィールドがケースに従って置き換えられる。詳しくは
      *Note config:: を参照のこと。
+
 `C-uE'
      `E' と同じ。ただし、+draft、+queue、+postq 以外のフォルダで利用さ
      れた場合は、`mew-case-guess-when-prepared' が `t' でも、オリジナ
@@ -1014,59 +1065,83 @@ Mew では、Summary モードに以下のような便利なコマンドが用�
      「Summary モードのみ」と「Summary & Message モード」の切り替え。
      「Summary モードのみ」を選んでいる場合は、`d' は次のメッセージを
      表示しないので、連続してすばやく `D' マークを付けられる。
+
 `zv'
      `mew-use-header-veil' が `nil' でないとき、To: と Cc: で
      `mew-header-veil-count' を越える行は「ベール」で隠されている。こ
      のコマンドは、それらの行の見える／見えないを反転させる。
      `mew-use-header-veil' と `mew-header-veil-count' の初期値は、それ
      ぞれ `t' と 4。
+
 `_'
      通常の行、折り返された行、長い行の順に行の表示を変える。
+
 `M-l'
      現在の行を Summary モードの中央に移動させる。
+
 `C-cC-s'
      Message モードで順方向段階的検索。
+
 `C-cC-r'
      Message モードで逆方向段階的検索。
+
 `y'
      メッセージ、あるいは、パートを入力したファイル名で保存する。
+
+
 `b'
      Message モードの内容そのものを入力したファイル名で保存する。
+
 `C-uy'
      保存するテキストの coding-system を指定して、メッセージ、あるいは、
      パートを入力したファイル名で保存する。
+
 `#'
      `mew-print-function' を利用して Message モードの内容を印刷する。
+
 `C-u#'
      プリンタ名を指定して Message モードの内容を印刷する。
+
 `|'
      Message モードの内容をパイプで指定されたコマンドに出力する。
+
 `C-u|'
      Message モードの本文(ヘッダを除く)をパイプで指定されたコマンドに
      出力する。
+
 `\'
      このメッセージを引数にして、入力された外部コマンドを起動する。
+
 `B'
      格納されているメッセージを取り出す。
+
 `C-uB'
      格納されているファイルを取り出す。
+
 `C-cC-a'
      現在のメッセージの情報をアドレス帳に登録する(*Note addrbook::)。
+
 `C-cC-v'
      PGP のバージョンを切替える(*Note cipher-viewing::)。
+
 `C-cC-z'
      昔ながらの自動処理できない PGP メッセージを PGP に復号化、検証さ
      せる(*Note cipher-viewing::)。
+
 `C'
      ケースを変更する。詳しくは、*Note config:: を参照のこと。
+
 `='
      フォルダ名とメッセージ番号を表示する。キャッシュ・メッセージの場
      合は、加えて ID とサイズも表示する。メッセージへのフルパスが、ウ
      インドウマネージャのカットバッファに入る。
+
 `;'
      Received: フィールドを解析し、分りやすく Message モードに表示する。
+
 `Rd'
      フォルダを削除する。
+
 `Rr'
      フォルダの名前を変える。
 
@@ -1083,6 +1158,7 @@ File: mew.ja.info, Node: status-update, Next: invalid, Prev: features, Up: Viewi
 
 `Z'
      アドレス帳(*Note addrbook::)などの情報を更新する。
+
 `C-uZ'
      現在の世界に対するフォルダのリストの情報を更新する。
 
@@ -1090,18 +1166,24 @@ File: mew.ja.info, Node: status-update, Next: invalid, Prev: features, Up: Viewi
 
 `z8'
      8 ビット・モード(`mew-use-8bit')を反転させる。
+
 `zc'
      解析したメッセージのキャッシュを消去する。
+
 `zd'
      `mew-debug' を反転させる。
+
 `zo'
      PGP を省略方法で作成する場合、PGP/MIME なのか古い PGP の書式なの
      か(`mew-use-old-pgp')を反転させる。
+
 `zp'
      解析、復号化のポリシ(`mew-decode-broken')を反転させる。
+
 `zv'
      Message モードでベールを使うか否か(`mew-use-header-veil')を反転さ
      せる。
+
 `zw'
      警告のレベル(`mew-warning-field-level')が 2 なら 1 へ、1 なら 2
      へ設定する。
@@ -1175,15 +1257,16 @@ File: mew.ja.info, Node: Composing, Next: header, Prev: invalid, Up: Top
 ります。
 
   1. `M-x mew-send' と入力する。
-  2. `mail-user-agent' が設定されている場合、`C-xm' と入力する。
-  3. Summary モードで `w' を押す。
 
-すると、以下のようなバッファが用意されます。
+  2. `mail-user-agent' が設定されている場合、`C-xm' と入力する。
+
+ 3.  Summary モードで `w' を押す。et jaすると、以下のようなバッファが
+用意されます。
 
      To:
      Subject:
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      ----
 
 これを Draft モードといいます。Draft モードにおいて、"----" より上をヘッ
@@ -1232,8 +1315,11 @@ File: mew.ja.info, Node: header, Next: cheader, Prev: Composing, Up: Composing
 ヘッダでは `TAB' に対し、以下のように各フィールド用の補完機能が割り当
 てられています。
 
+
    - フィールド名の補完
+
    - アドレスの補完 (To:、Cc: など) (*Note addr-comp:: を参照)
+
    - フォルダ名の補完 (Fcc:)
 
 <フィールド名の補完>
@@ -1281,7 +1367,9 @@ File: mew.ja.info, Node: cheader, Next: addr-comp, Prev: header, Up: Composing
 ことです。リストの最後は、最初につながっていると考えます。ヘッダ中の循
 環的な補完機能は、以下のようにフィールドごとに異なります。
 
+
    - ドメイン名の循環的な補完 (To:、Cc: など)
+
    - From: の循環的な補完 (From:)
 
 <ドメイン名の循環的な補完>
@@ -1347,10 +1435,7 @@ To: や Cc: では、アドレスを補完できます。補完には `TAB' を�
 
 アドレスの補完に利用されるアドレスの種類には、以下の 3 つがあります。
 
-  1. アドレス帳の展開規則
-  2. アドレス帳の個人情報
-  3. 送信時に学習されたアドレス
-
+ 1. アドレス帳の展開規則アドレス帳の個人情報送信時に学習されたアドレスet ja
 アドレスの補完には 2 つの方法が提供されています。
 `mew-use-full-alias' によって選択します(初期値は `nil')。
 
@@ -1656,6 +1741,7 @@ File: mew.ja.info, Node: send, Next: cite, Prev: addr-comp2, Up: Composing
 `C-cC-m'
      メッセージを作成し +queue または +postq に入れ、送信待ち状態にす
      る。
+
 `C-cC-c'
      メッセージを作成し送信する。"Really send this message? (y or n) "
      と訊かれる。`y' を押せば、送信される。
@@ -1666,7 +1752,7 @@ File: mew.ja.info, Node: send, Next: cite, Prev: addr-comp2, Up: Composing
      To: pooh
      Subject: 明日の日曜日
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      ----
      明日の日曜日、遊びませんか？
 
@@ -1680,7 +1766,7 @@ File: mew.ja.info, Node: send, Next: cite, Prev: addr-comp2, Up: Composing
      To: winnie-the-pooh@example.net
      Subject: =?iso-2022-jp?B?GyRCTEBGfCRORnxNS0Z8GyhC?=
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      Mime-Version: 1.0
      Content-Type: Text/Plain; charset=iso-2022-jp
      Content-Transfer-Encoding: 7bit
@@ -1720,6 +1806,7 @@ Mew は、サーバがユーザ認証を要求すると、送信のためのパ�
      に、+queue にあるメッセージを送信する。ダイアルアップ環境において、接続
      料金を節約する意味でも、送信のための認証という意味でも、これはよい方法。
      `mew-auto-flush-queue' の初期値は `t'。
+
 `C-cC-c'
      +queue にあるメッセージを送信する。+queue に行って、できあがったメッセー
      ジを見た後に、このコマンドを使うと便利。`mew-ask-flush-queue' が
@@ -1751,14 +1838,16 @@ Summary モード、中が Message モード、下が Draft モードです。
 Message モードのテキストを引用するコマンドを以下に示します。
 
 `C-cC-y'
-     Message モードからメッセージの一部をコピーし、引用ラベルと引用記
-     号付で貼り付ける。
-       1. おおまかにいえば、Message モードの本文がコピーされる。たとえ
-          ば、Text/Plain が表示されていると、Message モード全体がコピー
-          される。Message/Rfc822 が表示されている場合は、ヘッダを除い
-          た本文がコピーされる。
+     Message モードからメッセージの一部をコピーし、引用ラベルと引
+     用記号付で貼り付ける。 1. おおまかにいえば、Message モード
+          の本文がコピーされる。たとえば、Text/Plain が表示されている
+          と、Message モード全体がコピーされる。Message/Rfc822 が表示
+          されている場合は、ヘッダを除いた本文がコピーされる。
+
        2. `C-uC-cC-y' では、ヘッダがあればヘッダをコピーする。
-       3. Emacs のマークがあると、そのマークとカーソルの間が対象となる。
+
+      3.  Emacs のマークがあると、そのマークとカーソルの間が対象となる。
+
 `C-cC-t'
      Message モードからメッセージの一部をコピーし、引用ラベルと引用記
      号なしで貼り付ける。
@@ -1808,7 +1897,7 @@ File: mew.ja.info, Node: mime-comp, Next: charset-guess, Prev: cite, Up: Composi
      To: mew-dist
      Subject: ここがヘッダ
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.8 on Emacs 26.1
+     X-Mailer: Mew version 6.9 on Emacs 28.2
      ----
      本文だよ。
 
@@ -1820,18 +1909,19 @@ File: mew.ja.info, Node: mime-comp, Next: charset-guess, Prev: cite, Up: Composi
 
 3 つの領域を以下のように呼ぶことにします。
 
-   * "----" より上を 「ヘッダ」
-   * "----" から "attachments" までを「本文」
-   * "attachments" より下を「添付領域」
 
-Draft モードでは、リージョンによってキー割当が違います。
+ * "----" より上を 「ヘッダ」----" から "attachments" までを「本文」
+attachments" より下を「添付領域」et ja Draft モードでは、リージョンに
+よってキー割当が違います。
 
 たとえば、`TAB' は以下のようになります。
 
 ヘッダ
      さまざまな補完。
+
 本文
      TAB の挿入。
+
 添付領域
      なにもしない。
 
@@ -1839,8 +1929,10 @@ Draft モードでは、リージョンによってキー割当が違います�
 
 ヘッダ
      c を挿入。
+
 本文
      c を挿入。
+
 添付領域
      ファイルのコピー。
 
@@ -1848,47 +1940,66 @@ Draft モードでは、リージョンによってキー割当が違います�
 
 `C-p'
      現在のディレクトリの前のファイルへ移動。
+
 `C-n'
      現在のディレクトリの後のファイルへ移動。
+
 `C-f'
      1 番目のサブディレクトリに移動。
+
 `C-b'
      親ディレクトリに移動。
+
 `c'
      ファイルのコピー。"." 上で有効。ネットワーク経由でも可。リモート
      のファイルをコピーする場合は、"/[user@]hostname:/filepath" の形式
      でファイルを指定。
+
 `l'
      ファイルへシンボッリクリンクを張る。"." 上で有効。添付ファイルを
      `f' を使って読み込んで編集する場合は、実体を編集してしまわないよ
      うに、`l' ではなく `c' でコピーすべき。
+
 `d'
      ファイルとディレクトリの消去。
+
 `m'
      サブディレクトリ(つまりマルチパート)の作成。"." 上で有効。
+
 `f'
      ファイルをバッファに読み込む。
+
 `F'
      新規ファイルをバッファに読み込む。"." 上で有効。
+
 `y'
      Message モードに表示されているメッセージにリンクを張る。"." 上で
      有効。
+
 `e'
      external-body の入力。"." 上で有効。
+
 `a'
      音をサンプリングしオーディオファイルとして挿入。"." 上で有効。
+
 `p'
      入力されたユーザの PGP 公開鍵を取り出す。"." 上で有効。
+
 `D'
      ちょっとした説明(Content-Description:)の入力。
+
 `T'
      データ型(Content-Type:)の変更。
+
 `t'
      データ型に関し、テキストとバイナリを反転させる。
+
 `I'
      Text/* 型の入力 coding-system を指定する。
+
 `C'
      Text/* 型の出力 coding-system を指定する。
+
 `P'
      受信側でこのパートを保存する際のファイル名(Content-Disposition:)
      の変更。ファイル名の入力の際に、単に `RET' を押すと値が消える。そ
@@ -1950,13 +2061,10 @@ Text/Plain(テキスト)です。
 
 各行は、
 
-   - マーク (Content-Transfer-Encoding:)
-   - パート番号
-   - データ型 (Content-Type:)
-   - 説明 (Content-Description:)
-   - ファイル名 (Content-Disposition:)
 
-から構成されています。
+
+ - マーク (Content-Transfer-Encoding:)ート番号ータ型 (Content-Type:)明
+   (Content-Description:)ァイル名 (Content-Disposition:)されています。
 
 データ型(Content-Type:)は `T' によって変えられます。データ型がテキスト
 (Text/Plain)かバイナリ(Application/Octet-Stream)の場合は、`t' によって
@@ -2130,11 +2238,11 @@ Summary モードで `a' や `A' を使うと、新しい草稿が Draft modeに
 れます。To:、Cc:、Newsgroups: の値は、以下の三つの alist に従って用意
 されます。
 
-  1. もし `C-u' 付きで呼び出された場合、送信者/投稿者のみに返答する。
-     この場合、`mew-reply-sender-alist' が利用される。
-  2. もし対象が自分自身で送ったメッセージなら、そのヘッダを加工せずに
-     返答したいのであろう。この場合、`mew-reply-fromme-alist' が利用さ
-     れる。
+ 1. もし `C-u' 付きで呼び出された場合、送信者/投稿者のみに返答する。この場合、`mew-reply-sender-alist' が利用される。
+
+ 2. もし対象が自分自身で送ったメッセージなら、そのヘッダを加工せずに返答したいのであろう。この場合、`mew-reply-fromme-alist' が
+     利用される。
+
   3. そうでなければ、すべての人に返答する。この場合、
      `mew-reply-all-alist' が利用される。
 
@@ -2147,10 +2255,9 @@ Summary モードで `a' や `A' を使うと、新しい草稿が Draft modeに
 
 これは、次のように解釈します。
 
-  1. Reply-To: が存在すれば、Reply-To: と From: の値を新しい To: へコ
-     ピーする。
-  2. そうでなければ、From: の値を新しい To: へコピーする。
+ 1.  Reply-To: が存在すれば、Reply-To: と From: の値を新しいTo: へコピーする。
 
+ 2. そうでなければ、From: の値を新しい To: へコピーする。et ja
 もし、Reply-To: で指定されたアドレスのみに返答したい場合は、
 `mew-reply-sender-alist' を以下のように設定するとよいでしょう。
 
@@ -2169,8 +2276,7 @@ Summary モードで `a' や `A' を使うと、新しい草稿が Draft modeに
 
 これは、次のように解釈します。
 
-  1. To: の値を新しい To: へ、Cc: の値を新しい Cc: へ、Newsgroups: の
-     値を新しい Newsgroups: へコピーする。
+ 1.  To: の値を新しい To: へ、Cc: の値を新しい Cc: へ、Newsgroups: の値を新しい Newsgroups: へコピーする。
 
 `mew-reply-all-alist' の初期値は以下の通りです。
 
@@ -2189,17 +2295,16 @@ Summary モードで `a' や `A' を使うと、新しい草稿が Draft modeに
 
 これは、次のように解釈します。
 
-  1. Follwup-To: の値が "poster" であれば、From: の値を新しい To: へコ
-     ピーする。
-  2. Follwup-To: が存在すれば、Follwup-To: と Newsgroups: の値を新しい
-     Newsgroups: へコピーする。
-  3. Newsgroups: が存在すれば、Newsgroups: の値を新しい Newsgroups: へ
-     コピーする。
-  4. Reply-To: が存在すれば、Reply-To: と From: の値を新しい To: へコ
-     ピーする。また、To:、Cc:、Apparently-To: の値を新しい Cc: へコピー
-     する。
-  5. そうでなければ、From: の値を新しい To: へコピーする。また、To:、
-     Cc:、Apparently-To: の値を新しい Cc: へコピーする。
+ 1.  Follwup-To: の値が "poster" であれば、From: の値を新しいTo: へコピーする。
+
+ 2.  Follwup-To: が存在すれば、Follwup-To: と Newsgroups: の値を新しいNewsgroups: へコピーする。
+
+ 3.  Newsgroups: が存在すれば、Newsgroups: の値を新しいNewsgroups: へコピーする。
+
+ 4.  Reply-To: が存在すれば、Reply-To: と From: の値を新しいTo: へコピーする。また、To:、Cc:、Apparently-To: の値を新しい Cc:
+     へコピーする。
+
+ 5. そうでなければ、From: の値を新しい To: へコピーする。また、To:、Cc:、Apparently-To: の値を新しい Cc: へコピーする。
 
 `mew-reply-all-alist' を以下のように設定したいと思う人もいるかもしれま
 せん。
@@ -2282,6 +2387,7 @@ Header モードに入るために、Summary モードには以下のコマン�
      メッセージの再利用による送信。対象となるメッセージの To:、Cc:、
      From: などを書き換えるために、Header モードに移行する。典型的には、
      +queue または +postq に入っているメッセージに対して利用する。
+
 `r'
      メッセージの再送。対象となるメッセージのヘッダに、Resent-To:、
      Resent-Cc:、Resent-From: などを追加するために、Header モードに移
@@ -2296,6 +2402,7 @@ Header モードでは、Draft モードのように、補完や循環的な補�
 `C-cC-m'
      メッセージを作成し +queue または +postq に入れ、送信待ち状態にす
      る。
+
 `C-cC-c'
      メッセージを作成し送信する。"Really send this message? (y or n) "
      と訊かれる。`y' を押せば送信される。
@@ -2312,10 +2419,13 @@ File: mew.ja.info, Node: shortcut, Next: mark-b-comp, Prev: resend, Up: Composin
 
 `C-cC-s'
      草稿全体を署名する。パスフレーズを入力すること。
+
 `C-cC-e'
      草稿全体を暗号化する。
+
 `C-cC-b'
      草稿全体を署名後暗号化する。パスフレーズを入力すること。
+
 `C-cC-r'
      草稿全体を暗号化後署名する。パスフレーズを入力すること。
 
@@ -2378,18 +2488,25 @@ File: mew.ja.info, Node: shortcut, Next: mark-b-comp, Prev: resend, Up: Composin
 
 pgp-signature (PS)
      PGP で署名
+
 pgp-encryption (PE)
      PGP で暗号化
+
 pgp-signature-encryption (PSPE)
      PGP で署名後暗号化
+
 pgp-encryption-signature (PEPS)
      PGP で暗号化後署名
+
 smime-signature (SS)
      S/MIME で署名
+
 smime-encryption (SE)
      S/MIME で暗号化
+
 smime-signature-encryption (SSSE)
      S/MIME で署名後暗号化
+
 smime-encryption-signature (SESS)
      S/MIME で暗号化後署名
 
@@ -2461,19 +2578,26 @@ Base64、Quoted-Printable、Gzip64 (Gzip + Base64)、署名、暗号化などが
 `" "'
      符号化しない。ただし、8 ビットのテキストは符号化されるかもしれな
      い。
+
 `B'
      Base64
+
 `Q'
      Quoted-Printable
+
 `G'
      Gzip64(gzip 圧縮し Base64 で符号化する。Mew が実験的に採用してい
      る。相手が Mew を使っていない場合は、使用すべきではない。)
+
 `PS'
      PGP で電子署名。
+
 `PE'
      PGP で暗号化。
+
 `SS'
      S/MIME で電子署名。
+
 `SE'
      S/MIME で暗号化。
 
@@ -2481,24 +2605,32 @@ Base64、Quoted-Printable、Gzip64 (Gzip + Base64)、署名、暗号化などが
 
 `B'
      Base64 で符号化するため `B' マークを付ける。
+
 `Q'
      Quoted-Printable で符号化するため `Q' マークを付ける。
+
 `G'
      Gzip64 で符号化するため `G' マークを付ける。ただし、Text/Plain と
      Application/Postscript でしか実行できない。これ以外の型には圧縮は
      無意味である。なぜなら、jpeg などはあらかじめ圧縮されているから。
+
 `S'
      PGP で署名するため `PS' マークを付ける。
+
 `E'
      PGP で暗号化するため `PE' マークを付ける。受信者のアドレスを入力
      する。
+
 `M-s'
      S/MIME で署名するため `SS' マークを付ける。
+
 `M-e'
      S/MIME で暗号化するため `SE' マークを付ける。受信者のアドレスを入
      力する。
+
 `Z'
      ZIP で直ちに暗号化する。暗号化された後は、`B'マークが付く。
+
 `U'
      符号化を元に戻す。元々のマークに戻る。
 
@@ -2596,14 +2728,19 @@ File: mew.ja.info, Node: Marks, Next: unread mark, Prev: anonymous, Up: Top
 
 `U'
      未読マーク。
+
 `D'
      消去のマーク。
+
 `X'
      消去のマーク。
+
 `o'
      整頓、つまり、フォルダを移動させるマーク。
+
 `*'
      処理の対象とするマーク。
+
 `$'
      マークを一時的に待避するためのマーク。
 
@@ -2663,6 +2800,7 @@ File: mew.ja.info, Node: unread mark, Next: delete mark, Prev: Marks, Up: Marks
      `SPC'、`n'、および `p' が読み進める対象とするメッセージを反転させ
      る。反転とは、「`U' マーク、`*' マーク、およびマークなし」と「`U'
      マークおよび `*' マーク」に対し、一方を他方へ変えること。
+
 `M-u'
      `U' マークを付ける。
 
@@ -2685,21 +2823,20 @@ File: mew.ja.info, Node: delete mark, Next: refile mark, Prev: unread mark, Up: 
 ゴミ箱の中のメッセージを実際に消去するには、以下の 2 つの方法がありま
 す。
 
-  1. Summary モードで `D' を実行する。
-  2. ゴミ箱で `D' マークを付けて、`x' を押す。
-
+ 1.  Summary モードで `D' を実行する。ゴミ箱で `D' マークを付けて、`x' を押す。et ja
 もう少し正確に言うと、ローカル・フォルダでは以下のルールが適用されます。
 (`mew-trash-folder' の初期値は +trash。
 `mew-trash-folder-list' の初期値は `nil'。)
 
-   - `mew-trash-folder' が `nil' なら、`D' マークの付いたメッセージは
-     消去される。
+
+ - `mew-trash-folder' が `nil' なら、`D' マークの付いたメッセージは消去される。
+
    - `mew-trash-folder-list' が定義されていたら、それらのフォルダ
      で `D' マークを付けたメッセージは消去される。それ以外のフォルダからは
      `mew-trash-folder' へ。
-   - `mew-trash-folder-list' が `nil' なら、 `mew-trash-folder' で `D'
-     マークを付けたメッセージは消去される。それ以外のフォルダからは
-     `mew-trash-folder' へ。(これが初期値。)
+
+ - `mew-trash-folder-list' が `nil' なら、 `mew-trash-folder'で `D' マークを付けたメッセージは消去される。それ以外のフォルダか
+     らは `mew-trash-folder' へ。(これが初期値。)
 
 IMAP に対しては、`mew-imap-trash-folder' と
 `mew-imap-trash-folder-list' に従って、同じ規則が適用されます。
@@ -2723,20 +2860,28 @@ IMAP に対しては、`mew-imap-trash-folder' と
 
 `d'
      `D' マークを付ける。
+
 `M-d'
      `X' マークを付ける。
+
 `md'
      `*' マークを `D' マークへ変換する。
+
 `mM-d'
      `*' マークを `X' マークへ変換する。
+
 `x'
      マークの付いたメッセージを処理する。
+
 `mxd'
      `D' マークの付いたメッセージのみを処理する。
+
 `mxM-d'
      `X' マークの付いたメッセージのみを消去する。
+
 `D'
      ゴミ箱の中のメッセージを全部消去する。
+
 `C-uD'
      指定されたフォルダのメッセージを全部消去する。
 
@@ -2775,13 +2920,17 @@ File: mew.ja.info, Node: refile mark, Next: target mark, Prev: delete mark, Up: 
 
 `o'
      `o' マークを付ける。
+
 `c'
      `o' マークを付ける。推測したフォルダに加えて、現在のフォルダも候
      補として提示する。
+
 `x'
      `o' マークの付いたメッセージを移動させる。
+
 `mxo'
      `o' マークの付いたメッセージのみを移動させる。他のマークは処理しない。
+
 `C-umxo'
      `o' マークの付いたメッセージの中で、現在のメッセージと同じ移動先
      を持つもののみを移動させる。
@@ -2802,12 +2951,16 @@ File: mew.ja.info, Node: target mark, Next: escape mark, Prev: refile mark, Up: 
 
 `*'
      `*' マークを付ける。
+
 `N'
      下方向の `*' マークの付いたメッセージへ移動し表示。
+
 `P'
      上方向の `*' マークの付いたメッセージへ移動し表示。
+
 `ma'
      マークの付いていないメッセージすべてに `*' マークを付ける。
+
 `mr'
      入力した正規表現にマッチしたメッセージに `*' マークを付ける。
 
@@ -2816,20 +2969,26 @@ File: mew.ja.info, Node: target mark, Next: escape mark, Prev: refile mark, Up: 
 
 `F'
      `*' マークの付いたメッセージを MIME 形式で転送するための草稿を準備。
+
 `J'
      大きなメッセージは Message/Partial として複数に分割されている場合
      がある。これらのメッセージには、Mew によって `P' マークが付けられ
      ている。ここで、ユーザがそれらのメッセージに `*' マークを付け、こ
      のコマンドを実行すれば、元のメッセージが復元される。
+
 `mI'
      `*' マークの付いている一部だけが取得されたメッセージ群(`T')を取得
      する。
+
 `C-umI'
      `mI' を実行する。
+
 `M-b'
      `*' マークの付いたメッセージに格納されているメッセージを取り出す。
+
 `M-\'
      `*' マークの付いたメッセージを引数として、外部コマンドを起動する。
+
 `M-t'
      `*' マークの付いたメッセージを "uudecode" する。
 
@@ -2853,14 +3012,18 @@ File: mew.ja.info, Node: escape mark, Next: unmark, Prev: target mark, Up: Marks
 以下のようになります。
 
   1. `m$' で `*' マークを一旦 `$' マークに待避
+
   2. `/' などで `*' マークを付け、`*' マークのついたメッセージを処理
+
   3. `U*' で `*' マークを消去
+
   4. `m*' で `$' マークを `*' マークへ戻す
 
 `$' マークに関するコマンドを以下にまとめます。
 
 `m$'
      `*' マークを `$' マークへ変換。
+
 `m*'
      `$' マークを `*' マークへ変換。
 
@@ -2879,6 +3042,7 @@ File: mew.ja.info, Node: unmark, Next: mark change, Prev: escape mark, Up: Marks
 
 `u'
      現在のメッセージのマークを消す。
+
 `U'
      入力したマークが付いているすべてのメッセージのマークを消す。
 
@@ -2911,8 +3075,10 @@ File: mew.ja.info, Node: mark change, Next: sync, Prev: unmark, Up: Marks
 `o'、`D'、`X'
      新たにマークしたときは、次のメッセージを表示。上書きした場合は、
      その行に留まる。
+
 `*' と `$'
      マークを付けた後は、その行に留まる。
+
 `U'
      マークを付けた後は、その行に留まる。
 
@@ -2923,25 +3089,33 @@ summary-mode:: を参照して下さい。
 
 `m$'
      `*' -> `$' :: `*' マークを一時的に保存。
+
 `m*'
      `$' -> `*' :: `*' マークを元に戻す。
+
 `ms'
      `$' <-> `*'
+
 `mM-u'
      `*' -> `U' :: 選択コマンド `?' で選んだメッセージを未読にするとき
      に便利。
+
 `md'
      `*' -> `D' :: 選択コマンド `?' で選んだメッセージを消去するときに
      便利。
+
 `mM-d'
      `*' -> `X' :: 選択コマンド `?' で選んだメッセージを消去するときに
      便利。
+
 `mo'
      `*' -> `o' :: 選択コマンド `?' で選んだメッセージをあるフォルダに
      移動させる場合に便利。
+
 `mc'
      `*' -> `o' :: 選択コマンド `?' で選んだメッセージをあるフォルダに
      コピーする場合に便利。
+
 `e'
      最初に入力したマークを次に入力したマークへ変換する。ただし、`o'
      マークは対象外。
@@ -2958,6 +3132,7 @@ Mew では、以下のマークに対し、IMAP サーバと整合性を確保�
 `U'
      メッセージを読んだか否か。IMAP のフラグは \Seen。通常は %inbox の
      みで有効。
+
 `*'
      注目しているメッセージ。IMAP のフラグは \Flagged。
 
@@ -2966,16 +3141,28 @@ Mew では、以下のマークに対し、IMAP サーバと整合性を確保�
 Mew がマークの整合性を取る方法を以下に示します。
 
   1. `s' + 'update
+
+
         - 既存のメッセージに対して変更したマークをサーバ側へ反映
+
         - 新着メッセージに対しては、サーバ側のフラグをマークへ反映
 
+
   2. `x'
+
+
         - 既存のメッセージに対して変更したマークをサーバ側へ反映
 
+
   3. `s' + 'sync
+
+
         - 既存のメッセージに対して変更したマークをサーバ側へ反映
+
         - 既存のメッセージの `*',`U', `$', ` ' マークを一旦クリア
+
         - サーバ側のフラグを既存のメッセージにマークとして反映
+
         - サーバ側で削除されたメッセージを削除
 
 
@@ -3009,11 +3196,9 @@ Mew では、メッセージ処理を後から IMAP サーバへ反映するこ�
 を処理するには、`lx' を使用して下さい。`lx' を実行すると、以下の処理が
 なされます。
 
-  1. `o' マークや `D' マークのついたメッセージがフォルダ A からなくな
-     る。
-  2. この処理はメッセージ形式で、%queue に溜る。
-  3. `o' マークのついたメッセージは、ローカルでフォルダ B へ移動され、
-     無効なメッセージとして扱われる。
+ 1.  `o' マークや `D' マークのついたメッセージがフォルダ A からなくなる。
+
+ 2. この処理はメッセージ形式で、%queue に溜る。 `o' マークのついたメッセージは、ローカルでフォルダ B へ移動され、無効なメッセージとして扱われる。
 
 無効なメッセージとは、読むことはできるが、`o' マークや `D' マークをつ
 けられないものをいいます。無効なメッセージには、`#' マークが付いていま
@@ -3037,17 +3222,23 @@ Mew が表示するマーク
 
 `M'
      マルチパートを表すマーク。*Note multipart:: を参照のこと。
+
 `-'
      Multipart/Alternative を表すマーク。*Note analysis:: を参照のこと。
+
 `T'
      メッセージが切り詰められたことを表すマーク。*Note retrieving:: を
      参照のこと。
+
 `S'
      署名を表すマーク。*Note cipher-viewing:: を参照のこと。
+
 `E'
      暗号化を表すマーク。*Note cipher-viewing:: を参照のこと。
+
 `P'
      分割されていることを示すマーク。*Note target mark:: を参照のこと。
+
 `#'
      メッセージが無効であることを示すマーク。*Note off-line:: を参照の
      こと。
@@ -3382,8 +3573,10 @@ Mew は `mew-refile-guess-control' に並べられた関数を順番にすべて
 
 `mew-refile-guess-by-alist'
          が +aaa、+bbb を推測。
+
 `mew-refile-guess-by-folder'
          が +ccc、+ddd を推測。
+
 `mew-refile-guess-by-default'
          が +eee を推測。
 
@@ -3488,10 +3681,13 @@ File: mew.ja.info, Node: copy-msg, Next: Virtual, Prev: auto-refile, Up: Refile
 
 `lc'
      あるフォルダのメッセージをローカルフォルダへコピーする。
+
 `mlc'
      `*' の付いた複数のメッセージをローカル・フォルダへコピーする。
+
 `li'
      あるフォルダのメッセージを IMAP のフォルダへコピーする。
+
 `mli'
      `*' の付いた複数のメッセージを IMAP フォルダへコピーする。
 
@@ -3509,6 +3705,7 @@ Virtual モードは、必要なメッセージを表示するための仮想的
 `セレクション'
      いろいろなフォルダから必要なメッセージだけを集めた仮想フォルダで
      す。フォルダ名の左側に "*" が付きます。
+
 `スレッド'
      フォルダ(Summary)やセレクション(Virtual)を基に、対話関係を行頭揃
      えによって可視化した仮想フォルダです。フォルダ名の両側に "*" が付
@@ -3554,15 +3751,19 @@ File: mew.ja.info, Node: selection, Next: sorting, Prev: Virtual, Up: Virtual
 
 `m/'
      あるフォルダで、"*" マークが付いているメッセージのみを表示する。
+
 `S'
      あるフォルダで、メッセージをソートして表示する。(元のフォルダには、
      何の影響もない。) *Note sorting:: を参照のこと。
+
 `V'
      現在のメッセージと対話関係にあるメッセージを表示する。*Note
      dialog:: を参照のこと。
+
 `/'
      あるフォルダから、検索条件に合致するメッセージを表示する。*Note
      search:: を参照のこと。
+
 `k/'
      すべてのフォルダから、検索条件に合致するメッセージを表示する。
      *Note dbsearch:: を参照のこと。
@@ -3599,10 +3800,13 @@ Date: は日付、X-Mail-Count: は数字と考えてソートすべきです。
 
 `text'
      先頭の "Re: " や "Fw: " を取り除いた文字列。
+
 `ml'
      text と同じであるが、さらにメーリングリスト特有の文字列も取り除く。
+
 `num'
      数値。
+
 `date'
      日付。
 
@@ -3637,11 +3841,11 @@ Mew では、あるメッセージに関係するメッセージをさまざま�
 ど説明するスレッド(*Note thread::)とは、以下の点で異なります。
 
 
-   - スレッドは、1つのフォルダ/仮想フォルダに対してのみ作成できる。対
-     話は、関連するメッセージが複数のフォルダに散らばっていてもよい。
 
-   - スレッドは、行頭揃えによって木構造を可視化する。対話は、日付順に
-     一覧表示する。
+ - スレッドは、1つのフォルダ/仮想フォルダに対してのみ作成できる。対話は、関連するメッセージが複数のフォルダに散らばっていてもよい。
+
+
+ - スレッドは、行頭揃えによって木構造を可視化する。対話は、日付順に一覧表示する。
 
 対話の機能を使うには、まず `kI' を実行し、データベースを作る必要が
 あります。新しく届くメッセージはデータベースに入らないので、`kI'
@@ -3667,11 +3871,14 @@ Mew では、以下のようなメッセージの検索機能を提供してい�
 `?'
      現在のフォルダで、条件に合致したメッセージに `*' マークを付ける。
      入力された条件によって、`mewl' か `grep' のどちらかが呼ばれる。
+
 `C-u?'
      リージョンを指定した `?'。
+
 `/'
      現在のフォルダで、条件に合致したメッセージからセレクションを作る。
      入力された条件によって、`mewl' か `grep' のどちらかが呼ばれる。
+
 `C-u/'
      リージョンを指定した `/'。
 
@@ -3680,8 +3887,10 @@ Mew では、以下のようなメッセージの検索機能を提供してい�
 
 `k?'
      現在のフォルダで、条件に合致したメッセージに `*' マークを付ける。
+
 `k/'
      全フォルダに対し、条件に合致したメッセージからセレクションを作る。
+
 `C-uk/'
      指定されたフォルダに対し、条件に合致したメッセージからセレクショ
      ンを作る。フォルダを複数指定するには "," で区切る。ワイルドカード
@@ -3708,24 +3917,31 @@ File: mew.ja.info, Node: condition, Next: dbsearch, Prev: search, Up: Virtual
      フィールド field に文字列 string が含まれているときマッチ(大文字
      小文字を区別しない)。field に "head" を指定した場合は、ヘッダ全体
      を意味する。
+
 `field==string'
      フィールド field に文字列 string が含まれているときマッチ(大文字
      小文字を区別する)。field に "head" を指定した場合は、ヘッダ全体を
      意味する。
+
 `field!=string'
      フィールド field に文字列 string が含まれていないときマッチ(大文
      字小文字を区別しない)。field に "head" を指定した場合は、ヘッダ全
      体を意味する。
+
 `field!==string'
      フィールド field に文字列 string が含まれていないときマッチ(大文
      字小文字を区別する)。field に "head" を指定した場合は、ヘッダ全体
      を意味する。
+
 `( <pattern> )'
      <pattern> の内容を先に評価。
+
 `! <pattern>'
      <pattern> でないときマッチ。
+
 `<pattern1> & <pattern2>'
      <pattern1> かつ <pattern2> のときマッチ。省略可能。
+
 `<pattern1> | <pattern2>'
      <pattern1> または <pattern2> のときマッチ。
 
@@ -3778,9 +3994,11 @@ File: mew.ja.info, Node: dbsearch, Next: keyword, Prev: condition, Up: Virtual
 
 `km'
      そのフォルダのインデックスを作る。
+
 `kM'
      全体のフォルダのインデックスを作る。あるいは、作るために初期化す
      る。
+
 `kc'
      検索エンジンを切り替える。
 
@@ -3792,11 +4010,14 @@ File: mew.ja.info, Node: dbsearch, Next: keyword, Prev: condition, Up: Virtual
      で更新したいなら `km' でもよいでしょう。`k?' と`k/' の両方が利用
      できます。`C-uk/'でフォルダを指定すると、サブディレクトリも検索に
      なります。
+
 `Spotlight'
      一度だけ `kM' を実行する必要があります。`km' は必要ありません。
      `k?' と `k/' の両方が利用できます。
+
 `Windows Desktop Search'
      一度だけ `kM' を実行する必要があります。`km' は必要ありません。
+
 `Google Desktop'
      一度だけ `kM' を実行する必要があります。`km' は必要ありません。
      `k/' のみが利用できます。
@@ -3825,10 +4046,13 @@ File: mew.ja.info, Node: keyword, Next: thread, Prev: dbsearch, Up: Virtual
      てのメッセージが対象となる。このコマンドを繰り返し利用すると、キー
      ワードの付近が次々と表示されていく。キーワードが設定されていない
      なら、ユーザにキーワードを訊く。
+
 `C-uM-n'
      キーワードを明示的に設定できること以外は、`M-n' に同じ。
+
 `M-p'
      `M-n' を逆方向にしたコマンド。
+
 `C-uM-p'
      `C-uM-n' を逆方向にしたコマンド。
 
@@ -3859,10 +4083,13 @@ File: mew.ja.info, Node: thread, Next: thread-op, Prev: keyword, Up: Virtual
      でに存在しているなら、スレッドに表示を切り替える。スレッドで使用
      された際は、元のフォルダへ移り、カーソルを現在のメッセージへ移動
      する。
+
 `C-utt'
      リージョンに対し、スレッドを作る。
+
 `mt'
      `*' マークの付いているメッセージに対し、スレッドを作る。
+
 `tr'
      正規表現に合致したメッセージに対し、スレッドを作る。
 
@@ -3878,14 +4105,19 @@ File: mew.ja.info, Node: thread-op, Next: Quit, Prev: thread, Up: Virtual
 `tp'
      現在のスレッドの頭に移動する。もし、あるスレッドの頭にカーソルが
      ある場合は、前のスレッドの頭に移動する。
+
 `tn'
      次のスレッドの頭に移動する。
+
 `^'
      親のメッセージに移動する。(スレッドでなくても利用可能)
+
 `&'
      長男のメッセージに移動する。(スレッドでなくても利用可能)
+
 `('
      兄のメッセージに移動する。
+
 `)'
      弟のメッセージに移動する。
 
@@ -3895,15 +4127,19 @@ File: mew.ja.info, Node: thread-op, Next: Quit, Prev: thread, Up: Virtual
 `t*'
      現在のメッセージを頭とする部分木に属するメッセージすべてに `*' マー
      クを付ける。詳しくは *Note target mark:: を参照のこと。
+
 `t$'
      現在のメッセージを頭とする部分木に属するメッセージすべてに `$' マー
      クを付ける。詳しくは *Note escape mark:: を参照のこと。
+
 `td'
      現在のメッセージを頭とする部分木に属するメッセージすべてに `D' マー
      クを付ける。詳しくは *Note delete mark:: を参照のこと。
+
 `tM-d'
      現在のメッセージを頭とする部分木に属するメッセージすべてに `X' マー
      クを付ける。詳しくは *Note delete mark:: を参照のこと。
+
 `to'
      現在のメッセージを頭とする部分木に属するメッセージすべてに `o' マー
      クを付ける。詳しくは *Note refile mark:: を参照のこと。
@@ -3917,8 +4153,10 @@ File: mew.ja.info, Node: thread-op, Next: Quit, Prev: thread, Up: Virtual
      子供以下を隠して親だけにする。子供以下が隠れている親メッセージに
      は、"+" が付く。また、子供以下が隠れている親メッセージでこのコマ
      ンドを実行すると、子供以下が現れる。
+
 `ta'
      すべてのスレッドに対し、子供の表示を反転させる。
+
 `tg'
      あるスレッドをあるメッセージに接ぎ木する。接ぎ木するスレッドは、
      `C-SPC' で指定する。目的のスレッドの一番上のメッセージで、`C-SPC'
@@ -3946,8 +4184,10 @@ Mew を終了させたり、一時中断させたり、そのモード(正確に
 `q'
      Mew を一時中断し、他のバッファに切り替える。Mew 用のバッファはす
      べて残っているので、バッファ操作で選べば再開できる。
+
 `Q'
      Mew を終了。Mew が使ったすべてのバッファを消去する。
+
 `C-cC-q'
      そのモード(正確にはバッファ)を消去する。
 
@@ -4003,10 +4243,8 @@ Summary モードの書式は、`mew-summary-form' で指定できます。以�
 このように、`mew-summary-form' は、リスト、シンボル、文字列のリストで
 す。
 
-  1. 文字列はそのまま出力される
-  2. リストは、整数とシンボルから構成される。シンボルは、呼び出す関数
-     を意味する。関数名は、"mew-summary-form-" とシンボル名を連結する
-     ことで作られる。(例： 'date というシンボルは、
+ 1. 文字列はそのまま出力されるリストは、整数とシンボルから構成される。シンボルは、呼び出す関数を意味する。関数名は、"mew-summary-form-" とシンボル名を連
+     結することで作られる。(例： 'date というシンボルは、
      `mew-summary-form-date' という関数名になる) あらかじめ定義されて
      いるシンボルに
      は、'type、'time、'date、'year、'size、'from、'subj、'body がある。
@@ -4015,8 +4253,11 @@ Summary モードの書式は、`mew-summary-form' で指定できます。以�
      る。正の数は、左詰めを意味する。負の数は、右詰めを意味する。もし、
      負の数を指定する場合、対応する関数は ASCII 文字列を返す必要がある。
      0 は、行の残りを意味し、左詰めとなる。
+
   3. `t' 以外のシンボルは、(1 シンボル) に等しい。
+
   4. `mew-summary-form' は、利用される際に先頭に (mark) が付け加えられる。
+
   5. `t' は、スレッドの際に段付けする位置を意味する。
 
 例を以下に示します。
@@ -4041,27 +4282,25 @@ Summary モードの書式は、`mew-summary-form' で指定できます。以�
 
 それぞの要素は、以下のような意味を持ちます。
 
-  1. 'name:: 名前の部分
-          A. Kazu Yamamoto
+ 1.  'name:: 名前の部分     A. Kazu Yamamoto
           B. (No match)
           C. Kazuhiko Yamamoto (Kazu)
-  2. 'comment:: コメントの部分
-          A: (No match)
+
+ 2.  'comment:: コメントの部分     A: (No match)
           B: Kazu Yamamoto
           C: (Kazu)
-  3. 'address:: アドレスの部分
-          A: kazu@example.org
+
+ 3.  'address:: アドレスの部分     A: kazu@example.org
           B: kazu@example.org
           C: kazu@example.org
-  4. 'nickname:: `mew-addrbook-for-summary' の値に応じたアドレス帳の個
-     人情報のある要素。`mew-addrbook-for-summary' の初期値は
+
+ 4.  'nickname:: `mew-addrbook-for-summary' の値に応じたアドレス帳の個人情報のある要素。`mew-addrbook-for-summary' の初期値は
      `'nickname' なので、通常はニックネームに変換される。何が指定でき
      るかは、*Note draft-mode:: を参照のこと。
-  5. (regex):: 最初に合致した文字列
 
-ある要素が合致しない場合、次の要素が評価されます。どの要素も From: フィー
-ルドに合致しない場合か、この値が `nil' の場合、From: フィールド全体が
-利用されます。
+ 5.  (regex):: 最初に合致した文字列et jaある要素が合致しない場合、次の
+要素が評価されます。どの要素も From: フィールドに合致しない場合か、こ
+の値が `nil' の場合、From: フィールド全体が利用されます。
 
 
 `mew-summary-form-mark-delete' が `t' の場合、重複しているメッセージに
@@ -4089,10 +4328,13 @@ Summary モードの `SPC' は、`mew-summary-show-direction' によって、次
 
 `up'
      上のメッセージを表示する。
+
 `down'
      下のメッセージを表示する。
+
 `next'
      読み進めている方向の次のメッセージを表示する。
+
 `stop'
      次は表示しない。
 
@@ -4221,8 +4463,8 @@ Draft mode
 
 引用ラベルに Message-ID: を加えるには以下のようにします。
 
-     (setq mew-cite-fields '("From:" "Subject:" "Date:" "Message-ID:"))
-     (setq mew-cite-format "From: %s\nSubject: %s\nDate: %s\nMessage-ID: %s\n\n")
+     (setq mew-cite-fields '("From:" "Subject:" "Date:" "Message-Id:"))
+     (setq mew-cite-format "From: %s\nSubject: %s\nDate: %s\nMessage-Id: %s\n\n")
 
 引用記号にアドレスのユーザ部分が付くようにするには以下のようにします。
 
@@ -4246,12 +4488,16 @@ Draft mode
 
 'shortname
      短縮名
+
 'address
      アドレス
+
 'username
      アドレスのユーザ部分
+
 'nickname
      ニックネーム
+
 'name
      正式な氏名
 
@@ -4294,8 +4540,10 @@ File: mew.ja.info, Node: charset, Next: highlight, Prev: draft-mode, Up: Customi
 
 `nil'
      どのような文字コードが利用されても確認なし
+
 `文字コードのリスト'
      このリストに存在しない文字コードが利用された場合に確認
+
 `t'
      `mew-charset-m17n' が利用された場合に確認
 
@@ -4317,14 +4565,13 @@ File: mew.ja.info, Node: charset, Next: highlight, Prev: draft-mode, Up: Customi
 文字と Latin 9 の文字が混在していると、以下の手順によって、文字コード
 が決定されます。
 
-  1. `unify-8859-on-decoding-mode' を利用している場合：
-       1. ISO-8859-1 に収まるなら "iso-8859-1" を利用
-       2. そうでないなら "utf-8" を利用
-  2. `unify-8859-on-decoding-mode' を利用していない場合：
+ 1.  `unify-8859-on-decoding-mode' を利用している場合：     1.  ISO-8859-1 に収まるなら "iso-8859-1" を利用
+
+      2. そうでないなら "utf-8" を利用m
+     `unify-8859-on-decoding-mode' を利用していない場合：
        1. ISO-8859-1 と ISO-8859-15 のどちらにも収まる場合、"ISO-8859-1"
-       2. ISO-8859-1 に収まるなら "iso-8859-1" を利用
-       3. ISO-8859-15 に収まるなら "iso-8859-15" を利用
-       4. そうでないなら、"utf-8" を利用
+
+      2.  ISO-8859-1 に収まるなら "iso-8859-1" を利用 ISO-8859-15 に収まるなら "iso-8859-15" を利用そうでないなら、"utf-8" を利用ifset
 
 `mew-charset-latin' の初期値は、"iso-8859-15" です。"iso-8859-1" にし
 たい場合は、以下のように設定します。
@@ -4426,105 +4673,148 @@ Mew で用意されているフックをまとめます。
 
 `mew-env-hook'
      Mew の起動時の環境が設定される前に評価される。
+
 `mew-init-hook'
      Mew の起動時に評価される。
+
 `mew-status-update-hook'
      状態の更新(`Z')のときに評価される。
+
 `mew-summary-mode-hook'
      Summary モードに入るときに評価される。
+
 `mew-virtual-mode-hook'
      Virtual モードに入るときに評価される。
+
 `mew-thread-display-hook'
      スレッドが表示された後に評価される。
+
 `mew-header-mode-hook'
      Header モードに入るときに評価される。
+
 `mew-draft-mode-hook'
      Draft モードに入るときに評価される。
+
 `mew-draft-mode-newdraft-hook'
      新しい草稿が用意された際に、Draft モードにおいて評価される。
+
 `mew-draft-mode-reedit-hook'
      +draft でないフォルダにある古い草稿を再編集した際に、Draft モード
      において評価される。
+
 `mew-draft-mode-reedit-draft-hook'
      +draft でないフォルダにある草稿を再編集した際に、Draft モードにお
      いて評価される。
+
 `mew-draft-mode-reedit-queue-hook'
      +queue または +postq フォルダにあるメッセージを再編集した際に、
      Draft モードにおいて評価される。
+
 `mew-draft-mode-edit-again-hook'
      古い形式で戻ってきたメッセージを再編集した際に、Draft モードにお
      いて評価される。
+
 `mew-message-mode-hook'
      Message モードに入るときに評価される。
+
 `mew-message-hook'
      メッセージが Message モードで表示される度に評価される。
+
 `mew-make-message-hook'
      Draft モードで MIME メッセージを作る前、つまり `C-cC-m' の際の最
      初に評価される。例：(add-hook 'mew-make-message-hook
      'ispell-message)
+
 `mew-send-hook'
      メッセージを SMTP で送信/キューイングする前に評価される。メッセー
      ジの最終形が作られる前に評価されることに注意。
+
 `mew-post-hook'
      メッセージを NNTP で投稿/キューイングする前に評価される。メッセー
      ジの最終形が作られる前に評価されることに注意。
+
 `mew-real-send-hook'
      メッセージを SMTP で送信/キューイングする前に評価される。メッセー
      ジの最終形が作られた後に評価されることに注意。
+
 `mew-real-post-hook'
      メッセージを NNTP で送信/キューイングする前に評価される。メッセー
      ジの最終形が作られた後に評価されることに注意。
+
 `mew-smtp-flush-hook'
      +queue フォルダにメッセージがある場合に、SMTP が起動される前に評
      価される。
+
 `mew-nntp2-flush-hook'
      +postq フォルダにメッセージがある場合に、NNTP が起動される前に評
      価される。
+
 `mew-smtp-sentinel-hook'
      SMTP が終了する際に評価される。
+
 `mew-nntp-sentinel-hook'
      受信用の NNTP が終了する際に評価される。
+
 `mew-nntp2-sentinel-hook'
      送信用の NNTP が終了する際に評価される。
+
 `mew-pop-sentinel-hook'
      POP が終了する際に評価される。
+
 `mew-pop-sentinel-non-biff-hook'
      Biff ではない POP が終了する際に評価される。
+
 `mew-imap-sentinel-hook'
      IMAP が終了する際に評価される。
+
 `mew-imap-sentinel-non-biff-hook'
      Biff ではない IMAP が終了する際に評価される。
+
 `mew-scan-sentinel-hook'
      Summary モードの `s' が終了する際に評価される。
+
 `mew-summary-ls-no-scan-hook'
      Summary モードの `s' がフォルダの一覧を取らなかった場合に評価され
      る。
+
 `mew-summary-exec-hook'
      Summary モードの `x' の実行が終了する際に評価される。
+
 `mew-refile-guess-by-from-learn-hook'
      mew-refile-guess-by-from-learn が実行される際に評価される。
+
 `mew-sort-hook'
      Summary モードの `M-s' の実行が終了する際に評価される。
+
 `mew-pack-hook'
      Summary モードの `O' の実行が終了する際に評価される。
+
 `mew-summary-delete-folder-hook'
      フォルダが削除されるときに評価される。
+
 `mew-summary-rename-folder-hook'
      フォルダ名が変更されるときに評価される。
+
 `mew-summary-toggle-disp-msg-hook'
      Summary モードの `v' の実行が終了する際に評価される。
+
 `mew-syntax-format-hook'
      マルチパートの書式を作成する関数 `mew-syntax-format' が呼ばれた際
      に評価される。
+
 `mew-addrbook-mode-hook'
      アドレス帳の登録モードに入るときに評価される。
+
 `mew-cite-hook'
      Draft モードで引用する際に呼ばれる。通常 supercite を設定するため
      に使う。
+
 `mew-before-cite-hook'
      Draft モードでメッセージを引用する直前に呼ばれる。
+
 `mew-suspend-hook'
      Mew を一時中断した際に評価される。
+
 `mew-quit-hook'
      Mew の終了時に評価される。
 
@@ -4554,33 +4844,43 @@ Mew では、メッセージを受信する際に POP を利用できます。�
 
 `mew-pop-server'
      POP サーバの名前。
+
 `mew-pop-ssh-server'
      POP を SSH 経由で取得する場合の SSH サーバの名前。
+
 `mew-pop-ssl'
      POP over SSL を使うか否か。
+
 `mew-pop-ssl-port'
      POP over SSL のポート番号。
+
 `mew-pop-user'
      POP のアカウント名。初期値はログイン名。
+
 `mew-pop-auth'
      POP の認証方式。`'pass' は USER/PASS (生パスワード)、`'apop' は
      APOP、`t' は `mew-pop-auth-list' に従った SASL を意味する。初期値
      は `'apop'。
+
 `mew-pop-auth-list'
      SASL で利用する認証方式のリスト。優先順位の高い順に並べる。現在、
      "CRAM-MD5" が利用可能。
+
 `mew-pop-delete'
      POP サーバからメッセージを取得後、POP サーバにあるメッセージを削
      除するか否か。`t' なら削除。`nil' なら削除しない。数値 N なら、最
      初のアクセスから N 日後に削除する。初期値は `t'。
+
 `mew-pop-size'
      POP サーバから取得するメッセージの大きさの上限。初期値は 55296 バ
      イト。0 に設定すると、上限なしの意味になり、すべてのメッセージを
      取得する。上限に引っ掛かったメッセージの全体を取得する方法につい
      ては、*Note retrieving:: を参照のこと。
+
 `mew-pop-body-lines'
      大きさの上限にひっかかったメッセージの本文を何行取得するかという
      値。初期値は 40。
+
 `mew-pop-header-only'
      POP でメッセージを取得する際に、ヘッダのみにするか、本文も取得するか。
      `nil' でなければ、ヘッダのみを取得。初期値は `nil'。
@@ -4597,29 +4897,38 @@ Mew では、メッセージを受信する際に IMAP を利用できます。�
 
 `mew-imap-server'
      IMAP サーバの名前。
+
 `mew-imap-ssh-server'
      IMAP を SSH 経由で取得する場合の SSH サーバの名前。
+
 `mew-imap-ssl'
      IMAP over SSL を使うか否か。
+
 `mew-imap-ssl-port'
      IMAP over SSL のポート番号。
+
 `mew-imap-user'
      IMAP のアカウント名。初期値はログイン名。
+
 `mew-imap-auth'
      IMAP の認証方式。`nil' は LOGIN (生パスワード)、`t' は
      `mew-imap-auth-list' に基づいた SASL を意味する。初期値は `t'。
+
 `mew-imap-auth-list'
      SASL で利用する認証方式のリスト。優先順位の高い順に並べる。現在、
      "CRAM-MD5" と "LOGIN" が利用可能。
+
 `mew-imap-delete'
      IMAP サーバからメッセージを取得後、IMAP サーバにあるメッセージを
      削除するか否か。`t' なら削除。`nil' なら削除しない。数値 N なら、
      最初のアクセスから N 日後に削除する。初期値は `t'。
+
 `mew-imap-size'
      IMAP サーバから取得するメッセージの大きさの上限。初期値は 55296 バイト。
      0 に設定すると、上限なしの意味になり、すべてのメッセージを取得する。上限
      に引っ掛かったメッセージの全体を取得する方法については、
      *Note retrieving:: を参照のこと。
+
 `mew-imap-header-only'
      IMAP でメッセージを取得する際に、ヘッダのみにするか、本文も取得するか。
      `nil' でなければ、ヘッダのみを取得。初期値は `nil'。
@@ -4636,28 +4945,37 @@ Mew では、ニュースを読み書きする際に NNTP を利用します。�
 
 `mew-nntp-server'
      NNTP サーバの名前。
+
 `mew-nntp-ssh-server'
      NNTP を SSH 経由で取得する場合の SSH サーバの名前。
+
 `mew-nntp-ssl'
      NNTP over SSL を使うか否か。
+
 `mew-nntp-ssl-port'
      NNTP over SSL のポート番号。
+
 `mew-nntp-user'
      NNTP のアカウント名。もし `nil' でなければ、認証の手続きが実行さ
      れる。(mew-nntp-auth という変数はないことに注意。)
+
 `mew-nntp-newsgroup'
      ニュースグループ名の初期値。
+
 `mew-nntp-size'
      NNTP サーバから取得するメッセージの大きさの上限。初期値は 55296 バイト。
      0 に設定すると、上限なしの意味になり、すべてのメッセージを取得する。上限
      に引っ掛かったメッセージの全体を取得する方法については、
      *Note retrieving:: を参照のこと。
+
 `mew-nntp-header-only'
      NNTP でメッセージを取得する際に、ヘッダのみにするか、本文も取得するか。
      `nil' でなければ、ヘッダのみを取得。初期値は `nil'。
+
 `mew-nntp-msgid-user'
      Message-Id: を作成するためのユーザ名。`nil' であれば `mew-user'
      の値が利用される。初期値は `nil'。Message-Id: の書式は以下を参照。
+
 `mew-nntp-msgid-domain'
      Message-Id: を作成するためのドメイン名。`nil' であれば
      `mew-mail-domain' の値が利用される。初期値は `nil'。Message-Id:
@@ -4680,32 +4998,47 @@ Mew では、メッセージを送信する際に SMTP を利用します。SMTP
 
 `mew-smtp-server'
      SMTP サーバの名前。
+
 `mew-smtp-port'
-     SMTP ポート番号。
+     SMTP ポート番号。絶対パス名を指定すると Unix ドメインソケットを使
+     用する。
+
+`mew-smtp-submission-family'
+     SMTP サーバと接続する際に用いるアドレスファミリ。初期値は 'ipv4。
+
 `mew-smtp-ssh-server'
      SSH 経由でメッセージを送る際の SSH サーバの名前。
+
 `mew-smtp-ssl'
      SMTP over SSL を使うか否か。
+
 `mew-smtp-ssl-port'
      SMTP over SSL のポート番号。
+
 `mew-smtp-user'
      SMTP AUTH で利用されるアカウント名。設定されない場合は、自動的に
      メールアドレスに設定される。
+
 `mew-smtp-auth-list'
      SMTP AUTH で利用する認証方式のリスト。優先順位の高い順に並べる。
      初期値は、'("CRAM-MD5" "PLAIN" "LOGIN")。
+
 `mew-smtp-helo-domain'
      SMTP HELO コマンドで使われるサーバ名。初期値は "localhost"。
+
 `mew-smtp-mail-from'
      SMTP MAIL FROM コマンドで指定されるアドレス。`nil' の場合は、
      From: フィールドのアドレスが指定される。初期値は `nil'。
+
 `mew-smtp-msgid-user'
      Message-Id: を作成するためのユーザ名。`nil' であれば `mew-user'
      の値が利用される。初期値は `nil'。Message-Id: の書式は以下を参照。
+
 `mew-smtp-msgid-domain'
      Message-Id: を作成するためのドメイン名。`nil' であれば
      `mew-mail-domain' の値が利用される。初期値は `nil'。Message-Id:
      の書式は以下を参照。
+
 `mew-use-8bit'
      8 ビットテキストを符号化せずにそのまま送るか否か。`nil' の場合は、
      適切な MIME 符号化が施される。初期値は `nil'。
@@ -4718,6 +5051,16 @@ Message Submission (ポート番号が 587 である送信用の SMTP)を使い�
 合は、以下のように設定して下さい。
 
      (setq mew-smtp-port "submission")
+
+送信サーバとの接続に Unix ドメインソケットを使いたい場合は、以下のように
+`mew-smtp-port' に絶対パス名を設定して下さい。
+
+     (setq mew-smtp-port "/var/run/msp.sock")
+
+送信サーバとの接続に IPv6 を使いたい場合は、以下のように
+`mew-smtp-submission-family' に 'ipv6 を設定して下さい。
+
+     (setq mew-smtp-submission-family 'ipv6)
 
 SSL (*Note SSL::)や TLS (*Note TLS::) の章も参考にして下さい。
 
@@ -4798,7 +5141,7 @@ File: mew.ja.info, Node: config, Next: config2, Prev: smtp, Up: Customize
      nntp-server, nntp-port, nntp-ssh-server, nntp-ssl, nntp-ssl-port,
      nntp-user, nntp-size, nntp-header-only,
      nntp-msgid-user, nntp-msgid-domain,
-     ssl-cert-directory, ssl-verify-level,
+     prog-ssl-arg, ssl-cert-directory, ssl-verify-level,
      inbox-folder, queue-folder, postq-folder,
      mailbox-type, mbox-command, mbox-command-arg,
      signature-file, content-type, refile-guess-alist,
@@ -4845,10 +5188,12 @@ Draft モードでは、ケースを自動的に設定することもできま�
      この変数が `t' の場合、草稿が用意されたときに、
      `mew-case-guess-alist' に従ってケースが設定される。初期値は
      `t'。
+
 `mew-case-guess-when-composed'
      この変数が `t' の場合、メッセージが作成されたときに、
      `mew-case-guess-alist' に従ってケースが設定される。初期値は
      `nil'
+
 `mew-case-guess-when-replied'
      この変数が `t' の場合、返答によって草稿が用意されたときに、
      `mew-case-guess-when-replied-alist' に従ってケースが設定される。
@@ -4870,6 +5215,7 @@ Summary モードのケースが利用されます。たとえ、そのケース
 
 `C'
      Summary モードにおいて、ケースを設定する。
+
 `C-cC-o'
      Draft モードにおいて、その草稿のケースを設定する。
 
@@ -4883,14 +5229,14 @@ File: mew.ja.info, Node: config2, Next: custom-misc, Prev: config, Up: Customize
 Mew 6.1 から ".mew.el" の設定方法が改善されました。古い書式も有効です
 が、より簡単な新しい書式も利用できます。
 
-   - 古い書式ではリストの中に "." が現れる場合がありました。新しい書式
-     では、"." はまったく使われません。たとえば、("foo" . "bar") と書
-     いていたところは、("foo" "bar") と書けます。
-   - 古い書式では、ポート番号は文字列で書いていました。たとえば、"25"
-     です。新しい書式では、数値で書いてもよくなりました。たとえば、25
-     です。文字列も有効です。たとえば、"smtp" です。
-   - 古い書式では、`mew-config-alist' のケースやキーを文字列で書いてい
-     ました。新しい書式では、シンボルで書けます。
+
+ - 古い書式ではリストの中に "." が現れる場合がありました。新しい書式では、"." はまったく使われません。たとえば、("foo" . "bar")
+     と書いていたところは、("foo" "bar") と書けます。
+
+ - 古い書式では、ポート番号は文字列で書いていました。たとえば、"25" です。新しい書式では、数値で書いてもよくなりました。たとえば、
+     25 です。文字列も有効です。たとえば、"smtp" です。
+
+ - 古い書式では、`mew-config-alist' のケースやキーを文字列で書いていました。新しい書式では、シンボルで書けます。
 
 以下に mew-config-alist を新しい書式で書いた例を示します。
 
@@ -5074,14 +5420,17 @@ Mew で "stunnel" を制御する重要な変数は 2 つです。
 
 0
      検証しない
+
 1
      サーバの証明書があれば検証する。検証結果が失敗なら、SSL/TSL コネ
      クションは作られない。証明書がなければ、SSL/TLS コネクションを作
      成する。
+
 2
      サーバの証明書を検証する。検証結果が失敗なら、SSL/TSL コネクショ
      ンは作られない。証明書がなければ、SSL/TLS コネクションを作成しな
      い。
+
 3
      サーバが送ってきたものではなく、ローカルにインストールされている
      証明書で検証する。
@@ -5252,16 +5601,12 @@ File: mew.ja.info, Node: addr-warn, Next: biff, Prev: spam2, Up: Tips
 どのアドレスを警告するのかを決定する変数は 4 つあり、すべて文字列のリ
 ストになります。Mew は以下のルールに従って、警告するアドレスを決めます。
 
-  1. アドレスが `mew-safe-addresses' で指定されていれば警告しない。
-  2. アドレスが `mew-warn-addresses' で指定されていれば警告する。
-  3. ドメインが `mew-safe-domains' で指定されていれば警告しない。
-  4. ドメインが `mew-warn-domains' で指定されていれば警告する。
-  5. `mew-warn-addresses' か `mew-safe-domains' が定義されていれば警告
-     する。
-  6. 警告しない。
+ 1. アドレスが `mew-safe-addresses' で指定されていれば警告しない。
 
-以下に "@example.org" 以外のドメインを持つアドレスを警告する例を示しま
-す。
+ 2. アドレスが `mew-warn-addresses' で指定されていれば警告する。ドメインが `mew-safe-domains' で指定されていれば警告しない。ドメインが `mew-warn-domains' で指定されていれば警告する。 `mew-warn-addresses' か `mew-safe-domains' が定義されていれば警告する。
+
+ 6. 警告しない。et ja以下に "@example.org" 以外のドメインを持つアドレ
+スを警告する例を示します。
 
      (setq mew-safe-domains '("example.org"))
 
@@ -5308,9 +5653,8 @@ Edit モード
 Edit モードは、既存のメッセージを編集し、新しいメッセージを作成するた
 めのモードです。用途の典型例を以下に示します。
 
-   - 大きな添付ファイルを削除して保存する
-   - PGP/MIME や S/MIME で暗号化されたメッセージを復号化した状態で保存
-     する
+
+ - 大きな添付ファイルを削除して保存するGP/MIME や S/MIME で暗号化されたメッセージを復号化した状態で保存する
 
 現在のメッセージを Edit モードで編集するには、`M-e'を押します。すると、
 Draft モードに似た形で草稿が用意されます。Edit モードでは、Draftモード
@@ -5334,8 +5678,10 @@ Edit モードでのコマンドをまとめます。
 
 `C-cC-c'
      編集したメッセージを新しいメッセージに保存。
+
 `C-cC-m'
      `C-cC-c'に同じ。
+
 `その他'
      Draft モードと同じ。
 
@@ -5359,26 +5705,32 @@ To: と Cc: を正しく書く
      不必要なアドレスを To: や Cc: に書いて、相手に迷惑をかけてしまう
      ことがないようにしましょう。
 
+
 To: と Cc: に書くアドレスの数は少なくする
      アドレスをたくさん To: や Cc: に書くのはよくないことです。面倒で
      もメーリングリストを作りましょう。あるいは、必要に応じて宛先を匿
      名にしましょう(*Note anonymous::)。
+
 
 Subject: には本文の内容を的確に短く書く
      Subject: を見て読むか決める人がいますから、不適切な Subject: だと
      読んでもらえないかもしれません。長い Subject: は読みにくいので止
      めましょう。
 
+
 必要な部分だけを引用する
      面倒でも不要な部分は削りましょう。Mew を使っていれば、引用は楽勝
      のはずです。
 
+
 シグニチャは簡素にする
      長いシグニチャは単なる自己満足です。
+
 
 いたずらメッセージを送らない
      こんなことは注意したくありませんが、それでも不幸のメッセージなど
      を送ってくる人がいます。人格を疑われることを理解すべきです。
+
 
 相手の読めるデータのみを添付する
      なんの合意もなしに送ってよいデータはテキストのみです。それ以外の
@@ -5409,6 +5761,7 @@ File: mew.ja.info, Node: Implementation, Next: Avail, Prev: Convention, Up: Top
      "mewencode" を使い続けています。(ただし、Base64 が Emacs で実装さ
      れていれば、そちらを使います。)
 
+
 文字列検索(`C-s'、`C-r')すると、行末にカーソルが飛ぶのはなぜ？
      Summary mode において、スレッド情報は表示されません。これは、
      Summary mode で表示されている行に関しては、表示する瞬間にスレッド
@@ -5421,6 +5774,7 @@ File: mew.ja.info, Node: Implementation, Next: Avail, Prev: Convention, Up: Top
      性が付きます。全体に非表示の属性が付くと、Summary mode のモードラ
      インの右端にある `*' マークが消えます。この状態では、文字列検索が
      直感通りに働きます。
+
 
 Mew 4.3 でファイルを添付すると MS のメールリーダでファイル名が認識できるようになりました
      MS のメールリーダは、ファイル名を符号化する際に、標準化されてない
@@ -5490,14 +5844,13 @@ All rights reserved.
 変更の有無にかかわらず、ソースおよびバイナリ形式の再配布および利用は、
 以下の条件を満たしていれば、これを許可する。
 
-  1. ソース・コードの再配布は、上記の著作権表示、この条件項目、および、
-     以下の免責事項を保存しなければならない。
-  2. バイナリ形式の再配布は、上記の著作権表示、この条件項目、および、
-     以下の免責事項を、その配布に付随する説明書、あるいはその他の資料
-     のいずれかに明記しなければならない。
-  3. 前もって特別に許諾を得ない限り、このソフトウェアから派生した製品
-     の推奨や販売促進のために、このチーム名と貢献者達の名前を利用して
-     はならない。
+ 1. ソース・コードの再配布は、上記の著作権表示、この条件項目、および、以下の免責事項を保存しなければならない。
+
+ 2. バイナリ形式の再配布は、上記の著作権表示、この条件項目、および、以下の免責事項を、その配布に付随する説明書、あるいはその他
+     の資料のいずれかに明記しなければならない。
+
+ 3. 前もって特別に許諾を得ない限り、このソフトウェアから派生した製品の推奨や販売促進のために、このチーム名と貢献者達の名前を利
+     用してはならない。
 
 このソフトウェアは「このままの形で」提供され、明示的あるいは言外の保証
 は、商用利用および特定目的への適合に対する言外の保証も含み、またこれら
@@ -5725,6 +6078,7 @@ File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Copyright, Up: T
 * mew-smtp-ssl:                 SSL.                    (line   5)
 * mew-smtp-ssl-port:            smtp.
 * mew-smtp-ssl:                 smtp.
+* mew-smtp-submission-family:   smtp.
 * mew-smtp-user:                smtp.
 * mew-sort-default-key-alist:   sorting.                (line   5)
 * mew-sort-default-key:         sorting.                (line   5)
@@ -6063,111 +6417,111 @@ File: mew.ja.info, Node: Key Index, Prev: Variable Index, Up: Top
 * zz (Summary):                 message-mode.           (line   5)
 
 Tag table:
-Node: Top288
-Node: Overview1325
-Node: characteristic1968
-Node: Emacsen2980
-Node: modes3158
-Node: folder convention3668
-Node: configuration5541
-Node: password7870
-Node: start9449
-Node: Viewing10214
-Node: singlepart11193
-Node: multipart12097
-Node: analysis14362
-Node: cipher-viewing16623
-Node: retrieving19502
-Node: moving22065
-Node: sum-write23630
-Node: features25094
-Node: status-update26668
-Node: invalid27369
-Node: Composing28665
-Node: header30173
-Node: cheader30847
-Node: addr-comp32052
-Node: addrbook33047
-Node: auto-alias35186
-Node: addr-comp136196
-Node: addr-comp237889
-Node: send39250
-Node: cite41360
-Node: mime-comp42761
-Node: charset-guess48340
-Node: longline50560
-Node: reply51696
-Node: forward54701
-Node: resend55293
-Node: shortcut56474
-Node: mark-b-comp59886
-Node: pgp-key62300
-Node: anonymous62875
-Node: Marks63850
-Node: unread mark64993
-Node: delete mark65865
-Node: refile mark67450
-Node: target mark68443
-Node: escape mark69504
-Node: unmark70019
-Node: mark change70636
-Node: sync71501
-Node: off-line72194
-Node: mew-mark73461
-Node: Refile73989
-Node: by-folder75137
-Node: by-alist76318
-Node: by-thread77972
-Node: by-from-folder78588
-Node: by-from79541
-Node: by-newsgroups80752
-Node: by-default80987
-Node: guess-rule81344
-Node: auto-refile82872
-Node: copy-msg84573
-Node: Virtual85442
-Node: selection86560
-Node: sorting87066
-Node: dialog88344
-Node: search89010
-Node: condition89647
-Node: dbsearch91385
-Node: keyword92267
-Node: thread92766
-Node: thread-op93571
-Node: Quit94887
-Node: Customize95310
-Node: summary-mode95998
-Node: message-mode98787
-Node: draft-mode101380
-Node: charset103475
-Node: highlight105101
-Node: hooks107141
-Node: pop110547
+Node: Top283
+Node: Overview1320
+Node: characteristic1963
+Node: Emacsen2895
+Node: modes3073
+Node: folder convention3589
+Node: configuration5467
+Node: password7796
+Node: start9353
+Node: Viewing10120
+Node: singlepart11099
+Node: multipart12044
+Node: analysis14274
+Node: cipher-viewing16547
+Node: retrieving19426
+Node: moving22001
+Node: sum-write23566
+Node: features25018
+Node: status-update26616
+Node: invalid27324
+Node: Composing28620
+Node: header30134
+Node: cheader30811
+Node: addr-comp32018
+Node: addrbook33004
+Node: auto-alias35143
+Node: addr-comp136153
+Node: addr-comp237846
+Node: send39207
+Node: cite41319
+Node: mime-comp42717
+Node: charset-guess48279
+Node: longline50499
+Node: reply51635
+Node: forward54588
+Node: resend55180
+Node: shortcut56363
+Node: mark-b-comp59785
+Node: pgp-key62214
+Node: anonymous62789
+Node: Marks63764
+Node: unread mark64912
+Node: delete mark65785
+Node: refile mark67364
+Node: target mark68361
+Node: escape mark69432
+Node: unmark69951
+Node: mark change70569
+Node: sync71444
+Node: off-line72150
+Node: mew-mark73400
+Node: Refile73934
+Node: by-folder75082
+Node: by-alist76263
+Node: by-thread77917
+Node: by-from-folder78533
+Node: by-from79486
+Node: by-newsgroups80697
+Node: by-default80932
+Node: guess-rule81289
+Node: auto-refile82819
+Node: copy-msg84520
+Node: Virtual85392
+Node: selection86511
+Node: sorting87021
+Node: dialog88302
+Node: search88954
+Node: condition89596
+Node: dbsearch91341
+Node: keyword92228
+Node: thread92730
+Node: thread-op93538
+Node: Quit94865
+Node: Customize95290
+Node: summary-mode95978
+Node: message-mode98743
+Node: draft-mode101336
+Node: charset103435
+Node: highlight105048
+Node: hooks107088
+Node: pop110537
 Node: imap111629
-Node: nntp112640
-Node: smtp113759
-Node: config115496
-Node: config2120010
-Node: custom-misc121166
-Node: Tips121883
-Node: region122410
-Node: visiting122919
-Node: SSH123281
-Node: SSL123878
-Node: TLS125429
-Node: spam126140
-Node: spam2127891
-Node: addr-warn129010
-Node: biff129783
-Node: edit130265
-Node: Convention131025
-Node: Implementation132065
-Node: Avail133524
-Node: obtain133773
-Node: ml133997
-Node: Copyright134188
-Node: Variable Index135196
-Node: Key Index150455
+Node: nntp112649
+Node: smtp113777
+Node: config115882
+Node: config2120413
+Node: custom-misc121549
+Node: Tips122266
+Node: region122793
+Node: visiting123302
+Node: SSH123664
+Node: SSL124261
+Node: TLS125815
+Node: spam126526
+Node: spam2128277
+Node: addr-warn129396
+Node: biff130148
+Node: edit130630
+Node: Convention131378
+Node: Implementation132424
+Node: Avail133885
+Node: obtain134134
+Node: ml134358
+Node: Copyright134549
+Node: Variable Index135538
+Node: Key Index150835
 
 End tag table
