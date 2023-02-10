@@ -1,14 +1,12 @@
-			    <Differences>
-			    Kazu Yamamoto
-			     June 7, 2018
+# Release note
 
-			   <Important Note>
+## Important note
 
-* mew-smtp-port now supports Unix domain socket.  If it is set to an
+* `mew-smtp-port` now supports Unix domain socket.  If it is set to an
   absolute pathname such as "/var/run/msp.sock", Mew will use it as a
   Unix domain socket which supports SOCK_STREAM and understands SMTP.
-  The value of mew-smtp-server will be ignored.  This feature requires
-  make-network-process introduced since Emacs 22.
+  The value of `mew-smtp-server` will be ignored.  This feature requires
+  `make-network-process` introduced since Emacs 22.
 
 * Configuration in ".mew.el" is simplified between Mew 5.2 and Mew
   6.1.  Almost all old configuration works. However, if you are using
@@ -16,29 +14,34 @@
   config2 node in info.
 
   Complex configuration includes:
-    - mew-header-alist
-    - mew-refile-guess-alist
-    - mew-inbox-action-alist
-    - All above in mew-config-alist
 
-	      <Differences between Mew 6.8 and Mew 6.7>
+    - `mew-header-alist`
+    - `mew-refile-guess-alist`
+    - `mew-inbox-action-alist`
+    - `All above in mew-config-alist`
+
+## Differences between Mew 6.8 and Mew 6.7
 
 * Mew now supports Emacs 24.3 or later only.
-* Supporting stunnel 5.
+* Supporting "stunnel" 5.
 * Supporting GnuPG 2.1.23 or later.
   The command name should be "gpg" instead of "gpg2".
   Put the following to your "~/.gnupg/gpg.conf".
-        no-auto-key-retrieve
-        auto-key-locate local
+
+```
+no-auto-key-retrieve
+auto-key-locate local
+```
+
 * Using LibreOffice (soffice) on Unix by default.
 
-	      <Differences between Mew 6.7 and Mew 6.6>
+## Differences between Mew 6.7 and Mew 6.6
 
 * Security fix for GnuPG.
 * GnuPG 2.1 is supported only for master password, not for PGP/MIME
   and S/MIME.
 
-	      <Differences between Mew 6.6 and Mew 6.5>
+## Differences between Mew 6.6 and Mew 6.5
 
 * Better image supports.
 * The body encoded with Base64/Quoted-Printable is decoded.
@@ -47,24 +50,23 @@
 * The speed to move the cursor in Summary mode got much faster.
 * Supporting stunnel 5.
 
-	      <Differences between Mew 6.5 and Mew 6.4>
+##  Differences between Mew 6.5 and Mew 6.4
 
 * Catching up to latest "stunnel".
 * Catching up to Ruby 1.9.
 * Highlighting HTML produced by "w3m".
 
-	      <Differences between Mew 6.4 and Mew 6.3>
+## Differences between Mew 6.4 and Mew 6.3
 
 * Zip support for reading and composing.
 * Many bug fixes.
 
-	      <Differences between Mew 6.3 and Mew 6.2>
+## Differences between Mew 6.3 and Mew 6.2
 
 * Mew 6.3 works on Emacs 23 properly.
 * Mew 6.2 does not work on Emacs 21. This bug has been fixed.
 
-
-	      <Differences between Mew 6.2 and Mew 6.1>
+## Differences between Mew 6.2 and Mew 6.1
 
 * Edit mode has been implemented.
 * The encoding of format=flowed has been implemented.
@@ -73,8 +75,7 @@
   with "cmew -f".
 * "k/" and "k?" can be used even while updating the DB.
 
-
-	      <Differences between Mew 6.1 and Mew 5.2>
+## Differences between Mew 6.1 and Mew 5.2
 
 * Configuration in ".mew.el", especially of mew-config-alist is
   simplified. See the config2 node in info.
@@ -92,7 +93,7 @@
 * "_" toggles a long line: normal, long, wrapped.
 * You can use gmail with IMAP.
 
-	      <Differences between Mew 5.2 and Mew 5.1>
+## Differences between Mew 5.2 and Mew 5.1
 
 * Full S/MIME support based on GnuPG 2.
 	http://www.mew.org/feature/smime.html.en
@@ -102,7 +103,7 @@
 	http://www.mew.org/feature/est.html.en
 	http://www.mew.org/feature/est.html.ja
 
-	      <Differences between Mew 5.1 and Mew 4.2>
+## Differences between Mew 5.1 and Mew 4.2
 
 * The ".mew" suffix is introduced for OS level search mechanisms.
 * OS level search mechanisms including Spotlight, Windows Desktop
@@ -132,7 +133,7 @@
 * All variables can be defined in ".mew.el". You don't have to
   set specific variables in ".emacs".
 
-	      <Differences between Mew 4.2 and Mew 4.1>
+## Differences between Mew 4.2 and Mew 4.1
 
 * mew-nmz.el has been integrated. You can search messages with
   keyword DB. For more information, see info.
@@ -147,8 +148,7 @@
 * Drag and Drop composing has been supported.
 * Many small bug fixes.
 
-
-	      <Differences between Mew 4.1 and Mew 3.2>
+## Differences between Mew 4.1 and Mew 3.2
 
 * Summary mode format
 	- Parts of message bodies are displayed.
@@ -225,8 +225,7 @@
 	- "mewls" is now called "mewl" so that both "mewls" or Mew 2/3
           and "mewl" for Mew 4 co-exist.
 
-
-	      <Differences between Mew 3.2 and Mew 3.1>
+## Differences between Mew 3.2 and Mew 3.1
 
 * If SSL/SSH is used for message retrieval by POP/IMAP/NNTP,
   it is notified in mode line ("Sec" or a lock image).
@@ -254,7 +253,7 @@
 	"\", "M-\", "m/"
 * Many bug fixes.
 
-	      <Differences between Mew 3.1 and Mew 2.2>
+## Differences between Mew 3.1 and Mew 2.2
 
 * Supporting Darwin.
 * The structure of folder list is changed. Type "1Z" once after
@@ -267,7 +266,7 @@
 * IMAP and NNTP are supported.
 * +mdrop is renamed to $inbox.
 
-	      <Differences between Mew 2.2 and Mew 2.1>
+## Differences between Mew 2.2 and Mew 2.1
 
 * mew-summary-toggle-8bit is bound to "z8" instaed of "8".
 * "0"-"9" are bound to digit-argument. So, for example, we can type
@@ -275,7 +274,7 @@
 * yes-or-no-p is replaced by y-or-n-p.
 * Minor bug fixes.
 
-	      <Differences between Mew 2.1 and Mew 2.0>
+## Differences between Mew 2.1 and Mew 2.0
 
 * XML is well supported.
 
@@ -320,7 +319,7 @@
 
 * Many other small bug fixes.
 
-	       <Differences between Mew 2 and Mew 1.94>
+## Differences between Mew 2 and Mew 1.94
 
 * Mew 2 has thrown away Emacs 19, Mule 2.3, XEmacs 20.4.
 
@@ -370,7 +369,7 @@
 
 * Mew 2 is liberal for many kinds of broken messages.
 
-		 <Differences between 1.94 and 1.93>
+## Differences between 1.94 and 1.93
 
 * Auto input-method selection. Typing C-cC-y or C-cC-t in Draft mode
   automatically selects input-method on X/Emacs 20 or later.
@@ -447,9 +446,7 @@
 
 * Many many bug fixes. And many many optimizations.
 
-
-
-		 <Differences between 1.93 and 1.92>
+## Differences between 1.93 and 1.92
 
 * Copyright of Mew conforms ``AS IS'' instead of GPL2.
 
@@ -480,7 +477,7 @@
 
 * Many many bug fixes.
 
-		 <Differences between 1.93 and 1.70>
+## Differences between 1.93 and 1.70
 
 * Mew uses IM Perl5 instead of MH. Mew will never support MH again.
 
@@ -551,5 +548,3 @@
 
 * Color is now used by default. Remove configurations concerned with
   fonts from each hooks!.
-
---End of file
