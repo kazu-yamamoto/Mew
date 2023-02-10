@@ -19,19 +19,19 @@
 @c Try "M-x texinfo-format-buffer" or makeinfo to get the Info.
 @end ifset
 
-@set version 6.8
-@set modified 2018/06/07
-@set X-Mailer Mew version 6.8 on Emacs 26.1
+@set version 6.9
+@set modified 2023/02/11
+@set X-Mailer Mew version 6.9 on Emacs 28.2
 
 @titlepage
 @sp 10
 @center
 @title Mew
 @ifset ja
-@author Copyright @copyright{}1996-2018 山本和彦
+@author Copyright @copyright{}1996-2023 山本和彦
 @end ifset
 @ifset en
-@author Copyright @copyright{}1996-2018 Kazuhiko Yamamoto
+@author Copyright @copyright{}1996-2023 Kazuhiko Yamamoto
 @end ifset
 @end titlepage
 
@@ -292,11 +292,11 @@ the name.
 @end ifset
 
 @ifset ja
-Emacs 24.3 以降を使って下さい。これらより前のバージョンや XEmacs は、サ
+Emacs 26.1 以降を使って下さい。これらより前のバージョンや XEmacs は、サ
 ポートしていません。
 @end ifset
 @ifset en
-Please use Emacs 24.3 or later. Mew doesn't support earlier versions
+Please use Emacs 26.1 or later. Mew doesn't support earlier versions
 nor XEmacs.
 @end ifset
 
@@ -11045,13 +11045,13 @@ feature, install the "netpbm" package and the "compface" package.
 @end ifset
 
 @ifset ja
-色を変更するには、Mew のソースと一緒に配布されている "dot.theme" を
+色を変更するには、Mew のソースと一緒に配布されている "conf/dot.theme" を
 適当な名前でコピーし内容を変更します。ここでは、そのファイル名を
 "~/.mew-theme.el" としましょう。まず、この名前を ".mew.el" で
 @samp{mew-theme-file} に指定して下さい。
 @end ifset
 @ifset en
-To modify colors, copy "dot.theme" contained Mew's source file to
+To modify colors, copy "conf/dot.theme" contained Mew's source file to
 an appropriate place, say "~/.mew-theme.el". First, set
 @samp{mew-theme-file} to this file name in ".mew.el" as follows:
 @end ifset
@@ -11103,10 +11103,10 @@ configuration as follows:
 @end lisp
 
 @ifset ja
-シンボルに何があるのかは、"dot.mew" を見て下さい。
+シンボルに何があるのかは、"conf/dot.mew" を見て下さい。
 @end ifset
 @ifset en
-To know what kind of symbols are prepared, see the "dot.mew".
+To know what kind of symbols are prepared, see the "conf/dot.mew".
 @end ifset
 
 @ifset ja
