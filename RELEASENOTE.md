@@ -379,9 +379,11 @@ auto-key-locate local
   would be nice if latin-2-postfix is selected for input-method. To
   implement this, put the following to your .emacs.
 
-	(setq mew-charset-input-method-alist
-	      '(("iso-8859-1" . "latin-1-postfix")
-		("iso-8859-2" . "latin-2-postfix")))
+```elisp
+(setq mew-charset-input-method-alist
+      '(("iso-8859-1" . "latin-1-postfix")
+	("iso-8859-2" . "latin-2-postfix")))
+```
 
 * "y" in Summary mode is now able to save the raw format of message
   (i.e. header fields are not decoded). You can safely forward saved 
@@ -409,8 +411,9 @@ auto-key-locate local
 
 * Imget's password and PGP passphrase can be cached. You can now survive
   without impwagent.
-  Set mew-use-cached-passwd t.
-  Set mew-use-pgp-cached-passphrase to t.
+
+    - Set mew-use-cached-passwd t.
+    - Set mew-use-pgp-cached-passphrase to t.
 
 * C-c{C-s,C-p,C-b,C-r} can work even if draft contains attachments.
 
@@ -434,7 +437,10 @@ auto-key-locate local
 
 * You can display text/html by a running netscape.
   Put the following in .emacs.
-	(setq mew-prog-text/html-arg-hack 'mew-prog-text/html-netscape-remote)
+
+```elisp
+(setq mew-prog-text/html-arg-hack 'mew-prog-text/html-netscape-remote)
+```
 
 * Range is asked only when you interactively execute "s".
 
@@ -500,9 +506,9 @@ auto-key-locate local
 * Some key-bindings in Draft mode were changed to keep C-c "key" for
   users.
 
-	C-cM  -> C-cC-a
-	C-cu  -> C-cC-l
-	C-cy  -> C-cC-t
+  - C-cM  -> C-cC-a
+  - C-cu  -> C-cC-l
+  - C-cy  -> C-cC-t
 
 * C-cC-u(undo) in Draft mode works for any kinds of messages. For this
   reason, mew-mime-compose-folder-delete is set 'delete by default.
@@ -516,13 +522,15 @@ auto-key-locate local
 
 * Refile scheme was changed much.
 
-	mew-auto-folder-alist             -> mew-refile-guess-alist
-	mew-refile-folder-guess-functions -> mew-refile-guess-control
+    - mew-auto-folder-alist             -> mew-refile-guess-alist
+    - mew-refile-folder-guess-functions -> mew-refile-guess-control
 
 * Pick interface(for "?", "/", and "V") was changed. Examples are below:
 
-	to=mew-dist
-	to=kazu & cc=kazu
+```
+to=mew-dist
+to=kazu & cc=kazu
+```
 
 * Burst("B") on Summary mode is now really cool.
 
@@ -535,14 +543,14 @@ auto-key-locate local
 
 * Some function names were changed.
 
-	mew-mark-process-all-folders -> mew-mark-clean-up-all
-	(Remove kill-emacs-hook from .emacs if it contains
-	mew-mark-process-all-folders.)
+    - mew-mark-process-all-folders -> mew-mark-clean-up-all
+    - (Remove kill-emacs-hook from .emacs if it contains
+    - mew-mark-process-all-folders.)
 
 * Some variables were changed.
 
-	Each members of mew-folders-ignore must start with "+" or "=".
-	Value of mew-folders-default-folder must start with "+" or "=".
+    - Each members of mew-folders-ignore must start with "+" or "=".
+    - Value of mew-folders-default-folder must start with "+" or "=".
 
 * Support RFC 2047(aka MIME header encoding/decoding) precisely.
 
