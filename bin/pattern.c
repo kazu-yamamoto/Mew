@@ -1,7 +1,7 @@
 /*
  * pattern.c
  *
- * Author:  Kazu Yamamoto <Kazu@Mew.org>
+ * Author:  Mew developing team
  * Created: Oct 17, 2000
  *
  * Code:

@@ -1,6 +1,6 @@
 ;;; mew-demo.el --- Startup demo for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Oct  2, 1996
 
 ;;; Code:
@@ -20,9 +20,7 @@ Mew -- Messaging in the Emacs World
 
 %s
 
-Copyright (C) 1994-2018 Kazu Yamamoto
-
-Please send comments to Kazu@Mew.org.
+Copyright (C) 1994-2023 Mew developing team
 
 "
 )
@@ -114,7 +112,7 @@ Please send comments to Kazu@Mew.org.
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2015 Mew developing team.
+;; Copyright (C) 1996-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

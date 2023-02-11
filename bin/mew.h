@@ -1,7 +1,7 @@
 /*
  * mew.h
  *
- * Author:  Kazu Yamamoto <Kazu@Mew.org>
+ * Author:  Mew developing team
  * Created: Jul  7, 2000
  * Revised: Jul 10, 2001
  *

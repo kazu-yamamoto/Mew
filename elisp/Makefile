@@ -1,7 +1,7 @@
 ##
 ### Makefile.in for byte-compile
 ###
-### Author:  Kazu Yamamoto <Kazu@Mew.org>
+### Author:  Mew developing team
 ### Created: Nov 18, 1994
 ### Revised: Feb 10, 2023
 

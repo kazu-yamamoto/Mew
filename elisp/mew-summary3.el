@@ -1,6 +1,6 @@
 ;;; mew-summary3.el --- Summary mode for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Oct  2, 1996
 
 ;;; Code:
@@ -461,7 +461,7 @@ attached."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2015 Mew developing team.
+;; Copyright (C) 1996-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

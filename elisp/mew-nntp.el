@@ -1,6 +1,6 @@
 ;;; mew-nntp.el for reading
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Feb  1, 1999
 
 ;;; Code:
@@ -713,7 +713,7 @@
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1999-2015 Mew developing team.
+;; Copyright (C) 1999-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

@@ -1,6 +1,6 @@
 ;;; mew-search.el --- Index Search
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Aug 24, 2005
 
 ;;; Code:
@@ -784,7 +784,7 @@ from scratch."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2005-2015 Mew developing team.
+;; Copyright (C) 2005-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

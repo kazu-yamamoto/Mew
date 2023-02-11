@@ -1,6 +1,6 @@
 ;;; mew-local.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Dec 12, 2001
 
 (eval-when-compile
@@ -398,7 +398,7 @@ Binary search is used for speed reasons."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2001-2015 Mew developing team.
+;; Copyright (C) 2001-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

@@ -1,6 +1,6 @@
 ;;; mew-env.el --- Environment setup for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Mar  6, 1997
 
 ;;; Code:
@@ -307,7 +307,7 @@ requires PTY.")
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2015 Mew developing team.
+;; Copyright (C) 1997-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

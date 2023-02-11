@@ -1,6 +1,6 @@
 ;;; mew-bq.el --- Base64 and Quoted-Printable encoding for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Aug 20, 1997
 
 ;;; Code:
@@ -1175,7 +1175,7 @@ That is, each line may be more than 75."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2015 Mew developing team.
+;; Copyright (C) 1997-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

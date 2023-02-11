@@ -1,6 +1,6 @@
 ;;; mew-lang-latin.el --- Latin specific stuff for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Dec 11, 2002
 
 ;;; Code:
@@ -57,7 +57,7 @@
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2002-2015 Mew developing team.
+;; Copyright (C) 2002-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

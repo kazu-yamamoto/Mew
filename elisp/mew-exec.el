@@ -1,6 +1,6 @@
 ;;; mew-exec.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Mar  2, 1997
 
 ;;; Code:
@@ -661,7 +661,7 @@ the queue, type '\\[mew-summary-send-message]' in the queue online."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2015 Mew developing team.
+;; Copyright (C) 1997-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

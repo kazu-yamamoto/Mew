@@ -1,6 +1,6 @@
 ;; mew-addrbook.el --- Aliases and personal information
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Mar 22, 1999
 
 ;;; Code:
@@ -543,7 +543,7 @@ reflected."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1999-2015 Mew developing team.
+;; Copyright (C) 1999-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

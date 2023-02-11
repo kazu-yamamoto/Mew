@@ -1,6 +1,6 @@
 ;;; mew-imap2.el for appending
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: May 22, 2003
 
 ;;; Code:
@@ -628,7 +628,7 @@ with '*' in the region are handled."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2003-2015 Mew developing team.
+;; Copyright (C) 2003-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

@@ -1,6 +1,6 @@
 ;;; mew.el --- Messaging in the Emacs World
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Mar 23, 1994
 ;; Revised: Feb 10, 2023
 
@@ -746,7 +746,7 @@ Mew remain, so you can resume with buffer operations."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1994-2015 Mew developing team.
+;; Copyright (C) 1994-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

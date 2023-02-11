@@ -1,6 +1,6 @@
 ;;; mew-vars2.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Feb  1, 1999
 
 ;;; Code:
@@ -984,7 +984,7 @@ An example is as follows:
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2000-2015 Mew developing team.
+;; Copyright (C) 2000-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

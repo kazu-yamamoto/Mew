@@ -1,7 +1,6 @@
 ;;; mew-sort.el --- Sorting messages for Mew
 
-;; Author:  Takashi P.KATOH <p-katoh@shiratori.riec.tohoku.ac.jp>
-;;          Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Feb  6, 1996
 
 ;;; Code:
@@ -496,7 +495,7 @@ local cache messages are packed."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1996-2015 Mew developing team.
+;; Copyright (C) 1996-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

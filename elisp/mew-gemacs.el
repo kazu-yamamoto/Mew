@@ -1,6 +1,6 @@
 ;;; mew-gemacs.el --- Environment of Graphical Emacs for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Jun 22, 2000
 
 ;;; Code:
@@ -437,7 +437,7 @@ with fitting to frame size"
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2015 Mew developing team.
+;; Copyright (C) 1997-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

@@ -10,7 +10,7 @@ Mew now supports Emacs 26.1 or later only.
 
 * Type `make`.
 
-  * Mew's info is formatted by Emacs 28.x. So, the info could not be
+  * Mew's info is formatted by Emacs 26.3. So, the info could not be
      visible with other Emacsen. In this case, type `make info` to format
      the info.
 

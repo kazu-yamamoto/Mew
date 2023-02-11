@@ -10,17 +10,17 @@
 
 @ifset ja
 @c Mew の texinfo
-@c Copyright (C) 1996-2023 山本和彦
+@c Copyright (C) 1996-2023 Mew developing team.
 @c M-x texinfo-format-buffer で info にしてね。
 @end ifset
 @ifset en
 @c Texinfo for Mew
-@c Copyright (C) 1996-2023 Kazuhiko Yamamoto
+@c Copyright (C) 1996-2023 Mew developing team.
 @c Try "M-x texinfo-format-buffer" or makeinfo to get the Info.
 @end ifset
 
 @set version 6.9
-@set modified 2023/02/10
+@set modified 2023/02/11
 @set X-Mailer Mew version 6.9 on Emacs 28.2
 
 @titlepage
@@ -28,10 +28,10 @@
 @center
 @title Mew
 @ifset ja
-@author Copyright @copyright{}1996-2018 山本和彦
+@author Copyright @copyright{}1996-2023 Mew developing team.
 @end ifset
 @ifset en
-@author Copyright @copyright{}1996-2018 Kazuhiko Yamamoto
+@author Copyright @copyright{}1996-2023 Mew developing team.
 @end ifset
 @end titlepage
 
@@ -201,52 +201,40 @@ The features of Mew @value{version} are as follows:
 @item
 複雑な構造を持つメッセージを簡単に表示できます。メッセージを表示する作
 業は、@samp{SPC} を押すだけです。
-
 @item
 コピー程度のファイルの操作を知っている人ならだれでも簡単に複雑なメッセー
 ジを作成できます。
-
 @item
 メッセージの一覧表示が終了するまで待たなくても、メッセージを読み始めら
 れます。
-
 @item
 Summary モードのメッセージの一覧を保存しているので、フォルダを移動した
 場合は、更新された部分だけを一覧表示します。
-
 @item
 メッセージの整頓先を賢く推測します。たくさんメッセージを受け取る人は、
 これがないと生きていけません。
-
 @item
 Draft モードでは、フィールド名、メールアドレス、氏名、ドメイン名、フォ
 ルダ名を補完できます。
-
 @item
 キーワードなどによって、探したいメッセージを簡単に検索できます。
-
 @item
 PGP や S/MIME で暗号化されたメッセージを自動的に復号化します。また、電
 子署名を自動的に検証します。
-
 @item
 MIME の構造を解析したり、PGP や S/MIME の署名を検証したりするのには少し
 時間がかかります。そこで、ユーザがあるメッセージを読んでいる間に、次の
 メッセージをあらかじめ処理しておくことで高速性を実現しています。解析さ
 れたメッセージは、しばらくの間保存されます。
-
 @item
 PGP や S/MIME を使って、メッセージを簡単に暗号化したり、署名したりでき
 ます。
-
 @item
 複数のフォルダを 1 つのフォルダに見せかけられます。
-
 @item
 メッセージのやり取りの流れを可視化するセレクションやスレッドの機能を備
 えています。特定のキーワードに合致したメッセージでセレクションを作り、
 さらにそのスレッドを作成できます。
-
 @item
 フォルダ名を入力する場合、フォルダ名の一部をキーとして検索できます。
 @end ifset
@@ -254,51 +242,39 @@ PGP や S/MIME を使って、メッセージを簡単に暗号化したり、�
 @item
 You can easily display a very complicated structured message. What you
 should do to view messages is just type @samp{SPC}.
-
 @item
 If you know how to do file operations such as copy, you can compose a
 very complicated message without any difficulty.
-
 @item
 You can start to read messages before they are all fully listed.
-
 @item
 Since Mew preserves lists of messages in Summary mode, when you move
 messages to a new folder, they will automatically be listed
 incrementally.
-
 @item
 Mew neatly suggests default folders for refiling. Those who receive
 many messages cannot live without this feature.
-
 @item
 In Draft mode, you can complete field names, e-mail addresses,
 receiver's names, domain names, and folder names.
-
 @item
 You can easily search messages with keywords etc.
-
 @item
 Mew automatically decodes messages encrypted with PGP or S/MIME. It
 also automatically verifies signed messages.
-
 @item
 You can easily encrypt or sign a message with PGP or S/MIME.
-
 @item
 It takes a bit of time to analyze MIME syntax or to verify a PGP or
 S/MIME signature. While the user is reading a message, Mew processes
 the next message so that the next message can be displayed
 faster. Analyzed messages are cached briefly.
-
 @item
 You can view multiple folders simultaneously.
-
 @item
 Selection/Thread, a mechanism to display the flow of messages, is
 supported. You can make Selection from messages matched to a keyword
 and make Thread from the Selection.
-
 @item
 When you input a folder name, you can search it with a substring of
 the name.
@@ -316,11 +292,11 @@ the name.
 @end ifset
 
 @ifset ja
-Emacs 24.3 以降を使って下さい。これらより前のバージョンや XEmacs は、サ
+Emacs 26.1 以降を使って下さい。これらより前のバージョンや XEmacs は、サ
 ポートしていません。
 @end ifset
 @ifset en
-Please use Emacs 24.3 or later. Mew doesn't support earlier versions
+Please use Emacs 26.1 or later. Mew doesn't support earlier versions
 nor XEmacs.
 @end ifset
 
@@ -345,48 +321,36 @@ Mew has the following seven modes:
 @ifset ja
 @item Summary モード
 メッセージの一覧を表示し選択するモード。
-
 @item Virtual モード
 単数あるいは複数のフォルダからある条件に合致したメッセージを取り出し、
 仮想的に 1 つのフォルダにしたモード。Summary モードに似ている。
 セレクションやスレッドと呼ばれる。
-
 @item Message モード
 メッセージの内容を表示するモード。
-
 @item Draft モード
 メッセージの送信、返答、転送を準備するためのモード。
-
 @item Header モード 
 既存のメッセージのヘッダのみを編集し送信するためのモード。
-
 @item Edit モード
 既存のメッセージを編集し、新しいメッセージを作成するためのモード。
-
 @item Addrbook モード
 アドレス帳にエントリを登録するためのモード。
 @end ifset
 @ifset en
 @item Summary mode
 A mode to list and select messages.
-
 @item Virtual mode
 A mode to list messages selected with a specific condition from one or
 more folders. This is similar to Summary mode. This mode is
 categorized to Selection or Thread.
-
 @item Message mode
 A mode to display the content of a message.
-
 @item Draft mode
 A mode to prepare a message to be sent, answered, and forwarded.
-
 @item Header mode
 A mode to edit the header of a message and to send it.
-
 @item Edit mode
 A mode to edit a message to generate another new message.
-
 @item Addrbook mode
 A mode to register an entry to the address book (Addrbook).
 @end ifset
@@ -460,14 +424,11 @@ as follows:
 ローカルのメールボックスや POP サーバに届いたメッセージを、ローカルに移
 動させて最初に保存するためのローカル・フォルダ。メッセージを整理する場
 合は、"+inbox" から他のローカル・フォルダに移動させることになる。
-
 @item +draft
 書きかけのメッセージを保存しておくローカル・フォルダ。
-
 @item +queue
 書き終ってメールの配送に適した書式に変換されたメッセージが溜るローカル・
 フォルダ。"+queue" のメッセージは、いずれ SMTP によって送信さる。
-
 @item +postq
 書き終ってニュースに投稿するのに適した書式に変換されたメッセージが溜る
 ローカル・フォルダ。"+postq" のメッセージは、いずれ NNTP によって送信さ
@@ -478,15 +439,12 @@ as follows:
 The first local folder to store messages which you fetch from your
 local mailbox or your POP server. To refile messages, what you do is
 to move the messages from "+inbox" to other folders.
-
 @item +draft
 A local folder where messages, which you have not completed yet, are
 stored.
-
 @item +queue
 A local folder where e-mail messages to be sent are stored. The
 messages in "+queue" will be eventually sent by SMTP.
-
 @item +postq
 A local folder where NetNews message to be sent are stored. The
 messages in "+postq" will be eventually sent by NNTP.
@@ -514,23 +472,19 @@ Here are a list of available proto of remote folders:
 @ifset ja
 @item %
 IMAP のフォルダ。例："%inbox"
-
 @item $
 POP サーバのサーバ側のフォルダ。例："$inbox" (POP サーバのフォルダは 1
 つしかないので、"$" で始まるリモート・フォルダは "$inbox" のみ。)
-
 @item -
 ニュースのニュースグループ。例："-fj.mail.reader.mew"
 @end ifset
 @ifset en
 @item %
 Folders on an IMAP servers. Example: "%inbox"
-
 @item $
 The folder on a POP server. Example: "$inbox" (Since there is only one
 folder in a POP server, "$inbox" is the only folder whose name starts
 with "$".)
-
 @item -
 Newsgroups of NetNews. Example: "-fj.mail.reader.mew"
 @end ifset
@@ -789,7 +743,6 @@ To read and/or write articles of NetNews, the followings are necessary.
 @itemize @minus
 @item
 Emacs が目の前のコンピュータで動いている
-
 @item
 Emacs が遠隔のコンピュータで動いているが、なんらかの暗号手段を使って通信
 している。
@@ -806,7 +759,6 @@ carefully to see if either the following conditions is satisfied:
 @itemize @minus
 @item
 Emacs is running on a local computer
-
 @item
 Emacs is running on a remote computer, but an encryption mechanism is
 being used for communication.
@@ -829,7 +781,6 @@ one of two password-cache mechanisms.
 @ifset ja
 @item
 パスワードをメモリに一時的に蓄える。ファイルには書き出さない。
-
 @item
 パスワードをメモリに Mew が起動している間中蓄える。Mew/Emacs の終了時に、
 パスワードを暗号化しファイルに書き出す。
@@ -837,7 +788,6 @@ one of two password-cache mechanisms.
 @ifset en
 @item
 Storing passwords in memory temporarily. Not writing them to a file.
-
 @item
 Storing passwords in memory while Mew is running. When Mew/Emacs
 quits, Mew encrypts the passwords and writes them to a file.
@@ -993,10 +943,8 @@ Mew が起動していなければ、まず Mew を起動する。そして、�
 
 @samp{mew-auto-get} が @samp{nil} なら、修飾子によって決定したデフォルト
 のフォルダへ単に移動する。
-
 @item C-uM-x mew
 @samp{mew-auto-get} の値を逆だと考えて、@samp{M-x mew} を実行する。
-
 @item C-xm
 @samp{mail-user-agent} が設定されている場合、Draft モードへ移行する。
 @end ifset
@@ -1018,13 +966,10 @@ and listed up in Summary mode.
 
 @samp{mew-auto-get} is @samp{nil}, just visit to the folder determined by
 @samp{proto}.
-
 @item C-uM-x mew
 Perform @samp{M-x mew} with @samp{mew-auto-get} reversed.
-
 @item M-x mew-send
 Enter Draft mode for message composing.
-
 @item C-xm
 Enter Draft mode for message composing if @samp{mail-user-agent} is
 configured.
@@ -1179,20 +1124,14 @@ processing are listed as follows:
 メッセージを読み進める。つまり、メッセージを表示し、スクロールさせ、他の
 メッセージに移動して表示する。カーソルが移動する方向は、
 @xref{summary-mode} を参照のこと。
-
 @item C-uSPC
 メッセージを先頭から再表示。
-
 @item DEL
 現在のメッセージを下にスクロールさせる。不必要なヘッダフィールドは、ウイ
 ンドウの上に隠れている。よって、@samp{DEL} を入力すると、それらが現れる。
-
 @item RET
 現在のメッセージを 1 行上にスクロールする。
-
 @item M-RET
-現在のメッセージを 1 行下にスクロールする。
-
 @item -
 現在のメッセージを 1 行下にスクロールする。
 @end ifset
@@ -1201,20 +1140,14 @@ processing are listed as follows:
 Read through messages. That is, display a message, scroll it, and
 move-then-display another message. refer to @ref{summary-mode} to know
 which direction the cursor moves.
-
 @item C-uSPC
 Redisplay the message from its header.
-
 @item DEL
 Back-scroll this message. Unnecessary header fields are hidden over the
 window. Type @samp{DEL} to see them when a message is displayed.
-
 @item RET
 Make this message scroll up one line.
-
 @item M-RET
-Make this message scroll down one line.
-
 @item -
 Make this message scroll down one line.
 @end ifset
@@ -1224,58 +1157,44 @@ Make this message scroll down one line.
 @ifset ja
 @item C-n
 下の行へ移動。
-
 @item C-p
 上の行へ移動。
-
 @item n
 下方向に移動し表示。対象となるのは、パート、@samp{*} マークの付いたメッ
 セージ、マークの付いていないメッセージ。
-
 @item C-un
 下方向に移動し表示。対象となるのは、@samp{*} マークの付いたメッセージ、
 マークの付いていないメッセージ。
-
 @item p
 上方向に移動し表示。対象となるのは、パート、@samp{*} マークの付いたメッ
 セージ、マークの付いていないメッセージ。
-
 @item C-up
 上方向に移動し表示。対象となるのは、@samp{*} マークの付いたメッセージ、
 マークの付いていないメッセージ。
-
 @item j
 入力された行番号に従ってその行へ移動。
-
 @item C-uj
 入力されたメッセージの番号に従ってその行へ移動。
 @end ifset
 @ifset en
 @item C-n
 Go to the next line.
-
 @item C-p
 Go to the previous line.
-
 @item n
 Move down then display. Targets include parts, messages marked with
 @samp{*}, and non-marked messages.
-
 @item C-un
 Move down then display. Targets include messages marked with @samp{*},
 and non-marked messages.
-
 @item p
 Move up then display. Targets include parts, messages marked with
 @samp{*}, and non-marked messages.
-
 @item C-up
 Move up then display. Targets include messages marked with @samp{*}, and
 non-marked messages.
-
 @item j
 Jump to a line according to the line number which you input.
-
 @item C-uj
 Jump to a message according to the message number which you input.
 @end ifset
@@ -1366,16 +1285,12 @@ mode but the first part is displayed with its header in Message mode.
 @itemize @minus
 @item
 マーク (Content-Transfer-Encoding:)
-
 @item
 パート番号
-
 @item
 データ型 (Content-Type:)
-
 @item
 説明 (Content-Description:)
-
 @item
 ファイル名 (Content-Disposition:)
 @end itemize
@@ -1389,16 +1304,12 @@ Each line of multipart consists of
 @itemize @minus
 @item
 marks (Content-Transfer-Encoding:)
-
 @item
 part number
-
 @item
 data type (Content-Type:)
-
 @item
 description (Content-Description:)
-
 @item
 file name (Content-Disposition:).
 @end itemize
@@ -1535,34 +1446,28 @@ There are several variables for controlling message analysis.
 解析するメッセージの大きさの上限。メッセージの大きさがこの値以下なら、解
 析し表示する。越えているなら、解析せずに生のまま表示する。初期値は 
 100000 バイト。
-
 @item mew-header-max-length
 解析するメッセージのヘッダ長の上限。ヘッダの行数がこの値以下なら、メッセー
 ジを解析して表示する。越えているなら、解析を途中で止めてメッセージを壊れ
 た形で表示する。初期値は 100 行。
-
 @item mew-decode-broken
 規格違反のメッセージを解析する際に、寛容になるか否か。@samp{t} なら寛容
 に、@samp{nil} なら厳密に解析する。寛容に解析する際に規格違反があった場
 合は、X-Mew: フィールドに表示する。初期値は @samp{t}。
-
 @item mew-use-text-body
 本文のテキストをヘッダと同時に表示するか否か。@samp{t} なら、本文がシン
 グルのテキスト、および、本文がマルチパートで最初のパートがテキストの場合、
 そのテキストをヘッダと同時に表示する。@samp{nil} の場合は、マルチパート内
 のパートのように表示する。初期値は @samp{t}。
-
 @item mew-use-alternative
 Multipart/Alternative の取り扱い。Multipart/Alternative であるメッセー
 ジには@samp{-} マークが付いている。@samp{t} なら、
 @samp{mew-mime-multipart-alternative-list} の優先順位に従って、1 つのパー
 トを表示する。@samp{nil} なら、通常のマルチパートとして表示する。初期値
 は @samp{t}。
-
 @item mew-use-text/html
 Text/Html の取扱い。@samp{nil} の場合は HTML を解析せずに表示。それ以外
 なら HTML を解析して表示。初期値は @samp{nil}。
-
 @item mew-use-text/xml
 Text/Xml の取扱い。@samp{nil} の場合は XML を解析せずに表示。それ以外
 なら XML を解析して表示。初期値は @samp{nil}。
@@ -1573,27 +1478,23 @@ The size limit of messages to be analyzed. If the size of a message is
 less than or equal to this value, it is analyzed and displayed.
 Otherwise, the raw message is displayed without analysis. The default
 value is 10000 bytes.
-
 @item mew-header-max-length
 The length limit of header to be analyzed. If the length of a header is
 less than or equal to this value, it is analyzed and displayed.
 Otherwise, the message is displayed as fragmentarily since the analysis
 is stopped. The default value is 100 lines.
-
 @item mew-decode-broken
 Whether Mew be liberal or conservative to invalid messages. If the value
 is @samp{t}, the setting is liberal. If the value is @samp{nil}, the
 setting is for conservative. If conservative and invalid portions are
 found, they are reported in the X-Mew: field. The default value is
 @samp{t}.
-
 @item mew-use-text-body
 Whether or not the text part of a body is displayed with its header. If
 the value is @samp{t}, both the body which is a single part text and the
 first text part in a multipart body are displayed with its header. If
 the value is @samp{nil}, they are displayed as a single part in a
 multipart. The default value is @samp{t}.
-
 @item mew-use-alternative
 How to treat Multipart/Alternative. Messages containing
 Multipart/Alternative are marked with @samp{-}. If the value is
@@ -1601,12 +1502,10 @@ Multipart/Alternative are marked with @samp{-}. If the value is
 @samp{mew-mime-multipart-alternative-list}. If the value is
 @samp{nil}, it is displayed as a multipart. The default value is
 @samp{t}.
-
 @item mew-use-text/html
 How to treat Text/Html. If @samp{nil}, HTML is displayed as is
 (without parsing). Otherwise, HTML is parsed and displayed. The
 default value is @samp{nil}.
-
 @item mew-use-text/xml
 How to treat Text/Xml. If @samp{nil}, XML is displayed as is
 (without parsing). Otherwise, XML is parsed and displayed. The
@@ -1709,50 +1608,38 @@ In addition to @samp{.}, the following commands are prepared:
 @ifset ja
 @item .
 メッセージを解析し、再表示する。
-
 @item C-u.
 @samp{mew-decode-broken} を逆にしてメッセージを解析し直す。
 @xref{invalid} を参照のこと。
-
 @item :
 @samp{mew-use-alternative} と @samp{mew-use-text-body} を反転させた
 @samp{.}.
-
 @item C-u:
 @samp{mew-use-alternative} と @samp{mew-use-text-body} を反転させた
 @samp{C-u.}.
-
 @item ,
 現在のメッセージやパートを生の書式で Message モードに表示する。
-
 @item C-cTAB
 メッセージ全体をファイルとして read only で開く。
-
 @item C-uC-cTAB
 メッセージ全体をファイルとして開く。
 @end ifset
 @ifset en
 @item .
 Analyze the message and re-display it.
-
 @item C-u. 
 Analyze the message with @samp{mew-decode-broken} reversed (see
 @ref{invalid}).
-
 @item :
 The same as @samp{.} with @samp{mew-use-alternative} and
 @samp{mew-use-text-body} reversed.
-
 @item C-u:
 The same as @samp{C-u.} with @samp{mew-use-alternative} and
 @samp{mew-use-text-body} reversed.
-
 @item ,
 Insert a message or a part into Message mode in raw format.
-
 @item C-cTAB
 Open an entire message as a file in read-only mode.
-
 @item C-uC-cTAB
 Open an entire message as a file.
 @end ifset
@@ -2071,10 +1958,8 @@ the messages, use @samp{i}. The mailbox is determined according to
 @item 'mbox
 ローカルのメールボックス。デフォルトでは "incm" という外部コマンドを使い、
 メッセージを取得する。設定方法は、@xref{configuration} を参照のこと。
-
 @item 'pop
 POP サーバ。POP を POP らしく使う方法。(初期値)
-
 @item 'imap
 IMAP サーバ。IMAP らしくない利用方法なので、推奨されていない。
 @end ifset
@@ -2082,10 +1967,8 @@ IMAP サーバ。IMAP らしくない利用方法なので、推奨されてい�
 @item 'mbox
 A local mailbox. "incm" is used to copy messages for the local mailbox
 by default. To know how to configure it, see @ref{configuration}.
-
 @item 'pop
 A POP server. To use POP as it is. (This is a default value.)
-
 @item 'imap
 An IMAP server. This is not recommended.
 @end ifset
@@ -2125,12 +2008,10 @@ important ranges for Mew.
 @item update
 「Summary モードの最後のメッセージの次」から「フォルダ内の最後のメッセー
 ジ」まで。つまり、Summary モードと実際のフォルダ内のメッセージの差分。
-
 @item all
 フォルダ内のメッセージすべて。ローカル・フォルダでは、Summary モードの表
 示がおかしくなったときに、内容を一新するために用いる。リモート・フォルダ
 では、すべてのメッセージの再取得。
-
 @item sync
 あるリモート・フォルダに対し、サーバ側では消えたメッセージのキャッシュを
 削除する。リモート・フォルダに対してのみ有効。
@@ -2140,12 +2021,10 @@ important ranges for Mew.
 From "the last message in the Summary mode + 1" to "the last message in
 the corresponding folder". That is, the gap between the Summary mode and
 the existing folder
-
 @item all
 All messages in the folder. When Summary mode in a local folder becomes
 inconsistent, use this range to flush the list. For a remote folder,
 this range results in retrieval of all messages again.
-
 @item sync
 Deleting cache messages whose originals were removed in the server side.
 Valid for remote folders only.
@@ -2178,26 +2057,20 @@ following ranges:
 @ifset ja
 @item <num1>-<num2>
 <num1> から <num2> まで。ローカル・フォルダに対してのみ有効。
-
 @item <num1>-
 <num1> から最後まで。ローカル・フォルダに対してのみ有効。
-
 @item -<num2>
 最初から <num2> まで。ローカル・フォルダに対してのみ有効。
-
 @item last:<num>
 最後の <num> 個。
 @end ifset
 @ifset en
 @item <num1>-<num2>
 From <num1> to <num2>. Valid for local folders only.
-
 @item <num1>-
 From <num1> to the last. Valid for local folders only.
-
 @item -<num2>
 From the first to <num2>. Valid for local folders only.
-
 @item last:<num>
 Last <num> messages.
 @end ifset
@@ -2255,10 +2128,8 @@ Here is a summary of the commands concerned with message retrieval:
 +queue にあるメッセージを送信する。詳しくは、@xref{send} を参照のこと。
 リモート・フォルダでは、そのデフォルトのフォルダに移動し、@samp{s} +
 @samp{update} を実行する。
-
 @item C-ui
 @samp{mew-auto-flush-queue} の値を逆だと思って、@samp{i} を実行する。
-
 @item I
 @samp{T} マークの付いている一部だけが取得されたメッセージの全体を取得す
 る。
@@ -2272,14 +2143,11 @@ Here is a summary of the commands concerned with message retrieval:
 @item C-uI
 @samp{mew-pop-delete} または @samp{mew-imap-delete} を逆転させて @samp{I} 
 を実行する。
-
 @item s
 フォルダの一覧を取る。
-
 @item C-us
 リモート・フォルダにおいて、「ヘッダのみのコピー」と「ヘッダと本文の両方
 のコピー」を反転させて、一覧を取る。
-
 @item lc
 リモート・フォルダのメッセージをローカル・フォルダへコピーする。
 @end ifset
@@ -2292,7 +2160,6 @@ information. In a remote folder, visit to its inbox folder and execute
 @samp{s} + @samp{update}.
 @item C-ui
 Perform @samp{i} with @samp{mew-auto-flush-queue} reversed.
-
 @item I
 Retrieve the rest of a truncated(@samp{T}) message. 
 
@@ -2304,18 +2171,14 @@ message from the mailbox.
 If you use this command in a remote folder, a "case" and protocol is
 determined by the folder. The message in the server side is always
 retained.
-
 @item C-uI
 Perform @samp{I} with @samp{mew-pop-delete} or @samp{mew-imap-delete}
 reversed.
-
 @item s
 List up messages in Summary mode or flush them.
-
 @item C-us
 On a remote folder, list up messages in Summary mode by toggling
 "copying a header only" and "copying both a header and a body".
-
 @item lc
 Copy a cached message in a remote folder to a local folder.
 @end ifset
@@ -2531,33 +2394,25 @@ messages.
 @item w
 メッセージを書く。新しい草稿が Draft モードに用意される。
 @xref{Composing} を参照のこと。
-
 @item C-uw
 メッセージを書く。新しい草稿が Draft モードに用意される。現在のメッセー
 ジの From: にあるアドレスが、草稿の To: へコピーされる。
-
 @item W
 あるメッセージのヘッダの一部だけを編集しメッセージを送信するために 
 Header モードに入る。@xref{resend} を参照のこと。
-
 @item a
 現在のメッセージに返答する。Draft モードに草稿が用意され、To: や Cc: が
 自動的に決定される。@xref{reply} を参照のこと。
-
 @item C-ua
 現在のメッセージに対し送信者宛に返答する。
-
 @item A
 現在のメッセージに返答する。Draft モードに草稿が用意され、To: や Cc: が
 自動的に決定された後、本文が引用される。@xref{reply} を参照のこと。
-
 @item C-uA
 現在のメッセージに対し、引用付きで送信者宛に返答する。
-
 @item f
 現在のメッセージを第 3 者に転送する。Draft モードに草稿が用意され、現在の
 メッセージが自動的に添付される。@xref{forward} を参照のこと。
-
 @item F
 @samp{*} マークの付いたメッセージを第 3 者に転送する。Draft モードに草稿
 が用意され、@samp{*} マークの付いたメッセージが自動的に添付される。詳し
@@ -2567,37 +2422,29 @@ Header モードに入る。@xref{resend} を参照のこと。
 @item w
 Write a message. A new draft is prepared in Draft mode. Please refer to
 @ref{Composing}.
-
 @item C-uw
 Write a message. A new draft is prepared in Draft mode. The From:
 address of the current message is copied to the To: field in the
 draft.
-
 @item W
 Send a message by modifying a part of the header of another message.
 Please refer to @ref{resend}.
-
 @item a
 Answer to this message. A new draft is prepared in Draft mode. Mew
 automatically inserts the content of the fields To: and Cc:. Please
 refer to @ref{reply}.
-
 @item C-ua
 Answer to this message only to the sender.
-
 @item A
 Answer to this message. A new draft is prepared in Draft mode. Mew
 automatically inserts the content of the fields To: and Cc: and cites
 the body. Please refer to @ref{reply}.
-
 @item C-uA
 Answer to this message only to the sender with citation.
-
 @item f
 Forward this message to a third person. A new draft is prepared in Draft
 mode and this message is automatically attached. Please refer to
 @ref{forward}.
-
 @item F
 Forward messages marked with @samp{*} to a third person. A new draft is
 prepared in Draft mode and this message is automatically attached. For
@@ -2623,10 +2470,8 @@ commands.
 @enumerate
 @item
 +draft では、メッセージが単に編集される。
-
 @item
 +queue と +postq では、メッセージが +draft に移動されて、編集される。
-
 @item
 それ以外では、メッセージが +draft にコピーされて、編集される。
 @end enumerate
@@ -2636,7 +2481,6 @@ commands.
 他のフォルダでは、@samp{mew-case-guess-when-prepared} が @samp{t} なら、
 ヘッダのそれぞれのフィールドがケースに従って置き換えられる。詳しくは
 @xref{config} を参照のこと。
-
 @item C-uE
 @samp{E} と同じ。ただし、+draft、+queue、+postq 以外のフォルダで利用され
 た場合は、@samp{mew-case-guess-when-prepared} が @samp{t} でも、オリジナ
@@ -2650,10 +2494,8 @@ typically included in a MIME-encapsulated error message.
 @enumerate
 @item
 In +draft, the message is just edited.
-
 @item
 In +queue or +postq, the message is moved to +draft and is edited.
-
 @item
 Otherwise, the message is copied to +draft and is edited. 
 @end enumerate
@@ -2663,7 +2505,6 @@ For +draft, +queue, and +postq, the "case" revives.
 For the other folders, if @samp{mew-case-guess-when-prepared} is
 @samp{t}, each field of the original header is replaced according to a
 guessed "case". For more information, see @ref{config}.
-
 @item C-uE
 The same as @samp{E}. But, when used for other folders than +draft,
 +queue, and +postq, the original header is retained even if
@@ -2717,81 +2558,57 @@ Mew provides you with the following useful commands in Summary mode:
 「Summary モードのみ」と「Summary & Message モード」の切り替え。
 「Summary モードのみ」を選んでいる場合は、@samp{d} は次のメッセージを表
 示しないので、連続してすばやく @samp{D} マークを付けられる。
-
 @item zv
 @samp{mew-use-header-veil} が @samp{nil} でないとき、To: と Cc: で
 @samp{mew-header-veil-count} を越える行は「ベール」で隠されている。この
 コマンドは、それらの行の見える／見えないを反転させる。
 @samp{mew-use-header-veil} と @samp{mew-header-veil-count} の初期値は、
 それぞれ @samp{t} と 4。
-
 @item _
 通常の行、折り返された行、長い行の順に行の表示を変える。
-
 @item M-l
 現在の行を Summary モードの中央に移動させる。
-
 @item C-cC-s
 Message モードで順方向段階的検索。
-
 @item C-cC-r
 Message モードで逆方向段階的検索。
-
 @item y
 メッセージ、あるいは、パートを入力したファイル名で保存する。
-
-
 @item b
 Message モードの内容そのものを入力したファイル名で保存する。
-
 @item C-uy
 保存するテキストの coding-system を指定して、メッセージ、あるいは、パー
 トを入力したファイル名で保存する。
-
 @item #
 @samp{mew-print-function} を利用して Message モードの内容を印刷する。
-
 @item C-u#
 プリンタ名を指定して Message モードの内容を印刷する。
-
 @item |
 Message モードの内容をパイプで指定されたコマンドに出力する。
-
 @item C-u|
 Message モードの本文(ヘッダを除く)をパイプで指定されたコマンドに出力する。
-
 @item \
 このメッセージを引数にして、入力された外部コマンドを起動する。
-
 @item B
 格納されているメッセージを取り出す。
-
 @item C-uB
 格納されているファイルを取り出す。
-
 @item C-cC-a
 現在のメッセージの情報をアドレス帳に登録する(@xref{addrbook})。
-
 @item C-cC-v
 PGP のバージョンを切替える(@xref{cipher-viewing})。
-
 @item C-cC-z
 昔ながらの自動処理できない PGP メッセージを PGP に復号化、検証させる(@xref{cipher-viewing})。
-
 @item C
 ケースを変更する。詳しくは、@xref{config} を参照のこと。
-
 @item =
 フォルダ名とメッセージ番号を表示する。キャッシュ・メッセージの場合は、
 加えて ID とサイズも表示する。メッセージへのフルパスが、ウインドウマネー
 ジャのカットバッファに入る。
-
 @item ;
 Received: フィールドを解析し、分りやすく Message モードに表示する。
-
 @item Rd
 フォルダを削除する。
-
 @item Rr
 フォルダの名前を変える。
 @end ifset
@@ -2800,87 +2617,64 @@ Received: フィールドを解析し、分りやすく Message モードに表�
 Toggle "Summary mode only" and "Summary & Message mode". If you choose
 "Summary mode only", you can quickly put the @samp{D} mark since the
 next message is not displayed.
-
 @item _
 Toggle normal lines, wrapped lines and long lines.
-
 @item zv
 If @samp{mew-use-header-veil} is non-nil, field lines of To: and Cc:
 over @samp{mew-header-veil-count} are covered with invisible
 veils. This commands toggles visibility of these lines.
 @samp{mew-use-header-veil} and @samp{mew-header-veil-count} are
 default to @samp{t} and 4, respectively.
-
 @item M-l
 Make the current line the center of the Summary mode.
-
 @item C-cC-s
 Incremental search forward in Message mode.
-
 @item C-cC-r
 Incremental search backward in Message mode.
-
 @item y
 Save this message or this part into the file whose name is specified by
 you.
-
 @item b
 Save the buffer of Message mode as is into the file whose name is
 specified by you.
-
 @item C-uy
 Save this message or this part into the file whose name is specified by
 you, specifying coding-system for text.
-
 @item #
 Print the content of Message mode according to @samp{mew-print-function}.
-
 @item C-u#
 Print the content of Message mode with a specified printer name.
-
 @item |
 Send the content of Message buffer to a command via pipe.
-
 @item C-u|
 Send the body of Message buffer (excluding its header) to a command via
 pipe.
-
 @item \
 Executing an external command specifying this message as an argument.
-
 @item B
 De-capsulate embedded messages in MIME format.
-
 @item C-uB
 Decompose embedded files in this message.
-
 @item C-cC-a
 Register the information on the current message to Addrbook
 (@pxref{addrbook}).
-
 @item C-cC-v
 Select PGP version (@xref{cipher-viewing}).
-
 @item C-cC-z
 Let PGP decrypt and/or verify old fashioned PGP messages
 (@pxref{cipher-viewing}).
-
 @item C
 Change the value of the "case". For more information, please refer to
 @ref{config}.
-
 @item =
 Display the folder name of this message and the message number. If this
 is a cache message, both the unique id and the size are also shown.
 The full path to the message is set to the cut buffer of your 
 window manager.
-
 @item ;
 Parse the Received: fields and display them in Message mode.
-
 @item Rd
 Delete this folder.
-
 @item Rr
 Rename this folder.
 @end ifset
@@ -2925,14 +2719,12 @@ any effects or some errors occur, use one of the following commands:
 @ifset ja
 @item Z
 アドレス帳(@xref{addrbook})などの情報を更新する。
-
 @item C-uZ
 現在の世界に対するフォルダのリストの情報を更新する。
 @end ifset
 @ifset en
 @item Z
 Update information including Addrbook (@pxref{addrbook}). 
-
 @item C-uZ
 Update information about folders of the current world.
 @end ifset
@@ -2949,24 +2741,18 @@ Here is a summary of toggle commands.
 @ifset ja
 @item z8
 8 ビット・モード(@samp{mew-use-8bit})を反転させる。
-
 @item zc
 解析したメッセージのキャッシュを消去する。
-
 @item zd
 @samp{mew-debug} を反転させる。
-
 @item zo
 PGP を省略方法で作成する場合、PGP/MIME なのか古い PGP の書式なのか
 (@samp{mew-use-old-pgp})を反転させる。
-
 @item zp
 解析、復号化のポリシ(@samp{mew-decode-broken})を反転させる。
-
 @item zv
 Message モードでベールを使うか否か(@samp{mew-use-header-veil})を反転さ
 せる。
-
 @item zw
 警告のレベル(@samp{mew-warning-field-level})が 2 なら 1 へ、1 なら 2 へ
 設定する。
@@ -2974,24 +2760,18 @@ Message モードでベールを使うか否か(@samp{mew-use-header-veil})を�
 @ifset en
 @item z8
 Toggle 8bit mode (i.e. @samp{mew-use-8bit}).
-
 @item zc
 Clean-up caches of analyzed messages.
-
 @item zd
 Toggle @samp{mew-debug}.
-
 @item zo
 Toggle PGP/MIME or old-fashioned PGP (@samp{mew-use-old-pgp}) when
 composing with shortcut methods.
-
 @item zp
 Toggle decode policy (i.e. @samp{mew-decode-broken}).
-
 @item zv
 Toggle whether or not veil is used in Message
 mode(@samp{mew-use-header-veil}).
-
 @item zw
 Toggle warning level. If @samp{mew-warning-field-level} is 2, set it to
 1. If @samp{mew-warning-field-level} is 1, set it to 2.
@@ -3182,20 +2962,16 @@ Methods to enter Draft mode to write a new message are given below.
 @ifset ja
 @item
 @samp{M-x mew-send} と入力する。
-
 @item
 @samp{mail-user-agent} が設定されている場合、@samp{C-xm} と入力する。
-
 @item
 Summary モードで @samp{w} を押す。
 @end ifset
 @ifset en
 @item
 Type @samp{M-x mew-send}.
-
 @item
 Type @samp{C-xm} if @samp{mail-user-agent} is configured.
-
 @item
 Press @samp{w} in Summary mode.
 @end ifset
@@ -3324,20 +3100,15 @@ In the header, completions for each field are assigned to @samp{TAB} as
 follows:
 @end ifset
 
-
 @itemize @minus
 @ifset ja
 @item フィールド名の補完
-
 @item アドレスの補完 (To:、Cc: など) (@xref{addr-comp} を参照)
-
 @item フォルダ名の補完 (Fcc:)
 @end ifset
 @ifset en
 @item Field completion
-
 @item Address completion (To:, Cc:, etc) (see @ref{addr-comp})
-
 @item Folder completion (Fcc:)
 @end ifset
 @end itemize
@@ -3458,16 +3229,13 @@ top of the list. Circular completions in a header are different for each
 field as follows:
 @end ifset
 
-
 @itemize @minus
 @ifset ja
 @item ドメイン名の循環的な補完 (To:、Cc: など)
-
 @item From: の循環的な補完 (From:)
 @end ifset
 @ifset en
 @item Circular completion of domain name (To:, Cc:, etc)
-
 @item Circular completion of From: (From:)
 @end ifset
 @end itemize
@@ -3653,20 +3421,16 @@ the completion.
 @ifset ja
 @item
 アドレス帳の展開規則
-
 @item
 アドレス帳の個人情報
-
 @item
 送信時に学習されたアドレス
 @end ifset
 @ifset en
 @item
 The expansion rule in an address book
-
 @item
 The personal information in the address book
-
 @item
 Learned addresses when sending
 @end ifset
@@ -4438,7 +4202,6 @@ choose one of the following two commands.
 @ifset ja
 @item C-cC-m
 メッセージを作成し +queue または +postq に入れ、送信待ち状態にする。
-
 @item C-cC-c
 メッセージを作成し送信する。"Really send this message? (y or n) " と訊か
 れる。@samp{y} を押せば、送信される。
@@ -4447,7 +4210,6 @@ choose one of the following two commands.
 @item C-cC-m
 Compose a message, put it into +queue or +postq, and leave it for later
 sending.
-
 @item C-cC-c
 Compose a message and send it. You receive the prompt: "Really send this
 message? (y or n) ". Type @samp{y} to send it.
@@ -4605,7 +4367,6 @@ both of these are commands in Summary mode.
 に、+queue にあるメッセージを送信する。ダイアルアップ環境において、接続
 料金を節約する意味でも、送信のための認証という意味でも、これはよい方法。
 @samp{mew-auto-flush-queue} の初期値は @samp{t}。
-
 @item C-cC-c
 +queue にあるメッセージを送信する。+queue に行って、できあがったメッセー
 ジを見た後に、このコマンドを使うと便利。@samp{mew-ask-flush-queue} が 
@@ -4619,7 +4380,6 @@ If @samp{mew-auto-flush-queue} is @samp{t}, the messages being held in
 This method is appropriate for dial-up environments, since one can save
 on connection fees and repeated authentication for sending.
 @samp{mew-auto-flush-queue} is default to @samp{t}.
-
 @item C-cC-c
 Send messages in +queue. Method is appropriate if you like to preview
 composed messages first in +queue and then send them. If
@@ -4707,14 +4467,11 @@ Message モードからメッセージの一部をコピーし、引用ラベル
 おおまかにいえば、Message モードの本文がコピーされる。たとえば、
 Text/Plain が表示されていると、Message モード全体がコピーされる。
 Message/Rfc822 が表示されている場合は、ヘッダを除いた本文がコピーされる。
-
 @item
 @samp{C-uC-cC-y} では、ヘッダがあればヘッダをコピーする。
-
 @item
 Emacs のマークがあると、そのマークとカーソルの間が対象となる。
 @end enumerate
-
 @item C-cC-t
 Message モードからメッセージの一部をコピーし、引用ラベルと引用記号なしで
 貼り付ける。
@@ -4728,15 +4485,12 @@ prefix and label.
 Roughly speaking, it copies the body in Message mode. For example, if
 Text/Plain is displayed, the entire Message mode is copied. If
 Message/Rfc822 is displayed, the body without the header is copied.
-
 @item
 If you type @samp{C-uC-cC-y}, the header is also copied if exists.
-
 @item
 If an Emacs mark exists, the target is the region between the mark and
 the cursor.
 @end enumerate
-
 @item C-cC-t
 Copy and paste a part of the message from Message mode WITHOUT citation
 prefix and label.
@@ -4899,25 +4653,20 @@ This is the body.
 Here we designate three regions as follows:
 @end ifset
 
-
 @itemize @bullet
 @ifset ja
 @item
 "----" より上を 「ヘッダ」
-
 @item
 "----" から "attachments" までを「本文」
-
 @item
 "attachments" より下を「添付領域」
 @end ifset
 @ifset en
 @item
 the region above "----" @samp{header}
-
 @item
 the region from "----" to "attachments" @samp{body}
-
 @item
 the region below "attachments" @samp{attachments}
 @end ifset
@@ -4941,20 +4690,16 @@ To @samp{TAB}, for instance, the following functions are assigned:
 @ifset ja
 @item ヘッダ
 さまざまな補完。
-
 @item 本文
 TAB の挿入。
-
 @item 添付領域
 なにもしない。
 @end ifset
 @ifset en
 @item header
 Completions.
-
 @item body
 Insert TAB.
-
 @item attachments
 Do nothing.
 @end ifset
@@ -4971,20 +4716,16 @@ To @samp{c}, functions are assigned as follows:
 @ifset ja
 @item ヘッダ
 c を挿入。
-
 @item 本文
 c を挿入。
-
 @item 添付領域
 ファイルのコピー。
 @end ifset
 @ifset en
 @item header
 Insert c.
-
 @item body
 Insert c.
-
 @item attachments
 Copy a file.
 @end ifset
@@ -5001,65 +4742,46 @@ The following is a summary of commands in the attachments region.
 @ifset ja
 @item C-p
 現在のディレクトリの前のファイルへ移動。
-
 @item C-n
 現在のディレクトリの後のファイルへ移動。
-
 @item C-f
 1 番目のサブディレクトリに移動。
-
 @item C-b
 親ディレクトリに移動。
-
 @item c
 ファイルのコピー。"." 上で有効。ネットワーク経由でも可。リモートのファイ
 ルをコピーする場合は、"/[user@@]hostname:/filepath" の形式でファイルを指
 定。
-
 @item l
 ファイルへシンボッリクリンクを張る。"." 上で有効。添付ファイルを 
 @samp{f} を使って読み込んで編集する場合は、実体を編集してしまわないよう
 に、@samp{l} ではなく @samp{c} でコピーすべき。
-
 @item d
 ファイルとディレクトリの消去。
-
 @item m
 サブディレクトリ(つまりマルチパート)の作成。"." 上で有効。
-
 @item f
 ファイルをバッファに読み込む。
-
 @item F
 新規ファイルをバッファに読み込む。"." 上で有効。
-
 @item y
 Message モードに表示されているメッセージにリンクを張る。"." 上で有効。
-
 @item e
 external-body の入力。"." 上で有効。
-
 @item a
 音をサンプリングしオーディオファイルとして挿入。"." 上で有効。
-
 @item p
 入力されたユーザの PGP 公開鍵を取り出す。"." 上で有効。
-
 @item D
 ちょっとした説明(Content-Description:)の入力。
-
 @item T
 データ型(Content-Type:)の変更。
-
 @item t
 データ型に関し、テキストとバイナリを反転させる。
-
 @item I
 Text/* 型の入力 coding-system を指定する。
-
 @item C
 Text/* 型の出力 coding-system を指定する。
-
 @item P
 受信側でこのパートを保存する際のファイル名(Content-Disposition:)の変更。
 ファイル名の入力の際に、単に @samp{RET} を押すと値が消える。そして、送信
@@ -5068,64 +4790,45 @@ Text/* 型の出力 coding-system を指定する。
 @ifset en
 @item C-p
 Go to the previous file in the current directory.
-
 @item C-n
 Go to the next file in the current directory.
-
 @item C-f
 Go to the first subdirectory.
-
 @item C-b
 Go to the parent directory.
-
 @item c
 Copy a file (possibly via networks) on ".". To copy a remote file, use
 the "/[user@@]hostname:/filepath" syntax.
-
 @item l
 Link a file with a symbolic link on ".". If you want to edit the
 attached file, you should @samp{c} instead of @samp{l} so that you do not
 edit the original file.
-
 @item d
 Delete this file or this directory.
-
 @item m
 Create a subdirectory (i.e. multipart) on ".".
-
 @item f
 Open this file into a buffer.
-
 @item F
 Open a new file into a buffer on ".".
-
 @item y
 Link the message which is displayed in Message mode on ".".
-
 @item e
 Input external-body on ".".
-
 @item a
 Sampling voice and insert as audio file on ".".
-
 @item p
 Extract the PGP key for the specified user on ".".
-
 @item D
 Input a description (Content-Description:).
-
 @item T
 Change the data type (Content-Type:).
-
 @item t
 Toggle text and binary for the data type.
-
 @item I
 Specify input coding-system for a Text/* object.
-
 @item C
 Specify output coding-system for a Text/* object.
-
 @item P
 Specify a file name (Content-Disposition:) to save this part in the
 receiver side. If you type just @samp{RET} without any string, its value
@@ -5228,21 +4931,15 @@ Q    3  Application/Postscript       Presentation Material      ohp.ps
 @ifset ja
 各行は、
 
-
 @itemize @minus
-
 @item
 マーク (Content-Transfer-Encoding:)
-
 @item
 パート番号
-
 @item
 データ型 (Content-Type:)
-
 @item
 説明 (Content-Description:)
-
 @item
 ファイル名 (Content-Disposition:)
 @end itemize
@@ -5252,21 +4949,15 @@ Q    3  Application/Postscript       Presentation Material      ohp.ps
 @ifset en
 Each line of a multipart message consists of 
 
-
 @itemize @minus
-
 @item
 marks (Content-Transfer-Encoding:)
-
 @item
 part number
-
 @item
 data type (Content-Type:)
-
 @item
 description (Content-Description:)
-
 @item
 file name (Content-Disposition:).
 @end itemize
@@ -5738,11 +5429,9 @@ according to three alists.
 @item
 もし @samp{C-u} 付きで呼び出された場合、送信者/投稿者のみに返答する。こ
 の場合、@samp{mew-reply-sender-alist} が利用される。
-
 @item
 もし対象が自分自身で送ったメッセージなら、そのヘッダを加工せずに返答した
 いのであろう。この場合、@samp{mew-reply-fromme-alist} が利用される。
-
 @item
 そうでなければ、すべての人に返答する。この場合、
 @samp{mew-reply-all-alist} が利用される。
@@ -5751,11 +5440,9 @@ according to three alists.
 @item
 If called with @samp{C-u}, replying to the sender/poster only. In this
 case, @samp{mew-reply-sender-alist} is used.
-
 @item
 If this message is sent by ME, you probably intend to reply with the
 original header. In this case, @samp{mew-reply-fromme-alist} is used.
-
 @item
 Otherwise, replying to all people listed. In this case,
 @samp{mew-reply-all-alist} is used.
@@ -5787,14 +5474,12 @@ This is read as follows:
 @ifset ja
 @item
 Reply-To: が存在すれば、Reply-To: と From: の値を新しい To: へコピーする。
-
 @item
 そうでなければ、From: の値を新しい To: へコピーする。
 @end ifset
 @ifset en
 @item
 If Reply-To: exists, copy the values of Reply-To: and From: to new To:.
-
 @item
 Otherwise, copy the value of From: to To:.
 @end ifset
@@ -5886,19 +5571,15 @@ This is read as follows:
 @item
 Follwup-To: の値が "poster" であれば、From: の値を新しい To: へコピーす
 る。
-
 @item
 Follwup-To: が存在すれば、Follwup-To: と Newsgroups: の値を新しい
 Newsgroups: へコピーする。
-
 @item
 Newsgroups: が存在すれば、Newsgroups: の値を新しい Newsgroups: へコピー
 する。
-
 @item
 Reply-To: が存在すれば、Reply-To: と From: の値を新しい To: へコピーする。
 また、To:、Cc:、Apparently-To: の値を新しい Cc: へコピーする。
-
 @item
 そうでなければ、From: の値を新しい To: へコピーする。また、To:、Cc:、
 Apparently-To: の値を新しい Cc: へコピーする。
@@ -5907,18 +5588,14 @@ Apparently-To: の値を新しい Cc: へコピーする。
 @item
 If the value of Followup-To: is "poster", copying the value of From: to
 new To:.
-
 @item
 If Followup-To: exists, copying the values of Followup-To: and
 Newsgroups: to new Newsgroups:.
-
 @item
 If Newsgroups: exists, copying the value of Newsgroups: to Newsgroups:.
-
 @item
 If Reply-To: exists, copying the values of Reply-To: and From: to new
 To:. And copying the values of To:, Cc:, and Apparently-To: to new Cc:.
-
 @item
 Otherwise, copying the value of From: to new To:. And copying the values
 of To:, Cc:, and Apparently-To: to new Cc:.
@@ -6107,7 +5784,6 @@ mode.
 メッセージの再利用による送信。対象となるメッセージの To:、Cc:、From: な
 どを書き換えるために、Header モードに移行する。典型的には、+queue または 
 +postq に入っているメッセージに対して利用する。
-
 @item r
 メッセージの再送。対象となるメッセージのヘッダに、Resent-To:、Resent-Cc:、
 Resent-From: などを追加するために、Header モードに移行する。再送によるメッ
@@ -6118,7 +5794,6 @@ Resent-From: などを追加するために、Header モードに移行する。
 @item W
 Recycle sending. Enter Header mode in order to modify To:, Cc:, From: of
 a target message. Typical usage is for messages in +queue or +postq.
-
 @item r
 Re-sending. Enter Header mode in order to add Resent-To:, Resent-Cc:,
 Resent-From: of a target message. Re-sending may confuse receivers, so
@@ -6145,7 +5820,6 @@ message is certainly used.
 @ifset ja
 @item C-cC-m
 メッセージを作成し +queue または +postq に入れ、送信待ち状態にする。
-
 @item C-cC-c
 メッセージを作成し送信する。"Really send this message? (y or n) " と訊か
 れる。@samp{y} を押せば送信される。
@@ -6154,7 +5828,6 @@ message is certainly used.
 @item C-cC-m
 Compose a message, put it into +queue or +postq, and let it be waiting
 to be sent.
-
 @item C-cC-c
 Compose a message and send it. You are asked, "Really send this message?
 (y or n) ". Type @samp{y} to send it.
@@ -6197,26 +5870,20 @@ messages with PGP or S/MIME. The following commands are explained.
 @ifset ja
 @item C-cC-s
 草稿全体を署名する。パスフレーズを入力すること。
-
 @item C-cC-e
 草稿全体を暗号化する。
-
 @item C-cC-b
 草稿全体を署名後暗号化する。パスフレーズを入力すること。
-
 @item C-cC-r
 草稿全体を暗号化後署名する。パスフレーズを入力すること。
 @end ifset
 @ifset en
 @item C-cC-s
 Sign the entire draft. Input your pass-phrase.
-
 @item C-cC-e
 Encrypt the entire draft.
-
 @item C-cC-b
 Sign, and then encrypt the entire draft. Input your pass-phrase.
-
 @item C-cC-r
 Encrypt, and then sign the entire draft. Input your pass-phrase.
 @end ifset
@@ -6382,50 +6049,36 @@ the symbols for each service. The service applied when typing
 @ifset ja
 @item pgp-signature (PS)
 PGP で署名
-
 @item pgp-encryption (PE)
 PGP で暗号化
-
 @item pgp-signature-encryption (PSPE)
 PGP で署名後暗号化
-
 @item pgp-encryption-signature (PEPS)
 PGP で暗号化後署名
-
 @item smime-signature (SS)
 S/MIME で署名
-
 @item smime-encryption (SE)
 S/MIME で暗号化
-
 @item smime-signature-encryption (SSSE)
 S/MIME で署名後暗号化
-
 @item smime-encryption-signature (SESS)
 S/MIME で暗号化後署名
 @end ifset
 @ifset en
 @item pgp-signature (PS)
 Sign with PGP
-
 @item pgp-encryption (PE)
 Encrypt with PGP
-
 @item pgp-signature-encryption (PSPE)
 Sign then encrypt with PGP
-
 @item pgp-encryption-signature (PEPS)
 Encrypt then sign with PGP
-
 @item pgp-signature (SS)
 Sign with S/MIME
-
 @item pgp-encryption (sE)
 Encrypt with S/MIME
-
 @item pgp-signature-encryption (SSSE)
 Sign then encrypt with S/MIME
-
 @item pgp-encryption-signature (SESS)
 Encrypt then sign with S/MIME
 @end ifset
@@ -6612,52 +6265,38 @@ At present, 8 marks are prepared.
 @ifset ja
 @item " "
 符号化しない。ただし、8 ビットのテキストは符号化されるかもしれない。
-
 @item B
 Base64
-
 @item Q
 Quoted-Printable
-
 @item G
 Gzip64(gzip 圧縮し Base64 で符号化する。Mew が実験的に採用している。相手
 が Mew を使っていない場合は、使用すべきではない。)
-
 @item PS 
 PGP で電子署名。
-
 @item PE
 PGP で暗号化。
-
 @item SS
 S/MIME で電子署名。
-
 @item SE
 S/MIME で暗号化。
 @end ifset
 @ifset en
 @item " "
 No encoding. But 8bit text would be encoded.
-
 @item B 
 Base64 
-
 @item Q
 Quoted-Printable
-
 @item G
 Gzip64 (compressed with gzip then encoded with Base64. This is
 experimental. Do not use this if receivers do not use Mew.)
-
 @item PS 
 Sign with PGP
-
 @item PE
 Encrypt with PGP
-
 @item SS 
 Sign with S/MIME
-
 @item SE
 Encrypt with S/MIME
 @end ifset
@@ -6674,64 +6313,48 @@ Additional key binding for marks in attachments is as follows:
 @ifset ja
 @item B
 Base64 で符号化するため @samp{B} マークを付ける。
-
 @item Q
 Quoted-Printable で符号化するため @samp{Q} マークを付ける。
-
 @item G
 Gzip64 で符号化するため @samp{G} マークを付ける。ただし、Text/Plain と 
 Application/Postscript でしか実行できない。これ以外の型には圧縮は無意味
 である。なぜなら、jpeg などはあらかじめ圧縮されているから。
-
 @item S
 PGP で署名するため @samp{PS} マークを付ける。
-
 @item E 
 PGP で暗号化するため @samp{PE} マークを付ける。受信者のアドレスを入力す
 る。
-
 @item M-s
 S/MIME で署名するため @samp{SS} マークを付ける。
-
 @item M-e
 S/MIME で暗号化するため @samp{SE} マークを付ける。受信者のアドレスを入
 力する。
-
 @item Z
 ZIP で直ちに暗号化する。暗号化された後は、@samp{B}マークが付く。
-
 @item U
 符号化を元に戻す。元々のマークに戻る。
 @end ifset
 @ifset en
 @item B
 Put the @samp{B} mark to encode with Base64.
-
 @item Q
 Put the @samp{Q} mark to encode with Quoted-Printable.
-
 @item G
 Put the @samp{G} mark to encode with Gzip64. This is applicable only to
 Text/Plain and Application/Postscript since compression is not effective
 with other objects. For example, JPEG is already compressed.
-
 @item S
 Put the @samp{PS} mark to sign with PGP.
-
 @item E 
 Put the @samp{PE} mark to encrypt with PGP. Input decrypters' addresses.
-
 @item M-s
 Put the @samp{SS} mark to sign with S/MIME.
-
 @item M-e
 Put the @samp{SE} mark to encrypt with S/MIME. Input decrypters'
 addresses.
-
 @item Z
 Encrypt the part with ZIP immediately. After the encryption, the
 @samp{B} mark appears.
-
 @item U 
 Unmark. The original mark appears.
 @end ifset
@@ -6961,38 +6584,28 @@ There are six marks at present.
 @ifset ja
 @item U
 未読マーク。
-
 @item D
 消去のマーク。
-
 @item X
 消去のマーク。
-
 @item o
 整頓、つまり、フォルダを移動させるマーク。
-
 @item *
 処理の対象とするマーク。
-
 @item $
 マークを一時的に待避するためのマーク。
 @end ifset
 @ifset en
 @item U
 The unread mark.
-
 @item D
 The delete mark.
-
 @item X
 The delete mark.
-
 @item o
 The refile mark, that is, to move a message to another folder.
-
 @item *
 The target mark.
-
 @item $
 The mark to save another mark temporarily.
 @end ifset
@@ -7135,7 +6748,6 @@ The followings are summary of commands related to the @samp{U} mark.
 を反転させる。反転とは、「@samp{U} マーク、@samp{*} マーク、およびマー
 クなし」と「@samp{U} マークおよび @samp{*} マーク」に対し、一方を他方へ
 変えること。
-
 @item M-u
 @samp{U} マークを付ける。
 @end ifset
@@ -7144,7 +6756,6 @@ The followings are summary of commands related to the @samp{U} mark.
 Toggle the target of @samp{SPC}, @samp{n}, and @samp{p}. Toggling means
 change one to the other out of ``the @samp{U} mark, the @samp{*} mark,
 and non-mark'' and ``the @samp{U} mark and the @samp{*} mark''.
-
 @item M-u
 Put the @samp{U} mark to the current message.
 @end ifset
@@ -7207,14 +6818,12 @@ To really delete messages in the trashes, there are two methods:
 @ifset ja
 @item
 Summary モードで @samp{D} を実行する。
-
 @item
 ゴミ箱で @samp{D} マークを付けて、@samp{x} を押す。
 @end ifset
 @ifset en
 @item
 Type @samp{D} in Summary mode.
-
 @item
 Put the @samp{D} mark in the trashes then type @samp{x}.
 @end ifset
@@ -7231,16 +6840,13 @@ Exactly speaking, the following rule is applied for local folders.
 @samp{mew-trash-folder-list} is default to @samp{nil}.)
 @end ifset
 
-
 @itemize @minus
 @ifset ja
 @item @samp{mew-trash-folder} が @samp{nil} なら、@samp{D} マークの付いたメッ
 セージは消去される。
-
 @item @samp{mew-trash-folder-list} が定義されていたら、それらのフォルダ
 で @samp{D} マークを付けたメッセージは消去される。それ以外のフォルダからは
 @samp{mew-trash-folder} へ。
-
 @item @samp{mew-trash-folder-list} が @samp{nil} なら、 
 @samp{mew-trash-folder} で @samp{D} マークを付けたメッセージは消去される。そ
 れ以外のフォルダからは @samp{mew-trash-folder} へ。(これが初期値。)
@@ -7248,11 +6854,9 @@ Exactly speaking, the following rule is applied for local folders.
 @ifset en
 @item If @samp{mew-trash-folder} is @samp{nil}, messages marked with
 @samp{D} are deleted.
-
 @item If @samp{mew-trash-folder-list} is defined, messages marked with
 @samp{D} in one of the folders defined in it are deleted. Otherwise,
 they are moved to the trash.
-
 @item If @samp{mew-trash-folder-list} is @samp{nl},
 messages marked with @samp{D} in @samp{mew-trash-folder} are deleted.
 Otherwise, they are moved to the trash. (This is default.)
@@ -7322,56 +6926,40 @@ The following is a summary regarding with the @samp{D} mark and the
 @ifset ja
 @item d 
 @samp{D} マークを付ける。
-
 @item M-d
 @samp{X} マークを付ける。
-
 @item md
 @samp{*} マークを @samp{D} マークへ変換する。
-
 @item mM-d
 @samp{*} マークを @samp{X} マークへ変換する。
-
 @item x
 マークの付いたメッセージを処理する。
-
 @item mxd
 @samp{D} マークの付いたメッセージのみを処理する。
-
 @item mxM-d
 @samp{X} マークの付いたメッセージのみを消去する。
-
 @item D
 ゴミ箱の中のメッセージを全部消去する。
-
 @item C-uD
 指定されたフォルダのメッセージを全部消去する。
 @end ifset
 @ifset en
 @item d
 Put the @samp{D} mark.
-
 @item M-d
 Put the @samp{X} mark.
-
 @item md
 Convert all @samp{*} marks to @samp{D}.
-
 @item mM-d
 Convert all @samp{*} marks to @samp{X}.
-
 @item x
 Process marked messages.
-
 @item mxd
 Process messages marked with @samp{D} only.
-
 @item mxM-d
 Delete messages marked with @samp{X} only.
-
 @item D
 Delete all messages in a trash.
-
 @item C-uD
 Delete all messages in a specified folder.
 @end ifset
@@ -7460,17 +7048,13 @@ A summary about the @samp{o} mark is here.
 @ifset ja
 @item o
 @samp{o} マークを付ける。
-
 @item c
 @samp{o} マークを付ける。推測したフォルダに加えて、現在のフォルダも候補
 として提示する。
-
 @item x
 @samp{o} マークの付いたメッセージを移動させる。
-
 @item mxo
 @samp{o} マークの付いたメッセージのみを移動させる。他のマークは処理しない。
-
 @item C-umxo
 @samp{o} マークの付いたメッセージの中で、現在のメッセージと同じ移動先を
 持つもののみを移動させる。
@@ -7478,18 +7062,14 @@ A summary about the @samp{o} mark is here.
 @ifset en
 @item o
 Put the @samp{o} mark.
-
 @item c
 Put the @samp{o} mark. Showing the current folder as a candidate in
 addition to guessed folders.
-
 @item x
 Refile messages marked with @samp{o}.
-
 @item mxo
 Refile messages marked with @samp{o} only. This command does not process
 other marks.
-
 @item C-umxo
 Refile messages marked with @samp{o}, whose destination is the same as
 that of the current message.
@@ -7542,32 +7122,24 @@ Here is a summary for @samp{*} commands.
 @ifset ja
 @item *
 @samp{*} マークを付ける。
-
 @item N
 下方向の @samp{*} マークの付いたメッセージへ移動し表示。
-
 @item P
 上方向の @samp{*} マークの付いたメッセージへ移動し表示。
-
 @item ma
 マークの付いていないメッセージすべてに @samp{*} マークを付ける。
-
 @item mr
 入力した正規表現にマッチしたメッセージに @samp{*} マークを付ける。
 @end ifset
 @ifset en
 @item *
 Put the @samp{*} mark.
-
 @item N
 Jump to the message marked with @samp{*} below and display it.
-
 @item P
 Jump to the message marked with @samp{*} above and display it.
-
 @item ma
 Put the @samp{*} mark to all unmarked messages.
-
 @item mr
 Put the @samp{*} mark to all matching messages with specified regular
 expression.
@@ -7587,26 +7159,20 @@ is a list of commands which handle multiple messages.
 @ifset ja
 @item F
 @samp{*} マークの付いたメッセージを MIME 形式で転送するための草稿を準備。
-
 @item J
 大きなメッセージは Message/Partial として複数に分割されている場合がある。
 これらのメッセージには、Mew によって @samp{P} マークが付けられている。こ
 こで、ユーザがそれらのメッセージに @samp{*} マークを付け、このコマンド
 を実行すれば、元のメッセージが復元される。
-
 @item mI 
 @samp{*} マークの付いている一部だけが取得されたメッセージ群(@samp{T})を
 取得する。
-
 @item C-umI
 @samp{mI} を実行する。
-
 @item M-b
 @samp{*} マークの付いたメッセージに格納されているメッセージを取り出す。
-
 @item M-\
 @samp{*} マークの付いたメッセージを引数として、外部コマンドを起動する。
-
 @item M-t
 @samp{*} マークの付いたメッセージを "uudecode" する。
 @end ifset
@@ -7614,27 +7180,21 @@ is a list of commands which handle multiple messages.
 @item F
 Prepare a draft to forward multiple messages marked with @samp{*} in MIME
 format.
-
 @item J
 A large message is occasionally fragmented into multiple messages whose
 Content-Type: is Message/Partial. Mew puts the @samp{P} mark to these
 messages. Now a user marks these messages with @samp{*} and executing
 this commands results in producing the original message.
-
 @item mI 
 Retrieve the rest of truncated(@samp{T}) messages marked with
 @samp{*}.
-
 @item C-umI
 Perform @samp{mI}.
-
 @item M-b
 De-capsulate messages embedded in the messages marked with @samp{*}.
-
 @item M-\
 Executing an external command specifying messages marked with @samp{*}
 as arguments.
-
 @item M-t
 Apply "uudecode" on messages marked with @samp{*}.
 @end ifset
@@ -7688,27 +7248,21 @@ is as follows:
 @ifset ja
 @item
 @samp{m$} で @samp{*} マークを一旦 @samp{$} マークに待避
-
 @item
 @samp{/} などで @samp{*} マークを付け、@samp{*} マークのついたメッセージを処理
-
 @item
 @samp{U*} で @samp{*} マークを消去
-
 @item
 @samp{m*} で @samp{$} マークを @samp{*} マークへ戻す
 @end ifset
 @ifset en
 @item
 Change the @samp{*} marks to the @samp{$} marks with @samp{m$}.
-
 @item
 Put the @samp{*} marks to messages, for instance, with @samp{/} and
 process the messages marked with @samp{*}.
-
 @item
 Cancel the @samp{*} marks with @samp{U*}.
-
 @item
 Get the old @samp{*} marks back with @samp{m*}.
 @end ifset
@@ -7725,14 +7279,12 @@ Here is summary of the commands related to the @samp{$} mark.
 @ifset ja
 @item m$
 @samp{*} マークを @samp{$} マークへ変換。
-
 @item m*
 @samp{$} マークを @samp{*} マークへ変換。
 @end ifset
 @ifset en
 @item m$
 Change the @samp{*} marks to the @samp{$} marks.
-
 @item m*
 Change the @samp{$} marks to the @samp{*} marks.
 @end ifset
@@ -7774,14 +7326,12 @@ Here is a summary for unmark commands.
 @ifset ja
 @item u
 現在のメッセージのマークを消す。
-
 @item U
 入力したマークが付いているすべてのメッセージのマークを消す。
 @end ifset
 @ifset en
 @item u
 Cancel the mark on this message.
-
 @item U
 Cancel all marks according to what you input.
 @end ifset
@@ -7865,10 +7415,8 @@ The followings shows the marks in the strong order:
 @item @samp{o}、@samp{D}、@samp{X}
 新たにマークしたときは、次のメッセージを表示。上書きした場合は、その行に
 留まる。
-
 @item @samp{*} と @samp{$}
 マークを付けた後は、その行に留まる。
-
 @item @samp{U}
 マークを付けた後は、その行に留まる。
 @end ifset
@@ -7876,10 +7424,8 @@ The followings shows the marks in the strong order:
 @item @samp{o}, @samp{D}, and @samp{X}
 After marking a message newly, the next message is shown. After
 overriding another mark, the cursor stays on the message.
-
 @item @samp{*} and @samp{$}
 After marking a message, the cursor stays on the message.
-
 @item @samp{U}
 After marking a message, the cursor stays on the message.
 @end ifset
@@ -7905,33 +7451,25 @@ You can exchange marks as follows:
 @ifset ja
 @item m$ 
 @samp{*} -> @samp{$} :: @samp{*} マークを一時的に保存。
-
 @item m*
 @samp{$} -> @samp{*} :: @samp{*} マークを元に戻す。
-
 @item ms
 @samp{$} <-> @samp{*}
-
 @item mM-u
 @samp{*} -> @samp{U} :: 選択コマンド @samp{?} で選んだメッセージを未読
 にするときに便利。
-
 @item md
 @samp{*} -> @samp{D} :: 選択コマンド @samp{?} で選んだメッセージを消去す
 るときに便利。
-
 @item mM-d
 @samp{*} -> @samp{X} :: 選択コマンド @samp{?} で選んだメッセージを消去す
 るときに便利。
-
 @item mo
 @samp{*} -> @samp{o} :: 選択コマンド @samp{?} で選んだメッセージをあるフォ
 ルダに移動させる場合に便利。
-
 @item mc
 @samp{*} -> @samp{o} :: 選択コマンド @samp{?} で選んだメッセージをあるフォ
 ルダにコピーする場合に便利。
-
 @item e
 最初に入力したマークを次に入力したマークへ変換する。ただし、@samp{o} マー
 クは対象外。
@@ -7939,31 +7477,24 @@ You can exchange marks as follows:
 @ifset en
 @item m$ 
 @samp{*} -> @samp{$} :: Preserve the @samp{*} marks temporarily.
-
 @item m*
 @samp{$} -> @samp{*} :: Get the @samp{*} marks back.
-
 @item ms
 @samp{$} <-> @samp{*}
-
 @item mM-u
 @samp{*} -> @samp{U} :: It is useful when you put @samp{U} marks to
 messages picked by @samp{?}.
-
 @item md
 @samp{*} -> @samp{D} :: It is useful when you put @samp{D} marks to
 messages picked by @samp{?}.
-
 @item mM-d
 @samp{*} -> @samp{X} :: It is useful when you put @samp{X} marks to
 messages picked by @samp{?}.
-
 @item mo
 @samp{*} -> @samp{o} :: It is useful when you put @samp{o} marks to
 messages to be moved picked by @samp{?}.  
 @samp{*} -> @samp{o} :: It is useful when you put @samp{o} marks to
 messages to be copied picked by @samp{?}.  
-
 @item e
 Exchange the first input mark to the second one. The @samp{o} mark is
 not exchangeable.
@@ -7992,7 +7523,6 @@ server:
 @item U
 メッセージを読んだか否か。IMAP のフラグは \Seen。通常は %inbox のみで有
 効。
-
 @item *
 注目しているメッセージ。IMAP のフラグは \Flagged。
 @end ifset
@@ -8000,7 +7530,6 @@ server:
 @item U
 Whether a message is read or not. This IMAP flag is \Seen. This is
 usually valid in %inbox only.
-
 @item *
 Review mark. This IMAP flag is \Flagged.
 @end ifset
@@ -8022,71 +7551,47 @@ synchronizes marks.
 @ifset ja
 @item
 @samp{s} + 'update
-
 @itemize @minus
-
 @item 既存のメッセージに対して変更したマークをサーバ側へ反映
-
 @item 新着メッセージに対しては、サーバ側のフラグをマークへ反映
 @end itemize
 
-
 @item
 @samp{x}
-
 @itemize @minus
-
 @item 既存のメッセージに対して変更したマークをサーバ側へ反映
 @end itemize
 
-
 @item
 @samp{s} + 'sync
-
 @itemize @minus
-
 @item 既存のメッセージに対して変更したマークをサーバ側へ反映
-
 @item 既存のメッセージの @samp{*},@samp{U}, @samp{$}, @samp{ } マークを一旦クリア
-
 @item サーバ側のフラグを既存のメッセージにマークとして反映
-
 @item サーバ側で削除されたメッセージを削除
 @end itemize
 @end ifset
 @ifset en
 @item
 @samp{s} + 'update
-
 @itemize @minus
-
 @item Reflecting modified marks of the existing messages to the server
-
 @item For newly arrived messages, reflecting flags of the server to
 the messages.
 @end itemize
 
-
 @item
 @samp{x}
-
 @itemize @minus
-
 @item Reflecting modified marks of the existing messages to the server
 @end itemize
 
-
 @item
 @samp{s} + 'sync
-
 @itemize @minus
-
 @item Reflecting modified marks of the existing messages to the server
-
 @item Clearing @samp{*},@samp{U}, @samp{$}, @samp{ } mark on the existing messages.
-
 @item Reflecting flags of the server to the existing messages
-
 @item Removing messages which were deleted in the server
 @end itemize
 @end ifset
@@ -8166,10 +7671,8 @@ without retrieval. If you want to process marks off-line, type @samp{lx}.
 @item
 @samp{o} マークや @samp{D} マークのついたメッセージがフォルダ A からなく
 なる。
-
 @item
 この処理はメッセージ形式で、%queue に溜る。
-
 @item
 @samp{o} マークのついたメッセージは、ローカルでフォルダ B へ移動され、無
 効なメッセージとして扱われる。
@@ -8177,10 +7680,8 @@ without retrieval. If you want to process marks off-line, type @samp{lx}.
 @ifset en
 @item
 Deleting messages marked with @samp{o} and/or @samp{D} from folder A.
-
 @item
 Queuing these jobs in %queue.
-
 @item
 Moving messages marked with @samp{o} to folder B and marking them
 invalid.
@@ -8239,46 +7740,34 @@ Here is a summary of marks displayed by Mew.
 @ifset ja
 @item M
 マルチパートを表すマーク。@xref{multipart} を参照のこと。
-
 @item -
 Multipart/Alternative を表すマーク。@xref{analysis} を参照のこと。
-
 @item T
 メッセージが切り詰められたことを表すマーク。@xref{retrieving} を参照のこ
 と。
-
 @item S
 署名を表すマーク。@xref{cipher-viewing} を参照のこと。
-
 @item E
 暗号化を表すマーク。@xref{cipher-viewing} を参照のこと。
-
 @item P
 分割されていることを示すマーク。@xref{target mark} を参照のこと。
-
 @item #
 メッセージが無効であることを示すマーク。@xref{off-line} を参照のこと。
 @end ifset
 @ifset en
 @item M
 This message is a multipart. Please refer to @ref{multipart}.
-
 @item -
 This message contains a Multipart/Alternative content. Please refer to
 @ref{analysis}.
-
 @item T
 This message was truncated by Mew. Please refer to @ref{retrieving}.
-
 @item S
 This message is signed. Please refer to @ref{cipher-viewing}.
-
 @item E
 This is a cipher message. Please refer to @ref{cipher-viewing}.
-
 @item P
 This message is fragmented. Please refer to @ref{target mark}.
-
 @item #
 This message is invalid. Please refer to @ref{off-line}.
 @end ifset
@@ -9037,20 +8526,16 @@ action.
 @ifset ja
 @item mew-refile-guess-by-alist
     が +aaa、+bbb を推測。
-
 @item mew-refile-guess-by-folder
     が +ccc、+ddd を推測。
-
 @item mew-refile-guess-by-default
     が +eee       を推測。
 @end ifset
 @ifset en
 @item mew-refile-guess-by-alist
     guessed +aaa and +bbb.
-
 @item mew-refile-guess-by-folder
     guessed +ccc and +ddd.
-
 @item mew-refile-guess-by-default
     guessed +eee.
 @end ifset
@@ -9281,26 +8766,20 @@ another.
 @ifset ja
 @item lc
 あるフォルダのメッセージをローカルフォルダへコピーする。
-
 @item mlc
 @samp{*} の付いた複数のメッセージをローカル・フォルダへコピーする。
-
 @item li
 あるフォルダのメッセージを IMAP のフォルダへコピーする。
-
 @item mli
 @samp{*} の付いた複数のメッセージを IMAP フォルダへコピーする。
 @end ifset
 @ifset en
 @item lc
 Copy a message to a local folder.
-
 @item mlc
 Copy messages marked with @samp{*} to a local folder.
-
 @item li
 Copy a message to the server side of IMAP.
-
 @item mli
 Copy messages marked with @samp{*} to the server side of IMAP.
 @end ifset
@@ -9332,7 +8811,6 @@ Virtual mode is a virtual folder and it consists of "selection" and
 @item セレクション
 いろいろなフォルダから必要なメッセージだけを集めた仮想フォルダです。フォ
 ルダ名の左側に "*" が付きます。
-
 @item スレッド
 フォルダ(Summary)やセレクション(Virtual)を基に、対話関係を行頭揃えによっ
 て可視化した仮想フォルダです。フォルダ名の両側に "*" が付きます。
@@ -9341,7 +8819,6 @@ Virtual mode is a virtual folder and it consists of "selection" and
 @item Selection
 A virtual folder collecting necessary messages from several folders.
 Its folder name has "*" on the left side.
-
 @item Thread
 A virtual folder to visualize message flow with indentation, created
 from a folder or a virtual folder. Its folder name has "*" on the both
@@ -9440,34 +8917,26 @@ several folders. There are five ways to create selection:
 @ifset ja
 @item m/
 あるフォルダで、"*" マークが付いているメッセージのみを表示する。
-
 @item S
 あるフォルダで、メッセージをソートして表示する。(元のフォルダには、何の影響もない。) @xref{sorting} を参照のこと。
-
 @item V
 現在のメッセージと対話関係にあるメッセージを表示する。@xref{dialog} を参照のこと。
-
 @item /
 あるフォルダから、検索条件に合致するメッセージを表示する。@xref{search} を参照のこと。
-
 @item k/
 すべてのフォルダから、検索条件に合致するメッセージを表示する。@xref{dbsearch} を参照のこと。
 @end ifset
 @ifset en
 @item m/
 Listing messages marked with @samp{*} on a folder. see @ref{sorting}.
-
 @item S
 Sorting messages on a folder and display them. (No effect to the
 original folder.) see @ref{dialog}.
-
 @item V
 Listing messages which have relationship with the current message. See
 @ref{dialog}.
-
 @item /
 Listing messaged matched to a search condition on a folder. see @ref{search}.
-
 @item k/
 Listing messaged matched to a search condition from all folders. See
 @ref{search}.
@@ -9552,26 +9021,20 @@ Mew provides four modes for sorting:
 @ifset ja
 @item text
 先頭の "Re: " や "Fw: " を取り除いた文字列。
-
 @item ml
 text と同じであるが、さらにメーリングリスト特有の文字列も取り除く。
-
 @item num
 数値。
-
 @item date
 日付。
 @end ifset
 @ifset en
 @item text
 String with preceding "Re: " and or "Fw: " removed.
-
 @item ml
 The same as text but preceding mailing-list-string removed.
-
 @item num
 Number.
-
 @item date
 Date.
 @end ifset
@@ -9646,14 +9109,12 @@ message. Let's call this "dialog". This is different from thread
 described later in the following points:
 @end ifset
 
-
 @itemize @minus
 @ifset ja
 
 @item
 スレッドは、1つのフォルダ/仮想フォルダに対してのみ作成できる。対話は、
 関連するメッセージが複数のフォルダに散らばっていてもよい。
-
 
 @item
 スレッドは、行頭揃えによって木構造を可視化する。対話は、日付順に一覧表
@@ -9663,7 +9124,6 @@ described later in the following points:
 @item
 Thread can be made from one folder or one virtual folder. Messages
 relating to dialog can ubiquitously exists in several folders.
-
 
 @item
 Thread visualizes tree structres with indentation. while dialog lists
@@ -9730,14 +9190,11 @@ Mew provides the following method to search messages:
 @item ?
 現在のフォルダで、条件に合致したメッセージに @samp{*} マークを付ける。
 入力された条件によって、@samp{mewl} か @samp{grep} のどちらかが呼ばれる。
-
 @item C-u?
 リージョンを指定した @samp{?}。
-
 @item /
 現在のフォルダで、条件に合致したメッセージからセレクションを作る。入力
 された条件によって、@samp{mewl} か @samp{grep} のどちらかが呼ばれる。
-
 @item C-u/
 リージョンを指定した @samp{/}。
 @end ifset
@@ -9746,15 +9203,12 @@ Mew provides the following method to search messages:
 Put the @samp{*} mark onto messages in this folder, which are matched to a
 specified pattern. Either @samp{mewl} or @samp{grep} is called
 according to the specified pattern.
-
 @item C-u?
 @samp{?} with a region specified.
-
 @item /
 Make selection with messages in this folder, which are matched to a
 specified pattern. Either @samp{mewl} or @samp{grep} is called
 according to the specified pattern.
-
 @item C-u/
 @samp{/} with a region specified.
 @end ifset
@@ -9774,10 +9228,8 @@ following commands.
 @ifset ja
 @item k?
 現在のフォルダで、条件に合致したメッセージに @samp{*} マークを付ける。
-
 @item k/
 全フォルダに対し、条件に合致したメッセージからセレクションを作る。
-
 @item C-uk/
 指定されたフォルダに対し、条件に合致したメッセージからセレクションを作
 る。フォルダを複数指定するには "," で区切る。ワイルドカードとして、"*"
@@ -9787,11 +9239,9 @@ following commands.
 @item k?
 Put the @samp{*} mark onto messages in this folder, which are matched to a
 specified pattern. 
-
 @item k/
 Make selection with messages in all folders, which are matched to a
 specified pattern.
-
 @item C-uk/
 Make selection with messages in specified folders, which are matched
 to a specified pattern. If you want to specify multiple folders,
@@ -9845,28 +9295,21 @@ Here is a list of expression elements. (In the strong order)
 @item field=string
 フィールド field に文字列 string が含まれているときマッチ(大文字小文字を
 区別しない)。field に "head" を指定した場合は、ヘッダ全体を意味する。
-
 @item field==string
 フィールド field に文字列 string が含まれているときマッチ(大文字小文字を
 区別する)。field に "head" を指定した場合は、ヘッダ全体を意味する。
-
 @item field!=string
 フィールド field に文字列 string が含まれていないときマッチ(大文字小文字
 を区別しない)。field に "head" を指定した場合は、ヘッダ全体を意味する。
-
 @item field!==string
 フィールド field に文字列 string が含まれていないときマッチ(大文字小文字
 を区別する)。field に "head" を指定した場合は、ヘッダ全体を意味する。
-
 @item ( <pattern> )
 <pattern> の内容を先に評価。
-
 @item ! <pattern>
 <pattern> でないときマッチ。
-
 @item <pattern1> & <pattern2>
 <pattern1> かつ <pattern2> のときマッチ。省略可能。
-
 @item <pattern1> | <pattern2>
 <pattern1> または <pattern2> のときマッチ。
 @end ifset
@@ -9874,28 +9317,21 @@ Here is a list of expression elements. (In the strong order)
 @item field=string
 Match if the "field" field contains the "string" string
 (case-insensitive). If you specify "head", it means the entire header.
-
 @item field==string
 Match if the "field" field contains the "string" string
 (case-sensitive). If you specify "head", it means the entire header.
-
 @item field!=string
 Match if the "field" field does not the "string" string
 (case-insensitive). If you specify "head", it means the entire header.
-
 @item field!==string
 Match if the "field" field does not the "string" string
 (case-sensitive). If you specify "head", it means the entire header.
-
 @item ( <pattern> )
 Evaluate <pattern> first.
-
 @item ! <pattern>
 Match if not <pattern>.
-
 @item <pattern1> & <pattern2>
 Match if <pattern1> AND <pattern2>. You can omit this.
-
 @item <pattern1> | <pattern2>
 Match if <pattern1> OR <pattern2>.
 @end ifset
@@ -10024,20 +9460,16 @@ To operate search engines, the following commands are provided:
 @ifset ja
 @item km
 そのフォルダのインデックスを作る。
-
 @item kM
 全体のフォルダのインデックスを作る。あるいは、作るために初期化する。
-
 @item kc
 検索エンジンを切り替える。
 @end ifset
 @ifset en
 @item km
 Make index for the current folder.
-
 @item kM
 Make index for all folders.
-
 @item kc
 Switch one search engine to another.
 @end ifset
@@ -10058,14 +9490,11 @@ The followings are expiation of each search engines.
 したいなら @samp{km} でもよいでしょう。@samp{k?} と@samp{k/} の両方が利
 用できます。@samp{C-uk/}でフォルダを指定すると、サブディレクトリも検索
 になります。
-
 @item Spotlight
 一度だけ @samp{kM} を実行する必要があります。@samp{km} は必要ありません。
 @samp{k?} と @samp{k/} の両方が利用できます。
-
 @item Windows Desktop Search
 一度だけ @samp{kM} を実行する必要があります。@samp{km} は必要ありません。
-
 @item Google Desktop
 一度だけ @samp{kM} を実行する必要があります。@samp{km} は必要ありません。
 @samp{k/} のみが利用できます。
@@ -10077,14 +9506,11 @@ command line instead. If you want to update the index for the current
 folder quickly, you can use @samp{km}. Both @samp{k?} and @samp{k/}
 are available. When you specify folders with @samp{C-uk/},
 sub-folders, if any, are included in the target.
-
 @item Spotlight
 Type @samp{kM} just once. @samp{km} is not necessary. Both @samp{k?}
 and @samp{k/} are available.
-
 @item Windows Desktop Search
 Type @samp{kM} just once. @samp{km} is not necessary.
-
 @item Google Desktop
 Type @samp{kM} just once. @samp{km} is not necessary. Only @samp{k/}
 is available.
@@ -10140,13 +9566,10 @@ enable this functionality are as follows:
 メッセージが対象となる。このコマンドを繰り返し利用すると、キーワードの
 付近が次々と表示されていく。キーワードが設定されていないなら、ユーザ
 にキーワードを訊く。
-
 @item C-uM-n
 キーワードを明示的に設定できること以外は、@samp{M-n} に同じ。
-
 @item M-p
 @samp{M-n} を逆方向にしたコマンド。
-
 @item C-uM-p
 @samp{C-uM-n} を逆方向にしたコマンド。
 @end ifset
@@ -10158,14 +9581,11 @@ highlight it. In Summary mode, the target is messages marked with
 command, text around the keyword is displayed from one to another. If
 no key word is set to the variable, this command first asks you a
 keyword.
-
 @item C-uM-n
 The same as @samp{M-n} except that you can change the stored keyword
 explicitly.
-
 @item M-p
 A reverse version of @samp{M-n}.
-
 @item C-uM-p
 A reverse version of @samp{C-uM-n}.
 @end ifset
@@ -10250,13 +9670,10 @@ Summary モード、あるは、セレクションからスレッドを作る。
 ルを現在のメッセージに移動する。もし、対応するスレッドがすでに存在して
 いるなら、スレッドに表示を切り替える。スレッドで使用された際は、元のフォ
 ルダへ移り、カーソルを現在のメッセージへ移動する。
-
 @item C-utt
 リージョンに対し、スレッドを作る。
-
 @item mt
 @samp{*} マークの付いているメッセージに対し、スレッドを作る。
-
 @item tr
 正規表現に合致したメッセージに対し、スレッドを作る。
 @end ifset
@@ -10266,13 +9683,10 @@ Make threads from Summary mode or selection and move the cursor to the
 current message. If corresponding threads already exist, switch to the
 Virtual mode. When this command is executed on threads, switch to the
 original folder and move the cursor to the current message.
-
 @item C-utt
 Make threads for messages in the region.
-
 @item mt
 Make threads for messages marked with @samp{*}.
-
 @item tr
 Make threads for messages matched to a regular expression.
 @end ifset
@@ -10299,19 +9713,14 @@ Here are the commands used for moving to thread presentation.
 @item tp
 現在のスレッドの頭に移動する。もし、あるスレッドの頭にカーソルがある場合
 は、前のスレッドの頭に移動する。
-
 @item tn
 次のスレッドの頭に移動する。
-
 @item ^
 親のメッセージに移動する。(スレッドでなくても利用可能)
-
 @item &
 長男のメッセージに移動する。(スレッドでなくても利用可能)
-
 @item (
 兄のメッセージに移動する。
-
 @item )
 弟のメッセージに移動する。
 @end ifset
@@ -10319,21 +9728,16 @@ Here are the commands used for moving to thread presentation.
 @item tp
 Move to the top of the current thread. If the current message is a top
 node, move to the top of the next thread.
-
 @item tn
 Move to the top of the next thread.
-
 @item ^
 Move to the parent message of the current message. (Available in both
 Summary and Virtual)
-
 @item &
 Move to the child message of the current message. (Available in both
 Summary and Virtual)
-
 @item (
 Search backward by one sibling message of the current message.
-
 @item )
 Search forward by one sibling message of the current message.
 @end ifset
@@ -10352,19 +9756,15 @@ Here are commands to mark messages in a thread.
 @item t*
 現在のメッセージを頭とする部分木に属するメッセージすべてに @samp{*} マー
 クを付ける。詳しくは @xref{target mark} を参照のこと。
-
 @item t$
 現在のメッセージを頭とする部分木に属するメッセージすべてに @samp{$} マー
 クを付ける。詳しくは @xref{escape mark} を参照のこと。
-
 @item td
 現在のメッセージを頭とする部分木に属するメッセージすべてに @samp{D} マー
 クを付ける。詳しくは @xref{delete mark} を参照のこと。
-
 @item tM-d
 現在のメッセージを頭とする部分木に属するメッセージすべてに @samp{X} マー
 クを付ける。詳しくは @xref{delete mark} を参照のこと。
-
 @item to
 現在のメッセージを頭とする部分木に属するメッセージすべてに @samp{o} マー
 クを付ける。詳しくは @xref{refile mark} を参照のこと。
@@ -10373,19 +9773,15 @@ Here are commands to mark messages in a thread.
 @item t*
 Put the @samp{*} mark all messages of the current sub-thread. Please
 refer to @ref{target mark} for more information.
-
 @item t$
 Put the @samp{$} mark all messages of the current sub-thread. Please
 refer to @ref{escape mark} for more information.
-
 @item td
 Put the @samp{D} mark all messages of the current sub-thread. Please
 refer to @ref{delete mark} for more information.
-
 @item tM-d
 Put the @samp{X} mark all messages of the current sub-thread. Please
 refer to @ref{delete mark} for more information.
-
 @item to
 Put the @samp{o} mark all messages of the current sub-thread. Please
 refer to @ref{refile mark} for more information.
@@ -10413,10 +9809,8 @@ Here are commands to manipulate a thread:
 子供以下を隠して親だけにする。子供以下が隠れている親メッセージには、
 "+" が付く。また、子供以下が隠れている親メッセージでこのコマンドを実行
 すると、子供以下が現れる。
-
 @item ta
 すべてのスレッドに対し、子供の表示を反転させる。
-
 @item tg
 あるスレッドをあるメッセージに接ぎ木する。接ぎ木するスレッドは、
 @samp{C-SPC} で指定する。目的のスレッドの一番上のメッセージで、
@@ -10429,10 +9823,8 @@ Here are commands to manipulate a thread:
 Hide children and leave the parent only. If its children are hidden,
 "+" is displayed on the parent. Also, if this command is executed on a
 message whose children are hidden, they appear.
-
 @item ta
 Toggle appearance of children for all threads.
-
 @item tg
 Graft a thread to a message. To specify which thread is grafted, type
 @samp{C-SPC} on the root of the thread. Then move onto your target
@@ -10491,10 +9883,8 @@ Here are how to quit and suspend Mew and how to erase a mode (buffer).
 @item q
 Mew を一時中断し、他のバッファに切り替える。Mew 用のバッファはすべて残っ
 ているので、バッファ操作で選べば再開できる。
-
 @item Q
 Mew を終了。Mew が使ったすべてのバッファを消去する。
-
 @item C-cC-q
 そのモード(正確にはバッファ)を消去する。
 @end ifset
@@ -10502,10 +9892,8 @@ Mew を終了。Mew が使ったすべてのバッファを消去する。
 @item q
 Suspend Mew then switch to another buffer. All buffers of Mew remain, so
 you can resume with buffer operations.
-
 @item Q
 Quit Mew. All buffers of Mew are erased.
-
 @item C-cC-q
 Erase the current mode (buffer).
 @end ifset
@@ -10644,7 +10032,6 @@ Like this, @samp{mew-summary-form} is a list of list, symbol, and string.
 @ifset ja
 @item
 文字列はそのまま出力される
-
 @item
 リストは、整数とシンボルから構成される。シンボルは、呼び出す関数を意味す
 る。関数名は、"mew-summary-form-" とシンボル名を連結することで作られる。
@@ -10656,20 +10043,16 @@ Like this, @samp{mew-summary-form} is a list of list, symbol, and string.
 めを意味する。負の数は、右詰めを意味する。もし、負の数を指定する場合、対
 応する関数は ASCII 文字列を返す必要がある。0 は、行の残りを意味し、左詰
 めとなる。
-
 @item
 @samp{t} 以外のシンボルは、(1 シンボル) に等しい。
-
 @item
 @samp{mew-summary-form} は、利用される際に先頭に (mark) が付け加えられる。
-
 @item
 @samp{t} は、スレッドの際に段付けする位置を意味する。
 @end ifset
 @ifset en
 @item
 A string is printed as it is.
-
 @item
 A list consists of an integer and a symbol. The symbol specifies a
 function to be called. The name of the function is produced by
@@ -10684,13 +10067,10 @@ value means padding SPCs on the left if necessary. If a negative value
 is specified, the corresponding function must return an ASCII string. 0
 means the remaining width of the line and is treated as a positive
 value.
-
 @item
 A symbol is equivalent to (1 symbol).
-
 @item
 '(mark) is appended to @samp{mew-summary-form} when used.
-
 @item
 @samp{t} means the position of thread indentation.
 @end ifset
@@ -10761,7 +10141,6 @@ A. Kazu Yamamoto
 B. (No match)
 C. Kazuhiko Yamamoto (Kazu)
 @end example
-
 @item
 'comment:: コメントの部分
 @example
@@ -10769,7 +10148,6 @@ A: (No match)
 B: Kazu Yamamoto
 C: (Kazu)
 @end example
-
 @item
 'address:: アドレスの部分
 @example
@@ -10777,13 +10155,11 @@ A: kazu@@example.org
 B: kazu@@example.org
 C: kazu@@example.org
 @end example
-
 @item
 'nickname:: @samp{mew-addrbook-for-summary} の値に応じたアドレス帳の個人
 情報のある要素。@samp{mew-addrbook-for-summary} の初期値は
 @samp{'nickname} なので、通常はニックネームに変換される。何が指定できる
 かは、@xref{draft-mode} を参照のこと。
-
 @item
 (regex):: 最初に合致した文字列
 @end ifset
@@ -10795,7 +10171,6 @@ A. Kazu Yamamoto
 B. (No match)
 C. Kazuhiko Yamamoto (Kazu)
 @end example
-
 @item
 'comment:: Comment part, if any
 @example
@@ -10803,7 +10178,6 @@ A: (No match)
 B: Kazu Yamamoto
 C: (Kazu)
 @end example
-
 @item
 'address:: Address part
 @example
@@ -10811,14 +10185,12 @@ A: kazu@@example.org
 B: kazu@@example.org
 C: kazu@@example.org
 @end example
-
 @item
 'nickname:: one element of personal information in Addrbook according to
 @samp{mew-addrbook-for-summary}. The default value of
 @samp{mew-addrbook-for-summary} is @samp{'nickname}. So, From: is
 converted a nickname by default. To know what kind of value can be used,
 refer to @ref{draft-mode}.
-
 @item
 (regex):: The substring first matched.
 @end ifset
@@ -10900,26 +10272,20 @@ candidates.
 @ifset ja
 @item up 
 上のメッセージを表示する。
-
 @item down 
 下のメッセージを表示する。
-
 @item next
 読み進めている方向の次のメッセージを表示する。
-
 @item stop
 次は表示しない。
 @end ifset
 @ifset en
 @item up 
 Display the message above.
-
 @item down 
 Display the message below.
-
 @item next
 Display the next message in the direction.
-
 @item stop
 Do not display the next message.
 @end ifset
@@ -11307,32 +10673,24 @@ following values.
 @ifset ja
 @item 'shortname
 短縮名
-
 @item 'address
 アドレス
-
 @item 'username
 アドレスのユーザ部分
-
 @item 'nickname
 ニックネーム
-
 @item 'name
 正式な氏名
 @end ifset
 @ifset en
 @item 'shortname
 Short name
-
 @item 'address
 Address
-
 @item 'username
 User part of address
-
 @item 'nickname
 Nickname
-
 @item 'name
 Full name
 @end ifset
@@ -11435,20 +10793,16 @@ If you want to check a chosen charset when composing, configure
 @ifset ja
 @item nil
 どのような文字コードが利用されても確認なし
-
 @item 文字コードのリスト
 このリストに存在しない文字コードが利用された場合に確認
-
 @item t
 @samp{mew-charset-m17n} が利用された場合に確認
 @end ifset
 @ifset en
 @item nil
 Not ask.
-
 @item A list of charset
 Ask if the charset is not a member of the list.
-
 @item t
 Ask if @samp{mew-charset-m17n} is used.
 @end ifset
@@ -11514,23 +10868,18 @@ draft, Mew takes the following step to decide a charset.
 @enumerate
 @item
 ISO-8859-1 に収まるなら "iso-8859-1" を利用
-
 @item
 そうでないなら "utf-8" を利用
 @end enumerate
-
 @item
 @samp{unify-8859-on-decoding-mode} を利用していない場合：
 @enumerate
 @item
 ISO-8859-1 と ISO-8859-15 のどちらにも収まる場合、@w{"}ISO-8859-1"
-
 @item
 ISO-8859-1 に収まるなら "iso-8859-1" を利用
-
 @item
 ISO-8859-15 に収まるなら "iso-8859-15" を利用
-
 @item
 そうでないなら、"utf-8" を利用
 @end enumerate
@@ -11541,24 +10890,19 @@ If @samp{unify-8859-on-decoding-mode} is used:
 @enumerate
 @item
 Use "iso-8859-1" if no loss.
-
 @item
 Otherwise, use "utf-8".
 @end enumerate
-
 @item
 If @samp{unify-8859-on-decoding-mode} is not used:
 @enumerate
 @item
 If both ISO-8859-1 and ISO-8859-15 can be used with no loss,
 @w{"}ISO-8859-1" is used.
-
 @item
 Use "iso-8859-1" if no loss.
-
 @item
 Use "iso-8859-15" if no loss.
-
 @item
 Otherwise, use "utf-8".
 @end enumerate
@@ -11701,13 +11045,13 @@ feature, install the "netpbm" package and the "compface" package.
 @end ifset
 
 @ifset ja
-色を変更するには、Mew のソースと一緒に配布されている "dot.theme" を
+色を変更するには、Mew のソースと一緒に配布されている "conf/dot.theme" を
 適当な名前でコピーし内容を変更します。ここでは、そのファイル名を
 "~/.mew-theme.el" としましょう。まず、この名前を ".mew.el" で
 @samp{mew-theme-file} に指定して下さい。
 @end ifset
 @ifset en
-To modify colors, copy "dot.theme" contained Mew's source file to
+To modify colors, copy "conf/dot.theme" contained Mew's source file to
 an appropriate place, say "~/.mew-theme.el". First, set
 @samp{mew-theme-file} to this file name in ".mew.el" as follows:
 @end ifset
@@ -11759,10 +11103,10 @@ configuration as follows:
 @end lisp
 
 @ifset ja
-シンボルに何があるのかは、"dot.mew" を見て下さい。
+シンボルに何があるのかは、"conf/dot.theme" を見て下さい。
 @end ifset
 @ifset en
-To know what kind of symbols are prepared, see the "dot.mew".
+To know what kind of symbols are prepared, see the "conf/dot.theme".
 @end ifset
 
 @ifset ja
@@ -11823,289 +11167,202 @@ Here is a summary of hooks used in Mew.
 @ifset ja
 @item mew-env-hook
 Mew の起動時の環境が設定される前に評価される。
-
 @item mew-init-hook
 Mew の起動時に評価される。
-
 @item mew-status-update-hook
 状態の更新(@samp{Z})のときに評価される。
-
 @item mew-summary-mode-hook
 Summary モードに入るときに評価される。
-
 @item mew-virtual-mode-hook
 Virtual モードに入るときに評価される。
-
 @item mew-thread-display-hook
 スレッドが表示された後に評価される。
-
 @item mew-header-mode-hook
 Header モードに入るときに評価される。
-
 @item mew-draft-mode-hook
 Draft モードに入るときに評価される。
-
 @item mew-draft-mode-newdraft-hook
 新しい草稿が用意された際に、Draft モードにおいて評価される。
-
 @item mew-draft-mode-reedit-hook
 +draft でないフォルダにある古い草稿を再編集した際に、Draft モードにおい
 て評価される。
-
 @item mew-draft-mode-reedit-draft-hook
 +draft でないフォルダにある草稿を再編集した際に、Draft モードにおいて評
 価される。
-
 @item mew-draft-mode-reedit-queue-hook
 +queue または +postq フォルダにあるメッセージを再編集した際に、Draft モー
 ドにおいて評価される。
-
 @item mew-draft-mode-edit-again-hook
 古い形式で戻ってきたメッセージを再編集した際に、Draft モードにおいて評価
 される。
-
 @item mew-message-mode-hook
 Message モードに入るときに評価される。
-
 @item mew-message-hook
 メッセージが Message モードで表示される度に評価される。
-
 @item mew-make-message-hook
 Draft モードで MIME メッセージを作る前、つまり @samp{C-cC-m} の際の最初
 に評価される。例：(add-hook 'mew-make-message-hook 'ispell-message)
-
 @item mew-send-hook
 メッセージを SMTP で送信/キューイングする前に評価される。メッセージの最
 終形が作られる前に評価されることに注意。
-
 @item mew-post-hook
 メッセージを NNTP で投稿/キューイングする前に評価される。メッセージの最
 終形が作られる前に評価されることに注意。
-
 @item mew-real-send-hook
 メッセージを SMTP で送信/キューイングする前に評価される。メッセージの最
 終形が作られた後に評価されることに注意。
-
 @item mew-real-post-hook
 メッセージを NNTP で送信/キューイングする前に評価される。メッセージの最
 終形が作られた後に評価されることに注意。
-
 @item mew-smtp-flush-hook
 +queue フォルダにメッセージがある場合に、SMTP が起動される前に評価され
 る。
-
 @item mew-nntp2-flush-hook
 +postq フォルダにメッセージがある場合に、NNTP が起動される前に評価され
 る。
-
 @item mew-smtp-sentinel-hook
 SMTP が終了する際に評価される。
-
 @item mew-nntp-sentinel-hook
 受信用の NNTP が終了する際に評価される。
-
 @item mew-nntp2-sentinel-hook
 送信用の NNTP が終了する際に評価される。
-
 @item mew-pop-sentinel-hook
 POP が終了する際に評価される。
-
 @item mew-pop-sentinel-non-biff-hook
 Biff ではない POP が終了する際に評価される。
-
 @item mew-imap-sentinel-hook
 IMAP が終了する際に評価される。
-
 @item mew-imap-sentinel-non-biff-hook
 Biff ではない IMAP が終了する際に評価される。
-
 @item mew-scan-sentinel-hook
 Summary モードの @samp{s} が終了する際に評価される。
-
 @item mew-summary-ls-no-scan-hook
 Summary モードの @samp{s} がフォルダの一覧を取らなかった場合に評価される。
-
 @item mew-summary-exec-hook
 Summary モードの @samp{x} の実行が終了する際に評価される。
-
 @item mew-refile-guess-by-from-learn-hook
 mew-refile-guess-by-from-learn が実行される際に評価される。
-
 @item mew-sort-hook
 Summary モードの @samp{M-s} の実行が終了する際に評価される。
-
 @item mew-pack-hook
 Summary モードの @samp{O} の実行が終了する際に評価される。
-
 @item mew-summary-delete-folder-hook
 フォルダが削除されるときに評価される。
-
 @item mew-summary-rename-folder-hook
 フォルダ名が変更されるときに評価される。
-
 @item mew-summary-toggle-disp-msg-hook
 Summary モードの @samp{v} の実行が終了する際に評価される。
-
 @item mew-syntax-format-hook
 マルチパートの書式を作成する関数 @samp{mew-syntax-format} が呼ばれた際に
 評価される。
-
 @item mew-addrbook-mode-hook
 アドレス帳の登録モードに入るときに評価される。
-
 @item mew-cite-hook
 Draft モードで引用する際に呼ばれる。通常 supercite を設定するために使う。
-
 @item mew-before-cite-hook
 Draft モードでメッセージを引用する直前に呼ばれる。
-
 @item mew-suspend-hook
 Mew を一時中断した際に評価される。
-
 @item mew-quit-hook
 Mew の終了時に評価される。
 @end ifset
 @ifset en
 @item mew-env-hook
 Hook called at initialize time before setting environment.
-
 @item mew-init-hook
 Hook called at initialize time.
-
 @item mew-status-update-hook
 Hook called at status update(@samp{Z}).
-
 @item mew-summary-mode-hook
 Hook called in Summary mode.
-
 @item mew-virtual-mode-hook
 Hook called in Virtual mode.
-
 @item mew-thread-display-hook
 Hook called after new threads are displayed.
-
 @item mew-header-mode-hook
 Hook called in Header mode.
-
 @item mew-draft-mode-hook
 Hook called in Draft mode.
-
 @item mew-draft-mode-newdraft-hook
 Hook called in Draft mode only when new draft is prepared.
-
 @item mew-draft-mode-reedit-hook
 Hook called in Draft mode when a message not in +draft is re-edited.
-
 @item mew-draft-mode-reedit-draft-hook
 Hook called in Draft mode when a message in +draft is re-edited.
-
 @item mew-draft-mode-reedit-queue-hook
 Hook called in Draft mode when a message in +queue or +postq is
 re-edited.
-
 @item mew-draft-mode-edit-again-hook
 Hook called in Draft mode when a message returned with the old style is
 edited again.
-
 @item mew-message-mode-hook
 Hook called in Message mode.
-
 @item mew-message-hook
 Hook called whenever message displayed.
-
 @item mew-make-message-hook
 Hook called before making a message in Draft mode. A good example is as
 follows: (add-hook 'mew-make-message-hook 'ispell-message)
-
 @item mew-send-hook
 Hook called before sending/queuing an e-mail message in Draft mode.
 Note that this hook is called before composition of the message
-
 @item mew-post-hook
 Hook called before posting/queuing a NetNews message in Draft mode.
 Note that this hook is called before composition of the message.
-
 @item mew-real-send-hook
 Hook called before sending/queuing an e-mail message in Draft mode.
 Note that this hook is called after composition of the message.
-
 @item mew-real-post-hook
 Hook called before sending/queuing a NetNews message in Draft mode.
 Note that this hook is called after composition of the message.
-
 @item mew-smtp-flush-hook
 Hook called before SMTP runs if messages exist in +queue.
-
 @item mew-nntp2-flush-hook
 Hook called before NNTP runs if messages exist in +postq.
-
 @item mew-smtp-sentinel-hook
 Hook called when a SMTP process finished.
-
 @item mew-nntp-sentinel-hook
 Hook called when a NNTP process to receive messages finished.
-
 @item mew-nntp2-sentinel-hook
 Hook called when a NNTP process to post messages finished.
-
 @item mew-pop-sentinel-hook
 Hook called when a POP process finished.
-
 @item mew-pop-sentinel-non-biff-hook
 Hook called when a non-Biff POP process finished.
-
 @item mew-imap-sentinel-hook
 Hook called when a NNTP process to post messages finished.
-
 @item mew-imap-sentinel-hook
 Hook called when an IMAP process finished.
-
 @item mew-imap-sentinel-non-biff-hook
 Hook called when a non-Biff IMAP process finished.
-
 @item mew-scan-sentinel-hook
 Hook called when scan finished.
-
 @item mew-summary-ls-no-scan-hook
 Hook called when mew-summary-ls does not scan a folder.
-
 @item mew-summary-exec-hook
 Hook called when @samp{x} in Summary mode finished.
-
 @item mew-refile-guess-by-from-learn-hook
 Hook called in mew-refile-guess-by-from-learn.
-
 @item mew-sort-hook
 Hook called when @samp{M-s} in Summary mode finished.
-
 @item mew-pack-hook
 Hook called when @samp{O} in Summary mode finished.
-
 @item mew-summary-delete-folder-hook
 Hook called when a folder deleted.
-
 @item mew-summary-rename-folder-hook
 Hook called when a folder renamed. 
-
 @item mew-summary-toggle-disp-msg-hook
 Hook called when @samp{v} in Summary finished.
-
 @item mew-syntax-format-hook
 Hook called when mew-syntax-format is called.
-
 @item mew-addrbook-mode-hook
 Hook called in Addrbook mode.
-
 @item mew-cite-hook
 Hook for an external cite mechanism. If you want to use super-cite, 
 (setq mew-cite-hook 'sc-cite-original).
-
 @item mew-before-cite-hook
 Called in mew-summary-reply-with-citation before citation.
-
 @item mew-suspend-hook
 Hook called on suspend.
-
 @item mew-quit-hook
 Hook called on quit.
 @end ifset
@@ -12167,43 +11424,33 @@ variables to control POP.
 @ifset ja
 @item mew-pop-server
 POP サーバの名前。
-
 @item mew-pop-ssh-server
 POP を SSH 経由で取得する場合の SSH サーバの名前。
-
 @item mew-pop-ssl
 POP over SSL を使うか否か。
-
 @item mew-pop-ssl-port
 POP over SSL のポート番号。
-
 @item mew-pop-user
 POP のアカウント名。初期値はログイン名。
-
 @item mew-pop-auth
 POP の認証方式。@samp{'pass} は USER/PASS (生パスワード)、@samp{'apop} 
 は APOP、@samp{t} は @samp{mew-pop-auth-list} に従った SASL を意味する。
 初期値は @samp{'apop}。
-
 @item mew-pop-auth-list
 SASL で利用する認証方式のリスト。優先順位の高い順に並べる。現在、
 "CRAM-MD5" が利用可能。
-
 @item mew-pop-delete
 POP サーバからメッセージを取得後、POP サーバにあるメッセージを削除するか
 否か。@samp{t} なら削除。@samp{nil} なら削除しない。数値 N なら、最初の
 アクセスから N 日後に削除する。初期値は @samp{t}。
-
 @item mew-pop-size
 POP サーバから取得するメッセージの大きさの上限。初期値は 55296 バイト。0 
 に設定すると、上限なしの意味になり、すべてのメッセージを取得する。上限に
 引っ掛かったメッセージの全体を取得する方法については、@xref{retrieving} 
 を参照のこと。
-
 @item mew-pop-body-lines
 大きさの上限にひっかかったメッセージの本文を何行取得するかという値。初
 期値は 40。
-
 @item mew-pop-header-only
 POP でメッセージを取得する際に、ヘッダのみにするか、本文も取得するか。
 @samp{nil} でなければ、ヘッダのみを取得。初期値は @samp{nil}。
@@ -12211,45 +11458,35 @@ POP でメッセージを取得する際に、ヘッダのみにするか、本�
 @ifset en
 @item mew-pop-server
 The name of your POP server. 
-
 @item mew-pop-ssh-server
 The name of SSH server which forwards the POP3 port.
-
 @item mew-pop-ssl
 If non-nil, POP connections are made over SSL.
-
 @item mew-pop-ssl-port
 The port for POP over SSL.
-
 @item mew-pop-user
 The user name on your POP server. The default is your login name.
-
 @item mew-pop-auth
 The authentication method for POP3. 'pass means the authentication with
 USER/PASS (i.e. plain password). 'apop means the authentication with
 APOP. @samp{t} means SASL according to @samp{mew-pop-auth-list}. The
 default is 'apop.
-
 @item mew-pop-auth-list
 A list of SASL methods in the preferred order. Currently, "CRAM-MD5"
 can be used.
-
 @item mew-pop-delete
 Whether or not delete messages on a POP server after retrieval by POP.
 If @samp{t}, delete the messages. If @samp{nil}, retain the messages.
 If number N, delete the messages N days after the first access. The
 default is @samp{t}.
-
 @item mew-pop-size
 The limit size of messages to be retrieved by POP. The default is 55296
 byte. 0 means unlimited, so you can get all messages from the POP
 server. To know how to retrieve the rest of a truncated message, please
 refer to @ref{retrieving}.
-
 @item mew-pop-body-lines
 *The limit of body lines to get when the size of message exceeds
 @samp{mew-pop-size}. The default is 40.
-
 @item mew-pop-header-only
 Whether or not the body of a message is retrieved by POP. If non-nil,
 only header is retrieved. The default is @samp{nil}
@@ -12278,38 +11515,29 @@ variables to control IMAP.
 @ifset ja
 @item mew-imap-server
 IMAP サーバの名前。
-
 @item mew-imap-ssh-server
 IMAP を SSH 経由で取得する場合の SSH サーバの名前。
-
 @item mew-imap-ssl
 IMAP over SSL を使うか否か。
-
 @item mew-imap-ssl-port
 IMAP over SSL のポート番号。
-
 @item mew-imap-user
 IMAP のアカウント名。初期値はログイン名。
-
 @item mew-imap-auth
 IMAP の認証方式。@samp{nil} は LOGIN (生パスワード)、@samp{t} は 
 @samp{mew-imap-auth-list} に基づいた SASL を意味する。初期値は @samp{t}。
-
 @item mew-imap-auth-list
 SASL で利用する認証方式のリスト。優先順位の高い順に並べる。現在、
 "CRAM-MD5" と "LOGIN" が利用可能。
-
 @item mew-imap-delete
 IMAP サーバからメッセージを取得後、IMAP サーバにあるメッセージを削除するか
 否か。@samp{t} なら削除。@samp{nil} なら削除しない。数値 N なら、最初の
 アクセスから N 日後に削除する。初期値は @samp{t}。
-
 @item mew-imap-size
 IMAP サーバから取得するメッセージの大きさの上限。初期値は 55296 バイト。
 0 に設定すると、上限なしの意味になり、すべてのメッセージを取得する。上限
 に引っ掛かったメッセージの全体を取得する方法については、
 @xref{retrieving} を参照のこと。
-
 @item mew-imap-header-only
 IMAP でメッセージを取得する際に、ヘッダのみにするか、本文も取得するか。
 @samp{nil} でなければ、ヘッダのみを取得。初期値は @samp{nil}。
@@ -12317,40 +11545,31 @@ IMAP でメッセージを取得する際に、ヘッダのみにするか、本
 @ifset en
 @item mew-imap-server
 The name of your IMAP server. 
-
 @item mew-imap-ssh-server
 The name of SSH server which forwards the IMAP4 port.
-
 @item mew-imap-ssl
 If non-nil, IMAP connections are made over SSL.
-
 @item mew-imap-ssl-port
 The port for IMAP over SSL.
-
 @item mew-imap-user
 The user name on the IMAP server. The default is your login name.
-
 @item mew-imap-auth
 The authentication method for IMAP4. @samp{nil} means the authentication with
 LOGIN (i.e. plain password). @samp{t} means SASL according to
 @samp{mew-imap-auth-list}. The default is @samp{t}.
-
 @item mew-imap-auth-list
 A list of SASL methods in the preferred order.
 Currently, "CRAM-MD5" and "LOGIN" can be used.
-
 @item mew-imap-delete
 Whether or not delete messages on an IMAP server after retrieval by
 IMAP. If @samp{t}, delete the messages. If @samp{nil}, retain the
 messages. If number N, delete the messages N days after the first
 access. Otherwise they are not deleted. The default is @samp{t}.
-
 @item mew-imap-size
 The limit size of messages to be retrieved by IMAP. The default is 55296
 byte. 0 means unlimited, so you can get all messages from the IMAP
 server. To know how to retrieve the rest of a truncated message, please
 refer to @ref{retrieving}.
-
 @item mew-imap-header-only
 Whether or not the body of a message is retrieved by IMAP. If non-nil,
 only header is retrieved. The default is @samp{nil}
@@ -12379,38 +11598,29 @@ following variables to control NNTP.
 @ifset ja
 @item mew-nntp-server
 NNTP サーバの名前。
-
 @item mew-nntp-ssh-server
 NNTP を SSH 経由で取得する場合の SSH サーバの名前。
-
 @item mew-nntp-ssl
 NNTP over SSL を使うか否か。
-
 @item mew-nntp-ssl-port
 NNTP over SSL のポート番号。
-
 @item mew-nntp-user
 NNTP のアカウント名。もし @samp{nil} でなければ、認証の手続きが実行され
 る。(mew-nntp-auth という変数はないことに注意。)
-
 @item mew-nntp-newsgroup
 ニュースグループ名の初期値。
-
 @item mew-nntp-size
 NNTP サーバから取得するメッセージの大きさの上限。初期値は 55296 バイト。
 0 に設定すると、上限なしの意味になり、すべてのメッセージを取得する。上限
 に引っ掛かったメッセージの全体を取得する方法については、
 @xref{retrieving} を参照のこと。
-
 @item mew-nntp-header-only
 NNTP でメッセージを取得する際に、ヘッダのみにするか、本文も取得するか。
 @samp{nil} でなければ、ヘッダのみを取得。初期値は @samp{nil}。
-
 @item mew-nntp-msgid-user
 Message-Id: を作成するためのユーザ名。@samp{nil} であれば 
 @samp{mew-user} の値が利用される。初期値は @samp{nil}。
 Message-Id: の書式は以下を参照。
-
 @item mew-nntp-msgid-domain
 Message-Id: を作成するためのドメイン名。@samp{nil} であれば 
 @samp{mew-mail-domain} の値が利用される。初期値は @samp{nil}。
@@ -12419,36 +11629,27 @@ Message-Id: の書式は以下を参照。
 @ifset en
 @item mew-nntp-server
 The name of your NNTP server.
-
 @item mew-nntp-ssh-server
 The name of SSH server which forwards the NNTP port.
-
 @item mew-nntp-ssl
 If non-nil, NNTP connections are made over SSL.
-
 @item mew-nntp-ssl-port
 The port for NNTP over SSL.
-
 @item mew-nntp-user
 The user name on the NNTP server. If non-nil, authentication is used.
 (Note that mew-nntp-auth does not exist.)
-
 @item mew-nntp-newsgroup
 The name of default Newsgroup.
-
 @item mew-nntp-size
 The limit size of messages to be retrieved by NNTP. The default is 55296
 byte. 0 means unlimited, so you can get all messages from the NNTP
 server.
-
 @item mew-nntp-header-only
 Whether or not the body of a message is retrieved by NNTP. If non-nil,
 only header is retrieved.
-
 @item mew-nntp-msgid-user
 A user name for creation of Message-Id:. If @samp{nil}, the value of
 @samp{mew-user} is used. The default is @samp{nil}.
-
 @item mew-nntp-msgid-domain
 A domain name for creation of Message-Id:. If @samp{nil}, the value of
 @samp{mew-mail-domain} is used. The default is @samp{nil}.
@@ -12490,48 +11691,36 @@ password. This section describes following variables to control SMTP.
 @ifset ja
 @item mew-smtp-server
 SMTP サーバの名前。
-
 @item mew-smtp-port
 SMTP ポート番号。絶対パス名を指定すると Unix ドメインソケットを
 使用する。
-
 @item mew-smtp-submission-family
 SMTP サーバと接続する際に用いるアドレスファミリ。初期値は 'ipv4。
-
 @item mew-smtp-ssh-server
 SSH 経由でメッセージを送る際の SSH サーバの名前。
-
 @item mew-smtp-ssl
 SMTP over SSL を使うか否か。
-
 @item mew-smtp-ssl-port
 SMTP over SSL のポート番号。
-
 @item mew-smtp-user
 SMTP AUTH で利用されるアカウント名。設定されない場合は、自動的にメール
 アドレスに設定される。
-
 @item mew-smtp-auth-list
 SMTP AUTH で利用する認証方式のリスト。優先順位の高い順に並べる。初期値
 は、'("CRAM-MD5" "PLAIN" "LOGIN")。
-
 @item mew-smtp-helo-domain
 SMTP HELO コマンドで使われるサーバ名。初期値は "localhost"。
-
 @item mew-smtp-mail-from
 SMTP MAIL FROM コマンドで指定されるアドレス。@samp{nil} の場合は、From: 
 フィールドのアドレスが指定される。初期値は @samp{nil}。
-
 @item mew-smtp-msgid-user
 Message-Id: を作成するためのユーザ名。@samp{nil} であれば 
 @samp{mew-user} の値が利用される。初期値は @samp{nil}。
 Message-Id: の書式は以下を参照。
-
 @item mew-smtp-msgid-domain
 Message-Id: を作成するためのドメイン名。@samp{nil} であれば 
 @samp{mew-mail-domain} の値が利用される。初期値は @samp{nil}。
 Message-Id: の書式は以下を参照。
-
 @item mew-use-8bit
 8 ビットテキストを符号化せずにそのまま送るか否か。@samp{nil} の場合は、適
 切な MIME 符号化が施される。初期値は @samp{nil}。
@@ -12539,47 +11728,35 @@ Message-Id: の書式は以下を参照。
 @ifset en
 @item mew-smtp-server
 The name of your SMTP server.
-
 @item mew-smtp-port
 The port for SMTP.  When an absolute pathname is specified,
 it will be used as a Unix domain socket.
-
 @item mew-smtp-submission-family
 The address family to be used for the SMTP server.  The default value is 'ipv4.
-
 @item mew-smtp-ssh-server
 The name of SSH server which forwards the SMTP port.
-
 @item mew-smtp-ssl
 If non-nil, SMTP connections are made over SSL.
-
 @item mew-smtp-ssl-port
 The port for SMTP over SSL.
-
 @item mew-smtp-user
 The user name on your SMTP server. If not configured, your e-mail
 address is automatically set.
-
 @item mew-smtp-auth-list
 A list of SMTP AUTH methods in the preferred order.
 Currently, "CRAM-MD5", "PLAIN", and "LOGIN" can be used.
-
 @item mew-smtp-helo-domain
 An e-mail domain to tell a SMTP server with HELO/EHLO. The default is
 "localhost".
-
 @item mew-smtp-mail-from
 The default is @samp{nil}. An e-mail address to tell a SMTP server with
 MAIL FROM:. If @samp{nil}, an address specified by the From: field is used.
-
 @item mew-smtp-msgid-user
 A user name for creation of Message-Id:. If @samp{nil}, the value of
 @samp{mew-user} is used. The default is @samp{nil}.
-
 @item mew-smtp-msgid-domain
 A domain name for creation of Message-Id:. If @samp{nil}, the value of
 @samp{mew-mail-domain} is used. The default is @samp{nil}.
-
 @item mew-use-8bit
 Whether or not send 8bit text without MIME encoding. If @samp{nil}, an
 appropriate MIME encoding is applied. The default is @samp{nil}.
@@ -12915,12 +12092,10 @@ You can automatically set the "case" in Draft mode.
 この変数が @samp{t} の場合、草稿が用意されたときに、
 @samp{mew-case-guess-alist} に従ってケースが設定される。初期値は
 @samp{t}。
-
 @item mew-case-guess-when-composed
 この変数が @samp{t} の場合、メッセージが作成されたときに、
 @samp{mew-case-guess-alist} に従ってケースが設定される。初期値は
 @samp{nil}
-
 @item mew-case-guess-when-replied
 この変数が @samp{t} の場合、返答によって草稿が用意されたときに、
 @samp{mew-case-guess-when-replied-alist} に従ってケースが設定される。初
@@ -12931,12 +12106,10 @@ You can automatically set the "case" in Draft mode.
 If this variable is @samp{t}, the "case" is automatically guessed
 according @samp{mew-case-guess-alist} when a draft is prepared. The
 default is @samp{t}.
-
 @item mew-case-guess-when-composed
 If this variable is @samp{t}, the "case" is automatically guessed
 according @samp{mew-case-guess-alist} when a message is composed. The
 default is @samp{nil}.
-
 @item mew-case-guess-when-replied
 If this variable is @samp{t}, the "case" is automatically guessed
 according @samp{mew-case-guess-when-replied-alist} when a draft is
@@ -12986,14 +12159,12 @@ The following is a summary of commands concerned with the "case".
 @ifset ja
 @item C
 Summary モードにおいて、ケースを設定する。
-
 @item C-cC-o
 Draft モードにおいて、その草稿のケースを設定する。
 @end ifset
 @ifset en
 @item C
 In Summary mode, set the "case".
-
 @item C-cC-o
 In Draft mode, set the "case" of a draft.
 @end ifset
@@ -13018,19 +12189,16 @@ In Mew 6.1, configuration format of "mew.el" is improved. You can use
 a new format as well as the old format.
 @end ifset
 
-
 @itemize @minus
 @ifset ja
 @item
 古い書式ではリストの中に "." が現れる場合がありました。新しい書式では、
 "." はまったく使われません。たとえば、("foo" . "bar") と書いていたとこ
 ろは、("foo" "bar") と書けます。
-
 @item
 古い書式では、ポート番号は文字列で書いていました。たとえば、"25" です。
 新しい書式では、数値で書いてもよくなりました。たとえば、25 です。文字列
 も有効です。たとえば、"smtp" です。
-
 @item
 古い書式では、@samp{mew-config-alist} のケースやキーを文字列で書いてい
 ました。新しい書式では、シンボルで書けます。
@@ -13040,12 +12208,10 @@ a new format as well as the old format.
 In the old format, sometime "." appears. In the new fomat, no "."
 appears at all. For instance, you can write ("foo" "bar") instead of
 ("foo" . "bar").
-
 @item
 In the old format, a numeric port is specified as string. An example
 is "25". In the new format, you can write it as integer. An example is
 25. The string is still valid. An example is "smtp".
-
 @item
 In the old format, the cases and the keys of @samp{mew-config-alist}
 are written as string. In the new format, you can specify them as
@@ -13471,15 +12637,12 @@ It's default to 1. The meanings of the values are as follows:
 @ifset ja
 @item 0
 検証しない
-
 @item 1
 サーバの証明書があれば検証する。検証結果が失敗なら、SSL/TSL コネクショ
 ンは作られない。証明書がなければ、SSL/TLS コネクションを作成する。
-
 @item 2
 サーバの証明書を検証する。検証結果が失敗なら、SSL/TSL コネクションは作
 られない。証明書がなければ、SSL/TLS コネクションを作成しない。
-
 @item 3
 サーバが送ってきたものではなく、ローカルにインストールされている証明書
 で検証する。
@@ -13487,17 +12650,14 @@ It's default to 1. The meanings of the values are as follows:
 @ifset en
 @item 0
 No verification.
-
 @item 1
 Verify server's certificate if present. If verification failed, an
 SSL/TLS connection is not created. If not present, an SSL/TLS
 connection is created.
-
 @item 2
 Verify server's certificate. If verification failed, an SSL/TLS
 connection is not created. If not present, an SSL/TLS connection is
 not created.
-
 @item 3 
 Verify server's certificate which locally installed (not one from the
 server).
@@ -13889,40 +13049,30 @@ They are all a list of strings. Mew takes the following rules:
 @ifset ja
 @item
 アドレスが @samp{mew-safe-addresses} で指定されていれば警告しない。
-
 @item
 アドレスが @samp{mew-warn-addresses} で指定されていれば警告する。
-
 @item
 ドメインが @samp{mew-safe-domains} で指定されていれば警告しない。
-
 @item
 ドメインが @samp{mew-warn-domains} で指定されていれば警告する。
-
 @item
 @samp{mew-warn-addresses} か @samp{mew-safe-domains} が定義されていれば
 警告する。
-
 @item
 警告しない。
 @end ifset
 @ifset en
 @item
 If an address is specified in @samp{mew-safe-addresses}, no warning.
-
 @item
 If the address is specified in @samp{mew-warn-addresses}, warning.
-
 @item
 If its domain is specified in @samp{mew-safe-domains}, no warning.
-
 @item
 If its domain is specified in @samp{mew-warn-domains}, warning.
-
 @item
 If either @samp{mew-warn-addresses} or @samp{mew-safe-domains} defined,
 warning.
-
 @item
 No warning.
 @end ifset
@@ -14044,19 +13194,16 @@ Edit mode is a mode to edit a message to generate another new message.
 The followings are typical examples:
 @end ifset
 
-
 @itemize @minus
 @ifset ja
 @item
 大きな添付ファイルを削除して保存する
-
 @item
 PGP/MIME や S/MIME で暗号化されたメッセージを復号化した状態で保存する
 @end ifset
 @ifset en
 @item
 Saving a new message with big attachments removed
-
 @item
 Saving a decrypted message whose original one is encrypted with
 PGP/MIME or S/MIME
@@ -14127,20 +13274,16 @@ The following is a summary of commands in Edit mode.
 @ifset ja
 @item C-cC-c
 編集したメッセージを新しいメッセージに保存。
-
 @item C-cC-m
 @samp{C-cC-c}に同じ。
-
 @item その他
 Draft モードと同じ。
 @end ifset
 @ifset en
 @item C-cC-c
 Saving the edited message to a new message.
-
 @item C-cC-m
 The same as @samp{C-cC-c}
-
 @item Other commands
 The same as the other commands in Edit mode
 @end ifset
@@ -14186,31 +13329,25 @@ To: が目的の人で、Cc: は参考までに送り付ける人です。自分
 を To: や Cc: に書いて、相手に迷惑をかけてしまうことがないようにしましょ
 う。
 
-
 @item To: と Cc: に書くアドレスの数は少なくする
 アドレスをたくさん To: や Cc: に書くのはよくないことです。面倒でもメーリ
 ングリストを作りましょう。あるいは、必要に応じて宛先を匿名にしましょう
 (@xref{anonymous})。
 
-
 @item Subject: には本文の内容を的確に短く書く
 Subject: を見て読むか決める人がいますから、不適切な Subject: だと読んで
 もらえないかもしれません。長い Subject: は読みにくいので止めましょう。
-
 
 @item 必要な部分だけを引用する
 面倒でも不要な部分は削りましょう。Mew を使っていれば、引用は楽勝のはずで
 す。
 
-
 @item シグニチャは簡素にする
 長いシグニチャは単なる自己満足です。
-
 
 @item いたずらメッセージを送らない
 こんなことは注意したくありませんが、それでも不幸のメッセージなどを送って
 くる人がいます。人格を疑われることを理解すべきです。
-
 
 @item 相手の読めるデータのみを添付する
 なんの合意もなしに送ってよいデータはテキストのみです。それ以外のデータを
@@ -14224,33 +13361,27 @@ their information. If his address is not on To:, he might skip to read
 the message. We should take care not to deliver to wrong people by
 mistaking the addresses.
 
-
 @item The number of addresses To: and Cc: should be small
 It is discouraged to specify a lot of mail addresses on To: and Cc:. You
 should create a mailing-list instead. Or, if necessary, you should make
 the destination anonymous (@pxref{anonymous}).
-
 
 @item Write a short and clear summary of body in Subject:
 There are people who decide to read contents from their Subject:. So,
 they might skip messages with improper Subject:. We should not write a
 long subject since it is hard to read.
 
-
 @item Cite only necessary sentences
 You should not bother to remove unnecessary sentences. With Mew,
 citation must be a piece of cake.
 
-
 @item Make your signature simple
 A long signature is just self-satisfaction.
-
 
 @item Do not send prank messages
 I do not want to warn this kind of stuff. Nonetheless, someone sends
 Happy or Unhappy messages to others. You should understand that people
 doubt your character.
-
 
 @item Attach data files that the receivers can read
 It is text only that you can send without any agreement with the
@@ -14295,7 +13426,6 @@ TCP コネクションを使うので問題ありません。しかし、Summary
 い遅かったので、"mewencode" を使い続けています。(ただし、Base64 が Emacs 
 で実装されていれば、そちらを使います。)
 
-
 @item 文字列検索(@samp{C-s}、@samp{C-r})すると、行末にカーソルが飛ぶのはなぜ？
 Summary mode において、スレッド情報は表示されません。これは、Summary
 mode で表示されている行に関しては、表示する瞬間にスレッド情報に非表示
@@ -14307,7 +13437,6 @@ mode で表示されている行に関しては、表示する瞬間にスレッ
 の入力がない時間に非表示の属性が付きます。全体に非表示の属性が付くと、
 Summary mode のモードラインの右端にある @samp{*} マークが消えます。こ
 の状態では、文字列検索が直感通りに働きます。
-
 
 @item Mew 4.3 でファイルを添付すると MS のメールリーダでファイル名が認識できるようになりました
 MS のメールリーダは、ファイル名を符号化する際に、標準化されてない独自の
@@ -14334,7 +13463,6 @@ Emacs Lisp in several ways, they are too slow to use. So, I decided to
 continue to use "mewencode". (If Base64 is implemented by Emacs, Mew
 uses the native function.)
 
-
 @item Why does the cursor jump onto the end of line when searching(@samp{C-s}, @samp{C-r})?
 Thread informations are not displayed in Summary mode. This is because
 the "invisible" property is dynamically put onto them when
@@ -14347,7 +13475,6 @@ property for all lines in Summary mode in background while there are no
 user key inputs. When this word is finished, the @samp{*} mark in the
 right side of the mode line in Summary mode disappears. In this
 situation, string search works exactly as you expect.
-
 
 @item MS's mailers can handle file names well if I attach files with Mew 4.3
 MS's mailers use "non-standard MS original" encoding to encode file
@@ -14467,7 +13594,7 @@ https://groups.google.com/forum/#!forum/mew-en
 @ifset ja
 Mew は以下の著作権に従います。
 
-Copyright (C) 1994-2018 Mew developing team.@*
+Copyright (C) 1994-2023 Mew developing team.@*
 All rights reserved.
 
 変更の有無にかかわらず、ソースおよびバイナリ形式の再配布および利用は、以
@@ -14477,12 +13604,10 @@ All rights reserved.
 @item
 ソース・コードの再配布は、上記の著作権表示、この条件項目、および、以下の
 免責事項を保存しなければならない。
-
 @item
 バイナリ形式の再配布は、上記の著作権表示、この条件項目、および、以下の免
 責事項を、その配布に付随する説明書、あるいはその他の資料のいずれかに明記
 しなければならない。
-
 @item
 前もって特別に許諾を得ない限り、このソフトウェアから派生した製品の推奨や
 販売促進のために、このチーム名と貢献者達の名前を利用してはならない。
@@ -14502,7 +13627,7 @@ All rights reserved.
 @ifset en
 Mew conforms the following copyright.
 
-Copyright (C) 1994-2018 Mew developing team.@*
+Copyright (C) 1994-2023 Mew developing team.@*
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -14513,12 +13638,10 @@ are met:
 @item
 Redistributions of source code must retain the above copyright
 notice, this list of conditions and the following disclaimer.
-
 @item
 Redistributions in binary form must reproduce the above copyright
 notice, this list of conditions and the following disclaimer in the
 documentation and/or other materials provided with the distribution.
-
 @item
 Neither the name of the team nor the names of its contributors
 may be used to endorse or promote products derived from this software
