@@ -1,7 +1,7 @@
 /*
  * utils.c
  *
- * Author:  Kazu Yamamoto <Kazu@Mew.org>
+ * Author:  Mew developing team
  * Created: Sep 29, 2000
  *
  * Code:

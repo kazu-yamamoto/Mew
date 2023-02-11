@@ -1,7 +1,7 @@
 /*
  * mewencode, mewdecode, and mewcat --- MIME encoding for Mew
  *
- * Author:  Kazu Yamamoto <Kazu@Mew.org>
+ * Author:  Mew developing team
  * Created: Dec  8, 1994
  *
  * Code:
@@ -9,7 +9,7 @@
 
 #include "mew.h"
 
-private char version_message[] = "version 6.9 20230210 Kazu Yamamoto";
+private char version_message[] = "version 6.9 20230210 Mew developing team";
 
 #ifdef HAVE_UNISTD_H
 #include <sys/types.h>
