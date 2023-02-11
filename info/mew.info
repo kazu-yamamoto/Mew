@@ -4534,7 +4534,7 @@ configuration as follows:
      (mew-setface-bold header-subject
        :tty "green" :light "ForestGreen" :dark "LimeGreen")
 
-To know what kind of symbols are prepared, see the "conf/dot.mew".
+To know what kind of symbols are prepared, see the "conf/dot.theme".
 
 The method above does not prepare symbols for all field names and
 field value. So, `mew-header-color' and `mew-header-color-bold' exist
@@ -6320,32 +6320,32 @@ Node: message-mode147542
 Node: draft-mode151076
 Node: charset154043
 Node: highlight156249
-Node: hooks159223
-Node: pop163772
-Node: imap165451
-Node: nntp167019
-Node: smtp168380
-Node: config171332
-Node: config2177276
-Node: custom-misc178792
-Node: Tips179813
-Node: region180401
-Node: visiting181091
-Node: SSH181621
-Node: SSL182593
-Node: TLS184966
-Node: spam185865
-Node: spam2188154
-Node: addr-warn189488
-Node: biff190616
-Node: edit191374
-Node: Convention192649
-Node: Implementation194717
-Node: Avail197080
-Node: obtain197387
-Node: ml197679
-Node: Copyright197967
-Node: Variable Index199916
-Node: Key Index215265
+Node: hooks159225
+Node: pop163774
+Node: imap165453
+Node: nntp167021
+Node: smtp168382
+Node: config171334
+Node: config2177278
+Node: custom-misc178794
+Node: Tips179815
+Node: region180403
+Node: visiting181093
+Node: SSH181623
+Node: SSL182595
+Node: TLS184968
+Node: spam185867
+Node: spam2188156
+Node: addr-warn189490
+Node: biff190618
+Node: edit191376
+Node: Convention192651
+Node: Implementation194719
+Node: Avail197082
+Node: obtain197389
+Node: ml197681
+Node: Copyright197969
+Node: Variable Index199918
+Node: Key Index215267
 
 End tag table

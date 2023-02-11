@@ -11103,10 +11103,10 @@ configuration as follows:
 @end lisp
 
 @ifset ja
-シンボルに何があるのかは、"conf/dot.mew" を見て下さい。
+シンボルに何があるのかは、"conf/dot.theme" を見て下さい。
 @end ifset
 @ifset en
-To know what kind of symbols are prepared, see the "conf/dot.mew".
+To know what kind of symbols are prepared, see the "conf/dot.theme".
 @end ifset
 
 @ifset ja

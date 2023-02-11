@@ -4399,7 +4399,7 @@ Message モードでアイコン化されます。初期値は `t' です。こ�
      (mew-setface-bold header-subject
        :tty "green" :light "ForestGreen" :dark "LimeGreen")
 
-シンボルに何があるのかは、"conf/dot.mew" を見て下さい。
+シンボルに何があるのかは、"conf/dot.theme" を見て下さい。
 
 上記の方法では、ヘッダのすべてのフィールド名やフィールド値に対してシン
 ボルが定義されている訳ではありません。そこで、どんなフィールドの色でも
@@ -6156,32 +6156,32 @@ Node: message-mode98788
 Node: draft-mode101381
 Node: charset103476
 Node: highlight105102
-Node: hooks107152
-Node: pop110558
-Node: imap111640
-Node: nntp112651
-Node: smtp113770
-Node: config115863
-Node: config2120391
-Node: custom-misc121547
-Node: Tips122264
-Node: region122791
-Node: visiting123300
-Node: SSH123662
-Node: SSL124259
-Node: TLS125810
-Node: spam126521
-Node: spam2128272
-Node: addr-warn129391
-Node: biff130164
-Node: edit130646
-Node: Convention131406
-Node: Implementation132446
-Node: Avail133905
-Node: obtain134154
-Node: ml134378
-Node: Copyright134569
-Node: Variable Index135577
-Node: Key Index150874
+Node: hooks107154
+Node: pop110560
+Node: imap111642
+Node: nntp112653
+Node: smtp113772
+Node: config115865
+Node: config2120393
+Node: custom-misc121549
+Node: Tips122266
+Node: region122793
+Node: visiting123302
+Node: SSH123664
+Node: SSL124261
+Node: TLS125812
+Node: spam126523
+Node: spam2128274
+Node: addr-warn129393
+Node: biff130166
+Node: edit130648
+Node: Convention131408
+Node: Implementation132448
+Node: Avail133907
+Node: obtain134156
+Node: ml134380
+Node: Copyright134571
+Node: Variable Index135579
+Node: Key Index150876
 
 End tag table
