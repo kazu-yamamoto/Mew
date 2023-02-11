@@ -881,7 +881,7 @@ The messages in the server side is always retained."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 2002-2015 Mew developing team.
+;; Copyright (C) 2002-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

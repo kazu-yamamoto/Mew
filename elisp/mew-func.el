@@ -1644,7 +1644,7 @@ by side-effect."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1997-2015 Mew developing team.
+;; Copyright (C) 1997-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without

@@ -1267,7 +1267,7 @@ according to a URL in a field specified by 'mew-x-pgp-key-list'."
 
 ;;; Copyright Notice:
 
-;; Copyright (C) 1994-2015 Mew developing team.
+;; Copyright (C) 1994-2023 Mew developing team.
 ;; All rights reserved.
 
 ;; Redistribution and use in source and binary forms, with or without
