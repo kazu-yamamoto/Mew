@@ -10,12 +10,12 @@
 
 @ifset ja
 @c Mew の texinfo
-@c Copyright (C) 1996-2018 山本和彦
+@c Copyright (C) 1996-2023 山本和彦
 @c M-x texinfo-format-buffer で info にしてね。
 @end ifset
 @ifset en
 @c Texinfo for Mew
-@c Copyright (C) 1996-2018 Kazuhiko Yamamoto
+@c Copyright (C) 1996-2023 Kazuhiko Yamamoto
 @c Try "M-x texinfo-format-buffer" or makeinfo to get the Info.
 @end ifset
 
@@ -13594,7 +13594,7 @@ https://groups.google.com/forum/#!forum/mew-en
 @ifset ja
 Mew は以下の著作権に従います。
 
-Copyright (C) 1994-2018 Mew developing team.@*
+Copyright (C) 1994-2023 Mew developing team.@*
 All rights reserved.
 
 変更の有無にかかわらず、ソースおよびバイナリ形式の再配布および利用は、以
@@ -13627,7 +13627,7 @@ All rights reserved.
 @ifset en
 Mew conforms the following copyright.
 
-Copyright (C) 1994-2018 Mew developing team.@*
+Copyright (C) 1994-2023 Mew developing team.@*
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
