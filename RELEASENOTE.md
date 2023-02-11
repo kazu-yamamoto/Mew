@@ -2,32 +2,17 @@
 
 This is stable releases of Mew 6.9.
 
-## Important note
-
-* `mew-smtp-port` now supports Unix domain socket.  If it is set to an
-  absolute pathname such as "/var/run/msp.sock", Mew will use it as a
-  Unix domain socket which supports SOCK_STREAM and understands SMTP.
-  The value of `mew-smtp-server` will be ignored.  This feature requires
-  `make-network-process` introduced since Emacs 22.
-
-* Configuration in ".mew.el" is simplified between Mew 5.2 and Mew
-  6.1.  Almost all old configuration works. However, if you are using
-  complex configuration, please translate it to the new one. See the
-  config2 node in info.
-
-  Complex configuration includes:
-
-    - `mew-header-alist`
-    - `mew-refile-guess-alist`
-    - `mew-inbox-action-alist`
-    - `All above in mew-config-alist`
-
 ## Differences between Mew 6.9 and Mew 6.8
 
 * Mew now supports Emacs 26.1 or later only.
 * Supporting coming Emacs 29.
 * Supporting "stunnel" 5.15.
 * Supporting native compilation.
+* `mew-smtp-port` now supports Unix domain socket.  If it is set to an
+  absolute pathname such as "/var/run/msp.sock", Mew will use it as a
+  Unix domain socket which supports SOCK_STREAM and understands SMTP.
+  The value of `mew-smtp-server` will be ignored.  This feature requires
+  `make-network-process` introduced since Emacs 22.
 * Some bug fixes.
 
 ## Differences between Mew 6.8 and Mew 6.7
@@ -102,6 +87,14 @@ auto-key-locate local
   No numeric argument is necessary any more.
 * "_" toggles a long line: normal, long, wrapped.
 * You can use gmail with IMAP.
+* Configuration in ".mew.el" is simplified between Mew 5.2 and Mew
+  6.1.  Almost all old configuration works. However, if you are using
+  complex configuration, please translate it to the new one. See the
+  config2 node in info. Complex configuration includes:
+
+    - `mew-header-alist`
+    - `mew-refile-guess-alist`
+    - `mew-inbox-action-alist`
 
 ## Differences between Mew 5.2 and Mew 5.1
 
