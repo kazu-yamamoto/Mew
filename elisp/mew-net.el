@@ -1,6 +1,6 @@
 ;;; mew-net.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Feb 27, 2002
 
 ;;; Code:

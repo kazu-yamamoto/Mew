@@ -1,6 +1,6 @@
 ;;; mew-gemacs.el --- Environment of Graphical Emacs for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Jun 22, 2000
 
 ;;; Code:

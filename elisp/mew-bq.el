@@ -1,6 +1,6 @@
 ;;; mew-bq.el --- Base64 and Quoted-Printable encoding for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Aug 20, 1997
 
 ;;; Code:

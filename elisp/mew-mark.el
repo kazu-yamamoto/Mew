@@ -1,6 +1,6 @@
 ;;; mew-mark.el --- Marking for Mew Summary and Virtual mode
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Mar  2, 1997
 
 ;;; Code:

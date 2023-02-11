@@ -1,6 +1,6 @@
 ;;; mew-mule3.el --- Environment of Mule version 3 for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Mar 20, 1997
 
 ;;; Code:

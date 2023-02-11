@@ -1,6 +1,6 @@
 ;;; mew-fib.el --- Filling blanks for Mew
 
-;; Author:  Yoshinari NOMURA <nom@csce.kyushu-u.ac.jp>
+;; Author:  Mew developing team
 ;; Created: Nov 29, 1994
 
 ;;; Code:

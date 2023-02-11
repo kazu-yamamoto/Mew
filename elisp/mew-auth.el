@@ -1,6 +1,6 @@
 ;;; mew-auth.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Aug 17, 1999
 
 ;;; Code:

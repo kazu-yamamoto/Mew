@@ -1,6 +1,6 @@
 ;;; mew-vars.el --- Variables and Constants for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Nov 22, 1997
 
 ;;; Code:

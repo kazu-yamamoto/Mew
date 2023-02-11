@@ -1,6 +1,6 @@
 ;;; mew-highlight.el --- Highlight for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Oct 18, 1997
 
 ;;; Code:

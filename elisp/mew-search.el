@@ -1,6 +1,6 @@
 ;;; mew-search.el --- Index Search
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Aug 24, 2005
 
 ;;; Code:

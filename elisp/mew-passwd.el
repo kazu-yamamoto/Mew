@@ -1,6 +1,6 @@
 ;;; mew-passwd.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: May 23, 2006
 
 ;;; Code:

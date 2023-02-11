@@ -1,6 +1,6 @@
 ;;; mew-smime.el --- S/MIME for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Nov 12, 2004
 
 ;;; Code:

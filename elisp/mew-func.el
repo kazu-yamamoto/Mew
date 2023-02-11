@@ -1,6 +1,6 @@
 ;;; mew-func.el --- Basic functions for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Mar 23, 1997
 
 ;;; Code:

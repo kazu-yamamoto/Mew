@@ -1,6 +1,6 @@
 ;;; mew-cache.el --- Cache management for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Mar 23, 1997
 
 ;;; Code:

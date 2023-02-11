@@ -1,6 +1,6 @@
 ;;; mew-complete.el --- Completion magic for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: May 30, 1997
 
 ;;; Code:

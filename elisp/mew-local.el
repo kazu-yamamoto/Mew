@@ -1,6 +1,6 @@
 ;;; mew-local.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Dec 12, 2001
 
 (eval-when-compile

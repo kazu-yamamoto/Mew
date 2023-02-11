@@ -1,6 +1,6 @@
 ;;; mew-ssl.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Jul 25, 2002
 
 ;;; Code:

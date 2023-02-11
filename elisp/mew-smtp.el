@@ -1,6 +1,6 @@
 ;;; mew-smtp.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Dec  3, 1999
 
 ;;; Code:

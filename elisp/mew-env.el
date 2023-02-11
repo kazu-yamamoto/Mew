@@ -1,6 +1,6 @@
 ;;; mew-env.el --- Environment setup for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Mar  6, 1997
 
 ;;; Code:

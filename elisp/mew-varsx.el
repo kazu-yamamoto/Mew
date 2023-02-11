@@ -1,6 +1,6 @@
 ;;; mew-varsx.el --- Variables depends on other variables
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: May 10, 2006
 
 ;;; Code:

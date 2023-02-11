@@ -1,8 +1,7 @@
 ;;-*-coding:iso-2022-7bit;-*-
 ;;; mew-lang-jp.el --- Japanese specific stuff for Mew
 
-;; Author:  Mito <mit@nines.nec.co.jp>
-;;          Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Sep 08, 1997
 
 ;;; Code:

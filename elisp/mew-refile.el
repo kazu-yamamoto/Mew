@@ -1,7 +1,6 @@
 ;;; mew-refile.el --- Refile for Mew
 
-;; Author:  Yoshinari NOMURA <nom@csce.kyushu-u.ac.jp>
-;;          Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Jun 11, 1994
 
 ;;; Code:

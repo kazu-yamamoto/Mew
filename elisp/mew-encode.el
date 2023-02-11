@@ -1,6 +1,6 @@
 ;;; mew-encode.el --- MIME syntax encoder for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Oct  2, 1996
 
 ;;; Code:

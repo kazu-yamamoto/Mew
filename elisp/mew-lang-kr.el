@@ -1,7 +1,7 @@
 ;;-*-coding:euc-kr;-*-
 ;;; mew-lang-kr.el --- Korean specific stuff for Mew
 
-;; Author:  CHOI Junho <cjh@kr.freebsd.org>
+;; Author:  Mew developing team
 ;; Created: Mar 31, 2003
 
 ;;; Code:

@@ -1,6 +1,6 @@
 ;;; mew.el --- Messaging in the Emacs World
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Mar 23, 1994
 ;; Revised: Feb 10, 2023
 

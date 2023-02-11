@@ -1,6 +1,6 @@
 ;;; mew-mule.el --- Environment of Mule common for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Jul 15, 1998
 
 ;;; Code:

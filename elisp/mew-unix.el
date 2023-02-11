@@ -1,6 +1,6 @@
 ;;; mew-unix.el -- Settings for Mew on Unix
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Dec  4, 1997
 
 ;;; Code:

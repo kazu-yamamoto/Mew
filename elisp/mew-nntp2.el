@@ -1,6 +1,6 @@
 ;;; mew-nntp2.el for posting
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Nov 19, 1999
 
 ;;; Code:

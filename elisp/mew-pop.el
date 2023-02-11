@@ -1,6 +1,6 @@
 ;;; mew-pop.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Jun 28, 2000
 
 ;;; Code:

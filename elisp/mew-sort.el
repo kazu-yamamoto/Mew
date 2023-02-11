@@ -1,7 +1,6 @@
 ;;; mew-sort.el --- Sorting messages for Mew
 
-;; Author:  Takashi P.KATOH <p-katoh@shiratori.riec.tohoku.ac.jp>
-;;          Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Feb  6, 1996
 
 ;;; Code:

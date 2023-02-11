@@ -1,6 +1,6 @@
 ;; mew-addrbook.el --- Aliases and personal information
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Mar 22, 1999
 
 ;;; Code:

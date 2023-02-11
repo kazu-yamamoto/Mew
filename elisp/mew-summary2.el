@@ -1,6 +1,6 @@
 ;;; mew-summary2.el --- Summary mode for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Oct  2, 1996
 
 ;;; Code:

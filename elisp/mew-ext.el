@@ -1,6 +1,6 @@
 ;;; mew-ext.el --- Message/External-Body support for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Nov 13, 1996
 
 ;;; Code:

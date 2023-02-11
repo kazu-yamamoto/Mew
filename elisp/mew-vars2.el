@@ -1,6 +1,6 @@
 ;;; mew-vars2.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Feb  1, 1999
 
 ;;; Code:

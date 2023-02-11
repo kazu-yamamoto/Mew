@@ -1,6 +1,6 @@
 ;;; mew-edit.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Nov  9, 1999
 
 ;;; Code:

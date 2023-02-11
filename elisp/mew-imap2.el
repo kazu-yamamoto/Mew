@@ -1,6 +1,6 @@
 ;;; mew-imap2.el for appending
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: May 22, 2003
 
 ;;; Code:

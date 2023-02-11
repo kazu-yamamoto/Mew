@@ -1,6 +1,6 @@
 ;;; mew-config.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Dec 14, 1999
 
 ;;; Code:

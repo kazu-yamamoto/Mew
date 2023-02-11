@@ -1,6 +1,6 @@
 ;;; mew-imap.el for reading
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Feb 21, 2002
 
 ;;; Code:

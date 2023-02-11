@@ -1,6 +1,6 @@
 ;;; mew-darwin.el --- Settings for Mew on Darwin
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Oct 30, 2002
 
 ;;; Code:

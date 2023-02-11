@@ -1,6 +1,6 @@
 ;;; mew-vars3.el
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: May 10, 2006
 
 ;;; Code:

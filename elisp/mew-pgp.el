@@ -1,6 +1,6 @@
 ;;; mew-pgp.el --- PGP/MIME for Mew
 
-;; Author:  Kazu Yamamoto <Kazu@Mew.org>
+;; Author:  Mew developing team
 ;; Created: Aug 17, 1994
 
 ;;; Code:
