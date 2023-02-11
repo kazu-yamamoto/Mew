@@ -10,12 +10,12 @@
 
 @ifset ja
 @c Mew の texinfo
-@c Copyright (C) 1996-2023 山本和彦
+@c Copyright (C) 1996-2023 Mew developing team.
 @c M-x texinfo-format-buffer で info にしてね。
 @end ifset
 @ifset en
 @c Texinfo for Mew
-@c Copyright (C) 1996-2023 Kazuhiko Yamamoto
+@c Copyright (C) 1996-2023 Mew developing team.
 @c Try "M-x texinfo-format-buffer" or makeinfo to get the Info.
 @end ifset
 
@@ -28,10 +28,10 @@
 @center
 @title Mew
 @ifset ja
-@author Copyright @copyright{}1996-2023 山本和彦
+@author Copyright @copyright{}1996-2023 Mew developing team.
 @end ifset
 @ifset en
-@author Copyright @copyright{}1996-2023 Kazuhiko Yamamoto
+@author Copyright @copyright{}1996-2023 Mew developing team.
 @end ifset
 @end titlepage
 
