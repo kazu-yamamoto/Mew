@@ -5,6 +5,10 @@
 ### Created: Nov 18, 1994
 ### Revised: Feb 10, 2023
 
+EMACS = emacs
+prefix = /usr/local
+elispdir = $(prefix)/share/emacs/site-lisp/mew
+
 ################################################################
 ##
 ## DO NOT EDIT THE FOLLOWINGS
