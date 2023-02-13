@@ -10,9 +10,9 @@ This is stable releases of Mew 6.9.
 * Supporting native compilation.
 * `mew-smtp-port` now supports Unix domain socket.  If it is set to an
   absolute pathname such as "/var/run/msp.sock", Mew will use it as a
-  Unix domain socket which supports SOCK_STREAM and understands SMTP.
-  The value of `mew-smtp-server` will be ignored.  This feature requires
-  `make-network-process` introduced since Emacs 22.
+  Unix domain socket.  The value of `mew-smtp-server` will be ignored.
+  This feature requires `make-network-process` introduced since Emacs
+  22.
 * Some bug fixes.
 
 ## Differences between Mew 6.8 and Mew 6.7
