@@ -1,4 +1,5 @@
-AC_INIT(mewl.c)
+AC_INIT
+AC_CONFIG_SRCDIR([mewl.c])
 
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -7,17 +8,14 @@ AC_C_CONST
 AC_TYPE_UID_T
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
-AC_TYPE_SIGNAL
 AC_CHECK_TYPE(useconds_t, int)
 AC_CHECK_TYPE(ssize_t, int)
 
 AC_EXEEXT
 AC_OBJEXT
 
-AC_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 AC_HEADER_DIRENT
-AC_HEADER_STDC
-AC_HEADER_TIME
 AC_CHECK_HEADERS(dir.h unistd.h pwd.h fcntl.h io.h sys/time.h sys/file.h)
 AC_CHECK_LIB(z, main)
 AC_CHECK_FUNCS(strncasecmp strnicmp memmove fgetln fork getpwuid getlogin usleep Sleep setmode _setmode chdir _chdir2 chmod poll futimes fchmod flock lockf snprintf utimes)
@@ -40,5 +38,7 @@ if test "$GCC" = "yes"; then
   CFLAGS="$CFLAGS -Wall"
 fi
 
-AC_OUTPUT(Makefile)
-AC_OUTPUT(mew-pinentry)
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
+AC_CONFIG_FILES([mew-pinentry])
+AC_OUTPUT
