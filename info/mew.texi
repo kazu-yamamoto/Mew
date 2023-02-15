@@ -427,10 +427,10 @@ as follows:
 @item +draft
 書きかけのメッセージを保存しておくローカル・フォルダ。
 @item +queue
-書き終ってメールの配送に適した書式に変換されたメッセージが溜るローカル・
-フォルダ。"+queue" のメッセージは、いずれ SMTP によって送信さる。
+書き終わってメールの配送に適した書式に変換されたメッセージが溜るローカル・
+フォルダ。"+queue" のメッセージは、いずれ SMTP によって送信される。
 @item +postq
-書き終ってニュースに投稿するのに適した書式に変換されたメッセージが溜る
+書き終わってニュースに投稿するのに適した書式に変換されたメッセージが溜る
 ローカル・フォルダ。"+postq" のメッセージは、いずれ NNTP によって送信さ
 れる。
 @end ifset
@@ -512,7 +512,7 @@ omit "case:" if a case is "default".
 ついて、@xref{Refile} を参照して下さい。
 @end ifset
 @ifset en
-A combination of "case" and proto organized a world to which a message
+A combination of "case" and proto organizes a world to which a message
 belongs. A message can move within its world. To make it easy to
 search received messages afterward, they should be moved to proper
 folders. To know how to refile received messages, see @ref{Refile}.
@@ -936,7 +936,7 @@ Mew が起動していなければ、まず Mew を起動する。そして、�
 「修飾子」が @samp{+}(ローカル・フォルダ)なら、@samp{mew-mailbox-type} 
 からメールボックスが決定される。(@xref{retrieving} を参照) その他、すな
 わちリモート・フォルダなら、メッセージを取得するためのプロトコルが修飾子
-に応じて決る。
+に応じて決まる。
 
 @samp{mew-auto-get} が @samp{t} なら、到着したメッセージが非同期に取得さ
 れ、Summary モードへ一覧表示される。
@@ -1314,7 +1314,7 @@ description (Content-Description:)
 file name (Content-Disposition:).
 @end itemize
 
-Content-Description can be considered Subject: for each part. This
+Content-Description: can be considered Subject: for each part. This
 format is very similar to that of the attachment region in Draft mode.
 @end ifset
 
@@ -1404,8 +1404,8 @@ current message. Analyzed messages are temporarily cached.
 @end ifset
 
 @ifset ja
-メッセージの終りの部分がはっきりと分かるように、Mew はメッセージの最後に 
-"[End of message]" という文字列を表示します。また、パートの終りでは、
+メッセージの終わりの部分がはっきりと分かるように、Mew はメッセージの最後に 
+"[End of message]" という文字列を表示します。また、パートの終わりでは、
 "[Message is continued]" という文字列を表示します。これらの文字列はそれ
 ぞれ、@samp{mew-end-of-message-string} と @samp{mew-end-of-part-string}
 で指定できます。
@@ -1941,7 +1941,7 @@ decrypt and/or verify this kind messages with @samp{C-cC-z}.
 @ifset ja
 メールボックスへ到着したメッセージを +inbox へコピーし一覧表示するには、
 @samp{i} を使います。コピー元のメールボックスは @samp{mew-mailbox-type} 
-によって決ります。(@samp{M-x mew} を実行した際に、@samp{mew-proto} が 
+によって決まります。(@samp{M-x mew} を実行した際に、@samp{mew-proto} が 
 @samp{+} の場合も、@samp{mew-mailbox-type} に従ってメッセージがコピーさ
 れます。) 以下に取りうる値を示します。
 @end ifset
@@ -2135,10 +2135,10 @@ Here is a summary of the commands concerned with message retrieval:
 る。
 
 ローカル・フォルダで実行した場合、ケースと @samp{mew-mailbox-type} によ
-り取得方法が決る。@samp{mew-pop-delete} または @samp{mew-imap-delete}
+り取得方法が決まる。@samp{mew-pop-delete} または @samp{mew-imap-delete}
 の値が @samp{t} なら、メールボックスのメッセージを削除する。
 
-リモート・フォルダで実行した場合、ケースと取得方法はそのフォルダから決る。
+リモート・フォルダで実行した場合、ケースと取得方法はそのフォルダから決まる。
 サーバ側のメッセージは常に保存される。
 @item C-uI
 @samp{mew-pop-delete} または @samp{mew-imap-delete} を逆転させて @samp{I} 
@@ -2862,7 +2862,7 @@ example will not be decoded into Japanese.
 @end ifset
 @ifset en
 Several mailers are careless about the spec and regularly violate these
-rules. The right way to do is ask the programmers of such mailers to
+rules. The right way to do is to ask the programmers of such mailers to
 make the programs conformant to the spec. However, since there are so
 many mailers of this kind around the world, Mew tries to decode as many
 different formats as possible. In these cases Mew displays warnings such
@@ -3121,7 +3121,7 @@ follows:
 @end ifset
 
 @ifset ja
-行頭の単語中で、しかも、上の行の最後が "," で終る継続行でなければ、
+行頭の単語中で、しかも、上の行の最後が "," で終わる継続行でなければ、
 @samp{TAB} で @samp{mew-fields} に定義されているフィールド名を補完できま
 す。
 @end ifset
@@ -3648,7 +3648,7 @@ Summary モードには、現在読んでいるメッセージの情報を Addrb
 @end ifset
 @ifset en
 Summary mode includes the feature of directly registering the
-information of the current message into Addrbook. To register a
+information of the current message into Addrbook. To register an
 expansion rule, type @samp{C-cC-a}.
 @end ifset
 
@@ -3777,7 +3777,7 @@ automatically saved to the file "~/Mail/.mew-alias".
 @end ifset
 @ifset en
 The automatic registration would register unnecessary short names. If
-you want to remove these entry, take the following steps. First, type
+you want to remove these entries, take the following steps. First, type
 @samp{M-a} to open "~/Mail/.mew-alias". Then edit it as you do against a
 text file. Lastly, type @samp{C-xC-s} to save it. When saving it, the
 modifications are automatically reflected to Mew.
@@ -3872,7 +3872,7 @@ To: piglet@@example.org,
 @end example
 
 @ifset ja
-"@@" で終る文字列は強制的に展開します。たとえば、以下のように似たような 
+"@@" で終わる文字列は強制的に展開します。たとえば、以下のように似たような 
 短縮名があった場合を考えて下さい。
 @end ifset
 @ifset en
@@ -5627,7 +5627,7 @@ You may want to set @samp{mew-reply-all-alist} like this:
 
 @ifset ja
 あるアドレスが複数ある場合は、自動的に 1 つになります。また、匿名の宛先
-を表す ":;" で終るアドレスも、自動的に消去されます。
+を表す ":;" で終わるアドレスも、自動的に消去されます。
 @end ifset
 @ifset en
 If there are multiple entries for a certain address, they are
@@ -6073,13 +6073,13 @@ Encrypt with PGP
 Sign then encrypt with PGP
 @item pgp-encryption-signature (PEPS)
 Encrypt then sign with PGP
-@item pgp-signature (SS)
+@item smime-signature (SS)
 Sign with S/MIME
-@item pgp-encryption (sE)
+@item smime-encryption (SE)
 Encrypt with S/MIME
-@item pgp-signature-encryption (SSSE)
+@item smime-signature-encryption (SSSE)
 Sign then encrypt with S/MIME
-@item pgp-encryption-signature (SESS)
+@item smime-encryption-signature (SESS)
 Encrypt then sign with S/MIME
 @end ifset
 @end table
@@ -6503,7 +6503,7 @@ From: Pooh <winnie-the-pooh@@example.net>
 Here, there is a colon (":") after the explanatory comment
 @w{"}party". This is followed by some addresses that are delimited by
 "," and terminated by ";". If you write addresses in this format, Mew
-sends the message to the addresses with them removed form the
+sends the message to the addresses with them removed from the
 header. In this example, Piglet and Roo will receive the following
 message.
 @end ifset
@@ -6869,7 +6869,7 @@ IMAP に対しては、@samp{mew-imap-trash-folder} と
 @end ifset
 @ifset en
 For IMAP, the same rule is applied according to both
-@samp{mew-imap-trash-folder} and @samp{mew-imap-trash-folder-list}
+@samp{mew-imap-trash-folder} and @samp{mew-imap-trash-folder-list}.
 @end ifset
 
 @ifset ja
@@ -6985,7 +6985,7 @@ Delete all messages in a specified folder.
 @ifset en
 To refile a message, type @samp{o} and input a folder name, then
 @samp{o} is put. A folder is guessed neatly, so most time what you
-should to is just type @samp{RET}. For more information, refer to
+should do is just type @samp{RET}. For more information, refer to
 @ref{Refile}.
 @end ifset
 
@@ -7650,7 +7650,7 @@ Suppose you refile a message in folder A to folder B off-line. It is
 very inconvenient for you to retrieve a corresponding message in folder
 B from your IMAP server , in order to read it, after refile jobs are
 done online. You may want to read the messages refiled to folder B by
-just going to the folder B, without retrieval form the IMAP server.
+just going to the folder B, without retrieval from the IMAP server.
 @end ifset
 
 @ifset ja
@@ -8048,7 +8048,7 @@ staff@@example.jp and another message whose To: is staff@@example.net,
 the same folder would be selected with guess by folders
 (e.g. "+net/staff"). So, Mew allows you to define your own rules
 explicitly. (You must use the new format for
-@samp{mew-refile-guess-alist}.  For more information, see
+@samp{mew-refile-guess-alist}.  For more information, see @ref{config2}.
 @end ifset
 
 @ifset ja
@@ -8109,7 +8109,6 @@ The whole is a list of (<key> <alist>). A field name is specified for
 <value> is a field value for <key>. <folder> means a folder to be
 chosen if matched. You can write <rule> recursively instead of
 <folder>.
-(@xref{config2}.)
 @end ifset
 
 @ifset ja
@@ -8199,7 +8198,7 @@ to +project/honey.
 Information that which folder was chosen for messages is stored to
 @w{"}~/Mail/.mew-refile-msgid-alist". @samp{mew-lisp-max-length}
 controls the amount of this information. The default value is 2000
-messages. If you want limits it to 3000 messages, put the following to
+messages. If you want to limit it to 3000 messages, put the following to
 "~/.mew.el".
 @end ifset
 
@@ -8270,7 +8269,7 @@ The function to provide this feature is
 していたので、自分にメッセージが戻ってきました。
 @end ifset
 @ifset en
-Next, let's consider a care where Pooh replied to Piglet. Since Pooh
+Next, let's consider a case where Pooh replied to Piglet. Since Pooh
 Cc:ed the message to himself, the message was also delivered to him.
 @end ifset
 
@@ -8356,7 +8355,7 @@ p-p-p@@example.org が +from/piglet に整頓されたことを学習します�
 But such a work may bother you. So, first refile a message whose From:
 is piglet@@example.org to +from/piglet. At this time, +from/piglet is
 created. Next, refile a message whose From: is p-p-p@@example.org to
-+from/piglet. Here Mews learns that p-p-p@@example.org was refiled to
++from/piglet. Here Mew learns that p-p-p@@example.org was refiled to
 +from/piglet. After this, when messages whose From: is p-p-p@@example.org
 are refiled, +from/piglet is chosen.
 @end ifset
@@ -8475,8 +8474,8 @@ Mew では、フォルダ推測の規則を 2 つの変数、@samp{mew-refile-gu
 @ifset en
 Mew controls guess rules by two variables,
 @samp{mew-refile-guess-control} and @samp{mew-refile-ctrl-multi}. If you
-want multiple candidates, set @samp{mew-refile-ctrl-multi}
-@samp{t}. Otherwise, set it @samp{nil}.
+want multiple candidates, set @samp{mew-refile-ctrl-multi} to
+@samp{t}. Otherwise, set it to @samp{nil}.
 @end ifset
 
 @ifset ja
@@ -8548,8 +8547,8 @@ action.
 @end ifset
 @ifset en
 If you want to provide all candidates, +aaa - +eee, set
-@samp{mew-refile-ctrl-multi} @samp{t}. If you want to provide +aaa only,
-set it @samp{nil}.
+@samp{mew-refile-ctrl-multi} to @samp{t}. If you want to provide +aaa only,
+set it to @samp{nil}.
 @end ifset
 
 @ifset ja
@@ -8562,7 +8561,7 @@ set it @samp{nil}.
 @ifset en
 If you want +aaa - +ddd but do not want left candidates, in other words,
 you want +eee only when no candidate is guessed by functions executed
-before, set @samp{mew-refile-ctrl-multi} @samp{t} and insert
+before, set @samp{mew-refile-ctrl-multi} to @samp{t} and insert
 @samp{mew-refile-ctrl-throw} between @samp{mew-refile-guess-by-folder}
 and @samp{mew-refile-guess-by-default}.
 @end ifset
@@ -8740,7 +8739,7 @@ too. In this case, a message is moved in the same world.)
 @samp{li} を利用します。
 @end ifset
 @ifset en
-To opy a message in a folder to an IMAP folder (the server side), type
+To copy a message in a folder to an IMAP folder (the server side), type
 @samp{li}.
 @end ifset
 
@@ -8928,10 +8927,10 @@ several folders. There are five ways to create selection:
 @end ifset
 @ifset en
 @item m/
-Listing messages marked with @samp{*} on a folder. see @ref{sorting}.
+Listing messages marked with @samp{*} on a folder.
 @item S
 Sorting messages on a folder and display them. (No effect to the
-original folder.) see @ref{dialog}.
+original folder.) See @ref{sorting}.
 @item V
 Listing messages which have relationship with the current message. See
 @ref{dialog}.
@@ -9123,10 +9122,10 @@ described later in the following points:
 @ifset en
 @item
 Thread can be made from one folder or one virtual folder. Messages
-relating to dialog can ubiquitously exists in several folders.
+relating to dialog can ubiquitously exist in several folders.
 
 @item
-Thread visualizes tree structres with indentation. while dialog lists
+Thread visualizes tree structures with indentation while dialog lists
 up messages in order of time.
 @end ifset
 @end itemize
@@ -9140,7 +9139,7 @@ up messages in order of time.
 @end ifset
 @ifset en
 To use the feature of dialog, execute @samp{kI} to create
-database. New messages are not automatically registered in to the
+database. Since New messages are not automatically registered into the
 database, you should periodically execute @samp{kI}. @samp{kI} updates
 the database incrementally by default. This method is fast but
 garbages are left. So, sometime you should type @samp{C-ukI} to update
@@ -9245,7 +9244,7 @@ specified pattern.
 @item C-uk/
 Make selection with messages in specified folders, which are matched
 to a specified pattern. If you want to specify multiple folders,
-separate them with ",". You can also use a wildcar "*".
+separate them with ",". You can also use a wildcard "*".
 @end ifset
 @end table
 
@@ -9321,10 +9320,10 @@ Match if the "field" field contains the "string" string
 Match if the "field" field contains the "string" string
 (case-sensitive). If you specify "head", it means the entire header.
 @item field!=string
-Match if the "field" field does not the "string" string
+Match if the "field" field does not contain the "string" string
 (case-insensitive). If you specify "head", it means the entire header.
 @item field!==string
-Match if the "field" field does not the "string" string
+Match if the "field" field does not contain the "string" string
 (case-sensitive). If you specify "head", it means the entire header.
 @item ( <pattern> )
 Evaluate <pattern> first.
@@ -9553,7 +9552,7 @@ choose Hyper Estraier.
 コマンドは以下の通りです。
 @end ifset
 @ifset en
-The keyword which you specified on search is shorted in a buffer. You
+The keyword which you specified on search is shored in a buffer. You
 can display messages with the keyword highlighted. The commands to
 enable this functionality are as follows:
 @end ifset
@@ -9727,7 +9726,7 @@ Here are the commands used for moving to thread presentation.
 @ifset en
 @item tp
 Move to the top of the current thread. If the current message is a top
-node, move to the top of the next thread.
+node, move to the top of the previous thread.
 @item tn
 Move to the top of the next thread.
 @item ^
@@ -10093,7 +10092,7 @@ An example is as follows:
 先の先頭に加えられる文字列です。初期値は "To:" です。
 @end ifset
 @ifset en
-@samp{mew-summary-form-from-me-prefix} is the prefix to be prepend to an
+@samp{mew-summary-form-from-me-prefix} is the prefix to be prepend to a
 destination address if the message is originated by me. The default is
 @w{"}To:".
 @end ifset
@@ -10202,7 +10201,7 @@ refer to @ref{draft-mode}.
 が利用されます。
 @end ifset
 @ifset en
-If a element does not match, the next element is applied. If no element
+If an element does not match, the next element is applied. If no element
 matches to the From: field, or this value is @samp{nil}, the whole of
 the From: field is used.
 @end ifset
@@ -10261,7 +10260,7 @@ Summary モードの @samp{SPC} は、@samp{mew-summary-show-direction} によ�
 きます。以下の値を設定できます。
 @end ifset
 @ifset en
-@samp{SPC} in Summary mode decide the next action to view a message
+@samp{SPC} in Summary mode decides the next action to view a message
 according to @samp{mew-summary-show-direction}. Likewise, you can
 specify the cursor direction after putting a strong mark by
 @samp{mew-summary-mark-direction}. You can select one from the following
@@ -10337,10 +10336,8 @@ buffer.
 @end ifset
 
 @ifset ja
-@w{"}w3m" と "emacs-w3m" をインストールすると、Text/Html を Message バッ
-ファに表示できるようになります。(以下で説明する "wvHtml"、"xlhtml"、
-"ppthtml" は、単なる "w3m" ではなく、国際化された "w3m-m17n" が必要で
-す。) 両者をインストールしたら、"~/.mew.el" に以下の設定を加えて下さい。
+以下の設定を "~/mew.el"に加えれば、Text/Html を Message バッファに表示
+できるようになります。
 @end ifset
 @ifset en
 Text/Html can be displayed in Message mode, if you add the following to
@@ -10355,6 +10352,14 @@ Text/Html can be displayed in Message mode, if you add the following to
 これで、あたかも Text/Plain であるかのように、Text/Html を Message バッ
 ファに表示できるようになります。この際も、以下で説明する @samp{C-cC-e}
 の操作は有効です。
+
+デフォルトでは Text/Html の表示は Emacs の組み込みブラウザを使います。
+
+そのほか、w3m ブラウザを使って表示させることもできます。
+そのためには、まず @w{"}w3m" と "emacs-w3m" をインストールします。
+(以下で説明する "wvHtml"、"xlhtml"、
+"ppthtml" は、単なる "w3m" ではなく、国際化された "w3m-m17n" が必要で
+す。) 両者をインストールしたら、"~/.mew.el" に以下の設定を加えて下さい。
 @end ifset
 @ifset en
 With this, Text/Html can be displayed in Message mode as if it were
@@ -10403,13 +10408,18 @@ of displaying it in the Message buffer. For this, type @samp{C-cC-e}.
 @end ifset
 
 @ifset ja
-Message バッファに画像を表示することもできます。また @samp{C-cC-e} を使
-い、外部のプログラムに表示させることも可能です。
+Message バッファに画像を表示することもできます。
+Message バッファに表示している画像の拡大や縮小は @samp{C-xo} 等でカーソルを
+画像が表示されているウィンドウに移動し、@samp{+} や @samp{-} を使います。
+また @samp{C-cC-e} を使い、外部のプログラムに表示させることも可能です。
 @end ifset
 @ifset en
-You can visualize an image file into the Message buffer. Also, you can
-display it with an external application by typing @samp{C-cC-e}, of
-course.
+You can visualize an image file into the Message buffer.
+If you want to enlarge or reduce the image in the Message buffer,
+you switch to a window of the Message buffer with e.g. @samp{C-xo}
+and type @samp{+} or @samp{-}, respectively.
+Also, you can display it with an external application by typing
+@samp{C-cC-e}, of course.
 @end ifset
 
 @ifset ja
@@ -10498,7 +10508,7 @@ application, type @samp{C-uC-cC-e}.
 
 @ifset ja
 最近、Multipart/Alternative の中に Text/Plain と Text/Html の両方が入っ
-ており、どちらかを選ぶようになっているメッセージを多く見掛けます。Mew
+ており、どちらかを選ぶようになっているメッセージ(いわゆる HTML メール)を多く見掛けます。Mew
 は、標準では Text/Plain の方を優先して表示します。"emacs-w3m" をインス
 トールすれば、Text/Html の方を優先したくなるかもしれません。その場合、
 以下の設定を "~/.mew.el" に加えて下さい。(ここで @xref{multipart} を読
@@ -10506,7 +10516,7 @@ application, type @samp{C-uC-cC-e}.
 @end ifset
 @ifset en
 Recently there are many message whose have Multipart/Alternative,
-which consists of Text/Plain and Text/Html. By default, Mew selects
+which consists of Text/Plain and Text/Html (so-called HTML email). By default, Mew selects
 Text/Plain. If you prefer to choose
 Text/Html, add the following to "~/.mew.el". (Now, it's a
 good idea to get back to @ref{multipart} to review how to use
@@ -10962,7 +10972,7 @@ US-ASCII, configure as follows:
 ジに色が付きます。初期値は @samp{t} です。
 @end ifset
 @ifset en
-If @samp{mew-use-highlight-mark} is @samp{t}, marked message are
+If @samp{mew-use-highlight-mark} is @samp{t}, marked messages are
 highlighted. The default is @samp{t}.
 @end ifset
 
@@ -11082,7 +11092,7 @@ configuration.
 @ifset en
 The symbol @samp{header-subject} means the value of the "Subject:"
 field in a header. :tty is the case where Emacs is executed on a
-terminal while :light and :dark indicates the case where the
+terminal while :light and :dark indicate the case where the
 background of Emacs executed with a window is white and black,
 respectively.
 @end ifset
@@ -11329,8 +11339,6 @@ Hook called when a POP process finished.
 @item mew-pop-sentinel-non-biff-hook
 Hook called when a non-Biff POP process finished.
 @item mew-imap-sentinel-hook
-Hook called when a NNTP process to post messages finished.
-@item mew-imap-sentinel-hook
 Hook called when an IMAP process finished.
 @item mew-imap-sentinel-non-biff-hook
 Hook called when a non-Biff IMAP process finished.
@@ -11353,14 +11361,14 @@ Hook called when a folder renamed.
 @item mew-summary-toggle-disp-msg-hook
 Hook called when @samp{v} in Summary finished.
 @item mew-syntax-format-hook
-Hook called when mew-syntax-format is called.
+Hook called when @samp{mew-syntax-format} is called.
 @item mew-addrbook-mode-hook
 Hook called in Addrbook mode.
 @item mew-cite-hook
 Hook for an external cite mechanism. If you want to use super-cite, 
 (setq mew-cite-hook 'sc-cite-original).
 @item mew-before-cite-hook
-Called in mew-summary-reply-with-citation before citation.
+Called in @samp{mew-summary-reply-with-citation} before citation.
 @item mew-suspend-hook
 Hook called on suspend.
 @item mew-quit-hook
@@ -11372,7 +11380,7 @@ Hook called on quit.
 以下にフックの設定例を示します。
 @end ifset
 @ifset en
-Here are some example configurations of hook
+Here are some example configurations of hook.
 @end ifset
 
 @ifset ja
@@ -11384,7 +11392,7 @@ Draft モードでは、フックを @samp{text-mode-hook}、
 @ifset en
 Draft mode evaluates @samp{text-mode-hook} and
 @samp{mew-draft-mode-hook} in order. If you do not set
-@samp{auto-fill-mode} to @samp{text-mode-hook}, It would be useful to
+@samp{auto-fill-mode} to @samp{text-mode-hook}, tt would be useful to
 define @samp{mew-draft-mode-hook} as follows:
 @end ifset
 
@@ -11467,10 +11475,10 @@ The port for POP over SSL.
 @item mew-pop-user
 The user name on your POP server. The default is your login name.
 @item mew-pop-auth
-The authentication method for POP3. 'pass means the authentication with
-USER/PASS (i.e. plain password). 'apop means the authentication with
+The authentication method for POP3. @samp{'pass} means the authentication with
+USER/PASS (i.e. plain password). @samp{'apop} means the authentication with
 APOP. @samp{t} means SASL according to @samp{mew-pop-auth-list}. The
-default is 'apop.
+default is @samp{'apop}.
 @item mew-pop-auth-list
 A list of SASL methods in the preferred order. Currently, "CRAM-MD5"
 can be used.
@@ -11481,11 +11489,11 @@ If number N, delete the messages N days after the first access. The
 default is @samp{t}.
 @item mew-pop-size
 The limit size of messages to be retrieved by POP. The default is 55296
-byte. 0 means unlimited, so you can get all messages from the POP
+bytes. 0 means unlimited, so you can get all messages from the POP
 server. To know how to retrieve the rest of a truncated message, please
 refer to @ref{retrieving}.
 @item mew-pop-body-lines
-*The limit of body lines to get when the size of message exceeds
+The limit of body lines to get when the size of message exceeds
 @samp{mew-pop-size}. The default is 40.
 @item mew-pop-header-only
 Whether or not the body of a message is retrieved by POP. If non-nil,
@@ -11567,7 +11575,7 @@ messages. If number N, delete the messages N days after the first
 access. Otherwise they are not deleted. The default is @samp{t}.
 @item mew-imap-size
 The limit size of messages to be retrieved by IMAP. The default is 55296
-byte. 0 means unlimited, so you can get all messages from the IMAP
+bytes. 0 means unlimited, so you can get all messages from the IMAP
 server. To know how to retrieve the rest of a truncated message, please
 refer to @ref{retrieving}.
 @item mew-imap-header-only
@@ -11642,11 +11650,11 @@ The user name on the NNTP server. If non-nil, authentication is used.
 The name of default Newsgroup.
 @item mew-nntp-size
 The limit size of messages to be retrieved by NNTP. The default is 55296
-byte. 0 means unlimited, so you can get all messages from the NNTP
+bytes. 0 means unlimited, so you can get all messages from the NNTP
 server.
 @item mew-nntp-header-only
 Whether or not the body of a message is retrieved by NNTP. If non-nil,
-only header is retrieved.
+only header is retrieved. The default is @samp{nil}.
 @item mew-nntp-msgid-user
 A user name for creation of Message-Id:. If @samp{nil}, the value of
 @samp{mew-user} is used. The default is @samp{nil}.
@@ -11749,8 +11757,9 @@ Currently, "CRAM-MD5", "PLAIN", and "LOGIN" can be used.
 An e-mail domain to tell a SMTP server with HELO/EHLO. The default is
 "localhost".
 @item mew-smtp-mail-from
-The default is @samp{nil}. An e-mail address to tell a SMTP server with
+An e-mail address to tell a SMTP server with
 MAIL FROM:. If @samp{nil}, an address specified by the From: field is used.
+The default is @samp{nil}.
 @item mew-smtp-msgid-user
 A user name for creation of Message-Id:. If @samp{nil}, the value of
 @samp{mew-user} is used. The default is @samp{nil}.
@@ -11953,7 +11962,7 @@ chosen according to the value of the "case".
 @w{"}$inbox"、"%inbox"、"-fj.mail.reader.mew" を意味します。
 @end ifset
 @ifset en
-Candidates of the value are "+", "$", "%", and "-". These means
+Candidates of the value are "+", "$", "%", and "-". These mean
 @w{"}+inbox", "$inbox", "%inbox", and "-fj.mail.reader.mew" without
 any special configuration.
 @end ifset
@@ -12074,7 +12083,7 @@ Draft モードにおいて、その草稿のケースを変更するには、@s
 @end ifset
 @ifset en
 To change the "case" of a draft in Draft mode, use @samp{C-cC-o}. Its
-header is dynamically modified according to the value of the
+header is dynamically modified according to the values of the
 'mail-domain' key and the 'header-alist' key. Note that the "case" is
 a local variable of the Draft mode.
 @end ifset
@@ -12494,7 +12503,7 @@ Mew supports SSH version 1 and version 2 and OpenSSH for SSH. You must
 execute "ssh" on the command and obtain server's public key before you
 use Mew with SSH. That is, you should set up so that you can login the
 server with your user password or with the password to decrypt the
-secret key of the local machine. Of source, you can omit the password
+secret key of the local machine. In addition, you can omit the password
 to decrypt the secret key if you use "ssh-agent".
 @end ifset
 
@@ -12573,7 +12582,7 @@ the "openssl" library, you should understand "openssl".
 @ifset en
 Suppose we use "~/.certs" as a directory where certificates of trusted
 CAs are contained. You need to copy PEM-format certificates embedded
-in the source of "openssl" to this director. Each name should be
+in the source of "openssl" to this directory. Each name should be
 @w{"}<hash>.0".
 @end ifset
 
@@ -12628,7 +12637,7 @@ Mew で "stunnel" を制御する重要な変数は 2 つです。
 @ifset en
 There are two important Mew variables to control "stunnel".
 @samp{mew-ssl-cert-directory} is the directory where you install
-certificates of trusted CAs. It's default value if "~/.certs". Also,
+certificates of trusted CAs. Its default value is "~/.certs". Also,
 you can set the verification level with @samp{mew-ssl-verify-level}.
 It's default to 1. The meanings of the values are as follows:
 @end ifset
@@ -12665,7 +12674,7 @@ server).
 @end table
 
 @ifset ja
-後は各プロトコルの SSL に関する変数を設定して下しさい。たとえば、POP
+後は各プロトコルの SSL に関する変数を設定して下さい。たとえば、POP
 over SSL を利用するには、@samp{mew-pop-ssl} を @samp{t} にします。また、
 ポート番号が標準と異なる場合には、@samp{mew-pop-ssl-port} を設定して下
 さい。
@@ -12730,7 +12739,7 @@ protected. For instance, configure as follows for POP:
 @end ifset
 
 @lisp
-;; mew-pop-port is default to "pop3" (110)
+;; A default value of mew-pop-port is "pop3" (110)
 (setq mew-pop-ssl t)
 (setq mew-pop-ssl-port mew-pop-port) ;; The default is "pop3s" (995)
 @end lisp
@@ -12810,7 +12819,7 @@ If you use "bogofilter", put the following to your "~/.mew.el".
 @end ifset
 @ifset en
 If you want to put the @samp{o} mark so as to be refiled to the +spam
-folder, instead of putting to th @samp{D} mark, you should program the
+folder, instead of putting to the @samp{D} mark, you should program the
 function as follows:
 @end ifset
 
@@ -12911,7 +12920,7 @@ with @samp{md} + @samp{x}.
 @end ifset
 @ifset en
 (4) In the case where you use POP and a spam filter does not run on
-the POP server but you want to mark spam messages when retrieving
+the POP server but you want to mark spam messages when retrieving.
 @end ifset
 
 @ifset ja
@@ -12962,14 +12971,14 @@ We consider bogofilter as an example and see three cases.
 (1) ローカルのフィルターに学習させる場合：
 @end ifset
 @ifset en
-(2) To let your local filter learn:
+(1) To let your local filter learn:
 @end ifset
 
 @lisp
 (setq mew-spam-prog "bogofilter")
 (setq mew-spam-prog-args '("-s" "-N" "-v"))
 (setq mew-ham-prog "bogofilter")
-(setq mew-ham-prog-args '("-n" "-S" "-v")))
+(setq mew-ham-prog-args '("-n" "-S" "-v"))
 @end lisp
 
 @ifset ja
@@ -12983,7 +12992,7 @@ We consider bogofilter as an example and see three cases.
 (setq mew-spam-prog "ssh")
 (setq mew-spam-prog-args '("<server>" "bogofilter" "-s" "-N" "-v"))
 (setq mew-ham-prog "ssh")
-(setq mew-ham-prog-args '("<server>" "bogofilter" "-n" "-S" "-v")))
+(setq mew-ham-prog-args '("<server>" "bogofilter" "-n" "-S" "-v"))
 @end lisp
 
 @ifset ja
@@ -12999,7 +13008,7 @@ your <server> learn via SSH:
 (setq mew-spam-prog "ssh")
 (setq mew-spam-prog-args '("-A" "<firewall>" "ssh" "<server>" "bogofilter" "-s" "-N" "-v"))
 (setq mew-ham-prog "ssh")
-(setq mew-ham-prog-args '("-A" "<firewall>" "ssh" "<server>" "bogofilter" "-n" "-S" "-v")))
+(setq mew-ham-prog-args '("-A" "<firewall>" "ssh" "<server>" "bogofilter" "-n" "-S" "-v"))
 @end lisp
 
 @ifset ja
@@ -13285,7 +13294,7 @@ Saving the edited message to a new message.
 @item C-cC-m
 The same as @samp{C-cC-c}
 @item Other commands
-The same as the other commands in Edit mode
+The same as the other commands in Draft mode
 @end ifset
 @end table
 
@@ -13565,7 +13574,7 @@ http://www.mew.org/en/git/
 Mew に関するメーリングリストについては、以下を参照して下さい。
 
 @example
-https://groups.google.com/forum/#!forum/mew-ja
+https://groups.google.com/g/mew-ja
 @end example
 @end ifset
 
@@ -13575,7 +13584,7 @@ and/or discuss features in English,
 please subscribe yourself to mew-en.
 
 @example
-https://groups.google.com/forum/#!forum/mew-en
+https://groups.google.com/g/mew-en
 @end example
 @end ifset
 
