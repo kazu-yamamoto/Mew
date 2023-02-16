@@ -9139,7 +9139,7 @@ up messages in order of time.
 @end ifset
 @ifset en
 To use the feature of dialog, execute @samp{kI} to create
-database. Since New messages are not automatically registered into the
+database. Since new messages are not automatically registered into the
 database, you should periodically execute @samp{kI}. @samp{kI} updates
 the database incrementally by default. This method is fast but
 garbages are left. So, sometime you should type @samp{C-ukI} to update
@@ -9552,7 +9552,7 @@ choose Hyper Estraier.
 コマンドは以下の通りです。
 @end ifset
 @ifset en
-The keyword which you specified on search is shored in a buffer. You
+The keyword which you specified on search is stored in a buffer. You
 can display messages with the keyword highlighted. The commands to
 enable this functionality are as follows:
 @end ifset
@@ -11392,7 +11392,7 @@ Draft モードでは、フックを @samp{text-mode-hook}、
 @ifset en
 Draft mode evaluates @samp{text-mode-hook} and
 @samp{mew-draft-mode-hook} in order. If you do not set
-@samp{auto-fill-mode} to @samp{text-mode-hook}, tt would be useful to
+@samp{auto-fill-mode} to @samp{text-mode-hook}, it would be useful to
 define @samp{mew-draft-mode-hook} as follows:
 @end ifset
 
