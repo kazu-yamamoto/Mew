@@ -1,50 +1,57 @@
-Name:                   mew
-Version:                0.1
-Author:                 Kazu Yamamoto <kazu@Mew.org>
-Maintainer:             Kazu Yamamoto <kazu@Mew.org>
-License:                BSD3
-Homepage:               http://www.mew.org/
-Synopsis:               Sub-commands for Mew
-Description:            "smew" and "cmew"
-Category:               Mail
-Cabal-Version:          >= 1.6
-Build-Type:             Simple
+cabal-version: >=1.8
+name:          mew
+version:       0.1
+license:       BSD3
+maintainer:    Kazu Yamamoto <kazu@Mew.org>
+author:        Kazu Yamamoto <kazu@Mew.org>
+homepage:      http://www.mew.org/
+synopsis:      Sub-commands for Mew
+description:   "smew" and "cmew"
+category:      Mail
+build-type:    Simple
 
-Executable smew
-  Main-Is:              smew.hs
-  GHC-Options:          -Wall
-  Build-Depends:        base >= 4 && < 5
-                      , HDBC
-                      , HDBC-sqlite3
-                      , containers
-                      , easy-file
-                      , parsec
-  Other-Modules:        Msg
-                        Param
-                        Search
-                        Sql
-                        Util
+executable smew
+    main-is:       smew.hs
+    other-modules:
+        Msg
+        Param
+        Search
+        Sql
+        Util
 
-Executable cmew
-  Main-Is:              cmew.hs
-  GHC-Options:          -Wall
-  Build-Depends:        base >= 4 && < 5
-                      , HDBC
-                      , HDBC-sqlite3
-                      , bytestring
-                      , containers
-                      , easy-file
-                      , parsec
-                      , regex-posix
-                      , time
-  if os(windows)
-    Build-Depends:      Win32
-  else
-    Build-Depends:      unix
-  Other-Modules:        Index
-                        Mail
-                        Msg
-                        Param
-                        Sql
-                        Util
+    ghc-options:   -Wall
+    build-depends:
+        base >=4 && <5,
+        HDBC,
+        HDBC-sqlite3,
+        containers,
+        easy-file,
+        parsec
 
+executable cmew
+    main-is:       cmew.hs
+    other-modules:
+        Index
+        Mail
+        Msg
+        Param
+        Sql
+        Util
+
+    ghc-options:   -Wall
+    build-depends:
+        base >=4 && <5,
+        HDBC,
+        HDBC-sqlite3,
+        bytestring,
+        containers,
+        easy-file,
+        parsec,
+        regex-posix,
+        time
+
+    if os(windows)
+        build-depends: Win32
+
+    else
+        build-depends: unix
