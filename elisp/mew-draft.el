@@ -290,10 +290,10 @@ the Body: field."
 
 (defun mew-draft-header-insert-xface ()
   (if (and mew-x-face-file
-	   (file-exists-p (expand-file-name mew-x-face-file)))
+	   (file-exists-p (expand-file-name mew-x-face-file mew-home)))
       (let (xface)
 	(with-temp-buffer
-	  (mew-insert-file-contents (expand-file-name mew-x-face-file))
+	  (mew-insert-file-contents (expand-file-name mew-x-face-file mew-home))
 	  (setq xface (mew-buffer-substring (point-min)
 					    (max (buffer-size) 1))))
 	(mew-draft-header-insert mew-x-face: xface))))
@@ -686,7 +686,7 @@ you can set the case."
       (setq case (mew-input-case (mew-tinfo-get-case) "Signature")))
      (t
       (setq case (mew-tinfo-get-case))))
-    (setq sigfile (expand-file-name (mew-signature-file case)))
+    (setq sigfile (expand-file-name (mew-signature-file case) mew-home))
     (if (not (file-exists-p sigfile))
 	(message "No signature file %s" sigfile)
       (if (and (mew-attach-p) mew-signature-as-lastpart)
