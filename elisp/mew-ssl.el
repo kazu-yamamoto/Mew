@@ -34,10 +34,16 @@ insert no extra text.")
 (defvar mew-ssl-ver nil)
 (defvar mew-ssl-minor-ver nil)
 
-(defvar mew-ssl-libwrap nil)
-(defvar mew-ssl-unixlike nil
+(defvar mew-ssl-libwrap nil
+  "Set to t when stunnel supports \"LIBWRAP\" feature.")
+(defvar mew-ssl-foreground nil
   "Set to t when stunnel supports \"foreground\" option.")
-(defvar mew-ssl-checkhost nil)
+(defvar mew-ssl-checkhost nil
+  "Set to t when stunnel supports \"checkHost\" option.")
+(defvar mew-ssl-pid nil
+  "Set to t when stunnel supports \"pid\" option.")
+(defvar mew-ssl-syslog nil
+  "Set to t when stunnel supports \"syslog\" option.")
 
 (defconst mew-ssl-process-exec-cnt 3)
 
@@ -107,18 +113,17 @@ insert no extra text.")
     (let ((file (mew-make-temp-name)))
       (with-temp-buffer
 	(insert "client=yes\n")
-	(if mew-ssl-unixlike
+	(if mew-ssl-pid
 	    (insert "pid=\n"))
 	(insert (format "verify=%d\n" (mew-ssl-verify-level case)))
 	(if (and (> (mew-ssl-verify-level case) 0) mew-ssl-checkhost)
 	    (insert (format "checkHost=%s\n" server)))
-	(if mew-ssl-unixlike
+	(if mew-ssl-foreground
 	    (insert "foreground=yes\n"))
 	(insert "debug=debug\n")
 	(if (and mew-ssl-libwrap (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 45)))
 	    (insert "libwrap=no\n"))
-	(if (and (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 22))
-		 mew-ssl-unixlike)
+	(if mew-ssl-syslog
 	    (insert "syslog=no\n"))
 	(insert "CApath=" (expand-file-name (mew-ssl-cert-directory case)) "\n")
 	(if (mew-prog-ssl-arg case)
@@ -286,7 +291,11 @@ A local port number can be obtained the process name after ':'. "
       (when (re-search-forward "LIBWRAP" nil t)
 	(setq mew-ssl-libwrap t))
       (when (re-search-forward "foreground" nil t)
-	(setq mew-ssl-unixlike t))
+	(setq mew-ssl-foreground t))
+      (when (re-search-forward "pid" nil t)
+	(setq mew-ssl-pid t))
+      (when (re-search-forward "syslog" nil t)
+	(setq mew-ssl-syslog t))
       (when (re-search-forward "checkHost" nil t)
 	(setq mew-ssl-checkhost t)))))
 
