@@ -122,10 +122,10 @@ no extra text.")
 	  (insert (mew-prog-ssl-arg case)))
       (insert (format "[%d]\n" localport))
       (insert (format "accept=%s:%d\n" mew-ssl-localhost localport))
-      (if mew-ssl-proxy-server
+      (if (mew-ssl-proxy-server case)
 	  (insert
 	   (format "connect=%s:%s\nprotocol=connect\nprotocolHost=%s:%d\n"
-		   mew-ssl-proxy-server mew-ssl-proxy-port
+		   (mew-ssl-proxy-server case) (mew-ssl-proxy-port case)
 		   server remoteport))
 	(insert (format "connect=%s:%d\n" server remoteport))
 	(if tls (insert (format "protocol=%s\n" tls))))
