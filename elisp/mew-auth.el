@@ -84,10 +84,8 @@
     (if json-status
         (if (string-match "^2" (cdr (assoc 'status json-status)))
             "OK" ;; 2XX
-          "NO" ;; XXX: Anyway NO?
-          )
-      "OK" ;; XXX: Maybe OK if not JSON.
-      )))
+          "NO") ;; XXX: Anyway NO?
+      "OK"))) ;; XXX: Maybe OK if not JSON.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; OAuth2
