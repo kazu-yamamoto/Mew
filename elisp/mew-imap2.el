@@ -37,6 +37,7 @@
 (defvar mew-imap2-fsm
   '(("greeting"      ("OK" . "capability"))
     ("capability"    ("OK" . "post-capability"))
+    ("auth-xoauth2"  ("OK" .  "next") ("NO" . "xoauth2-wpwd"))
     ("auth-cram-md5" ("OK" . "pwd-cram-md5") ("NO" . "wpwd"))
     ("pwd-cram-md5"  ("OK" . "next") ("NO" . "wpwd"))
     ("auth-login"    ("OK" . "user-login") ("NO" . "wpwd"))
@@ -241,7 +242,8 @@
 
 (defvar mew-imap2-auth-alist
   '(("CRAM-MD5" mew-imap2-command-auth-cram-md5)
-    ("LOGIN"    mew-imap2-command-auth-login)))
+    ("LOGIN"    mew-imap2-command-auth-login)
+    ("XOAUTH2"  mew-imap2-command-auth-xoauth2)))
 
 (defun mew-imap2-auth-get-func (auth)
   (nth 1 (mew-assoc-case-equal auth mew-imap2-auth-alist 0)))
@@ -537,7 +539,7 @@ with '*' in the region are handled."
 	 (buf (process-buffer process))
 	 aux stay next func code resp)
     (save-excursion
-      (mew-imap2-debug (upcase status) string)
+      (mew-imap2-debug (upcase (format "%s" status)) string)
       (if (and buf (get-buffer buf)) (set-buffer buf))
       (while (string-match "^\\*[^\n]*\n" str)
 	(setq aux (substring str 0 (match-end 0)))
@@ -551,9 +553,13 @@ with '*' in the region are handled."
       (cond
        (next
 	nil)
-       ((string-match "^\\+" str)
+       ((string-match "^\\+ *\\(.*\\)" str)
 	(mew-imap2-set-aux pnm str)
-	(setq next (mew-imap2-fsm-next status "OK")))
+        (setq next (mew-imap2-fsm-next
+                    status
+                    (if (string= status "auth-xoauth2")
+                        (mew-auth-xoauth2-json-status (mew-match-string 1))
+                      "OK"))))
        ((string-match eos str)
 	(mew-imap2-set-tag pnm nil)
 	(setq code (mew-match-string 1 str))

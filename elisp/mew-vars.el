@@ -619,9 +619,9 @@ your e-mail address is automatically set"
 
 (defcustom mew-smtp-auth-list '("CRAM-MD5" "PLAIN" "LOGIN")
   "*A list of SMTP AUTH methods in the preferred order.
-Currently, \"CRAM-MD5\", \"PLAIN\", and \"LOGIN\" can be used."
+Currently, \"CRAM-MD5\", \"PLAIN\", \"LOGIN\", and \"XOAUTH2\" can be used."
   :group 'mew-smtp
-  :type '(repeat (choice (const "CRAM-MD5") (const "PLAIN") (const "LOGIN"))))
+  :type '(repeat (choice (const "CRAM-MD5") (const "PLAIN") (const "LOGIN") (const "XOAUTH2"))))
 
 (defcustom mew-smtp-helo-domain "localhost"
   "*An e-mail domain to tell a SMTP server with HELO/EHLO."
@@ -736,9 +736,9 @@ t means SASL according to 'mew-pop-auth-list'."
 
 (defcustom mew-pop-auth-list '("CRAM-MD5" "PLAIN")
   "*A list of SASL methods in the preferred order.
-Currently, \"CRAM-MD5\" can be used."
+Currently, \"CRAM-MD5\", \"PLAIN\", and \"XOAUTH2\" can be used."
   :group 'mew-pop
-  :type '(repeat (choice (const "CRAM-MD5") (const "PLAIN"))))
+  :type '(repeat (choice (const "CRAM-MD5") (const "PLAIN") (const "XOAUTH2"))))
 
 (defcustom mew-pop-delete t
   "*Whether or not delete messages on a POP server after retrieval by
@@ -826,11 +826,11 @@ t means SASL according to 'mew-imap-auth-list'."
   :group 'mew-imap
   :type 'boolean)
 
-(defcustom mew-imap-auth-list '("CRAM-MD5"  "LOGIN")
+(defcustom mew-imap-auth-list '("CRAM-MD5" "LOGIN")
   "*A list of SASL methods in the preferred order.
-Currently, \"CRAM-MD5\" and \"LOGIN\" can be used."
+Currently, \"CRAM-MD5\", \"LOGIN\", and \"XOAUTH2\" can be used."
   :group 'mew-imap
-  :type '(repeat (choice (const "CRAM-MD5") (const "LOGIN"))))
+  :type '(repeat (choice (const "CRAM-MD5") (const "LOGIN") (const "XOAUTH2"))))
 
 (defcustom mew-imap-delete t
   "*Whether or not delete messages on an IMAP server after retrieval by
