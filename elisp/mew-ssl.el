@@ -26,10 +26,9 @@ A file name of a certificate should be 'cert-hash.0'.
     the server).")
 
 (defvar mew-prog-ssl-arg nil
-  "For stunnel v3, a list of command-line arguments, each one a string.
-For stunnel v4 or v5, a string of extra text to place in the configuration
-file, which should end with a newline (example: \"fips=no\\n\"); or nil to
-insert no extra text.")
+  "A string of extra text to place in the configuration file,
+which should end with a newline (example: \"fips=no\\n\"); or nil to insert
+no extra text.")
 
 (defvar mew-ssl-ver nil)
 (defvar mew-ssl-minor-ver nil)
@@ -38,14 +37,17 @@ insert no extra text.")
   "Set to t when stunnel supports \"LIBWRAP\" feature.")
 (defvar mew-ssl-foreground nil
   "Set to t when stunnel supports \"foreground\" option.")
-(defvar mew-ssl-checkhost nil
-  "Set to t when stunnel supports \"checkHost\" option.")
 (defvar mew-ssl-pid nil
   "Set to t when stunnel supports \"pid\" option.")
 (defvar mew-ssl-syslog nil
   "Set to t when stunnel supports \"syslog\" option.")
 
 (defconst mew-ssl-process-exec-cnt 3)
+
+(defconst mew-ssl-min-major-ver 5
+  "Minimum major version of stunnel that Mew supports.")
+(defconst mew-ssl-min-minor-ver 15
+  "Minimum minor version of stunnel that Mew supports.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -97,45 +99,32 @@ insert no extra text.")
 
 (defun mew-ssl-options (case server remoteport localport tls)
   (setq server (mew-ssl-server server))
-  (if (= mew-ssl-ver 3)
-      (let (args)
-	(setq args
-	      `("-c" "-f"
-		"-a" ,(expand-file-name (mew-ssl-cert-directory case))
-		"-d" ,(format "%s:%d" mew-ssl-localhost localport)
-		"-v" ,(number-to-string (mew-ssl-verify-level case))
-		"-D" "debug"
-		"-P" ""
-		"-r" ,(format "%s:%d" server remoteport)
-		,(mew-prog-ssl-arg case)))
-	(if tls (setq args (cons "-n" (cons tls args))))
-	args)
-    (let ((file (mew-make-temp-name)))
-      (with-temp-buffer
-	(insert "client=yes\n")
-	(if mew-ssl-pid
-	    (insert "pid=\n"))
-	(insert (format "verify=%d\n" (mew-ssl-verify-level case)))
-	(if (and (> (mew-ssl-verify-level case) 0) mew-ssl-checkhost)
-	    (insert (format "checkHost=%s\n" server)))
-	(if mew-ssl-foreground
-	    (insert "foreground=yes\n"))
-	(insert "debug=debug\n")
-	(if (and mew-ssl-libwrap (or (>= mew-ssl-ver 5) (>= mew-ssl-minor-ver 45)))
-	    (insert "libwrap=no\n"))
-	(if mew-ssl-syslog
-	    (insert "syslog=no\n"))
-	(insert "CApath=" (expand-file-name (mew-ssl-cert-directory case)) "\n")
-	(if (mew-prog-ssl-arg case)
-	    (insert (mew-prog-ssl-arg case)))
-	(insert (format "[%d]\n" localport))
-	(insert (format "accept=%s:%d\n" mew-ssl-localhost localport))
-	(insert (format "connect=%s:%d\n" server remoteport))
-	(if tls (insert (format "protocol=%s\n" tls)))
-	(mew-frwlet mew-cs-dummy mew-cs-text-for-write
-	  ;; NEVER use call-process-region for privacy reasons
-	  (write-region (point-min) (point-max) file nil 'no-msg))
-	(list file)))))
+  (let ((file (mew-make-temp-name)))
+    (with-temp-buffer
+      (insert "client=yes\n")
+      (if mew-ssl-pid
+	  (insert "pid=\n"))
+      (insert (format "verify=%d\n" (mew-ssl-verify-level case)))
+      (if (> (mew-ssl-verify-level case) 0)
+	  (insert (format "checkHost=%s\n" server)))
+      (if mew-ssl-foreground
+	  (insert "foreground=yes\n"))
+      (insert "debug=debug\n")
+      (if mew-ssl-libwrap
+	  (insert "libwrap=no\n"))
+      (if mew-ssl-syslog
+	  (insert "syslog=no\n"))
+      (insert "CApath=" (expand-file-name (mew-ssl-cert-directory case)) "\n")
+      (if (mew-prog-ssl-arg case)
+	  (insert (mew-prog-ssl-arg case)))
+      (insert (format "[%d]\n" localport))
+      (insert (format "accept=%s:%d\n" mew-ssl-localhost localport))
+      (insert (format "connect=%s:%d\n" server remoteport))
+      (if tls (insert (format "protocol=%s\n" tls)))
+      (mew-frwlet mew-cs-dummy mew-cs-text-for-write
+		  ;; NEVER use call-process-region for privacy reasons
+		  (write-region (point-min) (point-max) file nil 'no-msg))
+      (list file))))
 
 (defun mew-open-ssl-stream (case server serv tls)
   "Open an SSL/TLS stream for SERVER's SERV.
@@ -147,6 +136,13 @@ A local port number can be obtained the process name after ':'. "
   (cond
    ((or (null mew-ssl-ver) (not (mew-which-exec mew-prog-ssl)))
     (message "'%s' is not found" mew-prog-ssl)
+    nil)
+   ((or (< mew-ssl-ver mew-ssl-min-major-ver)
+	(and (= mew-ssl-ver mew-ssl-min-major-ver)
+	     (< mew-ssl-minor-ver mew-ssl-min-minor-ver)))
+    (message "Version %d.%d of '%s' is installed, but Mew requires version %d.%d or later."
+	     mew-ssl-ver mew-ssl-minor-ver mew-prog-ssl mew-ssl-min-major-ver
+	     mew-ssl-min-minor-ver)
     nil)
    (t
     (let* ((remoteport (mew-serv-to-port serv))
@@ -186,7 +182,7 @@ A local port number can be obtained the process name after ':'. "
 	    (setq pnm (process-name pro))
 	    (mew-info-clean-up pnm)
 	    (mew-ssl-set-try pnm 0)
-	    (if (>= mew-ssl-ver 4) (mew-ssl-set-file pnm (car opts)))
+	    (mew-ssl-set-file pnm (car opts))
 	    (mew-set-process-cs pro mew-cs-text-for-read mew-cs-text-for-write)
 	    (set-process-filter pro 'mew-ssl-filter1)
 	    (set-process-sentinel pro 'mew-ssl-sentinel)
@@ -295,9 +291,7 @@ A local port number can be obtained the process name after ':'. "
       (when (re-search-forward "pid" nil t)
 	(setq mew-ssl-pid t))
       (when (re-search-forward "syslog" nil t)
-	(setq mew-ssl-syslog t))
-      (when (re-search-forward "checkHost" nil t)
-	(setq mew-ssl-checkhost t)))))
+	(setq mew-ssl-syslog t)))))
 
 (provide 'mew-ssl)
 
