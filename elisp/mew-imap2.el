@@ -362,14 +362,18 @@
 ;;; Opening IMAP
 ;;;
 
-(defun mew-imap2-open (pnm server port)
+(defun mew-imap2-open (pnm case server port starttlsp)
   (let ((sprt (mew-*-to-port port))
+	(sslnp (mew-ssl-native-p (mew-imap-ssl case)))
 	pro tm)
     (condition-case emsg
 	(progn
 	  (setq tm (run-at-time mew-imap-timeout-time nil 'mew-imap2-timeout))
 	  (message "Connecting to the IMAP server...")
-	  (setq pro (open-network-stream pnm nil server sprt))
+	  (setq pro (mew-open-network-stream pnm nil server sprt
+					     'imap sslnp starttlsp case))
+	  (setq pro (car pro))
+	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
 	  (mew-set-process-cs pro mew-cs-text-for-net mew-cs-text-for-net)
 	  (message "Connecting to the IMAP server...done"))
@@ -383,7 +387,11 @@
     pro))
 
 (defun mew-imap2-timeout ()
-  (signal 'quit nil))
+  ;; Do not timeout if the NSM query pane is active.
+  (unless (get-buffer "*Network Security Manager*")
+    (message "IMAP connection timed out (%d seconds)"
+	     mew-imap-timeout-time)
+    (signal 'quit nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -398,29 +406,37 @@
 	 (sshsrv (mew-imap-ssh-server case))
 	 (sslp (mew-imap-ssl case))
 	 (sslport (mew-imap-ssl-port case))
+	 (sslnp (mew-ssl-native-p (mew-imap-ssl case)))
+	 (starttlsp
+	  (mew-ssl-starttls-p (mew-imap-ssl case)
+			      (mew-*-to-string (mew-imap-port case))
+			      (mew-imap-ssl-port case)))
 	 (proxysrv (mew-imap-proxy-server case))
 	 (proxyport (mew-imap-proxy-port case))
 	 process sshname sshpro sslname sslpro lport tls)
     (cond
+     (sslnp
+      (let ((serv (if starttlsp port sslport)))
+	(setq process (mew-imap2-open pnm case server serv starttlsp))))
      (sshsrv
       (setq sshpro (mew-open-ssh-stream case server port sshsrv))
       (when sshpro
 	(setq sshname (process-name sshpro))
 	(setq lport (mew-ssh-pnm-to-lport sshname))
 	(when lport
-	  (setq process (mew-imap2-open pnm "localhost" lport)))))
+	  (setq process (mew-imap2-open pnm case "localhost" lport nil)))))
      (sslp
-      (if (mew-port-equal port sslport) (setq tls mew-tls-imap))
+      (when starttlsp (setq tls mew-tls-imap))
       (setq sslpro (mew-open-ssl-stream case server sslport tls))
       (when sslpro
 	(setq sslname (process-name sslpro))
 	(setq lport (mew-ssl-pnm-to-lport sslname))
 	(when lport
-	  (setq process (mew-imap2-open pnm mew-ssl-localhost lport)))))
+	  (setq process (mew-imap2-open pnm case mew-ssl-localhost lport nil)))))
      (proxysrv
-      (setq process (mew-imap2-open pnm proxysrv proxyport)))
+      (setq process (mew-imap2-open pnm case proxysrv proxyport nil)))
      (t
-      (setq process (mew-imap2-open pnm server port))))
+      (setq process (mew-imap2-open pnm case server port nil))))
     (if (null process)
 	(cond
 	 ((and sshsrv (null sshpro))
@@ -450,7 +466,14 @@
       (set-process-buffer process nil)
       (set-process-sentinel process 'mew-imap2-sentinel)
       (set-process-filter process 'mew-imap2-filter)
-      (message "Copying in background..."))))
+      (message "Copying in background...")
+      (when sslnp
+	;; GnuTLS requires a client-initiated command after the
+	;; session is established or upgraded to use TLS because
+	;; no additional greeting from the server.
+	(mew-imap2-set-status pnm "capability")
+	(mew-imap2-command-capability process pnm))
+      )))
 
 (defun mew-summary-from-local-to-imap ()
   "Copy messages in local folders under specified folder prefix
