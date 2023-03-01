@@ -137,8 +137,7 @@ no extra text.")
 (defconst mew-tls-nntp "nntp")
 (defconst mew-tls-imap "imap") ;; xxx stunnel does not support this.
 
-;; stunnel does not support IPv6, sigh
-(defconst mew-ssl-localhost "127.0.0.1")
+(defconst mew-ssl-localhost "localhost")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
