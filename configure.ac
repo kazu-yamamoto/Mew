@@ -15,7 +15,10 @@ AC_ARG_WITH(etcdir,
 AC_SUBST(etcdir)
 
 if test -z "${emacsbin}"; then
-    AC_PATH_PROGS(emacsbin, emacs, emacs)
+    AC_PATH_PROGS(emacsbin, emacs, no)
+    if test "${emacsbin}" = no; then
+	AC_MSG_ERROR([Emacs is not found])
+    fi
 fi
 chk_prefix=
   if test "${datadir}" = "\${prefix}/share" && \
