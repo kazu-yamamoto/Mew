@@ -1190,17 +1190,28 @@ and sets buffer-file-coding-system."
     (if disp (setenv "DISPLAY" disp))
     (apply 'start-process name buffer program program-args)))
 
+(defvar mew-process-prior-locale-category "LC_ALL")
+(defvar mew-process-prior-locale-value
+  (let ((case-fold-search t)
+	(locale-prog (executable-find "locale")))
+    (with-temp-buffer
+      (if (and locale-prog
+	       (call-process locale-prog nil t nil "-a")
+	       (re-search-backward "^C.utf-?8" nil t))
+	  (mew-match-string 0)
+	"C"))))
+
 (defun mew-start-process-lang (name buffer program &rest program-args)
   (let ((process-environment (copy-sequence process-environment)))
     (setenv "LANGUAGE" "C")
-    (setenv "LC_ALL" "C")
+    (setenv mew-process-prior-locale-category mew-process-prior-locale-value)
     (setenv "LANG" "C")
     (apply 'start-process name buffer program program-args)))
 
 (defun mew-call-process-lang (prog &optional infile buffer display &rest args)
   (let ((process-environment (copy-sequence process-environment)))
     (setenv "LANGUAGE" "C")
-    (setenv "LC_ALL" "C")
+    (setenv mew-process-prior-locale-category mew-process-prior-locale-value)
     (setenv "LANG" "C")
     (apply 'call-process prog infile buffer display args)))
 
