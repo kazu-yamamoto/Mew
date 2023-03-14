@@ -1809,8 +1809,11 @@ fi
 
   test -n "$emacsbin" && break
 done
-test -n "$emacsbin" || emacsbin="emacs"
+test -n "$emacsbin" || emacsbin="no"
 
+    if test "${emacsbin}" = no; then
+	as_fn_error $? "Emacs is not found" "$LINENO" 5
+    fi
 fi
 chk_prefix=
   if test "${datadir}" = "\${prefix}/share" && \
