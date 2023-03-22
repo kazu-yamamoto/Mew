@@ -1198,7 +1198,7 @@ and sets buffer-file-coding-system."
       (if (and locale-prog
 	       (call-process locale-prog nil t nil "-a")
 	       (re-search-backward "^C.utf-?8" nil t))
-	  (mew-match-string 0)
+	  (match-string 0)
 	"C"))))
 
 (defun mew-start-process-lang (name buffer program &rest program-args)
