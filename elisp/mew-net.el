@@ -183,6 +183,8 @@
       (if func
 	  (setq mew-biff-timer-id (mew-timer (* 60 mew-biff-interval) func)))))
   (let ((ent '(mew-biff-string mew-biff-string)))
+    (when (stringp global-mode-string)
+        (setq global-mode-string (list global-mode-string)))
     (unless (member ent global-mode-string)
       (if global-mode-string
 	  (setq global-mode-string
