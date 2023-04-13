@@ -22,7 +22,7 @@
 ;;;
 
 (defvar mew-nntp-info-list
-  '("server" "port" "process" "ssh-process" "ssl-process" "status"
+  '("server" "port" "process" "ssh-process" "ssl-process" "ssl-p" "status"
     "directive" "bnm" "mdb"
     "rtrs" "refs" "range"
     "rttl" "rcnt" "hlds"
@@ -66,7 +66,7 @@
 ;;;
 
 (defun mew-nntp-secure-p (pnm)
-  (or (mew-nntp-get-ssh-process pnm) (mew-nntp-get-ssl-process pnm)))
+  (or (mew-nntp-get-ssh-process pnm) (mew-nntp-get-ssl-p pnm)))
 
 (defun mew-nntp-command-mode-reader (pro pnm)
   (mew-net-status (mew-nntp-get-status-buf pnm)
@@ -466,7 +466,7 @@
        (t
 	(setq process (mew-nntp-open pnm case server port no-msg nil))))
       (when process
-	(mew-summary-lock process "NNTPing" (or sshpro sslpro))
+	(mew-summary-lock process "NNTPing" (or sshpro sslp))
 	(mew-sinfo-set-summary-form (mew-get-summary-form bnm))
 	(mew-sinfo-set-summary-column (mew-get-summary-column bnm))
 	(mew-sinfo-set-unread-mark nil)
@@ -478,6 +478,7 @@
 	(mew-nntp-set-process pnm process)
 	(mew-nntp-set-ssh-process pnm sshpro)
 	(mew-nntp-set-ssl-process pnm sslpro)
+	(mew-nntp-set-ssl-p pnm sslp)
 	(mew-nntp-set-server pnm server)
 	(mew-nntp-set-port pnm port)
 	(mew-nntp-set-user pnm user)
@@ -504,7 +505,7 @@
 	  (when virtual
 	    (mew-nntp-set-status-buf pnm virtual)
 	    (with-current-buffer virtual
-	      (mew-summary-lock process "NNTPing" (or sshpro sslpro)))))
+	      (mew-summary-lock process "NNTPing" (or sshpro sslp)))))
 	 ((eq directive 'scan)
 	  (mew-nntp-set-range pnm (nth 0 args))
 	  (mew-nntp-set-get-body pnm (nth 1 args))
