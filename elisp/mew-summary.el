@@ -258,7 +258,6 @@ and return (beg . end)."
 ;;; Modeline
 ;;;
 
-(defvar mew-mode-line-target "%p")
 (defvar mew-mode-line-format
   `(""
     (mew-summary-buffer-secure-process ,mew-secure-format2)))
