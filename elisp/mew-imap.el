@@ -30,7 +30,7 @@
 ;;;
 
 (defvar mew-imap-info-list
-  '("server" "port" "process" "ssh-process" "ssl-process" "status"
+  '("server" "port" "process" "ssh-process" "ssl-process" "ssl-p" "status"
     "directive" "bnm" "mdb"
     "rmvs" "kils" "refs" "movs"
     "rtrs" "dels" "uidl" "range"
@@ -105,7 +105,7 @@
 ;;;
 
 (defun mew-imap-secure-p (pnm)
-  (or (mew-imap-get-ssh-process pnm) (mew-imap-get-ssl-process pnm)))
+  (or (mew-imap-get-ssh-process pnm) (mew-imap-get-ssl-p pnm)))
 
 (defun mew-imap-command-capability (pro pnm)
   (mew-net-status (mew-imap-get-status-buf pnm)
@@ -1365,7 +1365,7 @@
       (if (null process)
 	  (when (eq directive 'exec)
 	    (mew-imap-exec-recover bnm))
-	(mew-summary-lock process "IMAPing" (or sshpro sslpro))
+	(mew-summary-lock process "IMAPing" (or sshpro sslp))
 	(mew-sinfo-set-summary-form (mew-get-summary-form bnm))
 	(mew-sinfo-set-summary-column (mew-get-summary-column bnm))
 	(mew-sinfo-set-unread-mark nil)
@@ -1377,6 +1377,7 @@
 	(mew-imap-set-process pnm process)
 	(mew-imap-set-ssh-process pnm sshpro)
 	(mew-imap-set-ssl-process pnm sslpro)
+	(mew-imap-set-ssl-p pnm sslp)
 	(mew-imap-set-server pnm server)
 	(mew-imap-set-port pnm port)
 	(mew-imap-set-user pnm user)
@@ -1416,7 +1417,7 @@
 	  (when virtual
 	    (mew-imap-set-status-buf pnm virtual)
 	    (with-current-buffer virtual
-	      (mew-summary-lock process "IMAPing" (or sshpro sslpro)))))
+	      (mew-summary-lock process "IMAPing" (or sshpro sslp)))))
 	 ((eq directive 'scan)
 	  (mew-imap-set-range pnm (nth 0 args))
 	  (mew-imap-set-get-body pnm (nth 1 args))
