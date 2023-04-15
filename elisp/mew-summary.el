@@ -258,11 +258,8 @@ and return (beg . end)."
 ;;; Modeline
 ;;;
 
-(defvar mew-mode-line-target "%p")
 (defvar mew-mode-line-format
   `(""
-    (mew-summary-buffer-left-msgs mew-summary-buffer-left-msgs "L%l")
-    (mew-summary-buffer-raw "*")
     (mew-summary-buffer-secure-process ,mew-secure-format2)))
 
 (defvar mew-mode-line-process
@@ -270,28 +267,17 @@ and return (beg . end)."
     (mew-summary-buffer-process mew-summary-buffer-process-status)))
 
 (defun mew-summary-setup-mode-line ()
-  (let ((tgt mew-mode-line-target)
-	target prev pos)
-    (if (boundp 'mode-line-position)
-	(progn
-	  (make-local-variable 'mode-line-position) ;; Emacs 21.3.50
-	  (setq mode-line-position
-		(copy-sequence (default-value 'mode-line-position)))
-	  (setq prev mode-line-position))
-      (setq mode-line-format (copy-sequence (default-value 'mode-line-format)))
-      (setq prev mode-line-format))
-    (setq target (or (rassoc (list tgt) prev) ;; Emacs 21.3.50
-		     (rassoc tgt prev)
-		     (car (member tgt prev))))
-    (when target
-      (setq pos (- (length prev) (length (member target prev))))
-      (setcar (nthcdr pos prev) mew-mode-line-format))
-    (when (boundp 'line-number-mode)
-      (make-local-variable 'line-number-mode)
-      (setq line-number-mode nil))
-    (or (assq 'mew-summary-buffer-process mode-line-process)
-	(setq mode-line-process
-	      (append mew-mode-line-process mode-line-process)))))
+  (when (boundp 'mode-line-format)
+    (make-local-variable 'mode-line-format)
+    (setq mode-line-format
+	  (copy-sequence (default-value 'mode-line-format)))
+    (nconc mode-line-format mew-mode-line-format))
+  (when (boundp 'line-number-mode)
+    (make-local-variable 'line-number-mode)
+    (setq line-number-mode nil))
+  (or (assq 'mew-summary-buffer-process mode-line-process)
+      (setq mode-line-process
+	    (append mew-mode-line-process mode-line-process))))
 
 (defun mew-summary-reset-mode-line ()
   (setq mew-summary-buffer-left-msgs nil))
