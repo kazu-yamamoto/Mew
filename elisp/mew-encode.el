@@ -734,13 +734,21 @@
 	(narrow-to-region beg end)
 	(when (mew-encode-flowed-check)
 	  (setq flowed t)
-	  (setq delsp (mew-charset-to-delsp charset))
+	  (setq delsp (mew-delsp-p))
 	  (setq column mew-flowed-fold-length)
 	  (if delsp (setq column (1- column)))
 	  (while (not (eobp))
 	    (mew-encode-flowed-line column delsp)
 	    (forward-line)))))
     (list flowed delsp)))
+
+(defun mew-delsp-p ()
+  (save-excursion
+    (let ((n (- (point-max) (point-min)))
+	  (i 0))
+      (while (re-search-forward " +" nil t)
+	(setq i (+ i 1)))
+      (< (/ (* i 100) n) mew-flowed-delsp-threshold))))
 
 (defun mew-encode-flowed-remove-trailing-sp ()
   (while (and (not (bobp)) (= (char-before) mew-sp))
