@@ -106,23 +106,96 @@
   "URL used to request access to Mail Resources.")
 
 (defvar mew-auth-oauth2-redirect-url nil
-  "URL used to OAuth redirect url.")
+  "URL used to OAuth redirect url.
+If nil, OOB is used.")
 
 (declare-function oauth2-auth-and-store "oauth2")
+(declare-function oauth2-compute-id "oauth2")
 (declare-function oauth2-refresh-access "oauth2")
 (declare-function oauth2-token-access-token "oauth2")
+(declare-function plstore-get "plstore")
+(declare-function plstore-open "plstore")
 
 (defun mew-auth-oauth2-auth-and-store
     (resource-url client-id client-secret &optional redirect-url)
   "Request access to a mail resource and store it using `auth-source'."
   (require 'oauth2)
-  (oauth2-auth-and-store
-   mew-auth-oauth2-auth-url
-   mew-auth-oauth2-token-url
-   resource-url
-   client-id
-   client-secret
-   redirect-url))
+  (require 'plstore)
+  (let* ((plstore (plstore-open oauth2-token-file))
+         (id (oauth2-compute-id mew-auth-oauth2-auth-url
+                                mew-auth-oauth2-token-url
+                                resource-url))
+         (plist (cdr (plstore-get plstore id)))
+         (port (and (string-match "^http://localhost:\\([0-9]+\\)" redirect-url)
+                    (string-to-number (match-string 1 redirect-url))))
+         (token))
+    ;; If plist is nil, OAuth2 authorization process is needed.
+    ;; In this case, if redirect-url is in the form of http://localhost:port,
+    ;; prepare mini web server as the redirect handler.
+    (if (and (null plist) port)
+        (progn
+          (message "Redirect server start at localhost:%d" port)
+          (mew-oauth2-setup-redirect-handler port)))
+    (setq token (oauth2-auth-and-store
+                 mew-auth-oauth2-auth-url
+                 mew-auth-oauth2-token-url
+                 resource-url
+                 client-id
+                 client-secret
+                 redirect-url))
+    (mew-oauth2-cleanup-redirect-handler port)
+    token))
+
+(defun mew-oauth2-setup-redirect-handler (port)
+  "Setup OAuth2 redirect server bound to PORT.
+It serves http://localhost:PORT
+"
+  (let ((proc-name (format "oauth2-redirect-handler:%d" port)))
+    (unless (process-status proc-name)
+      (make-network-process
+       :name proc-name
+       :buffer nil
+       :host 'local
+       :service port
+       :sentinel 'mew-oauth2-redirect-handler-sentinel
+       :filter 'mew-oauth2-redirect-handler-filter
+       :server t))))
+
+(defun mew-oauth2-cleanup-redirect-handler (port)
+  "Clean up OAuth2 redirect servers both LISTEN and ACCEPT."
+  (let ((proc-name (format "oauth2-redirect-handler:%d" port)))
+    (mapcar (lambda (p)
+              (if (string= (process-contact p :name) proc-name)
+                  (delete-process p)))
+            (process-list))))
+
+(defun mew-oauth2-redirect-handler-log (string)
+  "Debug logger for OAuth2 redirect server."
+  (with-current-buffer (get-buffer-create  " *mew OAuth2 debug*")
+    (insert (format "%s" string))))
+
+(defun mew-oauth2-redirect-handler-sentinel (proc event)
+  (mew-oauth2-redirect-handler-log
+   (format "Process: %s had the event '%s'" proc event)))
+
+(defun mew-oauth2-redirect-handler-filter (proc string)
+  (mew-oauth2-redirect-handler-log
+   (format "Process: %s had the string ---\n%s---\n" proc string))
+  (if (string-match "^GET .*[?&]code=\\([^&]+\\)" string)
+      (let ((code (match-string 1 string))
+            (minibuf (active-minibuffer-window)))
+        (kill-new code)
+        (mew-oauth2-redirect-handler-log
+         (format "Got code: %s\n" code))
+        (process-send-string
+         proc
+         (format "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nOK, your code is:\n%s\nEmacs kill-ring also has the code. You can C-y to yank code." code))
+        (delete-process proc)
+        (if minibuf
+            (progn
+              (mew-oauth2-redirect-handler-log "Insert code to minibuffer\n")
+              (with-current-buffer (window-buffer minibuf)
+                (insert (format "%s" code))))))))
 
 (defun mew-auth-oauth2-token ()
   "Get OAuth token for Mew to access mail service."
