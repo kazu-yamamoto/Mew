@@ -109,42 +109,74 @@
   "URL used to OAuth redirect url.
 If nil, OOB is used.")
 
-(declare-function oauth2-auth-and-store "oauth2")
-(declare-function oauth2-compute-id "oauth2")
 (declare-function oauth2-refresh-access "oauth2")
 (declare-function oauth2-token-access-token "oauth2")
 (declare-function plstore-get "plstore")
 (declare-function plstore-open "plstore")
+(declare-function plstore-put"plstore")
+(declare-function plstore-save "plstore")
+(eval-when-compile
+  (require 'cl-lib)
+  (cl-defstruct oauth2-token
+    plstore
+    plstore-id
+    client-id
+    client-secret
+    access-token
+    refresh-token
+    token-url
+    access-response))
 
-(defun mew-auth-oauth2-auth-and-store
-    (resource-url client-id client-secret &optional redirect-url)
-  "Request access to a mail resource and store it using `auth-source'."
+(defun mew-auth-oauth2-auth-and-store (auth-url token-url scope client-id client-secret &optional redirect-uri state user-id)
+  "Request access to a mail resource and store it using `plstore'."
   (require 'oauth2)
-  (require 'plstore)
   (let* ((plstore (plstore-open oauth2-token-file))
-         (id (oauth2-compute-id mew-auth-oauth2-auth-url
-                                mew-auth-oauth2-token-url
-                                resource-url))
+         (id (secure-hash 'md5 (concat auth-url token-url scope user-id)))
          (plist (cdr (plstore-get plstore id)))
-         (port (and (string-match "^http://localhost:\\([0-9]+\\)" redirect-url)
-                    (string-to-number (match-string 1 redirect-url))))
-         (token))
-    ;; If plist is nil, OAuth2 authorization process is needed.
-    ;; In this case, if redirect-url is in the form of http://localhost:port,
-    ;; prepare mini web server as the redirect handler.
-    (if (and (null plist) port)
-        (progn
-          (message "Redirect server start at localhost:%d" port)
-          (mew-oauth2-setup-redirect-handler port)))
-    (setq token (oauth2-auth-and-store
-                 mew-auth-oauth2-auth-url
-                 mew-auth-oauth2-token-url
-                 resource-url
-                 client-id
-                 client-secret
-                 redirect-url))
-    (mew-oauth2-cleanup-redirect-handler port)
-    token))
+         (port (and (stringp redirect-uri)
+                    (string-match "^http://localhost:\\([0-9]+\\)" redirect-uri)
+                    (string-to-number (match-string 1 redirect-uri)))))
+    (if plist
+        (make-oauth2-token :plstore plstore
+                           :plstore-id id
+                           :client-id client-id
+                           :client-secret client-secret
+                           :access-token (plist-get plist :access-token)
+                           :refresh-token (plist-get plist :refresh-token)
+                           :token-url token-url
+                           :access-response (plist-get plist :access-response))
+
+      ;; If plist is nil, OAuth2 authorization process is needed.
+      ;; In this case, if redirect-uri is in the form of http://localhost:port,
+      ;; prepare mini web server as a redirect handler.
+      (if port
+          (mew-oauth2-setup-redirect-handler port))
+      ;; Authorization process. Web browser will be invoked.
+      (let ((token (oauth2-auth
+                    auth-url
+                    token-url
+                    client-id
+                    client-secret
+                    scope
+                    state
+                    redirect-uri)))
+        ;; Save token to plstore
+        (setf (oauth2-token-plstore token) plstore)
+        (setf (oauth2-token-plstore-id token) id)
+        (plstore-put plstore id nil `(:access-token
+                                      ,(oauth2-token-access-token token)
+                                      :refresh-token
+                                      ,(oauth2-token-refresh-token token)
+                                      :access-response
+                                      ,(oauth2-token-access-response token)))
+        (plstore-save plstore)
+        ;; Shutdown mini web server
+        (mew-oauth2-cleanup-redirect-handler port)
+        ;; Return token structure.
+        ;; Note that this token is structure not string.
+        ;; (oauth2-token-access-token token) is the string for API
+        ;; requests.
+        token))))
 
 (defun mew-oauth2-setup-redirect-handler (port)
   "Setup OAuth2 redirect server bound to PORT.
@@ -189,28 +221,38 @@ It serves http://localhost:PORT
          (format "Got code: %s\n" code))
         (process-send-string
          proc
-         (format "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nOK, your code is:\n%s\nEmacs kill-ring also has the code. You can C-y to yank code." code))
+         (format (concat
+                  "HTTP/1.1 200 OK\r\n"
+                  "Content-Type: text/plain\r\n"
+                  "\r\n"
+                  "OK, your code is:\n"
+                  "%s\n"
+                  "Emacs kill-ring also has the code. You can C-y to yank code.")
+                 code))
         (delete-process proc)
-        (if minibuf
-            (progn
-              (mew-oauth2-redirect-handler-log "Insert code to minibuffer\n")
-              (with-current-buffer (window-buffer minibuf)
-                (insert (format "%s" code))))))))
+        (when minibuf
+          (mew-oauth2-redirect-handler-log "Insert code to minibuffer\n")
+          (with-current-buffer (window-buffer minibuf)
+            (insert (format "%s" code)))))))
 
-(defun mew-auth-oauth2-token ()
+(defun mew-auth-oauth2-token (&optional user-id)
   "Get OAuth token for Mew to access mail service."
   (require 'oauth2)
   (let ((token (mew-auth-oauth2-auth-and-store
+                mew-auth-oauth2-auth-url
+                mew-auth-oauth2-token-url
                 mew-auth-oauth2-resource-url
                 mew-auth-oauth2-client-id
                 mew-auth-oauth2-client-secret
-                mew-auth-oauth2-redirect-url)))
+                mew-auth-oauth2-redirect-url
+                nil
+                user-id)))
     (oauth2-refresh-access token)
     token))
 
-(defun mew-auth-oauth2-token-access-token ()
+(defun mew-auth-oauth2-token-access-token (user-id)
   (require 'oauth2)
-  (ignore-errors (oauth2-token-access-token (mew-auth-oauth2-token))))
+  (ignore-errors (oauth2-token-access-token (mew-auth-oauth2-token user-id))))
 
 (provide 'mew-auth)
 
