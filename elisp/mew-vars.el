@@ -1541,6 +1541,12 @@ threshold, the format=flowed encoding is used."
   :group 'mew-draft
   :type 'integer)
 
+(defcustom mew-flowed-delsp-threshold 8
+  "*A threshold percent to decide to DelSp.
+If the percent of SPC is less than this threshold, DelSp is used."
+  :group 'mew-draft
+  :type 'integer)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Ask?
