@@ -956,9 +956,9 @@ there is no protection in a plain text file.  For more details, see
 .netrc 形式のテキストファイルを GnuPG で暗号化した場合、Mew は保存され
 たパスワードの使用時に、復号用の鍵にアクセスするためのパスフレーズを尋
 ねます。この復号処理には、EasyPG Assistant と呼ばれる Emacs パッケージ
-が使われます。このパッケージは GnuPG を呼び出して暗号の処理を行なうも
-のです。多くの場合、デフォルトの設定で問題なく動作しますが、設定可能な
-項目がいくつかあります。詳しくは、@xref{(epa)Top} を参照してください。
+が使われます。このパッケージは GnuPG を呼び出して暗号の処理をします。
+多くの場合、デフォルトの設定で問題なく動作しますが、設定可能な項目がい
+くつかあります。詳しくは、@xref{(epa)Top} を参照してください。
 @end ifset
 @ifset en
 If you use encrypted version of the .netrc-style text file as your
@@ -12653,10 +12653,10 @@ command line.
 @end ifset
 
 @ifset ja
-Mew は、通信の秘匿性と完全性を保証するために、TCP 通信路の暗号化を行な
-う TLS (Transport Layer Security) に対応しています。
-この機能を使うには、Emacs に GnuTLS ライブラリが組み込まれているか、
-外部プログラムとして "stunnel" バージョン 5.15以降が必要です。
+Mew は、通信の秘匿性と完全性を保証するために、TCP 通信路を暗号化する
+TLS (Transport Layer Security) に対応しています。この機能を使うには、
+Emacs に GnuTLS ライブラリが組み込まれているか、外部プログラムとして
+"stunnel" バージョン 5.15以降が必要です。
 @end ifset
 @ifset en
 Mew supports TLS (Transport Layer Security) for confidentiality and
@@ -12692,9 +12692,9 @@ TLS functionality with ``ssl'' keyword in Mew.
 @end ifset
 
 @ifset ja
-TLS を有効にするには、stunnel もしくは GnuTLS ライブラリのための変数設
-定を行ない、次に各プロトコルについて TLS を有効にするかどうかの設定を
-行ないます。
+TLS を有効にするには、stunnel もしくは GnuTLS ライブラリのための変数を
+設定し、次に各プロトコルについて TLS を有効にするかどうかの設定をしま
+す。
 @end ifset
 @ifset en
 To enable TLS functionality, you have to configure variables for
@@ -12862,22 +12862,22 @@ variables.
 @end ifset
 
 @ifset ja
-証明書の検証レベルは、Emacs の Network Security Manager によって管理さ
-れているポリシーに従います。ポリシーを設定するには、
+証明書の検証レベルは、Emacs の Network Security Manager(NSM) によって
+管理されているポリシーに従います。ポリシーを設定するには、
 @samp{network-security-level} という変数を使います。デフォルト値は
 @samp{'medium} です。@samp{'low} の場合、証明書を検証しません。
 @samp{'medium} の場合、ルート CA の証明書リストを使って証明書を検証し
 ます。検証ができなかった場合、もしくは自己署名証明書だった場合、その証
 明書を受け入れるかどうかのダイアログが表示されます。また、今まで証明書
-を使って暗号化通信が行なわれていたサーバに対して、暗号化なしでの接続が
-行なわれようとした場合にも、警告を表示します。@samp{'high} とすると、
-@samp{'medium} のチェックに加えて、サーバ証明書の鍵の変更や弱い暗号ス
-イートの使用に関して警告が表示されます。詳しくは、
-@xref{(emacs)Network Security} を参照して下さい。
+を使って暗号路で通信していたサーバに対して、暗号化なしで接続しようとし
+た場合にも、警告を表示します。@samp{'high} とすると、@samp{'medium} の
+チェックに加えて、サーバ証明書の鍵の変更や弱い暗号スイートの使用に関し
+て警告が表示されます。詳しくは、@xref{(emacs)Network Security} を参照
+して下さい。
 @end ifset
 @ifset en
 The policy for verification of the server certificates is handled by
-Emacs Network Security Manager.  It is configured by
+Emacs Network Security Manager (NSM).  It is configured by
 @samp{network-security-level}, and the default value is
 @samp{'medium}.  If it is set to @samp{'low}, no verification is
 performed.  If @samp{'medium}, NSM will check whether the certificate
@@ -12888,8 +12888,7 @@ displayed if it is an invalid certificate including self-signed one.
 Also, if the connection is unencrypted, but it was encrypted in
 previous sessions, a similar dialog will be displayed.  @samp{'high}
 will perform additional checks such as a validated certificate which
-changes the public key and weak cipher/protocols.
-For more details,
+changes the public key and weak cipher/protocols.  For more details,
 see @xref{(emacs)Network Security}.
 @end ifset
 
@@ -12920,13 +12919,13 @@ will be no change with @samp{network-security-level} when
 @ifset ja
 GnuTLS には、証明書の検証方法を制御するための
 @samp{gnutls-verify-error} という変数もあります。GnuTLS は TCP 接続の
-確立時に証明書の検証を行ないますが、この変数は、検証に失敗した時に切断
-するかどうかを制御します。デフォルトでは @samp{nil} に設定されており、
-検証に失敗してもすぐには切断しません。前述の Network Security Manager
-が、TCP 接続の確立後にチェックを行ない、切断するかどうかを決定します。
-すぐに切断しない設定がデフォルトとなっていることは奇妙に思われるかも知
-れませんが、Emacs で GnuTLS が標準的に行なう検証よりも多くの項目をチェッ
-クできるようにするため、TCP 接続と検証処理を分離しています。
+確立時に証明書を検証します、この変数は、検証に失敗した時に切断するかど
+うかを制御します。デフォルトでは @samp{nil} に設定されており、検証に失
+敗してもすぐには切断しません。前述の Network Security Managerが、TCP
+接続の確立後に検証し、切断するかどうかを決定します。すぐに切断しない設
+定がデフォルトとなっていることは奇妙に思われるかも知れませんが、Emacs
+で GnuTLS が標準的な検証よりも多くの項目を検査できるようにするため、
+TCP 接続と検証処理を分離しています。
 @end ifset
 @ifset en
 GnuTLS has own variable, @samp{gnutls-verify-error}, to configure the
@@ -12945,11 +12944,11 @@ disconnect are separated.
 
 @ifset ja
 @samp{gnutls-verify-error} を手動で設定した場合、TCP 接続の確立時に証
-明書の検証に失敗すると、すぐに接続が切断されます。NSM による検証は行な
-われません。この場合、@samp{network-security-level} や
-@samp{mew-ssl-verify-level} による設定は無効になりますので注意して下さ
-い。特別な理由がない限り、@samp{gnutls-verify-error} ではなく
-@samp{network-security-level} を使って設定することをお勧めします。
+明書の検証に失敗すると、すぐに接続が切断されます。NSM は検証しません。
+この場合、@samp{network-security-level} や@samp{mew-ssl-verify-level}
+による設定は無効になりますので注意して下さい。特別な理由がない限り、
+@samp{gnutls-verify-error} ではなく@samp{network-security-level} を使っ
+て設定することをお勧めします。
 @end ifset
 @ifset en
 If you set @samp{gnutls-verify-error} manually, GnuTLS will terminate
