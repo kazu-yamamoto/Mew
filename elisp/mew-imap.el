@@ -1465,8 +1465,7 @@
 	  ;; GnuTLS requires a client-initiated command after the
 	  ;; session is established or upgraded to use TLS because
 	  ;; no additional greeting from the server.
-	  (mew-imap-set-status pnm "capability")
-	  (mew-imap-command-capability process pnm))
+	  (mew-imap-filter process "* OK\n"))
 	))))
 
 (defun mew-imap-exec-recover (bnm)
