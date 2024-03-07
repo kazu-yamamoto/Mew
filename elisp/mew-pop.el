@@ -774,7 +774,7 @@
 	  ;; GnuTLS requires a client-initiated command after the
 	  ;; session is established or upgraded to use TLS because
 	  ;; no additional greeting from the server.
-	  (mew-pop-command-capa process pnm))
+	  (mew-pop-filter process "+OK\n"))
 	))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
