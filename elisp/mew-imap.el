@@ -1462,10 +1462,13 @@
 	(set-process-buffer process buf)
 	;;
 	(when sslnp
-	  ;; GnuTLS requires a client-initiated command after the
-	  ;; session is established or upgraded to use TLS because
-	  ;; no additional greeting from the server.
-	  (mew-imap-filter process "* OK\n"))
+	  ;; GnuTLS receives IMAP greeting in its internals
+	  ;; and passes it as a return value.
+	  ;; We store the value in the variable mew--gnutls-imap-greeting
+	  ;; and pass it to the filter to process the greeting.
+	  (mew-imap-filter process
+			  (string-replace "\r\n" "\n"
+					  mew--gnutls-imap-greeting)))
 	))))
 
 (defun mew-imap-exec-recover (bnm)
