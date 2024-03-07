@@ -771,10 +771,13 @@
 	(set-process-filter process 'mew-pop-filter)
 	(set-process-buffer process buf)
 	(when sslnp
-	  ;; GnuTLS requires a client-initiated command after the
-	  ;; session is established or upgraded to use TLS because
-	  ;; no additional greeting from the server.
-	  (mew-pop-filter process "+OK\n"))
+	  ;; GnuTLS receives POP greeting in its internals
+	  ;; and passes it as a return value.
+	  ;; We store the value in the variable mew--gnutls-pop-greeting
+	  ;; and pass it to the filter to process the greeting.
+	  (mew-pop-filter process
+			  (string-replace "\r\n" "\n"
+					  mew--gnutls-pop-greeting)))
 	))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
