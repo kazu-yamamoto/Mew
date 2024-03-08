@@ -586,6 +586,7 @@
 		;; When a validation error occurs, (car pro) will be nil.
 		;;
 		(let ((plainp (eq 'plain (plist-get (cdr pro) :type)))
+		      (greeting (plist-get (cdr pro) :greeting))
 		      (openp  (and (car pro)
 				   (eq 'open (process-status (car pro)))))
 		      ;; Falling back to a plain connection is allowed
@@ -608,7 +609,12 @@
 		   (t
 		    (setq pro (list
 			       (car pro)
-			       :error nil)))))))))
+			       :error nil))
+		    (cond
+		     ((eq proto 'pop)
+		      (setq mew--gnutls-pop-greeting greeting))
+		     ((eq proto 'imap)
+		      (setq mew--gnutls-imap-greeting greeting))))))))))
 	 (t
 	  (with-temp-message status-msg
 	    (let ((params (list :name name :buffer buf
