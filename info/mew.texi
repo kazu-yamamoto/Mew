@@ -10495,14 +10495,14 @@ of displaying it in the Message buffer. For this, type @samp{C-cC-e}.
 @ifset ja
 Message バッファに画像を表示することもできます。
 Message バッファに表示している画像の拡大や縮小は @samp{C-xo} 等でカーソルを
-画像が表示されているウィンドウに移動し、@samp{+} や @samp{-} を使います。
+画像が表示されているウィンドウに移動し、@samp{i+} や @samp{i-} (emacs 28 までは @samp{+} や @samp{-}) を使います。
 また @samp{C-cC-e} を使い、外部のプログラムに表示させることも可能です。
 @end ifset
 @ifset en
 You can visualize an image file into the Message buffer.
 If you want to enlarge or reduce the image in the Message buffer,
 you switch to a window of the Message buffer with e.g. @samp{C-xo}
-and type @samp{+} or @samp{-}, respectively.
+and type @samp{i+} or @samp{i-} (@samp{+} or @samp{-} up to emacs 28), respectively.
 Also, you can display it with an external application by typing
 @samp{C-cC-e}, of course.
 @end ifset
