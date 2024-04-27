@@ -474,11 +474,11 @@
 
 (defun mew-summary-retrieve (&optional no-flush)
   "In local folders, retrieve messages to +inbox asynchronously
-according to 'mew-mailbox-type' and 'mew-case'.
-If 'mew-auto-flush-queue' is non-nil, +queue is flushed.
-If called with '\\[universal-argument]', +queue is not flushed.
+according to `mew-mailbox-type' and `mew-case'.
+If `mew-auto-flush-queue' is non-nil, +queue is flushed.
+If called with `\\[universal-argument]', +queue is not flushed.
 
-In remote folders, visit an inbox folder and scan with 'update."
+In remote folders, visit an inbox folder and scan with `update'."
   (interactive "P")
   (let (case proto inbox case:inbox mailbox)
     (mew-set '(case proto) (mew-summary-case-proto))
@@ -631,10 +631,10 @@ In remote folders, visit an inbox folder and scan with 'update."
   "Retrieve the rest of a truncated('T') message.
 
 In a LOCAL folder: a method to retrieve the message is determined
-by 'mew-case' and 'mew-mailbox-type'.
-If 'mew-pop-delete'/'mew-imap-delete' is non-nil, delete the message
-from the mailbox. When executed with '\\[universal-argument]',
-'mew-pop-delete'/'mew-imap-delete' is considered reversed.
+by `mew-case' and `mew-mailbox-type'.
+If `mew-pop-delete'/`mew-imap-delete' is non-nil, delete the message
+from the mailbox. When executed with `\\[universal-argument]',
+`mew-pop-delete'/`mew-imap-delete' is considered reversed.
 
 In a REMOTE folder: case and protocol are determined by the folder.
 The message in the server side is always retained."
@@ -740,13 +740,13 @@ The message in the server side is always retained."
       (mew-summary-unlock))))
 
 (defun mew-summary-mark-retrieve-message (&optional rev-del)
-  "Retrieve the rest of truncated('T') messages marked with '*'.
+  "Retrieve the rest of truncated(`T') messages marked with `*'.
 
 In a LOCAL folder: a method to retrieve the messages is determined by
-'mew-case' and 'mew-mailbox-type'.
-If 'mew-pop-delete'/'mew-imap-delete' is non-nil, delete the messages
-from the mailbox.  When executed with '\\[universal-argument]',
-'mew-pop-delete'/'mew-imap-delete' is considered reversed.
+`mew-case' and `mew-mailbox-type'.
+If `mew-pop-delete'/`mew-imap-delete' is non-nil, delete the messages
+from the mailbox.  When executed with `\\[universal-argument]',
+`mew-pop-delete'/`mew-imap-delete' is considered reversed.
 
 In a REMOTE folder: case and protocol are determined by the folder.
 The messages in the server side is always retained."

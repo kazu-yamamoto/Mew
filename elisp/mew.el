@@ -43,7 +43,7 @@
 ;;;
 
 (defvar mew-debug nil
-  "'decode, 'encode, 'net, 'pgp, 'thread, 'sort, t for all.")
+  "'`ecode', `encode', `net', `pgp', `thread', `sort', `t' for all.")
 (defun mew-debug (category)
   (or (eq mew-debug t) (eq mew-debug category)))
 
@@ -59,20 +59,20 @@
   "Execute Mew first unless Mew is running. And retrieve arrived
 messages or just visit to the default folder.
 
-'proto' is determined by 'mew-proto' and 'mew-case'.
+`proto' is determined by `mew-proto' and `mew-case'.
 
-If 'proto' is '+' (ie a local folder), a mailbox is determined
-according to 'mew-mailbox-type'. Otherwise (ie a remote folder), an
+If `proto' is `+' (ie a local folder), a mailbox is determined
+according to `mew-mailbox-type'. Otherwise (ie a remote folder), an
 appropriate protocol to retrieve messages is chosen according to
-'proto'.
+`proto'.
 
-If 'mew-auto-get' is 't', arrived messages are asynchronously fetched
+If `mew-auto-get' is `t', arrived messages are asynchronously fetched
 and listed up in Summary mode.
 
-'mew-auto-get' is 'nil', just visit to the folder determined by
-'proto'.
+`mew-auto-get' is `nil', just visit to the folder determined by
+`proto'.
 
-When executed with '\\[universal-argument]', 'mew-auto-get' is
+When executed with `\\[universal-argument]', `mew-auto-get' is
 considered reversed."
   (interactive "P")
   (mew-window-push)
@@ -104,7 +104,7 @@ function."
 					 _send-actions
 					 &rest _dummy)
   "Set up message composition draft with Mew.
-This is 'mail-user-agent' entry point to Mew.
+This is `mail-user-agent' entry point to Mew.
 
 The optional arguments TO and SUBJECT specify recipients and the
 initial Subject field, respectively.
@@ -361,8 +361,8 @@ of the current world is also updated."
 (defun mew-window-configure (action)
   "Configure windows according to ACTION.
 ACTION should be symbol or a list of two numbers.
-Predefined symbol is 'summary, 'message, and 'draft.
-They are used as a key of 'mew-window-configuration to get
+Predefined symbol is `summary', `message', and `draft'.
+They are used as a key of `mew-window-configuration' to get
 a list of two numbers.
 
 Two numbers means the ratio of the upper window and

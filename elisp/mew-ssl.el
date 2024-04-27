@@ -85,8 +85,8 @@ keep this as nil.")
 (defvar mew-prog-ssl "stunnel")
 (defvar mew-ssl-cert-directory "~/.certs"
   "The directory where certificates of root servers are stored.
-A file name of a certificate should be 'cert-hash.0'.
-'cert-hash' can be extracted by 'openssl x509 -hash -noout -in cert.pem'.")
+A file name of a certificate should be `cert-hash.0'.
+`cert-hash' can be extracted by `openssl x509 -hash -noout -in cert.pem'.")
 
 (defvar mew-ssl-verify-level 1
   "Verification level of server's certificate.
@@ -209,12 +209,12 @@ no extra text.")
       (list file))))
 
 (defun mew-open-ssl-stream (case server serv tls)
-  "Open an SSL/TLS stream for SERVER's SERV.
+  "Open an SSL/TLS stream for SERVER\\='s SERV.
 This function returns a process when an SSL/TLS connection is created
 successfully.
 If TLS is nil, an SSL connection is created.
-If TLS is a magic word for 'stunnel', a TLS connection is created.
-A local port number can be obtained the process name after ':'. "
+If TLS is a magic word for `stunnel', a TLS connection is created.
+A local port number can be obtained the process name after `:'. "
   (cond
    ((or (null mew-ssl-ver) (not (mew-which-exec mew-prog-ssl)))
     (message "'%s' is not found" mew-prog-ssl)
