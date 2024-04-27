@@ -92,7 +92,7 @@ If optional argument NO-MSG is non-nil, no message is displayed."
 ;;
 
 (defun mew-summary-mark-undo-all ()
-  "Unmark all message marked with 'o' or 'D' or 'X'."
+  "Unmark all message marked with `o' or `D' or `X'."
   (interactive)
   (message "Unmarking...")
   (dolist (mark mew-summary-mark-undo-marks)
@@ -701,8 +701,8 @@ BEG and END."
 ;;;
 
 (defun mew-summary-mark-duplicated (&optional arg)
-  "Put the mark specified by 'mew-mark-duplicated' on duplicated
-messages. If called with '\\[universal-argument]', process in the
+  "Put the mark specified by `mew-mark-duplicated' on duplicated
+messages. If called with `\\[universal-argument]', process in the
 region."
   (interactive "P")
   (mew-summary-not-in-queue
@@ -863,7 +863,7 @@ the specified mark."
 
 (defun mew-summary-exchange-marks ()
   "Exchange the first input mark to the second one.
-The 'o' mark is not exchangeable."
+The `o' mark is not exchangeable."
   (interactive)
   (let* ((from (mew-summary-input-exchangeable-mark "Input mark from: "))
 	 (to  (mew-summary-input-exchangeable-mark "Input mark to: "))

@@ -562,7 +562,7 @@ citation prefix and label.
 
 (defun mew-cite-prefix-username ()
   "A good candidate for mew-cite-prefix-function.
-The citation style is 'from_address> ', e.g. 'kazu> '"
+The citation style is `from_address> ', e.g. `kazu> '"
   (let* ((from (mew-header-parse-address mew-from:))
 	 (user (mew-addrstr-extract-user from))
 	 (func (mew-addrbook-func mew-addrbook-for-cite-prefix))
@@ -607,13 +607,13 @@ format=flowed is used on composing."
 
 (defun mew-draft-use-format-flowed (&optional arg)
   "Toggle the use of format=flowed for the current draft.
-If called with '\\[universal-argument]', enable format=flowed if the argument
+If called with `\\[universal-argument]', enable format=flowed if the argument
 is positive.  You can use `mew-draft-use-format-flowed-hooks' to
 enable interesting minor modes according to whether the message is
 flowed or not.  Here is an example:
 
-\(add-hook 'mew-draft-use-format-flowed-hooks
-     '(lambda()
+\(add-hook \\='mew-draft-use-format-flowed-hooks
+     \\='(lambda()
 	(if mew-use-format-flowed
 	    (progn
 	      (auto-fill-mode 0)
@@ -952,7 +952,7 @@ Set privacy service which will be effective when \\[mew-draft-make-message]."
 (defvar mew-draft-privacy-method-alist '(("pgp" . pgp) ("smime" . smime)))
 
 (defun mew-draft-set-privacy-method ()
-  "Set mew-draft-privacy-method. 'pgp or 'smime."
+  "Set mew-draft-privacy-method. `pgp' or `smime'."
   (interactive)
   (let ((method (completing-read "Privacy method: " mew-draft-privacy-method-alist nil t)))
     (setq mew-draft-privacy-method

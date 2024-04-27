@@ -17,7 +17,7 @@
   (and ent (setq auto-mode-alist (delq ent auto-mode-alist))))
 
 (defvar mew-connection-type1 nil
-  "Connection type for many processes. 't' means PTY and 'nil' means PIPE.
+  "Connection type for many processes. `t' means PTY and `nil' means PIPE.
 PIPE is usually recommended for speed but some OSes such as Linux
 requires PTY.")
 
