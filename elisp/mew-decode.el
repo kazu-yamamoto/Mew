@@ -119,8 +119,8 @@
        ,@body)))
 
 (defun mew-summary-toggle-header-veil ()
-  "If 'mew-use-header-veil' is non-nil, field lines of To: and Cc:
-over 'mew-header-veil-count' are covered with invisible veils.
+  "If `mew-use-header-veil' is non-nil, field lines of To: and Cc:
+over `mew-header-veil-count' are covered with invisible veils.
 This commands toggles visibility of these lines."
   (interactive)
   (when (and mew-use-header-veil (get-buffer (mew-buffer-message)))

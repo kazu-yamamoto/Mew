@@ -524,7 +524,7 @@ citation prefix and label.
 
 (defun mew-cite-strings ()
   "A function to create cite labels according to
-'mew-cite-format' and 'mew-cite-fields'."
+`mew-cite-format' and `mew-cite-fields'."
   (if (null mew-cite-fields)
       ""
     (let* ((vals (mapcar 'mew-cite-get-value mew-cite-fields))

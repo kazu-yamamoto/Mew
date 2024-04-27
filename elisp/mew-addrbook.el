@@ -132,7 +132,7 @@
 ;;;
 
 (defvar mew-alias-expand-prefix nil
-  "A variable to make 'mew-alias-expand' elegant.")
+  "A variable to make `mew-alias-expand' elegant.")
 
 ;; for completion
 (defun mew-addrbook-alias-get (key alist)
@@ -153,9 +153,9 @@
 
 (defun mew-alias-expand (key alist count)
   "Expand KEY to a list of addresses according to ALIST.
-Infinite loop is prevented by COUNT and 'mew-expand-max-depth'.
-Before calling, 'mew-alias-expand-prefix' must be set 'nil'.
-If \"prefix:a,b,c;\" is given, 'mew-alias-expand-prefix'
+Infinite loop is prevented by COUNT and `mew-expand-max-depth'.
+Before calling, `mew-alias-expand-prefix' must be set `nil'.
+If \"prefix:a,b,c;\" is given, `mew-alias-expand-prefix'
 is set to \"prefix\", and (expanded-a expanded-b expanded-c) is
 returned."
   (cond
