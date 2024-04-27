@@ -604,7 +604,7 @@ fields in the header according to the new value."
 	  (mew-draft-header-insert mew-x-mailer: mew-x-mailer)))))
 
 (defun mew-draft-get-case-by-guess (&optional alist)
-  "Guess case according to 'mew-case-guess-alist'."
+  "Guess case according to `mew-case-guess-alist'."
   (unless alist (setq alist mew-case-guess-alist))
   (let ((cases (mew-refile-guess-by-alist1 alist)))
     (if cases

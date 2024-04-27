@@ -158,7 +158,7 @@ This is O(N^2). So, do not use this function with a large LST."
 
 (defun mew-assoc-match (key alist nth)
   "Return list in ALIST that KEY regex is matched to its NTH element.
-Case is ignored. Note that the NTH element is 't',
+Case is ignored. Note that the NTH element is `t',
 the list is always selected."
   (let ((case-fold-search t) n)
     (catch 'loop
@@ -170,7 +170,7 @@ the list is always selected."
 
 (defun mew-assoc-match2 (key alist nth)
   "Return list in ALIST whose NTH regex is matched to KEY.
-Case is ignored. Note that the NTH element is 't',
+Case is ignored. Note that the NTH element is `t',
 the list is always selected."
   (let ((case-fold-search t) n)
     (catch 'loop
@@ -182,7 +182,7 @@ the list is always selected."
 
 (defun mew-assoc-match3 (key alist nth)
   "Return list in ALIST whose NTH regex is matched to KEY.
-Case is ignored. Note that the NTH element is 't',
+Case is ignored. Note that the NTH element is `t',
 the list is always selected. The deference from mew-assoc-match2
 is that this returns the position of a selected list in addition
 to the list itself."
@@ -1306,7 +1306,7 @@ and sets buffer-file-coding-system."
 (defun mew-get-my-address-regex-list ()
   "This creates a list of regular expression used to tell
 whether or not a given address is mine. The list is created
-from (mew-user), (mew-mail-address), and 'mew-mail-address-list'."
+from (mew-user), (mew-mail-address), and `mew-mail-address-list'."
   (cons (concat "^" (regexp-quote (mew-user)) "$")
 	(cons (concat "^" (regexp-quote (mew-mail-address)) "$")
 	      mew-mail-address-list)))

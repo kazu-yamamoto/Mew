@@ -166,13 +166,13 @@ If nodisplay is non-nil, displays the cached message."
 through messages.  That is, display a message, scroll it, and
 move-then-display another message or part.
 
-See 'mew-summary-show-direction' to set the direction that the
-cursor moves. You can select a value out of 'up, 'down,
-'next(current direction) or 'stop.  Default is
-'down. 'mew-summary-show-direction' is valid in this case only
+See `mew-summary-show-direction' to set the direction that the
+cursor moves. You can select a value out of `up', `down',
+`next'(current direction) or `stop'.  Default is
+`down'. `mew-summary-show-direction' is valid in this case only
 because the cursor stays in the other cases.
 
- (2) If called interactively with '\\[universal-argument]' (i.e.
+ (2) If called interactively with `\\[universal-argument]' (i.e.
 REDISPLAY is non-nil), this command displays the current message
 or part again. This is a convenient way to get back to the
 beginning of the current message or part.
@@ -180,7 +180,7 @@ beginning of the current message or part.
  (3) If called internally, this function displays the current
 message or part. If it is already displayed, nothing changes.
 
- (4) If called internally and REDISPLAY is 'non-nil', this
+ (4) If called internally and REDISPLAY is `non-nil', this
 function displays the current message or part. Even if it is
 already displayed, this function displays it again getting back
 to the beginning."
@@ -350,7 +350,7 @@ This function does not create a cache."
 
 (defun mew-summary-analyze-again-alternative (&optional arg)
   "This command analyzes the message again with
-'mew-use-alternative' and 'mew-use-text-body' reversed."
+`mew-use-alternative' and `mew-use-text-body' reversed."
   (interactive "P")
   (mew-summary-goto-message)
   (let ((mew-use-alternative (not mew-use-alternative))
@@ -362,29 +362,29 @@ This function does not create a cache."
 message is removed and the message is analyzed then displayed.
 
 1a) If the size of the current message exceeds
-'mew-file-max-size', MIME analysis is skipped then the beginning
+`mew-file-max-size', MIME analysis is skipped then the beginning
 of the raw message is displayed. In this situation, this command
 analyzes the current message without the limitation then displays
 it.
 
-1b) If the length of a header exceeds 'mew-header-max-length', a
+1b) If the length of a header exceeds `mew-header-max-length', a
 broken message is displayed. In this situation, this command
 analyzes the current message without the limitation then displays
 it.
 
-1c) If the current message is displayed by '\\<mew-summary-mode-map>\\[mew-summary-analyze-again-alternative]', this command gets it back to
+1c) If the current message is displayed by `\\<mew-summary-mode-map>\\[mew-summary-analyze-again-alternative]', this command gets it back to
 the normal display.
 
-1d) If 'mew-use-text/html' is nil, its HTML body is displayed as
+1d) If `mew-use-text/html' is nil, its HTML body is displayed as
 is. In this situation, this command analyzes the HTML body and
 displays it.
 
-1e) If called with '\\[universal-argument]', analyze the message
-with 'mew-decode-broken' reversed.
+1e) If called with `\\[universal-argument]', analyze the message
+with `mew-decode-broken' reversed.
 
 2) If this command is called on a part, the part is displayed again.
 
-2a) If 'mew-use-text/html' is nil, its HTML part is displayed as
+2a) If `mew-use-text/html' is nil, its HTML part is displayed as
 is. In this situation, this command analyzes the HTML part and
 displays it."
   (interactive "P")
@@ -497,7 +497,7 @@ a decrypted/verified body is displayed."
 
 (defun mew-summary-find-file (&optional arg)
   "Open this message and makes it read-only.
-If called with '\\[universal-argument]', it stays writable."
+If called with `\\[universal-argument]', it stays writable."
   (interactive "P")
   (mew-summary-msg-or-part
    (let* ((fld (mew-summary-folder-name))
@@ -650,7 +650,7 @@ ad-hoc solution for putting the review mark on a thread.")
 
 (defun mew-summary-display-up (&optional arg)
   "Move to above then display. Targets includes parts, messages
-marked with '*', and non-marked messages. When called with '\\[universal-argument]',
+marked with `*', and non-marked messages. When called with `\\[universal-argument]',
 parts are skipped."
   (interactive "P")
   (beginning-of-line)
@@ -661,7 +661,7 @@ parts are skipped."
 
 (defun mew-summary-display-down (&optional arg)
   "Move to below then display. Targets includes parts, messages
-marked with '*', and non-marked messages. When called with '\\[universal-argument]',
+marked with `*', and non-marked messages. When called with `\\[universal-argument]',
 parts are skipped."
   (interactive "P")
   (when arg
@@ -676,7 +676,7 @@ parts are skipped."
 
 (defun mew-summary-prev-page ()
   "\\<mew-summary-mode-map>Back-scroll this message. Unnecessary header fields are hidden
-over the window. Type '\\[mew-summary-prev-page]' to see them when a message is displayed."
+over the window. Type `\\[mew-summary-prev-page]' to see them when a message is displayed."
   (interactive)
   (mew-summary-scroll-down 'fullpage))
 
@@ -780,7 +780,7 @@ over the window. Type '\\[mew-summary-prev-page]' to see them when a message is 
 ;;;
 
 (defun mew-summary-mouse-show (e)
-  "Mouse version of 'mew-summary-display'."
+  "Mouse version of `mew-summary-display'."
   (interactive "e")
   (mouse-set-point e)
   (beginning-of-line)

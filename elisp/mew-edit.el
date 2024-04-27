@@ -656,9 +656,9 @@ typically included in a MIME-encapsulated error message.
 2. In +queue or +postq, the message is moved to +draft and is edited.
 3. Otherwise, the message is copied to +draft and is edited.
 
-For the other folders, if mew-case-guess-when-prepared is 't', each
+For the other folders, if mew-case-guess-when-prepared is `t', each
 fields of the original header is replaced according to a guessed
-sending case.  If called with '\\[universal-argument]', the original
+sending case.  If called with `\\[universal-argument]', the original
 header is reserved.
 
 See also mew-summary-edit-again."
@@ -825,7 +825,7 @@ The message is assumed to be a valid MIME message."
 
 (defun mew-summary-edit-again ()
   "Edit an old fashioned error message in which the original message
-is encapsulated after strings defined in 'mew-summary-edit-again-regex'
+is encapsulated after strings defined in `mew-summary-edit-again-regex'
 An example is \"----- Original message follows -----\". See also
 mew-summary-reedit."
   (interactive)

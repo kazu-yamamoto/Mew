@@ -186,11 +186,11 @@
 ;;;
 
 (mew-defface-bold eof-message
-  "Face to highlight the 'end of message' string"
+  "Face to highlight the `end of message' string"
   :tty "green" :light "ForestGreen" :dark "LimeGreen")
 
 (mew-defface-bold eof-part
-  "Face to highlight the 'end of part' string"
+  "Face to highlight the `end of part' string"
   :tty "yellow" :light "DarkOrange4" :dark "Gold")
 
 (provide 'mew-vars3)

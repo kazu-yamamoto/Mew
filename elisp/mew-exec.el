@@ -41,8 +41,8 @@ DELS represents the messages to be deleted."
     (mew-summary-unlink-msgs src dels)))
 
 (defun mew-mark-exec-delete (src dels)
-  "Delete messages from the SRC folder according to 'mew-trash-folder'
-and 'mew-trash-folder-list'.
+  "Delete messages from the SRC folder according to `mew-trash-folder'
+and `mew-trash-folder-list'.
 DELS represents the messages to be deleted."
   (when dels
     ;; see also mew-summary-exec-remote-get-execinfo.
@@ -233,8 +233,8 @@ all marked messages before the current message."
     (mew-summary-exec-region (point-min) (point-max))))
 
 (defun mew-summary-exec-refile (&optional arg)
-  "Process messages marked with 'o'.
-If called with '\\[universal-argument]', only messages whose
+  "Process messages marked with `o'.
+If called with `\\[universal-argument]', only messages whose
 destination is the same as that of the current message are processed."
   (interactive "P")
   (let* ((ent (assoc mew-mark-refile mew-mark-spec))

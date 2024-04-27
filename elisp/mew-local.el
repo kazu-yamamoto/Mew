@@ -29,10 +29,10 @@ Subdirectories are expressed by a list.
 This function uses two techniques for speed up.
 
 One is to gather candidates of directory by matching
-'mew-regex-folder-candidate'. The default is
+`mew-regex-folder-candidate'. The default is
 \"^[^.0-9]\\|^[0-9].*[^0-9]\". So, typical messages whose name is
 numeric are not gathered. This makes it faster to check whether or not
-each candidate is a directory in 'while' loop.
+each candidate is a directory in `while' loop.
 
 The other is to see if the link count of a directory is 2. If so, the
 directory does not have subdirectories. So, it is not necessary to
@@ -56,10 +56,10 @@ Subdirectories are expressed by a list.
 This function uses one technique for speed up.
 
 It is to gather candidates of directory by matching
-'mew-regex-folder-candidate'. The default is
+`mew-regex-folder-candidate'. The default is
 \"^[^.0-9]\\|^[0-9].*[^0-9]\". So, typical messages whose name is
 numeric are not gathered. This makes it faster to check whether or not
-each candidate is a directory in 'while' loop."
+each candidate is a directory in `while' loop."
   (let* ((default-directory (expand-file-name dir default-directory))
 	 (dirent (directory-files "." nil mew-regex-folder-candidate)) ;; MUST sort
 	 dirs ent subdirs)
@@ -171,7 +171,7 @@ each candidate is a directory in 'while' loop."
 ;;;
 
 (defun mew-local-folder-insert (folder)
-  "Insert FOLDER to 'mew-local-folder-alist'.
+  "Insert FOLDER to `mew-local-folder-alist'.
 Binary search is used for speed reasons."
   (let (dir subdir)
     (unless (string-match mew-regex-ignore-folders folder)

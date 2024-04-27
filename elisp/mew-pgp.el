@@ -1172,10 +1172,10 @@ public keyring."
 
 A PGP public key is fetch from one of the PGP PKS servers with a
 key ID which is extracted from the X-Mew: field. The list of the
-PGP PKS servers is specified by 'mew-pgp-pks-servers'.
+PGP PKS servers is specified by `mew-pgp-pks-servers'.
 
 If called with \\[universal-argument], a PGP public key is fetched
-according to a URL in a field specified by 'mew-x-pgp-key-list'."
+according to a URL in a field specified by `mew-x-pgp-key-list'."
   (interactive "P")
   (if arg
       (mew-pgp-fetch-key-by-xuri)

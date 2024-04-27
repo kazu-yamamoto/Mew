@@ -46,7 +46,7 @@
       (setq mode-line-process (format " %s %s/%s" flag fld msg)))))
 
 (defun mew-message-next-page (&optional lines)
-  "Scroll up this message. Return 'nil' if more pages. Otherwise, return 't'."
+  "Scroll up this message. Return `nil' if more pages. Otherwise, return `t'."
   (interactive)
   (if (save-excursion
 	(goto-char (window-end))
@@ -76,8 +76,8 @@
     nil))
 
 (defun mew-message-prev-page (&optional lines)
-  "Back-scroll this message. Return 'nil' if more pages.
-Otherwise, return 't'."
+  "Back-scroll this message. Return `nil' if more pages.
+Otherwise, return `t'."
   (interactive)
   (move-to-window-line 0)
   (if (save-excursion

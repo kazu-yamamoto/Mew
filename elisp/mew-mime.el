@@ -673,10 +673,10 @@ Content-Type is automatically asked. And if it has both
 internal and external visualization mechanisms, you are asked
 which you want to use.
 
-If executed with '\\[universal-argument]', you can specify a
+If executed with `\\[universal-argument]', you can specify a
 command to be executed.
 
-See 'mew-mime-content-type' to know how actions can be defined."
+See `mew-mime-content-type' to know how actions can be defined."
   (interactive "P")
   (mew-summary-msg-or-part
    (let* ((fld (mew-summary-folder-name))

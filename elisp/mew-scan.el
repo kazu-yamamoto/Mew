@@ -34,7 +34,7 @@
 ;;;
 
 (defun mew-scan-setup ()
-  "Define functions (MEW-FOO) according 'mew-scan-fields-alias'."
+  "Define functions (MEW-FOO) according `mew-scan-fields-alias'."
   (dotimes (i (length mew-scan-fields-alias))
     (fset (intern (concat "MEW-" (nth i mew-scan-fields-alias)))
 	  `(lambda () (aref mew-vec ,i)))))
@@ -46,7 +46,7 @@
 
 (defun mew-summary-form-mark ()
   "A function to return a mark.
-'mew-summary-form-mark-delete' and 'mew-summary-form-mark-review'
+`mew-summary-form-mark-delete' and `mew-summary-form-mark-review'
 effect to this function."
   (let ((mark-delete mew-mark-delete)
 	(mark-review mew-mark-review)
@@ -168,7 +168,7 @@ effect to this function."
 
 (defun mew-summary-form-size ()
   "A function to return the size of the message. Should be used
-with -4. See also 'mew-summary-form-size-0k' and 'mew-summary-form-size-huge'."
+with -4. See also `mew-summary-form-size-0k' and `mew-summary-form-size-huge'."
   (let ((len-1 (1- (length mew-summary-form-size-unit)))
 	(SIZE (mew-scan-uid-size (MEW-UID)))
 	(i 0) size unit)
@@ -190,7 +190,7 @@ with -4. See also 'mew-summary-form-size-0k' and 'mew-summary-form-size-huge'."
 	 unit)))))
 
 (defun mew-summary-form-extract-addr (addr)
-  "Extract addr according to 'mew-summary-form-extract-rule'."
+  "Extract addr according to `mew-summary-form-extract-rule'."
   (condition-case nil
       (let* ((func (if mew-addrbook-for-summary
 		       (mew-addrbook-func mew-addrbook-for-summary)))
@@ -223,14 +223,14 @@ with -4. See also 'mew-summary-form-size-0k' and 'mew-summary-form-size-huge'."
 
 (defun mew-summary-form-from ()
   "A function to return an address.
-If the message is destined to me AND 'mew-summary-form-from-me-prefix'
+If the message is destined to me AND `mew-summary-form-from-me-prefix'
 is a string, an address on To:, is returned. In this
-case, 'mew-summary-form-from-me-prefix' is prepended to the address.
+case, `mew-summary-form-from-me-prefix' is prepended to the address.
 
 Otherwise, an address on From: is returned.
 
-Address is converted by 'mew-summary-form-extract-addr'. See also
-'mew-summary-form-extract-rule'."
+Address is converted by `mew-summary-form-extract-addr'. See also
+`mew-summary-form-extract-rule'."
   (let* ((FROM (MEW-FROM)) (TO (MEW-TO))
 	 (from (or (mew-addrstr-parse-address FROM) "")))
     (cond
@@ -270,9 +270,9 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 		   mew-summary-form-list-list-type))
 
 (defun mew-get-summary-form (folder)
-  "Get summary-form from 'mew-summary-form-list',
-'mew-summary-form-list-string-type, and 'mew-summary-form-list-list-type'.
-'mew-summary-form-header' is prepended. "
+  "Get summary-form from `mew-summary-form-list',
+`mew-summary-form-list-string-type, and `mew-summary-form-list-list-type'.
+`mew-summary-form-header' is prepended. "
   (let* ((form-col (mew-decide-summary-form folder))
 	 (form (or (nth 0 form-col) mew-summary-form)))
     (append mew-summary-form-header form)))
@@ -704,11 +704,11 @@ Address is converted by 'mew-summary-form-extract-addr'. See also
 In a LOCAL folder: messages in the local folder are scanned according
 to the range which you specify.
 
-In a REMOTE folder: messages in the server's folder are cached
+In a REMOTE folder: messages in the server\\='s folder are cached
 according to the range which you specify. If
-'mew-pop-header-only'/'mew-imap-header-only'/'mew-nntp-header-only' is
+`mew-pop-header-only'/`mew-imap-header-only'/`mew-nntp-header-only' is
 non-nil, only headers of messages are cached. If executed with
-'\\[universal-argument]', these variables are considered reversed."
+`\\[universal-argument]', these variables are considered reversed."
   (interactive "P")
   (mew-summary-only
    (when (mew-summary-exclusive-p)

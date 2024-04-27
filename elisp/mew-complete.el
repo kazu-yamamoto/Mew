@@ -418,7 +418,7 @@ the cursor is inserted."
 
 (defun mew-circular-complete-switch ()
   "A switch function to call a function defined to
-'mew-circular-complete-function'."
+`mew-circular-complete-function'."
   (interactive)
   (if mew-circular-complete-function (funcall mew-circular-complete-function)))
 
@@ -478,7 +478,7 @@ the cursor is inserted."
 
 (defun mew-expand-address ()
   "Address expansion function for To:, Cc:, etc.
-'user@domain' will be expands 'name <user@domain>' if
+`user@domain' will be expands `name <user@domain>' if
 the name exists."
   (interactive)
   (let ((word (mew-delete-backward-char)) func name)

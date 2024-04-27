@@ -37,8 +37,8 @@
 
 (defun mew-summary-pick (&optional regionp)
   "Pick messages according to a specified pick pattern.
-Then put the '*' mark onto them. 'mewl' or 'grep' is called as a
-picking command. If called with '\\[universal-argument]', the
+Then put the `*' mark onto them. `mewl' or `grep' is called as a
+picking command. If called with `\\[universal-argument]', the
 target is the region."
   (interactive "P")
   (mew-pickable
@@ -165,7 +165,7 @@ target is the region."
       (format "%d-%d" min max))))
 
 (defun mew-summary-pick-with-mewl (pattern folder src-msgs)
-  "A function to pick messages matching PATTERN with 'mewl'"
+  "A function to pick messages matching PATTERN with `mewl'"
   (let ((pfolder (mew-scan-mewl-folder (mew-expand-folder2 folder)))
 	(range (mew-summary-pick-range src-msgs))
 	(opts (list "-b" mew-mail-path
