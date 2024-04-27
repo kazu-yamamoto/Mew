@@ -220,7 +220,7 @@ This macro is used to prohibit using a command in Summary mode."
 ;;;
 
 (defun mew-summary-get-region ()
-  "Get a region according to 'mew-summary-region-include-cursor-line'
+  "Get a region according to `mew-summary-region-include-cursor-line'
 and return (beg . end)."
   (save-excursion
     (let ((beg (region-beginning))

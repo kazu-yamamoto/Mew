@@ -28,7 +28,7 @@ First pass -  Repeat the following procedure in numerical order:
 
 Here we have pretty good threads.  However, if the messages are not
 sorted by Date:, it is possible that some top nodes can be
-connected to other threads.  If 'mew-use-complete-thread' is non-nil,
+connected to other threads.  If `mew-use-complete-thread' is non-nil,
 the second pass is carried out.
 
 Second pass - Repeat the following procedure for top nodes linearly:
@@ -341,7 +341,7 @@ mode or Selection."
 
 (defun mew-summary-thread-region (beg end &optional mark disp-msg iter)
   "Make threads for messages in a region.  If you want to know how
-threads are created, see 'mew-use-complete-thread'."
+threads are created, see `mew-use-complete-thread'."
   (interactive "r")
   (when (mew-summary-exclusive-p)
     (let* ((column (or (mew-sinfo-get-summary-column) ;; scanned
@@ -472,28 +472,28 @@ threads are created, see 'mew-use-complete-thread'."
 ;;;
 
 (defun mew-thread-mark-review ()
-  "Put the '*' mark on all messages of the current sub-thread."
+  "Put the `*' mark on all messages of the current sub-thread."
   (interactive)
   (mew-thread-mark mew-mark-review))
 
 (defun mew-thread-mark-delete ()
-  "Put the 'D' mark on all messages of the current sub-thread."
+  "Put the `D' mark on all messages of the current sub-thread."
   (interactive)
   (mew-summary-not-in-nntp
    (mew-thread-mark mew-mark-delete 'valid-only)))
 
 (defun mew-thread-mark-unlink ()
-  "Put the 'X' mark on all messages of the current sub-thread."
+  "Put the `X' mark on all messages of the current sub-thread."
   (interactive)
   (mew-thread-mark mew-mark-unlink 'valid-only))
 
 (defun mew-thread-mark-escape ()
-  "Put the '$' mark on all messages of the current sub-thread."
+  "Put the `$' mark on all messages of the current sub-thread."
   (interactive)
   (mew-thread-mark mew-mark-escape))
 
 (defun mew-thread-mark-refile ()
-  "Put the 'o' mark on all messages of the current sub-thread."
+  "Put the `o' mark on all messages of the current sub-thread."
   (interactive)
   (mew-thread-only
    (let* ((fld (mew-folder-basename (mew-summary-folder-name 'ext)))
@@ -509,7 +509,7 @@ threads are created, see 'mew-use-complete-thread'."
        (mew-refile-set-from-alist alist folders)))))
 
 (defun mew-thread-mark-copy ()
-  "Put the 'o' mark on all messages of the current sub-thread
+  "Put the `o' mark on all messages of the current sub-thread
 with the current folder as a candidate in addition to guessed folders."
   (interactive)
   (mew-thread-only

@@ -118,7 +118,7 @@ the current message is copied to To: in a draft."
 
 (defun mew-subject-simplify (str &optional act-lst no-replace)
   "A function to simplify a value of Subject: according to
-'mew-subject-simplify-replace-alist'."
+`mew-subject-simplify-replace-alist'."
   (let ((case-fold-search t)
 	(action-list (or act-lst mew-subject-simplify-replace-alist))
 	(ret str)
@@ -208,18 +208,18 @@ the current message is copied to To: in a draft."
 Values of To:, Cc:, and Newsgroups: are prepared according to
 three alists.
 
-\(1) If called with '\\[universal-argument]', replying to the
-    sender/poster only. In this case, 'mew-reply-sender-alist' is used.
+\(1) If called with `\\[universal-argument]', replying to the
+    sender/poster only. In this case, `mew-reply-sender-alist' is used.
 
 \(2) If this message is sent by ME, you probably intend to reply with
-    the original header. In this case, 'mew-reply-fromme-alist' is used.
+    the original header. In this case, `mew-reply-fromme-alist' is used.
 
 \(3) Otherwise, replying to all people listed. In this case,
-    'mew-reply-all-alist' is used.
+    `mew-reply-all-alist' is used.
 
-The default value of 'mew-reply-sender-alist' is as follows:
+The default value of `mew-reply-sender-alist' is as follows:
 
-	'((\"Reply-To:\"
+	\\='((\"Reply-To:\"
 	   (\"To:\" \"Reply-To:\" \"From:\"))
 	  (t
 	   (\"To:\" \"From:\")))
@@ -231,16 +231,16 @@ This is read as follows:
 	(1.2) Otherwise, copy the value of From: to To:.
 
 If you would like to reply only to the address on Reply-To: (if any),
-set 'mew-reply-sender-alist' to:
+set `mew-reply-sender-alist' to:
 
-	'((\"Reply-To:\"
+	\\='((\"Reply-To:\"
 	   (\"To:\" \"Reply-To:\"))
 	  (t
 	   (\"To:\" \"From:\")))
 
-The default value of 'mew-reply-fromme-alist' is as follows:
+The default value of `mew-reply-fromme-alist' is as follows:
 
-	'((t
+	\\='((t
 	   (\"To:\" \"To:\")
 	   (\"Cc:\" \"Cc:\")
 	   (\"Newsgroups:\" \"Newsgroups:\"))))
@@ -251,9 +251,9 @@ This is read as follows:
               copying the value of Cc: to new Cc: and
               copying the value of Newsgroups: to new Newsgroups:.
 
-The default value of 'mew-reply-all-alist' is as follows:
+The default value of `mew-reply-all-alist' is as follows:
 
-	'(((\"Followup-To:\" \"poster\")
+	\\='(((\"Followup-To:\" \"poster\")
 	   (\"To:\" \"From:\"))
 	  (\"Followup-To:\"
 	   (\"Newsgroups:\" \"Followup-To:\" \"Newsgroups:\"))
@@ -282,9 +282,9 @@ This is read as follows:
               copying the values of To:, Cc: and Apparently-To: to
               new Cc:.
 
-You may want to set 'mew-reply-all-alist' to:
+You may want to set `mew-reply-all-alist' to:
 
-	'(((\"Followup-To:\" \"poster\")
+	\\='(((\"Followup-To:\" \"poster\")
 	   (\"To:\" \"From:\"))
 	  (\"Followup-To:\"
 	   (\"Newsgroups:\" \"Followup-To:\"))
@@ -364,7 +364,7 @@ You may want to set 'mew-reply-all-alist' to:
 
 (defun mew-summary-reply-with-citation (&optional replysender)
   "Answer to this message. A new draft is prepared in Draft mode.
-And this message is automatically cited. See also 'mew-summary-reply'."
+And this message is automatically cited. See also `mew-summary-reply'."
   (interactive "P")
   (mew-summary-msg-or-part
    (mew-summary-not-in-draft
@@ -432,7 +432,7 @@ Draft mode and this message is automatically attached."
 ;;;
 
 (defun mew-summary-multi-forward ()
-  "Forward messages marked with '*' to a third person. A new draft
+  "Forward messages marked with `*' to a third person. A new draft
 is prepared in Draft mode and this message is automatically
 attached."
   (interactive)
