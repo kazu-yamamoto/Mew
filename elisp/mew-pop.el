@@ -7,6 +7,8 @@
 
 (require 'mew)
 
+(declare-function string-replace "subr")
+
 (defvar mew-pop-msgid-file ".mew-msgid")
 (defvar mew-pop-folder-alist (list (mew-folder-func mew-pop-inbox-folder)))
 (defun mew-pop-folder-alist ()
@@ -654,6 +656,8 @@
 ;;;
 ;;; Launcher
 ;;;
+
+(defvar mew--gnutls-pop-greeting nil)
 
 (defun mew-pop-retrieve (case directive bnm &rest args)
   ;; in +inbox

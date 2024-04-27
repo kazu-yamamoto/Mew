@@ -7,6 +7,8 @@
 
 (require 'mew)
 
+(declare-function string-replace "subr")
+
 (defvar mew-imap-msgid-file ".mew-msgid")
 (defvar mew-imap-folder-alist-file ".mew-folder-alist")
 (defvar mew-imap-folder-alist nil)
@@ -1313,6 +1315,8 @@
 	 ((char-equal mark mew-mark-refile)
 	  (setq ret (cons (mew-make-mark-hist :msg msg :mark mew-mark-read) ret))))))
     (nreverse ret)))
+
+(defvar mew--gnutls-imap-greeting nil)
 
 (defun mew-imap-retrieve (case directive bnm &rest args)
   (let* ((server (mew-imap-server case))
