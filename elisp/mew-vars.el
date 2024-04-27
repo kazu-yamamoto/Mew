@@ -912,7 +912,9 @@ If non-nil, only header is retrieved."
 For example, the WU IMAP server returns the following value
 for the NAMESPACE command.
 
-	((\"\" \"/\")(\"#mhinbox\" NIL)(\"#mh/\" \"/\")) ((\"/\" \"/\")) ((\"#shared/\" \"/\")(\"#ftp/\" \"/\")(\"#news.\" \".\")(\"#public/\" \"/\"))
+	((\"\" \"/\")(\"#mhinbox\" NIL)(\"#mh/\" \"/\"))
+        ((\"/\" \"/\"))
+        ((\"#shared/\" \"/\")(\"#ftp/\" \"/\")(\"#news.\" \".\")(\"#public/\" \"/\"))
 
 The first list is prefixes of user mailboxes. Each element consists
 of a prefix and a separator.
@@ -1745,8 +1747,8 @@ created (if the feature is provided)."
   "*Type of the password manager when mew-use-master-passwd is non-nil."
   :group 'mew-privacy
   :type '(choice
-	  (const :tag "Master Password" 'master)
-	  (const :tag "auth-source" 'auth-source)))
+	  (const :tag "Master Password" master)
+	  (const :tag "auth-source" auth-source)))
 
 (defcustom mew-use-8bit nil
   "*If non-nil, the 8bit-clean charset mechanism is used for 8bit
