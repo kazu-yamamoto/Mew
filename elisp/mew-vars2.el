@@ -176,7 +176,7 @@ for privacy reasons.")
     (nickname  mew-addrbook-nickname-get)
     (name      mew-addrbook-name-get))
   "Function database to get each field of Addrbook.
-'shortname, 'address, 'username, 'nickname, and 'name is defined.")
+`shortname', `address', `username', `nickname', and `name' is defined.")
 
 (defun mew-addrbook-func (key)
   (mew-alist-get-value (assq key mew-addrbook-switch)))
@@ -300,8 +300,8 @@ its <content-type>. When composing, content-type is selected
 according to the suffix of the file to be attached with <regular
 expression of file suffix>.
 
-For <content-transfer-encoding>, 'nil', 'mew-b64', or 'mew-qp'
-should be specified. 'mew-b64' and 'mew-qp' means Base64 and
+For <content-transfer-encoding>, `nil', `mew-b64', or `mew-qp'
+should be specified. `mew-b64' and `mew-qp' means Base64 and
 Quoted-Printable, respectively. This is used as an appropriate
 content-transfer-encoding when composing.
 
@@ -329,7 +329,7 @@ whose format is one of followings:
 - (nil (\"prog\" args async))
 	Equivalent to (\"prog\" args async).
 - (nil func2)
-	(1) Displayed 'type \\[mew-summary-execute-external]'.
+	(1) Displayed `type \\[mew-summary-execute-external]'.
 	(2) <func2> is called.
 - (func1 func2)
 	(1) <func1> is called.
@@ -347,8 +347,8 @@ whose format is one of followings:
 	    If the original content-type is Application/Octet-Stream,
 	    you are asked to choose <func1> or \"prog\".
 
-Note that (1) indicates the action for '\\[mew-summary-display]' and
-\(2) indicates the action for '\\[mew-summary-execute-external]'.
+Note that (1) indicates the action for `\\[mew-summary-display]' and
+\(2) indicates the action for `\\[mew-summary-execute-external]'.
 
 If you want to add an entry for new content-type, please let the author
 know. Such an entry should be shared by all users and be included in
@@ -383,7 +383,7 @@ the next version of Mew.")
 
 (defvar mew-mime-content-type-for-ooffice nil
   "A list of (content-type suffix) for OpenOffice.org to be prepended
-'mew-mime-content-type'")
+`mew-mime-content-type'")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -575,8 +575,8 @@ and face-for-value. Fields whose visible-p is t are displayed in
 Message mode in the defined order. Fields whose visible-p is nil are
 hidden in Message mode. Type DEL to see them. Fields not matched
 to field-regular-expressions are operated by the value of
-'mew-field-other-visible'. If face-for-key is omitted,
-'mew-face-header-key' is used. If face-for-value is not
+`mew-field-other-visible'. If face-for-key is omitted,
+`mew-face-header-key' is used. If face-for-value is not
 present, mew-face-header-marginal is used."
   :group 'mew-highlight
   :type '(alist :key-type regexp
@@ -785,12 +785,12 @@ undo-func, exec-func, and sanity-fucn.")
 
 (defvar mew-inbox-action-alist nil
   "*This variable controls actions when retrieving messages.
-Currently this works when '\\<mew-summary-mode-map>\\[mew-summary-retrieve]'.
-You can put any marks, typically 'o' and 'D' according to message
+Currently this works when `\\<mew-summary-mode-map>\\[mew-summary-retrieve]'.
+You can put any marks, typically `o' and `D' according to message
 headers.
 
 This value must be a list of entries. An entry is a list whose first
-element is a field defined in 'mew-scan-fields'.
+element is a field defined in `mew-scan-fields'.
 
 If the second element is a list, the first element of the list must be
 a mark (e.g. ?D) or a string which is a comma separated folders (e.g
@@ -798,12 +798,12 @@ a mark (e.g. ?D) or a string which is a comma separated folders (e.g
 expressions to be matched to the value of the field.
 
 With the following configuration, Mew marks messages whose Subject:
-matches \"adult\" or \"money\" with 'D'. And Mew marks messages whose
-Subject is \"daily log\" with 'o' to be refiled \"+log\". Also Mew
-marks messages whose Content-Type: contains \"gb2312\" with 'D'.
+matches \"adult\" or \"money\" with `D'. And Mew marks messages whose
+Subject is \"daily log\" with `o' to be refiled \"+log\". Also Mew
+marks messages whose Content-Type: contains \"gb2312\" with `D'.
 
 \(setq mew-inbox-action-alist
-      '((\"Subject:\"
+      \\='((\"Subject:\"
 	 (?D \"adult\" \"money\")
 	 (\"+log\" \"daily log\"))
 	(\"Content-Type:\"
@@ -812,7 +812,7 @@ marks messages whose Content-Type: contains \"gb2312\" with 'D'.
 If the second element of the entry is a symbol, it will be called as a
 function which returns nil or a mark or a string.
 
-If you are using 'spamassassin' which adds the \"X-Spam-Flag:\" field
+If you are using `spamassassin' which adds the \"X-Spam-Flag:\" field
 to messages and puts them in your mailbox, configure as follows:
 
 \(setq mew-spam: \"X-Spam-Flag:\")
@@ -822,14 +822,14 @@ to messages and puts them in your mailbox, configure as follows:
     (if (string-match \"yes\" val) ?D)))
 
 \(setq mew-inbox-action-alist
-      '((\"X-Spam-Flag:\" mew-spam-assassin)))
+      \\='((\"X-Spam-Flag:\" mew-spam-assassin)))
 
 With this configuration, messages with the \"X-Spam-Flag:\" whose
-value is \"Yes\" are automatically marked with 'D' since the
-'mew-spam-assassin' function returns 'D' marks when the value is
+value is \"Yes\" are automatically marked with `D' since the
+`mew-spam-assassin' function returns `D' marks when the value is
 \"Yes\".
 
-If you are using 'bogofilter' which adds the \"X-Bogosity:\" field
+If you are using `bogofilter' which adds the \"X-Bogosity:\" field
 to messages and puts them to your mailbox, configure as follows:
 
 \(setq mew-spam: \"X-Bogosity:\")
@@ -839,7 +839,7 @@ to messages and puts them to your mailbox, configure as follows:
     (if (string-match \"yes\" val) ?D)))
 
 \(setq mew-inbox-action-alist
-      '((\"X-Bogosity:\" mew-spam-bogofilter)))
+      \\='((\"X-Bogosity:\" mew-spam-bogofilter)))
 ")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -919,7 +919,7 @@ to messages and puts them to your mailbox, configure as follows:
   "*Alist of config. This is a list of
 	(<case> (<key> <value>) (<key> <value>) ...).
   - <case> is a string of case.
-  - <key> is a symbol of Mew value with the 'mew-' prefix removed.
+  - <key> is a symbol of Mew value with the `mew-' prefix removed.
   - <value> is a string.
 
 Currently, the following keys are supported:
@@ -958,7 +958,7 @@ message-id = *random*.nntp-msgid-user@nntp-msgid-domain
 An example is as follows:
 
 \(setq mew-config-alist
-      '((mew
+      \\='((mew
 	 (mail-domain  \"example.org\")
 	 (inbox-folder \"+inbox-mew\"))
 	(keio

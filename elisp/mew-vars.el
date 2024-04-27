@@ -115,7 +115,7 @@
   :type 'directory)
 
 (defcustom mew-conf-path mew-mail-path
-  "*A directory where Mew's configuration files locate."
+  "*A directory where Mew\\='s configuration files locate."
   :group 'mew-env
   :type 'directory)
 
@@ -148,7 +148,7 @@ really deleted."
   :type '(choice string (const nil)))
 
 (defcustom mew-imap-trash-folder-list nil
-  "*A list of IMAP folders whose messages marked with 'D' are really deleted."
+  "*A list of IMAP folders whose messages marked with `D' are really deleted."
   :group 'mew-summary
   :type '(choice (const nil) (repeat string)))
 
@@ -199,9 +199,9 @@ really deleted."
 
 (defcustom mew-imap-spam-field nil
   "*The field name of anti spam information to be used for IMAP spam filter.
-If both 'mew-imap-spam-field' and 'mew-imap-spam-word' are defined,
+If both `mew-imap-spam-field' and `mew-imap-spam-word' are defined,
 messages whose the field contains the word are automatically
-removed or refiled to 'mew-imap-spam-folder' or 'mew-imap-trash-folder'
+removed or refiled to `mew-imap-spam-folder' or `mew-imap-trash-folder'
 \(if defined) while scanning %inbox."
   :group 'mew-imap
   :type '(choice (const :tag "Not use" nil)
@@ -209,22 +209,22 @@ removed or refiled to 'mew-imap-spam-folder' or 'mew-imap-trash-folder'
 
 (defcustom mew-imap-spam-word nil
   "*The word of anti spam information to be used for IMAP spam filter.
-See 'mew-imap-spam-field'."
+See `mew-imap-spam-field'."
   :group 'mew-imap
   :type '(choice (const :tag "Not use" nil)
 		 (string :tag "Spam word")))
 
 (defcustom mew-imap-spam-pattern nil
   "*IMAP SEARCH pattern to filter spams.
-If non-nil, 'mew-imap-spam-field' and 'mew-imap-spam-field'
-treated as 'nil'."
+If non-nil, `mew-imap-spam-field' and `mew-imap-spam-field'
+treated as `nil'."
   :group 'mew-imap
   :type '(choice (const :tag "Not use" nil)
 		 (string :tag "Spam word")))
 
 (defcustom mew-imap-spam-folder nil
   "*A folder to be used for IMAP spam filter.
-See 'mew-imap-spam-field'."
+See `mew-imap-spam-field'."
   :group 'mew-imap
   :type '(choice (const :tag "Not use" nil)
 		 (string :tag "Spam folder")))
@@ -314,7 +314,7 @@ is edited again."
 (defcustom mew-make-message-hook nil
   "*Hook called before making a message in Draft mode. A good example
 is as follows:
-  (add-hook 'mew-make-message-hook 'ispell-message)"
+  (add-hook \\='mew-make-message-hook \\='ispell-message)"
   :group 'mew-draft
   :type 'hook)
 
@@ -463,7 +463,7 @@ folder as the argument."
 (defcustom mew-mail-address-list nil
   "*The addresses included in this list never appear on the Cc: field
 on a draft buffer. If nil, this value is automatically generated from
-'mew-config-alist'."
+`mew-config-alist'."
   :group 'mew-draft
   :type '(choice (const nil) (repeat string)))
 
@@ -471,14 +471,14 @@ on a draft buffer. If nil, this value is automatically generated from
   "*Your e-mail address domain list like
 \(\"example.org\" \"example.jp\").
 They are used for mail-domain completion in Draft mode(C-cTAB). If
-nil, this value is automatically generated from 'mew-config-alist'."
+nil, this value is automatically generated from `mew-config-alist'."
   :group 'mew-draft
   :type '(choice (const nil) (repeat string)))
 
 (defcustom mew-from-list nil
   "*A list of From: for circular completion in Draft mode. If nil,
-this value is automatically generated from 'mew-config-alist'. See
-also 'mew-from'."
+this value is automatically generated from `mew-config-alist'. See
+also `mew-from'."
   :group 'mew-draft
   :type '(choice (const nil) (repeat string)))
 
@@ -549,8 +549,8 @@ For more infomation, see the document of '\\<mew-summary-mode-map>\\[mew-summary
     (t
      ("To:" "From:")))
   "*Alist to be used to prepare To:/Cc:/Newsgroups: in a reply draft.
-When '\\[universal-argument]' is specified for '\\<mew-summary-mode-map>\\[mew-summary-reply]' and '\\[mew-summary-reply-with-citation]', this alist is used.
-For more infomation, see the document of '\\[mew-summary-reply]'")
+When `\\[universal-argument]' is specified for `\\<mew-summary-mode-map>\\[mew-summary-reply]' and `\\[mew-summary-reply-with-citation]', this alist is used.
+For more infomation, see the document of `\\[mew-summary-reply]'")
 
 (defvar mew-reply-fromme-alist
   '((t
@@ -559,7 +559,7 @@ For more infomation, see the document of '\\[mew-summary-reply]'")
      ("Newsgroups:" "Newsgroups:")))
   "*Alist to be used to prepare To:/Cc:/Newsgroups: in a reply draft.
 When the message to be replied is sent/posted by ME, this alist is used.
-For more infomation, see the document of '\\<mew-summary-mode-map>\\[mew-summary-reply]'")
+For more infomation, see the document of `\\<mew-summary-mode-map>\\[mew-summary-reply]'")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -568,18 +568,18 @@ For more infomation, see the document of '\\<mew-summary-mode-map>\\[mew-summary
 
 (defcustom mew-ssh-keep-connection t
   "*If non-nil, an SSH process for each service (POP, IMAP, NNTP, SMTP)
-is kept for further connections. This must be 't' for IMAP and NNTP."
+is kept for further connections. This must be `t' for IMAP and NNTP."
   :group 'mew-net
   :type 'boolean)
 
 (defcustom mew-ssl-keep-connection t
   "*If non-nil, an SSL/TLS process for each service (POP, IMAP, NNTP, SMTP)
-is kept for further connections. This must be 't' for IMAP and NNTP."
+is kept for further connections. This must be `t' for IMAP and NNTP."
   :group 'mew-net
   :type 'boolean)
 
 (defcustom mew-ssl-default 'tunnel
-  "*Default SSL/TLS type when mew-{imap,nntp,pop,smtp}-ssl is 't'."
+  "*Default SSL/TLS type when mew-{imap,nntp,pop,smtp}-ssl is `t'."
   :group 'mew-net
   :type '(choice (const :tag "Native (GnuTLS)" native)
 		 (const :tag "External (stunnel)" tunnel)))
@@ -602,7 +602,7 @@ nil - use the default specified by Emacs Network Security Manager."
 
 (defcustom mew-ssl-client-keycert-list nil
   "The client-side certificate used for TLS connection.
-'((\"keyfile\" \"certfile\")) - A list of key/cert pairs."
+\\='((\"keyfile\" \"certfile\")) - A list of key/cert pairs."
   :group 'mew-net
   :type '(choice (const :tag "None" nil)
 		 (repeat string)))
@@ -673,13 +673,13 @@ If nil, an address specified by the From: field is used."
 
 (defcustom mew-smtp-msgid-user nil
   "*A user part for creation of Message-Id: for SMTP. If nil, the
-value of 'mew-user' is used."
+value of `mew-user' is used."
   :group 'mew-smtp
   :type '(choice string (const nil)))
 
 (defcustom mew-smtp-msgid-domain nil
   "*A domain name for creation of Message-Id: for SMTP. If nil, the
-value of 'mew-mail-domain' is used."
+value of `mew-mail-domain' is used."
   :group 'mew-smtp
   :type '(choice string (const nil)))
 
@@ -691,7 +691,7 @@ value of 'mew-mail-domain' is used."
 ;;;
 
 (defcustom mew-mailbox-type 'pop
-  "'pop, 'imap or 'mbox"
+  "`pop', `imap' or `mbox'"
   :group 'mew-net
   :type '(choice (const pop) (const imap) (const mbox)))
 
@@ -701,13 +701,13 @@ value of 'mew-mail-domain' is used."
 ;;;
 
 (defcustom mew-mbox-command "incm"
-  "*A command to be execute if 'mew-mailbox-type' is 'mbox."
+  "*A command to be execute if `mew-mailbox-type' is `mbox'."
   :group 'mew-pop
   :type '(choice string (const nil)))
 
 (defcustom mew-mbox-command-arg "-u"
-  "*Arguments for 'mew-mbox-command'.
-For maildir, set this to '-u -d /path/to/mbox'."
+  "*Arguments for `mew-mbox-command'.
+For maildir, set this to `-u -d /path/to/mbox'."
   :group 'mew-pop
   :type '(choice string (const nil)))
 
@@ -718,7 +718,7 @@ For maildir, set this to '-u -d /path/to/mbox'."
 
 (defcustom mew-biff-interval 5
   "*Minutes of biff interval. This should be smaller than
-'mew-passwd-timer-unit' * 'mew-passwd-lifetime'."
+`mew-passwd-timer-unit' * `mew-passwd-lifetime'."
   :group 'mew-net
   :type 'integer)
 
@@ -773,9 +773,9 @@ tunnel - Use an external program to establish a TLS tunnel.
 
 (defcustom mew-pop-auth 'apop
   "*The authentication method for POP3.
-'pass means the authentication with USER/PASS (i.e. plain password).
-'apop means the authentication with APOP.
-t means SASL according to 'mew-pop-auth-list'."
+`pass' means the authentication with USER/PASS (i.e. plain password).
+`apop' means the authentication with APOP.
+t means SASL according to `mew-pop-auth-list'."
   :group 'mew-pop
   :type '(choice (const apop) (const pass) (const t)))
 
@@ -805,7 +805,7 @@ POP server."
 
 (defcustom mew-pop-body-lines 40
   "*The limit of body lines to get when the size of message
-exceeds 'mew-pop-size'."
+exceeds `mew-pop-size'."
   :group 'mew-pop
   :type 'integer)
 
@@ -875,7 +875,7 @@ tunnel - Use an external program to establish a TLS tunnel.
 (defcustom mew-imap-auth t
   "*The authentication method for IMAP4.
 nil means the authentication with LOGIN (i.e. plain password).
-t means SASL according to 'mew-imap-auth-list'."
+t means SASL according to `mew-imap-auth-list'."
   :group 'mew-imap
   :type 'boolean)
 
@@ -927,12 +927,12 @@ is nil, the prefix is added to mailbox alist as a mailbox.
 If you want to used your home directory with WU, configure as
 follows:
 
-	(setq mew-imap-prefix-list '(\"\"))
+	(setq mew-imap-prefix-list \\='(\"\"))
 
 If you want to used the MH directory with WU, configure as
 follows:
 
-	(setq mew-imap-prefix-list '(\"#mh/\" \"#mhinbox\"))
+	(setq mew-imap-prefix-list \\='(\"#mh/\" \"#mhinbox\"))
 
 Note that %inbox means /var/mail/<user> while %#mhinbox refers to
 Mail/inbox.
@@ -1019,13 +1019,13 @@ If non-nil, only header is retrieved."
 
 (defcustom mew-nntp-msgid-user nil
   "*A user part for creation of Message-Id: for NNTP. If nil, the
-value of 'mew-user' is used."
+value of `mew-user' is used."
   :group 'mew-nntp
   :type '(choice string (const nil)))
 
 (defcustom mew-nntp-msgid-domain nil
   "*A domain name for creation of Message-Id: for NNTP. If nil, the
-value of 'mew-mail-domain' is used."
+value of `mew-mail-domain' is used."
   :group 'mew-nntp
   :type '(choice string (const nil)))
 
@@ -1043,24 +1043,24 @@ If KEY is t, all folders matches it. The corresponding RANGE is
 returned always.
 
 If KEY is a string, match-function is applied according to
-'mew-range-list-string-type'. If matched, the corresponding RANGE is
+`mew-range-list-string-type'. If matched, the corresponding RANGE is
 returned.
 
 If KEY is a list of strings, match-function is applied according to
-'mew-range-list-list-type'. If a match found out of the strings,
+`mew-range-list-list-type'. If a match found out of the strings,
 the corresponding RANGE is returned.
 
-Candidate values for 'mew-rage-list-string-type' and
-'mew-range-list-list-type' are as follows:
+Candidate values for `mew-rage-list-string-type' and
+`mew-range-list-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
+	\\='regex		Regular expression.
+	\\='recursive	Initial substring match. That is,
 			not only a folder specified but all so
 			all sub-folders are matched.
-	'string		String comparison.
+	\\='string		String comparison.
 
 An example is as follows:
-	'(((\"+queue\" \"+postq\" \"+draft\") \"all\")
+	\\='(((\"+queue\" \"+postq\" \"+draft\") \"all\")
 	  ((\"$inbox\") \"sync\")
 	  (t \"update\"))
 
@@ -1077,13 +1077,13 @@ If this value is nil, an appropriate value is set when Mew is booting.
 
 (defcustom mew-range-list-string-type 'regex
   "*A value to specify an action if the key is a string in
-'mew-range-list'. Candidates are 'regex, 'recursive, and 'string."
+`mew-range-list'. Candidates are `regex', `recursive', and `string'."
   :group 'mew-summary
   :type '(choice (const regex) (const recursive) (const string)))
 
 (defcustom mew-range-list-list-type 'recursive
   "*A value to specify an action if the key is a list of strings in
-'mew-range-list'. Candidates are 'regex, 'recursive, and 'string."
+`mew-range-list'. Candidates are `regex', `recursive', and `string'."
   :group 'mew-summary
   :type '(choice (const regex) (const recursive) (const string)))
 
@@ -1104,31 +1104,31 @@ If KEY is t, all folders matches it. The corresponding VALUE is
 returned always.
 
 If KEY is a string, match-function is applied according to
-'mew-unread-mark-list-string-type'. If matched, the corresponding
+`mew-unread-mark-list-string-type'. If matched, the corresponding
 VALUE is returned.
 
 If KEY is a list of strings, match-function is applied according to
-'mew-unread-mark-list-list-type'. If a match found out of the strings,
+`mew-unread-mark-list-list-type'. If a match found out of the strings,
 the corresponding VALUE is returned.
 
-Candidate values for 'mew-rage-list-string-type' and
-'mew-unread-mark-list-list-type' are as follows:
+Candidate values for `mew-rage-list-string-type' and
+`mew-unread-mark-list-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
+	\\='regex		Regular expression.
+	\\='recursive	Initial substring match. That is,
 			not only a folder specified but all so
 			all sub-folders are matched.
-	'string		String comparison.
+	\\='string		String comparison.
 
 The default value is:
-	'(((\"+inbox\" \"$inbox\" \"%inbox\" \"-\") t)
+	\\='(((\"+inbox\" \"$inbox\" \"%inbox\" \"-\") t)
 	  (t nil))
 
 An example for the case where messages are marked as unread in any
 folders:
-	'((t t))
+	\\='((t t))
 
-Note that this variable is effective only when 'mew-use-unread-mark'
+Note that this variable is effective only when `mew-use-unread-mark'
 is non-nil.
 "
   :group 'mew-summary
@@ -1142,13 +1142,13 @@ is non-nil.
 
 (defcustom mew-unread-mark-list-string-type 'regex
   "*A value to specify an action if the key is a string in
-'mew-unread-mark-list'. Candidates are 'regex, 'recursive, and 'string."
+`mew-unread-mark-list'. Candidates are `regex', `recursive', and `string'."
   :group 'mew-summary
   :type '(choice (const regex) (const recursive) (const string)))
 
 (defcustom mew-unread-mark-list-list-type 'recursive
   "*A value to specify an action if the key is a list of strings in
-'mew-unread-mark-list'. Candidates are 'regex, 'recursive, and 'string."
+`mew-unread-mark-list'. Candidates are `regex', `recursive', and `string'."
   :group 'mew-summary
   :type '(choice (const regex) (const recursive) (const string)))
 
@@ -1161,7 +1161,7 @@ is non-nil.
   "*A list to be appended to summary-form if the first element of
 summary-form is not an integer. Since Mew assumes that
 each line of Summary mode begins with one mark, this variable
-MUST be '(mark).")
+MUST be \\='(mark).")
 
 (defconst mew-custom-type-of-summary-form
   '(choice
@@ -1216,12 +1216,12 @@ of list, symbol, and string.
 
 \(b) A list consists of an integer and a symbol. The symbol specifies a
 function to be called. The name of the function is produced by
-concatenating 'mew-summary-form-func-prefix' and the symbol name.
-\(e.g. 'mew-summary-form-date' for the symbol 'date').
+concatenating `mew-summary-form-func-prefix' and the symbol name.
+\(e.g. `mew-summary-form-date' for the symbol `date').
 
-Pre-defined symbols are 'type, 'time, 'date, 'year, 'size, 'from,
-'subj and 'body. For more details, see the explanation of the
-functions called 'mew-summary-form-<symbol>'.
+Pre-defined symbols are `type', `time', `date', `year', `size', `from',
+`subj' and `body'. For more details, see the explanation of the
+functions called `mew-summary-form-<symbol>'.
 
 The integer specifies the width of field which will be filled with a
 return string of the function.
@@ -1234,48 +1234,48 @@ ASCII string.
 
 0 means the remaining width and is treated as a positive value.
 
-\(c) A symbol except 't' is equivalent to (1 symbol).
+\(c) A symbol except `t' is equivalent to (1 symbol).
 
 \(d) The value of mew-summary-form-header (mark) is appended to
-summary-form when used. See also 'mew-summary-form-header'.
+summary-form when used. See also `mew-summary-form-header'.
 
-\(e) 't' means the position where thread indentation is inserted.
+\(e) `t' means the position where thread indentation is inserted.
 
 An example is as follows:
-	'(type (5 date) \" \" (-4 size) \" \" (14 from) \" \" t (30 subj) \"|\" (0 body))
+	\\='(type (5 date) \" \" (-4 size) \" \" (14 from) \" \" t (30 subj) \"|\" (0 body))
 
-You can also set this value in 'mew-summary-form-list'."
+You can also set this value in `mew-summary-form-list'."
   :group 'mew-summary
   :type mew-custom-type-of-summary-form)
 
 (defcustom mew-summary-form-list nil
-  "*A list of (KEY VALUE) to define 'mew-summary-form' for each
+  "*A list of (KEY VALUE) to define `mew-summary-form' for each
 folder. Each component is (key summary-form).
 
 If KEY is t, all folders matches it. The corresponding SUMMARY-FORM is
 returned always.
 
 If KEY is a string, match-function is applied according to
-'mew-summary-form-list-string-type'. If matched, the corresponding
+`mew-summary-form-list-string-type'. If matched, the corresponding
 SUMMARY-FORM is returned.
 
 If KEY is a list of strings, match-function is applied according to
-'mew-summary-form-list-list-type'. If a match found out of the strings,
+`mew-summary-form-list-list-type'. If a match found out of the strings,
 the corresponding SUMMARY-FORM is returned.
 
-Candidate values for 'mew-summary-form-list-string-type' and
-'mew-summary-form-list-list-type' are as follows:
+Candidate values for `mew-summary-form-list-string-type' and
+`mew-summary-form-list-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
+	\\='regex		Regular expression.
+	\\='recursive	Initial substring match. That is,
 			not only a folder specified but all so
 			all sub-folders are matched.
-	'string		String comparison.
+	\\='string		String comparison.
 
-SUMMARY-FORM is a list. See 'mew-summary-form' for more information.
+SUMMARY-FORM is a list. See `mew-summary-form' for more information.
 
 An example is as follows:
-      '(((\"+inbox\")
+      \\='(((\"+inbox\")
 	 (type (5 date) \" \" (-4 size) \" \" (14 from) \" \" t (30 subj) \"|\" (0 body)))
 	(t
 	 (type (5 date) \" \" (14 from) \" \" t (30 subj) \"|\" (0 body))))
@@ -1293,13 +1293,13 @@ An example is as follows:
 
 (defcustom mew-summary-form-list-string-type 'regex
   "*A value to specify an action if the key is a string in
-'mew-summary-form-list'. Candidates are 'regex, 'recursive, and 'string."
+`mew-summary-form-list'. Candidates are `regex', `recursive', and `string'."
   :group 'mew-summary
   :type '(choice (const regex) (const recursive) (const string)))
 
 (defcustom mew-summary-form-list-list-type 'recursive
   "*A value to specify an action if the key is a list of strings in
-'mew-summary-form-list'. Candidates are 'regex, 'recursive, and 'string."
+`mew-summary-form-list'. Candidates are `regex', `recursive', and `string'."
   :group 'mew-summary
   :type '(choice (const regex) (const recursive) (const string)))
 
@@ -1311,7 +1311,7 @@ if the message is originated by me."
 
 (defcustom mew-summary-form-extract-rule '(nickname)
   "*A list to specify what part to extract from the From: field. Each
-element must be 'name, 'comment, 'address, 'nickname, or appropriate
+element must be `name', `comment', `address', `nickname', or appropriate
 \"regex\".
 
 Consider the following examples:
@@ -1322,25 +1322,25 @@ Consider the following examples:
 
 Each element returns the following value:
 
-	'name		Name part, if any
+	\\='name		Name part, if any
 				A: Kazu Yamamoto
 				B: (No match)
 				C: Kazuhiko Yamamoto (Kazu)
-	'comment	Comment part, if any
+	\\='comment	Comment part, if any
 				A: (No match)
 				B: Kazu Yamamoto
 				C: (Kazu)
-	'address	Address part
+	\\='address	Address part
 				A: kazu@example.org
 				B: kazu@example.org
 				C: kazu@example.org
 
-	'nickname       One element of personal information in
-                        Addrbook according to 'mew-addrbook-for-summary'.
-                        The default value of 'mew-addrbook-for-summary'
-                        is 'nickname. So, From: is converted a nickname
+	\\='nickname       One element of personal information in
+                        Addrbook according to `mew-addrbook-for-summary'.
+                        The default value of `mew-addrbook-for-summary'
+                        is `nickname'. So, From: is converted a nickname
                         by default. For more information, see
-                        'mew-addrbook-switch'.
+                        `mew-addrbook-switch'.
 
 	(regex)		The substring first matched
 
@@ -1361,42 +1361,42 @@ instead of the 'D' mark."
 		 (character :tag "Use another character")))
 
 (defcustom mew-summary-form-mark-spam nil
-  "*If non-nil, the 'D' mark automatically is put onto
+  "*If non-nil, the `D' mark automatically is put onto
 SPAM messages. A message is considered a SPAM message
 if the MD5 checksum of its body is duplicated in a scan.
-If a character, use it as a mark instead of the 'D' mark."
+If a character, use it as a mark instead of the `D' mark."
   :group 'mew-summary
   :type '(choice (const :tag "Use mew-mark-delete" t)
 		 (const :tag "Not use" nil)
 		 (character :tag "Use another character")))
 
 (defcustom mew-summary-form-mark-review nil
-  "*If non-nil, the '*' mark automatically is put onto
+  "*If non-nil, the `*' mark automatically is put onto
 messages destined to me. If a character, use it as a mark
-instead of the '*' mark."
+instead of the `*' mark."
   :group 'mew-summary
   :type '(choice (const :tag "Use mew-mark-review" t)
 		 (const :tag "Not use" nil)
 		 (character :tag "Use another character")))
 
 (defcustom mew-summary-form-size-0k nil
-  "*If non-nil, the size of message is displayed as '0k'
+  "*If non-nil, the size of message is displayed as `0k'
 if the size is less than 1k byte."
   :group 'mew-summary
   :type 'boolean)
 
 (defcustom mew-summary-form-size-huge t
-  "*If non-nil, the size of message is displayed as 'HUGE'
+  "*If non-nil, the size of message is displayed as `HUGE'
 when the size is greater than or equal to 1000 after maximum
-quantization by 'mew-summary-form-size-unit'."
+quantization by `mew-summary-form-size-unit'."
   :group 'mew-summary
   :type 'boolean)
 
 (defcustom mew-spam: "X-Bogosity:"
   "*The field name which your spam filter inserts.
 E.g.
-	\"X-Spam-Flag:\" for 'spamassassin'
-	\"X-Bogosity:\" for 'bogofilter'"
+	\"X-Spam-Flag:\" for `spamassassin'
+	\"X-Bogosity:\" for `bogofilter'"
   :group 'mew-summary
   :type 'string)
 
@@ -1412,11 +1412,11 @@ The last MUST be \"Body\"."
                      (repeat string))))
 
 (defvar mew-scan-fields-alias nil
-  "*A list of aliases for 'mew-scan-fields'.
+  "*A list of aliases for `mew-scan-fields'.
 Functions called MEW-FOO will be defined according to this variable.")
 
 (defvar mew-summary-form-func-prefix "mew-summary-form-"
-  "The prefix for symbol used in 'mew-summary-form'.")
+  "The prefix for symbol used in `mew-summary-form'.")
 
 (defvar mew-scan-decode-fields (list mew-subj: mew-from: mew-to:))
 
@@ -1429,7 +1429,7 @@ Functions called MEW-FOO will be defined according to this variable.")
 (defcustom mew-thread-column 28
   "A position where thread indentation is inserted
 for indentation of thread. This valuable is for backward compatibility
-only. Use 't' in 'mew-summary-form instead."
+only. Use `t' in `mew-summary-form instead'."
   :group 'mew-summary
   :type 'integer)
 
@@ -1473,14 +1473,14 @@ obtain any fields."
 (defcustom mew-header-max-length 400
   "*If the length of a header exceeds this value,
 it is not arranged nor MIME decoded.
-See also 'mew-header-max-depth'."
+See also `mew-header-max-depth'."
   :group 'mew-message
   :type 'integer)
 
 (defcustom mew-header-max-depth 50
   "*A value to decide loop depth for header field syntax analysis.
 It was known as mew-loop-depth.
-See also 'mew-header-max-length'."
+See also `mew-header-max-length'."
   :group 'mew-message
   :type 'integer)
 
@@ -1513,19 +1513,19 @@ to this file."
   :type 'integer)
 
 (defcustom mew-scan-max-field-length 5
-  "*Max field length which 'mewl' treats."
+  "*Max field length which `mewl' treats."
   :group 'mew-env
   :type 'integer)
 
 (defcustom mew-scan-max-body-length 20
-  "*Max body length which 'mewl' treats."
+  "*Max body length which `mewl' treats."
   :group 'mew-env
   :type 'integer)
 
 (defcustom mew-scan-body-length 10
   "*Body length which Mew treats.
-Increase this value if 'mew-summary-form-mark-spam' put
-the 'D' mark onto different messages."
+Increase this value if `mew-summary-form-mark-spam' put
+the `D' mark onto different messages."
   :group 'mew-env
   :type 'integer)
 
@@ -1581,7 +1581,7 @@ any query."
 
 (defcustom mew-ask-range nil
   "*If *non-nil*, Mew asks range if the cache in Summary mode seems
-invalid. Otherwise, 'update is used for range in the case."
+invalid. Otherwise, `update' is used for range in the case."
   :group 'mew-summary
   :type 'boolean)
 
@@ -1620,7 +1620,7 @@ invalid. Otherwise, 'update is used for range in the case."
 is appropriate.
 	nil:               not ask
 	A list of charset: ask if the charset is not a member of the list
-	t:                 ask if 'mew-charset-m17n' is used."
+	t:                 ask if `mew-charset-m17n' is used."
   :group 'mew-draft
   :type '(choice (const nil) (const t) (repeat string)))
 
@@ -1669,7 +1669,7 @@ Otherwise, windows are configured dynamically."
 
 (defcustom mew-use-text/html nil
   "*If non-nil, Mew parses text/html messages.
-If you want to use 'mew-use-text/html-list', this value should be 'nil'."
+If you want to use `mew-use-text/html-list', this value should be `nil'."
   :group 'mew-message
   :type 'boolean)
 
@@ -1681,21 +1681,21 @@ If KEY is t, all folders matches it. The corresponding boolean is
 returned always.
 
 If KEY is a string, match-function is applied according to
-'mew-use-text/html-string-type'. If matched, the corresponding
+`mew-use-text/html-string-type'. If matched, the corresponding
 boolean is returned.
 
 If KEY is a list of strings, match-function is applied according
-to 'mew-use-text/html-list-type'. If a match found out of the
+to `mew-use-text/html-list-type'. If a match found out of the
 strings, the corresponding boolean is returned.
 
-Candidate values for 'mew-use-text/html-string-type' and
-'mew-use-text/html-list-type' are as follows:
+Candidate values for `mew-use-text/html-string-type' and
+`mew-use-text/html-list-type' are as follows:
 
-	'regex		Regular expression.
-	'recursive	Initial substring match. That is,
+	\\='regex		Regular expression.
+	\\='recursive	Initial substring match. That is,
 			not only a folder specified but all so
 			all sub-folders are matched.
-	'string		String comparison.
+	\\='string		String comparison.
 "
   :group 'mew-summary
   :type '(choice
@@ -1708,13 +1708,13 @@ Candidate values for 'mew-use-text/html-string-type' and
 
 (defcustom mew-use-text/html-string-type 'regex
   "*A value to specify an action if the key is a string in
-'mew-use-text/html-list'. Candidates are 'regex, 'recursive, and 'string."
+`mew-use-text/html-list'. Candidates are `regex', `recursive', and `string'."
   :group 'mew-summary
   :type '(choice (const regex) (const recursive) (const string)))
 
 (defcustom mew-use-text/html-list-type 'recursive
   "*A value to specify an action if the key is a list of strings in
-'mew-use-text/html-list'. Candidates are 'regex, 'recursive, and 'string."
+`mew-use-text/html-list'. Candidates are `regex', `recursive', and `string'."
   :group 'mew-summary
   :type '(choice (const regex) (const recursive) (const string)))
 
@@ -1726,7 +1726,7 @@ Candidate values for 'mew-use-text/html-string-type' and
 
 (defcustom mew-use-symbolic-link-for-forwarding nil
   "*If nil, messages to be forwarded is copied to +draft when
-'\\<mew-summary-mode-map>\\[mew-summary-forward]' and '\\[mew-summary-multi-forward]' are used. Otherwise, symbolic links are
+`\\<mew-summary-mode-map>\\[mew-summary-forward]' and `\\[mew-summary-multi-forward]' are used. Otherwise, symbolic links are
 created (if the feature is provided)."
   :group 'mew-draft
   :type 'boolean)
@@ -1764,7 +1764,7 @@ composing."
   :type 'boolean)
 
 (defcustom mew-use-autoconv-when-unknown t
-  "*If non-nil, Mew uses 'mew-cs-autoconv' for an unknown coding system."
+  "*If non-nil, Mew uses `mew-cs-autoconv' for an unknown coding system."
   :group 'mew-message
   :type 'boolean)
 
@@ -1777,26 +1777,26 @@ is used as a folder candidate instead of inbox."
 (defcustom mew-use-biff nil
   "*If non-nil, Mew displays \"Mail(n)\" in the mode line if your
 message server receives messages. This is confirmed by POP or IMAP
-every 'mew-biff-interval' minutes.
+every `mew-biff-interval' minutes.
 
-To use this feature, 'mew-use-cached-passwd' should be 't'.
+To use this feature, `mew-use-cached-passwd' should be `t'.
 
 If you want to use the biff functionality against a local mailbox, use
-'display-time-mode' instead."
+`display-time-mode' instead."
   :group 'mew-env
   :type 'boolean)
 
 (defcustom mew-use-biff-bell nil
   "*If non-nil, Mew beeps when the number of messages in
 your POP server becomes non-zero. To use this feature,
-'mew-use-biff' should be 't'."
+`mew-use-biff' should be `t'."
   :group 'mew-env
   :type 'boolean)
 
 (defcustom mew-use-sender nil
   "*If From: contains multiple addresses, Mew adds Sender: anyway.
 If From: contains one address and SMTP MAIL FROM
-\('mew-smtp-mail-from') is different from it, this variable effects.
+\(`mew-smtp-mail-from') is different from it, this variable effects.
 If non-nil, Mew adds Sender: and specifies SMTP MAIL FROM to its value.
 Otherwise, Mew does not add Sender:."
   :group 'mew-draft
@@ -1809,7 +1809,7 @@ Otherwise, Mew does not add Sender:."
 
 (defcustom mew-use-alternative t
   "*If non-nil, Multipart/Alternative is treated as a singlepart
-according to 'mew-mime-multipart-alternative-list'."
+according to `mew-mime-multipart-alternative-list'."
   :group 'mew-summary
   :type 'boolean)
 
@@ -1819,7 +1819,7 @@ If one of them matches, Multiprat/Alternative is treated as
 Multipart/Mixed.
 
 An example:
-  (setq mew-disable-alternative-regex-list '(\"Apple Mail\"))"
+  (setq mew-disable-alternative-regex-list \\='(\"Apple Mail\"))"
   :group 'mew-summary
   :type '(list regexp))
 
@@ -1845,27 +1845,27 @@ multipart is displayed with its header."
   :type 'boolean)
 
 (defcustom mew-use-fast-refile nil
-  "*If non-nil, 'rassoc' is used to look up the alist of
+  "*If non-nil, `rassoc' is used to look up the alist of
 folders. Since it is a built-in function, it makes marking for refile
 much faster especially when the alist is long. But the fast method
-is not case-sensitive. So, you should set this variable to 't' only when
+is not case-sensitive. So, you should set this variable to `t' only when
 you does not use capital letters for your folders. If nil, the old
 slow method, which is case-sensitive, is used."
   :group 'mew-refile
   :type 'boolean)
 
 (defcustom mew-use-node-folder t
-  "*If non-nil, candidate folders chosen by 'mew-refile-guess-by-folder'
+  "*If non-nil, candidate folders chosen by `mew-refile-guess-by-folder'
 includes node folders as well as leaf folders. Otherwise, candidates
 are selected out of leaf folders only."
   :group 'mew-refile
   :type 'boolean)
 
 (defcustom mew-use-case-completion t
-  "*If non-nil, 'mew-case' is automatically completed when you
+  "*If non-nil, `mew-case' is automatically completed when you
 input a folder.  For example, consider that you input a folder in a
-local folder after typing '\\<mew-summary-mode-map>\\[mew-summary-goto-folder]'.
-Typing '%' automatically inserts 'mew-case' before '%'."
+local folder after typing `\\<mew-summary-mode-map>\\[mew-summary-goto-folder]'.
+Typing `%' automatically inserts `mew-case' before `%'."
   :group 'mew-summary
   :type 'boolean)
 
@@ -1965,8 +1965,8 @@ If you cite a message, the citation style of format=flowed is used. "
 
 (defcustom mew-multipart-icon-position 'right
   "*Position where multipart icons are displayed.
-If 'left, displayed at the left size of the default toolbar.
-If 'right, displayed at the right size of the default toolbar.
+If `left', displayed at the left size of the default toolbar.
+If `right', displayed at the right size of the default toolbar.
 Otherwise, not displayed."
   :group 'mew-summary
   :type 'symbol)
@@ -1993,34 +1993,34 @@ Otherwise, not displayed."
 
 (defcustom mew-summary-show-direction 'next
   "*Direction for SPC at end of message.
-'up 'down 'next(current direction) 'stop.
-Other values are considered as 'stop.
-See also 'mew-summary-mark-direction'."
+`up' `down' `next'(current direction) `stop'.
+Other values are considered as `stop'.
+See also `mew-summary-mark-direction'."
   :group 'mew-summary
   :type '(choice (const next) (const up) (const down) (const stop)))
 
 (defcustom mew-summary-mark-direction 'next
   "*Direction after marking a message
-'up 'down 'next(current direction) 'stop.
-Other values are considered as 'stop.
-See also 'mew-summary-show-direction'."
+`up' `down' `next'(current direction) `stop'.
+Other values are considered as `stop'.
+See also `mew-summary-show-direction'."
   :group 'mew-summary
   :type '(choice (const next) (const up) (const down) (const stop)))
 
 (defcustom mew-summary-show-pause nil
   "*Pause on going to next message if *non-nil*.
-See also 'mew-summary-show-direction' and 'mew-summary-mark-direction'."
+See also `mew-summary-show-direction' and `mew-summary-mark-direction'."
   :group 'mew-summary
   :type 'boolean)
 
 (defcustom mew-summary-mark-duplicated-skip 'first
   "*This value decides which duplicated message should not be
-marked with 'mew-mark-duplicated' when 'mew-summary-mark-duplicated'
+marked with `mew-mark-duplicated' when `mew-summary-mark-duplicated'
 is executed.
 
-Possible value is 'first, 'last, or nil.
+Possible value is `first', `last', or nil.
 nil means to mark all duplicated messages.
-Other values are considered as 'first."
+Other values are considered as `first'."
   :group 'mew-summary
   :type '(choice (const first) (const last) (const nil)))
 
@@ -2036,19 +2036,19 @@ displayed."
   :type '(choice integer (const nil)))
 
 (defcustom mew-summary-goto-line-then-display t
-  "*If non-nil 'mew-summary-goto-line' displays the message
+  "*If non-nil `mew-summary-goto-line' displays the message
 where the cursor jumped."
   :group 'mew-summary
   :type 'boolean)
 
 (defcustom mew-summary-jump-top-then-display t
-  "*If non-nil 'mew-summary-jump-top' displays the top message
+  "*If non-nil `mew-summary-jump-top' displays the top message
 where the cursor jumped to the top."
   :group 'mew-summary
   :type 'boolean)
 
 (defcustom mew-summary-jump-bottom-then-display t
-  "*If non-nil 'mew-summary-jump-bottom' displays the bottom message
+  "*If non-nil `mew-summary-jump-bottom' displays the bottom message
 where the cursor jumped to the bottom."
   :group 'mew-summary
   :type 'boolean)
@@ -2096,7 +2096,7 @@ insert a newline at the end of buffer. "
   :type 'boolean)
 
 (defcustom mew-field-other-visible t
-  "*If *non-nil*, fields which are not found in 'mew-field-spec'
+  "*If *non-nil*, fields which are not found in `mew-field-spec'
 are displayed after visible fields. Otherwise they are
 hidden before visible fields (and after invisible fields)."
   :group 'mew-message
@@ -2104,7 +2104,7 @@ hidden before visible fields (and after invisible fields)."
 
 (defcustom mew-use-header-veil t
   "*If *non-nil*, field lines of To: and Cc:
-over 'mew-header-veil-count' are covered with invisible veils."
+over `mew-header-veil-count' are covered with invisible veils."
   :group 'mew-message
   :type 'boolean)
 
@@ -2124,16 +2124,16 @@ over 'mew-header-veil-count' are covered with invisible veils."
 ;;;
 
 (defcustom mew-draft-mode-auto-save t
-  "*If t, a draft is repeatedly saved to 'buffer-auto-save-file-name'
-by 'do-auto-save'. If automatic saving is enabled and Emacs is crashed,
-the '.save-' file remains. If this value is nil, automatic saving does
+  "*If t, a draft is repeatedly saved to `buffer-auto-save-file-name'
+by `do-auto-save'. If automatic saving is enabled and Emacs is crashed,
+the `.save-' file remains. If this value is nil, automatic saving does
 not work resulting that no garbage file remains."
   :group 'mew-draft
   :type 'boolean)
 
 (defcustom mew-header-alist nil
   "*List of (key value) for header field to be inserted on draft.
-'((\"X-fingerprint:\" \"6B 63 38 88 67 5E 96 8E  CE A4 62 73 3F 11 64 94\")
+\\='((\"X-fingerprint:\" \"6B 63 38 88 67 5E 96 8E  CE A4 62 73 3F 11 64 94\")
   (\"X-URL:\" \"http://www.example.org/\"))"
   :group 'mew-draft
   :type '(list (list string string)))
@@ -2161,46 +2161,46 @@ line."
 
 (defcustom mew-reply-to nil
   "*A value inserted into Reply-To: field in Draft mode if *non-nil*.
-See also 'mew-config-alist'."
+See also `mew-config-alist'."
   :group 'mew-draft
   :type '(choice string (const nil)))
 
 (defcustom mew-fcc "+backup"
   "*A value inserted into Fcc: field in Draft mode if *non-nil*.
-See also 'mew-config-alist'."
+See also `mew-config-alist'."
   :group 'mew-draft
   :type '(choice string (const nil)))
 
 (defcustom mew-cc nil
   "*A value inserted into Cc: field in Draft mode if *non-nil*.
-See also 'mew-config-alist'."
+See also `mew-config-alist'."
   :group 'mew-draft
   :type '(choice string (const nil)))
 
 (defcustom mew-bcc nil
   "*A value inserted into Bcc: field in Draft mode if *non-nil*.
-See also 'mew-config-alist'."
+See also `mew-config-alist'."
   :group 'mew-draft
   :type '(choice string (const nil)))
 
 (defcustom mew-dcc nil
   "*A value inserted into Dcc: field in Draft mode if *non-nil*.
-If the value is 'me, your address is automatically inserted
+If the value is `me', your address is automatically inserted
 according to the case.
-See also 'mew-config-alist'."
+See also `mew-config-alist'."
   :group 'mew-draft
   :type '(choice string (const nil)))
 
 (defcustom mew-from nil
   "*A value inserted into From: field in Draft mode if *non-nil*.
-For backward-compatibility. See also 'mew-name', 'mew-user', and
-'mew-mail-domain'."
+For backward-compatibility. See also `mew-name', `mew-user', and
+`mew-mail-domain'."
   :group 'mew-draft
   :type '(choice string (const nil)))
 
 (defcustom mew-organization nil
   "*A value inserted into Organization: field in Draft mode if *non-nil*.
-See also 'mew-config-alist'."
+See also `mew-config-alist'."
   :group 'mew-draft
   :type '(choice string (const nil)))
 
@@ -2216,13 +2216,13 @@ See also 'mew-config-alist'."
 
 (defcustom mew-cite-hook nil
   "*Hook for an external cite mechanism. If you want to use
-super-cite, (setq mew-cite-hook 'sc-cite-original)."
+super-cite, (setq mew-cite-hook \\='sc-cite-original)."
   :group 'mew-cite
   :type 'hook)
 
 (defcustom mew-cite-strings-function 'mew-cite-strings
   "*Function called from mew-cite-original which to create cite labels
-according to 'mew-cite-format' and 'mew-cite-fields'."
+according to `mew-cite-format' and `mew-cite-fields'."
   :group 'mew-cite
   :type '(choice function (const nil)))
 
@@ -2233,12 +2233,12 @@ according to 'mew-cite-format' and 'mew-cite-fields'."
 
 (defcustom mew-cite-prefix-function nil
   "*Function called on citations. A good candidate is
-'mew-cite-prefix-username"
+`mew-cite-prefix-username'"
   :group 'mew-cite
   :type '(choice function (const nil)))
 
 (defcustom mew-cite-prefix-confirmp nil
-  "*If *non-nil*, citation prefix (such as 'kazu> ') is
+  "*If *non-nil*, citation prefix (such as `kazu> ') is
 confirmed to be used."
   :group 'mew-cite
   :type 'boolean)
@@ -2261,8 +2261,8 @@ If this is nil, label is not generated."
 
 (defcustom mew-draft-cite-fill-mode nil
   "*A method to format a citation header.
-If 'wrap, format with fill-region.
-If 'truncate, cut over fill-column and insert 'mew-draft-cite-ellipses'."
+If `wrap', format with fill-region.
+If `truncate', cut over fill-column and insert `mew-draft-cite-ellipses'."
   :group 'mew-draft
   :type '(choice (symbol :tag "Wrap" wrap)
                  (symbol :tag "Truncate" truncate)
@@ -2270,25 +2270,25 @@ If 'truncate, cut over fill-column and insert 'mew-draft-cite-ellipses'."
 
 (defcustom mew-draft-cite-ellipses " .."
   "String that is inserted a truncated line when
-'mew-draft-cite-fill-mode' is 'truncate."
+`mew-draft-cite-fill-mode' is `truncate'."
   :group 'mew-cite
   :type 'string)
 
 (defcustom mew-draft-cite-label-fill-column nil
-  "If *non-nil*, this value is used for 'mew-draft-cite-fill-mode'
-instead of 'fill-column'."
+  "If *non-nil*, this value is used for `mew-draft-cite-fill-mode'
+instead of `fill-column'."
   :group 'mew-cite
   :type '(choice integer (const nil)))
 
 (defcustom mew-summary-reply-position 'body
-  "If 'body, the cursor locates in the beginning of the body.
+  "If `body', the cursor locates in the beginning of the body.
 Otherwise, the cursor is after To:."
   :group 'mew-cite
   :type 'symbol)
 
 (defcustom mew-summary-reply-with-citation-position 'end
-  "If 'body, the cursor locates in the beginning of the body.
-If 'end, the cursor locates after the citation.
+  "If `body', the cursor locates in the beginning of the body.
+If `end', the cursor locates after the citation.
 Otherwise, the cursor is after To:."
   :group 'mew-cite
   :type 'symbol)
@@ -2304,12 +2304,12 @@ Otherwise, the cursor is after To:."
   :type 'boolean)
 
 (defcustom mew-visit-queue-after-sending nil
-  "*If *non-nil*, visit to +queue after '\\<mew-draft-mode-map>\\[mew-draft-make-message]' in Draft mode."
+  "*If *non-nil*, visit to +queue after `\\<mew-draft-mode-map>\\[mew-draft-make-message]' in Draft mode."
   :group 'mew-draft
   :type 'boolean)
 
 (defcustom mew-visit-inbox-after-setting-case nil
-  "*If *non-nil*, visit to an appropriate inbox after setting a case with '\\<mew-summary-mode-map>\\[mew-summary-set-case]'."
+  "*If *non-nil*, visit to an appropriate inbox after setting a case with `\\<mew-summary-mode-map>\\[mew-summary-set-case]'."
   :group 'mew-summary
   :type 'boolean)
 
@@ -2325,7 +2325,7 @@ variable, the corresponding input-method is automatically
 selected. An example configuration is as follows:
 
 \(setq mew-charset-input-method-alist
-      '((\"iso-8859-1\" \"latin-1-postfix\")
+      \\='((\"iso-8859-1\" \"latin-1-postfix\")
 	(\"iso-8859-2\" \"latin-2-postfix\")))
 "
   :group 'mew-draft
@@ -2349,13 +2349,13 @@ an appropriate charset cannot be chosen. Possible candidates are
 If characters of both Latin 1 and Lain 9 exist in a draft, Mew takes
 the following step to decide a charset.
 
-1. If 'unify-8859-on-decoding-mode' is used:
+1. If `unify-8859-on-decoding-mode' is used:
 	1.1. Use \"iso-8859-1\" if no loss.
 	1.2. Otherwise, use \"utf-8\".
-2. If 'unify-8859-on-decoding-mode' is not used:
+2. If `unify-8859-on-decoding-mode' is not used:
 
 	2.1. If both ISO-8859-1 and ISO-8859-15 can be used with no
-             loss, 'mew-charset-latin' is used.
+             loss, `mew-charset-latin' is used.
 	2.2. Use \"iso-8859-1\" if no loss.
 	2.3. Use \"iso-8859-15\" if no loss.
 	2.3. Otherwise, use \"utf-8\".
@@ -2370,7 +2370,7 @@ the following step to decide a charset.
 
 (defcustom mew-signature-file "~/.signature"
   "*A signature file to be inserted in Draft mode. To support multiple
-signature files, use 'c-sig.el'."
+signature files, use `c-sig.el'."
   :group 'mew-draft
   :type 'file)
 
@@ -2404,7 +2404,7 @@ as the final part."
   :type 'boolean)
 
 (defcustom mew-use-samba-encoding-type 'cap
-  "*A type of SAMBA encoding. Either 'cap or 'hex."
+  "*A type of SAMBA encoding. Either `cap' or `hex'."
   :group 'mew-summary
   :type '(choice (const cap) (const hex)))
 
@@ -2419,7 +2419,7 @@ as the final part."
 ;;;
 
 (defcustom mew-attach-move-by-line nil
-  "*If non-nil, 'mew-attach-{next,previous}' move the cursor line by line."
+  "*If non-nil, `mew-attach-{next,previous}' move the cursor line by line."
   :group 'mew-draft
   :type 'boolean)
 
@@ -2580,31 +2580,31 @@ mew-summary-goto-folder."
 
 (defcustom mew-save-dir mew-home
   "*The default directory to save messages or parts in Summary mode.
-See also 'mew-copy-dir'."
+See also `mew-copy-dir'."
   :group 'mew-summary
   :type 'directory)
 
 (defcustom mew-summary-preserve-dir nil
   "*If non-nil, the previous directory is used as the default
-directory for save, etc. See also 'mew-draft-preserve-dir'."
+directory for save, etc. See also `mew-draft-preserve-dir'."
   :group 'mew-summary
   :type 'boolean)
 
 (defcustom mew-copy-dir mew-home
   "*The default directory from which attachments are copied in Draft mode.
-See also 'mew-save-dir'."
+See also `mew-save-dir'."
   :group 'mew-draft
   :type 'directory)
 
 (defcustom mew-draft-preserve-dir nil
   "*If non-nil, the previous directory is used as the default
-directory for copy, etc. See also 'mew-summary-preserve-dir'."
+directory for copy, etc. See also `mew-summary-preserve-dir'."
   :group 'mew-draft
   :type 'boolean)
 
 (defcustom mew-file-append-p nil
   "*If *non-nil*, a message or a part is appended to the existing file
-on '\\<mew-summary-mode-map>\\[mew-summary-save]'. Otherwise overwrote."
+on `\\<mew-summary-mode-map>\\[mew-summary-save]'. Otherwise overwrote."
   :group 'mew-summary
   :type 'boolean)
 
@@ -2614,8 +2614,8 @@ on '\\<mew-summary-mode-map>\\[mew-summary-save]'. Otherwise overwrote."
 ;;;
 
 (defcustom mew-regex-folder-candidate "^[^.#0-9]\\|^[0-9].*[^0-9]"
-  "*Regular expression used in 'mew-dir-list-with-link-count'
-and 'mew-dir-list-without-link-count' to list up folder
+  "*Regular expression used in `mew-dir-list-with-link-count'
+and `mew-dir-list-without-link-count' to list up folder
 candidates. The default value \"^[^.#0-9]\\\\|^[0-9].*[^0-9]\" lists up
 folders whose name is alphabet only."
   :group 'mew-env
@@ -2634,7 +2634,7 @@ folders whose name is alphabet only."
 The format is like this:
 
     (setq mew-refile-guess-alist
-          '((\"To:\"
+          \\='((\"To:\"
               (\"wide@wide\" \"+wide/wide\")
               (\"adam\"      \"+labo/adam\"))
             (\"Newsgroups:\"
@@ -2675,24 +2675,24 @@ The format is like this:
     mew-refile-guess-by-default))
 
 (defcustom mew-refile-auto-refile-skip-any-mark nil
-  "*If *non-nil*, 'mew-summary-auto-refile' does not touch
+  "*If *non-nil*, `mew-summary-auto-refile' does not touch
 any already marked message."
   :group 'mew-refile
   :type 'boolean)
 
 (defcustom mew-refile-auto-refile-confirm nil
-  "*If *non-nil*, 'mew-summary-auto-refile' prompts the user for
+  "*If *non-nil*, `mew-summary-auto-refile' prompts the user for
 confirmation before refiling."
   :group 'mew-refile
   :type 'boolean)
 
 (defcustom mew-refile-guess-strip-domainpart t
-  "*If *non-nil*, 'mew-refile-guess-by-default' strips domainpart of from"
+  "*If *non-nil*, `mew-refile-guess-by-default' strips domainpart of from"
   :group 'mew-refile
   :type 'boolean)
 
 (defcustom mew-refile-guess-from-me-is-special nil
-  "*If *non-nil*, 'mew-refile-guess-by-from-*' think the messages from
+  "*If *non-nil*, `mew-refile-guess-by-from-*' think the messages from
 yourself as special. They use To: or Cc: instead of From:"
   :group 'mew-refile
   :type 'boolean)
@@ -2705,13 +2705,13 @@ yourself as special. They use To: or Cc: instead of From:"
 (defcustom mew-case-guess-alist nil
   "*If *non-nil*, this value is used to guess cases when
 prepared or composed.
-The syntax is exactly the same as 'mew-refile-guess-alist'."
+The syntax is exactly the same as `mew-refile-guess-alist'."
   :group 'mew-draft
   :type mew-custom-type-of-guess-alist)
 
 (defcustom mew-case-guess-when-replied-alist nil
   "*If *non-nil*, this value is used to guess cases when replied.
-The syntax is exactly the same as 'mew-refile-guess-alist'."
+The syntax is exactly the same as `mew-refile-guess-alist'."
   :group 'mew-draft
   :type mew-custom-type-of-guess-alist)
 
@@ -2753,8 +2753,8 @@ mew-temp-file a file name prefix contained the directory name. The
 directory must be unreadable from others, otherwise it might become a
 big security hole. And this directory must not be gained access
 through network to prevent tire-tapping. Mew never uses
-'call-process-region' rather does use 'call-process' creating a
-temporary file with mew-temp-file by itself. If 'call-process-region'
+`call-process-region' rather does use `call-process' creating a
+temporary file with mew-temp-file by itself. If `call-process-region'
 is used, Emacs creates a temporary file (probably in /tmp). So bad
 guys can wiretap the temporary file."
   :group 'mew-privacy
@@ -2772,7 +2772,7 @@ guys can wiretap the temporary file."
 
 (defcustom mew-auto-get t
   "If *non-nil*, Mew gets messages from your mailbox automatically.
-'\\[universal-argument] \\[mew]' equals to '\\[mew]' with 'mew-auto-get'
+`\\[universal-argument] \\[mew]' equals to `\\[mew]' with `mew-auto-get'
 reversed."
   :group 'mew-summary
   :type 'boolean)
@@ -2780,7 +2780,7 @@ reversed."
 (defcustom mew-auto-flush-queue t
   "If *non-nil* and if there are queued messages in +queue,
 they are flushed after getting
-message (i.e. '\\<mew-summary-mode-map>\\[mew-summary-retrieve]'). This
+message (i.e. `\\<mew-summary-mode-map>\\[mew-summary-retrieve]'). This
 idea saves money in dial up environment."
   :group 'mew-draft
   :type 'boolean)
@@ -2791,7 +2791,7 @@ idea saves money in dial up environment."
 ;;;
 
 (defcustom mew-pick-pattern-list nil
-  "*A list of pick pattern which can be circular completed with '\\<mew-input-map>\\[mew-circular-complete-switch]'
+  "*A list of pick pattern which can be circular completed with `\\<mew-input-map>\\[mew-circular-complete-switch]'
 The first member is displayed as a default value."
   :group 'mew-summary
   :type '(choice (const nil) (repeat string)))
@@ -2805,7 +2805,7 @@ The first member is displayed as a default value."
 
 (defcustom mew-sort-default-key "date"
   "*Default sort key when inputting a sort key.
-Its format is key:mode where more is found in 'mew-sort-mode'."
+Its format is key:mode where more is found in `mew-sort-mode'."
   :group 'mew-summary
   :type 'string)
 
@@ -2813,7 +2813,7 @@ Its format is key:mode where more is found in 'mew-sort-mode'."
   "*List of (folder sort-key) to decide a default sort-key
 of a specific folder. An example is follows:
 \(setq mew-sort-default-key-alist
-      '((\"+tmp/beginners\" \"x-sequence\")
+      \\='((\"+tmp/beginners\" \"x-sequence\")
         (\"+tmp/elips\" \"x-mail-count\")))"
   :group 'mew-summary
   :type '(list (list string string)))
@@ -2822,7 +2822,7 @@ of a specific folder. An example is follows:
   '(("date" "date") ("subject") ("from") ("to") ("newsgroups")
     ("posted" "date") ("x-sequence" "postnum")
     ("x-mail-count" "num") ("x-ml-count" "num"))
-  "*List of fields for 'mew-summary-sort'.
+  "*List of fields for `mew-summary-sort'.
 Each element is (FIELD-NAME) or (FIELD-NAME . MODE).
 MODE is one of \"date\" (by chronological order) or
                \"num\"  (by numerical order) or
@@ -2888,20 +2888,20 @@ MODE is one of \"date\" (by chronological order) or
   :type 'boolean)
 
 (defcustom mew-use-cursor-mark nil
-  "*If *non-nil*, show 'mew-cursor-mark' in the beginning of the
-cursor line. This is convenient if 'mew-use-highlight-cursor-line' is
+  "*If *non-nil*, show `mew-cursor-mark' in the beginning of the
+cursor line. This is convenient if `mew-use-highlight-cursor-line' is
 not available."
   :group 'mew-highlight
   :type 'boolean)
 
 (defcustom mew-use-highlight-cursor-line t
-  "*Put the 'mew-highlight-cursor-line-face' face on the current line
+  "*Put the `mew-highlight-cursor-line-face' face on the current line
 in Summary/Virtual mode."
   :group 'mew-highlight
   :type 'boolean)
 
 (defcustom mew-use-highlight-mouse-line nil
-  "*Put the 'mew-highlight-mouse-line-face' face on the mouse location
+  "*Put the `mew-highlight-mouse-line-face' face on the mouse location
 in Summary/Virtual mode."
   :group 'mew-highlight
   :type 'boolean)
@@ -2922,7 +2922,7 @@ in Summary/Virtual mode."
 
 (defcustom mew-cursor-mark ">"
   "*The mark in the beginning of the cursor line if
-'mew-use-cursor-mark' is *non-nil*."
+`mew-use-cursor-mark' is *non-nil*."
   :group 'mew-highlight
   :type '(choice string (const nil)))
 
@@ -2977,41 +2977,41 @@ will be appended (mew-mail-domain) when composing."
   :type 'boolean)
 
 (defcustom mew-addrbook-override-by-newone t
-  "If non-nil, the 'user' entry in 'mew-alias-auto-alist'
+  "If non-nil, the `user' entry in `mew-alias-auto-alist'
 is override by a new entry of (user different-address).
 This means that addresses in To: and Cc: in Draft mode are
-always learned with an exception 'user' is defined in Addrbook.
-If nil,  the old 'user' entry remains."
+always learned with an exception `user' is defined in Addrbook.
+If nil,  the old `user' entry remains."
   :group 'mew-addrbook
   :type 'boolean)
 
 (defcustom mew-addrbook-for-cite-label nil
   "*How to replace the From: value in cite label
-with Addrbook. See 'mew-addrbook-switch'."
+with Addrbook. See `mew-addrbook-switch'."
   :group 'mew-addrbook
   :type 'symbol)
 
 (defcustom mew-addrbook-for-cite-prefix 'username
   "*How to replace the From: value in cite prefix
-with Addrbook. See 'mew-addrbook-switch'."
+with Addrbook. See `mew-addrbook-switch'."
   :group 'mew-addrbook
   :type 'symbol)
 
 (defcustom mew-addrbook-for-address-expansion 'name
   "*How to replace an address in address fields
-with Addrbook. See 'mew-addrbook-switch'."
+with Addrbook. See `mew-addrbook-switch'."
   :group 'mew-addrbook
   :type 'symbol)
 
 (defcustom mew-addrbook-for-summary 'nickname
   "*How to replace a From: address in summary-form with Addrbook.
-See 'mew-addrbook-switch' and 'mew-summary-form-extract-rule'."
+See `mew-addrbook-switch' and `mew-summary-form-extract-rule'."
   :group 'mew-addrbook
   :type 'symbol)
 
 (defcustom mew-addrbook-strip-domainpart t
   "*If *non-nil*, a shortname is created by stripping its domain part
-when '\\<mew-summary-mode-map>\\[mew-summary-addrbook-add]' in Summary mode."
+when `\\<mew-summary-mode-map>\\[mew-summary-addrbook-add]' in Summary mode."
   :group 'mew-addrbook
   :type 'boolean)
 
@@ -3038,21 +3038,21 @@ list. the address is not registered to Addrbook."
 
 (defcustom mew-draft-privacy-method 'pgp
   "Privacy method to create messages in Draft mode.
-You should choose 'pgp or 'smime."
+You should choose `pgp' or `smime'."
   :group 'mew-privacy
   :type '(choice (const pgp) (const smime)))
 
 (defcustom mew-protect-privacy-always nil
   "*If non-nil, a draft is to be protected according to
-'mew-protect-privacy-always-type'."
+`mew-protect-privacy-always-type'."
   :group 'mew-privacy
   :type 'boolean)
 
 (defcustom mew-protect-privacy-always-type 'pgp-signature
   "*A type of privacy protection for all drafts.
-Currently, 'pgp-signature, 'pgp-encryption, 'pgp-signature-encryption,
-'pgp-encryption-signature, and nil are available. Since signature
-does not require receiver's public key, signature service may be
+Currently, `pgp-signature', `pgp-encryption', `pgp-signature-encryption',
+`pgp-encryption-signatur'e, and nil are available. Since signature
+does not require receiver\\='s public key, signature service may be
 appropriate for this value."
   :group 'mew-privacy
   :type '(choice (const pgp-signature)
@@ -3067,14 +3067,14 @@ appropriate for this value."
 
 (defcustom mew-protect-privacy-encrypted nil
   "*If non-nil, a draft replying a encrypted message is to be protected
-according to 'mew-protect-privacy-encrypted-type'."
+according to `mew-protect-privacy-encrypted-type'."
   :group 'mew-privacy
   :type 'boolean)
 
 (defcustom mew-protect-privacy-encrypted-type 'pgp-encryption
   "*A type of privacy protection for drafts replying encrypted
-messages. Currently, 'pgp-signature, 'pgp-encryption,
-'pgp-signature-encryption, 'pgp-encryption-signature,
+messages. Currently, `pgp-signature', `pgp-encryption',
+`pgp-signature-encryption', `pgp-encryption-signature',
 and nil are available."
   :group 'mew-privacy
   :type '(choice (const pgp-signature)
@@ -3088,7 +3088,7 @@ and nil are available."
                  (other :tag "nil" nil)))
 
 (defcustom mew-protect-privacy-with-old-pgp-signature nil
-  "*If non-nil and 'mew-use-old-pgp' is non-nil,
+  "*If non-nil and `mew-use-old-pgp' is non-nil,
 the old fashioned PGP message are used when composing."
   :group 'mew-privacy
   :type 'boolean)
@@ -3099,7 +3099,7 @@ the old fashioned PGP message are used when composing."
   :type 'integer)
 
 (defcustom mew-passwd-lifetime 2
-  "*Number of 'mew-passwd-timer-unit' to cancel the cached passwords."
+  "*Number of `mew-passwd-timer-unit' to cancel the cached passwords."
   :group 'mew-privacy
   :type 'integer)
 
@@ -3111,7 +3111,7 @@ the password is used."
 
 (defcustom mew-encrypt-to-myself t
   "*if non-nil, any message/part to be encrypted is encrypted with
-your public key as well as receivers' one."
+your public key as well as receivers\\=' one."
   :group 'mew-privacy
   :type 'boolean)
 
@@ -3290,7 +3290,7 @@ Bad example:
 
 Good example:
 	Content-Disposition: attachment;
-	 filename*=iso-2022-jp''%1B%24B%24F%249%24H%1B%28B
+	 filename*=iso-2022-jp\\='\\='%1B%24B%24F%249%24H%1B%28B
 
 Bad example
 	Content-Disposition: attachment;
