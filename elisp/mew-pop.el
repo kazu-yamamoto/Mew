@@ -514,7 +514,7 @@
 
 (defun mew-pop-command-auth-xoauth2 (pro pnm)
   (let* ((user (mew-pop-get-user pnm))
-         (token (mew-auth-oauth2-token-access-token user))
+         (token (mew-oauth2-token-access-token user))
          (auth-string (mew-auth-xoauth2-auth-string user token)))
     (mew-pop-process-send-string pro "AUTH XOAUTH2 %s" auth-string)
     (mew-smtp-set-status pnm "auth-xoauth2")))

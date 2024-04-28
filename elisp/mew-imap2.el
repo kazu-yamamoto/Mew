@@ -581,7 +581,8 @@ with '*' in the region are handled."
         (setq next (mew-imap2-fsm-next
                     status
                     (if (string= status "auth-xoauth2")
-                        (mew-auth-xoauth2-json-status (mew-match-string 1))
+                        (mew-xoauth2-json-status (mew-match-string 1))
+			"OK"
                       "OK"))))
        ((string-match eos str)
 	(mew-imap2-set-tag pnm nil)

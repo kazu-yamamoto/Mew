@@ -1016,8 +1016,8 @@
 
 (defun mew-imap-command-auth-xoauth2 (pro pnm)
   (let* ((user (mew-imap-get-user pnm))
-         (token (mew-auth-oauth2-token-access-token user))
-         (auth-string (mew-auth-xoauth2-auth-string user token)))
+         (token (mew-oauth2-token-access-token user))
+         (auth-string (mew-xoauth2-auth-string user token)))
     ;; XXX: need to reset satus if token is nil.
     (mew-imap-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
     (mew-imap-set-status pnm "auth-xoauth2")))
@@ -1026,8 +1026,8 @@
 ;; (defalias 'mew-imap2-command-auth-xoauth2 'mew-imap-command-auth-xoauth2)
 (defun mew-imap2-command-auth-xoauth2 (pro pnm)
   (let* ((user (mew-imap2-get-user pnm))
-         (token (mew-auth-oauth2-token-access-token user))
-         (auth-string (mew-auth-xoauth2-auth-string user token)))
+         (token (mew-oauth2-token-access-token user))
+         (auth-string (mew-xoauth2-auth-string user token)))
     ;; XXX: need to reset satus if token is nil.
     (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
     (mew-imap2-set-status pnm "auth-xoauth2")))
@@ -1551,7 +1551,7 @@
        (setq next (mew-imap-fsm-next
                    status
                    (if (string= status "auth-xoauth2")
-                       (mew-auth-xoauth2-json-status (mew-match-string 1))
+                       (mew-xoauth2-json-status (mew-match-string 1))
                      "OK"))))
       ((and (goto-char (point-max)) (= (forward-line -1) 0) (looking-at eos))
        (mew-imap-set-tag pnm nil)

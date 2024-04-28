@@ -654,7 +654,7 @@ your e-mail address is automatically set"
   :group 'mew-smtp
   :type '(choice string (const nil)))
 
-(defcustom mew-smtp-auth-list '("CRAM-MD5" "PLAIN" "LOGIN")
+(defcustom mew-smtp-auth-list '("XOAUTH2" "CRAM-MD5" "PLAIN" "LOGIN")
   "*A list of SMTP AUTH methods in the preferred order.
 Currently, \"CRAM-MD5\", \"PLAIN\", \"LOGIN\", and \"XOAUTH2\" can be used."
   :group 'mew-smtp
@@ -779,7 +779,7 @@ t means SASL according to `mew-pop-auth-list'."
   :group 'mew-pop
   :type '(choice (const apop) (const pass) (const t)))
 
-(defcustom mew-pop-auth-list '("CRAM-MD5" "PLAIN")
+(defcustom mew-pop-auth-list '("XOAUTH2" "CRAM-MD5" "PLAIN")
   "*A list of SASL methods in the preferred order.
 Currently, \"CRAM-MD5\", \"PLAIN\", and \"XOAUTH2\" can be used."
   :group 'mew-pop
@@ -879,7 +879,7 @@ t means SASL according to `mew-imap-auth-list'."
   :group 'mew-imap
   :type 'boolean)
 
-(defcustom mew-imap-auth-list '("CRAM-MD5" "LOGIN")
+(defcustom mew-imap-auth-list '("XOAUTH2" "CRAM-MD5" "LOGIN")
   "*A list of SASL methods in the preferred order.
 Currently, \"CRAM-MD5\", \"LOGIN\", and \"XOAUTH2\" can be used."
   :group 'mew-imap

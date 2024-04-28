@@ -739,6 +739,7 @@ Mew remain, so you can resume with buffer operations."
 (require 'mew-imap2)
 (require 'mew-config)
 (require 'mew-auth)
+(require 'mew-oauth2)
 
 (eval-when-compile
   (if (mew-which-el "timer")
