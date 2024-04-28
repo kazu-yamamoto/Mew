@@ -157,7 +157,7 @@ It serves http://localhost:PORT"
   mew-oauth2-token)
 
 (defun mew-xoauth2-auth-string (user token)
-  (let* ((expire (gethash :expire_time token))
+  (let* ((expire (gethash :expire token))
 	 (access-token (gethash :access_token token))
 	 (refresh-token (gethash :refresh_token token)))
     (cond
