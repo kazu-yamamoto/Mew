@@ -82,10 +82,10 @@ It serves http://localhost:PORT"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Getting "code"
+;;; Getting authentication code
 ;;;
 
-(defun mew-oauth2-get-code (url client-id resource-url redirect-url port)
+(defun mew-oauth2-get-auth-code (url client-id resource-url redirect-url port)
   (let ((url-params
 	 (concat
 	  url
@@ -103,10 +103,10 @@ It serves http://localhost:PORT"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Getting access_token with "code"
+;;; Getting access_token with authentication code
 ;;;
 
-(defun mew-access-token (url client-id client-secret redirect-url code)
+(defun mew-oauth2-get-access-token (url client-id client-secret redirect-url code)
   (let ((params (concat 
 		 "grant_type=authorization_code"
 		 "&code=" code
@@ -123,7 +123,7 @@ It serves http://localhost:PORT"
 ;;; Getting access_token with refresh_token
 ;;;
 
-(defun mew-refresh-token (url client-id client-secret refresh-token)
+(defun mew-oauth2-refresh-access-token (url client-id client-secret refresh-token)
   (let ((params (concat 
 		 "grant_type=refresh_token"
 		 "&client_id=" client-id
@@ -164,7 +164,7 @@ It serves http://localhost:PORT"
      ((and access-token (time-less-p expire (current-time)))
       access-token)
      (refresh-token
-      (let* ((json (mew-refresh-token
+      (let* ((json (mew-oauth2-refresh-access-token
 		    mew-oauth2-token-url
 		    mew-oauth2-client-id
 		    mew-oauth2-client-secret
@@ -175,23 +175,22 @@ It serves http://localhost:PORT"
 	(puthash :access_token access-token token)
 	(puthash :expire expire token)))
      (t
-      (let* ((code (mew-oauth2-get-code
-		    mew-oauth2-auth-url
-		    mew-oauth2-client-id
-		    mew-oauth2-resource-url
-		    mew-oauth2-redirect-url
-		    8080))
-	     (json (mew-access-token 
+      (let* ((auth-code (mew-oauth2-get-auth-code
+			 mew-oauth2-auth-url
+			 mew-oauth2-client-id
+			 mew-oauth2-resource-url
+			 mew-oauth2-redirect-url
+			 8080))
+	     (json (mew-oauth2-get-access-token 
 		    mew-oauth2-token-url
 		    mew-oauth2-client-id
 		    mew-oauth2-client-secret
 		    mew-oauth2-redirect-url
-		    code))
+		    auth-code))
 	     (expires-in (gethash "expires_in" json)))
 	(setq access-token (gethash "access_token" json))
 	(setq refresh-token (gethash "refresh_token" json))
 	(setq expire (time-add (- expires-in 100) (current-time)))
-	(puthash :code access-token token)
 	(puthash :access_token access-token token)
 	(puthash :refresh_token refresh-token token)
 	(puthash :expire expire token))))))
