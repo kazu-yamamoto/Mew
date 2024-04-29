@@ -280,6 +280,23 @@
          (epasswd (mew-base64-encode-string passwd)))
     (mew-imap2-process-send-string2 pro epasswd)))
 
+;;;;;;;;;;;;;;;;
+;; XOAUTH2
+
+(defun mew-imap2-command-auth-xoauth2 (pro pnm)
+  (let* ((tag (mew-imap2-passtag pnm))
+         (auth-string (mew-xoauth2-auth-string tag)))
+    ;; XXX: need to reset satus if token is nil.
+    (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
+    (mew-imap2-set-status pnm "auth-xoauth2")))
+
+(defun mew-imap2-command-xoauth2-wpwd (pro pnm)
+  (mew-imap2-set-done pnm t)
+  (mew-passwd-set-passwd (mew-imap2-passtag pnm) nil)
+  (delete-process pro)
+  ;; XXX: Should be cared more! Clear process and filter without sending LOGOUT.
+  (error "IMAP XOAUTH2 token is wrong!"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Sub functions
