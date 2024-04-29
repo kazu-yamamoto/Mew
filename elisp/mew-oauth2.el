@@ -75,7 +75,7 @@ It serves http://localhost:PORT"
 	 (concat "HTTP/1.1 200 OK\r\n"
                  "Content-Type: text/plain\r\n"
                  "\r\n"
-                 "Mew gets code:\n"
+                 "Mew gets the following authentication code:\n"
 		 code "\n"))
 	(setq mew-oauth2-code code)
 	(delete-process proc))))
@@ -94,12 +94,16 @@ It serves http://localhost:PORT"
 	  "&scope=" (url-hexify-string resource-url)
 	  "&redirect_uri=" (url-hexify-string redirect-url))))
     (mew-oauth2-cleanup-redirect-handler port)
-    (mew-oauth2-setup-redirect-handler port)
-    (browse-url url-params)
-    (mew-rendezvous (null mew-oauth2-code))
-    ;; fixme condition-case
-    (mew-oauth2-cleanup-redirect-handler port)
-    mew-oauth2-code))
+    (condition-case nil
+	(progn
+	  (mew-oauth2-setup-redirect-handler port)
+	  (browse-url url-params)
+	  (mew-rendezvous (null mew-oauth2-code))
+	  ;; fixme condition-case
+	  (mew-oauth2-cleanup-redirect-handler port)
+	  mew-oauth2-code)
+      (error "")
+      (quit ""))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
