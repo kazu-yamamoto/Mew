@@ -75,14 +75,14 @@ It serves http://localhost:PORT"
 	 (concat "HTTP/1.1 200 OK\r\n"
                  "Content-Type: text/plain\r\n"
                  "\r\n"
-                 "Mew gets the following authentication code:\n"
+                 "Mew gets the following authorization code:\n"
 		 code "\n"))
 	(setq mew-oauth2-code code)
 	(delete-process proc))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Getting authentication code
+;;; Getting authorization code
 ;;;
 
 (defun mew-oauth2-get-auth-code (url client-id resource-url redirect-url port)
@@ -107,7 +107,7 @@ It serves http://localhost:PORT"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Getting access_token with authentication code
+;;; Getting access_token with authorization code
 ;;;
 
 (defun mew-oauth2-get-access-token (url client-id client-secret redirect-url code)
