@@ -155,20 +155,16 @@ It serves http://localhost:PORT"
           "NO") ;; XXX: Anyway NO?
       "OK"))) ;; XXX: Maybe OK if not JSON.
 
-(defvar mew-oauth2-token (make-hash-table))
-
-(defun mew-oauth2-token-access-token (user)
-  mew-oauth2-token)
-
-(defun mew-xoauth2-auth-string (tag)
+(defun mew-xoauth2-auth-string (user tag)
   (mew-passwd-setup-master)
   (let* ((tk (mew-passwd-get-passwd tag))
          (token (if (hash-table-p tk) tk (make-hash-table)))
-         (auth-string (mew-xoauth2-get-auth-string token)))
+         (access-token (mew-xoauth2-get-access-token token)))
     (mew-passwd-set-passwd tag token)
-    auth-string))
+    ;; base64(user=user@example.com^Aauth=Bearer ya29vF9dft4...^A^A)
+    (base64-encode-string (format "user=%s\1auth=Bearer %s\1\1" user access-token) t)))
 
-(defun mew-xoauth2-get-auth-string (token)
+(defun mew-xoauth2-get-access-token (token)
   (let* ((expire (gethash :expire token))
 	 (access-token (gethash :access_token token))
 	 (refresh-token (gethash :refresh_token token)))

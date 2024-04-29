@@ -1015,8 +1015,9 @@
 ;; XOAUTH2
 
 (defun mew-imap-command-auth-xoauth2 (pro pnm)
-  (let* ((tag (mew-imap-passtag pnm))
-         (auth-string (mew-xoauth2-auth-string tag)))
+  (let* ((user (mew-imap-get-user pnm))
+	 (tag (mew-imap-passtag pnm))
+         (auth-string (mew-xoauth2-auth-string user tag)))
     (mew-imap-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
     (mew-imap-set-status pnm "auth-xoauth2")))
 

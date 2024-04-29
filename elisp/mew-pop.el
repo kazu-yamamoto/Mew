@@ -513,8 +513,9 @@
   (nth 1 (mew-assoc-case-equal auth mew-pop-auth-alist 0)))
 
 (defun mew-pop-command-auth-xoauth2 (pro pnm)
-  (let* ((tag (mew-pop-passtag pnm))
-         (auth-string (mew-xoauth2-auth-string tag)))
+  (let* ((user (mew-pop-get-user pnm))
+	 (tag (mew-pop-passtag pnm))
+         (auth-string (mew-xoauth2-auth-string user tag)))
     (mew-pop-process-send-string pro "AUTH XOAUTH2 %s" auth-string)
     (mew-smtp-set-status pnm "auth-xoauth2")))
 
