@@ -156,7 +156,15 @@ It serves http://localhost:PORT"
 (defun mew-oauth2-token-access-token (user)
   mew-oauth2-token)
 
-(defun mew-xoauth2-auth-string (user token)
+(defun mew-xoauth2-auth-string (tag)
+  (mew-passwd-setup-master)
+  (let* ((tk (mew-passwd-get-passwd tag))
+         (token (if (hash-table-p tk) tk (make-hash-table)))
+         (auth-string (mew-xoauth2-get-auth-string token)))
+    (mew-passwd-set-passwd tag token)
+    auth-string))
+
+(defun mew-xoauth2-get-auth-string (token)
   (let* ((expire (gethash :expire token))
 	 (access-token (gethash :access_token token))
 	 (refresh-token (gethash :refresh_token token)))

@@ -1015,19 +1015,16 @@
 ;; XOAUTH2
 
 (defun mew-imap-command-auth-xoauth2 (pro pnm)
-  (let* ((user (mew-imap-get-user pnm))
-         (token (mew-oauth2-token-access-token user))
-         (auth-string (mew-xoauth2-auth-string user token)))
-    ;; XXX: need to reset satus if token is nil.
+  (let* ((tag (mew-imap-passtag pnm))
+         (auth-string (mew-xoauth2-auth-string tag)))
     (mew-imap-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
     (mew-imap-set-status pnm "auth-xoauth2")))
 
 ;; XXX: defalias does not work!
 ;; (defalias 'mew-imap2-command-auth-xoauth2 'mew-imap-command-auth-xoauth2)
 (defun mew-imap2-command-auth-xoauth2 (pro pnm)
-  (let* ((user (mew-imap2-get-user pnm))
-         (token (mew-oauth2-token-access-token user))
-         (auth-string (mew-xoauth2-auth-string user token)))
+  (let* ((tag (mew-imap2-passtag pnm))
+         (auth-string (mew-xoauth2-auth-string tag)))
     ;; XXX: need to reset satus if token is nil.
     (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
     (mew-imap2-set-status pnm "auth-xoauth2")))
