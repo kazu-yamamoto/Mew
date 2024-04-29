@@ -181,10 +181,12 @@ It serves http://localhost:PORT"
 		    mew-oauth2-client-id
 		    mew-oauth2-client-secret
 		    refresh-token))
-	     (expires-in (gethash "expires_in" json)))
+	     (expires-in (gethash "expires_in" json))
+	     (refresh-token (gethash "refresh_token" json)))
 	(setq access-token (gethash "access_token" json))
 	(setq expire (time-add (- expires-in 100) (current-time)))
 	(puthash :access_token access-token token)
+	(if refresh-token (puthash :refresh_token refresh-token token))
 	(puthash :expire expire token)))
      (t
       (let* ((auth-code (mew-oauth2-get-auth-code
