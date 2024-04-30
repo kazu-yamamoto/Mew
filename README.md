@@ -1,4 +1,4 @@
-# Messaging in the Emacs World
+# Mew (Messaging in the Emacs World)
 
 Mew is a mail-reader on Emacs, which is free to use and whose source code is open.
 
