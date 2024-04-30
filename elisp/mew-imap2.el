@@ -284,7 +284,7 @@
 ;; XOAUTH2
 
 (defun mew-imap2-command-auth-xoauth2 (pro pnm)
-  (let* ((user (mew-imap2-get-auth-user pnm))
+  (let* ((user (mew-imap2-get-user pnm))
 	 (tag (mew-imap2-passtag pnm))
          (auth-string (mew-xoauth2-auth-string user tag)))
     ;; XXX: need to reset satus if token is nil.
