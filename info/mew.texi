@@ -100,6 +100,7 @@ home page (http://www.Mew.org/).
 * Implementation::              実装について
 * Avail::                       入手方法とメーリングリスト
 * Copyright::                   著作権について
+* Privacy Policy::              プライバシポリシー
 * Variable Index::              変数索引
 * Key Index::                   キー索引
 @end ifset
@@ -117,6 +118,7 @@ home page (http://www.Mew.org/).
 * Implementation::              Implementation Issues
 * Avail::                       Availability and mailing-list
 * Copyright::                   Copyright
+* Privacy Policy::              Privacy Policy
 * Variable Index::              Variable Index
 * Key Index::                   Key Index
 @end ifset
@@ -13904,7 +13906,7 @@ https://groups.google.com/g/mew-en
 @c      Copyright
 @c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-@node Copyright, Variable Index, ml, Top
+@node Copyright, Privacy Policy, ml, Top
 @ifset ja
 @chapter 著作権について
 @end ifset
@@ -14004,10 +14006,33 @@ granted to copy, modify, redistribute this manual but no warranty.
 @end ifset
 
 @c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@c      Privacy Poilcy
+@c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@node Privacy Policy, Variable Index, ml, Top
+@ifset ja
+@chapter プライバシポリシー
+@end ifset
+@ifset en
+@chapter Privacy Policy
+@end ifset
+
+@ifset ja
+ユーザは、各自のメールアドレスやメールサーバの情報を設定しなければなら
+ないが、そのような情報はどこにも送信されない。ユーザはまったくトラッキ
+ングされない。
+@end ifset
+
+@ifset en
+Users need to configure their e-mail addresses and e-mail servers but
+such information is not sent anywhere. Users are not trucked at all.
+@end ifset
+
+@c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 @c      Variable Index
 @c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-@node Variable Index, Key Index, Copyright, Top
+@node Variable Index, Key Index, Privacy Policy, Top
 @ifset ja
 @chapter 変数索引
 @end ifset

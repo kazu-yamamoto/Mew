@@ -42,6 +42,7 @@ Mew 6.9 マニュアル
 * Implementation::              実装について
 * Avail::                       入手方法とメーリングリスト
 * Copyright::                   著作権について
+* Privacy Policy::              プライバシポリシー
 * Variable Index::              変数索引
 * Key Index::                   キー索引
 
@@ -54,7 +55,7 @@ File: mew.ja.info, Node: Overview, Next: characteristic, Prev: Top, Up: Top
 ****************
 
 Mew とは、テキスト・メールやマルチメディア・メール(MIME)、ニュース、セ
-キュリティ機能(PGP、S/MIME、SSH、SSL)を便利に利用するためのユーザイン
+キュリティ機能(PGP、S/MIME、SSH、TLS)を便利に利用するためのユーザイン
 ターフェイスです。最新の検索サービスとも連動します。
 
 Mew は 「Messaging in the Emacs World」 の略です。先頭の M は大文字で
@@ -182,13 +183,13 @@ Mew のフォルダには、「ローカル・フォルダ」と「リモート�
 `+draft'
      書きかけのメッセージを保存しておくローカル・フォルダ。
 `+queue'
-     書き終ってメールの配送に適した書式に変換されたメッセージが溜るロー
-     カル・フォルダ。"+queue" のメッセージは、いずれ SMTP によって送信
-     さる。
+     書き終わってメールの配送に適した書式に変換されたメッセージが溜る
+     ローカル・フォルダ。"+queue" のメッセージは、いずれ SMTP によって
+     送信される。
 `+postq'
-     書き終ってニュースに投稿するのに適した書式に変換されたメッセージ
-     が溜るローカル・フォルダ。"+postq" のメッセージは、いずれ NNTP に
-     よって送信される。
+     書き終わってニュースに投稿するのに適した書式に変換されたメッセー
+     ジが溜るローカル・フォルダ。"+postq" のメッセージは、いずれ NNTP
+     によって送信される。
 
 リモート・フォルダとは、サーバ側にあるフォルダをローカルにコピーしたも
 のです。本物のメッセージはあくまでサーバ側にあり、ローカルにはメッセー
@@ -377,6 +378,39 @@ File: mew.ja.info, Node: password, Next: start, Prev: configuration, Up: Overvie
 ないように気をつけて下さい。もし席を空け、Emacs をよく知っている他の人
 にEmacs を操作された場合、パスワードを盗み取られる可能性があります。
 
+Mew のマスターパスワード機能は Mew 独自のものですが、Emacs には
+auth-source と呼ばれるパスワードマネージャが含まれています。
+auth-source は .netrc 形式のテキストファイル、GNOME Keyring, macOS
+Keychain といった、プラットフォームが提供するパスワード保存機能にも対
+応しています。
+
+Mew の auth-source 対応は、まだ実験的なものです。auth-source を試すに
+は、マスターパスワードを使用する設定に加えて、次のように設定します。
+
+     (setq mew-master-passwd-type 'auth-source)
+     (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
+
+どのパスワード保存機能を使用するかは、`auth-sources' 変数で設定できま
+す。上記設定では 3 個のファイルを探し、一番最初に見つかったものを使用
+します。`auth-sources' を指定しなかった場合、デフォルトでは .netrc 形
+式のテキストファイルとして、~/.authinfoというファイルが使われます。
+GnuPG を使って暗号化し、~/.authinfo.gpg という名前で用意すれば、暗号化
+した状態で維持することも可能です。平文のファイルにパスワードを保存する
+のは危険ですので、暗号化しておくことを強くお勧めします。詳しくは、
+*Note (auth)Top:: を参照してください。
+
+.netrc 形式のテキストファイルを GnuPG で暗号化した場合、Mew は保存され
+たパスワードの使用時に、復号用の鍵にアクセスするためのパスフレーズを尋
+ねます。この復号処理には、EasyPG Assistant と呼ばれる Emacs パッケージ
+が使われます。このパッケージは GnuPG を呼び出して暗号の処理をします。
+多くの場合、デフォルトの設定で問題なく動作しますが、設定可能な項目がい
+くつかあります。詳しくは、*Note (epa)Top:: を参照してください。
+
+現在の auth-source には、記録したパスワードを上書き・消去できないとい
+う大きな欠点があることに注意してください。サーバのパスワードを変更した
+場合は、~/.authinfo.gpg ファイルを手動で編集してください。これは、将来
+のEmacs で修正される見込みです。
+
 
 
 
@@ -397,7 +431,7 @@ Mew を起動するには、以下の方法があります。
      「修飾子」が `+'(ローカル・フォルダ)なら、`mew-mailbox-type' から
      メールボックスが決定される。(*Note retrieving:: を参照) その他、
      すなわちリモート・フォルダなら、メッセージを取得するためのプロト
-     コルが修飾子に応じて決る。
+     コルが修飾子に応じて決まる。
 
      `mew-auto-get' が `t' なら、到着したメッセージが非同期に取得され、
      Summary モードへ一覧表示される。
@@ -572,11 +606,11 @@ Mew は、MIME を再帰的に処理します。以下は転送されたマル�
 くことで高速性を実現しています。解析されたメッセージは、しばらくの間保
 存されます。
 
-メッセージの終りの部分がはっきりと分かるように、Mew はメッセージの最後
-に "[End of message]" という文字列を表示します。また、パートの終りでは、
-"[Message is continued]" という文字列を表示します。これらの文字列はそ
-れぞれ、`mew-end-of-message-string' と `mew-end-of-part-string'で指定
-できます。
+メッセージの終わりの部分がはっきりと分かるように、Mew はメッセージの最
+後に "[End of message]" という文字列を表示します。また、パートの終わり
+では、"[Message is continued]" という文字列を表示します。これらの文字
+列はそれぞれ、`mew-end-of-message-string' と `mew-end-of-part-string'
+で指定できます。
 
 
 
@@ -777,7 +811,7 @@ File: mew.ja.info, Node: retrieving, Next: moving, Prev: cipher-viewing, Up: Vie
 
 メールボックスへ到着したメッセージを +inbox へコピーし一覧表示するには、
 `i' を使います。コピー元のメールボックスは `mew-mailbox-type' によって
-決ります。(`M-x mew' を実行した際に、`mew-proto' が `+' の場合も、
+決まります。(`M-x mew' を実行した際に、`mew-proto' が `+' の場合も、
 `mew-mailbox-type' に従ってメッセージがコピーされます。) 以下に取りう
 る値を示します。
 
@@ -855,11 +889,11 @@ POP、IMAP、NNTP に対し、それぞれ `mew-pop-header-only'、
      する。
 
      ローカル・フォルダで実行した場合、ケースと `mew-mailbox-type' に
-     より取得方法が決る。`mew-pop-delete' または `mew-imap-delete'の値
-     が `t' なら、メールボックスのメッセージを削除する。
+     より取得方法が決まる。`mew-pop-delete' または `mew-imap-delete'の
+     値が `t' なら、メールボックスのメッセージを削除する。
 
      リモート・フォルダで実行した場合、ケースと取得方法はそのフォルダ
-     から決る。サーバ側のメッセージは常に保存される。
+     から決まる。サーバ側のメッセージは常に保存される。
 `C-uI'
      `mew-pop-delete' または `mew-imap-delete' を逆転させて `I' を実行
      する。
@@ -1238,7 +1272,7 @@ File: mew.ja.info, Node: header, Next: cheader, Prev: Composing, Up: Composing
 
 <フィールド名の補完>
 
-行頭の単語中で、しかも、上の行の最後が "," で終る継続行でなければ、
+行頭の単語中で、しかも、上の行の最後が "," で終わる継続行でなければ、
 `TAB' で `mew-fields' に定義されているフィールド名を補完できます。
 
      To: kazu@example.org
@@ -1530,8 +1564,8 @@ Draft モードのヘッダ内で、かつ、アドレスを書くべきフィ�
      To: piglet@example.org,
              winnie-the-pooh@example.net
 
-"@" で終る文字列は強制的に展開します。たとえば、以下のように似たような
-短縮名があった場合を考えて下さい。
+"@" で終わる文字列は強制的に展開します。たとえば、以下のように似たよう
+な 短縮名があった場合を考えて下さい。
 
      pooh:           winnie-the-pooh@example.net
      pooh-pooh:      pooh-pooh@example.org
@@ -2218,7 +2252,7 @@ Summary モードで `a' や `A' を使うと、新しい草稿が Draft modeに
               ("Cc:" "To:" "Cc:" "Apparently-To:"))))
 
 あるアドレスが複数ある場合は、自動的に 1 つになります。また、匿名の宛
-先を表す ":;" で終るアドレスも、自動的に消去されます。
+先を表す ":;" で終わるアドレスも、自動的に消去されます。
 
 自分のアドレスは自動的に消去されます。自分のアドレスは、
 `mew-config-alist' などから `mew-mail-address-list' に自動設定されます。
@@ -4112,16 +4146,22 @@ Emacs がサポートしてないデータ型のファイルは、Message バッ
 示できません。そのデータをテキストに整形する外部コマンドをインストール
 すれば、Message バッファに表示可能になります。
 
-"w3m" と "emacs-w3m" をインストールすると、Text/Html を Message バッ
-ファに表示できるようになります。(以下で説明する "wvHtml"、"xlhtml"、
-"ppthtml" は、単なる "w3m" ではなく、国際化された "w3m-m17n" が必要で
-す。) 両者をインストールしたら、"~/.mew.el" に以下の設定を加えて下さい。
+以下の設定を "~/mew.el"に加えれば、Text/Html を Message バッファに表示
+できるようになります。
 
      (setq mew-use-text/html t)		; decode HTML for all folders
 
 これで、あたかも Text/Plain であるかのように、Text/Html を Message バッ
 ファに表示できるようになります。この際も、以下で説明する `C-cC-e'の操
 作は有効です。
+
+デフォルトでは Text/Html の表示は Emacs の組み込みブラウザを使います。
+
+そのほか、w3m ブラウザを使って表示させることもできます。
+そのためには、まず "w3m" と "emacs-w3m" をインストールします。
+(以下で説明する "wvHtml"、"xlhtml"、
+"ppthtml" は、単なる "w3m" ではなく、国際化された "w3m-m17n" が必要で
+す。) 両者をインストールしたら、"~/.mew.el" に以下の設定を加えて下さい。
 
      (condition-case nil
          (require 'mew-w3m)
@@ -4137,8 +4177,11 @@ Text/Html の設定を完了させて下さい。これで、たとえば WORD �
 プログラム自身にそのデータを表示させることもできます。これには
 `C-cC-e' を使います。
 
-Message バッファに画像を表示することもできます。また `C-cC-e' を使い、
-外部のプログラムに表示させることも可能です。
+Message バッファに画像を表示することもできます。Message バッファに表示
+している画像の拡大や縮小は `C-xo' や `h'等でカーソルを画像が表示されて
+いるウィンドウに移動し、`i+' や `i-' (emacs 28 までは `+' や `-') を使
+います。また `C-cC-e' を使い、外部のプログラムに表示させることも可能で
+す。
 
 HTML は `C-cC-e' を使って外部のブラウザに表示できます。Windows やMac
 ではデフォルトのブラウザが利用されます。Unix では、以下のように
@@ -4178,11 +4221,11 @@ Office 関連のファイルも、`C-cC-e' を使えば、それぞれのアプ�
 たい場合は、`C-uC-cC-e' と入力して下さい。
 
 最近、Multipart/Alternative の中に Text/Plain と Text/Html の両方が入っ
-ており、どちらかを選ぶようになっているメッセージを多く見掛けます。Mew
-は、標準では Text/Plain の方を優先して表示します。"emacs-w3m" をインス
-トールすれば、Text/Html の方を優先したくなるかもしれません。その場合、
-以下の設定を "~/.mew.el" に加えて下さい。(ここで *Note multipart:: を
-読み、`:' の使い方も思い出しておきましょう。)
+ており、どちらかを選ぶようになっているメッセージ(いわゆる HTML メール)
+を多く見掛けます。Mewは、標準では Text/Plain の方を優先して表示します。
+"emacs-w3m" をインストールすれば、Text/Html の方を優先したくなるかもし
+れません。その場合、以下の設定を "~/.mew.el" に加えて下さい。(ここで
+*Note multipart:: を読み、`:' の使い方も思い出しておきましょう。)
 
      (setq mew-mime-multipart-alternative-list
            '("Text/Html" "Text/Plain" ".*"))
@@ -4557,9 +4600,10 @@ Mew では、メッセージを受信する際に POP を利用できます。�
 `mew-pop-ssh-server'
      POP を SSH 経由で取得する場合の SSH サーバの名前。
 `mew-pop-ssl'
-     POP over SSL を使うか否か。
+     POP over TLS を使うか否か。`'native' は GnuTLSを使った TLS 接続、
+     `'tunnel' は stunnelを使った TLS トンネル接続を意味する。
 `mew-pop-ssl-port'
-     POP over SSL のポート番号。
+     POP over TLS のポート番号。
 `mew-pop-user'
      POP のアカウント名。初期値はログイン名。
 `mew-pop-auth'
@@ -4600,9 +4644,10 @@ Mew では、メッセージを受信する際に IMAP を利用できます。�
 `mew-imap-ssh-server'
      IMAP を SSH 経由で取得する場合の SSH サーバの名前。
 `mew-imap-ssl'
-     IMAP over SSL を使うか否か。
+     IMAP over TLS を使うか否か。`'native' は GnuTLSを使った TLS 接続、
+     `'tunnel' は stunnelを使った TLS トンネル接続を意味する。
 `mew-imap-ssl-port'
-     IMAP over SSL のポート番号。
+     IMAP over TLS のポート番号。
 `mew-imap-user'
      IMAP のアカウント名。初期値はログイン名。
 `mew-imap-auth'
@@ -4639,9 +4684,10 @@ Mew では、ニュースを読み書きする際に NNTP を利用します。�
 `mew-nntp-ssh-server'
      NNTP を SSH 経由で取得する場合の SSH サーバの名前。
 `mew-nntp-ssl'
-     NNTP over SSL を使うか否か。
+     NNTP over TLS を使うか否か。`'native' は GnuTLSを使った TLS 接続、
+     `'tunnel' は stunnelを使った TLS トンネル接続を意味する。
 `mew-nntp-ssl-port'
-     NNTP over SSL のポート番号。
+     NNTP over TLS のポート番号。
 `mew-nntp-user'
      NNTP のアカウント名。もし `nil' でなければ、認証の手続きが実行さ
      れる。(mew-nntp-auth という変数はないことに注意。)
@@ -4688,9 +4734,10 @@ Mew では、メッセージを送信する際に SMTP を利用します。SMTP
 `mew-smtp-ssh-server'
      SSH 経由でメッセージを送る際の SSH サーバの名前。
 `mew-smtp-ssl'
-     SMTP over SSL を使うか否か。
+     SMTP over TLS を使うか否か。`'native' は GnuTLSを使った TLS 接続、
+     `'tunnel' は stunnelを使った TLS トンネル接続を意味する。
 `mew-smtp-ssl-port'
-     SMTP over SSL のポート番号。
+     SMTP over TLS のポート番号。
 `mew-smtp-user'
      SMTP AUTH で利用されるアカウント名。設定されない場合は、自動的に
      メールアドレスに設定される。
@@ -4732,7 +4779,7 @@ Message Submission (ポート番号が 587 である送信用の SMTP)を使い�
 
      (setq mew-smtp-submission-family 'ipv6)
 
-SSL (*Note SSL::)や TLS (*Note TLS::) の章も参考にして下さい。
+TLS/SSL (*Note TLS/SSL::) の章も参考にして下さい。
 
 SMTP サーバの中には、認証なし、つまりパスワードを送られるとエラーと見
 なす設定であるにも関わらず、認証を要求してくるものがあります。Mew は、
@@ -4970,8 +5017,10 @@ File: mew.ja.info, Node: Tips, Next: region, Prev: custom-misc, Up: Top
 * region::                      リージョン
 * visiting::                    移動
 * SSH::                         Secure SHell
-* SSL::                         Secure Socket Layer
-* TLS::                         Transport Layer Security
+* TLS/SSL::                     Transport Layer Security / Secure Socket Layer
+* Stunnel::                     Stunnel を使った TLS 接続
+* GnuTLS::                      GnuTLS ライブラリを使った TLS 接続
+* TLS/SSL2::                    TLS 接続のための変数設定
 * spam::                        スパム
 * spam2::                       スパム(2)
 * addr-warn::                   アドレスの警告
@@ -5022,7 +5071,7 @@ Summary モードから、一番数字の小さい草稿(Draft モード)に移�
 
 
 
-File: mew.ja.info, Node: SSH, Next: SSL, Prev: visiting, Up: Tips
+File: mew.ja.info, Node: SSH, Next: TLS/SSL, Prev: visiting, Up: Tips
 
 Secure SHell
 ============
@@ -5040,24 +5089,47 @@ over SSH を利用する場合は、`mew-pop-ssh-server' に SSH サーバの名
 
 SSH で通信が保護されている場合、モードラインに錠前の絵が表示されます。
 
-Mew の実装では、SSH と SSL/TLS を同時には使えません。SSH トンネルの中
-でSSL/TLS を使う必要がある場合、Mew では SSL/TLS だけを設定し、SSH ト
-ンネルはコマンドラインから張るようにして下さい。
+Mew の実装では、SSH と TLS を同時には使えません。SSH トンネルの中でTLS
+を使う必要がある場合、Mew では TLS だけを設定し、SSH トンネルはコマン
+ドラインから張るようにして下さい。
 
 
 
-File: mew.ja.info, Node: SSL, Next: TLS, Prev: SSH, Up: Tips
+File: mew.ja.info, Node: TLS/SSL, Next: Stunnel, Prev: SSH, Up: Tips
 
-Secure Socket Layer
-===================
+Transport Layer Security / Secure Socket Layer
+==============================================
 
-SSL を使うには、認証局方式の信用モデルを理解している必要があります。現
-在、Mew は SSL のために "stunnel" バージョン 3、4、5 をサポートしてい
-ます。
+Mew は、通信の秘匿性と完全性を保証するために、TCP 通信路を暗号化する
+TLS (Transport Layer Security) に対応しています。この機能を使うには、
+Emacs に GnuTLS ライブラリが組み込まれているか、外部プログラムとして
+"stunnel" バージョン 5.15以降が必要です。
 
-Mew で利用する前に、SSL サーバに対して "stunnel" で SSL のコネクション
+TLS プロトコルは、Netscape Communications 社が 1990 年代に開発した SSL
+(Secure Socket Layer) の後継として規格化されたものです。2 つのプロトコ
+ルには互換性があり、GnuTLS や "stunnel" プログラムは TLS と SSL の両方
+に対応しています。しかし、2020 年の時点で SSL には多数の脆弱性が発見さ
+れており、SSL の使用は避けて TLS のみを使用すべきだと考えられています。
+
+TLS 機能の設定に用いる Mew の設定変数や関数の名前には、 "ssl" が含まれ
+ているものがあります。混乱しやすいですが、このような歴史的な理由による
+ものです。
+
+TLS を有効にするには、stunnel もしくは GnuTLS ライブラリのための変数を
+設定し、次に各プロトコルについて TLS を有効にするかどうかの設定をしま
+す。
+
+
+
+File: mew.ja.info, Node: Stunnel, Next: GnuTLS, Prev: TLS/SSL, Up: Tips
+
+Stunnel を使った TLS 接続
+=========================
+
+Mew で利用する前に、TLS サーバに対して "stunnel" で TLS のコネクション
 が張れるか確かめて下さい。"stunnel" は、"openssl" のライブラリをリンク
-しているので、"openssl" の知識が必要です。
+しているので、"openssl" の知識が必要です。また、TLS を使うには、認証局
+方式の信用モデルを理解している必要があります。
 
 信用する証明書を保存しておくディレクトリを "~/.certs" だとしましょう。
 ここに "openssl" の "certs" ディレクトリに付いてくる PEM 形式の証明書
@@ -5074,10 +5146,12 @@ Mew で利用する前に、SSL サーバに対して "stunnel" で SSL のコ�
 
 "openssl" に付いてくる証明書は、世の中で使われている CA すべてを網羅で
 きていません。あなたが利用するサーバの証明書が、他の CA から発行された
-場合、その CA の証明書を同様にコピーしておく必要があります。以下のペー
-ジに CA の証明書がたくさん置いてあります。
+場合、その CA の証明書を同様にコピーしておく必要があります。インターネッ
+トにおいて信頼されている CA の証明書は、次の URLで管理・公開されていま
+す。
 
-     http://www.columbia.edu/~ariel/good-certs/ns45/
+     https://www.ccadb.org
+     https://www.mozilla.org/en-US/about/governance/policies/security-group/certs/
 
 Mew で "stunnel" を制御する重要な変数は 2 つです。
 `mew-ssl-cert-directory' は、信用する CA の証明書を置いておくディレク
@@ -5088,51 +5162,106 @@ Mew で "stunnel" を制御する重要な変数は 2 つです。
 0
      検証しない
 1
-     サーバの証明書があれば検証する。検証結果が失敗なら、SSL/TSL コネ
-     クションは作られない。証明書がなければ、SSL/TLS コネクションを作
-     成する。
+     サーバの証明書があれば検証する。検証結果が失敗なら、TLS コネクショ
+     ンは作られない。証明書がなければ、TLS コネクションを作成する。
 2
-     サーバの証明書を検証する。検証結果が失敗なら、SSL/TSL コネクショ
-     ンは作られない。証明書がなければ、SSL/TLS コネクションを作成しな
-     い。
+     サーバの証明書を検証する。検証結果が失敗なら、TLS コネクションは
+     作られない。証明書がなければ、TLS コネクションを作成しない。
 3
      サーバが送ってきたものではなく、ローカルにインストールされている
      証明書で検証する。
 
-後は各プロトコルの SSL に関する変数を設定して下しさい。たとえば、POP
-over SSL を利用するには、`mew-pop-ssl' を `t' にします。また、ポート番
-号が標準と異なる場合には、`mew-pop-ssl-port' を設定して下さい。
-
-     (setq mew-pop-ssl t)
-
-SMTP で SSL を利用する場合は、以下のようにします。
-
-     (setq mew-smtp-ssl t)
-
-SSL で通信が保護されている場合、モードラインに錠前の絵が表示されます。
+変数を設定したら、stunnel を使う準備は完了です。
 
 
 
-File: mew.ja.info, Node: TLS, Next: spam, Prev: SSL, Up: Tips
+File: mew.ja.info, Node: GnuTLS, Next: TLS/SSL2, Prev: Stunnel, Up: Tips
 
-Transport Layer Security
+GnuTLS ライブラリを使った TLS 接続
+==================================
+
+GnuTLS が組み込まれた Emacs を使っている場合、TLS 機能を有効にするため
+の特別な設定は不要です。次の変数を設定することで、証明書の検証レベルと
+信頼するルート CA を変更することができます。
+
+証明書の検証レベルは、Emacs の Network Security Manager(NSM) によって
+管理されているポリシーに従います。ポリシーを設定するには、
+`network-security-level' という変数を使います。デフォルト値は`'medium'
+です。`'low' の場合、証明書を検証しません。`'medium' の場合、ルート CA
+の証明書リストを使って証明書を検証します。検証ができなかった場合、もし
+くは自己署名証明書だった場合、その証明書を受け入れるかどうかのダイアロ
+グが表示されます。また、今まで証明書を使って暗号路で通信していたサーバ
+に対して、暗号化なしで接続しようとした場合にも、警告を表示します。
+`'high' とすると、`'medium' のチェックに加えて、サーバ証明書の鍵の変更
+や弱い暗号スイートの使用に関して警告が表示されます。詳しくは、*Note
+(emacs)Network Security:: を参照して下さい。
+
+GnuTLS を使う場合は前述のとおり `network-security-level' を設定するこ
+とが推奨されます。一方で Mew は、Stunnel を用いた TLS 接続について、
+`mew-ssl-verify-level' という変数を用いて証明書の検証レベルを設定して
+いました。この変数で設定した場合との後方互換性を保つため、Mew は
+`mew-ssl-verify-level' が `0' の場合のみ、`network-security-level' を
+`'low' に自動設定します。この自動設定は、 Mew による接続のみに影響しま
+す。`mew-ssl-verify-level' のデフォルト値は `1' となっています。`0' 以
+外の値の場合は、`network-security-level' の設定に変更が加えられること
+はありません。
+
+GnuTLS には、証明書の検証方法を制御するための`gnutls-verify-error' と
+いう変数もあります。GnuTLS は TCP 接続の確立時に証明書を検証します、こ
+の変数は、検証に失敗した時に切断するかどうかを制御します。デフォルトで
+は `nil' に設定されており、検証に失敗してもすぐには切断しません。前述
+の Network Security Managerが、TCP接続の確立後に検証し、切断するかどう
+かを決定します。すぐに切断しない設定がデフォルトとなっていることは奇妙
+に思われるかも知れませんが、Emacsで GnuTLS が標準的な検証よりも多くの
+項目を検査できるようにするため、TCP 接続と検証処理を分離しています。
+
+`gnutls-verify-error' を手動で設定した場合、TCP 接続の確立時に証明書の
+検証に失敗すると、すぐに接続が切断されます。NSM は検証しません。この場
+合、`network-security-level' や`mew-ssl-verify-level'による設定は無効
+になりますので注意して下さい。特別な理由がない限り、
+`gnutls-verify-error' ではなく`network-security-level' を使って設定す
+ることをお勧めします。
+
+信頼するルート CA は、`mew-ssl-trustfiles' の設定に従います。ただし、
+GnuTLS には通常、デフォルトのルート CA リストが設定されており、Emacs
+26.3 とそれより前のバージョンでは、それが常に先頭に追加されます。リス
+トを空にしても、デフォルトのリストを無視できないことに注意してください。
+
+
+
+File: mew.ja.info, Node: TLS/SSL2, Next: spam, Prev: GnuTLS, Up: Tips
+
+TLS 接続のための変数設定
 ========================
 
-Mew では SSL の代りに TLS を利用することもできます。TLS の実現は、SSL
-と同様 "stunnel" に頼っています。ですので、TLS を利用する際には、
-*Note SSL:: の説明に従って設定して下さい。
+次に各プロトコルの TLS に関する変数を設定して下さい。たとえば、POP
+over TLS を利用するには、`mew-pop-ssl' を `t' にします。TLS の実装とし
+て stunnel もしくは GnuTLS を明示的に指定したい場合は、それぞれ
+`'tunnel', `'native' を指定します。`t' を設定したプロトコルについては、
+`mew-ssl-default' を使って使用する実装を選択することが可能です。また、
+ポート番号が標準と異なる場合には、`mew-pop-ssl-port' を設定して下さい。
 
-次に、SSL のポート番号を守りたいプロトコルと同じポート番号に設定します。
-たとえば、POP では以下のようにします。
+     (setq mew-pop-ssl t)
 
-     ;; mew-pop-port is default to "pop3" (110)
+SMTP で TLS を利用する場合は、以下のようにします。
+
+     (setq mew-smtp-ssl t)
+
+TLS で通信が保護されている場合、モードラインに錠前の絵が表示されます。
+
+Mew では、各プロトコルの STARTTLS 拡張を使い、TCP 接続の確立後に
+TLS を有効にすることもできます。STARTTLS を利用したい場合、ますは
+*Note TLS/SSL:: の説明に従って設定して下さい。
+
+STARTTLS は、プロトコルの通常のポート番号と TLS 用のポート番号とを一致
+するように設定することで有効になります。たとえば、POP では以下のように
+します。
+
+     ;; A default value of mew-pop-port is "pop3" (110)
      (setq mew-pop-ssl t)
      (setq mew-pop-ssl-port mew-pop-port) ;; The default is "pop3s" (995)
 
-すなわち、SSL のポート番号と保護したいプロトコルのポートが同じであれば
-TLS、異なれば SSL が利用されます。
-
-以下は、Message Submission を TLS で守るための設定例です。
+以下は、Message Submission で STARTTLS を有効にするための設定例です。
 
      (setq mew-smtp-port "submission") ;; The default is "smtp" (25)
      (setq mew-smtp-ssl t)
@@ -5140,7 +5269,7 @@ TLS、異なれば SSL が利用されます。
 
 
 
-File: mew.ja.info, Node: spam, Next: spam2, Prev: TLS, Up: Tips
+File: mew.ja.info, Node: spam, Next: spam2, Prev: TLS/SSL2, Up: Tips
 
 スパム
 ======
@@ -5231,14 +5360,14 @@ Summary モードで読んでいる現在のメッセージを、フィルター
      (setq mew-spam-prog "bogofilter")
      (setq mew-spam-prog-args '("-s" "-N" "-v"))
      (setq mew-ham-prog "bogofilter")
-     (setq mew-ham-prog-args '("-n" "-S" "-v")))
+     (setq mew-ham-prog-args '("-n" "-S" "-v"))
 
 (2) サーバ(<server>)側のフィルターに SSH 経由で学習させる場合：
 
      (setq mew-spam-prog "ssh")
      (setq mew-spam-prog-args '("<server>" "bogofilter" "-s" "-N" "-v"))
      (setq mew-ham-prog "ssh")
-     (setq mew-ham-prog-args '("<server>" "bogofilter" "-n" "-S" "-v")))
+     (setq mew-ham-prog-args '("<server>" "bogofilter" "-n" "-S" "-v"))
 
 (3) ファイアウォール(<firewall>)の先のサーバ(<server>)のフィルターに多
 段の SSH 経由で学習させる場合：
@@ -5246,7 +5375,7 @@ Summary モードで読んでいる現在のメッセージを、フィルター
      (setq mew-spam-prog "ssh")
      (setq mew-spam-prog-args '("-A" "<firewall>" "ssh" "<server>" "bogofilter" "-s" "-N" "-v"))
      (setq mew-ham-prog "ssh")
-     (setq mew-ham-prog-args '("-A" "<firewall>" "ssh" "<server>" "bogofilter" "-n" "-S" "-v")))
+     (setq mew-ham-prog-args '("-A" "<firewall>" "ssh" "<server>" "bogofilter" "-n" "-S" "-v"))
 
 なお SSH を利用する場合、関連するホストには、パスワードなしでログイン
 できるように設定しておく必要があります。
@@ -5484,13 +5613,13 @@ File: mew.ja.info, Node: ml, Next: Copyright, Prev: obtain, Up: Avail
 
 Mew に関するメーリングリストについては、以下を参照して下さい。
 
-     https://groups.google.com/forum/#!forum/mew-ja
+     https://groups.google.com/g/mew-ja
 
 
 
 
 
-File: mew.ja.info, Node: Copyright, Next: Variable Index, Prev: ml, Up: Top
+File: mew.ja.info, Node: Copyright, Next: Privacy Policy, Prev: ml, Up: Top
 
 著作権について
 **************
@@ -5534,7 +5663,20 @@ CD ROM に入れて配布したいという方は、できるだけ教えて下�
 
 
 
-File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Copyright, Up: Top
+File: mew.ja.info, Node: Privacy Policy, Next: Variable Index, Prev: ml, Up: Top
+
+プライバシポリシー
+******************
+
+ユーザは、各自のメールアドレスやメールサーバの情報を設定しなければなら
+ないが、そのような情報はどこにも送信されない。ユーザはまったくトラッキ
+ングされない。
+
+
+
+
+
+File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Privacy Policy, Up: Top
 
 変数索引
 ********
@@ -5542,6 +5684,7 @@ File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Copyright, Up: T
 
 * Menu:
 
+* gnutls-verify-error:          GnuTLS.                 (line   5)
 * mail-user-agent:              Composing.              (line   5)
 * mail-user-agent:              configuration.          (line   5)
 * mail-user-agent:              start.                  (line   5)
@@ -5636,6 +5779,7 @@ File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Copyright, Up: T
 * mew-mailbox-type:             retrieving.             (line   5)
 * mew-mailbox-type:             start.                  (line   5)
 * mew-make-message-hook:        hooks.
+* mew-master-passwd-type:       password.               (line   5)
 * mew-mbox-command-arg:         configuration.          (line   5)
 * mew-mbox-command:             configuration.          (line   5)
 * mew-message-hook:             hooks.
@@ -5652,7 +5796,9 @@ File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Copyright, Up: T
 * mew-nntp-server:              nntp.
 * mew-nntp-size:                nntp.
 * mew-nntp-ssh-server:          nntp.
+* mew-nntp-ssl:                 TLS/SSL2.               (line   5)
 * mew-nntp-ssl:                 nntp.
+* mew-nntp-ssl-port:            TLS/SSL2.               (line   5)
 * mew-nntp-ssl-port:            nntp.
 * mew-nntp-user:                nntp.
 * mew-nntp2-flush-hook:         hooks.
@@ -5672,9 +5818,9 @@ File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Copyright, Up: T
 * mew-pop-size:                 pop.
 * mew-pop-ssh-server:           SSH.                    (line   5)
 * mew-pop-ssh-server:           pop.
-* mew-pop-ssl:                  SSL.                    (line   5)
+* mew-pop-ssl:                  TLS/SSL2.               (line   5)
 * mew-pop-ssl:                  pop.
-* mew-pop-ssl-port:             SSL.                    (line   5)
+* mew-pop-ssl-port:             TLS/SSL2.               (line   5)
 * mew-pop-ssl-port:             pop.
 * mew-pop-user:                 configuration.          (line   5)
 * mew-pop-user:                 pop.
@@ -5735,7 +5881,8 @@ File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Copyright, Up: T
 * mew-smtp-server:              configuration.          (line   5)
 * mew-smtp-server:              smtp.
 * mew-smtp-ssh-server:          smtp.
-* mew-smtp-ssl:                 SSL.                    (line   5)
+* mew-smtp-ssl:                 TLS/SSL2.               (line   5)
+* mew-smtp-ssl-port:            TLS/SSL2.               (line   5)
 * mew-smtp-ssl-port:            smtp.
 * mew-smtp-ssl:                 smtp.
 * mew-smtp-submission-family:   smtp.
@@ -5747,8 +5894,11 @@ File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Copyright, Up: T
 * mew-spam-prog-args:           spam2.                  (line   5)
 * mew-spam-prog:                spam2.                  (line   5)
 * mew-spam:                     spam.                   (line   5)
-* mew-ssl-cert-directory:       SSL.                    (line   5)
-* mew-ssl-verify-level:         SSL.                    (line   5)
+* mew-ssl-cert-directory:       Stunnel.                (line   5)
+* mew-ssl-default:              TLS/SSL2.               (line   5)
+* mew-ssl-trustfiles:           GnuTLS.                 (line   5)
+* mew-ssl-verify-level:         GnuTLS.                 (line   5)
+* mew-ssl-verify-level:         Stunnel.                (line   5)
 * mew-status-update-hook:       hooks.
 * mew-summary-delete-folder-hook: hooks.
 * mew-summary-exec-hook:        hooks.
@@ -5809,6 +5959,7 @@ File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Copyright, Up: T
 * mew-warn-domains:             addr-warn.              (line   5)
 * mew-warning-field-level:      status-update.          (line   5)
 * mew-x-pgp-key-list:           cipher-viewing.         (line   5)
+* network-security-level:       GnuTLS.                 (line   5)
 * read-mail-command:            configuration.          (line   5)
 
 
@@ -5997,6 +6148,7 @@ File: mew.ja.info, Node: Key Index, Prev: Variable Index, Up: Top
 * f (Summary):                  forward.                (line   5)
 * f (Summary):                  sum-write.              (line   5)
 * g (Summary):                  moving.                 (line   5)
+* h (Summary):                  message-mode.           (line   5)
 * i (Attach):                   mime-comp.              (line   5)
 * i (Summary):                  retrieving.             (line   5)
 * i (Summary):                  send.                   (line   5)
@@ -6078,110 +6230,113 @@ File: mew.ja.info, Node: Key Index, Prev: Variable Index, Up: Top
 
 Tag table:
 Node: Top289
-Node: Overview1326
-Node: characteristic1969
-Node: Emacsen2981
-Node: modes3159
-Node: folder convention3669
-Node: configuration5542
-Node: password7871
-Node: start9450
-Node: Viewing10215
-Node: singlepart11194
-Node: multipart12098
-Node: analysis14363
-Node: cipher-viewing16624
-Node: retrieving19503
-Node: moving22066
-Node: sum-write23631
-Node: features25095
-Node: status-update26669
-Node: invalid27370
-Node: Composing28666
-Node: header30174
-Node: cheader30848
-Node: addr-comp32053
-Node: addrbook33048
-Node: auto-alias35187
-Node: addr-comp136197
-Node: addr-comp237890
-Node: send39251
-Node: cite41361
-Node: mime-comp42762
-Node: charset-guess48341
-Node: longline50561
-Node: reply51697
-Node: forward54702
-Node: resend55294
-Node: shortcut56475
-Node: mark-b-comp59887
-Node: pgp-key62301
-Node: anonymous62876
-Node: Marks63851
-Node: unread mark64994
-Node: delete mark65866
-Node: refile mark67451
-Node: target mark68444
-Node: escape mark69505
-Node: unmark70020
-Node: mark change70637
-Node: sync71502
-Node: off-line72195
-Node: mew-mark73462
-Node: Refile73990
-Node: by-folder75138
-Node: by-alist76319
-Node: by-thread77973
-Node: by-from-folder78589
-Node: by-from79542
-Node: by-newsgroups80753
-Node: by-default80988
-Node: guess-rule81345
-Node: auto-refile82873
-Node: copy-msg84574
-Node: Virtual85443
-Node: selection86561
-Node: sorting87067
-Node: dialog88345
-Node: search89011
-Node: condition89648
-Node: dbsearch91386
-Node: keyword92268
-Node: thread92767
-Node: thread-op93572
-Node: Quit94888
-Node: Customize95311
-Node: summary-mode95999
-Node: message-mode98788
-Node: draft-mode101381
-Node: charset103476
-Node: highlight105102
-Node: hooks107154
-Node: pop110560
-Node: imap111642
-Node: nntp112653
-Node: smtp113772
-Node: config115865
-Node: config2120393
-Node: custom-misc121549
-Node: Tips122266
-Node: region122793
-Node: visiting123302
-Node: SSH123664
-Node: SSL124261
-Node: TLS125812
-Node: spam126523
-Node: spam2128274
-Node: addr-warn129393
-Node: biff130166
-Node: edit130648
-Node: Convention131408
-Node: Implementation132448
-Node: Avail133907
-Node: obtain134156
-Node: ml134380
-Node: Copyright134571
-Node: Variable Index135579
-Node: Key Index150876
+Node: Overview1368
+Node: characteristic2011
+Node: Emacsen3023
+Node: modes3201
+Node: folder convention3711
+Node: configuration5586
+Node: password7915
+Node: start10583
+Node: Viewing11349
+Node: singlepart12328
+Node: multipart13232
+Node: analysis15499
+Node: cipher-viewing17760
+Node: retrieving20639
+Node: moving23205
+Node: sum-write24770
+Node: features26234
+Node: status-update27808
+Node: invalid28509
+Node: Composing29805
+Node: header31313
+Node: cheader31988
+Node: addr-comp33193
+Node: addrbook34188
+Node: auto-alias36327
+Node: addr-comp137337
+Node: addr-comp239032
+Node: send40393
+Node: cite42503
+Node: mime-comp43904
+Node: charset-guess49483
+Node: longline51703
+Node: reply52839
+Node: forward55845
+Node: resend56437
+Node: shortcut57618
+Node: mark-b-comp61030
+Node: pgp-key63444
+Node: anonymous64019
+Node: Marks64994
+Node: unread mark66137
+Node: delete mark67009
+Node: refile mark68594
+Node: target mark69587
+Node: escape mark70648
+Node: unmark71163
+Node: mark change71780
+Node: sync72645
+Node: off-line73338
+Node: mew-mark74605
+Node: Refile75133
+Node: by-folder76281
+Node: by-alist77462
+Node: by-thread79116
+Node: by-from-folder79732
+Node: by-from80685
+Node: by-newsgroups81896
+Node: by-default82131
+Node: guess-rule82488
+Node: auto-refile84016
+Node: copy-msg85717
+Node: Virtual86586
+Node: selection87704
+Node: sorting88210
+Node: dialog89488
+Node: search90154
+Node: condition90791
+Node: dbsearch92529
+Node: keyword93411
+Node: thread93910
+Node: thread-op94715
+Node: Quit96031
+Node: Customize96454
+Node: summary-mode97142
+Node: message-mode99931
+Node: draft-mode102765
+Node: charset104860
+Node: highlight106486
+Node: hooks108538
+Node: pop111944
+Node: imap113102
+Node: nntp114189
+Node: smtp115384
+Node: config117542
+Node: config2122070
+Node: custom-misc123226
+Node: Tips123943
+Node: region124595
+Node: visiting125104
+Node: SSH125466
+Node: TLS/SSL126054
+Node: Stunnel126795
+Node: GnuTLS128133
+Node: TLS/SSL2129957
+Node: spam131043
+Node: spam2132799
+Node: addr-warn133915
+Node: biff134688
+Node: edit135170
+Node: Convention135930
+Node: Implementation136970
+Node: Avail138429
+Node: obtain138678
+Node: ml138902
+Node: Copyright139081
+Node: Privacy Policy140089
+Node: Variable Index140287
+Node: Key Index156192
 
 End tag table
