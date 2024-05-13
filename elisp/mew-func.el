@@ -1065,6 +1065,12 @@ and sets buffer-file-coding-system."
       (aset ret i (aref base (% (mew-random) baselen))))
     ret))
 
+(defun mew-random-binary-string (len)
+  (let ((ret (mew-make-string len)))
+    (dotimes (i len)
+      (aset ret i (% (mew-random) 255)))
+    ret))
+
 (defun mew-random-filename (dir len nump &optional suffix)
   (let ((cnt 0) (max 20) ;; ad hoc
 	file filepath)

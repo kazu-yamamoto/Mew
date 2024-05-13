@@ -85,14 +85,16 @@ It serves http://localhost:PORT"
 ;;; Getting authorization code
 ;;;
 
-(defun mew-oauth2-get-auth-code (url client-id resource-url redirect-url port)
+(defun mew-oauth2-get-auth-code (url client-id resource-url redirect-url challenge port)
   (let ((url-params
 	 (concat
 	  url
 	  "?response_type=code"
 	  "&client_id=" client-id
 	  "&scope=" (url-hexify-string resource-url)
-	  "&redirect_uri=" (url-hexify-string redirect-url))))
+	  "&redirect_uri=" (url-hexify-string redirect-url)
+	  "&code_challenge=" challenge
+	  "&code_challenge_method=S256")))
     (mew-oauth2-cleanup-redirect-handler port)
     (condition-case nil
 	(progn
@@ -110,10 +112,11 @@ It serves http://localhost:PORT"
 ;;; Getting access_token with authorization code
 ;;;
 
-(defun mew-oauth2-get-access-token (url client-id client-secret redirect-url code)
+(defun mew-oauth2-get-access-token (url client-id client-secret redirect-url code verifier)
   (let ((params (concat 
 		 "grant_type=authorization_code"
 		 "&code=" code
+		 "&code_verifier=" verifier
 		 "&client_id=" client-id
 		 "&client_secret=" client-secret
 		 "&redirect_uri=" (url-hexify-string redirect-url))))
@@ -186,18 +189,22 @@ It serves http://localhost:PORT"
 	(puthash :expire expire token)
 	access-token))
      (t
-      (let* ((auth-code (mew-oauth2-get-auth-code
+      (let* ((verifier (mew-oauth2-pkce-code-verifier))
+	     (challenge (mew-oauth2-pkce-code-challenge verifier))
+	     (auth-code (mew-oauth2-get-auth-code
 			 mew-oauth2-auth-url
 			 mew-oauth2-client-id
 			 mew-oauth2-resource-url
 			 mew-oauth2-redirect-url
+			 challenge
 			 8080))
 	     (json (mew-oauth2-get-access-token 
 		    mew-oauth2-token-url
 		    mew-oauth2-client-id
 		    mew-oauth2-client-secret
 		    mew-oauth2-redirect-url
-		    auth-code))
+		    auth-code
+		    verifier))
 	     (expires-in (gethash "expires_in" json)))
 	(setq access-token (gethash "access_token" json))
 	(setq refresh-token (gethash "refresh_token" json))
@@ -207,6 +214,33 @@ It serves http://localhost:PORT"
 	(puthash :expire expire token)
 	access-token)))))
 ;;;
+
+;; RFC 7636 Appendix A
+
+(defun mew-numlist-to-string (nums)
+  (apply 'concat (seq-map 'unibyte-string nums)))
+
+;; (mew-base64-url-without-padding-encode
+;;  (mew-numlist-to-string '(3 236 255 224 193)))
+;; "A-z_4ME"
+(defun mew-base64-url-without-padding-encode (str)
+  (base64url-encode-string str t))
+
+;; RFC 7636 Appendix B
+
+;; (setq rfc7636-random32 '(116 24 223 180 151 153 224 37 79 250 96 125 216 173 187 186 22 212 37 77 105 214 191 240 91 88 5 88 83 132 141 121))
+;; (setq rfc7636-verifier (mew-base64-url-without-padding-encode
+;; 			(mew-numlist-to-string rfc7636-random32)))
+;; "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"
+(defun mew-oauth2-pkce-code-verifier ()
+  (mew-base64-url-without-padding-encode (mew-random-binary-string 32)))
+;; (>= (length (mew-oauth2-pkce-code-verifier)) 43)
+
+;; (mew-oauth2-pkce-code-challenge rfc7636-verifier)
+;; "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM"
+(defun mew-oauth2-pkce-code-challenge (verifier)
+  (mew-base64-url-without-padding-encode
+   (secure-hash 'sha256 verifier nil nil t)))
 
 (provide 'mew-oauth2)
 
