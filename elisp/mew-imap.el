@@ -1602,7 +1602,8 @@
 	 (file (mew-expand-file bnm mew-imap-msgid-file))
 	 (buf (process-buffer process))
 	 (virtual-info (mew-imap-get-virtual-info pnm))
-	 (disp-info (mew-imap-get-disp-info pnm)))
+	 (disp-info (mew-imap-get-disp-info pnm))
+	 (sinfo-mark-hist (mew-sinfo-get-mark-hist)))
     (save-excursion
       (mew-imap-debug "IMAP SENTINEL" event)
       (set-process-buffer process nil)
@@ -1669,7 +1670,9 @@
 	  (mew-net-uidl-db-set (mew-imap-passtag pnm) uidl)
 	  (cond
 	   ((= rttl 0)
-	    (mew-imap-message pnm "No new messages"))
+	    (mew-imap-message pnm "No new messages")
+	    (when sinfo-mark-hist
+	      (mew-summary-folder-cache-save)))
 	   ((= rttl 1)
 	    (mew-imap-message pnm "1 message retrieved")
 	    (mew-summary-folder-cache-save))
@@ -1679,7 +1682,9 @@
 	 ((eq directive 'get)
 	  (cond
 	   ((= rttl 0)
-	    (mew-imap-message pnm "The message does not exist"))
+	    (mew-imap-message pnm "The message does not exist")
+	    (when sinfo-mark-hist
+	      (mew-summary-folder-cache-save)))
 	   ((= rttl 1)
 	    (mew-imap-message pnm "1 message retrieved")
 	    (mew-summary-folder-cache-save))
@@ -1690,7 +1695,9 @@
 	  (mew-biff-clear)
 	  (cond
 	   ((or (= rttl 0) (null msgid))
-	    (mew-imap-message pnm "No new messages"))
+	    (mew-imap-message pnm "No new messages")
+	    (when sinfo-mark-hist
+	      (mew-summary-folder-cache-save)))
 	   ((= rttl 1)
 	    (mew-imap-message pnm "1 message retrieved")
 	    (mew-lisp-save file msgid nil 'unlimit)
@@ -1706,7 +1713,8 @@
 		  (mew-inherit-offline t))
 	      (mew-mark-exec-refile bnm movs)))
 	  (when (or kils movs)
-	    (mew-mark-kill-invisible)
+	    (mew-mark-kill-invisible))
+	  (when (or kils movs sinfo-mark-hist)
 	    (mew-summary-folder-cache-save))
 	  (cond
 	   ((= rttl 1)
