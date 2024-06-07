@@ -28,6 +28,7 @@ OBJS =	mew-addrbook.elc	mew-attach.elc		mew-auth.elc	\
 	mew-message.elc		mew-mime.elc		mew-minibuf.elc	\
 	mew-mule.elc		mew-mule3.elc	\
 	mew-net.elc		mew-nntp.elc		mew-nntp2.elc	\
+        mew-oauth2.elc \
 	mew-pgp.elc		mew-pick.elc		mew-pop.elc	\
 	mew-refile.elc		mew-scan.elc		mew-smime.elc	\
 	mew-search.elc		mew-smtp.elc		mew-sort.elc	\
@@ -54,6 +55,7 @@ SRCS =	mew-addrbook.el	mew-attach.el	mew-auth.el	\
 	mew-message.el	mew-mime.el	mew-minibuf.el	\
 	mew-mule.el	mew-mule3.el	\
 	mew-net.el	mew-nntp.el	mew-nntp2.el	\
+        mew-oauth2.el \
 	mew-pgp.el	mew-pick.el	mew-pop.el	\
 	mew-refile.el	mew-scan.el	mew-smime.el	\
 	mew-search.el	mew-smtp.el	mew-sort.el	\
