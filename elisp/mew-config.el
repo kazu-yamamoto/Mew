@@ -516,6 +516,30 @@
 (defun mew-use-format-flowed (&optional case)
   (mew-cfent-value case "use-format-flowed" mew-use-format-flowed))
 
+;;
+
+(defun mew-oauth2-client-id (&optional case)
+  (mew-cfent-value case "oauth2-client-id" mew-oauth2-client-id))
+
+(defun mew-oauth2-client-secret (&optional case)
+  (mew-cfent-value case "oauth2-client-secret" mew-oauth2-client-secret))
+
+(defun mew-oauth2-redirect-url (&optional case)
+  (mew-cfent-value case "oauth2-redirect-url" mew-oauth2-redirect-url))
+
+(defun mew-oauth2-redirect-port (&optional case)
+  (mew-cfent-value case "oauth2-redirect-port" mew-oauth2-redirect-port))
+
+(defun mew-oauth2-auth-url (&optional case)
+  (mew-cfent-value case "oauth2-auth-url" mew-oauth2-auth-url))
+
+(defun mew-oauth2-token-url (&optional case)
+  (mew-cfent-value case "oauth2-token-url" mew-oauth2-token-url))
+
+(defun mew-oauth2-resource-url (&optional case)
+  (mew-cfent-value case "oauth2-resource-url" mew-oauth2-resource-url))
+
+
 ;;;
 ;;; Setting case
 ;;;
