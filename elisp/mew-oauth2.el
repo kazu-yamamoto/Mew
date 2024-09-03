@@ -87,7 +87,6 @@ It serves http://localhost:PORT"
   )
 
 (defun mew-oauth2-redirect-handler-filter (proc string)
-  (mew-oauth2-debug "OAUTH2:" string)
   (if (string-match "^GET .*[?&]code=\\([^& ]+\\)" string)
       (let ((code (match-string 1 string)))
         (process-send-string
@@ -96,7 +95,7 @@ It serves http://localhost:PORT"
                  "Content-Type: text/plain\r\n"
                  "\r\n"
                  "Mew gets the following authorization code:\n"
-		 code "***\n"))
+		 code "\n"))
 	(setq mew-oauth2-code code)
 	(delete-process proc))))
 
@@ -106,7 +105,6 @@ It serves http://localhost:PORT"
 ;;;
 
 (defun mew-oauth2-get-auth-code (url client-id resource-url redirect-url challenge port)
-  (mew-oauth2-debug "OAUTH2:" (concat "get-auth-code" url client-id))
   (let ((url-params
 	 (concat
 	  url
@@ -134,7 +132,6 @@ It serves http://localhost:PORT"
 ;;;
 
 (defun mew-oauth2-get-access-token (url client-id client-secret redirect-url code verifier)
-  (mew-oauth2-debug "OAUTH2:" (concat "get-accesss-token" url client-id))
   (let ((params (concat 
 		 "grant_type=authorization_code"
 		 "&code=" code
@@ -153,7 +150,6 @@ It serves http://localhost:PORT"
 ;;;
 
 (defun mew-oauth2-refresh-access-token (url client-id client-secret refresh-token)
-  (mew-oauth2-debug "OAUTH2:" (concat "refresh-accesss-token" url client-id))
   (let ((params (concat 
 		 "grant_type=refresh_token"
 		 "&client_id=" client-id
@@ -191,7 +187,6 @@ It serves http://localhost:PORT"
     (base64-encode-string (format "user=%s\1auth=Bearer %s\1\1" user access-token) t)))
 
 (defun mew-xoauth2-get-access-token (token case)
-  (mew-oauth2-debug "OAUTH2:" (concat "get-access-toekn" case))
   (let* ((expire (gethash :expire token))
 	 (access-token (gethash :access_token token))
 	 (refresh-token (gethash :refresh_token token)))
