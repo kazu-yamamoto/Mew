@@ -605,7 +605,7 @@ Return a part syntax after moving the beginning of the content body."
 	 (ct (mew-syntax-get-value ctl 'cap))
 	 (textp (mew-ct-textp ct))
 	 (cte (or (mew-syntax-get-cte syntax) mew-7bit))
-	 (multi-err t) (encap nil) type hend format delsp)
+	 (multi-err t) (encap nil) hend format delsp cooked-textp)
     ;; the beginning of the content body
     (cond
      ((not (mew-cte-p cte))
@@ -685,11 +685,12 @@ Return a part syntax after moving the beginning of the content body."
     ;; ct may be changed to apo
     ;; or single in multipart/alternative
     ;; or single in multipart/security
-    (setq type (mew-syntax-get-value (mew-syntax-get-ct syntax) 'cap))
+    (setq cooked-textp (and (string= mew-ct-txt (mew-syntax-get-value (mew-syntax-get-ct syntax) 'cap))
+		     (not (mew-syntax-from-alternative syntax))))
     (setq hend (mew-syntax-get-end syntax))
     (unless hend
       (mew-syntax-set-end syntax (point-max)))
-    (when (and (string= type mew-ct-txt)
+    (when (and cooked-textp
 	       (setq format (mew-syntax-get-param ctl "format"))
 	       (mew-case-equal format "flowed"))
       (setq delsp (mew-syntax-get-param ctl "delsp"))
@@ -699,7 +700,7 @@ Return a part syntax after moving the beginning of the content body."
       (mew-decode-flowed (mew-syntax-get-begin syntax) (point-max) delsp)
       (setq hend nil))
     ;; highlight in the cache buffers only
-    (when (and (string= type mew-ct-txt)
+    (when (and cooked-textp
 	       (string-match mew-buffer-cache-prefix (buffer-name)))
       (mew-highlight-body-region (mew-syntax-get-begin syntax) (point-max)))
     (unless hend

@@ -45,6 +45,9 @@
 (defun mew-syntax-get-key (syntax)
   (aref syntax 0))
 
+(defun mew-syntax-from-alternative (syntax)
+  (listp (aref syntax 1)))
+
 (defun mew-syntax-get-begin (syntax)
   (let ((beg (aref syntax 1)))
     (if (listp beg) (car beg) beg)))
