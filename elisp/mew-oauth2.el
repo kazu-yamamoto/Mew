@@ -12,6 +12,14 @@
 ;;;
 ;;; Variables
 ;;;
+(defvar mew-oauth2-info-list
+  '("code"
+    "client-id" "client-secret"
+    "redirect-url" "redirect-port"
+    "auth-url" "token-url" "resource-url"
+    ))
+
+(mew-info-defun "mew-oauth2-" mew-oauth2-info-list)
 
 (defvar mew-oauth2-client-id nil)
 
@@ -33,6 +41,17 @@
 
 (defvar mew-oauth2-resource-url "https://mail.google.com/"
   "URL used to request access to Mail Resources.")
+
+(defun mew-oauth2-debug (label string)
+  (when (mew-debug 'oauth2)
+    (with-current-buffer (get-buffer-create mew-buffer-debug)
+      (goto-char (point-max))
+      (let ((start (point)))
+	(insert (format "\n<%s>\n%s\n" label string))
+	(goto-char start)
+	(mew-crlf-to-lf))
+      (goto-char (point-max)))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -68,7 +87,7 @@ It serves http://localhost:PORT"
   )
 
 (defun mew-oauth2-redirect-handler-filter (proc string)
-  (if (string-match "^GET .*[?&]code=\\([^&]+\\)" string)
+  (if (string-match "^GET .*[?&]code=\\([^& ]+\\)" string)
       (let ((code (match-string 1 string)))
         (process-send-string
          proc
@@ -158,16 +177,16 @@ It serves http://localhost:PORT"
           "NO") ;; XXX: Anyway NO?
       "OK"))) ;; XXX: Maybe OK if not JSON.
 
-(defun mew-xoauth2-auth-string (user tag)
+(defun mew-xoauth2-auth-string (user tag case)
   (mew-passwd-setup-master)
   (let* ((tk (mew-passwd-get-passwd tag))
          (token (if (hash-table-p tk) tk (make-hash-table)))
-         (access-token (mew-xoauth2-get-access-token token)))
+         (access-token (mew-xoauth2-get-access-token token case)))
     (mew-passwd-set-passwd tag token)
     ;; base64(user=user@example.com^Aauth=Bearer ya29vF9dft4...^A^A)
     (base64-encode-string (format "user=%s\1auth=Bearer %s\1\1" user access-token) t)))
 
-(defun mew-xoauth2-get-access-token (token)
+(defun mew-xoauth2-get-access-token (token case)
   (let* ((expire (gethash :expire token))
 	 (access-token (gethash :access_token token))
 	 (refresh-token (gethash :refresh_token token)))
@@ -176,9 +195,9 @@ It serves http://localhost:PORT"
       access-token)
      (refresh-token
       (let* ((json (mew-oauth2-refresh-access-token
-		    mew-oauth2-token-url
-		    mew-oauth2-client-id
-		    mew-oauth2-client-secret
+		    (mew-oauth2-token-url case)
+		    (mew-oauth2-client-id case)
+		    (mew-oauth2-client-secret case)
 		    refresh-token))
 	     (expires-in (gethash "expires_in" json))
 	     (refresh-token (gethash "refresh_token" json)))
@@ -192,17 +211,17 @@ It serves http://localhost:PORT"
       (let* ((verifier (mew-oauth2-pkce-code-verifier))
 	     (challenge (mew-oauth2-pkce-code-challenge verifier))
 	     (auth-code (mew-oauth2-get-auth-code
-			 mew-oauth2-auth-url
-			 mew-oauth2-client-id
-			 mew-oauth2-resource-url
-			 mew-oauth2-redirect-url
+			 (mew-oauth2-auth-url case)
+			 (mew-oauth2-client-id case)
+			 (mew-oauth2-resource-url case)
+			 (mew-oauth2-redirect-url case)
 			 challenge
-			 8080))
+			 (mew-oauth2-redirect-port case)))
 	     (json (mew-oauth2-get-access-token 
-		    mew-oauth2-token-url
-		    mew-oauth2-client-id
-		    mew-oauth2-client-secret
-		    mew-oauth2-redirect-url
+		    (mew-oauth2-token-url case)
+		    (mew-oauth2-client-id case)
+		    (mew-oauth2-client-secret case)
+		    (mew-oauth2-redirect-url case)
 		    auth-code
 		    verifier))
 	     (expires-in (gethash "expires_in" json)))

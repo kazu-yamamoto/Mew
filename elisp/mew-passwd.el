@@ -230,7 +230,7 @@
   (if (and key (or mew-use-cached-passwd mew-use-master-passwd))
       (progn
 	(mew-passwd-setup-master)
-	(if (mew-passwd-get-passwd key)
+	(if (stringp (mew-passwd-get-passwd key))
 	    (progn
 	      (mew-timing)
 	      (if mew-passwd-reset-timer (mew-passwd-set-counter key 0))
