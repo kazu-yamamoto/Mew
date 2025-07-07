@@ -10,28 +10,28 @@
 
 @ifset ja
 @c Mew の texinfo
-@c Copyright (C) 1996-2023 Mew developing team.
+@c Copyright (C) 1996-2025 Mew developing team.
 @c M-x texinfo-format-buffer で info にしてね。
 @end ifset
 @ifset en
 @c Texinfo for Mew
-@c Copyright (C) 1996-2023 Mew developing team.
+@c Copyright (C) 1996-2025 Mew developing team.
 @c Try "M-x texinfo-format-buffer" or makeinfo to get the Info.
 @end ifset
 
-@set version 6.9
-@set modified 2023/02/11
-@set X-Mailer Mew version 6.9 on Emacs 28.2
+@set version 6.10
+@set modified 2025/07/07
+@set X-Mailer Mew version 6.10 on Emacs 29.4
 
 @titlepage
 @sp 10
 @center
 @title Mew
 @ifset ja
-@author Copyright @copyright{}1996-2023 Mew developing team.
+@author Copyright @copyright{}1996-2025 Mew developing team.
 @end ifset
 @ifset en
-@author Copyright @copyright{}1996-2023 Mew developing team.
+@author Copyright @copyright{}1996-2025 Mew developing team.
 @end ifset
 @end titlepage
 
@@ -12472,6 +12472,7 @@ configure as follows:
 * addr-warn::                   アドレスの警告
 * biff::                        Biff
 * edit::                        Edit モード
+* xauth2::                      XOAUTH2
 @end ifset
 @ifset en
 * region::                      Region
@@ -12486,6 +12487,7 @@ configure as follows:
 * addr-warn::                   Warning addresses
 * biff::                        Biff
 * edit::                        Edit mode
+* xauth2::                      XOAUTH2
 @end ifset
 @end menu
 
@@ -13497,7 +13499,7 @@ Below is an example to set it to 10 minutes.
 @end lisp
 
 @c %%%%%%%%%%%%%%%%%
-@node edit, Convention, biff, Tips
+@node edit, xauth2, biff, Tips
 @ifset ja
 @section Edit モード
 @end ifset
@@ -13612,11 +13614,70 @@ The same as the other commands in Draft mode
 @end ifset
 @end table
 
+@c %%%%%%%%%%%%%%%%%
+@node xauth2, Convention, edit, Tips
+@ifset ja
+@section XOAUTH2
+@end ifset
+@ifset en
+@section XOAUTH2
+@end ifset
+@vindex mew-oauth2-client-id
+@vindex mew-oauth2-client-secret
+@vindex mew-oauth2-redirect-url
+@vindex mew-oauth2-auth-url
+@vindex mew-oauth2-token-url
+@vindex mew-oauth2-resource-url
+
+@ifset ja
+gmailなどが、認証の仕組みとしてXOAUTH2を要求するようになりました。Mew
+でも、自分で認証認可の設定をすれば、XOAUTH2が利用できます。クライアント
+IDとクライアントシークレットを発行できたら、以下の変数に設定してくださ
+い。
+@end ifset
+@ifset en
+Gmail and other services now require XOAUTH2 as an authentication
+mechanism. Mew can also use XOAUTH2 if you configure the
+authentication and authorization yourself. Once you have issued your
+client ID and client secret, set them in the following variables.
+@end ifset
+
+@lisp
+(setq mew-oauth2-client-id "<client id>")
+(setq mew-oauth2-client-secret "<client secret>")
+@end lisp
+
+@ifset ja
+うまく設定できれば、使い始めるときに、一回だけローカルのブラウザに認可
+画面が表示されます。発行されたアクセストークンは、Mewのパスワードの仕
+組みで保存されます。
+@end ifset
+@ifset en
+If everything is set up properly, the authorization screen will be
+displayed in your local browser only once when you start using it. The
+issued access token will be saved using Mew's password mechanism.
+@end ifset
+
+@ifset ja
+現在、XOAUTH2で通信が確認できているのはgmailとMS365です。MS365では、以
+下の設定も必要です。
+@end ifset
+@ifset en
+Currently, communication with XOAUTH2 has been confirmed with gmail
+and MS365. For MS365, the following settings are also required.
+@end ifset
+
+@lisp
+(setq mew-oauth2-auth-url "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize")
+(setq mew-oauth2-token-url "https://login.microsoftonline.com/organizations/oauth2/v2.0/token")
+(setq mew-oauth2-resource-url "https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send offline_access")
+@end lisp
+
 @c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 @c      Message Convention
 @c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-@node Convention, Implementation, edit, Top
+@node Convention, Implementation, xauth2, Top
 @ifset ja
 @chapter メッセージの作法
 @end ifset
@@ -13917,7 +13978,7 @@ https://groups.google.com/g/mew-en
 @ifset ja
 Mew は以下の著作権に従います。
 
-Copyright (C) 1994-2023 Mew developing team.@*
+Copyright (C) 1994-2025 Mew developing team.@*
 All rights reserved.
 
 変更の有無にかかわらず、ソースおよびバイナリ形式の再配布および利用は、以
@@ -13950,7 +14011,7 @@ All rights reserved.
 @ifset en
 Mew conforms the following copyright.
 
-Copyright (C) 1994-2023 Mew developing team.@*
+Copyright (C) 1994-2025 Mew developing team.@*
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
