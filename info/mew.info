@@ -15,16 +15,16 @@ END-INFO-DIR-ENTRY
 
 File: mew.info, Node: Top, Next: Overview, Prev: (dir), Up: (dir)
 
-Mew 6.9 Manual
-**************
+Mew 6.10 Manual
+***************
 
                                                          Kazu YAMAMOTO
                                                     Created 1996/02/18
-                                                   Modified 2023/02/11
+                                                   Modified 2025/07/07
 
-This manual documents Mew version 6.9. In addition to this manual, you
-may find useful information about Mew from Mew's official home page
-(http://www.Mew.org/).
+This manual documents Mew version 6.10. In addition to this manual,
+you may find useful information about Mew from Mew's official home
+page (http://www.Mew.org/).
 
 
 * Menu:
@@ -81,7 +81,7 @@ File: mew.info, Node: characteristic, Next: Emacsen, Prev: Overview, Up: Overvie
 Mew's features
 ==============
 
-The features of Mew 6.9 are as follows:
+The features of Mew 6.10 are as follows:
 
    - You can easily display a very complicated structured
      message. What you should do to view messages is just type `SPC'.
@@ -1260,7 +1260,7 @@ Then a buffer like the following is prepared.
      To:
      Subject:
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.10 on Emacs 29.4
      ----
 
 We call this "Draft mode". In Draft mode, we call the region above
@@ -1771,7 +1771,7 @@ following example:
      To: pooh
      Subject: the next Sunday
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.10 on Emacs 29.4
      ----
      Would you like to play with me next Sunday?
 
@@ -1785,7 +1785,7 @@ This message is modified as follows, for example, if it is put into
      To: winnie-the-pooh@example.net
      Subject: the next Sunday
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.10 on Emacs 29.4
      Mime-Version: 1.0
      Content-Type: Text/Plain; charset=us-ascii
      Content-Transfer-Encoding: 7bit
@@ -1919,7 +1919,7 @@ body. Now the entire draft looks like:
 
      To: mew-dist
      Subject: This is header
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.10 on Emacs 29.4
      ----
      This is the body.
 
@@ -5174,6 +5174,7 @@ Advanced usage
 * addr-warn::                   Warning addresses
 * biff::                        Biff
 * edit::                        Edit mode
+* xauth2::                      XOAUTH2
 
 
 
@@ -5607,7 +5608,7 @@ is an example to set it to 10 minutes.
 
 
 
-File: mew.info, Node: edit, Next: Convention, Prev: biff, Up: Tips
+File: mew.info, Node: edit, Next: xauth2, Prev: biff, Up: Tips
 
 Edit
 ====
@@ -5647,9 +5648,35 @@ The following is a summary of commands in Edit mode.
      The same as the other commands in Draft mode
 
 
+
+File: mew.info, Node: xauth2, Next: Convention, Prev: edit, Up: Tips
+
+XOAUTH2
+=======
+
+Gmail and other services now require XOAUTH2 as an authentication
+mechanism. Mew can also use XOAUTH2 if you configure the
+authentication and authorization yourself. Once you have issued your
+client ID and client secret, set them in the following variables.
+
+     (setq mew-oauth2-client-id "<client id>")
+     (setq mew-oauth2-client-secret "<client secret>")
+
+If everything is set up properly, the authorization screen will be
+displayed in your local browser only once when you start using it. The
+issued access token will be saved using Mew's password mechanism.
+
+Currently, communication with XOAUTH2 has been confirmed with gmail
+and MS365. For MS365, the following settings are also required.
+
+     (setq mew-oauth2-auth-url "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize")
+     (setq mew-oauth2-token-url "https://login.microsoftonline.com/organizations/oauth2/v2.0/token")
+     (setq mew-oauth2-resource-url "https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send offline_access")
+
+
 
 
-File: mew.info, Node: Convention, Next: Implementation, Prev: edit, Up: Top
+File: mew.info, Node: Convention, Next: Implementation, Prev: xauth2, Up: Top
 
 E-mail convention
 *****************
@@ -5798,7 +5825,7 @@ Copyright
 
 Mew conforms the following copyright.
 
-Copyright (C) 1994-2023 Mew developing team.
+Copyright (C) 1994-2025 Mew developing team.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -5976,6 +6003,12 @@ Variable Index
 * mew-nntp-user:                nntp.
 * mew-nntp2-flush-hook:         hooks.
 * mew-nntp2-sentinel-hook:      hooks.
+* mew-oauth2-auth-url:          xauth2.                 (line   5)
+* mew-oauth2-client-id:         xauth2.                 (line   5)
+* mew-oauth2-client-secret:     xauth2.                 (line   5)
+* mew-oauth2-redirect-url:      xauth2.                 (line   5)
+* mew-oauth2-resource-url:      xauth2.                 (line   5)
+* mew-oauth2-token-url:         xauth2.                 (line   5)
 * mew-pack-hook:                hooks.
 * mew-pick-pattern-list:        condition.              (line   5)
 * mew-pop-auth-list:            pop.
@@ -6403,113 +6436,114 @@ Key Index
 
 Tag table:
 Node: Top285
-Node: Overview1546
-Node: characteristic2439
-Node: Emacsen4165
-Node: modes4382
-Node: folder convention5149
-Node: configuration8201
-Node: password10974
-Node: start15276
-Node: Viewing16444
-Node: singlepart17740
-Node: multipart19229
-Node: analysis22460
-Node: cipher-viewing26409
-Node: retrieving31435
-Node: moving35444
-Node: sum-write38092
-Node: features40469
-Node: status-update42949
-Node: invalid43974
-Node: Composing46174
-Node: header48222
-Node: cheader49222
-Node: addr-comp51024
-Node: addrbook52902
-Node: auto-alias56095
-Node: addr-comp157816
-Node: addr-comp260238
-Node: send62455
-Node: cite65546
-Node: mime-comp67792
-Node: charset-guess75139
-Node: longline78826
-Node: reply80654
-Node: forward84472
-Node: resend85345
-Node: shortcut87418
-Node: mark-b-comp92860
-Node: pgp-key95825
-Node: anonymous96706
-Node: Marks98273
-Node: unread mark99917
-Node: delete mark101418
-Node: refile mark103661
-Node: target mark105272
-Node: escape mark106903
-Node: unmark107758
-Node: mark change108737
-Node: sync110181
-Node: off-line111359
-Node: mew-mark113209
-Node: Refile113931
-Node: by-folder115791
-Node: by-alist117688
-Node: by-thread119768
-Node: by-from-folder120624
-Node: by-from121981
-Node: by-newsgroups123559
-Node: by-default123894
-Node: guess-rule124348
-Node: auto-refile126134
-Node: copy-msg128346
-Node: Virtual129614
-Node: selection131274
-Node: sorting131969
-Node: dialog133812
-Node: search134943
-Node: condition136108
-Node: dbsearch138363
-Node: keyword139587
-Node: thread140444
-Node: thread-op141704
-Node: Quit143874
-Node: Customize144423
-Node: summary-mode145238
-Node: message-mode149398
-Node: draft-mode153152
-Node: charset156119
-Node: highlight158325
-Node: hooks161301
-Node: pop165766
-Node: imap167567
-Node: nntp169252
-Node: smtp170752
-Node: config173807
-Node: config2179751
-Node: custom-misc181267
-Node: Tips182288
-Node: region183011
-Node: visiting183701
-Node: SSH184231
-Node: TLS/SSL185197
-Node: Stunnel186222
-Node: GnuTLS188260
-Node: TLS/SSL2191466
-Node: spam192993
-Node: spam2195289
-Node: addr-warn196620
-Node: biff197748
-Node: edit198506
-Node: Convention199782
-Node: Implementation201850
-Node: Avail204213
-Node: obtain204520
-Node: ml204812
-Node: Copyright205088
-Node: Privacy Policy207037
-Node: Variable Index207292
-Node: Key Index223210
+Node: Overview1549
+Node: characteristic2442
+Node: Emacsen4169
+Node: modes4386
+Node: folder convention5153
+Node: configuration8205
+Node: password10978
+Node: start15280
+Node: Viewing16448
+Node: singlepart17744
+Node: multipart19233
+Node: analysis22464
+Node: cipher-viewing26413
+Node: retrieving31439
+Node: moving35448
+Node: sum-write38096
+Node: features40473
+Node: status-update42953
+Node: invalid43978
+Node: Composing46178
+Node: header48227
+Node: cheader49227
+Node: addr-comp51029
+Node: addrbook52907
+Node: auto-alias56100
+Node: addr-comp157821
+Node: addr-comp260243
+Node: send62460
+Node: cite65553
+Node: mime-comp67799
+Node: charset-guess75147
+Node: longline78834
+Node: reply80662
+Node: forward84480
+Node: resend85353
+Node: shortcut87426
+Node: mark-b-comp92868
+Node: pgp-key95833
+Node: anonymous96714
+Node: Marks98281
+Node: unread mark99925
+Node: delete mark101426
+Node: refile mark103669
+Node: target mark105280
+Node: escape mark106911
+Node: unmark107766
+Node: mark change108745
+Node: sync110189
+Node: off-line111367
+Node: mew-mark113217
+Node: Refile113939
+Node: by-folder115799
+Node: by-alist117696
+Node: by-thread119776
+Node: by-from-folder120632
+Node: by-from121989
+Node: by-newsgroups123567
+Node: by-default123902
+Node: guess-rule124356
+Node: auto-refile126142
+Node: copy-msg128354
+Node: Virtual129622
+Node: selection131282
+Node: sorting131977
+Node: dialog133820
+Node: search134951
+Node: condition136116
+Node: dbsearch138371
+Node: keyword139595
+Node: thread140452
+Node: thread-op141712
+Node: Quit143882
+Node: Customize144431
+Node: summary-mode145246
+Node: message-mode149406
+Node: draft-mode153160
+Node: charset156127
+Node: highlight158333
+Node: hooks161309
+Node: pop165774
+Node: imap167575
+Node: nntp169260
+Node: smtp170760
+Node: config173815
+Node: config2179759
+Node: custom-misc181275
+Node: Tips182296
+Node: region183059
+Node: visiting183749
+Node: SSH184279
+Node: TLS/SSL185245
+Node: Stunnel186270
+Node: GnuTLS188308
+Node: TLS/SSL2191514
+Node: spam193041
+Node: spam2195337
+Node: addr-warn196668
+Node: biff197796
+Node: edit198554
+Node: xauth2199825
+Node: Convention200961
+Node: Implementation203031
+Node: Avail205394
+Node: obtain205701
+Node: ml205993
+Node: Copyright206269
+Node: Privacy Policy208218
+Node: Variable Index208473
+Node: Key Index224793
 
 End tag table

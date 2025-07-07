@@ -15,14 +15,14 @@ END-INFO-DIR-ENTRY
 
 File: mew.ja.info, Node: Top, Next: Overview, Prev: (dir), Up: (dir)
 
-Mew 6.9 マニュアル
-******************
+Mew 6.10 マニュアル
+*******************
 
                                                               山本和彦
                                                        作成 1996/02/19
-                                                       更新 2023/02/11
+                                                       更新 2025/07/07
 
-このマニュアルでは、Mew バージョン 6.9 について解説します。このマニュ
+このマニュアルでは、Mew バージョン 6.10 について解説します。このマニュ
 アルの他に、Mew に関する有益な情報は Mew の公式ホームページ
 (http://www.Mew.org/)から得られるかもしれません。
 
@@ -81,7 +81,7 @@ File: mew.ja.info, Node: characteristic, Next: Emacsen, Prev: Overview, Up: Over
 Mew の特長
 ==========
 
-Mew バージョン 6.9 の特長を以下に示します。
+Mew バージョン 6.10 の特長を以下に示します。
 
    - 複雑な構造を持つメッセージを簡単に表示できます。メッセージを表示
      する作業は、`SPC' を押すだけです。
@@ -1217,7 +1217,7 @@ File: mew.ja.info, Node: Composing, Next: header, Prev: invalid, Up: Top
      To:
      Subject:
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.10 on Emacs 29.4
      ----
 
 これを Draft モードといいます。Draft モードにおいて、"----" より上をヘッ
@@ -1700,7 +1700,7 @@ File: mew.ja.info, Node: send, Next: cite, Prev: addr-comp2, Up: Composing
      To: pooh
      Subject: 明日の日曜日
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.10 on Emacs 29.4
      ----
      明日の日曜日、遊びませんか？
 
@@ -1714,7 +1714,7 @@ File: mew.ja.info, Node: send, Next: cite, Prev: addr-comp2, Up: Composing
      To: winnie-the-pooh@example.net
      Subject: =?iso-2022-jp?B?GyRCTEBGfCRORnxNS0Z8GyhC?=
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.10 on Emacs 29.4
      Mime-Version: 1.0
      Content-Type: Text/Plain; charset=iso-2022-jp
      Content-Transfer-Encoding: 7bit
@@ -1842,7 +1842,7 @@ File: mew.ja.info, Node: mime-comp, Next: charset-guess, Prev: cite, Up: Composi
      To: mew-dist
      Subject: ここがヘッダ
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.9 on Emacs 28.2
+     X-Mailer: Mew version 6.10 on Emacs 29.4
      ----
      本文だよ。
 
@@ -5026,6 +5026,7 @@ File: mew.ja.info, Node: Tips, Next: region, Prev: custom-misc, Up: Top
 * addr-warn::                   アドレスの警告
 * biff::                        Biff
 * edit::                        Edit モード
+* xauth2::                      XOAUTH2
 
 
 
@@ -5442,7 +5443,7 @@ Biff の対象となるサーバとプロトコルは、Mew の起動時に `mew
 
 
 
-File: mew.ja.info, Node: edit, Next: Convention, Prev: biff, Up: Tips
+File: mew.ja.info, Node: edit, Next: xauth2, Prev: biff, Up: Tips
 
 Edit モード
 ===========
@@ -5482,9 +5483,35 @@ Edit モードでのコマンドをまとめます。
      Draft モードと同じ。
 
 
+
+File: mew.ja.info, Node: xauth2, Next: Convention, Prev: edit, Up: Tips
+
+XOAUTH2
+=======
+
+gmailなどが、認証の仕組みとしてXOAUTH2を要求するようになりました。Mew
+でも、自分で認証認可の設定をすれば、XOAUTH2が利用できます。クライアン
+トIDとクライアントシークレットを発行できたら、以下の変数に設定してくだ
+さい。
+
+     (setq mew-oauth2-client-id "<client id>")
+     (setq mew-oauth2-client-secret "<client secret>")
+
+うまく設定できれば、使い始めるときに、一回だけローカルのブラウザに認可
+画面が表示されます。発行されたアクセストークンは、Mewのパスワードの仕
+組みで保存されます。
+
+現在、XOAUTH2で通信が確認できているのはgmailとMS365です。MS365では、以
+下の設定も必要です。
+
+     (setq mew-oauth2-auth-url "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize")
+     (setq mew-oauth2-token-url "https://login.microsoftonline.com/organizations/oauth2/v2.0/token")
+     (setq mew-oauth2-resource-url "https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send offline_access")
+
+
 
 
-File: mew.ja.info, Node: Convention, Next: Implementation, Prev: edit, Up: Top
+File: mew.ja.info, Node: Convention, Next: Implementation, Prev: xauth2, Up: Top
 
 メッセージの作法
 ****************
@@ -5626,7 +5653,7 @@ File: mew.ja.info, Node: Copyright, Next: Privacy Policy, Prev: ml, Up: Top
 
 Mew は以下の著作権に従います。
 
-Copyright (C) 1994-2023 Mew developing team.
+Copyright (C) 1994-2025 Mew developing team.
 All rights reserved.
 
 変更の有無にかかわらず、ソースおよびバイナリ形式の再配布および利用は、
@@ -5803,6 +5830,12 @@ File: mew.ja.info, Node: Variable Index, Next: Key Index, Prev: Privacy Policy, 
 * mew-nntp-user:                nntp.
 * mew-nntp2-flush-hook:         hooks.
 * mew-nntp2-sentinel-hook:      hooks.
+* mew-oauth2-auth-url:          xauth2.                 (line   5)
+* mew-oauth2-client-id:         xauth2.                 (line   5)
+* mew-oauth2-client-secret:     xauth2.                 (line   5)
+* mew-oauth2-redirect-url:      xauth2.                 (line   5)
+* mew-oauth2-resource-url:      xauth2.                 (line   5)
+* mew-oauth2-token-url:         xauth2.                 (line   5)
 * mew-pack-hook:                hooks.
 * mew-pick-pattern-list:        condition.              (line   5)
 * mew-pop-auth-list:            pop.
@@ -6230,113 +6263,114 @@ File: mew.ja.info, Node: Key Index, Prev: Variable Index, Up: Top
 
 Tag table:
 Node: Top289
-Node: Overview1368
-Node: characteristic2011
-Node: Emacsen3023
-Node: modes3201
-Node: folder convention3711
-Node: configuration5586
-Node: password7915
-Node: start10583
-Node: Viewing11349
-Node: singlepart12328
-Node: multipart13232
-Node: analysis15499
-Node: cipher-viewing17760
-Node: retrieving20639
-Node: moving23205
-Node: sum-write24770
-Node: features26234
-Node: status-update27808
-Node: invalid28509
-Node: Composing29805
-Node: header31313
-Node: cheader31988
-Node: addr-comp33193
-Node: addrbook34188
-Node: auto-alias36327
-Node: addr-comp137337
-Node: addr-comp239032
-Node: send40393
-Node: cite42503
-Node: mime-comp43904
-Node: charset-guess49483
-Node: longline51703
-Node: reply52839
-Node: forward55845
-Node: resend56437
-Node: shortcut57618
-Node: mark-b-comp61030
-Node: pgp-key63444
-Node: anonymous64019
-Node: Marks64994
-Node: unread mark66137
-Node: delete mark67009
-Node: refile mark68594
-Node: target mark69587
-Node: escape mark70648
-Node: unmark71163
-Node: mark change71780
-Node: sync72645
-Node: off-line73338
-Node: mew-mark74605
-Node: Refile75133
-Node: by-folder76281
-Node: by-alist77462
-Node: by-thread79116
-Node: by-from-folder79732
-Node: by-from80685
-Node: by-newsgroups81896
-Node: by-default82131
-Node: guess-rule82488
-Node: auto-refile84016
-Node: copy-msg85717
-Node: Virtual86586
-Node: selection87704
-Node: sorting88210
-Node: dialog89488
-Node: search90154
-Node: condition90791
-Node: dbsearch92529
-Node: keyword93411
-Node: thread93910
-Node: thread-op94715
-Node: Quit96031
-Node: Customize96454
-Node: summary-mode97142
-Node: message-mode99931
-Node: draft-mode102765
-Node: charset104860
-Node: highlight106486
-Node: hooks108538
-Node: pop111944
-Node: imap113102
-Node: nntp114189
-Node: smtp115384
-Node: config117542
-Node: config2122070
-Node: custom-misc123226
-Node: Tips123943
-Node: region124595
-Node: visiting125104
-Node: SSH125466
-Node: TLS/SSL126054
-Node: Stunnel126795
-Node: GnuTLS128133
-Node: TLS/SSL2129957
-Node: spam131043
-Node: spam2132799
-Node: addr-warn133915
-Node: biff134688
-Node: edit135170
-Node: Convention135930
-Node: Implementation136970
-Node: Avail138429
-Node: obtain138678
-Node: ml138902
-Node: Copyright139081
-Node: Privacy Policy140089
-Node: Variable Index140287
-Node: Key Index156192
+Node: Overview1371
+Node: characteristic2014
+Node: Emacsen3027
+Node: modes3205
+Node: folder convention3715
+Node: configuration5590
+Node: password7919
+Node: start10587
+Node: Viewing11353
+Node: singlepart12332
+Node: multipart13236
+Node: analysis15503
+Node: cipher-viewing17764
+Node: retrieving20643
+Node: moving23209
+Node: sum-write24774
+Node: features26238
+Node: status-update27812
+Node: invalid28513
+Node: Composing29809
+Node: header31318
+Node: cheader31993
+Node: addr-comp33198
+Node: addrbook34193
+Node: auto-alias36332
+Node: addr-comp137342
+Node: addr-comp239037
+Node: send40398
+Node: cite42510
+Node: mime-comp43911
+Node: charset-guess49491
+Node: longline51711
+Node: reply52847
+Node: forward55853
+Node: resend56445
+Node: shortcut57626
+Node: mark-b-comp61038
+Node: pgp-key63452
+Node: anonymous64027
+Node: Marks65002
+Node: unread mark66145
+Node: delete mark67017
+Node: refile mark68602
+Node: target mark69595
+Node: escape mark70656
+Node: unmark71171
+Node: mark change71788
+Node: sync72653
+Node: off-line73346
+Node: mew-mark74613
+Node: Refile75141
+Node: by-folder76289
+Node: by-alist77470
+Node: by-thread79124
+Node: by-from-folder79740
+Node: by-from80693
+Node: by-newsgroups81904
+Node: by-default82139
+Node: guess-rule82496
+Node: auto-refile84024
+Node: copy-msg85725
+Node: Virtual86594
+Node: selection87712
+Node: sorting88218
+Node: dialog89496
+Node: search90162
+Node: condition90799
+Node: dbsearch92537
+Node: keyword93419
+Node: thread93918
+Node: thread-op94723
+Node: Quit96039
+Node: Customize96462
+Node: summary-mode97150
+Node: message-mode99939
+Node: draft-mode102773
+Node: charset104868
+Node: highlight106494
+Node: hooks108546
+Node: pop111952
+Node: imap113110
+Node: nntp114197
+Node: smtp115392
+Node: config117550
+Node: config2122078
+Node: custom-misc123234
+Node: Tips123951
+Node: region124643
+Node: visiting125152
+Node: SSH125514
+Node: TLS/SSL126102
+Node: Stunnel126843
+Node: GnuTLS128181
+Node: TLS/SSL2130005
+Node: spam131091
+Node: spam2132847
+Node: addr-warn133963
+Node: biff134736
+Node: edit135218
+Node: xauth2135973
+Node: Convention136783
+Node: Implementation137825
+Node: Avail139284
+Node: obtain139533
+Node: ml139757
+Node: Copyright139936
+Node: Privacy Policy140944
+Node: Variable Index141142
+Node: Key Index157449
 
 End tag table
