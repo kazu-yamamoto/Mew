@@ -42,6 +42,12 @@
 (defvar mew-oauth2-resource-url "https://mail.google.com/"
   "URL used to request access to Mail Resources.")
 
+;;; MS356
+
+;;(setq mew-oauth2-auth-url "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize")
+;;(setq mew-oauth2-token-url "https://login.microsoftonline.com/organizations/oauth2/v2.0/token")
+;;(setq mew-oauth2-resource-url "https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send offline_access")
+
 (defun mew-oauth2-debug (label string)
   (when (mew-debug 'oauth2)
     (with-current-buffer (get-buffer-create mew-buffer-debug)
