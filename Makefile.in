@@ -145,7 +145,7 @@ log::
 diff::
 	git diff HEAD..FETCH_HEAD
 
-VERSION = `git tag | tail -1 | sed -e 's/v//'`
+VERSION = `git tag --sort=authordate | tail -1 | sed -e 's/v//'`
 
 archive:
 	git archive master -o ~/mew-$(VERSION).tar --prefix=mew-$(VERSION)/
