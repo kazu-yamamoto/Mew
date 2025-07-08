@@ -1,6 +1,25 @@
 # Release note
 
-This is stable releases of Mew 6.9.
+This is stable releases of Mew 6.10.
+
+## Differences between Mew 6.10 and Mew 6.9
+
+* XOAUTH2 support. Please see Sec 9.13 of the manual.
+* Use C.UTF-8 if available to display non-ASCII names for GnuPG
+  programs.
+  [#179](https://github.com/kazu-yamamoto/Mew/pull/179)
+* Enable IPv6 support of stunnel by default.
+  [#177](https://github.com/kazu-yamamoto/Mew/pull/177)
+* Add GnuTLS support.
+  [#175](https://github.com/kazu-yamamoto/Mew/pull/175)
+* Supporting stunnel >=5.15 only.
+  [#174](https://github.com/kazu-yamamoto/Mew/pull/174)
+* Separately check if stunnel supports 'foreground', 'pid' and
+  'syslog' options.
+  [#171](https://github.com/kazu-yamamoto/Mew/pull/170)
+* Use configured file names as relative paths from mew-home.
+  [#170](https://github.com/kazu-yamamoto/Mew/pull/170)
+* And several bug fixes.
 
 ## Differences between Mew 6.9 and Mew 6.8
 
