@@ -24,6 +24,9 @@
 (defvar mew-passwd-decryption-name "GPG Decryption")
 
 (defvar mew-passwd-master nil)
+(defvar mew-passwd-master-asymmetric-encryption-command (list "-e" "--default-recipient-self"))
+(defvar mew-passwd-master-symmetric-encryption-command (list "-c" "--cipher-algo" mew-passwd-cipher))
+
 (defvar mew-passwd-alist nil)
 (defvar mew-passwd-timer-id nil)
 (defvar mew-passwd-rendezvous nil)
@@ -292,7 +295,7 @@
 	(with-temp-buffer
 	  (catch 'loop
 	    (dotimes (_i N) ;; prevent byte-compile warning
-	      (when mew-passwd-agent-hack (mew-passwd-clear-passphrase file))
+	      (when (and mew-passwd-agent-hack (eq mew-master-passwd-encryption 'symmetric)) (mew-passwd-clear-passphrase file))
 	      (setq pro (apply 'mew-start-process-lang
 			       mew-passwd-decryption-name
 			       (current-buffer)
@@ -301,6 +304,7 @@
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
 	      (mew-passwd-rendezvous pro)
+	      (if (eq mew-master-passwd-encryption 'asymmetric) (setq mew-passwd-master t))
 	      (unless (file-exists-p tfile)
 		(setq mew-passwd-master nil))
 	      (when mew-passwd-master
@@ -319,13 +323,16 @@
   (let* ((process-connection-type mew-connection-type2)
 	 (file (expand-file-name mew-passwd-file mew-conf-path))
 	 (tfile (mew-make-temp-name "gpg-save"))
-	 (args (mew-passwd-adjust-args (list "-c"
-					     "--cipher-algo" mew-passwd-cipher
-					     "--yes" "--output" file tfile)))
+	 (args)
 	 (N mew-passwd-repeat)
 	 pro)
     (if (file-exists-p file)
 	(rename-file file (concat file mew-backup-suffix) 'override))
+    (cond ((eq mew-master-passwd-encryption 'symmetric)
+	   (setq args (mew-passwd-adjust-args (append mew-passwd-master-symmetric-encryption-command (list "--yes" "--output" file tfile)))))
+	  ((eq mew-master-passwd-encryption 'asymmetric)
+	   (setq args (mew-passwd-adjust-args (append mew-passwd-master-asymmetric-encryption-command (list "--yes" "--output" file tfile)))))
+	  (t (error "unknown mew-use-master-passwd-encryption")))
     (unwind-protect
 	(with-temp-buffer
 	  (pp mew-passwd-alist (current-buffer))
