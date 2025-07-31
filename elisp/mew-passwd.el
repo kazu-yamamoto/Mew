@@ -256,7 +256,7 @@
       (error ""))))
 
 (defun mew-passwd-read-passwd (prompt &optional encrypt-p)
-  (if mew-passwd-master
+  (if (stringp mew-passwd-master) ; when mew-passwd-master is t, need to read passwd
       (progn
 	(mew-timing)
 	mew-passwd-master)
@@ -304,9 +304,9 @@
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
 	      (mew-passwd-rendezvous pro)
-	      (if (eq mew-master-passwd-encryption 'asymmetric) (setq mew-passwd-master t))
 	      (unless (file-exists-p tfile)
 		(setq mew-passwd-master nil))
+	      (if (eq mew-master-passwd-encryption 'asymmetric)	(setq mew-passwd-master t)) ; t means need to save a password file
 	      (when mew-passwd-master
 		(let ((coding-system-for-read 'undecided))
 		  (insert-file-contents tfile))
