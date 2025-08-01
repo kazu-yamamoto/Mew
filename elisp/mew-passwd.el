@@ -295,7 +295,8 @@
 	(with-temp-buffer
 	  (catch 'loop
 	    (dotimes (_i N) ;; prevent byte-compile warning
-	      (when (and mew-passwd-agent-hack (eq mew-master-passwd-encryption 'symmetric)) (mew-passwd-clear-passphrase file))
+	      (when mew-passwd-agent-hack (mew-passwd-clear-passphrase file))
+	      (setq mew-passwd-master t) ;; 
 	      (setq pro (apply 'mew-start-process-lang
 			       mew-passwd-decryption-name
 			       (current-buffer)
@@ -304,9 +305,9 @@
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
 	      (mew-passwd-rendezvous pro)
+	      (if (eq mew-master-passwd-encryption 'asymmetric)	(setq mew-passwd-master t)) ; drop passphrase, but need to save a password file
 	      (unless (file-exists-p tfile)
 		(setq mew-passwd-master nil))
-	      (if (eq mew-master-passwd-encryption 'asymmetric)	(setq mew-passwd-master t)) ; t means need to save a password file
 	      (when mew-passwd-master
 		(let ((coding-system-for-read 'undecided))
 		  (insert-file-contents tfile))
@@ -409,9 +410,10 @@
 (defun mew-passwd-clear-passphrase (file)
   (when (file-exists-p file)
     (let ((cache-id (mew-passwd-get-cache-id file)))
-      (with-temp-buffer
-	(insert "CLEAR_PASSPHRASE " cache-id "\n")
-	(call-process-region (point-min) (point-max) "gpg-connect-agent")))))
+      (if cache-id ;; only symmetric encrpyted file has a salt / cache-id
+	  (with-temp-buffer
+	    (insert "CLEAR_PASSPHRASE " cache-id "\n")
+	    (call-process-region (point-min) (point-max) "gpg-connect-agent"))))))
 
 (defun mew-passwd-adjust-args (args)
   (if mew-passwd-agent-hack
