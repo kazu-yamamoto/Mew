@@ -1748,7 +1748,7 @@ created (if the feature is provided)."
   :group 'mew-privacy
   :type '(choice
 	  (const :tag "Symmetric encryption" symmetric)
-	  (const :tag "Asymmetric encrytipon" asymmetric)))
+	  (const :tag "Asymmetric (public key) encrytipon" asymmetric)))
 
 (defcustom mew-master-passwd-type 'master
   "*Type of the password manager when mew-use-master-passwd is non-nil."
