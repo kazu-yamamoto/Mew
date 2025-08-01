@@ -196,8 +196,9 @@
     (let ((file (expand-file-name mew-passwd-file mew-conf-path)))
       (if (file-exists-p file)
 	  (setq mew-passwd-alist (mew-passwd-load))
-	;; save nil and ask master twice
-	(mew-passwd-save)))
+	(mew-passwd-save "ask")	;; save nil and ask master twice
+	(mew-passwd-load) ;; read new password
+	))
     (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))))
 
 (defun mew-passwd-clean-up ()
@@ -268,7 +269,8 @@
   "Change the master password."
   (interactive)
   (setq mew-passwd-master nil)
-  (mew-passwd-save))
+  (mew-passwd-save "ask") ;; save and ask master twice
+  (mew-passwd-load)) ;; read new password
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -320,19 +322,18 @@
       (mew-passwd-delete-file tfile))
     pwds))
 
-(defun mew-passwd-save ()
+(defun mew-passwd-save (&optional pinentry-mode)
   (let* ((process-connection-type mew-connection-type2)
 	 (file (expand-file-name mew-passwd-file mew-conf-path))
 	 (tfile (mew-make-temp-name "gpg-save"))
-	 (args)
 	 (N mew-passwd-repeat)
 	 pro)
     (if (file-exists-p file)
 	(rename-file file (concat file mew-backup-suffix) 'override))
     (cond ((eq mew-master-passwd-encryption 'symmetric)
-	   (setq args (mew-passwd-adjust-args (append mew-passwd-master-symmetric-encryption-command (list "--yes" "--output" file tfile)))))
+	   (setq args (mew-passwd-adjust-args (append mew-passwd-master-symmetric-encryption-command (list "--yes" "--output" file tfile)) pinentry-mode)))
 	  ((eq mew-master-passwd-encryption 'asymmetric)
-	   (setq args (mew-passwd-adjust-args (append mew-passwd-master-asymmetric-encryption-command (list "--yes" "--output" file tfile)))))
+	   (setq args (mew-passwd-adjust-args (append mew-passwd-master-asymmetric-encryption-command (list "--yes" "--output" file tfile)) pinentry-mode)))
 	  (t (error "unknown mew-use-master-passwd-encryption")))
     (unwind-protect
 	(with-temp-buffer
@@ -415,9 +416,9 @@
 	    (insert "CLEAR_PASSPHRASE " cache-id "\n")
 	    (call-process-region (point-min) (point-max) "gpg-connect-agent"))))))
 
-(defun mew-passwd-adjust-args (args)
+(defun mew-passwd-adjust-args (args &optional pinentry-mode)
   (if mew-passwd-agent-hack
-      (cons "--pinentry-mode" (cons "loopback" args))
+      (cons "--pinentry-mode" (cons (if pinentry-mode pinentry-mode "loopback") args))
     args))
 
 (provide 'mew-passwd)
