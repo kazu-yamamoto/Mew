@@ -197,7 +197,7 @@
       (if (file-exists-p file)
 	  (setq mew-passwd-alist (mew-passwd-load))
 	(mew-passwd-save "ask")	;; save nil and ask master twice
-	(mew-passwd-load) ;; read new password
+	(mew-passwd-load) ;; load new password
 	))
     (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))))
 
@@ -268,9 +268,16 @@
 (defun mew-passwd-change ()
   "Change the master password."
   (interactive)
-  (setq mew-passwd-master nil)
-  (mew-passwd-save "ask") ;; save and ask master twice
-  (mew-passwd-load)) ;; read new password
+  (cond ((eq mew-master-passwd-encryption 'asymmetric)
+	 (message "Master password for public key encrytion can't be changed.")
+	 (mew-let-user-read))
+	(t
+	 (message "Master password for symmentric encrytion.")
+	 (mew-let-user-read)
+	 (setq mew-passwd-master nil)
+	 (mew-passwd-save "ask") ;; save and ask master twice
+	 (mew-passwd-load))) ;; load new password
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -403,7 +410,7 @@
 
 (defun mew-passwd-get-cache-id (file)
   (with-temp-buffer
-    (apply 'call-process mew-prog-passwd nil t nil (mew-passwd-adjust-args (list "--list-packets" file)))
+    (apply 'call-process mew-prog-passwd nil t nil (mew-passwd-adjust-args (list "--list-packets" file) "loopback"))
     (goto-char (point-min))
     (when (re-search-forward "salt \\([^ ,]+\\)," nil t)
       (concat "S" (match-string 1)))))
