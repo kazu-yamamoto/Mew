@@ -192,19 +192,22 @@
     )
    (t
     (when (and (not mew-passwd-master) mew-use-master-passwd)
-    (setq mew-passwd-agent-hack (mew-passwd-check-agent-hack))
-    (let ((file (expand-file-name mew-passwd-file mew-conf-path)))
-      (if (file-exists-p file)
-	  (setq mew-passwd-alist (mew-passwd-load))
-	(mew-passwd-save "ask")	;; save nil and ask master twice
-	(mew-passwd-load) ;; load new password
-	))
-    (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))))
+      (setq mew-passwd-agent-hack (mew-passwd-check-agent-hack))
+      (let ((file (expand-file-name mew-passwd-file mew-conf-path)))
+	(if (file-exists-p file)
+	    (setq mew-passwd-alist (mew-passwd-load))
+	  (mew-passwd-save "ask")	;; save nil and ask master twice
+	  (mew-passwd-load) ;; load new password
+	  ))
+      (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))))
 
 (defun mew-passwd-clean-up ()
   (remove-hook 'kill-emacs-hook 'mew-passwd-clean-up)
   (when mew-passwd-master
-    (mew-passwd-save))
+    (if (and (eq mew-master-passwd-encryption 'symmetric) (not (stringp mew-passwd-master)))
+	(mew-passwd-save "ask") ;; ask master twice at change from public key encryption to symmetric encryption
+      (mew-passwd-save)
+      ))
   (setq mew-passwd-master nil)
   (when (and mew-use-cached-passwd (not mew-use-master-passwd))
     (setq mew-passwd-alist nil)
@@ -272,7 +275,7 @@
 	 (message "Master password for public key encrytion can't be changed.")
 	 (mew-let-user-read))
 	(t
-	 (message "Master password for symmentric encrytion.")
+	 (message "Master password for symmetric encrytion.")
 	 (mew-let-user-read)
 	 (setq mew-passwd-master nil)
 	 (mew-passwd-save "ask") ;; save and ask master twice
@@ -304,7 +307,6 @@
 	(with-temp-buffer
 	  (catch 'loop
 	    (dotimes (_i N) ;; prevent byte-compile warning
-	      (when mew-passwd-agent-hack (mew-passwd-clear-passphrase file))
 	      (setq mew-passwd-master t) ;; 
 	      (setq pro (apply 'mew-start-process-lang
 			       mew-passwd-decryption-name
@@ -408,24 +410,9 @@
 	(write-region (point-min) (point-max) file nil 'no-msg)))
     (delete-file file)))
 
-(defun mew-passwd-get-cache-id (file)
-  (with-temp-buffer
-    (apply 'call-process mew-prog-passwd nil t nil (mew-passwd-adjust-args (list "--list-packets" file) "loopback"))
-    (goto-char (point-min))
-    (when (re-search-forward "salt \\([^ ,]+\\)," nil t)
-      (concat "S" (match-string 1)))))
-
-(defun mew-passwd-clear-passphrase (file)
-  (when (file-exists-p file)
-    (let ((cache-id (mew-passwd-get-cache-id file)))
-      (if cache-id ;; only symmetric encrpyted file has a salt / cache-id
-	  (with-temp-buffer
-	    (insert "CLEAR_PASSPHRASE " cache-id "\n")
-	    (call-process-region (point-min) (point-max) "gpg-connect-agent"))))))
-
 (defun mew-passwd-adjust-args (args &optional pinentry-mode)
   (if mew-passwd-agent-hack
-      (cons "--pinentry-mode" (cons (if pinentry-mode pinentry-mode "loopback") args))
+      (append '("--no-symkey-cache" "--pinentry-mode") (cons (if pinentry-mode pinentry-mode "loopback") args))
     args))
 
 (provide 'mew-passwd)
