@@ -197,8 +197,7 @@
 	(if (file-exists-p file)
 	    (setq mew-passwd-alist (mew-passwd-load))
 	  (mew-passwd-save "ask")	;; save nil and ask master twice
-	  (mew-passwd-load) ;; load new password
-	  ))
+	  (mew-passwd-load))) ;; load new password
       (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))))
 
 (defun mew-passwd-clean-up ()
@@ -206,8 +205,7 @@
   (when mew-passwd-master
     (if (and (eq mew-master-passwd-encryption 'symmetric) (not (stringp mew-passwd-master)))
 	(mew-passwd-save "ask") ;; ask master twice at change from public key encryption to symmetric encryption
-      (mew-passwd-save)
-      ))
+      (mew-passwd-save)))
   (setq mew-passwd-master nil)
   (when (and mew-use-cached-passwd (not mew-use-master-passwd))
     (setq mew-passwd-alist nil)
@@ -271,16 +269,16 @@
 (defun mew-passwd-change ()
   "Change the master password."
   (interactive)
-  (cond ((eq mew-master-passwd-encryption 'asymmetric)
-	 (message "Master password for public key encrytion can't be changed.")
-	 (mew-let-user-read))
-	(t
-	 (message "Master password for symmetric encrytion.")
-	 (mew-let-user-read)
-	 (setq mew-passwd-master nil)
-	 (mew-passwd-save "ask") ;; save and ask master twice
-	 (mew-passwd-load))) ;; load new password
-  )
+  (cond
+   ((eq mew-master-passwd-encryption 'asymmetric)
+    (message "Master password for public key encrytion can't be changed.")
+    (mew-let-user-read))
+   (t
+    (message "Master password for symmetric encrytion.")
+    (mew-let-user-read)
+    (setq mew-passwd-master nil)
+    (mew-passwd-save "ask") ;; save and ask master twice
+    (mew-passwd-load)))) ;; load new password
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -339,11 +337,12 @@
 	 pro)
     (if (file-exists-p file)
 	(rename-file file (concat file mew-backup-suffix) 'override))
-    (cond ((eq mew-master-passwd-encryption 'symmetric)
-	   (setq args (mew-passwd-adjust-args (append mew-passwd-master-symmetric-encryption-command (list "--yes" "--output" file tfile)) pinentry-mode)))
-	  ((eq mew-master-passwd-encryption 'asymmetric)
-	   (setq args (mew-passwd-adjust-args (append mew-passwd-master-asymmetric-encryption-command (list "--yes" "--output" file tfile)) pinentry-mode)))
-	  (t (error "unknown mew-use-master-passwd-encryption")))
+    (cond
+     ((eq mew-master-passwd-encryption 'symmetric)
+      (setq args (mew-passwd-adjust-args (append mew-passwd-master-symmetric-encryption-command (list "--yes" "--output" file tfile)) pinentry-mode)))
+     ((eq mew-master-passwd-encryption 'asymmetric)
+      (setq args (mew-passwd-adjust-args (append mew-passwd-master-asymmetric-encryption-command (list "--yes" "--output" file tfile)) pinentry-mode)))
+     (t (error "unknown mew-use-master-passwd-encryption")))
     (unwind-protect
 	(with-temp-buffer
 	  (pp mew-passwd-alist (current-buffer))
