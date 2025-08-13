@@ -70,6 +70,7 @@ SRCS =	mew-addrbook.el	mew-attach.el	mew-auth.el	\
 
 TEMPFILE  = temp.el
 TEMPFILE2 = temp2.el
+TEMPFILE3 = temp3.el
 DETECT = emacs
 
 CP = cp
@@ -127,11 +128,24 @@ $(TEMPFILE2):
 
 ################################################################
 
+format: $(TEMPFILE3) mew.el
+	@echo 'Formatting EL files of Mew ... '
+	$(EMACS) -batch -q -no-site-file -l ./$(TEMPFILE3) -f format-files
+	@echo 'Formatting EL files of Mew ... done'
+
+$(TEMPFILE3):
+	@echo '(setq load-path (cons "." load-path))' > $(TEMPFILE3)
+	@echo "(require 'mew)" >> $(TEMPFILE3)
+	@echo '(defun indent-file (file) (save-excursion (find-file (expand-file-name file)) (indent-region (point-min) (point-max)) (save-buffer)))' >> $(TEMPFILE3)
+	@echo "(defun format-files () (mapcar (lambda (x) (indent-file (symbol-name x))) '($(SRCS))))" >> $(TEMPFILE3)
+
+################################################################
+
 clean:
-	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2)
+	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2) $(TEMPFILE3)
 
 distclean:
-	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2)
+	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2) $(TEMPFILE3)
 
 ##
 ## End of Makefile
