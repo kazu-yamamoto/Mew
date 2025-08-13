@@ -334,7 +334,7 @@
 	 (file (expand-file-name mew-passwd-file mew-conf-path))
 	 (tfile (mew-make-temp-name "gpg-save"))
 	 (N mew-passwd-repeat)
-	 pro)
+	 pro args)
     (if (file-exists-p file)
 	(rename-file file (concat file mew-backup-suffix) 'override))
     (cond
