@@ -23,6 +23,7 @@
 (defvar mew-passwd-encryption-name "GPG Encryption")
 (defvar mew-passwd-decryption-name "GPG Decryption")
 
+;; t means a master password isn't cached but passwords are loaded.
 (defvar mew-passwd-master nil)
 (defvar mew-passwd-master-asymmetric-encryption-command (list "-e" "--default-recipient-self"))
 (defvar mew-passwd-master-symmetric-encryption-command (list "-c" "--cipher-algo" mew-passwd-cipher))
@@ -329,6 +330,8 @@
       (mew-passwd-delete-file tfile))
     pwds))
 
+;; "pinentry-mode" is a string for pinentry-mode option of
+;; GnuPG2. "loopback" or "ask" is useful.
 (defun mew-passwd-save (&optional pinentry-mode)
   (let* ((process-connection-type mew-connection-type2)
 	 (file (expand-file-name mew-passwd-file mew-conf-path))
