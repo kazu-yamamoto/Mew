@@ -189,13 +189,13 @@
     )
    (t
     (when (and (not mew-passwd-master) mew-use-master-passwd)
-    (setq mew-passwd-agent-hack (mew-passwd-check-agent-hack))
-    (let ((file (expand-file-name mew-passwd-file mew-conf-path)))
-      (if (file-exists-p file)
-	  (setq mew-passwd-alist (mew-passwd-load))
-	;; save nil and ask master twice
-	(mew-passwd-save)))
-    (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))))
+      (setq mew-passwd-agent-hack (mew-passwd-check-agent-hack))
+      (let ((file (expand-file-name mew-passwd-file mew-conf-path)))
+	(if (file-exists-p file)
+	    (setq mew-passwd-alist (mew-passwd-load))
+	  ;; save nil and ask master twice
+	  (mew-passwd-save)))
+      (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))))
 
 (defun mew-passwd-clean-up ()
   (remove-hook 'kill-emacs-hook 'mew-passwd-clean-up)

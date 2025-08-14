@@ -275,7 +275,7 @@
 
 (defun mew-imap2-command-pwd-login (pro pnm)
   (let* ((prompt (format "IMAP LOGIN password (%s): "
-                        (mew-imap2-get-account pnm)))
+                         (mew-imap2-get-account pnm)))
          (passwd (mew-imap2-input-passwd prompt pnm))
          (epasswd (mew-base64-encode-string passwd)))
     (mew-imap2-process-send-string2 pro epasswd)))
@@ -600,7 +600,7 @@ with '*' in the region are handled."
                     status
                     (if (string= status "auth-xoauth2")
                         (mew-xoauth2-json-status (mew-match-string 1))
-			"OK"
+		      "OK"
                       "OK"))))
        ((string-match eos str)
 	(mew-imap2-set-tag pnm nil)

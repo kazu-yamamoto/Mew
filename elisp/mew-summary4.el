@@ -810,7 +810,7 @@ message."
   "Copy messages marked with `*' to a local folder.  If called
 with `\\[universal-argument]', only messages marked with `*' in
 the region are handled."
- (interactive "P")
+  (interactive "P")
   (mew-summary-not-in-draft
    (let ((mew-use-highlight-x-face nil)
 	 (fld (mew-summary-folder-name))

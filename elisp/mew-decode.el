@@ -201,9 +201,9 @@ This commands toggles visibility of these lines."
 	 (mew-decode-syntax-insert-warning)
 	 (save-excursion (mew-highlight-x-face (point-min) (point-max)))
 	 (setq vispos (if (get-text-property (point-min) 'mew-visible)
-			(point-min)
-		      (or (next-single-property-change (point-min) 'mew-visible)
-			  (point-max)))))))
+			  (point-min)
+			(or (next-single-property-change (point-min) 'mew-visible)
+			    (point-max)))))))
     (mew-header-veil)
     (mew-header-goto-end)
     (if (eobp)
@@ -686,7 +686,7 @@ Return a part syntax after moving the beginning of the content body."
     ;; or single in multipart/alternative
     ;; or single in multipart/security
     (setq cooked-textp (and (string= mew-ct-txt (mew-syntax-get-value (mew-syntax-get-ct syntax) 'cap))
-		     (not (mew-syntax-from-alternative syntax))))
+			    (not (mew-syntax-from-alternative syntax))))
     (setq hend (mew-syntax-get-end syntax))
     (unless hend
       (mew-syntax-set-end syntax (point-max)))

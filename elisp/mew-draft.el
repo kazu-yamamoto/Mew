@@ -224,10 +224,10 @@ the Body: field."
 ;;;
 
 (defun mew-draft-header (&optional subject nl to cc newsgroups in-reply-to references other-headers fromme)
-;; to -- string or list
-;; cc -- string or list
-;; nl -- one empty line under "----", which is necessary if
-;;      attachment is prepared
+  ;; to -- string or list
+  ;; cc -- string or list
+  ;; nl -- one empty line under "----", which is necessary if
+  ;;      attachment is prepared
   (let ((del (unless fromme mew-regex-my-address-list)) ;; deleting list
 	case body)
     (goto-char (point-min))
@@ -322,8 +322,8 @@ citation prefix and label.
 2. If called with '\\[universal-argument]', the header is also copied if exists.
 3. If an Emacs mark exists, the target is the region between the mark and
    the cursor."
-;; MUST take care of C-x C-x
-;; MUST be able to cancel by C-x u
+  ;; MUST take care of C-x C-x
+  ;; MUST be able to cancel by C-x u
   (interactive "P")
   (if (and (not force) (or (mew-in-header-p) (mew-in-attach-p)))
       (message "Cannot cite a message here")
@@ -373,8 +373,8 @@ citation prefix and label.
 2. If called with '\\[universal-argument]', the header is also copied if exists.
 3. If an Emacs mark exists, the target is the region between the mark and
    the cursor."
-;; MUST take care of C-x C-x
-;; MUST be able to cancel by C-x u
+  ;; MUST take care of C-x C-x
+  ;; MUST be able to cancel by C-x u
   (interactive "P")
   (if (and (not force) (or (mew-in-header-p) (mew-in-attach-p)))
       (message "Cannot cite a message here")

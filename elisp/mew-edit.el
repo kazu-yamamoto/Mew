@@ -456,11 +456,11 @@ If executed with '\\[universal-argument]', coding-system is asked."
 
 (defun mew-input-burst-folder ()
   (let (default)
-     (if (and mew-use-burst-folder-history mew-burst-last-folder)
-	 (setq default mew-burst-last-folder)
-       (setq default (mew-inbox-folder))) ;; local folder
-     (setq mew-burst-last-folder (mew-input-local-folder default))
-     mew-burst-last-folder))
+    (if (and mew-use-burst-folder-history mew-burst-last-folder)
+	(setq default mew-burst-last-folder)
+      (setq default (mew-inbox-folder))) ;; local folder
+    (setq mew-burst-last-folder (mew-input-local-folder default))
+    mew-burst-last-folder))
 
 (defun mew-summary-burst-part (part folder newmsg &optional num)
   (let (n len nums entry file)

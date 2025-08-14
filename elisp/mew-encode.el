@@ -214,7 +214,7 @@
 	    (setq insl nil)
 	    (forward-line))))
       ret)))
-	
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Dcc:, Bcc:
@@ -997,9 +997,9 @@
 	  (mew-encode-smime proto cte decrypters)))))))
 
 (defun mew-security-multipart-boundary (depth)
-   (if depth
-       (mew-boundary-get (format "Security_Multipart%s" (number-to-string depth)))
-     (mew-boundary-get "Security_Multipart")))
+  (if depth
+      (mew-boundary-get (format "Security_Multipart%s" (number-to-string depth)))
+    (mew-boundary-get "Security_Multipart")))
 
 (defun mew-save-transfer-form (beg end retain &optional cte)
   ;; called in the narrowed region

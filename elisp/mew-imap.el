@@ -668,7 +668,7 @@
        pro pnm
        (if (mew-imap-get-gm-ext-1 pnm)
            "UID FETCH %s (X-GM-MSGID X-GM-THRID X-GM-LABELS BODY.PEEK[HEADER])"
-           "UID FETCH %s BODY.PEEK[HEADER]")
+         "UID FETCH %s BODY.PEEK[HEADER]")
        uid)))))
 
 (defun mew-imap-command-post-fetch (pro pnm)
@@ -1139,7 +1139,7 @@
     (if (char-equal sep-char (aref dir len))
 	(substring dir 0 len)
       dir)))
-	
+
 (defun mew-imap-file-name-as-directory (dir case)
   ;; inbox.foo => inbox.foo.
   (let* ((sep (mew-imap-separator case))
@@ -1408,9 +1408,9 @@
 	  (mew-sinfo-set-unread-mark (mew-get-unread-mark bnm))
 	  (if (mew-imap-get-range pnm)
 	      (progn
-;;		(mew-imap-set-mdb pnm (mew-summary-mark-collect4))
+		;;		(mew-imap-set-mdb pnm (mew-summary-mark-collect4))
 		(mew-net-folder-clean))
-;;	    (mew-imap-set-mdb pnm (mew-summary-mark-collect5))
+	    ;;	    (mew-imap-set-mdb pnm (mew-summary-mark-collect5))
 	    (mew-net-invalid-cache-invisible))
 	  (when (and (string= mailbox mew-imap-inbox-string)
 		     (or (mew-imap-spam-pattern case)
@@ -1451,8 +1451,8 @@
 	  ;; We store the value in the variable mew--gnutls-imap-greeting
 	  ;; and pass it to the filter to process the greeting.
 	  (mew-imap-filter process
-			  (string-replace "\r\n" "\n"
-					  mew--gnutls-imap-greeting)))
+			   (string-replace "\r\n" "\n"
+					   mew--gnutls-imap-greeting)))
 	))))
 
 (defun mew-imap-exec-recover (bnm)
