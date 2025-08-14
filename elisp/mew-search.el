@@ -26,26 +26,26 @@
 
 (defvar mew-search-switch
   `((spotlight "Spotlight" ,mew-prog-spotlight
-     mew-search-with-spotlight mew-search-virtual-with-spotlight
-     mew-spotlight-index-folder mew-spotlight-index-all
-     mew-pick-canonicalize-pattern-spotlight
-     nil nil)
+	       mew-search-with-spotlight mew-search-virtual-with-spotlight
+	       mew-spotlight-index-folder mew-spotlight-index-all
+	       mew-pick-canonicalize-pattern-spotlight
+	       nil nil)
     (wds "WDS" ,mew-prog-wds
-     mew-search-with-wds mew-search-virtual-with-wds
-     mew-wds-index-folder mew-wds-index-all
-     mew-pick-canonicalize-pattern-wds
-     mew-wds-register mew-wds-unregister)
+	 mew-search-with-wds mew-search-virtual-with-wds
+	 mew-wds-index-folder mew-wds-index-all
+	 mew-pick-canonicalize-pattern-wds
+	 mew-wds-register mew-wds-unregister)
     (google "Google" ,mew-prog-google
-     mew-search-with-google mew-search-virtual-with-google
-     mew-google-index-folder mew-google-index-all
-     mew-pick-canonicalize-pattern-google
-     mew-google-register mew-google-unregister)
+	    mew-search-with-google mew-search-virtual-with-google
+	    mew-google-index-folder mew-google-index-all
+	    mew-pick-canonicalize-pattern-google
+	    mew-google-register mew-google-unregister)
     (est "Hyper Estraier" ,mew-prog-est
-     mew-search-with-est mew-search-virtual-with-est
-     mew-est-index-folder mew-est-index-all
-     mew-pick-canonicalize-pattern-est
-     nil nil
-     mew-est-input-filter)))
+	 mew-search-with-est mew-search-virtual-with-est
+	 mew-est-index-folder mew-est-index-all
+	 mew-pick-canonicalize-pattern-est
+	 nil nil
+	 mew-est-input-filter)))
 
 (defun mew-search-get-list (func)
   (let ((sw mew-search-switch)
@@ -193,9 +193,9 @@ with a search method."
       (message "No search method")
     (let* ((ent (mew-search-get-ent mew-search-method))
 	   (func (mew-search-get-func-register ent)))
-       (if (not (fboundp func))
-	   (message "This command cannot be used")
-	 (funcall func)))))
+      (if (not (fboundp func))
+	  (message "This command cannot be used")
+	(funcall func)))))
 
 (defun mew-summary-search-unregister ()
   (interactive)
@@ -203,9 +203,9 @@ with a search method."
       (message "No search method")
     (let* ((ent (mew-search-get-ent mew-search-method))
 	   (func (mew-search-get-func-unregister ent)))
-       (if (not (fboundp func))
-	   (message "This command cannot be used")
-	 (funcall func)))))
+      (if (not (fboundp func))
+	  (message "This command cannot be used")
+	(funcall func)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -650,7 +650,7 @@ with a search method."
       ((not (mew-which-exec mew-prog-smew))
        (message "%s not found" mew-prog-smew))
       (t
-      ,@body))))
+       ,@body))))
 
 (defun mew-summary-selection-by-msgid ()
   "Creating Virtual mode with messages relating to the current message"

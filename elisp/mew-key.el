@@ -43,11 +43,11 @@
   (define-key mew-summary-mode-map " "    'mew-summary-display)
   (define-key mew-summary-mode-map "."    'mew-summary-analyze-again)
   (define-key mew-summary-mode-map ":"
-    'mew-summary-analyze-again-alternative)
+	      'mew-summary-analyze-again-alternative)
   (define-key mew-summary-mode-map ","    'mew-summary-display-asis)
   (define-key mew-summary-mode-map ";"    'mew-summary-trace-path)
-;;  (define-key mew-summary-mode-map "\e<"  'mew-summary-jump-top)
-;;  (define-key mew-summary-mode-map "\e>"  'mew-summary-jump-bottom)
+  ;;  (define-key mew-summary-mode-map "\e<"  'mew-summary-jump-top)
+  ;;  (define-key mew-summary-mode-map "\e>"  'mew-summary-jump-bottom)
   (define-key mew-summary-mode-map "<"    'mew-summary-scroll-right)
   (define-key mew-summary-mode-map ">"    'mew-summary-scroll-left)
   (define-key mew-summary-mode-map "\d"   'mew-summary-prev-page)
@@ -110,7 +110,7 @@
   (define-key mew-summary-mode-map "\C-c\C-s" 'mew-summary-isearch-forward)
   (define-key mew-summary-mode-map "\C-c\C-r" 'mew-summary-isearch-backward)
   (define-key mew-summary-mode-map "\C-c\C-o"
-    'mew-summary-jump-to-draft-buffer)
+	      'mew-summary-jump-to-draft-buffer)
   (define-key mew-summary-mode-map "\ea"  'mew-summary-alias-edit)
   (define-key mew-summary-mode-map "\el"  'mew-summary-recenter)
   (define-key mew-summary-mode-map "\et"  'mew-summary-uudecode)
@@ -333,15 +333,15 @@
   (define-key (symbol-value symmap) "\C-c\C-b" 'mew-draft-sign-encrypt-message)
   (define-key (symbol-value symmap) "\C-c\C-r" 'mew-draft-encrypt-sign-message)
   (define-key (symbol-value symmap) "\C-c\C-p\C-m"
-    'mew-draft-set-privacy-method)
+	      'mew-draft-set-privacy-method)
   (define-key (symbol-value symmap) "\C-c\C-p\C-a"
-    'mew-draft-toggle-privacy-always)
+	      'mew-draft-toggle-privacy-always)
   (define-key (symbol-value symmap) "\C-c\C-p\C-e"
-    'mew-draft-toggle-privacy-encrypted)
+	      'mew-draft-toggle-privacy-encrypted)
   (define-key (symbol-value symmap) "\C-c\C-p\C-d"
-    'mew-draft-set-privacy-type)
+	      'mew-draft-set-privacy-type)
   (define-key (symbol-value symmap) "\C-c\C-p\C-f"
-    'mew-draft-use-format-flowed))
+	      'mew-draft-use-format-flowed))
 
 (unless mew-draft-header-map
   (setq mew-draft-header-map (make-sparse-keymap))
@@ -549,20 +549,20 @@
   (define-key mew-input-map "?"      'mew-input-complete)
   (define-key mew-input-map "\C-c\t" 'mew-circular-complete-switch)
   (define-key mew-input-map [menu-bar minibuf]
-    (cons "Mew" (make-sparse-keymap "Mew")))
+	      (cons "Mew" (make-sparse-keymap "Mew")))
   (define-key mew-input-map [menu-bar minibuf quit]
-    (list 'menu-item "Quit" 'keyboard-escape-quit
-          :help "Abort input and exit minibuffer"))
+	      (list 'menu-item "Quit" 'keyboard-escape-quit
+		    :help "Abort input and exit minibuffer"))
   (define-key mew-input-map [menu-bar minibuf return]
-    (list 'menu-item "Enter" 'exit-minibuffer
-          :help "Terminate input and exit minibuffer")))
+	      (list 'menu-item "Enter" 'exit-minibuffer
+		    :help "Terminate input and exit minibuffer")))
 
 (unless mew-input-folder-map
   (setq mew-input-folder-map (copy-keymap mew-input-map))
   (let ((c 33)) ;; excluding SPC
     (while (<= c 128) ;; including delete
       (define-key mew-input-folder-map (char-to-string c)
-	'mew-input-folder-self-insert)
+		  'mew-input-folder-self-insert)
       (setq c (1+ c))))
   (define-key mew-input-folder-map "\d"     'mew-input-folder-self-insert)
   (define-key mew-input-folder-map "\C-g"   'mew-input-folder-abort-minibuffer)

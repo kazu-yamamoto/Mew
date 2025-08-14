@@ -559,7 +559,7 @@ the next version of Mew.")
       "softfail" mew-face-header-xmew-bad))
     ("^Delivered-" nil)
     ("^List-" nil) ;; RFC 2369
-;;    ("^Content-" t)
+    ;;    ("^Content-" t)
     ("^\\(Mime-Version\\|Lines\\):$" nil)
     ("^From$" nil)
     ("^Status:$" nil)
@@ -581,8 +581,8 @@ present, mew-face-header-marginal is used."
   :group 'mew-highlight
   :type '(alist :key-type regexp
                 :value-type
-                  (choice (list boolean)
-                          (list boolean face face))))
+                (choice (list boolean)
+                        (list boolean face face))))
 
 ;; cons the position to the spec.
 (defun mew-nspec-by-key (key)
@@ -743,7 +743,7 @@ For more detail, see mew-mark-put-mark and mew-mark-afterstep.")
     (,mew-mark-delete "delete" 2 nil t   nil mew-mark-exec-delete nil)
     (,mew-mark-unlink "unlink" 2 nil t   nil mew-mark-exec-unlink nil)
     (,mew-mark-refile "refile" 2 t   mew-mark-kill-refile mew-mark-unrefile
-		                     mew-mark-exec-refile mew-mark-sanity-refile))
+		      mew-mark-exec-refile mew-mark-sanity-refile))
   "*A list of lists which consists of
 mark, name, level, statefullp, kill-line-p,
 undo-func, exec-func, and sanity-fucn.")
@@ -969,7 +969,7 @@ An example is as follows:
 	 (name         \"Kazu Yamamoto\")
 	 (mail-domain  \"example.jp\"))))
 "
-;; bcc can be used but not recommended
+  ;; bcc can be used but not recommended
   :group 'mew-env
   :type '(alist :key-type string
                 :value-type (repeat (cons string string))))

@@ -521,7 +521,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 	(insert mew-pgp-string)
 	(goto-char (point-min))
 	(if (re-search-forward "SIG_CREATED [A-Z] [0-9]+ \\([0-9]+\\)" nil t)
-	   (setq alg (cdr (assoc (mew-match-string 1) mew-pgp-hash-alist)))))
+	    (setq alg (cdr (assoc (mew-match-string 1) mew-pgp-hash-alist)))))
       (or alg micalg))))
 
 (defun mew-pgp-sign (file1)
@@ -969,7 +969,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 	 ;; We need MIME-decoded buffer to check PGP boundaries.
 	 (setq type (mew-old-pgp-check))
 	 (if type
-	    (mew-old-pgp-decode fld msg type)
+	     (mew-old-pgp-decode fld msg type)
 	   (message "No PGP data found")))))))
 
 (defun mew-old-pgp-decode (fld msg type)

@@ -1952,9 +1952,9 @@ If you cite a message, the citation style of format=flowed is used. "
   "*Ratio of windows"
   :group 'mew-env
   :type '(list
-           (list (const summary) (list integer integer))
-           (list (const message) (list integer integer))
-           (list (const draft) (list integer integer))))
+          (list (const summary) (list integer integer))
+          (list (const message) (list integer integer))
+          (list (const draft) (list integer integer))))
 
 (defcustom mew-mode-line-id "Mew: %12b"
   "*A default value of mode-line-buffer-identification for each Mew mode."

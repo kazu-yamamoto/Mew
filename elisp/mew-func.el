@@ -238,13 +238,13 @@ in the context of FUNC."
     (setq next (car LIST))
     (if (equal frst MEM)
 	(if next next frst)
-    (catch 'loop
-      (while LIST ;; cannot use dolist
-	(setq crnt next)
-	(setq LIST (cdr LIST))
-	(setq next (car LIST))
-	(if (equal crnt MEM)
-	    (throw 'loop (if next next frst))))))))
+      (catch 'loop
+	(while LIST ;; cannot use dolist
+	  (setq crnt next)
+	  (setq LIST (cdr LIST))
+	  (setq next (car LIST))
+	  (if (equal crnt MEM)
+	      (throw 'loop (if next next frst))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -448,8 +448,8 @@ also ignored."
 (defun mew-quote-string (str qchar targets)
   "If characters in STR is a member of TARGETS, QCHAR is prepended to them."
   (let* ((len (length str))
-	(ret (mew-make-string (* len 2)))
-	(j 0) c)
+	 (ret (mew-make-string (* len 2)))
+	 (j 0) c)
     (dotimes (i len)
       (setq c (aref str i))
       (when (member c targets)

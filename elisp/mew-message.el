@@ -195,8 +195,8 @@ confused. Please use '\\[mew-message-forward]' instead."
 (defun mew-message-goto-next-url (&optional arg)
   (interactive "P")
   (let ((next (if arg
-                   'previous-single-property-change
-                 'next-single-property-change))
+                  'previous-single-property-change
+                'next-single-property-change))
         pos)
     (setq pos (funcall next (point) 'mew-url))
     (if pos

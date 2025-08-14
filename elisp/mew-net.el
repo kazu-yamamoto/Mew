@@ -184,7 +184,7 @@
 	  (setq mew-biff-timer-id (mew-timer (* 60 mew-biff-interval) func)))))
   (let ((ent '(mew-biff-string mew-biff-string)))
     (when (stringp global-mode-string)
-        (setq global-mode-string (list global-mode-string)))
+      (setq global-mode-string (list global-mode-string)))
     (unless (member ent global-mode-string)
       (if global-mode-string
 	  (setq global-mode-string
@@ -785,15 +785,15 @@ The messages in the server side is always retained."
 	     (setq case-rtrs (nreverse case-rtrs)))
 	 (while (re-search-forward mew-regex-msg-review nil t)
 	   (when (mew-sumsyn-match mew-regex-sumsyn-long)
-	   (setq uid (mew-sumsyn-message-uid))
-	   (setq msg (mew-sumsyn-message-number))
-	   (setq siz (mew-sumsyn-message-size))
-	   (when (and (mew-msg-validp msg) (mew-msg-truncatedp siz))
-	     (setq rtr (mew-make-refileinfo :uid uid
-					    :size siz
-					    :delete del
-					    :folders (list bnm msg)))
-	     (setq rtrs (cons rtr rtrs))))
+	     (setq uid (mew-sumsyn-message-uid))
+	     (setq msg (mew-sumsyn-message-number))
+	     (setq siz (mew-sumsyn-message-size))
+	     (when (and (mew-msg-validp msg) (mew-msg-truncatedp siz))
+	       (setq rtr (mew-make-refileinfo :uid uid
+					      :size siz
+					      :delete del
+					      :folders (list bnm msg)))
+	       (setq rtrs (cons rtr rtrs))))
 	   (forward-line))
 	 (setq rtrs (nreverse rtrs))))
      (if (and (not rtrs) (not case-rtrs))

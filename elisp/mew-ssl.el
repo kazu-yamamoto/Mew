@@ -75,7 +75,7 @@ keep this as nil.")
 	     :starttls-function
 	     (lambda (capabilities)
 	       (when (string-match-p "STARTTLS" capabilities)
-		   "STARTTLS\r\n"))))
+		 "STARTTLS\r\n"))))
     ))
 (defun mew-starttls-get-param (proto key evalp)
   "Get parameter from mew-ssl-native-starttls-plist"
@@ -204,8 +204,8 @@ no extra text.")
 	(insert (format "connect=%s:%d\n" server remoteport))
 	(if tls (insert (format "protocol=%s\n" tls))))
       (mew-frwlet mew-cs-dummy mew-cs-text-for-write
-		  ;; NEVER use call-process-region for privacy reasons
-		  (write-region (point-min) (point-max) file nil 'no-msg))
+	;; NEVER use call-process-region for privacy reasons
+	(write-region (point-min) (point-max) file nil 'no-msg))
       (list file))))
 
 (defun mew-open-ssl-stream (case server serv tls)

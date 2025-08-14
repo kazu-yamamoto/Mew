@@ -130,8 +130,8 @@
 
 (defun mew-pop-command-pass (pro pnm)
   (let* ((prompt (format "POP password (%s): "
-                        (mew-pop-get-account pnm)))
-          (passwd (mew-pop-input-passwd prompt pnm)))
+                         (mew-pop-get-account pnm)))
+         (passwd (mew-pop-input-passwd prompt pnm)))
     (mew-pop-message pnm "Sending your POP password to the POP server...")
     (mew-pop-process-send-string pro "PASS %s" passwd)))
 
@@ -670,8 +670,8 @@
 	 (sslnp (mew-ssl-native-p (mew-pop-ssl case)))
 	 (starttlsp
 	  (mew-ssl-starttls-p (mew-pop-ssl case)
-			     (mew-*-to-string (mew-pop-port case))
-			     (mew-pop-ssl-port case)))
+			      (mew-*-to-string (mew-pop-port case))
+			      (mew-pop-ssl-port case)))
          (proxysrv (mew-pop-proxy-server case))
          (proxyport (mew-pop-proxy-port case))
 	 (pnm (mew-pop-info-name case))

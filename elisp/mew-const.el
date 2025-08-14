@@ -219,7 +219,7 @@
 
 ;; fld msg
 (defun mew-regex-sumsyn-msg (msg)
-                           (format "\r \\([^ \n]*\\) \\(%s\\) " msg))
+  (format "\r \\([^ \n]*\\) \\(%s\\) " msg))
 
 (defun mew-summary-search-msg (msg)
   (let ((regex (mew-regex-sumsyn-msg msg)))
@@ -291,7 +291,7 @@
 (defconst mew-folder-virtual "*")
 (defconst mew-folder-prefixes
   `(,mew-folder-local ,mew-folder-pop ,mew-folder-imap
-    ,mew-folder-nntp ,mew-folder-virtual))
+		      ,mew-folder-nntp ,mew-folder-virtual))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

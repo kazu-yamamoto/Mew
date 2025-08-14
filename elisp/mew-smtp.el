@@ -57,9 +57,9 @@
     ;; XXX: MS Exchange Returns 334 like CRAM-MD5?
     ;;  https://docs.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth
     ("auth-xoauth2"  ("235" . "next") (t . "wpwd"))
-;; See blow
-;;    ("auth-plain"    ("334" . "pwd-plain") (t . "wpwd"))
-;;    ("pwd-plain"     ("235" . "next") (t . "wpwd"))
+    ;; See blow
+    ;;    ("auth-plain"    ("334" . "pwd-plain") (t . "wpwd"))
+    ;;    ("pwd-plain"     ("235" . "next") (t . "wpwd"))
     ;;
     ("helo"          ("250" . "next"))
     ("mail-from"     ("250" . "rcpt-to"))
@@ -290,7 +290,7 @@
 (defun mew-smtp-command-user-login (pro pnm)
   (let* ((user (mew-smtp-get-auth-user pnm))
          (euser (mew-base64-encode-string user)))
-     (mew-smtp-process-send-string pro "%s" euser)))
+    (mew-smtp-process-send-string pro "%s" euser)))
 
 (defun mew-smtp-command-pwd-login (pro pnm)
   (let* ((user (mew-smtp-get-auth-user pnm))
@@ -461,13 +461,13 @@
 	     (mew--advice-tun-command (mew--advice-tun-command
 				       case server port tun-plist))
 	     (status-msg (format "Opening a %s connection %s%s%s..."
-				(if sslnp "TLS" "TCP")
-				(if sslnp "(GnuTLS" "")
-				(if sslnp
-				    (if starttlsp ", STARTTLS)" ")")
-				  "")
-				(if (eq tun-type 'ssh) " over SSH"
-				  "")))
+				 (if sslnp "TLS" "TCP")
+				 (if sslnp "(GnuTLS" "")
+				 (if sslnp
+				     (if starttlsp ", STARTTLS)" ")")
+				   "")
+				 (if (eq tun-type 'ssh) " over SSH"
+				   "")))
 	     family nowait pro tlsparams)
 	;; SMTP-specific
 	(when (and (eq proto 'smtp) mew-inherit-submission)
