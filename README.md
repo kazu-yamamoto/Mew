@@ -4,7 +4,7 @@ Mew is a mail-reader on Emacs, which is free to use and whose source code is ope
 
 ## Privacy policy
 
-Users need to configure their e-mail addresses and e-mail servers but such information is not sent anywhere. Users are not trucked at all.
+Users need to configure their e-mail addresses and e-mail servers but such information is not sent anywhere. Users are not tracked at all.
 
 ## Information
 
