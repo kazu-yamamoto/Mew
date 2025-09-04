@@ -434,24 +434,24 @@
     (name buffer host service &optional nowait)
   ;; Must be equivalent to
   ;; (open-gnutls-stream name buffer host service &optional nowait)
-  (make-process args
-		:command mew--advice-tun-command
-		:coding 'utf-8-unix
-		:connection-type 'pipe
-		:noquery t
-		:stderr nil)
+  (apply 'make-process (append (list :command mew--advice-tun-command
+				     :coding 'utf-8-unix
+				     :connection-type 'pipe
+				     :noquery t
+				     :stderr nil)
+			       args))
   ;; Do gnutls-negotiate here
   )
 ;; Override function for PLAIN or STARTTLS connection over tunnel.
 (defun mew--advice-override-make-network-process (&rest args)
   ;; PLAIN: make-network-process
   ;; STARTTLS: make-network-process -> gnutls-negotiate
-  (make-process args
-		:command mew--advice-tun-command
-		:coding 'utf-8-unix
-		:connection-type 'pipe
-		:noquery t
-		:stderr nil))
+  (apply ' make-process (apply (list :command mew--advice-tun-command
+				     :coding 'utf-8-unix
+				     :connection-type 'pipe
+				     :noquery t
+				     :stderr nil
+				     args))))
 ;;;
 ;;; XXX: This conditional can be removed safely.
 (if (fboundp 'make-network-process)
