@@ -409,7 +409,7 @@
 ;;; XXX: port must be resolved by using mew-serv-to-port
 ;;       because some service names are not in /etc/services.
 ;;       mew-serv-to-port uses mew-port-db.
-(setq mew--advice-tls-parameters-plist nil)
+(defvar mew--advice-tls-parameters-plist nil)
 
 (defun mew--advice-filter-args-gnutls-negotiate (&rest args)
   (nconc (car args) mew--advice-tls-parameters-plist))
@@ -423,7 +423,7 @@
 (defun mew--tun-type (tun-plist)
   (plist-get tun-plist :type))
 
-(setq mew--advice-tun-command nil)
+(defvar mew--advice-tun-command nil)
 
 (defun mew--advice-tun-command (case host port tun-plist)
   (cond
