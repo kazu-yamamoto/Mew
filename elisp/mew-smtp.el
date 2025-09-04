@@ -6,9 +6,10 @@
 ;;; Code:
 
 (require 'mew)
+
 (autoload 'puny-encode-domain "puny")
-(when (and (fboundp 'gnutls-available-p)
-	   (gnutls-available-p))
+
+(when (and (fboundp 'gnutls-available-p) (gnutls-available-p))
   (require 'gnutls)
   (require 'nsm))
 
@@ -409,8 +410,10 @@
 ;;       because some service names are not in /etc/services.
 ;;       mew-serv-to-port uses mew-port-db.
 (setq mew--advice-tls-parameters-plist nil)
+
 (defun mew--advice-filter-args-gnutls-negotiate (&rest args)
   (nconc (car args) mew--advice-tls-parameters-plist))
+
 ;;;
 ;;; Functions to handle tunneling by an external program.  The
 ;;; external program must be capable of bidirectional communications
@@ -419,7 +422,9 @@
 ;;;
 (defun mew--tun-type (tun-plist)
   (plist-get tun-plist :type))
+
 (setq mew--advice-tun-command nil)
+
 (defun mew--advice-tun-command (case host port tun-plist)
   (cond
    ((eq (mew--tun-type tun-plist) 'ssh)
@@ -429,6 +434,7 @@
 	    (plist-get tun-plist :port)
 	    port host))
    (t nil)))
+
 ;; Override function for TLS connection over tunnel.
 (defun mew--advice-override-open-gnutls-stream
     (name buffer host service &optional nowait)
@@ -442,6 +448,7 @@
 			       args))
   ;; Do gnutls-negotiate here
   )
+
 ;; Override function for PLAIN or STARTTLS connection over tunnel.
 (defun mew--advice-override-make-network-process (&rest args)
   ;; PLAIN: make-network-process
@@ -634,6 +641,7 @@
 	(when (plist-get (cdr pro) :error)
 	  (message (plist-get (cdr pro) :status-msg)))
 	pro))
+
   (defun mew-open-network-stream (name buf server port proto sslnp starttlsp case)
     (open-network-stream name buf server port :return-list t)))
 
@@ -787,8 +795,7 @@
 	;; session is established or upgraded to use TLS because
 	;; no additional greeting from the server.
 	(mew-smtp-set-status pnm "ehlo")
-	(mew-smtp-command-ehlo process pnm))
-      )))
+	(mew-smtp-command-ehlo process pnm)))))
 
 (defun mew-smtp-flush-queue (case &optional qfld)
   (let (msgs)
