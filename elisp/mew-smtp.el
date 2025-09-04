@@ -497,7 +497,7 @@
 		      :status-msg
 		      (concat status-msg
 			      "FAILED (GnuTLS or NSM not available)"))))
-	 ((and sslnp)
+	 (sslnp
 	  (let ((hostname (puny-encode-domain server))
 		;; Note: on Emacs 26.3 and prior GnuTLS always uses
 		;; the system-wide default path first even if
