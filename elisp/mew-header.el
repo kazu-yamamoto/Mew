@@ -275,21 +275,24 @@
 
 (defun mew-addrstr-parse-syntax-list1 (str sep addrp depth allow-spc)
   (let* ((i 0) (len (length str))
-	 (par-cnt 0) (tmp-cnt 0) (sep-cnt 0)
-	 ;; Emacs 23 has non-safe aset.
-	 (tmp (mew-set-string-multibyte (mew-make-string len)))
-	 c ret prevc
+	 (par-cnt 0) (sep-cnt 0)
+	 tmp tmp-last c ret prevc
 	 (do-clear
 	  (lambda ()
-	    (setq tmp-cnt 0)
+	    (setq tmp nil)
+	    (setq tmp-last nil)
 	    (mew-addrstr-parse-syntax-list-check-depth depth)))
 	 (do-cons-ret
 	  (lambda ()
-	    (setq ret (cons (substring tmp 0 tmp-cnt) ret))))
+	    (setq ret (cons (apply 'string tmp) ret))))
 	 (do-copy
 	  (lambda ()
-	    (aset tmp tmp-cnt c)
-	    (setq tmp-cnt (1+ tmp-cnt))))
+	    (cond
+	     ((null tmp)
+	      (setq tmp (list c))
+	      (setq tmp-last tmp))
+	     (t
+	      (setq tmp-last (setcdr tmp-last (list c)))))))
 	 (in-fold-quote
 	  (lambda ()
 	    (setq i (1+ i))
@@ -362,7 +365,7 @@
 	  (lambda ()
 	    ;; broken quoted string cannot be rescued because
 	    ;; the separator cannot be distinguished
-	    (if (> tmp-cnt 0) (funcall do-cons-ret))
+	    (if tmp (funcall do-cons-ret))
 	    (funcall do-clear)))
 	 (do-rescue
 	  (lambda (var)
@@ -393,8 +396,8 @@
       (cond
        ((> par-cnt 0)
 	(funcall do-rescue str))
-       ((> tmp-cnt 0)
-	(funcall do-rescue tmp))))
+       (tmp
+	(funcall do-rescue (apply 'string tmp)))))
     (setq ret (delete nil ret))
     (when allow-spc
       (setq ret (mapcar (lambda (str)
