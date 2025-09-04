@@ -459,191 +459,186 @@
 				     :noquery t
 				     :stderr nil
 				     args))))
-;;;
-;;; XXX: This conditional can be removed safely.
-(if (fboundp 'make-network-process)
-    (defun mew-open-network-stream (name buf server port proto sslnp
-					 starttlsp case &optional tun-plist)
-      (let* ((tun-type (mew--tun-type tun-plist))
-	     (mew--advice-tun-command (mew--advice-tun-command
-				       case server port tun-plist))
-	     (status-msg (format "Opening a %s connection %s%s%s..."
-				 (if sslnp "TLS" "TCP")
-				 (if sslnp "(GnuTLS" "")
-				 (if sslnp
-				     (if starttlsp ", STARTTLS)" ")")
-				   "")
-				 (if (eq tun-type 'ssh) " over SSH"
-				   "")))
-	     family nowait pro tlsparams)
-	;; SMTP-specific
-	(when (and (eq proto 'smtp) mew-inherit-submission)
-	  (setq family mew-smtp-submission-family)
-	  (setq nowait t))
-	;; TLS does not work for Unix-domain socket for now.
-	(when (and (not sslnp)
-		   (stringp port) (string-match "^/" port))
-	  (setq family 'local)
-	  (setq server 'local))
-	(cond
-	 ;; Both GnuTLS and NSM are mandatory for 'native.
-	 ((and sslnp (or (not (fboundp 'gnutls-available-p))
-			 (not (gnutls-available-p))
-			 (not (fboundp 'gnutls-boot-parameters))
-			 (not (fboundp 'nsm-level))))
-	  (setq pro
-		(list nil
-		      :error t
-		      :status-msg
-		      (concat status-msg
-			      "FAILED (GnuTLS or NSM not available)"))))
-	 (sslnp
-	  (let ((hostname (puny-encode-domain server))
-		;; Note: on Emacs 26.3 and prior GnuTLS always uses
-		;; the system-wide default path first even if
-		;; trustfiles is specified.
-		(trustfiles (mew-ssl-trustfiles case))
-		(nsm-noninteractive nil)
-		(network-security-level network-security-level))
-	    (when (eq (mew-ssl-verify-level case) 0)
-	      ;; Forcibly disable verification.
-	      (setq network-security-level 'low))
-	    (setq tlsparams
-		  (cons 'gnutls-x509pki
-			;; XXX: (gnutls-boot-parameters) returns
-			;; :priority key instead of :priority-string
-			;; while (gnutls-negotiate) accepts
-			;; :priority-string.  To handle this odd
-			;; mismatch, create :priority-string in the
-			;; result of (gnutls-boot-parameters) here.
-			(let ((boot-params
-			       (gnutls-boot-parameters
-				:type 'gnutls-x509pki
-				:keylist (mew-ssl-client-keycert-list case)
-				:trustfiles (mew-ssl-trustfiles case)
-				:priority-string (mew-ssl-algorithm-priority case)
-				:min-prime-bits mew-ssl-min-prime-bits
-				;;
-				;; mew-ssl-verify-error should be nil
-				;; to defer verification to NSM.  Note
-				;; that gnutls-verify-error overrides
-				;; verify-error when it is nil.
-				;; Setting gnutls-verify-error to t is
-				;; also discouraged.
-				;;
-				:verify-error mew-ssl-verify-error
-				:hostname hostname)))
-			  (plist-put boot-params
-				     :priority-string
-				     (plist-get boot-params :priority)))))
-	    ;; debug output: TLS params
-	    (funcall (intern (concat "mew-" (symbol-name proto) "-debug"))
-		     (format "TLS proto=%s, server=%s:%s, starttlsp=%s"
-			     proto hostname port starttlsp)
-		     (format "verify-level=%s, network-security-level=%s, nowait=%s, tlsparams=%s"
-			     (mew-ssl-verify-level case) network-security-level
-			     nowait
-			     (apply #'concat (mapcar (lambda (a) (format "%s " a)) tlsparams))))
-	    (let ((type (if starttlsp 'starttls 'tls)))
-	      (with-temp-message status-msg
-		;; XXX: (open-network-stream) does not pass tlsparams
-		;; to (gnutls-negotiate) to start STARTTLS.  As a
-		;; workaround, add an advice to forcibly append the
-		;; parameters.  This should be fixed in
-		;; (open-network-stream).
-		(setq mew--advice-tls-parameters-plist (cdr tlsparams))
-		(advice-add 'gnutls-negotiate
-			    :filter-args #'mew--advice-filter-args-gnutls-negotiate)
-		;;
-		;; Override key functions when using a tunnel.
-		(cond
-		 ((and mew--advice-tun-command (eq type 'tls))
-		  (advice-add 'open-gnutls-stream
-			      :override #'mew--advice-override-open-gnutls-stream))
-		 (mew--advice-tun-command
-		  (advice-add 'make-network-process
-			      :override #'mew--advice-override-make-network-process)))
-		(setq pro (open-network-stream
-			   name buf server port
-			   :type type
-			   :return-list t
-			   :nowait nowait
-			   :always-query-capabilities
-			   (mew-starttls-get-param proto :always-query-capabilities nil)
-			   :capability-command
-			   (mew-starttls-get-param proto :capability-command t)
-			   :end-of-capability
-			   (mew-starttls-get-param proto :end-of-capability t)
-			   :end-of-command
-			   (mew-starttls-get-param proto :end-of-command t)
-			   :success
-			   (mew-starttls-get-param proto :success t)
-			   :starttls-function
-			   (mew-starttls-get-param proto :starttls-function nil)))
-		(cond
-		 ((and mew--advice-tun-command (eq type 'tls))
-		  (advice-remove 'open-gnutls-stream
-				 #'mew--advice-override-open-gnutls-stream))
-		 (mew--advice-tun-command
-		  (advice-remove 'make-network-process
-				 #'mew--advice-override-make-network-process)))
-		(advice-remove 'gnutls-negotiate
-			       #'mew--advice-filter-args-gnutls-negotiate)
-		;;
-		;; When a validation error occurs, (car pro) will be nil.
-		;;
-		(let ((plainp (eq 'plain (plist-get (cdr pro) :type)))
-		      (greeting (plist-get (cdr pro) :greeting))
-		      (openp  (and (car pro)
-				   (eq 'open (process-status (car pro)))))
-		      ;; Falling back to a plain connection is allowed
-		      ;; only when verify-level < 2.
-		      (needtlsp (and starttlsp
-				     (> (mew-ssl-verify-level case) 1))))
-		  (cond
-		   ((not openp)
-		    (let ((msg (plist-get (cdr pro) :error)))
-		      (setq pro (list nil
-				      :error t
-				      :status-msg
-				      (concat status-msg "FAILED: " msg)))))
-		   ((and plainp needtlsp)
-		    (delete-process (car pro))
-		    (setq pro (list nil
-				    :error t
-				    :status-msg
-				    (concat status-msg "FAILED"))))
-		   (t
-		    (setq pro (list
-			       (car pro)
-			       :error nil))
-		    (cond
-		     ((eq proto 'pop)
-		      (setq mew--gnutls-pop-greeting greeting))
-		     ((eq proto 'imap)
-		      (setq mew--gnutls-imap-greeting greeting))))))))))
-	 (t
-	  (with-temp-message status-msg
-	    (let ((params (list :name name :buffer buf
-				:service port :family family
-				:nowait nowait))
-		  ;; :host will be ignored when family is 'local.
-		  (host (if (not (eq family 'local))
-			    (list :host server))))
-	      (setq pro (list
-			 (apply #'make-network-process (nconc params host))
-			 :greeting nil
-			 :capabilities nil
-			 :type 'plain
-			 :error nil))))))
-	(if (and (eq proto 'smtp) nowait)
-	    (run-at-time mew-smtp-submission-timeout nil 'mew-smtp-submission-timeout pro))
-	(when (plist-get (cdr pro) :error)
-	  (message (plist-get (cdr pro) :status-msg)))
-	pro))
 
-  (defun mew-open-network-stream (name buf server port proto sslnp starttlsp case)
-    (open-network-stream name buf server port :return-list t)))
+(defun mew-open-network-stream (name buf server port proto sslnp
+				     starttlsp case &optional tun-plist)
+  (let* ((tun-type (mew--tun-type tun-plist))
+	 (mew--advice-tun-command (mew--advice-tun-command
+				   case server port tun-plist))
+	 (status-msg (format "Opening a %s connection %s%s%s..."
+			     (if sslnp "TLS" "TCP")
+			     (if sslnp "(GnuTLS" "")
+			     (if sslnp
+				 (if starttlsp ", STARTTLS)" ")")
+			       "")
+			     (if (eq tun-type 'ssh) " over SSH"
+			       "")))
+	 family nowait pro tlsparams)
+    ;; SMTP-specific
+    (when (and (eq proto 'smtp) mew-inherit-submission)
+      (setq family mew-smtp-submission-family)
+      (setq nowait t))
+    ;; TLS does not work for Unix-domain socket for now.
+    (when (and (not sslnp)
+	       (stringp port) (string-match "^/" port))
+      (setq family 'local)
+      (setq server 'local))
+    (cond
+     ;; Both GnuTLS and NSM are mandatory for 'native.
+     ((and sslnp (or (not (fboundp 'gnutls-available-p))
+		     (not (gnutls-available-p))
+		     (not (fboundp 'gnutls-boot-parameters))
+		     (not (fboundp 'nsm-level))))
+      (setq pro
+	    (list nil
+		  :error t
+		  :status-msg
+		  (concat status-msg
+			  "FAILED (GnuTLS or NSM not available)"))))
+     (sslnp
+      (let ((hostname (puny-encode-domain server))
+	    ;; Note: on Emacs 26.3 and prior GnuTLS always uses
+	    ;; the system-wide default path first even if
+	    ;; trustfiles is specified.
+	    (trustfiles (mew-ssl-trustfiles case))
+	    (nsm-noninteractive nil)
+	    (network-security-level network-security-level))
+	(when (eq (mew-ssl-verify-level case) 0)
+	  ;; Forcibly disable verification.
+	  (setq network-security-level 'low))
+	(setq tlsparams
+	      (cons 'gnutls-x509pki
+		    ;; XXX: (gnutls-boot-parameters) returns
+		    ;; :priority key instead of :priority-string
+		    ;; while (gnutls-negotiate) accepts
+		    ;; :priority-string.  To handle this odd
+		    ;; mismatch, create :priority-string in the
+		    ;; result of (gnutls-boot-parameters) here.
+		    (let ((boot-params
+			   (gnutls-boot-parameters
+			    :type 'gnutls-x509pki
+			    :keylist (mew-ssl-client-keycert-list case)
+			    :trustfiles (mew-ssl-trustfiles case)
+			    :priority-string (mew-ssl-algorithm-priority case)
+			    :min-prime-bits mew-ssl-min-prime-bits
+			    ;;
+			    ;; mew-ssl-verify-error should be nil
+			    ;; to defer verification to NSM.  Note
+			    ;; that gnutls-verify-error overrides
+			    ;; verify-error when it is nil.
+			    ;; Setting gnutls-verify-error to t is
+			    ;; also discouraged.
+			    ;;
+			    :verify-error mew-ssl-verify-error
+			    :hostname hostname)))
+		      (plist-put boot-params
+				 :priority-string
+				 (plist-get boot-params :priority)))))
+	;; debug output: TLS params
+	(funcall (intern (concat "mew-" (symbol-name proto) "-debug"))
+		 (format "TLS proto=%s, server=%s:%s, starttlsp=%s"
+			 proto hostname port starttlsp)
+		 (format "verify-level=%s, network-security-level=%s, nowait=%s, tlsparams=%s"
+			 (mew-ssl-verify-level case) network-security-level
+			 nowait
+			 (apply #'concat (mapcar (lambda (a) (format "%s " a)) tlsparams))))
+	(let ((type (if starttlsp 'starttls 'tls)))
+	  (with-temp-message status-msg
+	    ;; XXX: (open-network-stream) does not pass tlsparams
+	    ;; to (gnutls-negotiate) to start STARTTLS.  As a
+	    ;; workaround, add an advice to forcibly append the
+	    ;; parameters.  This should be fixed in
+	    ;; (open-network-stream).
+	    (setq mew--advice-tls-parameters-plist (cdr tlsparams))
+	    (advice-add 'gnutls-negotiate
+			:filter-args #'mew--advice-filter-args-gnutls-negotiate)
+	    ;;
+	    ;; Override key functions when using a tunnel.
+	    (cond
+	     ((and mew--advice-tun-command (eq type 'tls))
+	      (advice-add 'open-gnutls-stream
+			  :override #'mew--advice-override-open-gnutls-stream))
+	     (mew--advice-tun-command
+	      (advice-add 'make-network-process
+			  :override #'mew--advice-override-make-network-process)))
+	    (setq pro (open-network-stream
+		       name buf server port
+		       :type type
+		       :return-list t
+		       :nowait nowait
+		       :always-query-capabilities
+		       (mew-starttls-get-param proto :always-query-capabilities nil)
+		       :capability-command
+		       (mew-starttls-get-param proto :capability-command t)
+		       :end-of-capability
+		       (mew-starttls-get-param proto :end-of-capability t)
+		       :end-of-command
+		       (mew-starttls-get-param proto :end-of-command t)
+		       :success
+		       (mew-starttls-get-param proto :success t)
+		       :starttls-function
+		       (mew-starttls-get-param proto :starttls-function nil)))
+	    (cond
+	     ((and mew--advice-tun-command (eq type 'tls))
+	      (advice-remove 'open-gnutls-stream
+			     #'mew--advice-override-open-gnutls-stream))
+	     (mew--advice-tun-command
+	      (advice-remove 'make-network-process
+			     #'mew--advice-override-make-network-process)))
+	    (advice-remove 'gnutls-negotiate
+			   #'mew--advice-filter-args-gnutls-negotiate)
+	    ;;
+	    ;; When a validation error occurs, (car pro) will be nil.
+	    ;;
+	    (let ((plainp (eq 'plain (plist-get (cdr pro) :type)))
+		  (greeting (plist-get (cdr pro) :greeting))
+		  (openp  (and (car pro)
+			       (eq 'open (process-status (car pro)))))
+		  ;; Falling back to a plain connection is allowed
+		  ;; only when verify-level < 2.
+		  (needtlsp (and starttlsp
+				 (> (mew-ssl-verify-level case) 1))))
+	      (cond
+	       ((not openp)
+		(let ((msg (plist-get (cdr pro) :error)))
+		  (setq pro (list nil
+				  :error t
+				  :status-msg
+				  (concat status-msg "FAILED: " msg)))))
+	       ((and plainp needtlsp)
+		(delete-process (car pro))
+		(setq pro (list nil
+				:error t
+				:status-msg
+				(concat status-msg "FAILED"))))
+	       (t
+		(setq pro (list
+			   (car pro)
+			   :error nil))
+		(cond
+		 ((eq proto 'pop)
+		  (setq mew--gnutls-pop-greeting greeting))
+		 ((eq proto 'imap)
+		  (setq mew--gnutls-imap-greeting greeting))))))))))
+     (t
+      (with-temp-message status-msg
+	(let ((params (list :name name :buffer buf
+			    :service port :family family
+			    :nowait nowait))
+	      ;; :host will be ignored when family is 'local.
+	      (host (if (not (eq family 'local))
+			(list :host server))))
+	  (setq pro (list
+		     (apply #'make-network-process (nconc params host))
+		     :greeting nil
+		     :capabilities nil
+		     :type 'plain
+		     :error nil))))))
+    (if (and (eq proto 'smtp) nowait)
+	(run-at-time mew-smtp-submission-timeout nil 'mew-smtp-submission-timeout pro))
+    (when (plist-get (cdr pro) :error)
+      (message (plist-get (cdr pro) :status-msg)))
+    pro))
 
 (defun mew-smtp-open (pnm case server port starttlsp)
   (let ((sprt (mew-*-to-port port))
