@@ -414,56 +414,8 @@
 (defun mew--advice-filter-args-gnutls-negotiate (&rest args)
   (nconc (car args) mew--advice-tls-parameters-plist))
 
-;;;
-;;; Functions to handle tunneling by an external program.  The
-;;; external program must be capable of bidirectional communications
-;;; via stdin and stdout and forward the data stream from/to the final
-;;; destination.  TLS and STARTTLS will be handled by GnuTLS.
-;;;
-(defun mew--tun-type (tun-plist)
-  (plist-get tun-plist :type))
-
-(defvar mew--advice-tun-command nil)
-
-(defun mew--advice-tun-command (case host port tun-plist)
-  (cond
-   ((eq (mew--tun-type tun-plist) 'ssh)
-    (format "%s -W %s:%s -oPort=%s %s"
-	    (mew-ssh-prog case)
-	    (plist-get tun-plist :host)
-	    (plist-get tun-plist :port)
-	    port host))
-   (t nil)))
-
-;; Override function for TLS connection over tunnel.
-(defun mew--advice-override-open-gnutls-stream
-    (name buffer host service &optional nowait)
-  ;; Must be equivalent to
-  ;; (open-gnutls-stream name buffer host service &optional nowait)
-  (apply 'make-process (append (list :command mew--advice-tun-command
-				     :coding 'utf-8-unix
-				     :connection-type 'pipe
-				     :noquery t
-				     :stderr nil)
-			       args))
-  ;; Do gnutls-negotiate here
-  )
-
-;; Override function for PLAIN or STARTTLS connection over tunnel.
-(defun mew--advice-override-make-network-process (&rest args)
-  ;; PLAIN: make-network-process
-  ;; STARTTLS: make-network-process -> gnutls-negotiate
-  (apply ' make-process (apply (list :command mew--advice-tun-command
-				     :coding 'utf-8-unix
-				     :connection-type 'pipe
-				     :noquery t
-				     :stderr nil
-				     args))))
-
 (defun mew-open-network-stream (name buf server port proto sslnp starttlsp case)
-  (let* ((tun-type (mew--tun-type tun-plist))
-	 (mew--advice-tun-command (mew--advice-tun-command
-				   case server port tun-plist))
+  (let* ((tun-type nil)
 	 (status-msg (format "Opening a %s connection %s%s%s..."
 			     (if sslnp "TLS" "TCP")
 			     (if sslnp "(GnuTLS" "")
@@ -553,13 +505,6 @@
 			:filter-args #'mew--advice-filter-args-gnutls-negotiate)
 	    ;;
 	    ;; Override key functions when using a tunnel.
-	    (cond
-	     ((and mew--advice-tun-command (eq type 'tls))
-	      (advice-add 'open-gnutls-stream
-			  :override #'mew--advice-override-open-gnutls-stream))
-	     (mew--advice-tun-command
-	      (advice-add 'make-network-process
-			  :override #'mew--advice-override-make-network-process)))
 	    (setq pro (open-network-stream
 		       name buf server port
 		       :type type
@@ -577,13 +522,6 @@
 		       (mew-starttls-get-param proto :success t)
 		       :starttls-function
 		       (mew-starttls-get-param proto :starttls-function nil)))
-	    (cond
-	     ((and mew--advice-tun-command (eq type 'tls))
-	      (advice-remove 'open-gnutls-stream
-			     #'mew--advice-override-open-gnutls-stream))
-	     (mew--advice-tun-command
-	      (advice-remove 'make-network-process
-			     #'mew--advice-override-make-network-process)))
 	    (advice-remove 'gnutls-negotiate
 			   #'mew--advice-filter-args-gnutls-negotiate)
 	    ;;
