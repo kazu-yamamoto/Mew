@@ -460,8 +460,7 @@
 				     :stderr nil
 				     args))))
 
-(defun mew-open-network-stream (name buf server port proto sslnp
-				     starttlsp case &optional tun-plist)
+(defun mew-open-network-stream (name buf server port proto sslnp starttlsp case)
   (let* ((tun-type (mew--tun-type tun-plist))
 	 (mew--advice-tun-command (mew--advice-tun-command
 				   case server port tun-plist))
