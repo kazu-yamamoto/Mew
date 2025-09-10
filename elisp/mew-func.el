@@ -295,12 +295,15 @@ in the context of FUNC."
 (defun mew-make-string (len)
   (make-string len ?a))
 
-(defun mew-replace-character (string from to)
-  "Replace characters equal to FROM to TO in STRING."
-  (dotimes (cnt (length string))
-    (if (char-equal (aref string cnt) from)
-	(aset string cnt to)))
-  string)
+(if (fboundp 'subst-char-in-string)
+    (defun mew-replace-character (string from to)
+      (subst-char-in-string from to string))
+  (defun mew-replace-character (string from to)
+    "Replace characters equal to FROM to TO in STRING."
+    (dotimes (cnt (length string))
+      (if (char-equal (aref string cnt) from)
+	  (aset string cnt to)))
+    string))
 
 (defun mew-replace-white-space (string)
   "Replace white characters to a space."
@@ -385,15 +388,18 @@ Words are separated by '/' and '-'."
 	(setq ret (cons (substring str start) ret)))
     (nreverse ret)))
 
-(defun mew-remove-single-quote (str)
-  (let* ((len (length str))
-	 (ret (mew-make-string len))
-	 (j 0))
-    (dotimes (i len)
-      (unless (char-equal (aref str i) ?')
-	(aset ret j (aref str i))
-	(setq j (1+ j))))
-    (substring ret 0 j)))
+(if (>= emacs-major-version 31)
+    (defun mew-remove-single-quote (str)
+      (string-replace "'" "" str))
+  (defun mew-remove-single-quote (str)
+    (let* ((len (length str))
+	   (ret (mew-make-string len))
+	   (j 0))
+      (dotimes (i len)
+	(unless (char-equal (aref str i) ?')
+	  (aset ret j (aref str i))
+	  (setq j (1+ j))))
+      (substring ret 0 j))))
 
 (defun mew-split-quoted (str sepchar &optional qopen qclose no-single)
   "Return a list of strings splitting STR with SEPCHAR.
