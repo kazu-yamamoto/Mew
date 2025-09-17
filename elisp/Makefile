@@ -17,6 +17,12 @@ elispdir = $(prefix)/share/emacs/site-lisp/mew
 # This Makefile doesn't get remade.
 .PHONY: Makefile
 
+# Too bad we cannot simply say
+#
+#   OBJS = $(SRC:%el=%elc)
+#
+# because this GNU `make` extension has only been added to the POSIX
+# standard in 2024, which is too recent to have broad support.
 OBJS =	mew-addrbook.elc	mew-attach.elc		mew-auth.elc	\
 	mew-blvs.elc		mew-bq.elc		mew-cache.elc	\
 	mew-complete.elc	mew-config.elc		mew-const.elc	\
@@ -98,19 +104,18 @@ install: install-elisp
 ################################################################
 
 .PHONY: el
-$(OBJS): el
-el: $(TEMPFILE) mew.el
+el: $(OBJS)
+
+$(OBJS): $(TEMPFILE)
 	@echo 'Compiling EL files of Mew ... '
 	@echo 'PLEASE IGNORE WARNINGS IF DISPLAYED. TAKE IT EASY!'
 	$(EMACS) -batch -q -no-site-file -l ./$(TEMPFILE) -f mew-compile
 	@echo 'Compiling EL files of Mew ... done'
 
-$(TEMPFILE):
+$(TEMPFILE): $(SRCS)
 	@echo '(setq mew-compiling t)' > $(TEMPFILE)
 	@echo '(setq load-path (cons "." load-path))' >> $(TEMPFILE)
-	@echo '(defun mew-compile () (mapcar (lambda (x) (byte-compile-file x)) (list ' >> $(TEMPFILE)
-	@echo $(OBJS) | sed -e 's/\(mew[^ ]*\.el\)c/"\1"/g'  >> $(TEMPFILE)
-	@echo ')))' >> $(TEMPFILE)
+	@echo "(defun mew-compile () (mapcar (lambda (x) (byte-compile-file (symbol-name x))) '($(SRCS))))" >> $(TEMPFILE)
 
 .PHONY: install-elisp
 install-elisp: $(OBJS)
