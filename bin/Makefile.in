@@ -3,7 +3,7 @@
 ###
 ### Author:  Mew developing team
 ### Created: Jul 7, 2000
-### Revised: 
+### Revised: Sep. 17, 2025
 
 ###
 ### make
@@ -75,9 +75,10 @@ DESTDIR =
 .c$(OBJEXT):
 	$(CC) -c $(DEFS) $(CFLAGS) $(CPPFLAGS) $<
 
+.PHONY: all
 all: $(PRG1) $(PRG2) $(PRG3)
 
-$(PRG1) : $(OBJ1)
+$(PRG1): $(OBJ1)
 	$(CC) $(COFLAG) $(LDFLAGS) $(OBJ1) $(LIBS)
 	$(RM) $(ALT)
 	for f in $(ALT); do \
@@ -95,12 +96,15 @@ $(DO2): $(SR2)
 $(DBG): $(DO1) $(DO2)
 	$(CC) $(CFLAGS) $(COFLAG) $(DO1) $(DO2)
 
+.PHONY: clean
 clean:
 	$(RM) $(OBJ1) $(PRG1) $(ALT) $(OBJ2) $(PRG2) $(OBJ3) $(PRG3) $(DBG) $(DO2)
 
+.PHONY: distclean
 distclean: clean
 	$(RM) $(CNF) $(MK) $(PRG5)
 
+.PHONY: install
 install: all
 	-@if [ ! -d $(DESTDIR)$(bindir) ]; then \
 		$(MKDIR) $(DESTDIR)$(bindir); \

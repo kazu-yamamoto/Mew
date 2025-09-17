@@ -3,7 +3,7 @@
 ###
 ### Author:  Mew developing team
 ### Created: Nov 18, 1994
-### Revised: Feb 10, 2023
+### Revised: Sep 17, 2025
 
 EMACS = emacs
 prefix = /usr/local
@@ -13,6 +13,9 @@ elispdir = $(prefix)/share/emacs/site-lisp/mew
 ##
 ## DO NOT EDIT THE FOLLOWINGS
 ##
+
+# This Makefile doesn't get remade.
+.PHONY: Makefile
 
 OBJS =	mew-addrbook.elc	mew-attach.elc		mew-auth.elc	\
 	mew-blvs.elc		mew-bq.elc		mew-cache.elc	\
@@ -86,12 +89,15 @@ DESTDIR =
 
 ################################################################
 
+.PHONY: all
 all: $(OBJS)
 
+.PHONY: install
 install: install-elisp
 
 ################################################################
 
+.PHONY: el
 $(OBJS): el
 el: $(TEMPFILE) mew.el
 	@echo 'Compiling EL files of Mew ... '
@@ -106,6 +112,7 @@ $(TEMPFILE):
 	@echo $(OBJS) | sed -e 's/\(mew[^ ]*\.el\)c/"\1"/g'  >> $(TEMPFILE)
 	@echo ')))' >> $(TEMPFILE)
 
+.PHONY: install-elisp
 install-elisp: $(OBJS)
 	-@if [ ! -d $(DESTDIR)$(elispdir) ]; then \
 		$(MKDIR) $(DESTDIR)$(elispdir); \
@@ -115,6 +122,7 @@ install-elisp: $(OBJS)
 
 ################################################################
 
+.PHONY: detect
 detect: $(TEMPFILE2) mew.el
 	@echo 'Compiling EL files of Mew ... '
 	$(DETECT) -batch -q -no-site-file -l ./$(TEMPFILE2) -f mew-compile
@@ -128,6 +136,7 @@ $(TEMPFILE2):
 
 ################################################################
 
+.PHONY: format
 format: $(TEMPFILE3) mew.el
 	@echo 'Formatting EL files of Mew ... '
 	$(EMACS) -batch -q -no-site-file -l ./$(TEMPFILE3) -f format-files
@@ -141,9 +150,11 @@ $(TEMPFILE3):
 
 ################################################################
 
+.PHONY: clean
 clean:
 	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2) $(TEMPFILE3)
 
+.PHONY: distclean
 distclean:
 	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2) $(TEMPFILE3)
 
