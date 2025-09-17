@@ -566,7 +566,7 @@ the next version of Mew.")
     ("^Face:$" nil
      mew-face-header-private
      mew-face-header-marginal)
-    ("^\\(X\\|Original\\)-" nil
+    ("^\\(X\\|Original\\|UI\\)-" nil
      mew-face-header-private
      mew-face-header-marginal))
   "*An alist of field spec for Message mode. Each spec
