@@ -61,49 +61,61 @@ DESTDIR =
 
 ################################################################
 
+.PHONY: all
 all: elisp bin
 
+.PHONY: install
 install: install-elisp install-bin install-info install-etc
 
 ################################################################
 
-elisp::
+.PHONY: elisp
+elisp:
 	cd elisp; $(MAKE) EMACS=$(EMACS)
 
+.PHONY: install-elisp
 install-elisp:
 	cd elisp; $(MAKE) install EMACS=$(EMACS) elispdir=$(elispdir) DESTDIR=$(DESTDIR)
 
 ################################################################
 
-detect::
+.PHONY: detect
+detect:
 	cd elisp; $(MAKE) detect EMACS=$(EMACS)
 
 ################################################################
 
-bin::
+.PHONY: bin
+bin:
 	cd bin; $(MAKE)
 
+.PHONY: install-bin
 install-bin:
 	cd bin; $(MAKE) install DESTDIR=$(DESTDIR)
 
 ################################################################
 
-info::
+.PHONY: info
+info:
 	cd info; $(MAKE) info EMACS=$(EMACS)
 
+.PHONY: install-info
 install-info:
 	cd info; $(MAKE) install-info infodir=$(infodir) DESTDIR=$(DESTDIR)
 
 ################################################################
 
+.PHONY: jinfo
 jinfo:
 	cd info; $(MAKE) jinfo EMACS=$(EMACS)
 
+.PHONY: install-jinfo
 install-jinfo:
 	cd info; $(MAKE) install-jinfo infodir=$(infodir) DESTDIR=$(DESTDIR)
 
 ################################################################
 
+.PHONY: install-etc
 install-etc:
 	-@if [ ! -d $(DESTDIR)$(etcdir) ]; then \
 		$(MKDIR) $(DESTDIR)$(etcdir); \
@@ -112,6 +124,7 @@ install-etc:
 
 ################################################################
 
+.PHONY: clean
 clean:
 	-@if [ -f elisp/Makefile ]; then \
 		cd elisp; $(MAKE) clean; \
@@ -120,6 +133,7 @@ clean:
 		cd bin; $(MAKE) clean; \
 	fi
 
+.PHONY: distclean
 distclean:
 	$(RM) $(CNF) $(MK)
 	-@if [ -f elisp/Makefile ]; then \
@@ -139,14 +153,17 @@ distclean:
 # make diff    to see the updates
 # git pull
 
-log::
+.PHONY: log
+log:
 	git log HEAD..FETCH_HEAD
 
-diff::
+.PHONY: diff
+diff:
 	git diff HEAD..FETCH_HEAD
 
 VERSION = `git tag --sort=authordate | tail -1 | sed -e 's/v//'`
 
+.PHONY: archive
 archive:
 	git archive master -o ~/mew-$(VERSION).tar --prefix=mew-$(VERSION)/
 	gzip ~/mew-$(VERSION).tar

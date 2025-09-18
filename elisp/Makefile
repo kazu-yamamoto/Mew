@@ -3,7 +3,7 @@
 ###
 ### Author:  Mew developing team
 ### Created: Nov 18, 1994
-### Revised: Feb 10, 2023
+### Revised: Sep 17, 2025
 
 EMACS = emacs
 prefix = /usr/local
@@ -14,6 +14,15 @@ elispdir = $(prefix)/share/emacs/site-lisp/mew
 ## DO NOT EDIT THE FOLLOWINGS
 ##
 
+# This Makefile doesn't get remade.
+.PHONY: Makefile
+
+# Too bad we cannot simply say
+#
+#   OBJS = $(SRC:%el=%elc)
+#
+# because this GNU `make` extension has only been added to the POSIX
+# standard in 2024, which is too recent to have broad support.
 OBJS =	mew-addrbook.elc	mew-attach.elc		mew-auth.elc	\
 	mew-blvs.elc		mew-bq.elc		mew-cache.elc	\
 	mew-complete.elc	mew-config.elc		mew-const.elc	\
@@ -86,26 +95,29 @@ DESTDIR =
 
 ################################################################
 
+.PHONY: all
 all: $(OBJS)
 
+.PHONY: install
 install: install-elisp
 
 ################################################################
 
-$(OBJS): el
-el: $(TEMPFILE) mew.el
+.PHONY: el
+el: $(OBJS)
+
+$(OBJS): $(TEMPFILE)
 	@echo 'Compiling EL files of Mew ... '
 	@echo 'PLEASE IGNORE WARNINGS IF DISPLAYED. TAKE IT EASY!'
 	$(EMACS) -batch -q -no-site-file -l ./$(TEMPFILE) -f mew-compile
 	@echo 'Compiling EL files of Mew ... done'
 
-$(TEMPFILE):
+$(TEMPFILE): $(SRCS)
 	@echo '(setq mew-compiling t)' > $(TEMPFILE)
 	@echo '(setq load-path (cons "." load-path))' >> $(TEMPFILE)
-	@echo '(defun mew-compile () (mapcar (lambda (x) (byte-compile-file x)) (list ' >> $(TEMPFILE)
-	@echo $(OBJS) | sed -e 's/\(mew[^ ]*\.el\)c/"\1"/g'  >> $(TEMPFILE)
-	@echo ')))' >> $(TEMPFILE)
+	@echo "(defun mew-compile () (mapcar (lambda (x) (byte-compile-file (symbol-name x))) '($(SRCS))))" >> $(TEMPFILE)
 
+.PHONY: install-elisp
 install-elisp: $(OBJS)
 	-@if [ ! -d $(DESTDIR)$(elispdir) ]; then \
 		$(MKDIR) $(DESTDIR)$(elispdir); \
@@ -115,6 +127,7 @@ install-elisp: $(OBJS)
 
 ################################################################
 
+.PHONY: detect
 detect: $(TEMPFILE2) mew.el
 	@echo 'Compiling EL files of Mew ... '
 	$(DETECT) -batch -q -no-site-file -l ./$(TEMPFILE2) -f mew-compile
@@ -128,6 +141,7 @@ $(TEMPFILE2):
 
 ################################################################
 
+.PHONY: format
 format: $(TEMPFILE3) mew.el
 	@echo 'Formatting EL files of Mew ... '
 	$(EMACS) -batch -q -no-site-file -l ./$(TEMPFILE3) -f format-files
@@ -141,9 +155,11 @@ $(TEMPFILE3):
 
 ################################################################
 
+.PHONY: clean
 clean:
 	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2) $(TEMPFILE3)
 
+.PHONY: distclean
 distclean:
 	$(RM) *.elc $(TEMPFILE) $(TEMPFILE2) $(TEMPFILE3)
 
