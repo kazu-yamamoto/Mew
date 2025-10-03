@@ -407,6 +407,19 @@ with fitting to frame size"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; BIMI
+;;;
+
+(defun mew-bimi-display (bimi)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((regex2 (concat "^\\(" mew-from: "\\).*")))
+      (when (re-search-forward regex2 nil t)
+	(goto-char (match-end 1))
+	(insert-image bimi)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; SSL/SSH/TLS notification
 ;;;
 
