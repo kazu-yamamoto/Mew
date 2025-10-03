@@ -2925,6 +2925,21 @@ in Summary/Virtual mode."
   :group 'mew-highlight
   :type 'boolean)
 
+(defcustom mew-use-highlight-bimi mew-icon-p
+  "*If non-nil, display BIMI logo in Message mode."
+  :group 'mew-highlight
+  :type 'boolean)
+
+(defcustom mew-use-bimi-status-check t
+  "*If non-nil, check BIMI status before displaying BIMI logo."
+  :group 'mew-highlight
+  :type 'boolean)
+
+(defcustom mew-bimi-size 24
+  "*Number of BIMI logo size."
+  :group 'mew-highlight
+  :type 'integer)
+
 ;;;
 ;;; Styles and colors
 ;;;

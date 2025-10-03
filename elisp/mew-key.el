@@ -123,6 +123,7 @@
   (define-key mew-summary-mode-map "\C-c\C-z" 'mew-summary-decode-old-pgp)
   (define-key mew-summary-mode-map "\C-c\C-q" 'mew-summary-kill)
   (define-key mew-summary-mode-map "\C-c\C-x" 'mew-summary-x-face)
+  (define-key mew-summary-mode-map "\C-c\C-y" 'mew-summary-bimi)
   (define-key mew-summary-mode-map "\C-c\C-k" 'mew-summary-kill-subprocess)
   (define-key mew-summary-mode-map "^"    'mew-summary-parent)
   (define-key mew-summary-mode-map "&"    'mew-summary-child)
@@ -249,6 +250,7 @@
      ["Save"                           mew-summary-save              t]
      ["Convert body's character set"   mew-summary-convert-local-cs  t]
      ["Display X-Face"                 mew-summary-x-face            t]
+     ["Display BIMI logo"              mew-summary-bimi              t]
      )
     ("Write/Reply/Forward"
      ["Write"               mew-summary-send   t]
