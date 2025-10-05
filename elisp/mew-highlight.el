@@ -285,22 +285,29 @@
     (goto-char beg)
     (mew-elet
      (let ((regex1 "^BIMI-Indicator: *\\(.*\\)\n")
+	   (wmsg " not found 'bimi=pass' in Authentication-Results: header.\n")
 	   overlay bimi-logo bimi-pass svg64 beg0 end0)
        (setq bimi-pass (string-match "\\bbimi=pass\\b" (or (mew-header-get-value "Authentication-Results:") "")))
-       (when (and (or bimi-pass (not mew-use-bimi-status-check))
-		  (re-search-forward regex1 end t))
+       (when (re-search-forward regex1 end t)
 	 (setq beg0 (match-beginning 0))
 	 (setq end0 (match-end 0))
 	 (setq svg64 (match-string-no-properties 1))
-	 (when (image-type-available-p 'svg)
-	   (setq bimi-logo (create-image (mew-base64-decode-string svg64) 'svg t
-					 :width mew-bimi-size :height mew-bimi-size :ascent 'center)))
-	 (when bimi-logo
-	   (setq overlay (mew-overlay-make beg0 end0))
-	   (overlay-put overlay 'invisible t)
-	   (save-restriction
-	     (narrow-to-region beg end)
-	     (mew-bimi-display bimi-logo))))))))
+	 (cond
+	  ((and mew-use-bimi-status-check (not bimi-pass))
+	   (goto-char beg0)
+	   (insert mew-x-mew: wmsg)
+	   (setq overlay (mew-overlay-make beg0 (point)))
+	   (overlay-put overlay 'face 'mew-face-header-warning))
+	  (t
+	   (when (image-type-available-p 'svg)
+	     (setq bimi-logo (create-image (mew-base64-decode-string svg64) 'svg t
+					   :width mew-bimi-size :height mew-bimi-size :ascent 'center)))
+	   (when bimi-logo
+	     (setq overlay (mew-overlay-make beg0 end0))
+	     (overlay-put overlay 'invisible t)
+	     (save-restriction
+	       (narrow-to-region beg end)
+	       (mew-bimi-display bimi-logo))))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
