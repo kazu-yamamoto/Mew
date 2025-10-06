@@ -2935,7 +2935,7 @@ in Summary/Virtual mode."
   :group 'mew-highlight
   :type 'boolean)
 
-(defcustom mew-bimi-size 24
+(defcustom mew-bimi-logo-size 24
   "*Number of BIMI logo size."
   :group 'mew-highlight
   :type 'integer)
