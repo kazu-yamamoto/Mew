@@ -481,7 +481,7 @@ If executed with `\\[universal-argument]', you can set the sending case."
 
 (defun mew-subprocess-clean-up ()
   (mew-summary-kill-subprocess t)
-  (remove-hook 'kill-emacs-hook 'mew-subprocess-kil))
+  (remove-hook 'kill-emacs-hook 'mew-subprocess-kill))
 
 (defun mew-subprocess-kill ()
   (mew-summary-kill-subprocess t))
