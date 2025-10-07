@@ -285,7 +285,7 @@
     (goto-char beg)
     (mew-elet
      (let ((regex1 "^BIMI-Indicator: *\\(.*\\)\n")
-	   (wmsg " not found 'bimi=pass' in Authentication-Results: header.\n")
+	   (wmsg " No 'bimi=pass' in Authentication-Results\n")
 	   overlay bimi-logo bimi-pass svgb64 beg0 end0 scale)
        (setq bimi-pass (string-match "\\bbimi=pass\\b" (or (mew-header-get-value "Authentication-Results:") "")))
        (when (re-search-forward regex1 end t)
@@ -295,9 +295,12 @@
 	 (cond
 	  ((and mew-use-bimi-status-check (not bimi-pass))
 	   (goto-char beg0)
-	   (insert mew-x-mew: wmsg)
-	   (setq overlay (mew-overlay-make beg0 (point)))
-	   (overlay-put overlay 'face 'mew-face-header-warning))
+	   (insert mew-x-mew:)
+	   (setq overlay (mew-overlay-make (- (point) (length mew-x-mew:)) (point)))
+	   (overlay-put overlay 'face 'mew-face-header-important)
+	   (insert wmsg)
+	   (setq overlay (mew-overlay-make (- (point) (length wmsg)) (point)))
+	   (overlay-put overlay 'face 'mew-face-header-xmew))
 	  (t
 	   (when (image-type-available-p 'svg)
 	     (if (boundp 'text-scale-mode)
@@ -428,4 +431,3 @@
 ;; IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ;;; mew-highlight.el ends here
-
