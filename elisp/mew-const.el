@@ -72,6 +72,7 @@
 (defconst mew-x-mailer:    "X-Mailer:")
 (defconst mew-x-face:      "X-Face:")
 (defconst mew-face:        "Face:")
+(defconst mew-bimi-indicator: "BIMI-Indicator:")
 (defconst mew-x-mew:       "X-Mew:")
 (defconst mew-x-mew-uidl:  "X-Mew-Uidl:")
 (defconst mew-x-mew-ref:   "X-Mew-Ref:")

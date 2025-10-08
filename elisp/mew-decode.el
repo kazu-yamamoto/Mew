@@ -200,6 +200,7 @@ This commands toggles visibility of these lines."
 	 (mew-decode-syntax-insert-privacy)
 	 (mew-decode-syntax-insert-warning)
 	 (save-excursion (mew-highlight-x-face (point-min) (point-max)))
+	 (save-excursion (mew-highlight-bimi (point-min) (point-max)))
 	 (setq vispos (if (get-text-property (point-min) 'mew-visible)
 			  (point-min)
 			(or (next-single-property-change (point-min) 'mew-visible)
