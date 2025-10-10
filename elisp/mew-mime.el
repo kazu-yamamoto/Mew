@@ -589,26 +589,32 @@
   (message "Displaying a PDF document...")
   (mew-erase-buffer)
   (let ((doit t) (prog mew-prog-application/pdf)
-	file1 file2)
-    (unless (mew-which-exec prog)
+	file2)
+    (unless (or (mew-which-exec prog) (and mew-pdf-tools-use (mew-pdf-tools-installed-p)))
       (setq doit nil)
-      (mew-elet (insert "To display this, install \"" prog "\".\n")))
+      (mew-elet (insert "To display this, install \"" prog "\" or a package of pdf-tools.\n")))
     (if (not doit)
 	(progn
 	  (mew-elet (insert "\n"))
 	  (mew-mime-part-messages t)
 	  (message "Displaying a PDF document...failed"))
-      (setq file1 (mew-make-temp-name))
+      (if (and (stringp mew-pdf-file) (file-exists-p mew-pdf-file))
+	  (progn
+	    (if (buffer-live-p mew-pdf-tools-buffer)
+		(mew-remove-buffer mew-pdf-tools-buffer))
+	    (delete-file mew-pdf-file)))
+      (setq mew-pdf-file (mew-make-temp-name))
       (with-current-buffer cache
 	(mew-flet
-	 (write-region begin end file1 nil 'no-msg)))
-      (setq file2 (mew-make-temp-name))
-      (call-process prog nil nil nil "-layout" "-enc" "UTF-8" file1 file2)
-      (when (file-exists-p file2)
-	(mew-frwlet 'utf-8 mew-cs-dummy
-	  (insert-file-contents file2)))
-      (if (file-exists-p file1) (delete-file file1))
-      (if (file-exists-p file2) (delete-file file2))
+	 (write-region begin end mew-pdf-file nil 'no-msg)))
+      (if (and mew-pdf-tools-use (mew-pdf-tools-installed-p))
+	  (mew-pdf-tools-view)
+	(setq file2 (mew-make-temp-name))
+	(call-process prog nil nil nil "-layout" "-enc" "UTF-8" mew-pdf-file file2)
+	(when (file-exists-p file2)
+	  (mew-frwlet 'utf-8 mew-cs-dummy
+	    (insert-file-contents file2)))
+	(if (file-exists-p file2) (delete-file file2)))
       (message "Displaying a PDF document...done"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
