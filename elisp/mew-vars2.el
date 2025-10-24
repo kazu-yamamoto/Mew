@@ -558,7 +558,7 @@ the next version of Mew.")
      ("hardfail" mew-face-header-xmew-bad
       "fail" mew-face-header-xmew-bad
       "softfail" mew-face-header-xmew-bad))
-    ("^BIMI-Indicator:$" nil)
+    ("^BIMI-" nil)
     ("^Delivered-" nil)
     ("^List-" nil) ;; RFC 2369
     ;;    ("^Content-" t)
