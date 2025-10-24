@@ -489,6 +489,7 @@ the next version of Mew.")
     (,mew-in-reply-to:   unstruct   unstruct)
     (,mew-x-face:	 unstruct   unstruct)
     (,mew-face:          unstruct   unstruct)
+    (,mew-bimi-indicator:      unstruct unstruct)
     ("Authentication-Results:" unstruct struct2) ;; capitalized
     ("Domainkey-Signature:"    unstruct unstruct) ;; capitalized
     ("Dkim-Signature:"         unstruct unstruct)) ;; capitalized
@@ -557,6 +558,7 @@ the next version of Mew.")
      ("hardfail" mew-face-header-xmew-bad
       "fail" mew-face-header-xmew-bad
       "softfail" mew-face-header-xmew-bad))
+    ("^BIMI-" nil)
     ("^Delivered-" nil)
     ("^List-" nil) ;; RFC 2369
     ;;    ("^Content-" t)
