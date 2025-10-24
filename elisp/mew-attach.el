@@ -583,7 +583,7 @@ on '.' in attachments."
       (mew-encode-syntax-print mew-encode-syntax))))
 
 (defun mew-attach-base64 ()
-  "Put the 'B' mark to encode with Base64 in attachments."
+  "Put the `B' mark to encode with Base64 in attachments."
   (interactive)
   (if (not (mew-attach-not-line0-1-dot))
       (message "Cannot encode with base64 here")
@@ -597,7 +597,7 @@ on '.' in attachments."
 	(mew-encode-syntax-print mew-encode-syntax)))))
 
 (defun mew-attach-quoted-printable ()
-  "Put the 'Q' mark to encode with Quoted-Printable in attachments"
+  "Put the `Q' mark to encode with Quoted-Printable in attachments"
   (interactive)
   (if (not (mew-attach-not-line0-1-dot))
       (message "Cannot encode with quoted-printable here")
@@ -611,7 +611,7 @@ on '.' in attachments."
 	(mew-encode-syntax-print mew-encode-syntax)))))
 
 (defun mew-attach-gzip64 ()
-  "Put the 'G' mark to encode with Gzip64 in attachments. This is
+  "Put the `G' mark to encode with Gzip64 in attachments. This is
 applicable only to Text/Plain and Application/Postscript since compression
 is not effective other objects. For example, JPEG is already compressed."
   (interactive)
@@ -632,7 +632,7 @@ is not effective other objects. For example, JPEG is already compressed."
 	(mew-encode-syntax-print mew-encode-syntax)))))
 
 (defun mew-attach-zip ()
-  "Put the 'Z' mark and encrypt it with \"zip\" in attachments."
+  "Put the `Z' mark and encrypt it with \"zip\" in attachments."
   (interactive)
   (if (not (mew-attach-not-line02-1-dot))
       (message "Cannot encrypt with zip here")
@@ -671,7 +671,7 @@ is not effective other objects. For example, JPEG is already compressed."
 		  (mew-encode-syntax-print mew-encode-syntax))))))))))
 
 (defun mew-attach-pgp-sign ()
-  "Put the 'PS' mark to sign with PGP in attachments."
+  "Put the `PS' mark to sign with PGP in attachments."
   (interactive)
   (cond
    ((not (mew-attach-not-line0-1-dot))
@@ -694,7 +694,7 @@ is not effective other objects. For example, JPEG is already compressed."
 	(mew-encode-syntax-print mew-encode-syntax)))))))
 
 (defun mew-attach-pgp-enc ()
-  "Put the 'PE' mark to encrypt with PGP in attachment.
+  "Put the `PE' mark to encrypt with PGP in attachment.
 Input decrypters' addresses."
   (interactive)
   (cond
@@ -725,7 +725,7 @@ Input decrypters' addresses."
 	(mew-encode-syntax-print mew-encode-syntax)))))))
 
 (defun mew-attach-smime-sign ()
-  "Put the 'PS' mark to sign with S/MIME in attachments."
+  "Put the `PS' mark to sign with S/MIME in attachments."
   (interactive)
   (cond
    ((not (mew-attach-not-line0-1-dot))
@@ -748,7 +748,7 @@ Input decrypters' addresses."
 	(mew-encode-syntax-print mew-encode-syntax)))))))
 
 (defun mew-attach-smime-enc ()
-  "Put the 'SE' mark to encrypt with S/MIME in attachment.
+  "Put the `SE' mark to encrypt with S/MIME in attachment.
 Input decrypters' addresses."
   (interactive)
   (cond

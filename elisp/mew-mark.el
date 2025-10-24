@@ -513,13 +513,13 @@ Put the escape mark (default is '$') in COUNT times."
 ;;;
 
 (defun mew-summary-delete (&optional count)
-  "Put the delete mark (default is 'D') in COUNT times."
+  "Put the delete mark (default is `D') in COUNT times."
   (interactive "P")
   (mew-summary-not-in-nntp
    (mew-mark-put-mark-loop 'mew-summary-delete-one count nil)))
 
 (defun mew-summary-delete-one (&optional no-msg)
-  "Put the delete mark (default is 'D') on this message."
+  "Put the delete mark (default is `D') on this message."
   (mew-mark-put-mark mew-mark-delete no-msg 'valid-only))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -528,13 +528,13 @@ Put the escape mark (default is '$') in COUNT times."
 ;;;
 
 (defun mew-summary-unlink (&optional count)
-  "Put the unlink mark (default is 'X') in COUNT times."
+  "Put the unlink mark (default is `X') in COUNT times."
   (interactive "P")
   (mew-summary-not-in-nntp
    (mew-mark-put-mark-loop 'mew-summary-unlink-one count nil)))
 
 (defun mew-summary-unlink-one (&optional no-msg)
-  "Put the unlink mark (default is 'X') on this message."
+  "Put the unlink mark (default is `X') on this message."
   (mew-mark-put-mark mew-mark-unlink no-msg 'valid-only))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -544,12 +544,12 @@ Put the escape mark (default is '$') in COUNT times."
 
 (defun mew-summary-unread (&optional count)
   "\\<mew-summary-mode-map>
-Put the unread mark (default is 'U') in COUNT times."
+Put the unread mark (default is `U') in COUNT times."
   (interactive "P")
   (mew-mark-put-mark-loop 'mew-summary-unread-one count nil))
 
 (defun mew-summary-unread-one (&optional no-msg)
-  "Put the unread mark (default is 'U') on this message."
+  "Put the unread mark (default is `U') on this message."
   (mew-mark-put-mark mew-mark-unread no-msg))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -674,22 +674,22 @@ BEG and END."
   (mew-summary-exchange-mark mew-mark-review mew-mark-unlink 'valid-only))
 
 (defun mew-summary-mark-escape ()	;; * -> $
-  "Change the '*' mark into the '$' mark."
+  "Change the `*' mark into the `$' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-review mew-mark-escape))
 
 (defun mew-summary-mark-review ()	;; $ -> *
-  "Change the '$' mark into the '*' mark."
+  "Change the `$' mark into the `*' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-escape mew-mark-review))
 
 (defun mew-summary-mark-unread ()	;; * -> U
-  "Change the '*' mark into the 'U' mark."
+  "Change the `*' mark into the `U' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-review mew-mark-unread))
 
 (defun mew-summary-mark-swap ()		;; $ <-> *
-  "Swap the '$' mark and the '*' mark."
+  "Swap the `$' mark and the `*' mark."
   (interactive)
   (mew-summary-exchange-mark mew-mark-escape mew-mark-tmp)
   (mew-summary-exchange-mark mew-mark-review mew-mark-escape)

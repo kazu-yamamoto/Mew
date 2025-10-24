@@ -219,14 +219,14 @@ all marked messages before the current message."
 	(mew-summary-exec-region beg end)))))
 
 (defun mew-summary-exec-delete ()
-  "Process messages marked with 'D'."
+  "Process messages marked with `D'."
   (interactive)
   (let* ((ent (assoc mew-mark-delete mew-mark-spec))
 	 (mew-mark-spec (list ent)))
     (mew-summary-exec-region (point-min) (point-max))))
 
 (defun mew-summary-exec-unlink ()
-  "Process messages marked with 'X'."
+  "Process messages marked with `X'."
   (interactive)
   (let* ((ent (assoc mew-mark-unlink mew-mark-spec))
 	 (mew-mark-spec (list ent)))

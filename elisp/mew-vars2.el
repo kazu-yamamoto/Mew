@@ -214,7 +214,7 @@ for privacy reasons.")
 
 (defvar mew-mime-content-type-multipart-list
   `(,mew-ct-mlm ,mew-ct-mla)
-  "Candidate of 'Content-Type: Multipart/' when CT: is changed
+  "Candidate of `Content-Type: Multipart/' when CT: is changed
 in draft buffer.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

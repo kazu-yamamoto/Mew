@@ -168,7 +168,7 @@ really deleted."
   :type '(choice string (const nil)))
 
 (defcustom mew-trash-folder-list nil
-  "*A list of folders whose messages marked with 'D' are really deleted."
+  "*A list of folders whose messages marked with `D' are really deleted."
   :group 'mew-summary
   :type '(choice (const nil) (repeat string)))
 
@@ -1354,9 +1354,9 @@ of the From: field is used."
                          (const address) (const nickname))))
 
 (defcustom mew-summary-form-mark-delete nil
-  "*If non-nil, the 'D' mark automatically is put onto
+  "*If non-nil, the `D' mark automatically is put onto
 duplicated messages. If a character, use it as a mark
-instead of the 'D' mark."
+instead of the `D' mark."
   :group 'mew-summary
   :type '(choice (const :tag "Use mew-mark-delete" t)
 		 (const :tag "Not use" nil)
@@ -1744,7 +1744,8 @@ created (if the feature is provided)."
   :type 'boolean)
 
 (defcustom mew-master-passwd-encryption 'symmetric
-  "*Encryption method for a master password file when mew-master-passwd-type is \"Master Password\""
+  "*Encryption method for a master password file when
+ mew-master-passwd-type is \"Master Password\""
   :group 'mew-privacy
   :type '(choice
 	  (const :tag "Symmetric encryption" symmetric)
