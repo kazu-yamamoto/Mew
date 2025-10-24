@@ -299,11 +299,11 @@ returned."
 	  (while (re-search-forward "[\"']" nil t)
 	    (setq qchar (char-before (point)))
 	    ;; (point) is for backward compatibility
-	    (backward-delete-char 1) ;; delete quote
+	    (delete-char -1) ;; delete quote
 	    (setq beg (point))
 	    (if (not (re-search-forward (char-to-string qchar) nil t))
 		(throw 'quote nil) ;; error
-	      (backward-delete-char 1) ;; delete quote
+	      (delete-char -1) ;; delete quote
 	      (save-restriction
 		(narrow-to-region beg (point))
 		(goto-char (point-min))
