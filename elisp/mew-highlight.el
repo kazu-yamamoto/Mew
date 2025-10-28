@@ -305,6 +305,7 @@
 		 (setq scale (expt text-scale-mode-step text-scale-mode-amount))
 	       (setq scale 1.0))
 	     (setq bimi-logo (create-image (mew-base64-decode-string svgb64) 'svg t
+					   :foreground "black"
 					   :width (round (* mew-bimi-logo-size scale)) :ascent 'center)))
 	   (when bimi-logo
 	     (save-restriction
