@@ -285,7 +285,7 @@
     (goto-char beg)
     (mew-elet
      (let ((regex1 "^BIMI-Indicator: *\\(.*\\)\n")
-	   (wmsg " No 'bimi=pass' in Authentication-Results: regarding BIMI-Indicator:\n")
+           (wmsg "No 'bimi=pass' in Authentication-Results: regarding BIMI-Indicator:")
 	   overlay bimi-logo bimi-pass svgb64 scale)
        (setq bimi-pass (string-match "\\bbimi=pass\\b" (or (mew-header-get-value "Authentication-Results:") "")))
        (when (re-search-forward regex1 end t)
@@ -296,9 +296,10 @@
 	   (insert mew-x-mew:)
 	   (setq overlay (mew-overlay-make (- (point) (length mew-x-mew:)) (point)))
 	   (overlay-put overlay 'face 'mew-face-header-important)
-	   (insert wmsg)
-	   (setq overlay (mew-overlay-make (- (point) (length wmsg)) (point)))
-	   (overlay-put overlay 'face 'mew-face-header-xmew))
+           (insert " " wmsg)
+           (setq overlay (mew-overlay-make (- (point) (length wmsg)) (point)))
+           (overlay-put overlay 'face 'mew-face-header-xmew)
+           (insert "\n"))
 	  (t
 	   (when (image-type-available-p 'svg)
 	     (if (boundp 'text-scale-mode)
