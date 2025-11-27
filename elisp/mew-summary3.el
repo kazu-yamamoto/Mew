@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-summary3.el --- Summary mode for Mew
 
 ;; Author:  Mew developing team

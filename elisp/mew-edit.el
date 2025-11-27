@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-edit.el
 
 ;; Author:  Mew developing team

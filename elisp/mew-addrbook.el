@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;; mew-addrbook.el --- Aliases and personal information
 
 ;; Author:  Mew developing team

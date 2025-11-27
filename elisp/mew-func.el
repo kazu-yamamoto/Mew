@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-func.el --- Basic functions for Mew
 
 ;; Author:  Mew developing team

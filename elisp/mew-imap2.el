@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-imap2.el for appending
 
 ;; Author:  Mew developing team

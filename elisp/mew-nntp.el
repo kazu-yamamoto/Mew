@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-nntp.el for reading
 
 ;; Author:  Mew developing team

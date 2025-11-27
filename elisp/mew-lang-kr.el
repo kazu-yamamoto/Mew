@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;-*-coding:euc-kr;-*-
 ;;; mew-lang-kr.el --- Korean specific stuff for Mew
 

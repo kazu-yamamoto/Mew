@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-ext.el --- Message/External-Body support for Mew
 
 ;; Author:  Mew developing team

@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-darwin.el --- Settings for Mew on Darwin
 
 ;; Author:  Mew developing team

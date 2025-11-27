@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-smime.el --- S/MIME for Mew
 
 ;; Author:  Mew developing team

@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;-*-coding:iso-2022-7bit;-*-
 ;;; mew-lang-jp.el --- Japanese specific stuff for Mew
 

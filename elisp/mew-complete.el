@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-complete.el --- Completion magic for Mew
 
 ;; Author:  Mew developing team

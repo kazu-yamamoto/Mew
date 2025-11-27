@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-blvs.el
 
 ;; Author:  Mew developing team

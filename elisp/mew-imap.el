@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-imap.el for reading
 
 ;; Author:  Mew developing team

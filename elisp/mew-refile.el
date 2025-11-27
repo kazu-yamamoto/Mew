@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-refile.el --- Refile for Mew
 
 ;; Author:  Mew developing team

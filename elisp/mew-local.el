@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-local.el
 
 ;; Author:  Mew developing team

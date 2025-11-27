@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-mime.el --- MIME launcher for Mew
 
 ;; Author:  Mew developing team

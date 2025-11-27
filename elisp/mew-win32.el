@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-win32.el --- Settings for Mew on Win32
 
 ;; Author:  Shuichi Kitaguchi <kit@Mew.org>

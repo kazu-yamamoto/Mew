@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-search.el --- Index Search
 
 ;; Author:  Mew developing team

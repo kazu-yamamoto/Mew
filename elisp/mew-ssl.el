@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-ssl.el
 
 ;; Author:  Mew developing team

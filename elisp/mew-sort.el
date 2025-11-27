@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-sort.el --- Sorting messages for Mew
 
 ;; Author:  Mew developing team

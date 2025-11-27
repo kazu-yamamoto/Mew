@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-smtp.el
 
 ;; Author:  Mew developing team

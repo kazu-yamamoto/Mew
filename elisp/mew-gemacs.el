@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-gemacs.el --- Environment of Graphical Emacs for Mew
 
 ;; Author:  Mew developing team

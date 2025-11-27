@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-draft.el --- Draft mode for Mew
 
 ;; Author:  Mew developing team

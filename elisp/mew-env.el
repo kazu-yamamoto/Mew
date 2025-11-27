@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-env.el --- Environment setup for Mew
 
 ;; Author:  Mew developing team

@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 (cond
  ((>= emacs-major-version 24)
   ;; this must be macro. If implemented as a function, its behavior

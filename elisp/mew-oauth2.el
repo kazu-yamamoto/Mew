@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-oauth2.el -- OAuth for Mew
 
 ;; Author:  Mew developing team

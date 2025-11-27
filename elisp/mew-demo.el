@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-demo.el --- Startup demo for Mew
 
 ;; Author:  Mew developing team

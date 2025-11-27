@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;;; mew-mule3.el --- Environment of Mule version 3 for Mew
 
 ;; Author:  Mew developing team
