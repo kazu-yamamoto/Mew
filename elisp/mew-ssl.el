@@ -21,8 +21,7 @@
   "verify-error parameter passed to GnuTLS.  You might want to
 keep this as nil.")
 (defvar mew-ssl-native-starttls-plist
-  '(
-    ;; RFC 3207
+  '(;; RFC 3207
     (smtp . (:capability-command
 	     (format "EHLO %s\r\n" (mew-smtp-helo-domain case))
 	     :always-query-capabilities t
