@@ -512,17 +512,29 @@
 		       :return-list t
 		       :nowait nowait
 		       :always-query-capabilities
-		       (mew-starttls-get-param proto :always-query-capabilities nil)
+		       (and starttlsp
+			    (mew-starttls-get-param
+			     proto :always-query-capabilities nil))
 		       :capability-command
-		       (mew-starttls-get-param proto :capability-command t)
+		       (and starttlsp
+			    (mew-starttls-get-param
+			     proto :capability-command t))
 		       :end-of-capability
-		       (mew-starttls-get-param proto :end-of-capability t)
+		       (and starttlsp
+			    (mew-starttls-get-param
+			     proto :end-of-capability t))
 		       :end-of-command
-		       (mew-starttls-get-param proto :end-of-command t)
+		       (and starttlsp
+			    (mew-starttls-get-param
+			     proto :end-of-command t))
 		       :success
-		       (mew-starttls-get-param proto :success t)
+		       (and starttlsp
+			    (mew-starttls-get-param
+			     proto :success t))
 		       :starttls-function
-		       (mew-starttls-get-param proto :starttls-function nil)))
+		       (and starttlsp
+			    (mew-starttls-get-param
+			     proto :starttls-function nil))))
 	    (advice-remove 'gnutls-negotiate
 			   #'mew--advice-filter-args-gnutls-negotiate)
 	    ;;
@@ -530,6 +542,7 @@
 	    ;;
 	    (let ((plainp (eq 'plain (plist-get (cdr pro) :type)))
 		  (greeting (plist-get (cdr pro) :greeting))
+		  (capabilities (plist-get (cdr pro) :capabilities))
 		  (openp  (and (car pro)
 			       (eq 'open (process-status (car pro)))))
 		  ;; Falling back to a plain connection is allowed
@@ -550,10 +563,21 @@
 				:status-msg
 				(concat status-msg "FAILED"))))
 	       (t
+		(when (and sslnp starttlsp)
+		  (mew-smtp-debug "*GREETING*"
+				  (if greeting
+				      (string-replace "\r\n" "\n"
+						      greeting)))
+		  (mew-smtp-debug "*CAPABILITIES*"
+				  (if capabilities
+				      (string-replace "\r\n" "\n"
+						      capabilities))))
 		(setq pro (list
 			   (car pro)
 			   :error nil))
 		(cond
+		 ((eq proto 'smtp)
+		  (setq mew--gnutls-smtp-greeting greeting))
 		 ((eq proto 'pop)
 		  (setq mew--gnutls-pop-greeting greeting))
 		 ((eq proto 'imap)
@@ -591,11 +615,6 @@
 	  (message "Connecting to the SMTP server...")
 	  (setq pro (mew-open-network-stream pnm nil server sprt
 					     'smtp sslnp starttlsp case))
-	  (when (and sslnp starttlsp)
-	    (mew-smtp-debug "*GREETING*"
-			    (plist-get (cdr pro) :greeting))
-	    (mew-smtp-debug "*CAPABILITIES*"
-			    (plist-get (cdr pro) :capabilities)))
 	  (setq pro (car pro))
 	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
@@ -621,6 +640,8 @@
 ;;;
 ;;; Launcher
 ;;;
+
+(defvar mew--gnutls-smtp-greeting nil)
 
 (defun mew-smtp-send-message (case qfld msgs &optional fallbacked)
   (let ((server (mew-smtp-server case))
@@ -723,12 +744,14 @@
       (set-process-filter process 'mew-smtp-filter)
       (message "Sending in background...")
       ;;
-      (when sslnp
-	;; GnuTLS requires a client-initiated command after the
-	;; session is established or upgraded to use TLS because
-	;; no additional greeting from the server.
-	(mew-smtp-set-status pnm "ehlo")
-	(mew-smtp-command-ehlo process pnm)))))
+      (when (and sslnp starttlsp)
+	;; open-network-stream receives SMTP greeting in its internals
+	;; and passes it as a return value.
+	;; We store the value in the variable mew--gnutls-smtp-greeting
+	;; and pass it to the filter to process the greeting.
+	(mew-smtp-filter process
+			 (string-replace "\r\n" "\n"
+					 mew--gnutls-smtp-greeting))))))
 
 (defun mew-smtp-flush-queue (case &optional qfld)
   (let (msgs)

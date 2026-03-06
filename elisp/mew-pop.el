@@ -775,8 +775,8 @@
 	(set-process-sentinel process 'mew-pop-sentinel)
 	(set-process-filter process 'mew-pop-filter)
 	(set-process-buffer process buf)
-	(when sslnp
-	  ;; GnuTLS receives POP greeting in its internals
+	(when (and sslnp starttlsp)
+	  ;; open-network-stream receives POP greeting in its internals
 	  ;; and passes it as a return value.
 	  ;; We store the value in the variable mew--gnutls-pop-greeting
 	  ;; and pass it to the filter to process the greeting.
