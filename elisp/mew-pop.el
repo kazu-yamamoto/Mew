@@ -624,7 +624,7 @@
 
 (defun mew-pop-open (pnm case server port no-msg starttlsp)
   (let ((sprt (mew-*-to-port port))
-	(sslnp (mew-ssl-native-p (mew-pop-ssl case)))
+	(sslnp (mew-tls-native-p (mew-pop-ssl case)))
 	pro tm)
     (condition-case emsg
 	(progn
@@ -668,7 +668,7 @@
 	 (sshsrv (mew-pop-ssh-server case))
 	 (sslp (mew-pop-ssl case))
 	 (sslport (mew-pop-ssl-port case))
-	 (sslnp (mew-ssl-native-p (mew-pop-ssl case)))
+	 (sslnp (mew-tls-native-p (mew-pop-ssl case)))
 	 (starttlsp
 	  (mew-ssl-starttls-p (mew-pop-ssl case)
 			      (mew-*-to-string (mew-pop-port case))

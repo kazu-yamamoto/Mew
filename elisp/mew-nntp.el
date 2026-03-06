@@ -391,7 +391,7 @@
 
 (defun mew-nntp-open (pnm case server port no-msg starttlsp)
   (let ((sprt (mew-*-to-port port))
-	(sslnp (mew-ssl-native-p (mew-nntp-ssl case)))
+	(sslnp (mew-tls-native-p (mew-nntp-ssl case)))
 	pro tm)
     (condition-case emsg
 	(progn
@@ -432,7 +432,7 @@
 	 (sshsrv (mew-nntp-ssh-server case))
 	 (sslp (mew-nntp-ssl case))
 	 (sslport (mew-nntp-ssl-port case))
-	 (sslnp (mew-ssl-native-p (mew-nntp-ssl case)))
+	 (sslnp (mew-tls-native-p (mew-nntp-ssl case)))
 	 (starttlsp
 	  (mew-ssl-starttls-p (mew-nntp-ssl case)
 			      (mew-*-to-string (mew-nntp-port case))

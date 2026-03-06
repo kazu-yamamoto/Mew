@@ -8,7 +8,7 @@
 
 (require 'mew)
 
-(defun mew-ssl-native-p (type)
+(defun mew-tls-native-p (type)
   "Return if the type is native or not"
   (or (eq type 'native)
       (and (eq type t) (eq mew-ssl-default 'native))))
