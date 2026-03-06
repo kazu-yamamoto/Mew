@@ -1,5 +1,5 @@
 ;;; -*- lexical-binding: nil; -*-
-;;; mew-ssl.el
+;;; mew-stunnel.el
 
 ;; Author:  Mew developing team
 ;; Created: Jul 25, 2002
@@ -320,7 +320,7 @@ A local port number can be obtained the process name after `:'. "
       (when (re-search-forward "syslog" nil t)
 	(setq mew-ssl-syslog t)))))
 
-(provide 'mew-ssl)
+(provide 'mew-stunnel)
 
 ;;; Copyright Notice:
 
@@ -352,4 +352,4 @@ A local port number can be obtained the process name after `:'. "
 ;; OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ;; IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-;;; mew-ssl.el ends here
+;;; mew-stunnel.el ends here

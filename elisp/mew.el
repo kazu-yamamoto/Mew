@@ -731,7 +731,7 @@ Mew remain, so you can resume with buffer operations."
 (require 'mew-highlight)
 (require 'mew-net)
 (require 'mew-ssh)
-(require 'mew-ssl)
+(require 'mew-stunnel)
 (require 'mew-gnutls)
 (require 'mew-smtp)
 (require 'mew-pop)

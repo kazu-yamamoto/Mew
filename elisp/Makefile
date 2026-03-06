@@ -41,7 +41,7 @@ OBJS =	mew-addrbook.elc	mew-attach.elc		mew-auth.elc	\
 	mew-pgp.elc		mew-pick.elc		mew-pop.elc	\
 	mew-refile.elc		mew-scan.elc		mew-smime.elc	\
 	mew-search.elc		mew-smtp.elc		mew-sort.elc	\
-	mew-ssh.elc		mew-ssl.elc		mew-gnutsl.elc  \
+	mew-ssh.elc		mew-stunnel.elc		mew-gnutsl.elc  \
         mew-passwd.elc	\
 	mew-summary.elc		mew-summary2.elc	mew-summary3.elc \
 	mew-summary4.elc	mew-syntax.elc		\
@@ -69,7 +69,7 @@ SRCS =	mew-addrbook.el	mew-attach.el	mew-auth.el	\
 	mew-pgp.el	mew-pick.el	mew-pop.el	\
 	mew-refile.el	mew-scan.el	mew-smime.el	\
 	mew-search.el	mew-smtp.el	mew-sort.el	\
-	mew-ssh.el	mew-ssl.el	mew-gnutls.el   \
+	mew-ssh.el	mew-stunnel.el	mew-gnutls.el   \
 	mew-passwd.el	\
 	mew-summary.el	mew-summary2.el	mew-summary3.el	\
 	mew-summary4.el	mew-syntax.el	\
