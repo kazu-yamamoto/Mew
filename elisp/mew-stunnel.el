@@ -67,25 +67,6 @@ A file name of a certificate should be `cert-hash.0'.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Magic words
-;;;
-
-(defun mew-tls-native-p (type)
-  "Return if the type is native or not"
-  (or (eq type 'native)
-      (and (eq type t) (eq mew-ssl-default 'native))))
-
-(defun mew-starttls-p (type port sslport)
-  "Return if STARTTLS should be used or not"
-  (and type (mew-port-equal port sslport)))
-
-(defconst mew-tls-smtp "smtp")
-(defconst mew-tls-pop  "pop3")
-(defconst mew-tls-nntp "nntp")
-(defconst mew-tls-imap "imap") ;; xxx stunnel does not support this.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; SSL/TLS info
 ;;;
 
@@ -319,6 +300,26 @@ A local port number can be obtained the process name after `:'. "
 	(setq mew-ssl-pid t))
       (when (re-search-forward "syslog" nil t)
 	(setq mew-ssl-syslog t)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Should move them to mew-tls.el?
+;;;
+
+(defun mew-tls-native-p (type)
+  "Return if the type is native or not"
+  (or (eq type 'native)
+      (and (eq type t) (eq mew-ssl-default 'native))))
+
+(defun mew-starttls-p (type port sslport)
+  "Return if STARTTLS should be used or not"
+  (and type (mew-port-equal port sslport)))
+
+(defconst mew-tls-smtp "smtp")
+(defconst mew-tls-pop  "pop3")
+(defconst mew-tls-nntp "nntp")
+(defconst mew-tls-imap "imap") ;; xxx stunnel does not support this.
+
 
 (provide 'mew-stunnel)
 
