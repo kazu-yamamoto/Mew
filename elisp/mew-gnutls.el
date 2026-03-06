@@ -6,6 +6,14 @@
 
 ;;; Code:
 
+(defvar mew-gnutls-min-prime-bits 2048
+  "Default prime bits for GnuTLS connection.")
+
+(defvar mew-gnutls-verify-error nil
+  "verify-error parameter passed to GnuTLS.  You might want to
+keep this as nil.")
+
+
 (defvar mew-gnutls-plist
   '(;; RFC 3207
     (smtp . (:capability-command
@@ -136,16 +144,16 @@
 			    :keylist (mew-ssl-client-keycert-list case)
 			    :trustfiles (mew-ssl-trustfiles case)
 			    :priority-string (mew-ssl-algorithm-priority case)
-			    :min-prime-bits mew-ssl-min-prime-bits
+			    :min-prime-bits mew-gnutls-min-prime-bits
 			    ;;
-			    ;; mew-ssl-verify-error should be nil
+			    ;; mew-gnutls-verify-error should be nil
 			    ;; to defer verification to NSM.  Note
 			    ;; that gnutls-verify-error overrides
 			    ;; verify-error when it is nil.
 			    ;; Setting gnutls-verify-error to t is
 			    ;; also discouraged.
 			    ;;
-			    :verify-error mew-ssl-verify-error
+			    :verify-error mew-gnutls-verify-error
 			    :hostname hostname)))
 		      (plist-put boot-params
 				 :priority-string

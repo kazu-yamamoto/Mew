@@ -255,7 +255,7 @@ of the current world is also updated."
     (mew-pgp-setup)
     (mew-smime-setup)
     (mew-ssh-setup)
-    (mew-ssl-setup)
+    (mew-stunnel-setup)
     (mew-net-setup)
     (mew-thread-setup)
     (mew-decoration-setup)

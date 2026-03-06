@@ -449,7 +449,7 @@
 	(sslport (mew-*-to-string (mew-smtp-ssl-port case)))
 	(sslnp (mew-tls-native-p (mew-smtp-ssl case)))
 	(starttlsp
-	 (mew-ssl-starttls-p (mew-smtp-ssl case)
+	 (mew-starttls-p (mew-smtp-ssl case)
 			     (mew-*-to-string (mew-smtp-port case))
 			     (mew-smtp-ssl-port case)))
 	mew-inherit-submission
@@ -486,12 +486,12 @@
 	(when lport
 	  (setq process (mew-smtp-open pnm case "localhost" lport nil)))))
      (sslp
-      (setq sslpro (mew-open-ssl-stream case server sslport tls))
+      (setq sslpro (mew-open-stunnel-stream case server sslport tls))
       (when sslpro
 	(setq sslname (process-name sslpro))
 	(setq lport (mew-ssl-pnm-to-lport sslname))
 	(when lport
-	  (setq process (mew-smtp-open pnm case mew-ssl-localhost lport nil)))))
+	  (setq process (mew-smtp-open pnm case mew-stunnel-localhost lport nil)))))
      (t
       (setq process (mew-smtp-open pnm case server port nil))))
     (if (null process)

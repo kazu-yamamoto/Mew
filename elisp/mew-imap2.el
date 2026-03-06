@@ -427,7 +427,7 @@
 	 (sslport (mew-imap-ssl-port case))
 	 (sslnp (mew-tls-native-p (mew-imap-ssl case)))
 	 (starttlsp
-	  (mew-ssl-starttls-p (mew-imap-ssl case)
+	  (mew-starttls-p (mew-imap-ssl case)
 			      (mew-*-to-string (mew-imap-port case))
 			      (mew-imap-ssl-port case)))
 	 (proxysrv (mew-imap-proxy-server case))
@@ -446,12 +446,12 @@
 	  (setq process (mew-imap2-open pnm case "localhost" lport nil)))))
      (sslp
       (when starttlsp (setq tls mew-tls-imap))
-      (setq sslpro (mew-open-ssl-stream case server sslport tls))
+      (setq sslpro (mew-open-stunnel-stream case server sslport tls))
       (when sslpro
 	(setq sslname (process-name sslpro))
 	(setq lport (mew-ssl-pnm-to-lport sslname))
 	(when lport
-	  (setq process (mew-imap2-open pnm case mew-ssl-localhost lport nil)))))
+	  (setq process (mew-imap2-open pnm case mew-stunnel-localhost lport nil)))))
      (proxysrv
       (setq process (mew-imap2-open pnm case proxysrv proxyport nil)))
      (t
