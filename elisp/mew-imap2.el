@@ -428,8 +428,8 @@
 	 (sslnp (mew-tls-native-p (mew-imap-ssl case)))
 	 (starttlsp
 	  (mew-starttls-p (mew-imap-ssl case)
-			      (mew-*-to-string (mew-imap-port case))
-			      (mew-imap-ssl-port case)))
+			  (mew-*-to-string (mew-imap-port case))
+			  (mew-imap-ssl-port case)))
 	 (proxysrv (mew-imap-proxy-server case))
 	 (proxyport (mew-imap-proxy-port case))
 	 process sshname sshpro sslname sslpro lport tls)

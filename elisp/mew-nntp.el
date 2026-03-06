@@ -435,8 +435,8 @@
 	 (sslnp (mew-tls-native-p (mew-nntp-ssl case)))
 	 (starttlsp
 	  (mew-starttls-p (mew-nntp-ssl case)
-			      (mew-*-to-string (mew-nntp-port case))
-			      (mew-nntp-ssl-port case)))
+			  (mew-*-to-string (mew-nntp-port case))
+			  (mew-nntp-ssl-port case)))
 	 (newsgroup (mew-bnm-to-newsgroup bnm))
 	 (pnm (mew-nntp-info-name case newsgroup))
 	 (buf (get-buffer-create (mew-nntp-buffer-name pnm)))

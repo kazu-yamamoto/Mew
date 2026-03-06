@@ -450,8 +450,8 @@
 	(sslnp (mew-tls-native-p (mew-smtp-ssl case)))
 	(starttlsp
 	 (mew-starttls-p (mew-smtp-ssl case)
-			     (mew-*-to-string (mew-smtp-port case))
-			     (mew-smtp-ssl-port case)))
+			 (mew-*-to-string (mew-smtp-port case))
+			 (mew-smtp-ssl-port case)))
 	mew-inherit-submission
 	process sshname sshpro sslname sslpro lport tlsp tls fallback)
     (cond
