@@ -624,7 +624,7 @@
 
 (defun mew-pop-open (pnm case server port no-msg starttlsp)
   (let ((sprt (mew-*-to-port port))
-	(sslnp (mew-ssl-native-p (mew-pop-ssl case)))
+	(sslnp (mew-tls-native-p (mew-pop-ssl case)))
 	pro tm)
     (condition-case emsg
 	(progn
@@ -668,11 +668,11 @@
 	 (sshsrv (mew-pop-ssh-server case))
 	 (sslp (mew-pop-ssl case))
 	 (sslport (mew-pop-ssl-port case))
-	 (sslnp (mew-ssl-native-p (mew-pop-ssl case)))
+	 (sslnp (mew-tls-native-p (mew-pop-ssl case)))
 	 (starttlsp
-	  (mew-ssl-starttls-p (mew-pop-ssl case)
-			      (mew-*-to-string (mew-pop-port case))
-			      (mew-pop-ssl-port case)))
+	  (mew-starttls-p (mew-pop-ssl case)
+			  (mew-*-to-string (mew-pop-port case))
+			  (mew-pop-ssl-port case)))
          (proxysrv (mew-pop-proxy-server case))
          (proxyport (mew-pop-proxy-port case))
 	 (pnm (mew-pop-info-name case))
@@ -695,12 +695,12 @@
 	    (setq process (mew-pop-open pnm case "localhost" lport no-msg nil)))))
        (sslp
 	(when starttlsp (setq tls mew-tls-pop))
-	(setq sslpro (mew-open-ssl-stream case server sslport tls))
+	(setq sslpro (mew-open-stunnel-stream case server sslport tls))
 	(when sslpro
 	  (setq sslname (process-name sslpro))
 	  (setq lport (mew-ssl-pnm-to-lport sslname))
 	  (when lport
-	    (setq process (mew-pop-open pnm case mew-ssl-localhost lport no-msg nil)))))
+	    (setq process (mew-pop-open pnm case mew-stunnel-localhost lport no-msg nil)))))
        (proxysrv
 	(setq process (mew-pop-open pnm case proxysrv proxyport no-msg nil)))
        (t
