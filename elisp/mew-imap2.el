@@ -492,8 +492,8 @@
 	;; We store the value in the variable mew--gnutls-imap-greeting
 	;; and pass it to the filter to process the greeting.
 	(mew-imap2-filter process
-			 (string-replace "\r\n" "\n"
-					 mew--gnutls-imap-greeting)))
+			  (string-replace "\r\n" "\n"
+					  mew--gnutls-imap-greeting)))
       )))
 
 (defun mew-summary-from-local-to-imap ()
