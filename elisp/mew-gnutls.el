@@ -26,59 +26,59 @@ keep this as nil.")
 (defvar mew-gnutls-plist
   '(;; RFC 3207
     (smtp . (:capability-command
-	     (format "EHLO %s\r\n" (mew-smtp-helo-domain case))
+	     (format "EHLO %s\n" (mew-smtp-helo-domain case))
 	     :always-query-capabilities t
 	     :end-of-command
-	     (format "^[0-9]+ .*\r?\n")
+	     (format "^[0-9]+ .*\n")
 	     :end-of-capability
-	     (format "^[0-9]+ .*\r?\n")
-	     :success (format "^2.*\r?\n")
+	     (format "^[0-9]+ .*\n")
+	     :success (format "^2.*\n")
 	     :starttls-function
 	     (lambda (capabilities)
 	       (and (string-match "[ -]STARTTLS" capabilities)
-		    "STARTTLS\r\n"))))
+		    "STARTTLS\n"))))
     ;; RFC 2595
     (imap . (:capability-command
-	     (format "1 CAPABILITY\r\n")
+	     (format "1 CAPABILITY\n")
 	     :always-query-capabilities t
 	     :end-of-capability
-	     (format "\r?\n")
+	     (format "\n")
 	     :end-of-command
-	     (format "\r?\n")
+	     (format "\n")
 	     :success
 	     (format "^1 OK ")
 	     :starttls-function
 	     (lambda (capabilities)
 	       (when (string-match-p "STARTTLS" capabilities)
-		 "1 STARTTLS\r\n"))))
+		 "1 STARTTLS\n"))))
     ;; RFC 2595
     (pop . (:capability-command
-	    (format "CAPA\r\n")
+	    (format "CAPA\n")
 	    :always-query-capabilities nil
 	    :end-of-capability
-	    (format "^\\.\r?\n\\|^-ERR")
+	    (format "^\\.\n\\|^-ERR")
 	    :end-of-command
-	    (format "^\\(-ERR\\|+OK\\).*\r?\n")
+	    (format "^\\(-ERR\\|+OK\\).*\n")
 	    :success
 	    (format "^\\+OK.*\n")
 	    :starttls-function
 	    (lambda (capabilities)
 	      (and (string-match "\\bSTLS\\b" capabilities)
-		   "STLS\r\n"))))
+		   "STLS\n"))))
     ;; RFC 4642
     (nntp . (:capability-command
-	     (format "CAPABILITIES\r?\n")
+	     (format "CAPABILITIES\n")
 	     :always-query-capabilities t
 	     :end-of-capability
-	     (format "^\\.\r?\n")
+	     (format "^\\.\n")
 	     :end-of-command
-	     (format "^\\.\r?\n")
+	     (format "^\\.\n")
 	     :success
-	     (format "^2.+ \r?\n")
+	     (format "^2.+ \n")
 	     :starttls-function
 	     (lambda (capabilities)
 	       (when (string-match-p "STARTTLS" capabilities)
-		 "STARTTLS\r\n"))))
+		 "STARTTLS\n"))))
     ))
 
 (defun mew-gnutls-get-param (proto key evalp)
@@ -192,6 +192,7 @@ keep this as nil.")
 	(setq pro (apply 
 		   'open-network-stream
 		   name buf server port
+		   :coding mew-cs-text-for-net
 		   :type type
 		   :return-list t
 		   (mew-gnutls-parameters case proto starttlsp)))
@@ -224,14 +225,8 @@ keep this as nil.")
 			    (concat status-msg "FAILED"))))
 	   (t
 	    (when (and gnutlsp starttlsp)
-	      (mew-smtp-debug "*GREETING*"
-			      (if greeting
-				  (string-replace "\r\n" "\n"
-						  greeting)))
-	      (mew-smtp-debug "*CAPABILITIES*"
-			      (if capabilities
-				  (string-replace "\r\n" "\n"
-						  capabilities))))
+	      (mew-smtp-debug "*GREETING*" greeting)
+	      (mew-smtp-debug "*CAPABILITIES*" capabilities))
 	    (setq pro (list
 		       (car pro)
 		       :error nil))
@@ -288,6 +283,7 @@ keep this as nil.")
 			(list :host server))))
 	  (setq pro (list
 		     (apply #'make-network-process (nconc params host))
+		     :coding mew-cs-text-for-net
 		     :greeting nil
 		     :capabilities nil
 		     :type 'plain

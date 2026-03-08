@@ -780,10 +780,7 @@
 	  ;; and passes it as a return value.
 	  ;; We store the value in the variable mew--gnutls-pop-greeting
 	  ;; and pass it to the filter to process the greeting.
-	  (mew-pop-filter process
-			  (string-replace "\r\n" "\n"
-					  mew--gnutls-pop-greeting)))
-	))))
+	  (mew-pop-filter process mew--gnutls-pop-greeting))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
