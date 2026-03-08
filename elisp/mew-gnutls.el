@@ -256,8 +256,7 @@ keep this as nil.")
 			       "")))
 	 family pro)
     ;; TLS does not work for Unix-domain socket for now.
-    (when (and (not gnutlsp)
-	       (stringp port) (string-match "^/" port))
+    (when (and (not gnutlsp) (stringp port) (string-match "^/" port))
       (setq family 'local)
       (setq server 'local))
     (cond
@@ -276,18 +275,11 @@ keep this as nil.")
       (setq pro (mew-open-gnutls-stream name buf server port proto gnutlsp starttlsp case status-msg)))
      (t
       (with-temp-message status-msg
-	(let ((params (list :name name :buffer buf
-			    :service port :family family))
-	      ;; :host will be ignored when family is 'local.
-	      (host (if (not (eq family 'local))
-			(list :host server))))
-	  (setq pro (list
-		     (apply #'make-network-process (nconc params host))
-		     :coding mew-cs-text-for-net
-		     :greeting nil
-		     :capabilities nil
-		     :type 'plain
-		     :error nil))))))
+	(setq pro (apply 'open-network-stream
+			 name buf server port
+			 :coding mew-cs-text-for-net
+			 :return-list t
+			 :family family)))))
     (when (plist-get (cdr pro) :error)
       (message (plist-get (cdr pro) :status-msg)))
     pro))
