@@ -330,7 +330,6 @@
 (defconst mew-inherit-pick-mewlp nil)
 (defconst mew-inherit-pick-omit-and nil)
 (defconst mew-inherit-pick-omit-and2 nil)
-(defconst mew-inherit-submission nil)
 (defconst mew-inherit-complete-folder nil)
 
 (provide 'mew-const)
