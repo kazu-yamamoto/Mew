@@ -157,7 +157,7 @@ keep this as nil.")
 ;;;
 ;;;
 
-(defun mew-open-gnutls-stream (name buf server port proto gnutlsp starttlsp case status-msg)
+(defun mew-open-gnutls-stream (name buf server port proto starttlsp case status-msg)
   (let* ((hostname (puny-encode-domain server))
 	 ;; Note: on Emacs 26.3 and prior GnuTLS always uses
 	 ;; the system-wide default path first even if
@@ -224,7 +224,7 @@ keep this as nil.")
 			    :status-msg
 			    (concat status-msg "FAILED"))))
 	   (t
-	    (when (and gnutlsp starttlsp)
+	    (when starttlsp
 	      (mew-smtp-debug "*GREETING*" greeting)
 	      (mew-smtp-debug "*CAPABILITIES*" capabilities))
 	    (setq pro (list
@@ -272,7 +272,7 @@ keep this as nil.")
 		  (concat status-msg
 			  "FAILED (GnuTLS or NSM not available)"))))
      (gnutlsp
-      (setq pro (mew-open-gnutls-stream name buf server port proto gnutlsp starttlsp case status-msg)))
+      (setq pro (mew-open-gnutls-stream name buf server port proto starttlsp case status-msg)))
      (t
       (with-temp-message status-msg
 	(setq pro (apply 'open-network-stream
