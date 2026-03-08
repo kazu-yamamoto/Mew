@@ -400,7 +400,7 @@
 
 (defun mew-smtp-open (pnm case server port starttlsp)
   (let ((sprt (mew-*-to-port port))
-	(sslnp (mew-tls-native-p (mew-smtp-ssl case)))
+	(gnutlsp (mew-tls-native-p (mew-smtp-ssl case)))
 	pro tm)
     ;; xxx some OSes do not define "submission", sigh.
     (when (and (stringp sprt) (string= sprt "submission"))
@@ -410,7 +410,7 @@
 	  (setq tm (run-at-time mew-smtp-timeout-time nil 'mew-smtp-timeout))
 	  (message "Connecting to the SMTP server...")
 	  (setq pro (mew-open-network-stream pnm nil server sprt
-					     'smtp sslnp starttlsp case))
+					     'smtp gnutlsp starttlsp case))
 	  (setq pro (car pro))
 	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
@@ -447,7 +447,7 @@
 	(sshsrv (mew-smtp-ssh-server case))
 	(sslp (mew-smtp-ssl case))
 	(sslport (mew-*-to-string (mew-smtp-ssl-port case)))
-	(sslnp (mew-tls-native-p (mew-smtp-ssl case)))
+	(gnutlsp (mew-tls-native-p (mew-smtp-ssl case)))
 	(starttlsp
 	 (mew-starttls-p (mew-smtp-ssl case)
 			 (mew-*-to-string (mew-smtp-port case))
@@ -455,7 +455,7 @@
 	mew-inherit-submission
 	process sshname sshpro sslname sslpro lport tlsp tls fallback)
     (cond
-     ((and (not sslnp) sslp starttlsp)
+     ((and (not gnutlsp) sslp starttlsp)
       (setq tlsp t)
       ;; let stunnel know that a wrapper protocol is SMTP
       (setq tls mew-tls-smtp)))
@@ -468,14 +468,14 @@
 	       (mew-port-equal port "smtp"))
       (setq port "submission")
       (setq fallback t)
-      (when (and sslp (not sslnp) (not tlsp))
+      (when (and sslp (not gnutlsp) (not tlsp))
 	;; TLS uses stunnel. So, we should not use non-blocking connect.
 	;; Timeout should be carried out by stunnel.
 	(setq mew-inherit-submission t))
       (if (mew-port-equal sslport "smtp")
 	  (setq sslport "submission")))
     (cond
-     (sslnp
+     (gnutlsp
       (let ((serv (if starttlsp port sslport)))
 	(setq process (mew-smtp-open pnm case server serv starttlsp))))
      (sshsrv
@@ -498,7 +498,7 @@
 	(cond
 	 ((and sshsrv (null sshpro))
 	  (message "Cannot create to the SSH connection"))
-	 (sslnp
+	 (gnutlsp
 	  (message "Cannot open an SSL/TLS (GnuTLS) connection"))
 	 ((and sslp (null sslpro))
 	  (message "Cannot create to the SSL/TLS connection"))
@@ -540,7 +540,7 @@
       (set-process-filter process 'mew-smtp-filter)
       (message "Sending in background...")
       ;;
-      (when (and sslnp starttlsp)
+      (when (and gnutlsp starttlsp)
 	;; open-network-stream receives SMTP greeting in its internals
 	;; and passes it as a return value.
 	;; We store the value in the variable mew--gnutls-smtp-greeting

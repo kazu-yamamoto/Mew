@@ -180,14 +180,14 @@
 
 (defun mew-nntp2-open (pnm case server port starttlsp)
   (let ((sprt (mew-*-to-port port))
-	(sslnp (mew-tls-native-p (mew-nntp-ssl case)))
+	(gnutlsp (mew-tls-native-p (mew-nntp-ssl case)))
 	pro tm)
     (condition-case emsg
 	(progn
 	  (setq tm (run-at-time mew-nntp-timeout-time nil 'mew-nntp2-timeout))
 	  (message "Connecting to the NNTP server...")
 	  (setq pro (mew-open-network-stream pnm nil server sprt
-					     'nntp sslnp starttlsp case))
+					     'nntp gnutlsp starttlsp case))
 	  (setq pro (car pro))
 	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
@@ -222,14 +222,14 @@
 	(sshsrv (mew-nntp-ssh-server case))
 	(sslp (mew-nntp-ssl case))
 	(sslport (mew-nntp-ssl-port case))
-	(sslnp (mew-tls-native-p (mew-nntp-ssl case)))
+	(gnutlsp (mew-tls-native-p (mew-nntp-ssl case)))
 	(starttlsp
 	 (mew-starttls-p (mew-nntp-ssl case)
 			 (mew-*-to-string (mew-nntp-port case))
 			 (mew-nntp-ssl-port case)))
 	process sshname sshpro sslname sslpro lport tls)
     (cond
-     (sslnp
+     (gnutlsp
       (let ((serv (if starttlsp port sslport)))
 	(setq process (mew-nntp2-open pnm case server serv starttlsp))))
      (sshsrv
@@ -274,7 +274,7 @@
       (set-process-sentinel process 'mew-nntp2-sentinel)
       (set-process-filter process 'mew-nntp2-filter)
       (message "Posting in background...")
-      (when (and sslnp starttlsp)
+      (when (and gnutlsp starttlsp)
 	;; open-network-stream requires a client-initiated command after the
 	;; session is upgraded to use TLS because
 	;; no additional greeting from the server.

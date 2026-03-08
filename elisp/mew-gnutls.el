@@ -87,12 +87,12 @@ keep this as nil.")
 (defun mew--advice-filter-args-gnutls-negotiate (&rest args)
   (nconc (car args) mew--advice-tls-parameters-plist))
 
-(defun mew-open-network-stream (name buf server port proto sslnp starttlsp case)
+(defun mew-open-network-stream (name buf server port proto gnutlsp starttlsp case)
   (let* ((tun-type nil)
 	 (status-msg (format "Opening a %s connection %s%s%s..."
-			     (if sslnp "TLS" "TCP")
-			     (if sslnp "(GnuTLS" "")
-			     (if sslnp
+			     (if gnutlsp "TLS" "TCP")
+			     (if gnutlsp "(GnuTLS" "")
+			     (if gnutlsp
 				 (if starttlsp ", STARTTLS)" ")")
 			       "")
 			     (if (eq tun-type 'ssh) " over SSH"
@@ -103,13 +103,13 @@ keep this as nil.")
       (setq family mew-smtp-submission-family)
       (setq nowait t))
     ;; TLS does not work for Unix-domain socket for now.
-    (when (and (not sslnp)
+    (when (and (not gnutlsp)
 	       (stringp port) (string-match "^/" port))
       (setq family 'local)
       (setq server 'local))
     (cond
      ;; Both GnuTLS and NSM are mandatory for 'native.
-     ((and sslnp (or (not (fboundp 'gnutls-available-p))
+     ((and gnutlsp (or (not (fboundp 'gnutls-available-p))
 		     (not (gnutls-available-p))
 		     (not (fboundp 'gnutls-boot-parameters))
 		     (not (fboundp 'nsm-level))))
@@ -119,7 +119,7 @@ keep this as nil.")
 		  :status-msg
 		  (concat status-msg
 			  "FAILED (GnuTLS or NSM not available)"))))
-     (sslnp
+     (gnutlsp
       (let ((hostname (puny-encode-domain server))
 	    ;; Note: on Emacs 26.3 and prior GnuTLS always uses
 	    ;; the system-wide default path first even if
@@ -235,7 +235,7 @@ keep this as nil.")
 				:status-msg
 				(concat status-msg "FAILED"))))
 	       (t
-		(when (and sslnp starttlsp)
+		(when (and gnutlsp starttlsp)
 		  (mew-smtp-debug "*GREETING*"
 				  (if greeting
 				      (string-replace "\r\n" "\n"
