@@ -18,6 +18,11 @@ keep this as nil.")
   (or (eq type 'native)
       (and (eq type t) (eq mew-ssl-default 'native))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Parameters
+;;;
+
 (defvar mew-gnutls-plist
   '(;; RFC 3207
     (smtp . (:capability-command
@@ -91,46 +96,80 @@ keep this as nil.")
 (defun mew--advice-filter-args-gnutls-negotiate (&rest args)
   (nconc (car args) mew--advice-tls-parameters-plist))
 
+(defun mew-gnutls-boot-parameters (case hostname)
+  (cons 'gnutls-x509pki
+	;; XXX: (gnutls-boot-parameters) returns
+	;; :priority key instead of :priority-string
+	;; while (gnutls-negotiate) accepts
+	;; :priority-string.  To handle this odd
+	;; mismatch, create :priority-string in the
+	;; result of (gnutls-boot-parameters) here.
+	(let ((boot-params
+	       (gnutls-boot-parameters
+		:type 'gnutls-x509pki
+		:keylist (mew-ssl-client-keycert-list case)
+		:trustfiles (mew-ssl-trustfiles case)
+		:priority-string (mew-ssl-algorithm-priority case)
+		:min-prime-bits mew-gnutls-min-prime-bits
+		;;
+		;; mew-gnutls-verify-error should be nil
+		;; to defer verification to NSM.  Note
+		;; that gnutls-verify-error overrides
+		;; verify-error when it is nil.
+		;; Setting gnutls-verify-error to t is
+		;; also discouraged.
+		;;
+		:verify-error mew-gnutls-verify-error
+		:hostname hostname)))
+	  (plist-put boot-params
+		     :priority-string
+		     (plist-get boot-params :priority)))))
+
+(defun mew-gnutls-parameters (case proto starttlsp)
+  (list
+   :always-query-capabilities
+   (and starttlsp
+	(mew-gnutls-get-param
+	 proto :always-query-capabilities nil))
+   :capability-command
+   (and starttlsp
+	(mew-gnutls-get-param
+	 proto :capability-command t))
+   :end-of-capability
+   (and starttlsp
+	(mew-gnutls-get-param
+	 proto :end-of-capability t))
+   :end-of-command
+   (and starttlsp
+	(mew-gnutls-get-param
+	 proto :end-of-command t))
+   :success
+   (and starttlsp
+	(mew-gnutls-get-param
+	 proto :success t))
+   :starttls-function
+   (and starttlsp
+	(mew-gnutls-get-param
+	 proto :starttls-function nil))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;
+;;;
+
 (defun mew-open-gnutls-stream (name buf server port proto gnutlsp starttlsp case nowait status-msg)
-  (let ((hostname (puny-encode-domain server))
-	;; Note: on Emacs 26.3 and prior GnuTLS always uses
-	;; the system-wide default path first even if
-	;; trustfiles is specified.
-	(trustfiles (mew-ssl-trustfiles case))
-	(nsm-noninteractive nil)
-	(network-security-level network-security-level)
-	tlsparams pro)
+  (let* ((hostname (puny-encode-domain server))
+	 ;; Note: on Emacs 26.3 and prior GnuTLS always uses
+	 ;; the system-wide default path first even if
+	 ;; trustfiles is specified.
+	 (trustfiles (mew-ssl-trustfiles case))
+	 (nsm-noninteractive nil)
+	 (network-security-level network-security-level)
+	 (tlsparams (mew-gnutls-boot-parameters case hostname))
+	 pro)
     (when (eq (mew-ssl-verify-level case) 0)
       ;; Forcibly disable verification.
       (setq network-security-level 'low))
-    (setq tlsparams
-	  (cons 'gnutls-x509pki
-		;; XXX: (gnutls-boot-parameters) returns
-		;; :priority key instead of :priority-string
-		;; while (gnutls-negotiate) accepts
-		;; :priority-string.  To handle this odd
-		;; mismatch, create :priority-string in the
-		;; result of (gnutls-boot-parameters) here.
-		(let ((boot-params
-		       (gnutls-boot-parameters
-			:type 'gnutls-x509pki
-			:keylist (mew-ssl-client-keycert-list case)
-			:trustfiles (mew-ssl-trustfiles case)
-			:priority-string (mew-ssl-algorithm-priority case)
-			:min-prime-bits mew-gnutls-min-prime-bits
-			;;
-			;; mew-gnutls-verify-error should be nil
-			;; to defer verification to NSM.  Note
-			;; that gnutls-verify-error overrides
-			;; verify-error when it is nil.
-			;; Setting gnutls-verify-error to t is
-			;; also discouraged.
-			;;
-			:verify-error mew-gnutls-verify-error
-			:hostname hostname)))
-		  (plist-put boot-params
-			     :priority-string
-			     (plist-get boot-params :priority)))))
     ;; debug output: TLS params
     (funcall (intern (concat "mew-" (symbol-name proto) "-debug"))
 	     (format "TLS proto=%s, server=%s:%s, starttlsp=%s"
@@ -151,35 +190,13 @@ keep this as nil.")
 		    :filter-args #'mew--advice-filter-args-gnutls-negotiate)
 	;;
 	;; Override key functions when using a tunnel.
-	(setq pro (open-network-stream
+	(setq pro (apply 
+		   'open-network-stream
 		   name buf server port
 		   :type type
 		   :return-list t
 		   :nowait nowait
-		   :always-query-capabilities
-		   (and starttlsp
-			(mew-gnutls-get-param
-			 proto :always-query-capabilities nil))
-		   :capability-command
-		   (and starttlsp
-			(mew-gnutls-get-param
-			 proto :capability-command t))
-		   :end-of-capability
-		   (and starttlsp
-			(mew-gnutls-get-param
-			 proto :end-of-capability t))
-		   :end-of-command
-		   (and starttlsp
-			(mew-gnutls-get-param
-			 proto :end-of-command t))
-		   :success
-		   (and starttlsp
-			(mew-gnutls-get-param
-			 proto :success t))
-		   :starttls-function
-		   (and starttlsp
-			(mew-gnutls-get-param
-			 proto :starttls-function nil))))
+		   (mew-gnutls-parameters case proto starttlsp)))
 	(advice-remove 'gnutls-negotiate
 		       #'mew--advice-filter-args-gnutls-negotiate)
 	;;
@@ -228,6 +245,11 @@ keep this as nil.")
 	     ((eq proto 'imap)
 	      (setq mew--gnutls-imap-greeting greeting))))))))
     pro))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;
+;;;
 
 (defun mew-open-network-stream (name buf server port proto gnutlsp starttlsp case)
   (let* ((tun-type nil)
@@ -282,6 +304,11 @@ keep this as nil.")
     (when (plist-get (cdr pro) :error)
       (message (plist-get (cdr pro) :status-msg)))
     pro))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;
+;;;
 
 (defvar mew-smtp-submission-family 'ipv4)
 (defvar mew-smtp-submission-timeout 10)
