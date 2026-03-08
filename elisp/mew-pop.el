@@ -666,7 +666,7 @@
          (user (mew-pop-user case))
 	 (port (mew-*-to-string (mew-pop-port case)))
 	 (sshsrv (mew-pop-ssh-server case))
-	 (sslp (mew-pop-ssl case))
+	 (stunnelp (mew-stunnel-p (mew-pop-ssl case)))
 	 (sslport (mew-pop-ssl-port case))
 	 (gnutlsp (mew-gnutls-p (mew-pop-ssl case)))
 	 (starttlsp
@@ -693,7 +693,7 @@
 	  (setq lport (mew-ssh-pnm-to-lport sshname))
 	  (when lport
 	    (setq process (mew-pop-open pnm case "localhost" lport no-msg nil)))))
-       (sslp
+       (stunnelp
 	(when starttlsp (setq tls mew-stunnel-protocol-pop))
 	(setq sslpro (mew-open-stunnel-stream case server sslport tls))
 	(when sslpro
@@ -708,7 +708,7 @@
       (if (null process)
 	  (if (eq directive 'exec)
 	      (mew-summary-visible-buffer bnm))
-	(mew-summary-lock process "POPing" (or sshpro sslp))
+	(mew-summary-lock process "POPing" (or sshpro stunnelp gnutlsp))
 	(mew-sinfo-set-summary-form (mew-get-summary-form bnm))
 	(mew-sinfo-set-summary-column (mew-get-summary-column bnm))
 	(mew-sinfo-set-unread-mark nil)
@@ -720,7 +720,7 @@
 	(mew-pop-set-process pnm process)
 	(mew-pop-set-ssh-process pnm sshpro)
 	(mew-pop-set-ssl-process pnm sslpro)
-	(mew-pop-set-ssl-p pnm sslp)
+	(mew-pop-set-ssl-p pnm stunnelp)
 	(mew-pop-set-server pnm server)
 	(mew-pop-set-port pnm port)
 	(mew-pop-set-user pnm user)
@@ -756,7 +756,7 @@
 	  (when virtual
 	    (mew-pop-set-status-buf pnm virtual)
 	    (with-current-buffer virtual
-	      (mew-summary-lock process "POPing" (or sshpro sslp)))))
+	      (mew-summary-lock process "POPing" (or sshpro stunnelp gnutlsp)))))
 	 ((eq directive 'scan)
 	  (mew-pop-set-range pnm (nth 0 args))
 	  (mew-pop-set-get-body pnm (nth 1 args))

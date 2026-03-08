@@ -14,7 +14,7 @@
 keep this as nil.")
 
 (defun mew-gnutls-p (type)
-  "Return if the type is native or not"
+  "Return if the type is gnutls or not"
   (or (eq type 'native)
       (and (eq type t) (eq mew-ssl-default 'native))))
 
