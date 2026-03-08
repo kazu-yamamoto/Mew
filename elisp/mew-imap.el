@@ -1304,7 +1304,7 @@
          (user (mew-imap-user case))
 	 (port (mew-*-to-string (mew-imap-port case)))
 	 (sshsrv (mew-imap-ssh-server case))
-	 (sslp (mew-imap-ssl case))
+	 (stunnelp (mew-stunnel-p (mew-imap-ssl case)))
 	 (sslport (mew-imap-ssl-port case))
 	 (gnutlsp (mew-gnutls-p (mew-imap-ssl case)))
 	 (starttlsp
@@ -1335,7 +1335,7 @@
 	  (setq lport (mew-ssh-pnm-to-lport sshname))
 	  (when lport
 	    (setq process (mew-imap-open pnm case "localhost" lport no-msg nil)))))
-       (sslp
+       (stunnelp
 	(when starttlsp (setq protocol mew-stunnel-protocol-imap))
 	(setq sslpro (mew-open-stunnel-stream case server sslport protocol))
 	(when sslpro
@@ -1350,7 +1350,7 @@
       (if (null process)
 	  (when (eq directive 'exec)
 	    (mew-imap-exec-recover bnm))
-	(mew-summary-lock process "IMAPing" (or sshpro sslp))
+	(mew-summary-lock process "IMAPing" (or sshpro stunnelp gnutlsp))
 	(mew-sinfo-set-summary-form (mew-get-summary-form bnm))
 	(mew-sinfo-set-summary-column (mew-get-summary-column bnm))
 	(mew-sinfo-set-unread-mark nil)
@@ -1362,7 +1362,7 @@
 	(mew-imap-set-process pnm process)
 	(mew-imap-set-ssh-process pnm sshpro)
 	(mew-imap-set-ssl-process pnm sslpro)
-	(mew-imap-set-ssl-p pnm sslp)
+	(mew-imap-set-ssl-p pnm stunnelp)
 	(mew-imap-set-server pnm server)
 	(mew-imap-set-port pnm port)
 	(mew-imap-set-user pnm user)
@@ -1402,7 +1402,7 @@
 	  (when virtual
 	    (mew-imap-set-status-buf pnm virtual)
 	    (with-current-buffer virtual
-	      (mew-summary-lock process "IMAPing" (or sshpro sslp)))))
+	      (mew-summary-lock process "IMAPing" (or sshpro stunnelp gnutlsp)))))
 	 ((eq directive 'scan)
 	  (mew-imap-set-range pnm (nth 0 args))
 	  (mew-imap-set-get-body pnm (nth 1 args))

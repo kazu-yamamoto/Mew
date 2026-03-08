@@ -423,7 +423,7 @@
 	 (port (mew-*-to-string (mew-imap-port case)))
 	 (pnm (mew-imap2-info-name case))
 	 (sshsrv (mew-imap-ssh-server case))
-	 (sslp (mew-imap-ssl case))
+	 (stunnelp (mew-stunnel-p (mew-imap-ssl case)))
 	 (sslport (mew-imap-ssl-port case))
 	 (gnutlsp (mew-gnutls-p (mew-imap-ssl case)))
 	 (starttlsp
@@ -444,7 +444,7 @@
 	(setq lport (mew-ssh-pnm-to-lport sshname))
 	(when lport
 	  (setq process (mew-imap2-open pnm case "localhost" lport nil)))))
-     (sslp
+     (stunnelp
       (when starttlsp (setq protocol mew-stunnel-protocol-imap))
       (setq sslpro (mew-open-stunnel-stream case server sslport protocol))
       (when sslpro
@@ -460,7 +460,7 @@
 	(cond
 	 ((and sshsrv (null sshpro))
 	  (message "Cannot create to the SSH connection"))
-	 ((and sslp (null sslpro))
+	 ((and stunnelp (null sslpro))
 	  (message "Cannot create to the SSL/TLS connection"))
 	 (t
 	  (message "Cannot connect to the IMAP server")))
