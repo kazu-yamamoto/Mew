@@ -1248,14 +1248,14 @@
 
 (defun mew-imap-open (pnm case server port no-msg starttlsp)
   (let ((sprt (mew-*-to-port port))
-	(sslnp (mew-tls-native-p (mew-imap-ssl case)))
+	(gnutlsp (mew-gnutls-p (mew-imap-ssl case)))
 	pro tm)
     (condition-case emsg
 	(progn
 	  (setq tm (run-at-time mew-imap-timeout-time nil 'mew-imap-timeout))
 	  (or no-msg (message "Connecting to the IMAP server..."))
 	  (setq pro (mew-open-network-stream pnm nil server sprt
-					     'imap sslnp starttlsp case))
+					     'imap gnutlsp starttlsp case))
 	  (setq pro (car pro))
 	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
@@ -1304,9 +1304,9 @@
          (user (mew-imap-user case))
 	 (port (mew-*-to-string (mew-imap-port case)))
 	 (sshsrv (mew-imap-ssh-server case))
-	 (sslp (mew-imap-ssl case))
+	 (stunnelp (mew-stunnel-p (mew-imap-ssl case)))
 	 (sslport (mew-imap-ssl-port case))
-	 (sslnp (mew-tls-native-p (mew-imap-ssl case)))
+	 (gnutlsp (mew-gnutls-p (mew-imap-ssl case)))
 	 (starttlsp
 	  (mew-starttls-p (mew-imap-ssl case)
 			  (mew-*-to-string (mew-imap-port case))
@@ -1320,12 +1320,12 @@
 	 (pnm (mew-imap-info-name case mailbox))
 	 (buf (get-buffer-create (mew-imap-buffer-name pnm)))
 	 (no-msg (eq directive 'biff))
-	 process sshname sshpro sslname sslpro lport info jobs tls
+	 process sshname sshpro sslname sslpro lport info jobs protocol
 	 virtual-info disp-info virtual)
     (if (mew-imap-get-process pnm)
 	(message "Another IMAP process is running. Try later")
       (cond
-       (sslnp
+       (gnutlsp
 	(let ((serv (if starttlsp port sslport)))
 	  (setq process (mew-imap-open pnm case server serv no-msg starttlsp))))
        (sshsrv
@@ -1335,9 +1335,9 @@
 	  (setq lport (mew-ssh-pnm-to-lport sshname))
 	  (when lport
 	    (setq process (mew-imap-open pnm case "localhost" lport no-msg nil)))))
-       (sslp
-	(when starttlsp (setq tls mew-tls-imap))
-	(setq sslpro (mew-open-stunnel-stream case server sslport tls))
+       (stunnelp
+	(when starttlsp (setq protocol mew-stunnel-protocol-imap))
+	(setq sslpro (mew-open-stunnel-stream case server sslport protocol))
 	(when sslpro
 	  (setq sslname (process-name sslpro))
 	  (setq lport (mew-ssl-pnm-to-lport sslname))
@@ -1350,7 +1350,7 @@
       (if (null process)
 	  (when (eq directive 'exec)
 	    (mew-imap-exec-recover bnm))
-	(mew-summary-lock process "IMAPing" (or sshpro sslp))
+	(mew-summary-lock process "IMAPing" (or sshpro stunnelp gnutlsp))
 	(mew-sinfo-set-summary-form (mew-get-summary-form bnm))
 	(mew-sinfo-set-summary-column (mew-get-summary-column bnm))
 	(mew-sinfo-set-unread-mark nil)
@@ -1362,7 +1362,7 @@
 	(mew-imap-set-process pnm process)
 	(mew-imap-set-ssh-process pnm sshpro)
 	(mew-imap-set-ssl-process pnm sslpro)
-	(mew-imap-set-ssl-p pnm sslp)
+	(mew-imap-set-ssl-p pnm stunnelp)
 	(mew-imap-set-server pnm server)
 	(mew-imap-set-port pnm port)
 	(mew-imap-set-user pnm user)
@@ -1402,7 +1402,7 @@
 	  (when virtual
 	    (mew-imap-set-status-buf pnm virtual)
 	    (with-current-buffer virtual
-	      (mew-summary-lock process "IMAPing" (or sshpro sslp)))))
+	      (mew-summary-lock process "IMAPing" (or sshpro stunnelp gnutlsp)))))
 	 ((eq directive 'scan)
 	  (mew-imap-set-range pnm (nth 0 args))
 	  (mew-imap-set-get-body pnm (nth 1 args))
@@ -1446,7 +1446,7 @@
 	(set-process-filter process 'mew-imap-filter)
 	(set-process-buffer process buf)
 	;;
-	(when (and sslnp starttlsp)
+	(when (and gnutlsp starttlsp)
 	  ;; open-network-stream receives IMAP greeting in its internals
 	  ;; and passes it as a return value.
 	  ;; We store the value in the variable mew--gnutls-imap-greeting

@@ -383,14 +383,14 @@
 
 (defun mew-imap2-open (pnm case server port starttlsp)
   (let ((sprt (mew-*-to-port port))
-	(sslnp (mew-tls-native-p (mew-imap-ssl case)))
+	(gnutlsp (mew-gnutls-p (mew-imap-ssl case)))
 	pro tm)
     (condition-case emsg
 	(progn
 	  (setq tm (run-at-time mew-imap-timeout-time nil 'mew-imap2-timeout))
 	  (message "Connecting to the IMAP server...")
 	  (setq pro (mew-open-network-stream pnm nil server sprt
-					     'imap sslnp starttlsp case))
+					     'imap gnutlsp starttlsp case))
 	  (setq pro (car pro))
 	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
@@ -423,18 +423,18 @@
 	 (port (mew-*-to-string (mew-imap-port case)))
 	 (pnm (mew-imap2-info-name case))
 	 (sshsrv (mew-imap-ssh-server case))
-	 (sslp (mew-imap-ssl case))
+	 (stunnelp (mew-stunnel-p (mew-imap-ssl case)))
 	 (sslport (mew-imap-ssl-port case))
-	 (sslnp (mew-tls-native-p (mew-imap-ssl case)))
+	 (gnutlsp (mew-gnutls-p (mew-imap-ssl case)))
 	 (starttlsp
 	  (mew-starttls-p (mew-imap-ssl case)
 			  (mew-*-to-string (mew-imap-port case))
 			  (mew-imap-ssl-port case)))
 	 (proxysrv (mew-imap-proxy-server case))
 	 (proxyport (mew-imap-proxy-port case))
-	 process sshname sshpro sslname sslpro lport tls)
+	 process sshname sshpro sslname sslpro lport protocol)
     (cond
-     (sslnp
+     (gnutlsp
       (let ((serv (if starttlsp port sslport)))
 	(setq process (mew-imap2-open pnm case server serv starttlsp))))
      (sshsrv
@@ -444,9 +444,9 @@
 	(setq lport (mew-ssh-pnm-to-lport sshname))
 	(when lport
 	  (setq process (mew-imap2-open pnm case "localhost" lport nil)))))
-     (sslp
-      (when starttlsp (setq tls mew-tls-imap))
-      (setq sslpro (mew-open-stunnel-stream case server sslport tls))
+     (stunnelp
+      (when starttlsp (setq protocol mew-stunnel-protocol-imap))
+      (setq sslpro (mew-open-stunnel-stream case server sslport protocol))
       (when sslpro
 	(setq sslname (process-name sslpro))
 	(setq lport (mew-ssl-pnm-to-lport sslname))
@@ -460,7 +460,7 @@
 	(cond
 	 ((and sshsrv (null sshpro))
 	  (message "Cannot create to the SSH connection"))
-	 ((and sslp (null sslpro))
+	 ((and stunnelp (null sslpro))
 	  (message "Cannot create to the SSL/TLS connection"))
 	 (t
 	  (message "Cannot connect to the IMAP server")))
@@ -486,7 +486,7 @@
       (set-process-sentinel process 'mew-imap2-sentinel)
       (set-process-filter process 'mew-imap2-filter)
       (message "Copying in background...")
-      (when (and sslnp starttlsp)
+      (when (and gnutlsp starttlsp)
 	;; open-network-stream receives IMAP greeting in its internals
 	;; and passes it as a return value.
 	;; We store the value in the variable mew--gnutls-imap-greeting

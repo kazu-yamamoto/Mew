@@ -303,23 +303,21 @@ A local port number can be obtained the process name after `:'. "
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Should move them to mew-tls.el?
+;;;
 ;;;
 
-(defun mew-tls-native-p (type)
-  "Return if the type is native or not"
-  (or (eq type 'native)
-      (and (eq type t) (eq mew-ssl-default 'native))))
+(defconst mew-stunnel-protocol-smtp "smtp")
+(defconst mew-stunnel-protocol-pop  "pop3")
+(defconst mew-stunnel-protocol-nntp "nntp")
+(defconst mew-stunnel-protocol-imap "imap") ;; xxx stunnel does not support this.
+
+(defun mew-stunnel-p (type)
+  "Return if the type is stunnel or not"
+  (and (eq type t) (eq mew-ssl-default 'tunnel)))
 
 (defun mew-starttls-p (type port sslport)
   "Return if STARTTLS should be used or not"
   (and type (mew-port-equal port sslport)))
-
-(defconst mew-tls-smtp "smtp")
-(defconst mew-tls-pop  "pop3")
-(defconst mew-tls-nntp "nntp")
-(defconst mew-tls-imap "imap") ;; xxx stunnel does not support this.
-
 
 (provide 'mew-stunnel)
 
