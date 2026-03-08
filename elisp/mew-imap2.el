@@ -445,7 +445,7 @@
 	(when lport
 	  (setq process (mew-imap2-open pnm case "localhost" lport nil)))))
      (sslp
-      (when starttlsp (setq tls mew-tls-imap))
+      (when starttlsp (setq tls mew-stunnel-protocol-imap))
       (setq sslpro (mew-open-stunnel-stream case server sslport tls))
       (when sslpro
 	(setq sslname (process-name sslpro))

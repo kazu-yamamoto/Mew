@@ -458,7 +458,7 @@
      ((and (not gnutlsp) sslp starttlsp)
       (setq tlsp t)
       ;; let stunnel know that a wrapper protocol is SMTP
-      (setq tls mew-tls-smtp)))
+      (setq tls mew-stunnel-protocol-smtp)))
     ;; a fallback: "submission" -> "smtp"
     ;; mew-smtp-port is "smtp" and mew-use-submission is t on Emacs 22
     (when (and (or (not sslp) starttlsp tlsp)

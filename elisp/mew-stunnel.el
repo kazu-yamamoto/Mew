@@ -310,10 +310,10 @@ A local port number can be obtained the process name after `:'. "
   "Return if STARTTLS should be used or not"
   (and type (mew-port-equal port sslport)))
 
-(defconst mew-tls-smtp "smtp")
-(defconst mew-tls-pop  "pop3")
-(defconst mew-tls-nntp "nntp")
-(defconst mew-tls-imap "imap") ;; xxx stunnel does not support this.
+(defconst mew-stunnel-protocol-smtp "smtp")
+(defconst mew-stunnel-protocol-pop  "pop3")
+(defconst mew-stunnel-protocol-nntp "nntp")
+(defconst mew-stunnel-protocol-imap "imap") ;; xxx stunnel does not support this.
 
 
 (provide 'mew-stunnel)

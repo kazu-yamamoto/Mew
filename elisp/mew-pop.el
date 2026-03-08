@@ -694,7 +694,7 @@
 	  (when lport
 	    (setq process (mew-pop-open pnm case "localhost" lport no-msg nil)))))
        (sslp
-	(when starttlsp (setq tls mew-tls-pop))
+	(when starttlsp (setq tls mew-stunnel-protocol-pop))
 	(setq sslpro (mew-open-stunnel-stream case server sslport tls))
 	(when sslpro
 	  (setq sslname (process-name sslpro))

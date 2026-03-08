@@ -240,7 +240,7 @@
 	(when lport
 	  (setq process (mew-nntp2-open pnm case "localhost" lport nil)))))
      (sslp
-      (when starttlsp (setq tls mew-tls-nntp))
+      (when starttlsp (setq tls mew-stunnel-protocol-nntp))
       (setq sslpro (mew-open-stunnel-stream case server sslport tls))
       (when sslpro
 	(setq sslname (process-name sslpro))
