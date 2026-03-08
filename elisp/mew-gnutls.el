@@ -13,6 +13,10 @@
   "verify-error parameter passed to GnuTLS.  You might want to
 keep this as nil.")
 
+(defun mew-gnutls-p (type)
+  "Return if the type is native or not"
+  (or (eq type 'native)
+      (and (eq type t) (eq mew-ssl-default 'native))))
 
 (defvar mew-gnutls-plist
   '(;; RFC 3207

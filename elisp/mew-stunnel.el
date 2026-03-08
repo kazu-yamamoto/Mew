@@ -306,11 +306,6 @@ A local port number can be obtained the process name after `:'. "
 ;;; Should move them to mew-tls.el?
 ;;;
 
-(defun mew-tls-native-p (type)
-  "Return if the type is native or not"
-  (or (eq type 'native)
-      (and (eq type t) (eq mew-ssl-default 'native))))
-
 (defun mew-starttls-p (type port sslport)
   "Return if STARTTLS should be used or not"
   (and type (mew-port-equal port sslport)))

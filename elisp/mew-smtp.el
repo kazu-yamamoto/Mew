@@ -400,7 +400,7 @@
 
 (defun mew-smtp-open (pnm case server port starttlsp)
   (let ((sprt (mew-*-to-port port))
-	(gnutlsp (mew-tls-native-p (mew-smtp-ssl case)))
+	(gnutlsp (mew-gnutls-p (mew-smtp-ssl case)))
 	pro tm)
     ;; xxx some OSes do not define "submission", sigh.
     (when (and (stringp sprt) (string= sprt "submission"))
@@ -447,7 +447,7 @@
 	(sshsrv (mew-smtp-ssh-server case))
 	(sslp (mew-smtp-ssl case))
 	(sslport (mew-*-to-string (mew-smtp-ssl-port case)))
-	(gnutlsp (mew-tls-native-p (mew-smtp-ssl case)))
+	(gnutlsp (mew-gnutls-p (mew-smtp-ssl case)))
 	(starttlsp
 	 (mew-starttls-p (mew-smtp-ssl case)
 			 (mew-*-to-string (mew-smtp-port case))

@@ -1248,7 +1248,7 @@
 
 (defun mew-imap-open (pnm case server port no-msg starttlsp)
   (let ((sprt (mew-*-to-port port))
-	(gnutlsp (mew-tls-native-p (mew-imap-ssl case)))
+	(gnutlsp (mew-gnutls-p (mew-imap-ssl case)))
 	pro tm)
     (condition-case emsg
 	(progn
@@ -1306,7 +1306,7 @@
 	 (sshsrv (mew-imap-ssh-server case))
 	 (sslp (mew-imap-ssl case))
 	 (sslport (mew-imap-ssl-port case))
-	 (gnutlsp (mew-tls-native-p (mew-imap-ssl case)))
+	 (gnutlsp (mew-gnutls-p (mew-imap-ssl case)))
 	 (starttlsp
 	  (mew-starttls-p (mew-imap-ssl case)
 			  (mew-*-to-string (mew-imap-port case))
