@@ -441,7 +441,7 @@
 	 (pnm (mew-nntp-info-name case newsgroup))
 	 (buf (get-buffer-create (mew-nntp-buffer-name pnm)))
 	 (no-msg (eq directive 'biff))
-	 process sshname sshpro sslname sslpro lport tls
+	 process sshname sshpro sslname sslpro lport protocol
 	 virtual-info disp-info virtual)
     (if (mew-nntp-get-process pnm)
 	(message "Another NNTP process is running. Try later")
@@ -457,8 +457,8 @@
 	  (when lport
 	    (setq process (mew-nntp-open pnm case "localhost" lport no-msg nil)))))
        (sslp
-	(when starttlsp (setq tls mew-stunnel-protocol-nntp))
-	(setq sslpro (mew-open-stunnel-stream case server sslport tls))
+	(when starttlsp (setq protocol mew-stunnel-protocol-nntp))
+	(setq sslpro (mew-open-stunnel-stream case server sslport protocol))
 	(when sslpro
 	  (setq sslname (process-name sslpro))
 	  (setq lport (mew-ssl-pnm-to-lport sslname))

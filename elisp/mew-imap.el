@@ -1320,7 +1320,7 @@
 	 (pnm (mew-imap-info-name case mailbox))
 	 (buf (get-buffer-create (mew-imap-buffer-name pnm)))
 	 (no-msg (eq directive 'biff))
-	 process sshname sshpro sslname sslpro lport info jobs tls
+	 process sshname sshpro sslname sslpro lport info jobs protocol
 	 virtual-info disp-info virtual)
     (if (mew-imap-get-process pnm)
 	(message "Another IMAP process is running. Try later")
@@ -1336,8 +1336,8 @@
 	  (when lport
 	    (setq process (mew-imap-open pnm case "localhost" lport no-msg nil)))))
        (sslp
-	(when starttlsp (setq tls mew-stunnel-protocol-imap))
-	(setq sslpro (mew-open-stunnel-stream case server sslport tls))
+	(when starttlsp (setq protocol mew-stunnel-protocol-imap))
+	(setq sslpro (mew-open-stunnel-stream case server sslport protocol))
 	(when sslpro
 	  (setq sslname (process-name sslpro))
 	  (setq lport (mew-ssl-pnm-to-lport sslname))

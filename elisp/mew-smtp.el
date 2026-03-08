@@ -453,12 +453,12 @@
 			 (mew-*-to-string (mew-smtp-port case))
 			 (mew-smtp-ssl-port case)))
 	mew-inherit-submission
-	process sshname sshpro sslname sslpro lport tlsp tls fallback)
+	process sshname sshpro sslname sslpro lport tlsp protocol fallback)
     (cond
      ((and (not gnutlsp) sslp starttlsp)
       (setq tlsp t)
       ;; let stunnel know that a wrapper protocol is SMTP
-      (setq tls mew-stunnel-protocol-smtp)))
+      (setq protocol mew-stunnel-protocol-smtp)))
     ;; a fallback: "submission" -> "smtp"
     ;; mew-smtp-port is "smtp" and mew-use-submission is t on Emacs 22
     (when (and (or (not sslp) starttlsp tlsp)
@@ -486,7 +486,7 @@
 	(when lport
 	  (setq process (mew-smtp-open pnm case "localhost" lport nil)))))
      (sslp
-      (setq sslpro (mew-open-stunnel-stream case server sslport tls))
+      (setq sslpro (mew-open-stunnel-stream case server sslport protocol))
       (when sslpro
 	(setq sslname (process-name sslpro))
 	(setq lport (mew-ssl-pnm-to-lport sslname))

@@ -432,7 +432,7 @@
 			  (mew-imap-ssl-port case)))
 	 (proxysrv (mew-imap-proxy-server case))
 	 (proxyport (mew-imap-proxy-port case))
-	 process sshname sshpro sslname sslpro lport tls)
+	 process sshname sshpro sslname sslpro lport protocol)
     (cond
      (gnutlsp
       (let ((serv (if starttlsp port sslport)))
@@ -445,8 +445,8 @@
 	(when lport
 	  (setq process (mew-imap2-open pnm case "localhost" lport nil)))))
      (sslp
-      (when starttlsp (setq tls mew-stunnel-protocol-imap))
-      (setq sslpro (mew-open-stunnel-stream case server sslport tls))
+      (when starttlsp (setq protocol mew-stunnel-protocol-imap))
+      (setq sslpro (mew-open-stunnel-stream case server sslport protocol))
       (when sslpro
 	(setq sslname (process-name sslpro))
 	(setq lport (mew-ssl-pnm-to-lport sslname))
