@@ -678,7 +678,7 @@
 	 (pnm (mew-pop-info-name case))
 	 (buf (get-buffer-create (mew-pop-buffer-name pnm)))
 	 (no-msg (eq directive 'biff))
-	 process sshname sshpro sslname sslpro lport tls
+	 process sshname sshpro sslname sslpro lport protocol
 	 virtual-info disp-info virtual)
     (if (mew-pop-get-process pnm)
 	(message "Another POP process is running. Try later")
@@ -694,8 +694,8 @@
 	  (when lport
 	    (setq process (mew-pop-open pnm case "localhost" lport no-msg nil)))))
        (stunnelp
-	(when starttlsp (setq tls mew-stunnel-protocol-pop))
-	(setq sslpro (mew-open-stunnel-stream case server sslport tls))
+	(when starttlsp (setq protocol mew-stunnel-protocol-pop))
+	(setq sslpro (mew-open-stunnel-stream case server sslport protocol))
 	(when sslpro
 	  (setq sslname (process-name sslpro))
 	  (setq lport (mew-ssl-pnm-to-lport sslname))
