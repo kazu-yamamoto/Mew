@@ -157,7 +157,7 @@ keep this as nil.")
 ;;;
 ;;;
 
-(defun mew-open-gnutls-stream (name buf server port proto gnutlsp starttlsp case nowait status-msg)
+(defun mew-open-gnutls-stream (name buf server port proto gnutlsp starttlsp case status-msg)
   (let* ((hostname (puny-encode-domain server))
 	 ;; Note: on Emacs 26.3 and prior GnuTLS always uses
 	 ;; the system-wide default path first even if
@@ -174,9 +174,8 @@ keep this as nil.")
     (funcall (intern (concat "mew-" (symbol-name proto) "-debug"))
 	     (format "TLS proto=%s, server=%s:%s, starttlsp=%s"
 		     proto hostname port starttlsp)
-	     (format "verify-level=%s, network-security-level=%s, nowait=%s, tlsparams=%s"
+	     (format "verify-level=%s, network-security-level=%s, tlsparams=%s"
 		     (mew-ssl-verify-level case) network-security-level
-		     nowait
 		     (apply #'concat (mapcar (lambda (a) (format "%s " a)) tlsparams))))
     (let ((type (if starttlsp 'starttls 'tls)))
       (with-temp-message status-msg
@@ -195,7 +194,6 @@ keep this as nil.")
 		   name buf server port
 		   :type type
 		   :return-list t
-		   :nowait nowait
 		   (mew-gnutls-parameters case proto starttlsp)))
 	(advice-remove 'gnutls-negotiate
 		       #'mew--advice-filter-args-gnutls-negotiate)
@@ -261,11 +259,7 @@ keep this as nil.")
 			       "")
 			     (if (eq tun-type 'ssh) " over SSH"
 			       "")))
-	 family nowait pro)
-    ;; SMTP-specific
-    (when (and (eq proto 'smtp) mew-inherit-submission)
-      (setq family mew-smtp-submission-family)
-      (setq nowait t))
+	 family pro)
     ;; TLS does not work for Unix-domain socket for now.
     (when (and (not gnutlsp)
 	       (stringp port) (string-match "^/" port))
@@ -284,12 +278,11 @@ keep this as nil.")
 		  (concat status-msg
 			  "FAILED (GnuTLS or NSM not available)"))))
      (gnutlsp
-      (setq pro (mew-open-gnutls-stream name buf server port proto gnutlsp starttlsp case nowait status-msg)))
+      (setq pro (mew-open-gnutls-stream name buf server port proto gnutlsp starttlsp case status-msg)))
      (t
       (with-temp-message status-msg
 	(let ((params (list :name name :buffer buf
-			    :service port :family family
-			    :nowait nowait))
+			    :service port :family family))
 	      ;; :host will be ignored when family is 'local.
 	      (host (if (not (eq family 'local))
 			(list :host server))))
@@ -299,22 +292,9 @@ keep this as nil.")
 		     :capabilities nil
 		     :type 'plain
 		     :error nil))))))
-    (if (and (eq proto 'smtp) nowait)
-	(run-at-time mew-smtp-submission-timeout nil 'mew-smtp-submission-timeout pro))
     (when (plist-get (cdr pro) :error)
       (message (plist-get (cdr pro) :status-msg)))
     pro))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;
-;;;
-
-(defvar mew-smtp-submission-family 'ipv4)
-(defvar mew-smtp-submission-timeout 10)
-(defun mew-smtp-submission-timeout (pro)
-  (when (and (processp pro) (eq (process-status pro) 'connect))
-    (mew-smtp-sentinel pro "time out - failed\n")))
 
 (provide 'mew-gnutls)
 

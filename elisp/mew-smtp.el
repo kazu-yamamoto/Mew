@@ -360,7 +360,6 @@
 	(setq name (concat name user "@" server))
       (setq name (concat name server)))
     (when (and (not fallbacked)
-	       mew-use-submission ;; xxx to be deleted
 	       (fboundp 'make-network-process)
 	       (string= port "smtp"))
       (setq port "submission"))
@@ -395,8 +394,6 @@
 ;;;
 ;;; Opening SMTP
 ;;;
-
-(defvar mew-use-submission nil)
 
 (defun mew-smtp-open (pnm case server port starttlsp)
   (let ((sprt (mew-*-to-port port))
@@ -452,7 +449,6 @@
 	 (mew-starttls-p (mew-smtp-ssl case)
 			 (mew-*-to-string (mew-smtp-port case))
 			 (mew-smtp-ssl-port case)))
-	mew-inherit-submission
 	process sshname sshpro sslname sslpro lport tlsp protocol fallback)
     (cond
      ((and (not gnutlsp) sslp starttlsp)
@@ -460,18 +456,12 @@
       ;; let stunnel know that a wrapper protocol is SMTP
       (setq protocol mew-stunnel-protocol-smtp)))
     ;; a fallback: "submission" -> "smtp"
-    ;; mew-smtp-port is "smtp" and mew-use-submission is t on Emacs 22
     (when (and (or (not sslp) starttlsp tlsp)
 	       (not fallbacked)
-	       mew-use-submission
 	       (fboundp 'make-network-process) ;; Emacs 22 or later
 	       (mew-port-equal port "smtp"))
       (setq port "submission")
       (setq fallback t)
-      (when (and sslp (not gnutlsp) (not tlsp))
-	;; TLS uses stunnel. So, we should not use non-blocking connect.
-	;; Timeout should be carried out by stunnel.
-	(setq mew-inherit-submission t))
       (if (mew-port-equal sslport "smtp")
 	  (setq sslport "submission")))
     (cond
@@ -506,7 +496,6 @@
 	  (if (and (not (eq server 'local))
 	           (or (not sslp) tlsp)
 		   (not fallbacked)
-		   mew-use-submission
 		   (fboundp 'make-network-process)
 		   (mew-port-equal port "submission"))
 	      (progn

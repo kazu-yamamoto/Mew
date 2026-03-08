@@ -619,8 +619,8 @@ server, set an appropriate value."
   :group 'mew-smtp
   :type 'string)
 
-(defcustom mew-smtp-port "smtp"
-  "*The SMTP port. (e.g. \"smtp\" or 25)"
+(defcustom mew-smtp-port "submission"
+  "*The SMTP port. (e.g. \"submission\" or 587)"
   :group 'mew-smtp
   :type 'string)
 

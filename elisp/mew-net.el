@@ -14,15 +14,16 @@
 ;;;
 
 (defvar mew-port-db
-  '(("smtp"        25)
-    ("smtps"      465) ; RFC 8314
-    ("pop3"       110)
-    ("pop3s"      995)
-    ("nntp"       119)
-    ("nntps"      563)
-    ("imap"       143)
-    ("imaps"      993)
-    ("submission" 587)))
+  '(("smtp"         25)
+    ("smtps"       465)
+    ("pop3"        110)
+    ("pop3s"       995)
+    ("nntp"        119)
+    ("nntps"       563)
+    ("imap"        143)
+    ("imaps"       993)
+    ("submission"  587)
+    ("submissions" 465))) ;; RFC 8314
 
 (defun mew-serv-to-port (serv)
   (cond
