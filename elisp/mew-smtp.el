@@ -438,7 +438,7 @@
 	(port (mew-*-to-string (mew-smtp-port case)))
 	(pnm (mew-smtp-info-name case))
 	(sshsrv (mew-smtp-ssh-server case))
-	(sslp (mew-smtp-ssl case))
+	(stunnelp (mew-stunnel-p (mew-smtp-ssl case)))
 	(sslport (mew-*-to-string (mew-smtp-ssl-port case)))
 	(gnutlsp (mew-gnutls-p (mew-smtp-ssl case)))
 	(starttlsp
@@ -457,7 +457,7 @@
 	(setq lport (mew-ssh-pnm-to-lport sshname))
 	(when lport
 	  (setq process (mew-smtp-open pnm case "localhost" lport nil)))))
-     (sslp
+     (stunnelp
       (when starttlsp (setq protocol mew-stunnel-protocol-smtp))
       (setq sslpro (mew-open-stunnel-stream case server sslport protocol))
       (when sslpro
@@ -473,7 +473,7 @@
 	  (message "Cannot create to the SSH connection"))
 	 (gnutlsp
 	  (message "Cannot open an SSL/TLS (GnuTLS) connection"))
-	 ((and sslp (null sslpro))
+	 ((and stunnelp (null sslpro))
 	  (message "Cannot create to the SSL/TLS connection"))
 	 (t
 	  (message "Cannot connect to the SMTP server")))
@@ -482,14 +482,12 @@
       (mew-smtp-set-qfld pnm qfld)
       (mew-smtp-set-messages pnm msgs)
       (mew-smtp-set-server pnm server)
-      (if sslp
-	  (mew-smtp-set-port pnm sslport)
-	(mew-smtp-set-port pnm port))
+      (mew-smtp-set-port pnm port)
       (mew-smtp-set-process pnm process)
       (mew-smtp-set-ssh-server pnm sshsrv)
       (mew-smtp-set-ssh-process pnm sshpro)
       (mew-smtp-set-ssl-process pnm sslpro)
-      (mew-smtp-set-ssl-p pnm sslp)
+      (mew-smtp-set-ssl-p pnm stunnelp)
       (mew-smtp-set-helo-domain pnm (mew-smtp-helo-domain case))
       (mew-smtp-set-user pnm user)
       (mew-smtp-set-auth-user pnm (mew-smtp-user case))
