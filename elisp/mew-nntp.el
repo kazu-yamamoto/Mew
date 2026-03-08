@@ -430,7 +430,7 @@
          (user (mew-nntp-user case))
 	 (port (mew-*-to-string (mew-nntp-port case)))
 	 (sshsrv (mew-nntp-ssh-server case))
-	 (sslp (mew-nntp-ssl case))
+	 (stunnelp (mew-stunnel-p (mew-nntp-ssl case)))
 	 (sslport (mew-nntp-ssl-port case))
 	 (gnutlsp (mew-gnutls-p (mew-nntp-ssl case)))
 	 (starttlsp
@@ -456,7 +456,7 @@
 	  (setq lport (mew-ssh-pnm-to-lport sshname))
 	  (when lport
 	    (setq process (mew-nntp-open pnm case "localhost" lport no-msg nil)))))
-       (sslp
+       (stunnelp
 	(when starttlsp (setq protocol mew-stunnel-protocol-nntp))
 	(setq sslpro (mew-open-stunnel-stream case server sslport protocol))
 	(when sslpro
@@ -467,7 +467,7 @@
        (t
 	(setq process (mew-nntp-open pnm case server port no-msg nil))))
       (when process
-	(mew-summary-lock process "NNTPing" (or sshpro sslp))
+	(mew-summary-lock process "NNTPing" (or sshpro stunnelp gnutlsp))
 	(mew-sinfo-set-summary-form (mew-get-summary-form bnm))
 	(mew-sinfo-set-summary-column (mew-get-summary-column bnm))
 	(mew-sinfo-set-unread-mark nil)
@@ -479,7 +479,7 @@
 	(mew-nntp-set-process pnm process)
 	(mew-nntp-set-ssh-process pnm sshpro)
 	(mew-nntp-set-ssl-process pnm sslpro)
-	(mew-nntp-set-ssl-p pnm sslp)
+	(mew-nntp-set-ssl-p pnm stunnelp)
 	(mew-nntp-set-server pnm server)
 	(mew-nntp-set-port pnm port)
 	(mew-nntp-set-user pnm user)
@@ -506,7 +506,7 @@
 	  (when virtual
 	    (mew-nntp-set-status-buf pnm virtual)
 	    (with-current-buffer virtual
-	      (mew-summary-lock process "NNTPing" (or sshpro sslp)))))
+	      (mew-summary-lock process "NNTPing" (or sshpro stunnelp gnutlsp)))))
 	 ((eq directive 'scan)
 	  (mew-nntp-set-range pnm (nth 0 args))
 	  (mew-nntp-set-get-body pnm (nth 1 args))
