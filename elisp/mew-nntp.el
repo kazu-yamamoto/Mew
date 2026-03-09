@@ -392,26 +392,25 @@
 (defun mew-nntp-open (pnm case server port no-msg starttlsp)
   (let ((sprt (mew-*-to-port port))
 	(gnutlsp (mew-gnutls-p (mew-nntp-ssl case)))
+	(pro-plist (list nil))
 	pro tm)
     (condition-case emsg
 	(progn
 	  (setq tm (run-at-time mew-nntp-timeout-time nil 'mew-nntp-timeout))
 	  (or no-msg (message "Connecting to the NNTP server..."))
-	  (setq pro (mew-open-network-stream pnm nil server sprt
+	  (setq pro-plist (mew-open-network-stream pnm nil server sprt
 					     'nntp gnutlsp starttlsp case))
-	  (setq pro (car pro))
+	  (setq pro (car pro-plist))
 	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
 	  (mew-set-process-cs pro mew-cs-text-for-net mew-cs-text-for-net)
 	  (or no-msg (message "Connecting to the NNTP server...done")))
       (quit
-       (or no-msg (message "Cannot connect to the NNTP server"))
-       (setq pro nil))
+       (or no-msg (message "Cannot connect to the NNTP server")))
       (error
-       (or no-msg (message "%s, %s" (nth 1 emsg) (nth 2 emsg)))
-       (setq pro nil)))
+       (or no-msg (message "%s, %s" (nth 1 emsg) (nth 2 emsg)))))
     (if tm (cancel-timer tm))
-    pro))
+    pro-plist))
 
 (defun mew-nntp-timeout ()
   ;; Do not timeout if the NSM query pane is active.
@@ -441,21 +440,21 @@
 	 (pnm (mew-nntp-info-name case newsgroup))
 	 (buf (get-buffer-create (mew-nntp-buffer-name pnm)))
 	 (no-msg (eq directive 'biff))
-	 process sshname sshpro sslname sslpro lport protocol
+	 process sshname sshpro sslname sslpro lport protocol pro-plist
 	 virtual-info disp-info virtual)
     (if (mew-nntp-get-process pnm)
 	(message "Another NNTP process is running. Try later")
       (cond
        (gnutlsp
 	(let ((serv (if starttlsp port sslport)))
-	  (setq process (mew-nntp-open pnm case server serv no-msg starttlsp))))
+	  (setq pro-plist (mew-nntp-open pnm case server serv no-msg starttlsp))))
        (sshsrv
 	(setq sshpro (mew-open-ssh-stream case server port sshsrv))
 	(when sshpro
 	  (setq sshname (process-name sshpro))
 	  (setq lport (mew-ssh-pnm-to-lport sshname))
 	  (when lport
-	    (setq process (mew-nntp-open pnm case "localhost" lport no-msg nil)))))
+	    (setq pro-plist (mew-nntp-open pnm case "localhost" lport no-msg nil)))))
        (stunnelp
 	(when starttlsp (setq protocol mew-stunnel-protocol-nntp))
 	(setq sslpro (mew-open-stunnel-stream case server sslport protocol))
@@ -463,9 +462,10 @@
 	  (setq sslname (process-name sslpro))
 	  (setq lport (mew-ssl-pnm-to-lport sslname))
 	  (when lport
-	    (setq process (mew-nntp-open pnm case mew-stunnel-localhost lport no-msg nil)))))
+	    (setq pro-plist (mew-nntp-open pnm case mew-stunnel-localhost lport no-msg nil)))))
        (t
-	(setq process (mew-nntp-open pnm case server port no-msg nil))))
+	(setq pro-plist (mew-nntp-open pnm case server port no-msg nil))))
+      (setq process (car pro-plist))
       (when process
 	(mew-summary-lock process "NNTPing" (or sshpro stunnelp gnutlsp))
 	(mew-sinfo-set-summary-form (mew-get-summary-form bnm))

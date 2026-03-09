@@ -32,7 +32,7 @@
     "qfld" "messages"
     ;; parameters used internally and should be initialized
     "string" "error" "auth-selected" "timer" "cont" "from" "sender"
-    "done" "imapp" "capa" "fallback"))
+    "done" "imapp" "capa"))
 
 (mew-info-defun "mew-smtp-" mew-smtp-info-list)
 
@@ -394,6 +394,7 @@
 (defun mew-smtp-open (pnm case server port starttlsp)
   (let ((sprt (mew-*-to-port port))
 	(gnutlsp (mew-gnutls-p (mew-smtp-ssl case)))
+	(pro-plist (list nil))
 	pro tm)
     ;; xxx some OSes do not define "submission", sigh.
     (when (and (stringp sprt) (string= sprt "submission"))
@@ -402,21 +403,19 @@
 	(progn
 	  (setq tm (run-at-time mew-smtp-timeout-time nil 'mew-smtp-timeout))
 	  (message "Connecting to the SMTP server...")
-	  (setq pro (mew-open-network-stream pnm nil server sprt
-					     'smtp gnutlsp starttlsp case))
-	  (setq pro (car pro))
+	  (setq pro-plist (mew-open-network-stream pnm nil server sprt
+						   'smtp gnutlsp starttlsp case))
+	  (setq pro (car pro-plist))
 	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
 	  (mew-set-process-cs pro mew-cs-text-for-net mew-cs-text-for-net)
 	  (message "Connecting to the SMTP server...done"))
       (quit
-       (setq pro nil)
        (message "Cannot connect to the SMTP server"))
       (error
-       (setq pro nil)
        (message "%s, %s" (nth 1 emsg) (nth 2 emsg))))
     (if tm (cancel-timer tm))
-    pro))
+    pro-plist))
 
 (defun mew-smtp-timeout ()
   ;; Do not timeout if the NSM query pane is active.
@@ -430,50 +429,49 @@
 ;;; Launcher
 ;;;
 
-(defvar mew--gnutls-smtp-greeting nil)
-
 (defun mew-smtp-send-message (case qfld msgs)
   (let ((server (mew-smtp-server case))
         (user (mew-smtp-user-only case))
 	(port (mew-*-to-string (mew-smtp-port case)))
 	(pnm (mew-smtp-info-name case))
 	(sshsrv (mew-smtp-ssh-server case))
-	(sslp (mew-smtp-ssl case))
+	(stunnelp (mew-stunnel-p (mew-smtp-ssl case)))
 	(sslport (mew-*-to-string (mew-smtp-ssl-port case)))
 	(gnutlsp (mew-gnutls-p (mew-smtp-ssl case)))
 	(starttlsp
 	 (mew-starttls-p (mew-smtp-ssl case)
 			 (mew-*-to-string (mew-smtp-port case))
 			 (mew-smtp-ssl-port case)))
-	process sshname sshpro sslname sslpro lport tlsp protocol fallback)
+	process sshname sshpro sslname sslpro lport tlsp protocol pro-plist)
     (cond
      (gnutlsp
       (let ((serv (if starttlsp port sslport)))
-	(setq process (mew-smtp-open pnm case server serv starttlsp))))
+	(setq pro-plist (mew-smtp-open pnm case server serv starttlsp))))
      (sshsrv
       (setq sshpro (mew-open-ssh-stream case server port sshsrv))
       (when sshpro
 	(setq sshname (process-name sshpro))
 	(setq lport (mew-ssh-pnm-to-lport sshname))
 	(when lport
-	  (setq process (mew-smtp-open pnm case "localhost" lport nil)))))
-     (sslp
+	  (setq pro-plist (mew-smtp-open pnm case "localhost" lport nil)))))
+     (stunnelp
       (when starttlsp (setq protocol mew-stunnel-protocol-smtp))
       (setq sslpro (mew-open-stunnel-stream case server sslport protocol))
       (when sslpro
 	(setq sslname (process-name sslpro))
 	(setq lport (mew-ssl-pnm-to-lport sslname))
 	(when lport
-	  (setq process (mew-smtp-open pnm case mew-stunnel-localhost lport nil)))))
+	  (setq pro-plist (mew-smtp-open pnm case mew-stunnel-localhost lport nil)))))
      (t
-      (setq process (mew-smtp-open pnm case server port nil))))
+      (setq pro-plist (mew-smtp-open pnm case server port nil))))
+    (setq process (car pro-plist))
     (if (null process)
 	(cond
 	 ((and sshsrv (null sshpro))
 	  (message "Cannot create to the SSH connection"))
 	 (gnutlsp
 	  (message "Cannot open an SSL/TLS (GnuTLS) connection"))
-	 ((and sslp (null sslpro))
+	 ((and stunnelp (null sslpro))
 	  (message "Cannot create to the SSL/TLS connection"))
 	 (t
 	  (message "Cannot connect to the SMTP server")))
@@ -482,20 +480,17 @@
       (mew-smtp-set-qfld pnm qfld)
       (mew-smtp-set-messages pnm msgs)
       (mew-smtp-set-server pnm server)
-      (if sslp
-	  (mew-smtp-set-port pnm sslport)
-	(mew-smtp-set-port pnm port))
+      (mew-smtp-set-port pnm port)
       (mew-smtp-set-process pnm process)
       (mew-smtp-set-ssh-server pnm sshsrv)
       (mew-smtp-set-ssh-process pnm sshpro)
       (mew-smtp-set-ssl-process pnm sslpro)
-      (mew-smtp-set-ssl-p pnm sslp)
+      (mew-smtp-set-ssl-p pnm stunnelp)
       (mew-smtp-set-helo-domain pnm (mew-smtp-helo-domain case))
       (mew-smtp-set-user pnm user)
       (mew-smtp-set-auth-user pnm (mew-smtp-user case))
       (mew-smtp-set-auth-list pnm (mew-smtp-auth-list case))
       (mew-smtp-set-status pnm "greeting")
-      (mew-smtp-set-fallback pnm fallback)
       ;;
       (set-process-buffer process nil)
       (set-process-sentinel process 'mew-smtp-sentinel)
@@ -503,13 +498,9 @@
       (message "Sending in background...")
       ;;
       (when (and gnutlsp starttlsp)
-	;; open-network-stream receives SMTP greeting in its internals
-	;; and passes it as a return value.
-	;; We store the value in the variable mew--gnutls-smtp-greeting
-	;; and pass it to the filter to process the greeting.
-	(mew-smtp-filter process
-			 (string-replace "\r\n" "\n"
-					 mew--gnutls-smtp-greeting))))))
+	(let ((greeting (plist-get (cdr pro-plist) :greeting)))
+	  (if (stringp greeting) (mew-smtp-filter process greeting)))))))
+
 
 (defun mew-smtp-flush-queue (case &optional qfld)
   (let (msgs)
