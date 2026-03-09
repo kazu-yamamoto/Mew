@@ -1249,26 +1249,25 @@
 (defun mew-imap-open (pnm case server port no-msg starttlsp)
   (let ((sprt (mew-*-to-port port))
 	(gnutlsp (mew-gnutls-p (mew-imap-ssl case)))
+	(pro-plist (list nil))
 	pro tm)
     (condition-case emsg
 	(progn
 	  (setq tm (run-at-time mew-imap-timeout-time nil 'mew-imap-timeout))
 	  (or no-msg (message "Connecting to the IMAP server..."))
-	  (setq pro (mew-open-network-stream pnm nil server sprt
+	  (setq pro-plist (mew-open-network-stream pnm nil server sprt
 					     'imap gnutlsp starttlsp case))
-	  (setq pro (car pro))
+	  (setq pro (car pro-plist))
 	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
 	  (mew-set-process-cs pro mew-cs-binary mew-cs-text-for-net)
 	  (or no-msg (message "Connecting to the IMAP server...done")))
       (quit
-       (or no-msg (message "Cannot connect to the IMAP server"))
-       (setq pro nil))
+       (or no-msg (message "Cannot connect to the IMAP server")))
       (error
-       (or no-msg (message "%s, %s" (nth 1 emsg) (nth 2 emsg)))
-       (setq pro nil)))
+       (or no-msg (message "%s, %s" (nth 1 emsg) (nth 2 emsg)))))
     (if tm (cancel-timer tm))
-    pro))
+    pro-plist))
 
 (defun mew-imap-timeout ()
   ;; Do not timeout if the NSM query pane is active.
@@ -1320,21 +1319,21 @@
 	 (pnm (mew-imap-info-name case mailbox))
 	 (buf (get-buffer-create (mew-imap-buffer-name pnm)))
 	 (no-msg (eq directive 'biff))
-	 process sshname sshpro sslname sslpro lport info jobs protocol
+	 process sshname sshpro sslname sslpro lport info jobs protocol pro-plist
 	 virtual-info disp-info virtual)
     (if (mew-imap-get-process pnm)
 	(message "Another IMAP process is running. Try later")
       (cond
        (gnutlsp
 	(let ((serv (if starttlsp port sslport)))
-	  (setq process (mew-imap-open pnm case server serv no-msg starttlsp))))
+	  (setq pro-plist (mew-imap-open pnm case server serv no-msg starttlsp))))
        (sshsrv
 	(setq sshpro (mew-open-ssh-stream case server port sshsrv))
 	(when sshpro
 	  (setq sshname (process-name sshpro))
 	  (setq lport (mew-ssh-pnm-to-lport sshname))
 	  (when lport
-	    (setq process (mew-imap-open pnm case "localhost" lport no-msg nil)))))
+	    (setq pro-plist (mew-imap-open pnm case "localhost" lport no-msg nil)))))
        (stunnelp
 	(when starttlsp (setq protocol mew-stunnel-protocol-imap))
 	(setq sslpro (mew-open-stunnel-stream case server sslport protocol))
@@ -1342,11 +1341,12 @@
 	  (setq sslname (process-name sslpro))
 	  (setq lport (mew-ssl-pnm-to-lport sslname))
 	  (when lport
-	    (setq process (mew-imap-open pnm case mew-stunnel-localhost lport no-msg nil)))))
+	    (setq pro-plist (mew-imap-open pnm case mew-stunnel-localhost lport no-msg nil)))))
        (proxysrv
-	(setq process (mew-imap-open pnm case proxysrv proxyport no-msg nil)))
+	(setq pro-plist (mew-imap-open pnm case proxysrv proxyport no-msg nil)))
        (t
-	(setq process (mew-imap-open pnm case server port no-msg nil))))
+	(setq pro-plist (mew-imap-open pnm case server port no-msg nil))))
+      (setq process (car pro-plist))
       (if (null process)
 	  (when (eq directive 'exec)
 	    (mew-imap-exec-recover bnm))
@@ -1447,14 +1447,8 @@
 	(set-process-buffer process buf)
 	;;
 	(when (and gnutlsp starttlsp)
-	  ;; open-network-stream receives IMAP greeting in its internals
-	  ;; and passes it as a return value.
-	  ;; We store the value in the variable mew--gnutls-imap-greeting
-	  ;; and pass it to the filter to process the greeting.
-	  (mew-imap-filter process
-			   (string-replace "\r\n" "\n"
-					   mew--gnutls-imap-greeting)))
-	))))
+	  (let ((greeting (plist-get (cdr pro-plist) :greeting)))
+	    (if (stringp greeting) (mew-imap-filter process greeting))))))))
 
 (defun mew-imap-exec-recover (bnm)
   (mew-summary-visible-buffer bnm)

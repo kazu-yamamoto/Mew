@@ -166,7 +166,8 @@ keep this as nil.")
 	 (nsm-noninteractive nil)
 	 (network-security-level network-security-level)
 	 (tlsparams (mew-gnutls-boot-parameters case hostname))
-	 pro)
+	 (type (if starttlsp 'starttls 'tls))
+	 pro-plist pro plist)
     (when (eq (mew-ssl-verify-level case) 0)
       ;; Forcibly disable verification.
       (setq network-security-level 'low))
@@ -177,67 +178,38 @@ keep this as nil.")
 	     (format "verify-level=%s, network-security-level=%s, tlsparams=%s"
 		     (mew-ssl-verify-level case) network-security-level
 		     (apply #'concat (mapcar (lambda (a) (format "%s " a)) tlsparams))))
-    (let ((type (if starttlsp 'starttls 'tls)))
-      (with-temp-message status-msg
-	;; XXX: (open-network-stream) does not pass tlsparams
-	;; to (gnutls-negotiate) to start STARTTLS.  As a
-	;; workaround, add an advice to forcibly append the
-	;; parameters.  This should be fixed in
-	;; (open-network-stream).
-	(setq mew--advice-tls-parameters-plist (cdr tlsparams))
-	(advice-add 'gnutls-negotiate
-		    :filter-args #'mew--advice-filter-args-gnutls-negotiate)
-	;;
-	;; Override key functions when using a tunnel.
-	(setq pro (apply 
-		   'open-network-stream
-		   name buf server port
-		   :coding mew-cs-text-for-net
-		   :type type
-		   :return-list t
-		   (mew-gnutls-parameters case proto starttlsp)))
-	(advice-remove 'gnutls-negotiate
-		       #'mew--advice-filter-args-gnutls-negotiate)
-	;;
-	;; When a validation error occurs, (car pro) will be nil.
-	;;
-	(let ((plainp (eq 'plain (plist-get (cdr pro) :type)))
-	      (greeting (plist-get (cdr pro) :greeting))
-	      (capabilities (plist-get (cdr pro) :capabilities))
-	      (openp  (and (car pro)
-			   (eq 'open (process-status (car pro)))))
-	      ;; Falling back to a plain connection is allowed
-	      ;; only when verify-level < 2.
-	      (needtlsp (and starttlsp
-			     (> (mew-ssl-verify-level case) 1))))
-	  (cond
-	   ((not openp)
-	    (let ((msg (plist-get (cdr pro) :error)))
-	      (setq pro (list nil
-			      :error t
-			      :status-msg
-			      (concat status-msg "FAILED: " msg)))))
-	   ((and plainp needtlsp)
-	    (delete-process (car pro))
-	    (setq pro (list nil
-			    :error t
-			    :status-msg
-			    (concat status-msg "FAILED"))))
-	   (t
-	    (when starttlsp
-	      (mew-smtp-debug "*GREETING*" greeting)
-	      (mew-smtp-debug "*CAPABILITIES*" capabilities))
-	    (setq pro (list
-		       (car pro)
-		       :error nil))
-	    (cond
-	     ((eq proto 'smtp)
-	      (setq mew--gnutls-smtp-greeting greeting))
-	     ((eq proto 'pop)
-	      (setq mew--gnutls-pop-greeting greeting))
-	     ((eq proto 'imap)
-	      (setq mew--gnutls-imap-greeting greeting))))))))
-    pro))
+    ;; XXX: (open-network-stream) does not pass tlsparams
+    ;; to (gnutls-negotiate) to start STARTTLS.  As a
+    ;; workaround, add an advice to forcibly append the
+    ;; parameters.  This should be fixed in
+    ;; (open-network-stream).
+    (setq mew--advice-tls-parameters-plist (cdr tlsparams))
+    (advice-add 'gnutls-negotiate
+		:filter-args #'mew--advice-filter-args-gnutls-negotiate)
+    ;;
+    ;; Override key functions when using a tunnel.
+    (with-temp-message status-msg
+      (setq pro-plist (apply
+		       'open-network-stream
+		       name buf server port
+		       :coding mew-cs-text-for-net
+		       :type type
+		       :return-list t
+		       (mew-gnutls-parameters case proto starttlsp))))
+    (advice-remove 'gnutls-negotiate
+		   #'mew--advice-filter-args-gnutls-negotiate)
+    pro-plist))
+
+(defun mew-check-process (pro-plist status-msg)
+  (let* ((pro (car pro-plist))
+	 (plist (cdr pro-plist))
+	 (openp (and (processp pro) (eq 'open (process-status pro)))))
+    (if openp
+	pro-plist
+      (if (processp pro) (delete-process pro))
+      (let ((msg (plist-get plist :error)))
+	(message "%s" (concat status-msg "FAILED: " msg)))
+      (list nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -254,7 +226,8 @@ keep this as nil.")
 			       "")
 			     (if (eq tun-type 'ssh) " over SSH"
 			       "")))
-	 family pro)
+	 (pro-plist (list nil))
+	 family)
     ;; TLS does not work for Unix-domain socket for now.
     (when (and (not gnutlsp) (stringp port) (string-match "^/" port))
       (setq family 'local)
@@ -265,24 +238,18 @@ keep this as nil.")
 		       (not (gnutls-available-p))
 		       (not (fboundp 'gnutls-boot-parameters))
 		       (not (fboundp 'nsm-level))))
-      (setq pro
-	    (list nil
-		  :error t
-		  :status-msg
-		  (concat status-msg
-			  "FAILED (GnuTLS or NSM not available)"))))
+      (message "%s" (concat status-msg "FAILED (GnuTLS or NSM not available)")))
      (gnutlsp
-      (setq pro (mew-open-gnutls-stream name buf server port proto starttlsp case status-msg)))
+      (setq pro-plist (mew-open-gnutls-stream name buf server port proto starttlsp case status-msg))
+      (mew-check-process pro-plist status-msg))
      (t
       (with-temp-message status-msg
-	(setq pro (apply 'open-network-stream
-			 name buf server port
-			 :coding mew-cs-text-for-net
-			 :return-list t
-			 :family family)))))
-    (when (plist-get (cdr pro) :error)
-      (message (plist-get (cdr pro) :status-msg)))
-    pro))
+	(setq pro-plist (apply 'open-network-stream
+			       name buf server port
+			       :coding mew-cs-text-for-net
+			       :return-list t
+			       :family family)))
+      (mew-check-process pro-plist status-msg)))))
 
 (provide 'mew-gnutls)
 
