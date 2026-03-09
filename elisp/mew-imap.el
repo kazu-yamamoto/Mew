@@ -1296,8 +1296,6 @@
 	  (setq ret (cons (mew-make-mark-hist :msg msg :mark mew-mark-read) ret))))))
     (nreverse ret)))
 
-(defvar mew--gnutls-imap-greeting nil)
-
 (defun mew-imap-retrieve (case directive bnm &rest args)
   (let* ((server (mew-imap-server case))
          (user (mew-imap-user case))
