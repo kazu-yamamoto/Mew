@@ -33,7 +33,7 @@
 ;;;
 
 (defvar mew-imap-info-list
-  '("server" "port" "process" "ssh-process" "ssl-process" "ssl-p" "status"
+  '("server" "port" "process" "ssh-process" "ssl-process" "secure" "status"
     "directive" "bnm" "mdb"
     "rmvs" "kils" "refs" "movs"
     "rtrs" "dels" "uidl" "range"
@@ -108,7 +108,7 @@
 ;;;
 
 (defun mew-imap-secure-p (pnm)
-  (or (mew-imap-get-ssh-process pnm) (mew-imap-get-ssl-p pnm)))
+  (mew-imap-get-secure pnm))
 
 (defun mew-imap-command-capability (pro pnm)
   (mew-net-status (mew-imap-get-status-buf pnm)
@@ -1318,7 +1318,7 @@
 	 (buf (get-buffer-create (mew-imap-buffer-name pnm)))
 	 (no-msg (eq directive 'biff))
 	 process sshname sshpro sslname sslpro lport info jobs protocol pro-plist
-	 virtual-info disp-info virtual)
+	 virtual-info disp-info virtual secure)
     (if (mew-imap-get-process pnm)
 	(message "Another IMAP process is running. Try later")
       (cond
@@ -1348,7 +1348,8 @@
       (if (null process)
 	  (when (eq directive 'exec)
 	    (mew-imap-exec-recover bnm))
-	(mew-summary-lock process "IMAPing" (or sshpro stunnelp gnutlsp))
+	(setq secure (or sshpro stunnelp gnutlsp))
+	(mew-summary-lock process "IMAPing" secure)
 	(mew-sinfo-set-summary-form (mew-get-summary-form bnm))
 	(mew-sinfo-set-summary-column (mew-get-summary-column bnm))
 	(mew-sinfo-set-unread-mark nil)
@@ -1360,7 +1361,7 @@
 	(mew-imap-set-process pnm process)
 	(mew-imap-set-ssh-process pnm sshpro)
 	(mew-imap-set-ssl-process pnm sslpro)
-	(mew-imap-set-ssl-p pnm stunnelp)
+	(mew-imap-set-secure pnm secure)
 	(mew-imap-set-server pnm server)
 	(mew-imap-set-port pnm port)
 	(mew-imap-set-user pnm user)

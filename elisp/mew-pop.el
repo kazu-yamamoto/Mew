@@ -24,7 +24,7 @@
 ;;;
 
 (defvar mew-pop-info-list
-  '("server" "port" "process" "ssh-process" "ssl-process" "ssl-p" "status"
+  '("server" "port" "process" "ssh-process" "ssl-process" "secure" "status"
     "directive" "bnm" "mdb"
     "rtrs" "dels" "refs" "rmvs" "kils" "left" "uidl" "range"
     "rttl" "rcnt" "dttl" "dcnt" "hlds"
@@ -84,7 +84,7 @@
 ;;;
 
 (defun mew-pop-secure-p (pnm)
-  (or (mew-pop-get-ssh-process pnm) (mew-pop-get-ssl-p pnm)))
+  (mew-pop-get-secure pnm))
 
 (defun mew-pop-command-capa (pro pnm)
   (mew-net-status (mew-pop-get-status-buf pnm)
@@ -676,7 +676,7 @@
 	 (buf (get-buffer-create (mew-pop-buffer-name pnm)))
 	 (no-msg (eq directive 'biff))
 	 process sshname sshpro sslname sslpro lport protocol pro-plist
-	 virtual-info disp-info virtual)
+	 virtual-info disp-info virtual secure)
     (if (mew-pop-get-process pnm)
 	(message "Another POP process is running. Try later")
       (cond
@@ -706,7 +706,8 @@
       (if (null process)
 	  (if (eq directive 'exec)
 	      (mew-summary-visible-buffer bnm))
-	(mew-summary-lock process "POPing" (or sshpro stunnelp gnutlsp))
+	(setq secure (or sshpro stunnelp gnutlsp))
+	(mew-summary-lock process "POPing" secure)
 	(mew-sinfo-set-summary-form (mew-get-summary-form bnm))
 	(mew-sinfo-set-summary-column (mew-get-summary-column bnm))
 	(mew-sinfo-set-unread-mark nil)
@@ -718,7 +719,7 @@
 	(mew-pop-set-process pnm process)
 	(mew-pop-set-ssh-process pnm sshpro)
 	(mew-pop-set-ssl-process pnm sslpro)
-	(mew-pop-set-ssl-p pnm stunnelp)
+	(mew-pop-set-secure pnm secure)
 	(mew-pop-set-server pnm server)
 	(mew-pop-set-port pnm port)
 	(mew-pop-set-user pnm user)

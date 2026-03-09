@@ -28,7 +28,7 @@
     "server" "port" "ssh-server"
     "user" "auth-user" "auth-list"
     "helo-domain"
-    "status" "process" "ssh-process" "ssl-process" "ssl-p"
+    "status" "process" "ssh-process" "ssl-process" "secure"
     "qfld" "messages"
     ;; parameters used internally and should be initialized
     "string" "error" "auth-selected" "timer" "cont" "from" "sender"
@@ -442,7 +442,7 @@
 	 (mew-starttls-p (mew-smtp-ssl case)
 			 (mew-*-to-string (mew-smtp-port case))
 			 (mew-smtp-ssl-port case)))
-	process sshname sshpro sslname sslpro lport tlsp protocol pro-plist)
+	process sshname sshpro sslname sslpro lport tlsp protocol pro-plist secure)
     (cond
      (gnutlsp
       (let ((serv (if starttlsp port sslport)))
@@ -475,6 +475,7 @@
 	  (message "Cannot create to the SSL/TLS connection"))
 	 (t
 	  (message "Cannot connect to the SMTP server")))
+      (setq secure (or sshpro stunnelp gnutlsp))
       (mew-info-clean-up pnm mew-smtp-info-list-clean-length)
       (mew-smtp-set-case pnm case)
       (mew-smtp-set-qfld pnm qfld)
@@ -485,7 +486,7 @@
       (mew-smtp-set-ssh-server pnm sshsrv)
       (mew-smtp-set-ssh-process pnm sshpro)
       (mew-smtp-set-ssl-process pnm sslpro)
-      (mew-smtp-set-ssl-p pnm stunnelp)
+      (mew-smtp-set-secure pnm stunnelp)
       (mew-smtp-set-helo-domain pnm (mew-smtp-helo-domain case))
       (mew-smtp-set-user pnm user)
       (mew-smtp-set-auth-user pnm (mew-smtp-user case))
@@ -710,13 +711,13 @@
 	(server (mew-smtp-get-server pnm))
 	(port (mew-smtp-get-port pnm))
 	(sshsrv (mew-smtp-get-ssh-server pnm))
-	(sslp (mew-smtp-get-ssl-p pnm)))
+	(secure (mew-smtp-get-secure pnm)))
     (with-temp-buffer
       (and logtime (insert logtime))
       (and msgid (insert " id=" msgid))
       (and server (insert " server=" server ":" port))
       (and sshsrv (insert " sshsrv=" sshsrv))
-      (and sslp (insert " SSL/TLS"))
+      (and secure (insert " TLS/STARTTLS"))
       (and recipients
 	   (setq recipients (mapconcat 'identity recipients ",")))
       (and recipients (insert " recipients=" recipients))

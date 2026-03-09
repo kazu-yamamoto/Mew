@@ -23,7 +23,7 @@
 ;;;
 
 (defvar mew-nntp-info-list
-  '("server" "port" "process" "ssh-process" "ssl-process" "ssl-p" "status"
+  '("server" "port" "process" "ssh-process" "ssl-process" "secure" "status"
     "directive" "bnm" "mdb"
     "rtrs" "refs" "range"
     "rttl" "rcnt" "hlds"
@@ -67,7 +67,7 @@
 ;;;
 
 (defun mew-nntp-secure-p (pnm)
-  (or (mew-nntp-get-ssh-process pnm) (mew-nntp-get-ssl-p pnm)))
+  (mew-nntp-get-secure pnm))
 
 (defun mew-nntp-command-mode-reader (pro pnm)
   (mew-net-status (mew-nntp-get-status-buf pnm)
@@ -441,7 +441,7 @@
 	 (buf (get-buffer-create (mew-nntp-buffer-name pnm)))
 	 (no-msg (eq directive 'biff))
 	 process sshname sshpro sslname sslpro lport protocol pro-plist
-	 virtual-info disp-info virtual)
+	 virtual-info disp-info virtual secure)
     (if (mew-nntp-get-process pnm)
 	(message "Another NNTP process is running. Try later")
       (cond
@@ -467,7 +467,8 @@
 	(setq pro-plist (mew-nntp-open pnm case server port no-msg nil))))
       (setq process (car pro-plist))
       (when process
-	(mew-summary-lock process "NNTPing" (or sshpro stunnelp gnutlsp))
+	(setq secure (or sshpro stunnelp gnutlsp))
+	(mew-summary-lock process "NNTPing" secure)
 	(mew-sinfo-set-summary-form (mew-get-summary-form bnm))
 	(mew-sinfo-set-summary-column (mew-get-summary-column bnm))
 	(mew-sinfo-set-unread-mark nil)
@@ -479,7 +480,7 @@
 	(mew-nntp-set-process pnm process)
 	(mew-nntp-set-ssh-process pnm sshpro)
 	(mew-nntp-set-ssl-process pnm sslpro)
-	(mew-nntp-set-ssl-p pnm stunnelp)
+	(mew-nntp-set-secure pnm secure)
 	(mew-nntp-set-server pnm server)
 	(mew-nntp-set-port pnm port)
 	(mew-nntp-set-user pnm user)
