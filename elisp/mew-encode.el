@@ -1259,8 +1259,8 @@
 	      (setq cte mew-b64))
 	  (unless (mew-case-equal cte mew-7bit)
 	    (mew-convert-mime-body
-	     ctbody-beg (point-max) cte (mew-ct-linebasep ct))))
-	 (goto-char (point-min)))
+	     ctbody-beg (point-max) cte (mew-ct-linebasep ct)))))
+	(goto-char (point-min))
 	(mew-header-delete-lines (list mew-cte:))
 	(goto-char cthd-end)
 	(mew-header-insert mew-cte: (concat cte " " mew-field-comment))))))
