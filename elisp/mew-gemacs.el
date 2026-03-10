@@ -395,7 +395,7 @@ with fitting to frame size"
 
 (defun mew-x-face-create ()
   (mew-create-image
-   (string-as-unibyte (mew-buffer-substring (point-min) (point-max)))
+   (encode-coding-string (mew-buffer-substring (point-min) (point-max)) mew-cs-binary)
    nil t))
 
 (defun mew-x-face-display (xface)
