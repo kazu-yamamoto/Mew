@@ -122,7 +122,8 @@ with a search method."
 	   (name (mew-search-get-name ent))
 	   (canon-func (mew-search-get-func-canonicalize-pattern ent))
 	   (flt-func (mew-search-get-func-filter ent))
-	   vfolder opattern pattern dfunc file opts rttl file-rttl flds filter)
+	   (file nil) (rttl nil)
+	   vfolder opattern pattern dfunc opts file-rttl flds filter)
       (if (not (fboundp func))
 	  (message "This command cannot be used")
 	(if ask-folder

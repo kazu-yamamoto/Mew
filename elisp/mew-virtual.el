@@ -118,7 +118,9 @@
   "Create selection with `grep'"
   (interactive)
   (let ((file-rttl (mew-summary-selection-by-pick-with-grep1 prog opts pattern rfolder msgs))
-	file rttl func args)
+	(file nil)
+	(rttl nil)
+	func args)
     (mew-set '(file rttl) file-rttl)
     (setq func `(lambda () (mew-delete-file ,file)))
     (setq args (list "-i" file))

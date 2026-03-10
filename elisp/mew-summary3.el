@@ -306,8 +306,9 @@ You may want to set `mew-reply-all-alist' to:
 	  (msg (mew-summary-message-number2))
 	  (split-width-threshold nil)
 	  cwin cbuf draft case
-	  subject to cc newsgroups in-reply-to references
-	  encrypted fromme ret)
+	  subject (to nil) (cc nil) (newsgroups nil)
+	  (in-reply-to nil) (references nil)
+	  encrypted (fromme nil) ret)
       (if (string= (mew-summary-folder-name) mew-draft-folder)
 	  (message "Cannot reply to draft message")
 	(setq draft (mew-folder-new-message mew-draft-folder))

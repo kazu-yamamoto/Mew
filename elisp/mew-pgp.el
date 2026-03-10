@@ -800,7 +800,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 (defun mew-old-pgp-sign (cs &optional syntax)
   (let ((file1 (mew-make-temp-name))
 	(mew-prog-pgps-arg mew-prog-old-pgps-arg)
-	file2 fmc errmsg charset)
+	(file2 nil) fmc (errmsg nil) charset)
     (goto-char (mew-header-end))
     (forward-line)
     (unless cs
@@ -833,7 +833,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   (let ((file1 (mew-make-temp-name))
 	(mew-prog-pgps-arg mew-prog-old-pgps-arg)
 	(decrypters (mew-header-parse-address-list mew-destination:-list))
-	file2 file3 fc errmsg charset)
+	(file2 nil) (file3 nil) fc (errmsg nil) charset)
     (goto-char (mew-header-end))
     (forward-line)
     (unless cs
@@ -979,7 +979,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 	 (syntax (mew-cache-decode-syntax cache))
 	 (file (mew-expand-msg fld msg))
 	 mew-inherit-decode-signer
-	 file1 file2 result xmew win start cte)
+	 file1 (file2 nil) result xmew win start cte)
     (with-temp-buffer
       (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
 	(mew-insert-file-contents file)

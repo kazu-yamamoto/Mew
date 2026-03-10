@@ -858,9 +858,13 @@ That is, each line may be more than 75."
   (let* ((value-params (mew-addrstr-parse-value-list whole-value))
 	 (value (car value-params))
 	 (params (cdr value-params))
-	 (max 0) num
-	 ret ext ext-sort entry charset cs
-	 paramname-value paramname paramvalue)
+	 (max 0)
+	 (num nil)
+	 (paramname nil)
+	 (paramvalue nil)
+	 (charset nil)
+	 ret ext ext-sort entry cs
+	 paramname-value)
     (dolist (param params)
       (setq paramname-value (mew-param-analyze param))
       (when paramname-value
@@ -977,7 +981,9 @@ That is, each line may be more than 75."
   value)
 
 (defun mew-param-sanity-check (ent)
-  (let (param value new)
+  (let ((param nil)
+	(value nil)
+	new)
     (mew-set '(param value) ent)
     (setq new (mew-header-sanity-check-string value))
     (unless (string= value new) (mew-decode-warning-params param 'ctl))

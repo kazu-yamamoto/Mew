@@ -248,7 +248,7 @@
 
 (defun mew-encode-smime (type cte decrypters)
   (let ((file1 (mew-save-transfer-form (point-min) (point-max) nil cte))
-	file2 errmsg file2-errmsg)
+	(file2 nil) (errmsg nil) file2-errmsg)
     (cond
      ((string= type mew-ct-smm-sig)
       (setq file2-errmsg (mew-smime-sign file1)))

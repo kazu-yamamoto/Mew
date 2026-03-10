@@ -386,7 +386,7 @@
 	 (qfld (mew-postq-folder case))
 	 (oname (buffer-name))
 	 (work (buffer-file-name))
-	 file-info file info nname)
+	 file-info file (info nil) nname)
     (mew-local-folder-check qfld)
     (setq file-info (mew-queue-enqueue work qfld))
     (mew-set '(file info) file-info)

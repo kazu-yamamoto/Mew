@@ -373,7 +373,8 @@ Called on the beginning of the content header in the narrowed region
 Return a part syntax after moving the beginning of the content body."
   (let ((case-fold-search t)
 	(vec (make-vector (length mew-mime-fields) nil))
-	key med attr n act value syntax)
+	(n nil) (act nil)
+	key med attr value syntax)
     (mew-decode-narrow-to-header
      (while (not (eobp))
        (if (not (looking-at mew-keyval))
@@ -889,7 +890,7 @@ Return a part syntax after moving the beginning of the content body."
 	 (count 0)
 	 (parts []) part
 	 (use-alt (and (mew-dinfo-get-use-alt) (string= ct mew-ct-mla)))
-	 prefpart lastpref lastatpref
+	 (prefpart nil) (lastpref nil) (lastatpref nil)
 	 bregex start break)
     (unless boundary
       (mew-decode-error "No boundary parameter for multipart"))
@@ -946,7 +947,7 @@ Return a part syntax after moving the beginning of the content body."
 	 (ctl (mew-syntax-get-ct syntax))
 	 (boundary (mew-syntax-get-param ctl "boundary"))
 	 (switch mew-decode-multipart-encrypted-switch)
-	 file1 file2 file3 syntax1 syntax3 func unknown existp proto
+	 file1 file2 (file3 nil) syntax1 syntax3 func unknown existp proto
 	 start result file3result privacy bregex)
     (unless boundary
       (mew-decode-error "No boundary parameter for multipart"))

@@ -626,7 +626,7 @@
 	 (qfld (mew-queue-folder case))
 	 (oname (buffer-name))
 	 (work (buffer-file-name))
-	 file-info file info nname)
+	 file-info file (info nil) nname)
     (mew-local-folder-check qfld)
     (setq file-info (mew-queue-enqueue work qfld))
     (mew-set '(file info) file-info)
@@ -655,7 +655,7 @@
   (let* ((dir (file-name-directory back))
 	 (msg (file-name-nondirectory back))
 	 (case (mew-smtp-get-case pnm))
-	 msgid logtime)
+	 (msgid nil) (logtime nil))
     (mew-elet
      (mew-erase-buffer)
      (mew-set-buffer-multibyte t)

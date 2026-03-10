@@ -234,7 +234,7 @@ cons pairs of folder name and message number."
 (defun mew-summary-mark-recover (mdb &optional refdb refs)
   (let ((opos (point))
 	(case-fold-search nil)
-	msg mrk new-ref ref-ent)
+	(msg nil) (mrk nil) new-ref ref-ent)
     (goto-char (point-min))
     (dolist (ent mdb)
       (mew-set '(msg mrk) ent)

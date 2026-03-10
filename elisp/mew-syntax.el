@@ -729,7 +729,7 @@ system."
 	 (lf (- LT lm ln lt ld 8))
 	 (marks (make-string lm mew-sp))
 	 (i 0) (N (length privacy))
-	 ctm ctp)
+	 (ctm nil) (ctp nil))
 
     (run-hooks 'mew-syntax-format-hook)
 

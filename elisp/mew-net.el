@@ -482,7 +482,7 @@ If called with `\\[universal-argument]', +queue is not flushed.
 
 In remote folders, visit an inbox folder and scan with `update'."
   (interactive "P")
-  (let (case proto inbox case:inbox mailbox)
+  (let ((case nil) (proto nil) inbox case:inbox mailbox)
     (mew-set '(case proto) (mew-summary-case-proto))
     (setq inbox (mew-proto-inbox-folder proto case))
     (cond

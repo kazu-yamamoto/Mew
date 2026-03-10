@@ -378,7 +378,7 @@
   (mew-set-buffer-multibyte t)
   (if (buffer-modified-p) (save-buffer)) ;; to make backup
   (widen)
-  (let (multip recipients msgid logtime)
+  (let (multip recipients (msgid nil) (logtime nil))
     (mew-smtp-set-raw-header
      pnm (mew-buffer-substring (point-min) (mew-header-end)))
     (unless headerp
@@ -467,7 +467,7 @@
   (mew-set-buffer-multibyte t)
   (if (buffer-modified-p) (save-buffer)) ;; to make backup
   (widen)
-  (let (multip newsgroups msgid logtime)
+  (let (multip newsgroups (msgid nil) (logtime nil))
     (mew-nntp2-set-raw-header
      pnm (mew-buffer-substring (point-min) (mew-header-end)))
     ;; Let's backup
@@ -820,7 +820,8 @@
 	 (no-encoding (mew-encode-no-mime-encoding privacy))
 	 (mew-inherit-7bit (mew-encode-limit-7bitp privacy))
 	 (beg (point))
-	 mret charset bodybeg cst ask-cst broken-name flowed delsp)
+	 mret (charset nil) bodybeg cst ask-cst
+	 broken-name (flowed nil) (delsp nil))
     (setq mret (mew-encode-mime-body ctl cte (or buffered file) no-encoding))
     (goto-char beg)
     (mew-set '(cte charset flowed delsp) mret)
@@ -984,7 +985,7 @@
 (defun mew-encode-security-multipart (beg privacy depth decrypters cte)
   (save-restriction
     (narrow-to-region beg (point-max))
-    (let (proto ct)
+    (let ((proto nil) ct)
       (dolist (ent privacy)
 	(goto-char (point-min))
 	(mew-set '(ct proto) ent)
@@ -1042,7 +1043,7 @@
   (let* ((boundary (mew-security-multipart-boundary depth))
 	 (switch mew-encode-multipart-encrypted-switch) ;; save length
 	 (func (mew-encode-get-security-func proto switch))
-	 file1 file2 file3 cte2 cte3 fc errmsg)
+	 file1 (file2 nil) (file3 nil) (cte2 nil) (cte3 nil) fc (errmsg nil))
     ;; Write the part converting line breaks.
     (setq file1 (mew-save-transfer-form (point-min) (point-max) nil cte))
     ;; The narrowed region stores nothing
@@ -1089,7 +1090,8 @@
 	 (switch mew-encode-multipart-signed-switch) ;; save length
 	 (func (mew-encode-get-security-func proto switch))
 	 (canon-func (mew-encode-get-canonicalize-func proto switch))
-	 file1 file2 micalg cte2 fmc errmsg ct2 cdp2)
+	 file1 (file2 nil) (micalg nil) (cte2 nil) fmc
+	 (errmsg nil) (ct2 nil) (cdp2 nil))
     (if (fboundp canon-func) (funcall canon-func))
     (setq file1 (mew-save-transfer-form (point-min) (point-max) 'retain))
     ;; The narrowed region still the ORIGINAL part (i.e. line breaks are LF)

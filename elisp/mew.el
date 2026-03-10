@@ -227,7 +227,7 @@ of the current world is also updated."
    ((and arg (integerp arg))
     (mew-message-for-summary "This command was obsoleted. Type '\\[universal-argument]\\[mew-status-update]' to collect folders"))
    ((consp arg)
-    (let (case proto)
+    (let ((case nil) (proto nil))
       (mew-set '(case proto) (mew-summary-case-proto))
       (cond
        ((mew-folder-localp proto)

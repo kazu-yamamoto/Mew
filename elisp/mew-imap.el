@@ -780,7 +780,8 @@
 	   (case (mew-imap-get-case pnm))
 	   (prefix-list (mew-imap-prefix-list case))
 	   (my-prefix "")
-	   user-prefix sexp sep sharp namespace ent my sp specials)
+	   (my nil) (sp nil)
+	   user-prefix sexp sep sharp namespace ent specials)
       (goto-char (point-max))
       (forward-line -1)
       (save-restriction
@@ -832,7 +833,7 @@
 	 (queue (mew-imap-queue-folder case))
 	 (namespace (mew-imap-get-namespace pnm))
 	 (specials (mew-imap-get-specials pnm))
-	 ret mailboxes friends)
+	 ret mailboxes (friends nil))
     (unless namespace
       (setq namespace (mew-imap-namespace-create nil "" "" nil)) ;; xxx separator?
       (mew-imap-set-namespace pnm namespace))
@@ -1561,7 +1562,7 @@
 (defun mew-imap-mark-recover (mdb)
   (let ((opos (point))
 	(case-fold-search nil)
-	msg mrk omrk)
+	(msg nil) (mrk nil) omrk)
     (goto-char (point-min))
     (dolist (ent mdb)
       (mew-set '(msg mrk) ent)

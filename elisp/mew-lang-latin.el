@@ -24,7 +24,7 @@
   (mew-latin-make-regex 'latin-iso8859-1 mew-latin01-list))
 
 (defun mew-latin0-region (beg end)
-  (let* (charset ent to from ch lc conflict0 conflict1)
+  (let* (charset ent (to nil) (from nil) ch lc conflict0 conflict1)
     (save-restriction
       (narrow-to-region beg end)
       (setq conflict0

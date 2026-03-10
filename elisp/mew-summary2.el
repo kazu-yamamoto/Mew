@@ -523,7 +523,7 @@ If called with `\\[universal-argument]', it stays writable."
    (let* ((win (selected-window))
 	  (fld (mew-summary-folder-name))
 	  (msg (mew-summary-message-number2))
-	  lst svr-date (snd "?") (rcv "?") last svr date tmp)
+	  lst svr-date (snd "?") (rcv "?") last (svr nil) date tmp)
      (mew-summary-set-message-buffer fld msg)
      ;; message buffer or cache buffer
      (setq lst (nreverse (mew-header-get-value mew-received: 'as-list)))

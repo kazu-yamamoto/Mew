@@ -181,7 +181,7 @@
   (let* ((sort-key (or (mew-alist-get-value
 			(assoc folder mew-sort-default-key-alist))
 		       mew-sort-default-key))
-	 key type funcs newkey)
+	 (key nil) (type nil) funcs newkey)
     (mew-set '(key type) (mew-input-sort-key sort-key))
     (setq funcs (assoc type mew-sort-switch))
     (setq newkey (concat (capitalize key) ":"))
@@ -287,7 +287,9 @@
 ;;;
 
 (defun mew-summary-sort-body (folder arg)
-  (let (key idx files range beg end func1 func2 diag)
+  (let ((range nil) 
+	(key nil) (idx nil) (files nil)
+	(beg nil) (end nil) (func1 nil) (func2 nil) diag)
     ;; Summary cache updates
     (mew-summary-reset)
     (mew-summary-retrieve-gap folder)
@@ -319,7 +321,8 @@
 
 (defun mew-summary-sort-body-for-debug (folder arg)
   (let ((win (selected-window))
-	key idx files range func1 func2 diag)
+	(key nil) (idx nil)
+	(files nil) (range nil) (func1 nil) (func2 nil) diag)
     (mew-set '(range beg end) (mew-sort-get-range arg))
     (mew-set '(key func1 func2) (mew-sort-ask-key folder))
     (setq diag (if arg folder (format "%s: %s" folder range)))
@@ -380,7 +383,8 @@ or the region. "
 	 (ofolder (mew-summary-folder-name 'ext))
 	 (vfolder (mew-folder-to-selection ofolder))
 	 (pfolder (mew-summary-physical-folder))
-	 key idx files range beg end func1 func2 diag)
+	 (key nil) (idx nil) (files nil) (range nil) (beg nil) (end nil)
+	 (func1 nil) (func2 nil) diag)
     (mew-set '(range beg end) (mew-sort-get-range arg))
     (mew-set '(key func1 func2) (mew-sort-ask-key ofolder))
     (setq diag (if arg ofolder (format "%s: %s" ofolder range)))

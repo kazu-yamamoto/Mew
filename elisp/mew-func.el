@@ -539,7 +539,8 @@ If case is \"default\", it is not prepended."
   (concat mew-folder-local folder))
 
 (defun mew-folder-path-to-folder (path &optional has-proto)
-  (let (case proto)
+  (let ((case nil)
+	(proto nil))
     ;; depends on folder
     (mew-set '(case proto) (mew-summary-case-proto))
     (if (mew-folder-localp proto)
