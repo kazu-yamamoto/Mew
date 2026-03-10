@@ -313,7 +313,8 @@ A local port number can be obtained the process name after `:'. "
 
 (defun mew-stunnel-p (type)
   "Return if the type is stunnel or not"
-  (and (eq type t) (eq mew-ssl-default 'tunnel)))
+  (or (eq type 'tunnel)
+      (and (eq type t) (eq mew-ssl-default 'tunnel))))
 
 (defun mew-starttls-p (type port sslport)
   "Return if STARTTLS should be used or not"
