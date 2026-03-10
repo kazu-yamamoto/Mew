@@ -608,7 +608,7 @@
 	  (if (string= (mew-tinfo-get-flowed) "yes")
 	      (setq delsp t)))
 	 ((mew-tinfo-get-use-flowed)
-	  (setq flowed-delsp (mew-encode-flowed beg (point-max) charset))
+	  (setq flowed-delsp (mew-encode-flowed beg (point-max)))
 	  (mew-set '(flowed delsp) flowed-delsp))))
       (unless (mew-coding-system-p cs)
 	(mew-encode-error
@@ -726,7 +726,7 @@
       ;; mew-heaer-insert will do this later
       (list "name" name))))
 
-(defun mew-encode-flowed (beg end charset)
+(defun mew-encode-flowed (beg end)
   "Encoding lines with RFC 3676"
   (let (flowed delsp column)
     (save-excursion

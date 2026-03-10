@@ -442,7 +442,7 @@
 	 (mew-starttls-p (mew-smtp-ssl case)
 			 (mew-*-to-string (mew-smtp-port case))
 			 (mew-smtp-ssl-port case)))
-	process sshname sshpro sslname sslpro lport tlsp protocol pro-plist secure)
+	process sshname sshpro sslname sslpro lport protocol pro-plist secure)
     (cond
      (gnutlsp
       (let ((serv (if starttlsp port sslport)))
@@ -486,7 +486,7 @@
       (mew-smtp-set-ssh-server pnm sshsrv)
       (mew-smtp-set-ssh-process pnm sshpro)
       (mew-smtp-set-ssl-process pnm sslpro)
-      (mew-smtp-set-secure pnm stunnelp)
+      (mew-smtp-set-secure pnm secure)
       (mew-smtp-set-helo-domain pnm (mew-smtp-helo-domain case))
       (mew-smtp-set-user pnm user)
       (mew-smtp-set-auth-user pnm (mew-smtp-user case))
@@ -561,10 +561,6 @@
 
 (defun mew-smtp-sentinel (process event)
   (let* ((pnm (process-name process))
-	 (pro (mew-smtp-get-process pnm))
-	 (case (mew-smtp-get-case pnm))
-	 (qfld (mew-smtp-get-qfld pnm))
-	 (msgs (mew-smtp-get-messages pnm))
 	 (status (mew-smtp-get-status pnm)))
     (save-excursion
       (mew-smtp-debug "SMTP SENTINEL" event)

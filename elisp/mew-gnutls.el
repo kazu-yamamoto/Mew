@@ -125,7 +125,7 @@ keep this as nil.")
 		     :priority-string
 		     (plist-get boot-params :priority)))))
 
-(defun mew-gnutls-parameters (case proto starttlsp)
+(defun mew-gnutls-parameters (proto starttlsp)
   (list
    :always-query-capabilities
    (and starttlsp
@@ -162,12 +162,11 @@ keep this as nil.")
 	 ;; Note: on Emacs 26.3 and prior GnuTLS always uses
 	 ;; the system-wide default path first even if
 	 ;; trustfiles is specified.
-	 (trustfiles (mew-ssl-trustfiles case))
 	 (nsm-noninteractive nil)
 	 (network-security-level network-security-level)
 	 (tlsparams (mew-gnutls-boot-parameters case hostname))
 	 (type (if starttlsp 'starttls 'tls))
-	 pro-plist pro plist)
+	 pro-plist)
     (when (eq (mew-ssl-verify-level case) 0)
       ;; Forcibly disable verification.
       (setq network-security-level 'low))
@@ -195,7 +194,7 @@ keep this as nil.")
 		       :coding mew-cs-text-for-net
 		       :type type
 		       :return-list t
-		       (mew-gnutls-parameters case proto starttlsp))))
+		       (mew-gnutls-parameters proto starttlsp))))
     (advice-remove 'gnutls-negotiate
 		   #'mew--advice-filter-args-gnutls-negotiate)
     pro-plist))

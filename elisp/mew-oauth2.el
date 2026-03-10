@@ -90,7 +90,7 @@ It serves http://localhost:PORT"
                   (delete-process p)))
             (process-list))))
 
-(defun mew-oauth2-redirect-handler-sentinel (proc event)
+(defun mew-oauth2-redirect-handler-sentinel (_proc _event)
   )
 
 (defun mew-oauth2-redirect-handler-filter (proc string)

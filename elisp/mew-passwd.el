@@ -99,7 +99,7 @@
       ;; Never get GnuPG passphrase.  Rely on gpg-agent for caching.
       (setq found nil))
      (t
-      (condition-case error
+      (condition-case nil
 	  (setq found (apply #'auth-source-search (nconc slist)))
 	(error
 	 (setq found nil)))))
@@ -132,7 +132,6 @@
     ;;      backends (i.e. auth-source-delete is noop).
     (let* ((epa-pinentry-mode 'loopback)
 	   (slist (mew-passwd-auth-source-parse-key key))
-	   (num (apply #'auth-source-forget+ (nconc slist)))
 	   (entry (apply #'auth-source-delete (nconc slist)))
 	   (save-function (plist-get (nth 0 entry) :save-function)))
       (when (functionp save-function)
