@@ -6,6 +6,9 @@
 
 ;;; Code:
 
+(declare-function auth-source-delete "auth-source.el")
+(declare-function auth-source-forget+ "auth-source.el")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Variables
