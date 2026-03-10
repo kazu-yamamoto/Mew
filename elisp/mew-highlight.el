@@ -8,6 +8,10 @@
 
 (require 'mew)
 
+(eval-when-compile
+  (if (mew-which-el "face-remap")
+    (require 'face-remap)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Cursor line
@@ -155,8 +159,7 @@
   (when (and (or mew-use-highlight-body mew-use-highlight-url)
 	     (or (= 0 mew-highlight-body-max-size)
 		 (<= (- END BEG) mew-highlight-body-max-size)))
-    (let* ((inhibit-point-motion-hooks t)
-	   (cite-regex mew-highlight-body-regex-cite)
+    (let* ((cite-regex mew-highlight-body-regex-cite)
 	   (cmt-regex mew-highlight-body-regex-comment)
 	   (url-regex mew-regex-url)
 	   (fancy-num 0)
@@ -330,8 +333,7 @@
 ;; See also mew-scan-insert-line
 (defun mew-summary-cook-region (beg end &optional interrupt)
   (when (and (mew-summary-or-virtual-p) mew-summary-buffer-raw)
-    (let ((inhibit-point-motion-hooks t)
-	  ret mark face start med)
+    (let (ret mark face start med)
       (catch 'loop
 	(save-excursion
 	  (mew-elet

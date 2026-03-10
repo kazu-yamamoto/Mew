@@ -8,7 +8,22 @@
 
 (require 'mew)
 (eval-when-compile
-  (require 'mew-env0))
+  (require 'mew-env0)
+  (declare-function MEW-BODY "mew-scan.el")
+  (declare-function MEW-CC "mew-scan.el")
+  (declare-function MEW-CT "mew-scan.el")
+  (declare-function MEW-CTE "mew-scan.el")
+  (declare-function MEW-DATE "mew-scan.el")
+  (declare-function MEW-FLD "mew-scan.el")
+  (declare-function MEW-FROM "mew-scan.el")
+  (declare-function MEW-ID "mew-scan.el")
+  (declare-function MEW-IRT "mew-scan.el")
+  (declare-function MEW-NUM "mew-scan.el")
+  (declare-function MEW-REF "mew-scan.el")
+  (declare-function MEW-SUBJ "mew-scan.el")
+  (declare-function MEW-TO "mew-scan.el")
+  (declare-function MEW-UID "mew-scan.el")
+  (declare-function MEW-XREF "mew-scan.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

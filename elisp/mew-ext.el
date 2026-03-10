@@ -12,7 +12,12 @@
    ;;   ((mew-which-el "efs")
    ;;    (require 'efs))
    ((mew-which-el "ange-ftp")
-    (require 'ange-ftp))))
+    (require 'ange-ftp)))
+  (mew-no-warning-defvar mew-prog-text/html-ext)
+  (declare-function ange-ftp-copy-file-internal "ange-ftp.el")
+  (declare-function ange-ftp-expand-file-name "ange-ftp.el")
+  (declare-function ange-ftp-file-name-completion "ange-ftp.el")
+  (declare-function ange-ftp-file-name-all-completions "ange-ftp.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

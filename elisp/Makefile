@@ -48,7 +48,7 @@ OBJS =	mew-addrbook.elc	mew-attach.elc		mew-auth.elc	\
 	mew-thread.elc		mew-unix.elc		\
 	mew-vars.elc		mew-vars2.elc		mew-vars3.elc	\
 	mew-varsx.elc		mew-virtual.elc		\
-	mew-win32.elc		mew-exec.elc	\
+	mew-exec.elc	\
 	mew-darwin.elc		mew.elc
 
 SRCS =	mew-addrbook.el	mew-attach.el	mew-auth.el	\
@@ -76,8 +76,10 @@ SRCS =	mew-addrbook.el	mew-attach.el	mew-auth.el	\
 	mew-thread.el	mew-unix.el	\
 	mew-vars.el	mew-vars2.el	mew-vars3.el	\
 	mew-varsx.el	mew-virtual.el	\
-	mew-win32.el	mew-exec.el	\
+	mew-exec.el	\
 	mew-darwin.el	mew.el
+
+EXTRA_SRCS = mew-win32.el
 
 TEMPFILE  = temp.el
 TEMPFILE2 = temp2.el
@@ -115,7 +117,8 @@ $(OBJS): $(TEMPFILE)
 	@echo 'Compiling EL files of Mew ... done'
 
 $(TEMPFILE): $(SRCS)
-	@echo '(setq mew-compiling t)' > $(TEMPFILE)
+	@echo ';;; -*- lexical-binding: nil; -*-' > $(TEMPFILE)
+	@echo '(setq mew-compiling t)' >> $(TEMPFILE)
 	@echo '(setq load-path (cons "." load-path))' >> $(TEMPFILE)
 	@echo "(defun mew-compile () (mapcar (lambda (x) (byte-compile-file (symbol-name x))) '($(SRCS))))" >> $(TEMPFILE)
 
@@ -125,6 +128,7 @@ install-elisp: $(OBJS)
 		$(MKDIR) $(DESTDIR)$(elispdir); \
 	fi
 	$(CP) $(SRCS) $(DESTDIR)$(elispdir)
+	$(CP) $(EXTRA_SRCS) $(DESTDIR)$(elispdir)
 	$(CP) $(OBJS) $(DESTDIR)$(elispdir)
 
 ################################################################
