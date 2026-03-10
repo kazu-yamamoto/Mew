@@ -8,6 +8,10 @@
 
 (require 'mew)
 
+(eval-when-compile
+  (require 'mew-env0)
+  (mew-no-warning-defvar mew-prog-audio2))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; goodies

@@ -8,6 +8,10 @@
 
 (require 'mew)
 
+(eval-when-compile
+  (if (mew-which-el "face-remap")
+    (require 'face-remap)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Cursor line

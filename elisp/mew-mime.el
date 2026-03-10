@@ -18,8 +18,8 @@
     (require 'mew-darwin))
    (t
     (require 'mew-unix)))
-  (mew-no-warning-defun w3m-region)
-  (mew-no-warning-defun w3m-expand-file-name-as-url))
+  (declare-function w3m-region "w3m.el")
+  (declare-function w3m-expand-file-name-as-url "w3m.el"))
 
 (defvar mew-process-file-alist nil)
 
