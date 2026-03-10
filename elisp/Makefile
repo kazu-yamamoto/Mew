@@ -41,7 +41,7 @@ OBJS =	mew-addrbook.elc	mew-attach.elc		mew-auth.elc	\
 	mew-pgp.elc		mew-pick.elc		mew-pop.elc	\
 	mew-refile.elc		mew-scan.elc		mew-smime.elc	\
 	mew-search.elc		mew-smtp.elc		mew-sort.elc	\
-	mew-ssh.elc		mew-stunnel.elc		mew-gnutsl.elc  \
+	mew-ssh.elc		mew-stunnel.elc		mew-gnutls.elc  \
         mew-passwd.elc	\
 	mew-summary.elc		mew-summary2.elc	mew-summary3.elc \
 	mew-summary4.elc	mew-syntax.elc		\
