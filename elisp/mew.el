@@ -186,6 +186,7 @@ CONTINUE, YANK-ACTION and SEND-ACTIONS are ignored."
 	  (mew-mark-init)
 	  (mew-config-init)
 	  (mew-subprocess-init)
+	  (mew-pdf-tools-init)
 	  (mew-rotate-log-files mew-smtp-log-file)
 	  (mew-rotate-log-files mew-nntp-log-file)
 	  (mew-rotate-log-files mew-refile-log-file))
@@ -626,6 +627,16 @@ Mew remain, so you can resume with buffer operations."
   (mew-quit-toolbar-update)
   (run-hooks 'mew-suspend-hook))
 
+(defun mew-pdf-tools-init ()
+  (add-hook 'kill-emacs-hook 'mew-pdf-tools-clean-up))
+
+(defun mew-pdf-tools-clean-up ()
+  (remove-hook 'kill-emacs-hook 'mew-pdf-tools-clean-up)
+  (mew-remove-buffer mew-pdf-tools-buffer)
+  (setq mew-pdf-tools-buffer nil)
+  (mew-delete-file mew-pdf-file)
+  (setq mew-pdf-file nil))
+
 (defun mew-summary-quit ()
   "Quit Mew. All buffers of Mew are erased."
   (interactive)
@@ -636,6 +647,7 @@ Mew remain, so you can resume with buffer operations."
     (mew-buffer-clean-up (mew-folder-regex mew-draft-folder)) ;; +draft/*
     (mew-buffer-clean-up mew-buffer-regex) ;; other buffers
     ;;
+    (mew-pdf-tools-clean-up)
     (mew-sinfo-clean-up)
     (mew-buffers-clean-up) ;; Summary mode and Virtual mode
     ;;

@@ -447,6 +447,16 @@ with fitting to frame size"
     ;; for Mac
     (define-key mew-message-mode-map [M-down-mouse-1] 'mew-browse-url-at-mouse))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; PDF
+;;;
+
+(defun mew-pdf-tools-view ()
+  (find-file mew-pdf-file)
+  (pdf-view-mode) ;; necessary? because mew-pdf-file always points to a PDF file
+  (setq mew-pdf-tools-buffer (current-buffer)))
+
 (provide 'mew-gemacs)
 
 ;;; Copyright Notice:
