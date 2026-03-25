@@ -6,8 +6,7 @@
 
 (eval-when-compile
   (require 'mew-summary)
-  (require 'mew-env0)
-  (mew-no-warning-defvar mew-dir-list-function))
+  (require 'mew-env0))
 
 (defvar mew-local-folder-alist-file ".mew-folder-alist")
 (defvar mew-local-folder-alist nil)
