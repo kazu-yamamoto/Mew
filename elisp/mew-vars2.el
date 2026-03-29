@@ -749,7 +749,7 @@ For more detail, see mew-mark-put-mark and mew-mark-afterstep.")
 		      mew-mark-exec-refile mew-mark-sanity-refile))
   "*A list of lists which consists of
 mark, name, level, statefullp, kill-line-p,
-undo-func, exec-func, and sanity-fucn.")
+undo-func, exec-func, and sanity-func.")
 
 ;;
 
