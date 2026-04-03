@@ -415,7 +415,7 @@ Note that this hook is called after composition of the message."
 
 (defcustom mew-summary-delete-folder-hook nil
   "*Hook called when a folder deleted.
-Eash function is called with a deleted folder as the argument."
+Each function is called with a deleted folder as the argument."
   :group 'mew-summary
   :type 'hook)
 
@@ -542,7 +542,7 @@ i.e. \"Friendly name <user@mail-domain>\"."
      ("Cc:" "To:" "Cc:" "Apparently-To:")))
   "*Alist to be used to prepare To:/Cc:/Newsgroups: in a reply draft.
 For most cases, this alist is used.
-For more infomation, see the document of '\\<mew-summary-mode-map>\\[mew-summary-reply]'")
+For more information, see the document of '\\<mew-summary-mode-map>\\[mew-summary-reply]'")
 
 (defvar mew-reply-sender-alist
   '(("Reply-To:"
@@ -551,7 +551,7 @@ For more infomation, see the document of '\\<mew-summary-mode-map>\\[mew-summary
      ("To:" "From:")))
   "*Alist to be used to prepare To:/Cc:/Newsgroups: in a reply draft.
 When `\\[universal-argument]' is specified for `\\<mew-summary-mode-map>\\[mew-summary-reply]' and `\\[mew-summary-reply-with-citation]', this alist is used.
-For more infomation, see the document of `\\[mew-summary-reply]'")
+For more information, see the document of `\\[mew-summary-reply]'")
 
 (defvar mew-reply-fromme-alist
   '((t
@@ -560,7 +560,7 @@ For more infomation, see the document of `\\[mew-summary-reply]'")
      ("Newsgroups:" "Newsgroups:")))
   "*Alist to be used to prepare To:/Cc:/Newsgroups: in a reply draft.
 When the message to be replied is sent/posted by ME, this alist is used.
-For more infomation, see the document of `\\<mew-summary-mode-map>\\[mew-summary-reply]'")
+For more information, see the document of `\\<mew-summary-mode-map>\\[mew-summary-reply]'")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -588,7 +588,7 @@ is kept for further connections. This must be `t' for IMAP and NNTP."
 ;; XXX: the default value of gnutls-trustfiles can
 ;; be different from the compile-time list.
 (defcustom mew-ssl-trustfiles nil
-  "List of CA buldle location filenames used by GnuTLS.
+  "List of CA bundle location filenames used by GnuTLS.
 nil - use the default list specified at compile time of the Emacs."
   :group 'mew-net
   :type '(choice (const :tag "System Default" nil)
@@ -644,8 +644,8 @@ tunnel - Use an external program to establish a TLS tunnel.
 		 (const :tag "External (stunnel)" tunnel)))
 
 (defcustom mew-smtp-ssl-port 465 ;; RFC 8314
-  "*The port for SMTP over SSL/TLS. Set this to \"smtp\" if you
-want to use TLS."
+  "*The port for SMTP over SSL/TLS. Set this to mew-smtp-port if you
+want to use STARTTLS."
   :group 'mew-smtp
   :type 'string)
 
@@ -3077,7 +3077,7 @@ You should choose `pgp' or `smime'."
 (defcustom mew-protect-privacy-always-type 'pgp-signature
   "*A type of privacy protection for all drafts.
 Currently, `pgp-signature', `pgp-encryption', `pgp-signature-encryption',
-`pgp-encryption-signatur'e, and nil are available. Since signature
+`pgp-encryption-signature', and nil are available. Since signature
 does not require receiver\\='s public key, signature service may be
 appropriate for this value."
   :group 'mew-privacy
@@ -3312,7 +3312,7 @@ Bad example:
 
 \(3) Decode invalid MIME parameters, which violates RFC 2231.
 \(i)  Raw text.
-\(ii) Encorded-word defined in RFC 2047.
+\(ii) Encoded-word defined in RFC 2047.
 
 Good example:
 	Content-Disposition: attachment;
