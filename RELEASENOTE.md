@@ -1,6 +1,22 @@
 # Release note
 
-This is stable releases of Mew 6.10.
+This is stable releases of Mew 6.11.
+
+## Differences between Mew 6.11 and Mew 6.10
+
+* Supporting coming Emacs 31.
+* Removing fallback code from the "submission" port to the "smtp" port.
+* `mew-smtp-port` is now defined as `"submission"` instead of `"smtp"`.
+* Remove STARTTLS parameters for non-STARTTLS connections with GnuTLS
+  [#212](github.com/kazu-yamamoto/Mew/pull/212)
+* Fix: BIMI logo color
+  [#210](github.com/kazu-yamamoto/Mew/pull/210)
+* Support "BIMI-Indicator:" Header
+  [#208](github.com/kazu-yamamoto/Mew/pull/208)
+* Hiding UI- in Message Mode
+  [#204](https://github.com/kazu-yamamoto/Mew/pull/204)
+* Fix master password issues / Add Asymmetric (public key) encryption support
+  [#201](https://github.com/kazu-yamamoto/Mew/pull/201)
 
 ## Differences between Mew 6.10 and Mew 6.9
 
