@@ -15,14 +15,14 @@ END-INFO-DIR-ENTRY
 
 File: mew.info, Node: Top, Next: Overview, Prev: (dir), Up: (dir)
 
-Mew 6.10 Manual
+Mew 6.11 Manual
 ***************
 
                                                          Kazu YAMAMOTO
                                                     Created 1996/02/18
-                                                   Modified 2025/07/07
+                                                   Modified 2026/04/16
 
-This manual documents Mew version 6.10. In addition to this manual,
+This manual documents Mew version 6.11. In addition to this manual,
 you may find useful information about Mew from Mew's official home
 page (http://www.Mew.org/).
 
@@ -81,7 +81,7 @@ File: mew.info, Node: characteristic, Next: Emacsen, Prev: Overview, Up: Overvie
 Mew's features
 ==============
 
-The features of Mew 6.10 are as follows:
+The features of Mew 6.11 are as follows:
 
    - You can easily display a very complicated structured
      message. What you should do to view messages is just type `SPC'.
@@ -630,16 +630,16 @@ There are several variables for controlling message analysis.
      The size limit of messages to be analyzed. If the size of a
      message is less than or equal to this value, it is analyzed and
      displayed.  Otherwise, the raw message is displayed without
-     analysis. The default value is 10000 bytes.
+     analysis. The default value is 100000 bytes.
 `mew-header-max-length'
      The length limit of header to be analyzed. If the length of a
      header is less than or equal to this value, it is analyzed and
-     displayed.  Otherwise, the message is displayed as fragmentarily
+     displayed.  Otherwise, the message is displayed fragmentarily
      since the analysis is stopped. The default value is 100 lines.
 `mew-decode-broken'
      Whether Mew be liberal or conservative to invalid messages. If the value
      is `t', the setting is liberal. If the value is `nil', the
-     setting is for conservative. If conservative and invalid portions are
+     setting is conservative. If conservative and invalid portions are
      found, they are reported in the X-Mew: field. The default value is
      `t'.
 `mew-use-text-body'
@@ -1260,7 +1260,7 @@ Then a buffer like the following is prepared.
      To:
      Subject:
      From: Kazu Yamamoto <kazu@example.org>
-     X-Mailer: Mew version 6.10 on Emacs 29.4
+     X-Mailer: Mew version 6.11 on Emacs 30.2
      ----
 
 We call this "Draft mode". In Draft mode, we call the region above
@@ -1771,7 +1771,7 @@ following example:
      To: pooh
      Subject: the next Sunday
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.10 on Emacs 29.4
+     X-Mailer: Mew version 6.11 on Emacs 30.2
      ----
      Would you like to play with me next Sunday?
 
@@ -1785,7 +1785,7 @@ This message is modified as follows, for example, if it is put into
      To: winnie-the-pooh@example.net
      Subject: the next Sunday
      From: Piglet <piglet@example.org>
-     X-Mailer: Mew version 6.10 on Emacs 29.4
+     X-Mailer: Mew version 6.11 on Emacs 30.2
      Mime-Version: 1.0
      Content-Type: Text/Plain; charset=us-ascii
      Content-Transfer-Encoding: 7bit
@@ -1829,7 +1829,7 @@ that both of these are commands in Summary mode.
 `C-cC-c'
      Send messages in +queue. Method is appropriate if you like to
      preview composed messages first in +queue and then send them. If
-     `mew-ask-flush-queue' is `t', you are asked, Flush queue? (y or
+     `mew-ask-flush-queue' is `t', you are asked, "Flush queue? (y or
      n) ". `mew-ask-flush-queue' is default to `nil'.
 
 
@@ -1919,7 +1919,7 @@ body. Now the entire draft looks like:
 
      To: mew-dist
      Subject: This is header
-     X-Mailer: Mew version 6.10 on Emacs 29.4
+     X-Mailer: Mew version 6.11 on Emacs 30.2
      ----
      This is the body.
 
@@ -2832,7 +2832,7 @@ Exactly speaking, the following rule is applied for local folders.
    - If `mew-trash-folder-list' is defined, messages marked with `D'
      in one of the folders defined in it are deleted. Otherwise, they
      are moved to the trash.
-   - If `mew-trash-folder-list' is `nl', messages marked with `D' in
+   - If `mew-trash-folder-list' is `nil', messages marked with `D' in
      `mew-trash-folder' are deleted.  Otherwise, they are moved to the
      trash. (This is default.)
 
@@ -3102,7 +3102,7 @@ server:
      Review mark. This IMAP flag is \Flagged.
 
 To allow off-line operations, Mew synchronizes marks with an IMAP
-server everytime when a user makes an action. Mew does not
+server every time when a user makes an action. Mew does not
 automatically synchronize marks repeatedly. The followings are how Mew
 synchronizes marks.
 
@@ -3670,7 +3670,7 @@ the mark is not put any corresponding messages in Virtual mode.
 
 You cannot process marks in Virtual mode. Even if you type `x' to
 process marks in Virtual mode, the cursor moves to corresponding
-Summary mode, if exsists, and you are asked to type `x' again.
+Summary mode, if exists, and you are asked to type `x' again.
 
 You should take note that Virtual folder is really virtual and it does
 not exist in file system. If you exit Mew, it then disappears.  To
@@ -3792,9 +3792,8 @@ described later in the following points:
 To use the feature of dialog, execute `kI' to create database. Since
 new messages are not automatically registered into the database, you
 should periodically execute `kI'. `kI' updates the database
-incrementally by default. This method is fast but garbages are
-left. So, sometime you should type `C-ukI' to update the database
-fully.
+incrementally by default. This method is fast but garbage is left. So,
+sometime you should type `C-ukI' to update the database fully.
 
 To make dialog, type `V' on the current message. This command displays
 him, his ancestors, and his children only. His brothers and so on are
@@ -4327,7 +4326,7 @@ follows:
      (defvar mew-prog-msexcel-ext "soffice")
      (defvar mew-prog-mspowerpoint-ext "soffice")
 
-If you want to set it to "xdg-open", for instace, do like this:
+If you want to set it to "xdg-open", for instance, do like this:
 
      (setq mew-prog-msword-ext "xdg-open")
      (setq mew-prog-msexcel-ext "xdg-open")
@@ -4742,8 +4741,8 @@ variables to control POP.
      means the authentication with APOP. `t' means SASL according to
      `mew-pop-auth-list'. The default is `'apop'.
 `mew-pop-auth-list'
-     A list of SASL methods in the preferred order. Currently,
-     "CRAM-MD5" can be used.
+     A list of SASL methods in the preferred order.  Currently,
+     "XOAUTH2", "CRAM-MD5" and "PLAIN" can be used.
 `mew-pop-delete'
      Whether or not delete messages on a POP server after retrieval by
      POP.  If `t', delete the messages. If `nil', retain the messages.
@@ -4789,7 +4788,7 @@ following variables to control IMAP.
      `mew-imap-auth-list'. The default is `t'.
 `mew-imap-auth-list'
      A list of SASL methods in the preferred order.  Currently,
-     "CRAM-MD5" and "LOGIN" can be used.
+     "XOAUTH2", "CRAM-MD5" and "LOGIN" can be used.
 `mew-imap-delete'
      Whether or not delete messages on an IMAP server after retrieval
      by IMAP. If `t', delete the messages. If `nil', retain the
@@ -4861,11 +4860,9 @@ password. This section describes following variables to control SMTP.
 `mew-smtp-server'
      The name of your SMTP server.
 `mew-smtp-port'
-     The port for SMTP.  When an absolute pathname is specified, it
-     will be used as a Unix domain socket.
-`mew-smtp-submission-family'
-     The address family to be used for the SMTP server.  The default
-     value is 'ipv4.
+     The port for SMTP.  The value was originally "smtp" but is
+     currently "submission".  When an absolute pathname is specified,
+     it will be used as a Unix domain socket.
 `mew-smtp-ssh-server'
      The name of SSH server which forwards the SMTP port.
 `mew-smtp-ssl'
@@ -4879,7 +4876,7 @@ password. This section describes following variables to control SMTP.
      address is automatically set.
 `mew-smtp-auth-list'
      A list of SMTP AUTH methods in the preferred order.  Currently,
-     "CRAM-MD5", "PLAIN", and "LOGIN" can be used.
+     "XOAUTH2", "CRAM-MD5", "PLAIN" and "LOGIN" can be used.
 `mew-smtp-helo-domain'
      An e-mail domain to tell a SMTP server with HELO/EHLO. The
      default is "localhost".
@@ -4901,20 +4898,10 @@ A value of Message-Id: for SMTP is created by the following rule:
 
      message-id = *random*.smtp-msgid-user@smtp-msgid-domain
 
-If you want to use Message Submission (SMTP for submission whose port
-number is 587), configure as follows:
-
-     (setq mew-smtp-port "submission")
-
 If you want to use a Unix domain socket to connect MTA, configure as
 follows:
 
      (setq mew-smtp-port "/var/run/msp.sock")
-
-If you want to use IPv6 as the transport protocol to connect MTA,
-configure as follows:
-
-     (setq mew-smtp-submission-family 'ipv6)
 
 Please refer also to TLS/SSL (*Note TLS/SSL::).
 
@@ -5087,9 +5074,9 @@ The format of configuration
 In Mew 6.1, configuration format of "mew.el" is improved. You can use
 a new format as well as the old format.
 
-   - In the old format, sometime "." appears. In the new fomat, no "."
-     appears at all. For instance, you can write ("foo" "bar") instead
-     of ("foo" . "bar").
+   - In the old format, sometime "." appears. In the new format, no
+     "."  appears at all. For instance, you can write ("foo" "bar")
+     instead of ("foo" . "bar").
    - In the old format, a numeric port is specified as string. An
      example is "25". In the new format, you can write it as
      integer. An example is 25. The string is still valid. An example
@@ -5263,8 +5250,8 @@ GnuTLS and "stunnel" support the both, as of 2020, SSL is considered
 as a "should not use" protocol because a lot of security flaws were
 found in the protocol.
 
-For this histrical reason, there are still variables and functions for
-TLS functionality with "ssl" keyword in Mew.
+For this historical reason, there are still variables and functions
+for TLS functionality with "ssl" keyword in Mew.
 
 To enable TLS functionality, you have to configure variables for
 "stunnel" program or GnuTLS library, and then ones for enabling TLS of
@@ -5423,15 +5410,17 @@ STARTTLS will be enabled when the port number for normal TCP
 connections of the protocol is set to the same as the port number for
 TLS connections.  Configure as follows for POP, for instance:
 
-     ;; A default value of mew-pop-port is "pop3" (110)
      (setq mew-pop-ssl t)
-     (setq mew-pop-ssl-port mew-pop-port) ;; The default is "pop3s" (995)
+     ;; The default value of mew-pop-ssl-port is "pop3s" (995)
+     ;; The default value of mew-pop-port is "pop3" (110)
+     (setq mew-pop-ssl-port mew-pop-port)
 
 The following is an example to enable STARTTLS for Message Submission.
 
-     (setq mew-smtp-port "submission") ;; The default is "smtp" (25)
      (setq mew-smtp-ssl t)
-     (setq mew-smtp-ssl-port mew-smtp-port) ;; The default is 465
+     ;; The default value of mew-smtp-ssl-port is "submissions" (465)
+     ;; The default value of mew-smtp-port is "submission" (587)
+     (setq mew-smtp-ssl-port mew-smtp-port)
 
 
 
@@ -5629,7 +5618,7 @@ To save edited message to a new message, type `C-cC-c' or
 you are asked a folder to save the new message.
 
 Please take care that you may confuse this command as retry sending
-(*Note sum-write::). Retry seinding is to send a message after editing
+(*Note sum-write::). Retry sending is to send a message after editing
 while Edit mode is to save a message after modifying.
 
 The following is summary of commands relating to Edit mode. To enter
@@ -5825,7 +5814,7 @@ Copyright
 
 Mew conforms the following copyright.
 
-Copyright (C) 1994-2025 Mew developing team.
+Copyright (C) 1994-2026 Mew developing team.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -6091,7 +6080,6 @@ Variable Index
 * mew-smtp-ssl-port:            TLS/SSL2.               (line   5)
 * mew-smtp-ssl-port:            smtp.
 * mew-smtp-ssl:                 smtp.
-* mew-smtp-submission-family:   smtp.
 * mew-smtp-user:                smtp.
 * mew-sort-default-key-alist:   sorting.                (line   5)
 * mew-sort-default-key:         sorting.                (line   5)
@@ -6448,102 +6436,102 @@ Node: Viewing16448
 Node: singlepart17744
 Node: multipart19233
 Node: analysis22464
-Node: cipher-viewing26413
-Node: retrieving31439
-Node: moving35448
-Node: sum-write38096
-Node: features40473
-Node: status-update42953
-Node: invalid43978
-Node: Composing46178
-Node: header48227
-Node: cheader49227
-Node: addr-comp51029
-Node: addrbook52907
-Node: auto-alias56100
-Node: addr-comp157821
-Node: addr-comp260243
-Node: send62460
-Node: cite65553
-Node: mime-comp67799
-Node: charset-guess75147
-Node: longline78834
-Node: reply80662
-Node: forward84480
-Node: resend85353
-Node: shortcut87426
-Node: mark-b-comp92868
-Node: pgp-key95833
-Node: anonymous96714
-Node: Marks98281
-Node: unread mark99925
-Node: delete mark101426
-Node: refile mark103669
-Node: target mark105280
-Node: escape mark106911
-Node: unmark107766
-Node: mark change108745
-Node: sync110189
-Node: off-line111367
-Node: mew-mark113217
-Node: Refile113939
-Node: by-folder115799
-Node: by-alist117696
-Node: by-thread119776
-Node: by-from-folder120632
-Node: by-from121989
-Node: by-newsgroups123567
-Node: by-default123902
-Node: guess-rule124356
-Node: auto-refile126142
-Node: copy-msg128354
-Node: Virtual129622
-Node: selection131282
-Node: sorting131977
-Node: dialog133820
-Node: search134951
-Node: condition136116
-Node: dbsearch138371
-Node: keyword139595
-Node: thread140452
-Node: thread-op141712
-Node: Quit143882
-Node: Customize144431
-Node: summary-mode145246
-Node: message-mode149406
-Node: draft-mode153160
-Node: charset156127
-Node: highlight158333
-Node: hooks161309
-Node: pop165774
-Node: imap167575
-Node: nntp169260
-Node: smtp170760
-Node: config173815
-Node: config2179759
-Node: custom-misc181275
-Node: Tips182296
-Node: region183059
-Node: visiting183749
-Node: SSH184279
-Node: TLS/SSL185245
-Node: Stunnel186270
-Node: GnuTLS188308
-Node: TLS/SSL2191514
-Node: spam193041
-Node: spam2195337
-Node: addr-warn196668
-Node: biff197796
-Node: edit198554
-Node: xauth2199825
-Node: Convention200961
-Node: Implementation203031
-Node: Avail205394
-Node: obtain205701
-Node: ml205993
-Node: Copyright206269
-Node: Privacy Policy208218
-Node: Variable Index208473
-Node: Key Index224793
+Node: cipher-viewing26407
+Node: retrieving31433
+Node: moving35442
+Node: sum-write38090
+Node: features40467
+Node: status-update42947
+Node: invalid43972
+Node: Composing46172
+Node: header48221
+Node: cheader49221
+Node: addr-comp51023
+Node: addrbook52901
+Node: auto-alias56094
+Node: addr-comp157815
+Node: addr-comp260237
+Node: send62454
+Node: cite65548
+Node: mime-comp67794
+Node: charset-guess75142
+Node: longline78829
+Node: reply80657
+Node: forward84475
+Node: resend85348
+Node: shortcut87421
+Node: mark-b-comp92863
+Node: pgp-key95828
+Node: anonymous96709
+Node: Marks98276
+Node: unread mark99920
+Node: delete mark101421
+Node: refile mark103665
+Node: target mark105276
+Node: escape mark106907
+Node: unmark107762
+Node: mark change108741
+Node: sync110185
+Node: off-line111364
+Node: mew-mark113214
+Node: Refile113936
+Node: by-folder115796
+Node: by-alist117693
+Node: by-thread119773
+Node: by-from-folder120629
+Node: by-from121986
+Node: by-newsgroups123564
+Node: by-default123899
+Node: guess-rule124353
+Node: auto-refile126139
+Node: copy-msg128351
+Node: Virtual129619
+Node: selection131278
+Node: sorting131973
+Node: dialog133816
+Node: search134945
+Node: condition136110
+Node: dbsearch138365
+Node: keyword139589
+Node: thread140446
+Node: thread-op141706
+Node: Quit143876
+Node: Customize144425
+Node: summary-mode145240
+Node: message-mode149400
+Node: draft-mode153155
+Node: charset156122
+Node: highlight158328
+Node: hooks161304
+Node: pop165769
+Node: imap167594
+Node: nntp169290
+Node: smtp170790
+Node: config173521
+Node: config2179465
+Node: custom-misc180983
+Node: Tips182004
+Node: region182767
+Node: visiting183457
+Node: SSH183987
+Node: TLS/SSL184953
+Node: Stunnel185979
+Node: GnuTLS188017
+Node: TLS/SSL2191223
+Node: spam192827
+Node: spam2195123
+Node: addr-warn196454
+Node: biff197582
+Node: edit198340
+Node: xauth2199610
+Node: Convention200746
+Node: Implementation202816
+Node: Avail205179
+Node: obtain205486
+Node: ml205778
+Node: Copyright206054
+Node: Privacy Policy208003
+Node: Variable Index208258
+Node: Key Index224540
 
 End tag table
