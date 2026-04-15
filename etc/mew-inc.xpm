@@ -2,7 +2,7 @@
 /*
  * Copyright (C) 1997 Yoshiaki Kasahara <kasahara@nc.kyushu-u.ac.jp>
  * Copyright (C) 1997 Yuuichi Teranishi <teranisi@isl.ntt.co.jp> 
- * Copyright (C) 1997 Kazu Yamamoto <kazu@Mew.org>
+ * Copyright (C) 1997 Kazu Yamamoto <kazu@iij.ad.jp>
  * Copyright notice is the same as Mew's one.
  */
 static char * mew_inc_xpm[] = {

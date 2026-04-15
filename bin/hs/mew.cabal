@@ -2,8 +2,8 @@ cabal-version: >=1.8
 name:          mew
 version:       0.1
 license:       BSD3
-maintainer:    Kazu Yamamoto <kazu@Mew.org>
-author:        Kazu Yamamoto <kazu@Mew.org>
+maintainer:    Kazu Yamamoto <kazu@iij.ad.jp>
+author:        Kazu Yamamoto <kazu@iij.ad.jp>
 homepage:      http://www.mew.org/
 synopsis:      Sub-commands for Mew
 description:   "smew" and "cmew"
