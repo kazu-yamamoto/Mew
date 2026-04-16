@@ -3,7 +3,7 @@
 
 ;; Author:  Mew developing team
 ;; Created: Mar 23, 1994
-;; Revised: Jul  7, 2025
+;; Revised: Apr 16, 2026
 
 ;;; Commentary:
 
