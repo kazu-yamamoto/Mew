@@ -19,7 +19,7 @@
 ;;; Mew version
 ;;;
 
-(defconst mew-version-number "6.11"
+(defconst mew-version-number "6.11rc1"
   "Version number for this version of Mew.")
 (defconst mew-version (format "Mew version %s" mew-version-number)
   "Version string for this version of Mew.")
