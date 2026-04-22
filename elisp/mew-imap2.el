@@ -391,7 +391,7 @@
 	  (setq tm (run-at-time mew-imap-timeout-time nil 'mew-imap2-timeout))
 	  (message "Connecting to the IMAP server...")
 	  (setq pro-plist (mew-open-network-stream pnm nil server sprt
-					     'imap gnutlsp starttlsp case))
+						   'imap gnutlsp starttlsp case))
 	  (setq pro (car pro-plist))
 	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
@@ -486,9 +486,9 @@
       (set-process-sentinel process 'mew-imap2-sentinel)
       (set-process-filter process 'mew-imap2-filter)
       (message "Copying in background...")
-	(when (and gnutlsp starttlsp)
-	  (let ((greeting (plist-get (cdr pro-plist) :greeting)))
-	    (if (stringp greeting) (mew-imap2-filter process greeting)))))))
+      (when (and gnutlsp starttlsp)
+	(let ((greeting (plist-get (cdr pro-plist) :greeting)))
+	  (if (stringp greeting) (mew-imap2-filter process greeting)))))))
 
 (defun mew-summary-from-local-to-imap ()
   "Copy messages in local folders under specified folder prefix

@@ -10,7 +10,7 @@
 
 (eval-when-compile
   (if (mew-which-el "face-remap")
-    (require 'face-remap)))
+      (require 'face-remap)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

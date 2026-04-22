@@ -1257,7 +1257,7 @@
 	  (setq tm (run-at-time mew-imap-timeout-time nil 'mew-imap-timeout))
 	  (or no-msg (message "Connecting to the IMAP server..."))
 	  (setq pro-plist (mew-open-network-stream pnm nil server sprt
-					     'imap gnutlsp starttlsp case))
+						   'imap gnutlsp starttlsp case))
 	  (setq pro (car pro-plist))
 	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)

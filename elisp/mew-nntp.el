@@ -399,7 +399,7 @@
 	  (setq tm (run-at-time mew-nntp-timeout-time nil 'mew-nntp-timeout))
 	  (or no-msg (message "Connecting to the NNTP server..."))
 	  (setq pro-plist (mew-open-network-stream pnm nil server sprt
-					     'nntp gnutlsp starttlsp case))
+						   'nntp gnutlsp starttlsp case))
 	  (setq pro (car pro-plist))
 	  (when (not (processp pro)) (signal 'quit nil))
 	  (mew-process-silent-exit pro)
