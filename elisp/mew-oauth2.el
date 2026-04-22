@@ -139,7 +139,7 @@ It serves http://localhost:PORT"
 ;;;
 
 (defun mew-oauth2-get-access-token (url client-id client-secret redirect-url code verifier)
-  (let ((params (concat 
+  (let ((params (concat
 		 "grant_type=authorization_code"
 		 "&code=" code
 		 "&code_verifier=" verifier
@@ -157,7 +157,7 @@ It serves http://localhost:PORT"
 ;;;
 
 (defun mew-oauth2-refresh-access-token (url client-id client-secret refresh-token)
-  (let ((params (concat 
+  (let ((params (concat
 		 "grant_type=refresh_token"
 		 "&client_id=" client-id
 		 "&client_secret=" client-secret
@@ -224,7 +224,7 @@ It serves http://localhost:PORT"
 			 (mew-oauth2-redirect-url case)
 			 challenge
 			 (mew-oauth2-redirect-port case)))
-	     (json (mew-oauth2-get-access-token 
+	     (json (mew-oauth2-get-access-token
 		    (mew-oauth2-token-url case)
 		    (mew-oauth2-client-id case)
 		    (mew-oauth2-client-secret case)

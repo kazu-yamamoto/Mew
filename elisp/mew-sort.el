@@ -287,7 +287,7 @@
 ;;;
 
 (defun mew-summary-sort-body (folder arg)
-  (let ((range nil) 
+  (let ((range nil)
 	(key nil) (idx nil) (files nil)
 	(beg nil) (end nil) (func1 nil) (func2 nil) diag)
     ;; Summary cache updates

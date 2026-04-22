@@ -363,7 +363,7 @@ with fitting to frame size"
 				t '(t nil) nil)
 	   (setq format 'pbm))
 	 (if mew-image-display-resize-care-height
-	     (call-process-region (point-min) (point-max) mew-prog-pamscale 
+	     (call-process-region (point-min) (point-max) mew-prog-pamscale
 				  t '(t nil) nil
 				  mew-prog-pamscale-opt
 				  (format "%d" width)

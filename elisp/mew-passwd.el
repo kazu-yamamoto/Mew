@@ -310,7 +310,7 @@
 	(with-temp-buffer
 	  (catch 'loop
 	    (dotimes (_i N) ;; prevent byte-compile warning
-	      (setq mew-passwd-master t) ;; 
+	      (setq mew-passwd-master t) ;;
 	      (setq pro (apply 'mew-start-process-lang
 			       mew-passwd-decryption-name
 			       (current-buffer)
