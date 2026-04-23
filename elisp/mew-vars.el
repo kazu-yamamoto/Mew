@@ -1744,14 +1744,6 @@ created (if the feature is provided)."
   :group 'mew-privacy
   :type 'boolean)
 
-(defcustom mew-master-passwd-encryption 'symmetric
-  "*Encryption method for a master password file when
- mew-master-passwd-type is \"Master Password\""
-  :group 'mew-privacy
-  :type '(choice
-	  (const :tag "Symmetric encryption" symmetric)
-	  (const :tag "Asymmetric (public key) encryption" asymmetric)))
-
 (defcustom mew-master-passwd-type 'master
   "*Type of the password manager when mew-use-master-passwd is non-nil."
   :group 'mew-privacy
