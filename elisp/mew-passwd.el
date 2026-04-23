@@ -378,6 +378,7 @@
 ;;;
 
 (defun mew-passwd-filter (process string)
+  (mew-passwd-debug "passwd filter" string)
   (let* ((name (process-name process))
 	 (regex (concat "^" (regexp-quote mew-passwd-encryption-name)))
 	 (encrypt-p (string-match regex name)))
@@ -420,6 +421,12 @@
   (if mew-passwd-agent-hack
       (append '("--no-symkey-cache" "--pinentry-mode") (cons (if pinentry-mode pinentry-mode "loopback") args))
     args))
+
+(defun mew-passwd-debug (label string)
+  (when (mew-debug 'passwd-debug)
+    (with-current-buffer (get-buffer-create mew-buffer-debug)
+      (goto-char (point-max))
+      (insert (format "\n<%s>\n%s\n" label string)))))
 
 (provide 'mew-passwd)
 
