@@ -984,6 +984,21 @@ An example is as follows:
     (or (assoc case mew-config-alist)
 	(assoc (intern case) mew-config-alist))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; pdf-tools
+;;;
+
+(defvar mew-pdf-tools-use nil) ;; Set t if you use pdf-tools to view a PDF file
+(defvar mew-pdf-file nil) ;; full path and name of the PDF file (defined as a global variable)
+(defvar mew-pdf-tools-buffer nil) ;; buffer name to show the PDF file
+(defvar mew-pdf-tools-function 'pdf-tools-install) ;; Set one of the function names in pdf-tools
+
+(defun mew-pdf-tools-installed-p ()
+  (and (fboundp mew-pdf-tools-function)
+       (boundp 'pdf-info-epdfinfo-program)
+       (file-exists-p pdf-info-epdfinfo-program)))
+
 (provide 'mew-vars2)
 
 ;;; Copyright Notice:
