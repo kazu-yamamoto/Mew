@@ -28,11 +28,7 @@
 (defvar mew-passwd-encryption-name "GPG Encryption")
 (defvar mew-passwd-decryption-name "GPG Decryption")
 
-;; t means a master password isn't cached but passwords are loaded.
 (defvar mew-passwd-master nil)
-(defvar mew-passwd-master-asymmetric-encryption-command (list "-e" "--default-recipient-self"))
-(defvar mew-passwd-master-symmetric-encryption-command (list "-c" "--cipher-algo" mew-passwd-cipher))
-
 (defvar mew-passwd-alist nil)
 (defvar mew-passwd-timer-id nil)
 (defvar mew-passwd-rendezvous nil)
@@ -201,16 +197,11 @@
       (let ((file (expand-file-name mew-passwd-file mew-conf-path)))
 	(if (file-exists-p file)
 	    (setq mew-passwd-alist (mew-passwd-load))
-	  (mew-passwd-save "ask")	;; save nil and ask master twice
-	  (mew-passwd-load))) ;; load new password
+	  (mew-passwd-read-master-passwd)))
       (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))))
 
 (defun mew-passwd-clean-up ()
   (remove-hook 'kill-emacs-hook 'mew-passwd-clean-up)
-  (when mew-passwd-master
-    (if (and (eq mew-master-passwd-encryption 'symmetric) (not (stringp mew-passwd-master)))
-	(mew-passwd-save "ask") ;; ask master twice at change from public key encryption to symmetric encryption
-      (mew-passwd-save)))
   (setq mew-passwd-master nil)
   (when (and mew-use-cached-passwd (not mew-use-master-passwd))
     (setq mew-passwd-alist nil)
@@ -248,6 +239,8 @@
 	  (let ((pass (mew-read-passwd prompt)))
 	    (mew-passwd-set-passwd key pass)
 	    (mew-passwd-set-counter key 0)
+	    (when mew-passwd-master
+	      (mew-passwd-save))
 	    pass)))
     (mew-read-passwd prompt)))
 
@@ -263,7 +256,7 @@
       (error ""))))
 
 (defun mew-passwd-read-passwd (prompt &optional encrypt-p)
-  (if (stringp mew-passwd-master) ; when mew-passwd-master is t, need to read passwd
+  (if mew-passwd-master
       (progn
 	(mew-timing)
 	mew-passwd-master)
@@ -271,19 +264,26 @@
       (unless encrypt-p (setq mew-passwd-master pass))
       pass)))
 
+(defun mew-passwd-read-master-passwd ()
+  (catch 'loop
+    (while t
+      (let ((pass (mew-passwd-read-passwd2)))
+	(when pass
+	  (setq mew-passwd-master pass)
+	  (throw 'loop nil))))))
+
+(defun mew-passwd-read-passwd2 ()
+  (let ((pass1 (mew-read-passwd "New master password: "))
+	(pass2 (mew-read-passwd "New master password again: ")))
+    (if (string= pass1 pass2)
+	pass1
+      nil)))
+
 (defun mew-passwd-change ()
   "Change the master password."
   (interactive)
-  (cond
-   ((eq mew-master-passwd-encryption 'asymmetric)
-    (message "Master password for public key encrytion can't be changed.")
-    (mew-let-user-read))
-   (t
-    (message "Master password for symmetric encrytion.")
-    (mew-let-user-read)
-    (setq mew-passwd-master nil)
-    (mew-passwd-save "ask") ;; save and ask master twice
-    (mew-passwd-load)))) ;; load new password
+  (setq mew-passwd-master nil)
+  (mew-passwd-read-master-passwd))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -310,7 +310,7 @@
 	(with-temp-buffer
 	  (catch 'loop
 	    (dotimes (_i N) ;; prevent byte-compile warning
-	      (setq mew-passwd-master t) ;;
+	      (when mew-passwd-agent-hack (mew-passwd-clear-passphrase file))
 	      (setq pro (apply 'mew-start-process-lang
 			       mew-passwd-decryption-name
 			       (current-buffer)
@@ -319,7 +319,6 @@
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
 	      (mew-passwd-rendezvous pro)
-	      (if (eq mew-master-passwd-encryption 'asymmetric)	(setq mew-passwd-master t)) ; drop passphrase, but need to save a password file
 	      (unless (file-exists-p tfile)
 		(setq mew-passwd-master nil))
 	      (when mew-passwd-master
@@ -334,22 +333,17 @@
       (mew-passwd-delete-file tfile))
     pwds))
 
-;; "pinentry-mode" is a string for pinentry-mode option of
-;; GnuPG2. "loopback" or "ask" is useful.
-(defun mew-passwd-save (&optional pinentry-mode)
+(defun mew-passwd-save ()
   (let* ((process-connection-type mew-connection-type2)
 	 (file (expand-file-name mew-passwd-file mew-conf-path))
 	 (tfile (mew-make-temp-name "gpg-save"))
+	 (args (mew-passwd-adjust-args (list "-c"
+					     "--cipher-algo" mew-passwd-cipher
+					     "--yes" "--output" file tfile)))
 	 (N mew-passwd-repeat)
-	 pro args)
+	 pro)
     (if (file-exists-p file)
 	(rename-file file (concat file mew-backup-suffix) 'override))
-    (cond
-     ((eq mew-master-passwd-encryption 'symmetric)
-      (setq args (mew-passwd-adjust-args (append mew-passwd-master-symmetric-encryption-command (list "--yes" "--output" file tfile)) pinentry-mode)))
-     ((eq mew-master-passwd-encryption 'asymmetric)
-      (setq args (mew-passwd-adjust-args (append mew-passwd-master-asymmetric-encryption-command (list "--yes" "--output" file tfile)) pinentry-mode)))
-     (t (error "unknown mew-use-master-passwd-encryption")))
     (unwind-protect
 	(with-temp-buffer
 	  (pp mew-passwd-alist (current-buffer))
@@ -417,9 +411,24 @@
 	(write-region (point-min) (point-max) file nil 'no-msg)))
     (delete-file file)))
 
-(defun mew-passwd-adjust-args (args &optional pinentry-mode)
+(defun mew-passwd-get-cache-id (file)
+  (with-temp-buffer
+    (call-process mew-prog-passwd nil t nil "--list-packets" file)
+    (goto-char (point-min))
+    (when (re-search-forward "salt \\([^ ,]+\\)," nil t)
+      (concat "S" (match-string 1)))))
+
+(defun mew-passwd-clear-passphrase (file)
+  (when (file-exists-p file)
+    (let ((cache-id (mew-passwd-get-cache-id file)))
+      (with-temp-buffer
+	(insert "CLEAR_PASSPHRASE " cache-id "\n")
+	(call-process-region (point-min) (point-max) "gpg-connect-agent")))))
+
+(defun mew-passwd-adjust-args (args)
   (if mew-passwd-agent-hack
-      (append '("--no-symkey-cache" "--pinentry-mode") (cons (if pinentry-mode pinentry-mode "loopback") args))
+      ;; password is asked just once when encrypting
+      (cons "--pinentry-mode" (cons "loopback" args))
     args))
 
 (defun mew-passwd-debug (label string)
