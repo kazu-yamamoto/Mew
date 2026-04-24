@@ -197,14 +197,11 @@
       (let ((file (expand-file-name mew-passwd-file mew-conf-path)))
 	(if (file-exists-p file)
 	    (setq mew-passwd-alist (mew-passwd-load))
-	  ;; save nil and ask master twice
-	  (mew-passwd-save)))
+	  (mew-passwd-read-master-passwd)))
       (add-hook 'kill-emacs-hook 'mew-passwd-clean-up)))))
 
 (defun mew-passwd-clean-up ()
   (remove-hook 'kill-emacs-hook 'mew-passwd-clean-up)
-  (when mew-passwd-master
-    (mew-passwd-save))
   (setq mew-passwd-master nil)
   (when (and mew-use-cached-passwd (not mew-use-master-passwd))
     (setq mew-passwd-alist nil)
@@ -242,6 +239,8 @@
 	  (let ((pass (mew-read-passwd prompt)))
 	    (mew-passwd-set-passwd key pass)
 	    (mew-passwd-set-counter key 0)
+	    (when mew-passwd-master
+	      (mew-passwd-save))
 	    pass)))
     (mew-read-passwd prompt)))
 
@@ -265,11 +264,26 @@
       (unless encrypt-p (setq mew-passwd-master pass))
       pass)))
 
+(defun mew-passwd-read-master-passwd ()
+  (catch 'loop
+    (while t
+      (let ((pass (mew-passwd-read-passwd2)))
+	(when pass
+	  (setq mew-passwd-master pass)
+	  (throw 'loop nil))))))
+
+(defun mew-passwd-read-passwd2 ()
+  (let ((pass1 (mew-read-passwd "New master password: "))
+	(pass2 (mew-read-passwd "New master password again: ")))
+    (if (string= pass1 pass2)
+	pass1
+      nil)))
+
 (defun mew-passwd-change ()
   "Change the master password."
   (interactive)
   (setq mew-passwd-master nil)
-  (mew-passwd-save))
+  (mew-passwd-read-master-passwd))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -413,6 +427,7 @@
 
 (defun mew-passwd-adjust-args (args)
   (if mew-passwd-agent-hack
+      ;; password is asked just once when encrypting
       (cons "--pinentry-mode" (cons "loopback" args))
     args))
 
