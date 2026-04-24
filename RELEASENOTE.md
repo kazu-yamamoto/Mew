@@ -15,8 +15,7 @@ This is stable releases of Mew 6.11.
   [#208](github.com/kazu-yamamoto/Mew/pull/208)
 * Hiding UI- in Message Mode
   [#204](https://github.com/kazu-yamamoto/Mew/pull/204)
-* Fix master password issues / Add Asymmetric (public key) encryption support
-  [#201](https://github.com/kazu-yamamoto/Mew/pull/201)
+* Fix master password issues.
 
 ## Differences between Mew 6.10 and Mew 6.9
 
