@@ -190,6 +190,9 @@ It serves http://localhost:PORT"
          (token (if (hash-table-p tk) tk (make-hash-table)))
          (access-token (mew-xoauth2-get-access-token token case)))
     (mew-passwd-set-passwd tag token)
+    (mew-passwd-set-counter tag 0)
+    (when mew-passwd-master
+      (mew-passwd-save))
     ;; base64(user=user@example.com^Aauth=Bearer ya29vF9dft4...^A^A)
     (base64-encode-string (format "user=%s\1auth=Bearer %s\1\1" user access-token) t)))
 
