@@ -13,9 +13,10 @@ This is stable releases of Mew 6.11.
   [#210](github.com/kazu-yamamoto/Mew/pull/210)
 * Support "BIMI-Indicator:" Header
   [#208](github.com/kazu-yamamoto/Mew/pull/208)
-* Hiding UI- in Message Mode
+* Hiding UI-* in Message Mode
   [#204](https://github.com/kazu-yamamoto/Mew/pull/204)
-* Fix master password issues.
+* Fix master password issues. New protocol passwords are saved when
+  entered.
 
 ## Differences between Mew 6.10 and Mew 6.9
 
