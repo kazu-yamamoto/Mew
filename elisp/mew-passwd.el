@@ -38,7 +38,7 @@
 For symmetric key encryption, this is used both for encryption (saving)
 and decryption (loading). However, for asymmetric key encryption, this
 is used only for decryption (loading). After loading passwords,
-this variable is set to 't`."
+this variable is set to 't`.")
 (defvar mew-passwd-alist nil)
 (defvar mew-passwd-timer-id nil)
 (defvar mew-passwd-rendezvous nil)
