@@ -20,6 +20,11 @@
 (defvar mew-passwd-cipher "AES")
 (defvar mew-passwd-repeat 3)
 
+(defvar mew-passwd-load-args (list "-d")
+  "arguments of `mew-prog-passwd' to load master password file")
+(defvar mew-passwd-save-args (list "-c" "--cipher-algo" mew-passwd-cipher)
+  "arguments of `mew-prog-passwd' to save master password file")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Internal variables
@@ -305,7 +310,9 @@
   (let* ((process-connection-type mew-connection-type2)
 	 (file (expand-file-name mew-passwd-file mew-conf-path))
 	 (tfile (mew-make-temp-name "gpg-load"))
-	 (args (mew-passwd-adjust-args (list "-d" "--yes" "--output" tfile file)))
+	 (args (mew-passwd-adjust-args (append
+					mew-passwd-load-args
+					(list "--yes" "--output" tfile file))))
 	 (N mew-passwd-repeat)
 	 pwds pro)
     (unwind-protect
@@ -339,9 +346,9 @@
   (let* ((process-connection-type mew-connection-type2)
 	 (file (expand-file-name mew-passwd-file mew-conf-path))
 	 (tfile (mew-make-temp-name "gpg-save"))
-	 (args (mew-passwd-adjust-args (list "-c"
-					     "--cipher-algo" mew-passwd-cipher
-					     "--yes" "--output" file tfile)))
+	 (args (mew-passwd-adjust-args (append
+					mew-passwd-save-args
+					(list "--yes" "--output" file tfile))))
 	 (N mew-passwd-repeat)
 	 pro)
     (if (file-exists-p file)
