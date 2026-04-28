@@ -20,6 +20,11 @@
 (defvar mew-passwd-cipher "AES")
 (defvar mew-passwd-repeat 3)
 
+(defvar mew-passwd-load-args (list "-d")
+  "arguments of `mew-prog-passwd' to load master password file")
+(defvar mew-passwd-save-args (list "-c" "--cipher-algo" mew-passwd-cipher)
+  "arguments of `mew-prog-passwd' to save master password file")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Internal variables
@@ -28,7 +33,12 @@
 (defvar mew-passwd-encryption-name "GPG Encryption")
 (defvar mew-passwd-decryption-name "GPG Decryption")
 
-(defvar mew-passwd-master nil)
+(defvar mew-passwd-master nil
+  "This variable is basically a string of master password.
+For symmetric key encryption, this is used both for encryption (saving)
+and decryption (loading). However, for asymmetric key encryption, this
+is used only for decryption (loading). After loading passwords,
+this variable is set to 't`."
 (defvar mew-passwd-alist nil)
 (defvar mew-passwd-timer-id nil)
 (defvar mew-passwd-rendezvous nil)
@@ -305,7 +315,9 @@
   (let* ((process-connection-type mew-connection-type2)
 	 (file (expand-file-name mew-passwd-file mew-conf-path))
 	 (tfile (mew-make-temp-name "gpg-load"))
-	 (args (mew-passwd-adjust-args (list "-d" "--yes" "--output" tfile file)))
+	 (args (mew-passwd-adjust-args (append
+					mew-passwd-load-args
+					(list "--yes" "--output" tfile file))))
 	 (N mew-passwd-repeat)
 	 pwds pro)
     (unwind-protect
@@ -321,8 +333,10 @@
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
 	      (mew-passwd-rendezvous pro)
-	      (unless (file-exists-p tfile)
-		(setq mew-passwd-master nil))
+	      (if (file-exists-p tfile)
+		  (unless mew-passwd-master
+		    (setq mew-passwd-master t)) ;; load success but master password isn't cached
+		(setq mew-passwd-master nil)) ;; load fail
 	      (when mew-passwd-master
 		(let ((coding-system-for-read 'undecided))
 		  (insert-file-contents tfile))
@@ -339,9 +353,9 @@
   (let* ((process-connection-type mew-connection-type2)
 	 (file (expand-file-name mew-passwd-file mew-conf-path))
 	 (tfile (mew-make-temp-name "gpg-save"))
-	 (args (mew-passwd-adjust-args (list "-c"
-					     "--cipher-algo" mew-passwd-cipher
-					     "--yes" "--output" file tfile)))
+	 (args (mew-passwd-adjust-args (append
+					mew-passwd-save-args
+					(list "--yes" "--output" file tfile))))
 	 (N mew-passwd-repeat)
 	 pro)
     (if (file-exists-p file)
@@ -415,7 +429,7 @@
 
 (defun mew-passwd-get-cache-id (file)
   (with-temp-buffer
-    (apply 'call-process mew-prog-passwd nil t nil (mew-passwd-adjust-args (list "--list-packets" file)))
+    (apply 'call-process mew-prog-passwd nil t nil (mew-passwd-adjust-args (list "--list-packets" "--passphrase" "" file)))
     (goto-char (point-min))
     (when (re-search-forward "salt \\([^ ,]+\\)," nil t)
       (concat "S" (match-string 1)))))
@@ -423,9 +437,10 @@
 (defun mew-passwd-clear-passphrase (file)
   (when (file-exists-p file)
     (let ((cache-id (mew-passwd-get-cache-id file)))
-      (with-temp-buffer
-	(insert "CLEAR_PASSPHRASE " cache-id "\n")
-	(call-process-region (point-min) (point-max) "gpg-connect-agent")))))
+      (when cache-id
+	(with-temp-buffer
+	  (insert "CLEAR_PASSPHRASE " cache-id "\n")
+	  (call-process-region (point-min) (point-max) "gpg-connect-agent"))))))
 
 (defun mew-passwd-adjust-args (args)
   (if mew-passwd-agent-hack
