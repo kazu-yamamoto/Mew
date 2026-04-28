@@ -44,6 +44,8 @@
 ;;; External functions
 ;;;
 
+;; t means a master password isn't cached in Emacs but
+;; protocol passwords are loaded in Emacs.
 (defun mew-passwd-get-passwd (key)
   (cond
    ((mew-passwd-use-auth-source-p)
@@ -328,8 +330,10 @@
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
 	      (mew-passwd-rendezvous pro)
-	      (unless (file-exists-p tfile)
-		(setq mew-passwd-master nil))
+	      (if (file-exists-p tfile)
+		  (unless mew-passwd-master
+		    (setq mew-passwd-master t)) ;; load success but master password isn't cached
+		(setq mew-passwd-master nil)) ;; load fail
 	      (when mew-passwd-master
 		(let ((coding-system-for-read 'undecided))
 		  (insert-file-contents tfile))
