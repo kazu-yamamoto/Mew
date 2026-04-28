@@ -422,7 +422,7 @@
 
 (defun mew-passwd-get-cache-id (file)
   (with-temp-buffer
-    (apply 'call-process mew-prog-passwd nil t nil (mew-passwd-adjust-args (list "--list-packets" file)))
+    (apply 'call-process mew-prog-passwd nil t nil (mew-passwd-adjust-args (list "--list-packets" "--passphrase" "" file)))
     (goto-char (point-min))
     (when (re-search-forward "salt \\([^ ,]+\\)," nil t)
       (concat "S" (match-string 1)))))
