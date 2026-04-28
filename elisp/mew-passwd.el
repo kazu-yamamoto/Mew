@@ -33,7 +33,12 @@
 (defvar mew-passwd-encryption-name "GPG Encryption")
 (defvar mew-passwd-decryption-name "GPG Decryption")
 
-(defvar mew-passwd-master nil)
+(defvar mew-passwd-master nil
+  "This variable is basically a string of master password.
+For symmetric key encryption, this is used both for encryption (saving)
+and decryption (loading). However, for asymmetric key encryption, this
+is used only for decryption (loading). After loading passwords,
+this variable is set to 't`."
 (defvar mew-passwd-alist nil)
 (defvar mew-passwd-timer-id nil)
 (defvar mew-passwd-rendezvous nil)
@@ -44,8 +49,6 @@
 ;;; External functions
 ;;;
 
-;; t means a master password isn't cached in Emacs but
-;; protocol passwords are loaded in Emacs.
 (defun mew-passwd-get-passwd (key)
   (cond
    ((mew-passwd-use-auth-source-p)
