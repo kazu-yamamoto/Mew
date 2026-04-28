@@ -430,9 +430,10 @@
 (defun mew-passwd-clear-passphrase (file)
   (when (file-exists-p file)
     (let ((cache-id (mew-passwd-get-cache-id file)))
-      (with-temp-buffer
-	(insert "CLEAR_PASSPHRASE " cache-id "\n")
-	(call-process-region (point-min) (point-max) "gpg-connect-agent")))))
+      (when cache-id
+	(with-temp-buffer
+	  (insert "CLEAR_PASSPHRASE " cache-id "\n")
+	  (call-process-region (point-min) (point-max) "gpg-connect-agent"))))))
 
 (defun mew-passwd-adjust-args (args)
   (if mew-passwd-agent-hack
