@@ -44,7 +44,7 @@
     ("auth-login"    ("OK" . "user-login") ("NO" . "wpwd"))
     ("user-login"    ("OK" . "pwd-login") ("NO" . "wpwd"))
     ("pwd-login"     ("OK" . "next") ("NO" . "wpwd"))
-    ("login"         ("OK" . "next") ("NO" . "wpwd"))
+    ("login"         ("OK" . "next") ("NO\\|BAD" . "wpwd"))
     ("append"        ("OK" . "post-append") ("\\[TRYCREATE\\]" . "create"))
     ("create"        ("OK" . "append") ("NO" . "wmbx"))
     ("post-append"   ("OK" . "done") ("\\[TRYCREATE\\]" . "create"))

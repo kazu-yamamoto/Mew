@@ -65,7 +65,7 @@
     ("auth-login"    ("OK" . "user-login") ("NO" . "wpwd"))
     ("user-login"    ("OK" . "pwd-login") ("NO" . "wpwd"))
     ("pwd-login"     ("OK" . "next") ("NO" . "wpwd"))
-    ("login"         ("OK" . "next") ("NO" . "wpwd"))
+    ("login"         ("OK" . "next") ("NO\\|BAD" . "wpwd"))
     ("select"        ("OK" . "post-select"))
     ("flags"         ("OK" . "flags")) ;; xxx NG but loop
     ("uid"           ("OK" . "umsg"))
