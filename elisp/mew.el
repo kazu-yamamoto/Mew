@@ -3,7 +3,7 @@
 
 ;; Author:  Mew developing team
 ;; Created: Mar 23, 1994
-;; Revised: Apr 28, 2026
+;; Revised: May 11, 2026
 
 ;;; Commentary:
 
@@ -19,7 +19,7 @@
 ;;; Mew version
 ;;;
 
-(defconst mew-version-number "6.11rc4"
+(defconst mew-version-number "6.11"
   "Version number for this version of Mew.")
 (defconst mew-version (format "Mew version %s" mew-version-number)
   "Version string for this version of Mew.")
