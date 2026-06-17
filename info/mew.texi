@@ -13601,6 +13601,7 @@ The same as the other commands in Draft mode
 @vindex mew-oauth2-client-id
 @vindex mew-oauth2-client-secret
 @vindex mew-oauth2-redirect-url
+@vindex mew-oauth2-redirect-port
 @vindex mew-oauth2-auth-url
 @vindex mew-oauth2-token-url
 @vindex mew-oauth2-resource-url
