@@ -12071,6 +12071,9 @@ nntp-server, nntp-port, nntp-ssh-server, nntp-ssl, nntp-ssl-port,
 nntp-user, nntp-size, nntp-header-only, 
 nntp-msgid-user, nntp-msgid-domain, 
 prog-ssl-arg, ssl-cert-directory, ssl-verify-level, 
+oauth2-client-id, oauth2-client-secret,
+oauth2-redirect-url, oauth2-redirect-port,
+oauth2-auth-url, oauth2-token-url, oauth2-resource-url,
 inbox-folder, queue-folder, postq-folder, 
 mailbox-type, mbox-command, mbox-command-arg,
 signature-file, content-type, refile-guess-alist, 
@@ -13598,6 +13601,7 @@ The same as the other commands in Draft mode
 @vindex mew-oauth2-client-id
 @vindex mew-oauth2-client-secret
 @vindex mew-oauth2-redirect-url
+@vindex mew-oauth2-redirect-port
 @vindex mew-oauth2-auth-url
 @vindex mew-oauth2-token-url
 @vindex mew-oauth2-resource-url
