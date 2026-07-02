@@ -518,7 +518,7 @@
 	 (tag (mew-pop-passtag pnm))
          (auth-string (mew-xoauth2-auth-string user tag (mew-pop-get-case pnm))))
     (mew-pop-process-send-string pro "AUTH XOAUTH2 %s" auth-string)
-    (mew-smtp-set-status pnm "auth-xoauth2")))
+    (mew-pop-set-status pnm "xoauth2")))
 
 (defun mew-pop-command-auth-cram-md5 (pro pnm)
   (mew-pop-process-send-string pro "AUTH CRAM-MD5")
