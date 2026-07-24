@@ -610,6 +610,17 @@ search_string(char *key, char *value, int case_sensitive) {
 			break;
 	}
 	return FALSE;
+  }
+
+private
+int ends_with(const char *str, const char *suffix) {
+	if (!str || !suffix) return FALSE;
+
+	size_t str_len = strlen(str);
+	size_t suffix_len = strlen(suffix);
+
+	if (str_len < suffix_len) return FALSE;
+	return strncmp(str + str_len - suffix_len, suffix, suffix_len) == 0;
 }
 
 /****************************************************************
@@ -907,25 +918,16 @@ exec_getfile(char **filename, char **foldername) {
 		if(default_fld_error_flag != 0)
 			warn_exit("default folder is not exist.");
 		while (*p == SP || *p == TAB) p++;
-		if (isdigit((unsigned char)*p) == 0) continue;
 		*filename = p;
-		while (isdigit((unsigned char)*p)) p++;
-		if (STRCMP(p, Suffix)==0) {
-			r = p;
-			p = p + Suffix_len;
-		} else
+		if (ends_with(p, Suffix))
+			r = p + strlen(p) - Suffix_len;
+		else
 			r = NULL;
-		*p = NUL;
 		fp = fopen(*filename, FDREAD);
-		if (fp != NULL) {
-			if (r != NULL) *r = NUL;
-			return fp;
-		}
-		if (r != NULL) {
-			*r = NUL;
-			fp = fopen(*filename, FDREAD);
-			if (fp != NULL) return fp;
-		}
+		if (r != NULL) *r = NUL; // remove suffix
+		if (fp != NULL) return fp;
+		fp = fopen(*filename, FDREAD); // try again without suffix
+		if (fp != NULL) return fp;
 	}
 	return NULL;
 }
