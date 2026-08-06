@@ -1517,7 +1517,17 @@ by side-effect."
 ;;
 
 (defun mew-time-calc (new old)
-  (float-time (time-subtract new old)))
+  (let ((million 1000000)
+	(sec (+ (* 65536 (- (nth 0 new) (nth 0 old)))
+		(- (nth 1 new) (nth 1 old))))
+	(usec (- (nth 2 new) (nth 2 old))))
+    (if (< usec 0)
+        (setq sec (1- sec)
+              usec (+ usec million))
+      (if (>= usec million)
+          (setq sec (1+ sec)
+                usec (- usec million))))
+    (+ sec (/ usec (float million)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
