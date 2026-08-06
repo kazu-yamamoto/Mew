@@ -616,7 +616,7 @@ the queue, type '\\[mew-summary-send-message]' in the queue online."
 	(mew-lisp-save file-info job 'nobackup 'unlimit)
 	(with-temp-buffer
 	  (mew-header-insert mew-subj: (format "IMAP jobs for %s" fld))
-	  (mew-header-insert mew-date: (mew-time-ctz-to-rfc (current-time)))
+	  (mew-header-insert mew-date: (mew-time-ctz-to-rfc (mew-current-time)))
 	  (mew-header-insert mew-from: "Mew IMAP manager")
 	  (insert "\n")
 	  (insert "Messages to be refiled:\n")

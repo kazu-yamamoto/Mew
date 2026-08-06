@@ -644,7 +644,7 @@ with `\\[universal-argument]', it displays how the refile rules work in Message 
 	(goto-char (point-max))
 	(mew-insert-buffer-substring cbuf beg end)
 	(insert "== src=" fld " dst=" folders-str " id=" msg-id)
-	(insert " date=" (mew-time-ctz-to-logtime (current-time)) "\n")))))
+	(insert " date=" (mew-time-ctz-to-logtime (mew-current-time)) "\n")))))
 
 (defun mew-summary-refile-unlog (fld)
   (save-excursion

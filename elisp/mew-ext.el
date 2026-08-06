@@ -144,7 +144,7 @@
 (defun mew-create-content-id ()
   ;; this is not unique if used with very short interval.
   ;; but it's ok
-  (format "<%s.%s.%s@%s>" (nth 0 (current-time)) (nth 1 (current-time))
+  (format "<%s.%s.%s@%s>" (nth 0 (mew-current-time)) (nth 1 (mew-current-time))
 	  (emacs-pid) (system-name)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

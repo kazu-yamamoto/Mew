@@ -941,7 +941,7 @@ If case is \"default\", it is not prepended."
     (nth 1 (file-attributes file))))
 
 (defun mew-file-get-time (file)
-  (nth 5 (file-attributes file)))
+  (time-convert (nth 5 (file-attributes file)) 'list))
 
 (defun mew-file-get-size (file)
   (nth 7 (file-attributes file)))
@@ -1528,6 +1528,14 @@ by side-effect."
           (setq sec (1+ sec)
                 usec (- usec million))))
     (+ sec (/ usec (float million)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Time
+;;;
+
+(defun mew-current-time ()
+  (time-convert (current-time) 'list))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

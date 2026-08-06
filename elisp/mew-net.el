@@ -215,7 +215,7 @@
     (if (>= (mew-time-diff time (mew-file-get-time (nth 0 keep))) (nth 1 keep))
 	t))
    ((integerp keep)
-    (if (>= (mew-time-diff time (current-time)) keep) t))
+    (if (>= (mew-time-diff time (mew-current-time)) keep) t))
    ;; ((eq keep t) t)
    ;; This case MUST not be included because messages marked with 'T'
    ;; will be deleted.

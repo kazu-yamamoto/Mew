@@ -300,7 +300,7 @@
 	 (rmvs (mew-imap-get-rmvs pnm))
 	 (del-time (mew-imap-get-delete pnm))
 	 (range (mew-imap-get-range pnm))
-	 (ctime (current-time))
+	 (ctime (mew-current-time))
 	 rtr rtrs dels uid siz uidl old-uidl uid-time hlds flags mdb)
     (if (eq directive 'inc)
 	(setq old-uidl (mew-net-uidl-db-get (mew-imap-passtag pnm))))
