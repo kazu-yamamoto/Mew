@@ -798,10 +798,7 @@ non-nil, only headers of messages are cached. If executed with
   (cond
    ((null t1) nil)
    ((null t2) t) ;; do update
-   ((> (nth 0 t1) (nth 0 t2)) t)
-   ((= (nth 0 t1) (nth 0 t2))
-    (if (> (nth 1 t1) (nth 1 t2)) t nil)) ;; nil if equal
-   (t nil)))
+   (t (time-less-p t2 t1))))
 
 (defun mew-summary-folder-dir-newp ()
   (let* ((folder (mew-summary-folder-name 'ext))
