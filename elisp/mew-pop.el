@@ -240,7 +240,7 @@
 	 (del-time (mew-pop-get-delete pnm))
 	 (bnm (mew-pop-get-bnm pnm))
 	 (range (mew-pop-get-range pnm))
-	 (ctime (current-time))
+	 (ctime (mew-current-time))
 	 (left 0)
 	 rtr rtrs dels num uid uidl old-uidl uid-time hlds)
     (cond

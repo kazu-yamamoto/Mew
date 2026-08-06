@@ -226,7 +226,7 @@
   (let* ((random (format "%08d" (mew-random)))
 	 (domain (mew-smtp-msgid-domain case))
 	 (user (mew-smtp-msgid-user case))
-	 (time (mew-time-ctz-to-msgid (current-time))))
+	 (time (mew-time-ctz-to-msgid (mew-current-time))))
     (concat "<" time "." random "." user "@" domain ">")))
 
 (defun mew-use-smtp-auth (&optional case)
@@ -374,7 +374,7 @@
   (let* ((random (format "%08d" (mew-random)))
 	 (domain (mew-nntp-msgid-domain case))
 	 (user (mew-nntp-msgid-user case))
-	 (time (mew-time-ctz-to-msgid (current-time))))
+	 (time (mew-time-ctz-to-msgid (mew-current-time))))
     (concat "<" time "." random "." user "@" domain ">")))
 ;;
 

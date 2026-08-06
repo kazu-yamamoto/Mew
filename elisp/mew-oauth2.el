@@ -201,7 +201,7 @@ It serves http://localhost:PORT"
 	 (access-token (gethash :access_token token))
 	 (refresh-token (gethash :refresh_token token)))
     (cond
-     ((and access-token (time-less-p (current-time) expire))
+     ((and access-token (time-less-p (mew-current-time) expire))
       access-token)
      (refresh-token
       (let* ((json (mew-oauth2-refresh-access-token
@@ -212,7 +212,7 @@ It serves http://localhost:PORT"
 	     (expires-in (gethash "expires_in" json))
 	     (refresh-token (gethash "refresh_token" json)))
 	(setq access-token (gethash "access_token" json))
-	(setq expire (if expires-in (time-add (- expires-in 100) (current-time)) nil))
+	(setq expire (if expires-in (time-add (- expires-in 100) (mew-current-time)) nil))
 	(puthash :access_token access-token token)
 	(if refresh-token (puthash :refresh_token refresh-token token))
 	(puthash :expire expire token)
@@ -237,7 +237,7 @@ It serves http://localhost:PORT"
 	     (expires-in (gethash "expires_in" json)))
 	(setq access-token (gethash "access_token" json))
 	(setq refresh-token (gethash "refresh_token" json))
-	(setq expire (if expires-in (time-add (- expires-in 100) (current-time)) nil))
+	(setq expire (if expires-in (time-add (- expires-in 100) (mew-current-time)) nil))
 	(puthash :access_token access-token token)
 	(puthash :refresh_token refresh-token token)
 	(puthash :expire expire token)

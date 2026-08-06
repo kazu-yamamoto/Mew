@@ -354,23 +354,23 @@ threads are created, see `mew-use-complete-thread'."
 	(setq db (mew-thread-create-db (count-lines beg end)))
 	;;
 	(message "Making thread (first pass)...")
-	(setq tm1 (current-time))
+	(setq tm1 (mew-current-time))
 	(setq top (mew-thread-pass-1 db (mew-thread-get-iter mark iter)))
-	(setq tm2 (current-time)))
+	(setq tm2 (mew-current-time)))
       ;;
       (if (null top)
 	  (message "No target messages")
 	(message "Making thread (second pass)...")
-	(setq tm3 (current-time))
+	(setq tm3 (mew-current-time))
 	(setq top (mew-thread-pass-2 db top))
-	(setq tm4 (current-time))
+	(setq tm4 (mew-current-time))
 	;;
 	(mew-summary-setup-vfolder db top column)
 	;;
 	(message "Displaying thread...")
-	(setq tm5 (current-time))
+	(setq tm5 (mew-current-time))
 	(mew-summary-thread-print-top (mew-vinfo-get-top) column)
-	(setq tm6 (current-time))
+	(setq tm6 (mew-current-time))
 	;;
 	(mew-thread-postscript mark disp-msg)	
 	;;

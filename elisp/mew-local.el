@@ -388,7 +388,7 @@ Binary search is used for speed reasons."
        (mew-remove-buffer buf)))))
 
 (defun mew-virtual-set-cache-time ()
-  (let* ((ctime (current-time))
+  (let* ((ctime (mew-current-time))
 	 (cache-time (list (nth 0 ctime) (nth 1 ctime))))
     (mew-sinfo-set-cache-time cache-time)))
 
