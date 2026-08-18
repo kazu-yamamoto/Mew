@@ -3945,6 +3945,10 @@ The followings are expiation of each search engines.
 `Google Desktop'
      Type `kM' just once. `km' is not necessary. Only `k/' is
      available.
+`Notmuch'
+     Type `kM' periodically. It's OK to execute "notmuch new" on the
+     command line instead. Only `k/' is available. The search pattern
+     given by '`k/' is passed directly to the "notmuch" command.
 
 The default search engine is automatically set to the one found first.
 If you explicitly specify it, set `mew-search-method' to one out of

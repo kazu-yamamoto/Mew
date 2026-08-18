@@ -17,6 +17,7 @@
 (defvar mew-prog-wds       "wdsgrep.exe")
 (defvar mew-prog-google    "gdgrep.rb")
 (defvar mew-prog-est       "estcmd")
+(defvar mew-prog-notmuch   "notmuch")
 
 (mew-defstruct search
 	       key name prog
@@ -46,7 +47,11 @@
 	 mew-est-index-folder mew-est-index-all
 	 mew-pick-canonicalize-pattern-est
 	 nil nil
-	 mew-est-input-filter)))
+	 mew-est-input-filter)
+    (notmuch "Notmuch" ,mew-prog-notmuch
+	 nil mew-search-virtual-with-notmuch
+	 mew-notmuch-index-folder mew-notmuch-index-all
+	 nilnil nil nil)))
 
 (defun mew-search-get-list (func)
   (let ((sw mew-search-switch)
@@ -632,6 +637,52 @@ with a search method."
 
 (defun mew-est-index-sentinel (_process _event)
   (save-excursion ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Notmuch
+;;;
+
+(if (and (boundp 'current-language-environment)
+	 (string-match "^\\(Japanese\\|Korean\\|Chinese\\)"
+		       current-language-environment))
+    (setenv "XAPIAN_CJK_NGRAM" "1"))
+
+(defun mew-search-notmuch (pattern _path)
+  "Perform call-process notmuch search --output=files PATTERN.
+Inserts the absolute paths of the found emails into the current buffer."
+  (setq pattern (mew-cs-encode-string pattern 'utf-8))
+  (let* ((ent (mew-search-get-ent mew-search-method))
+	 (prog (mew-search-get-prog ent)))
+    (mew-plet
+     (mew-alet
+      (call-process prog nil t nil
+		    "search"
+		    "--output=files"
+		    "--limit=1000"
+		    "--sort=oldest-first"
+		    pattern)))))
+
+(defun mew-search-virtual-with-notmuch (pattern _flds &optional _filter)
+  "Create a file listing the absolute paths of all found emails.
+Return the generated filename and match-count."
+  (let* ((file (mew-make-temp-name)) (rttl 0) crnt)
+    (mew-search-notmuch pattern nil)
+    (setq rttl (count-lines (point-min) (point-max)))
+    (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
+      (write-region (point-min) (point-max) file nil 'no-msg))
+    (list file rttl)))
+
+(defun mew-notmuch-index-folder (_folder)
+  "Perform notmuch new."
+  (mew-notmuch-index-all))
+
+(defun mew-notmuch-index-all ()
+  "Perform notmuch new."
+  (let* ((ent (mew-search-get-ent mew-search-method))
+	 (prog (mew-search-get-prog ent)))
+    (start-process prog nil prog "new")
+    (message "Notmuch indexing new messages in background...")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

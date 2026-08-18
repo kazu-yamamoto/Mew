@@ -3834,6 +3834,11 @@ File: mew.ja.info, Node: dbsearch, Next: keyword, Prev: condition, Up: Virtual
 `Google Desktop'
      一度だけ `kM' を実行する必要があります。`km' は必要ありません。
      `k/' のみが利用できます。
+`Notmuch'
+     定期的に `kM' を実行する必要があります。コマンドラインで、
+     "notmuch new" を実行しても構いません。`k/' のみが利用できます。
+     `k/' によって入力された検索パターンは、"notmuch" コマンドに
+     そのまま渡されます。
 
 検索エンジンの初期値は、最初に見つかった利用できるものに自動的に設定さ
 れます。明示的に指定したい場合は、
