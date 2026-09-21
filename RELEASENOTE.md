@@ -4,6 +4,9 @@ This is stable releases of Mew 6.11.
 
 ## Differences between Mew 6.11 and Mew 6.10
 
+* Mew now supports Emacs 27.1 or later only.  `mew-time-rfc-to-sortkey`
+  ignores the time zone on Emacs 26 because `encode-time` there does not
+  accept a single list argument.
 * Supporting coming Emacs 31.
 * Removing fallback code from the "submission" port to the "smtp" port.
 * `mew-smtp-port` is now defined as `"submission"` instead of `"smtp"`.

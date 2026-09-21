@@ -12,9 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # INSTALL.md says Mew supports Emacs 26.1 or later.
+        # INSTALL.md says Mew supports Emacs 27.1 or later.
         emacs-version:
-          - '26.3'
           - '27.2'
           - '28.2'
           - '29.4'
