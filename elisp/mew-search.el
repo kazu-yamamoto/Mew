@@ -666,7 +666,7 @@ Inserts the absolute paths of the found emails into the current buffer."
 (defun mew-search-virtual-with-notmuch (pattern _flds &optional _filter)
   "Create a file listing the absolute paths of all found emails.
 Return the generated filename and match-count."
-  (let* ((file (mew-make-temp-name)) (rttl 0) crnt)
+  (let* ((file (mew-make-temp-name)) (rttl 0))
     (mew-search-notmuch pattern nil)
     (setq rttl (count-lines (point-min) (point-max)))
     (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write

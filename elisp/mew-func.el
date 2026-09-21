@@ -407,9 +407,9 @@ Words are separated by '/' and '-'."
 SEPCHARs in double-quoted strings are ignored.
 If QUOTEDCHAR is provided, SEPCHARs between QOPEN and QCLOSE are
 also ignored."
-  (let ((qlevel 0) (len (length str)) (start 0) dblq sub ret c)
+  (let ((qlevel 0) (len (length str)) (start 0) (i 0) dblq sub ret c)
     (if (and qopen (not qclose)) (setq qclose qopen))
-    (dotimes (i len)
+    (while (< i len) ;; cannot use non-lexbind dotimes since Emacs 29 does not support it
       (setq c (aref str i))
       (cond
        ((char-equal ?\\ c)
@@ -426,7 +426,8 @@ also ignored."
 	  (unless no-single
 	    (setq sub (mew-remove-single-quote sub)))
 	  (setq ret (cons sub ret))
-	  (setq start (1+ i))))))
+	  (setq start (1+ i)))))
+      (setq i (1+ i)))
     (when (/= start len)
       (setq sub (substring str start))
       (unless no-single
