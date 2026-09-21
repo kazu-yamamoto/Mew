@@ -1,0 +1,39 @@
+name: test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # INSTALL.md says Mew supports Emacs 26.1 or later.
+        emacs-version:
+          - '26.3'
+          - '27.2'
+          - '28.2'
+          - '29.4'
+          - '30.1'
+          - 'snapshot'
+    name: Emacs ${{ matrix.emacs-version }}
+    continue-on-error: ${{ matrix.emacs-version == 'snapshot' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: purcell/setup-emacs@master
+        with:
+          version: ${{ matrix.emacs-version }}
+
+      - name: Show the Emacs version
+        run: emacs --version
+
+      - name: Byte-compile
+        run: make -C elisp EMACS=emacs
+
+      - name: Run the tests
+        run: make -C elisp test EMACS=emacs
