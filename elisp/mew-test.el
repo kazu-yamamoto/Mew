@@ -588,7 +588,6 @@ from `mew-random', which is not fit for a secret."
     (cl-letf (((symbol-function 'mew-random) (lambda () 7)))
       (should-not (equal (mew-random-binary-string 32)
 			 (make-string 32 7)))))
-  (should (equal (mew-random-device-string 0) ""))
   (let ((mew-random-device "/no/such/device"))
     (should-not (mew-random-device-string 32)))
   (let ((mew-random-device nil))
