@@ -478,8 +478,17 @@ the lower window is not zero, switch to the buffer."
   "Setting temporary directory for Mew.
 mew-temp-file must be local and readable for the user only
 for privacy/speed reasons."
-  (setq mew-temp-dir (make-temp-name mew-temp-file-initial))
-  (mew-make-directory mew-temp-dir)
+  ;; make-temp-file creates the directory itself, with mkdir and mode
+  ;; 700, and gives up a name which is already taken.  make-temp-name
+  ;; only makes up a name; between that and creating the directory
+  ;; someone else can put one there, and mew-make-directory then goes
+  ;; on using what they left.  Everything below is private: the parts
+  ;; of a decrypted message, and the plain text of the password file
+  ;; while gpg is encrypting it.
+  (let ((parent (mew-parent-directory mew-temp-file-initial)))
+    (unless (file-directory-p parent)
+      (mew-make-directory parent)))
+  (setq mew-temp-dir (make-temp-file mew-temp-file-initial t))
   (set-file-modes mew-temp-dir mew-folder-mode)
   (setq mew-temp-file (expand-file-name "mew" mew-temp-dir))
   (add-hook 'kill-emacs-hook 'mew-temp-dir-clean-up))

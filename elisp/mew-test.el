@@ -225,6 +225,58 @@ character."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew.el
+;;;
+
+(ert-deftest mew-test-temp-dir-init ()
+  "The temporary directory has to be new, empty and private."
+  (let* ((base (make-temp-file "mew-test-base" t))
+         (mew-temp-file-initial (expand-file-name "mew" base))
+         (mew-temp-dir nil)
+         (mew-temp-file nil)
+         first)
+    (unwind-protect
+        (progn
+          (mew-temp-dir-init)
+          (setq first mew-temp-dir)
+          (should (file-directory-p first))
+          (should (equal (file-modes first) mew-folder-mode))
+          (should (string-prefix-p mew-temp-file-initial first))
+          (should-not (directory-files first nil "\\`[^.]"))
+          (should (equal mew-temp-file (expand-file-name "mew" first)))
+          ;; A second call must not land on the first one.
+          (mew-temp-dir-init)
+          (should-not (equal mew-temp-dir first)))
+      (remove-hook 'kill-emacs-hook 'mew-temp-dir-clean-up)
+      (delete-directory base t))))
+
+(ert-deftest mew-test-temp-dir-init-does-not-reuse ()
+  "A directory which is already there must not be taken over.
+`make-temp-name' only makes up a name.  Between that and creating the
+directory someone else can put one there, and `mew-make-directory'
+would go on using it.  `make-temp-file' does the mkdir itself and
+gives up a name which is taken, which is what this pins down: with
+`make-temp-name' forced to hand out a name that exists, the result
+must still be a different directory."
+  (let* ((base (make-temp-file "mew-test-base" t))
+         (mew-temp-file-initial (expand-file-name "mew" base))
+         (squatted (concat mew-temp-file-initial "SQUATTED"))
+         (mew-temp-dir nil)
+         (mew-temp-file nil))
+    (unwind-protect
+        (progn
+          (make-directory squatted)
+          (set-file-modes squatted #o777)
+          (cl-letf (((symbol-function 'make-temp-name)
+                     (lambda (&rest _) squatted)))
+            (mew-temp-dir-init))
+          (should-not (equal mew-temp-dir squatted))
+          (should (equal (file-modes squatted) #o777)))
+      (remove-hook 'kill-emacs-hook 'mew-temp-dir-clean-up)
+      (delete-directory base t))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-decode.el
 ;;;
 
