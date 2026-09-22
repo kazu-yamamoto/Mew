@@ -82,10 +82,12 @@
 
 (defmacro mew-summary-multi-msgs (&rest body)
   "Collect messages marked with '*' and set their corresponding
-files to FILES."
+files to FILES.  FLD-MSG-LIST is bound as well, but only for a BODY
+which mentions it: binding it for one which does not is an unused
+variable once this file is compiled with lexical binding."
   (declare (debug (&rest form)))
   `(let* ((FLD-MSGS (mew-summary-mark-collect2 mew-mark-review))
-	  (FLD-MSG-LIST FLD-MSGS) ;; may be used in body
+	  ,@(if (mew-member* 'FLD-MSG-LIST body) '((FLD-MSG-LIST FLD-MSGS)))
 	  FILES) ;; may be used in body
      (cond
       ((null FLD-MSGS)

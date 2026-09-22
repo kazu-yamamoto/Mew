@@ -967,8 +967,9 @@ If case is \"default\", it is not prepended."
 ;; Functions to get other attributes are implemented in C level.
 
 (defun mew-file-get-links (file)
-  (let ((w32-get-true-file-link-count t)) ;; for Meadow
-    (nth 1 (file-attributes file))))
+  ;; There used to be a let of w32-get-true-file-link-count here, for
+  ;; Meadow.  No Emacs has that variable any more.
+  (nth 1 (file-attributes file)))
 
 (defun mew-file-get-time (file)
   (nth 5 (file-attributes file)))

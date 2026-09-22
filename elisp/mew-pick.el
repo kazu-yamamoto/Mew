@@ -499,8 +499,11 @@ If you want to change the stored keyword, execute this command with '\\[universa
     (mew-pick-lex-cut)
     (nreverse ret)))
 
-(defun mew-pick-parse (mew-inherit-pick-tokens)
-  (let (mew-inherit-pick-ret)
+(defun mew-pick-parse (tokens)
+  ;; mew-inherit-pick-tokens is what mew-pick-parse1 and the rest read
+  ;; and set, so it has to be bound dynamically here.
+  (let ((mew-inherit-pick-tokens tokens)
+	mew-inherit-pick-ret)
     (mew-pick-parse1)
     (nreverse mew-inherit-pick-ret)))
 
