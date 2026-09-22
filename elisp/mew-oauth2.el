@@ -69,6 +69,12 @@
 
 (defvar mew-oauth2-code nil)
 
+;; The redirect handler listens on localhost, so anything which can
+;; reach that port, a page in the browser for instance, can send us an
+;; authorization code of its own.  The state we generate here is what
+;; tells the real redirect from such an injection.  RFC 6749 10.12.
+(defvar mew-oauth2-state nil)
+
 (defun mew-oauth2-setup-redirect-handler (port)
   "Setup OAuth2 redirect server bound to PORT.
 It serves http://localhost:PORT"
@@ -100,18 +106,40 @@ It serves http://localhost:PORT"
 \"+\" stands for a space there, which `url-unhex-string' does not know."
   (url-unhex-string (subst-char-in-string ?+ ?\s str)))
 
+(defun mew-oauth2-query-get (request key)
+  "Return the decoded value of KEY in the query string of REQUEST."
+  (let ((regex (concat "[?&]" (regexp-quote key) "=\\([^& \r\n]+\\)")))
+    (if (string-match regex request)
+	(mew-oauth2-query-decode (match-string 1 request)))))
+
+(defun mew-oauth2-respond (proc status body)
+  (process-send-string
+   proc
+   (concat "HTTP/1.1 " status "\r\n"
+	   "Content-Type: text/plain\r\n"
+	   "\r\n"
+	   body))
+  (delete-process proc))
+
 (defun mew-oauth2-redirect-handler-filter (proc string)
-  (if (string-match "^GET .*[?&]code=\\([^& ]+\\)" string)
-      (let ((code (mew-oauth2-query-decode (match-string 1 string))))
-        (process-send-string
-         proc
-	 (concat "HTTP/1.1 200 OK\r\n"
-                 "Content-Type: text/plain\r\n"
-                 "\r\n"
-                 "Mew gets the following authorization code:\n"
-		 code "\n"))
-	(setq mew-oauth2-code code)
-	(delete-process proc))))
+  (when (string-match "^GET \\([^ \r\n]*\\)" string)
+    (let* ((request (mew-match-string 1 string))
+	   (code (mew-oauth2-query-get request "code"))
+	   (state (mew-oauth2-query-get request "state")))
+      (cond
+       ((null code)
+	()) ;; not the redirect we are waiting for
+       ((not (and (stringp mew-oauth2-state)
+		  (stringp state)
+		  (string= state mew-oauth2-state)))
+	(mew-oauth2-respond
+	 proc "400 Bad Request"
+	 "Mew did not ask for this authorization code.\n"))
+       (t
+	(mew-oauth2-respond
+	 proc "200 OK"
+	 (concat "Mew gets the following authorization code:\n" code "\n"))
+	(setq mew-oauth2-code code))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -119,6 +147,7 @@ It serves http://localhost:PORT"
 ;;;
 
 (defun mew-oauth2-get-auth-code (url client-id resource-url redirect-url challenge port)
+  (setq mew-oauth2-state (mew-oauth2-random-string))
   (let ((url-params
 	 (concat
 	  url
@@ -126,6 +155,7 @@ It serves http://localhost:PORT"
 	  "&client_id=" client-id
 	  "&scope=" (url-hexify-string resource-url)
 	  "&redirect_uri=" (url-hexify-string redirect-url)
+	  "&state=" mew-oauth2-state
 	  "&code_challenge=" challenge
 	  "&code_challenge_method=S256")))
     (mew-oauth2-cleanup-redirect-handler port)
@@ -157,6 +187,9 @@ client secret containing \"+\" or \"&\" would arrive mangled."
 
 (defun mew-oauth2-post (url params)
   "POST PARAMS to URL with curl and return the parsed JSON.
+PARAMS goes to curl through a file under `mew-temp-dir', created with
+mode 600, instead of on the command line, where \"ps\" would show the
+client secret and the tokens to everybody on the machine.
 Return nil if curl is missing or if the answer is not JSON, so that
 the caller can ask for a new authorization instead of sending a token
 which does not exist."
@@ -165,15 +198,24 @@ which does not exist."
     (message "%s does not exist" mew-prog-curl)
     nil)
    (t
-    (with-temp-buffer
-      (call-process mew-prog-curl nil t nil
-		    "-XPOST" url "--data" params "--silent")
-      (goto-char (point-min))
-      (condition-case nil
-	  (json-parse-buffer)
-	(error
-	 (message "OAuth2: the token server did not answer with JSON")
-	 nil))))))
+    (let ((file (mew-make-temp-name)))
+      (unwind-protect
+	  (progn
+	    (with-temp-buffer
+	      (insert params)
+	      (with-file-modes #o600
+		(mew-frwlet mew-cs-dummy mew-cs-binary
+		  (write-region (point-min) (point-max) file nil 'no-msg))))
+	    (with-temp-buffer
+	      (call-process mew-prog-curl nil t nil
+			    "-XPOST" url "--data" (concat "@" file) "--silent")
+	      (goto-char (point-min))
+	      (condition-case nil
+		  (json-parse-buffer)
+		(error
+		 (message "OAuth2: the token server did not answer with JSON")
+		 nil))))
+	(mew-delete-file file))))))
 
 (defun mew-oauth2-get-access-token (url client-id client-secret redirect-url code verifier)
   (mew-oauth2-post
@@ -311,6 +353,11 @@ that case, so that the refresh token is not thrown away."
 (defun mew-base64-url-without-padding-encode (str)
   (base64url-encode-string str t))
 
+;; base64url uses [-_A-Za-z0-9] only, so the result needs no escaping
+;; in a URL and comes back unchanged.
+(defun mew-oauth2-random-string ()
+  (mew-base64-url-without-padding-encode (mew-random-binary-string 32)))
+
 ;; RFC 7636 Appendix B
 
 ;; (setq rfc7636-random32 '(116 24 223 180 151 153 224 37 79 250 96 125 216 173 187 186 22 212 37 77 105 214 191 240 91 88 5 88 83 132 141 121))
@@ -318,7 +365,7 @@ that case, so that the refresh token is not thrown away."
 ;; 			(mew-numlist-to-string rfc7636-random32)))
 ;; "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"
 (defun mew-oauth2-pkce-code-verifier ()
-  (mew-base64-url-without-padding-encode (mew-random-binary-string 32)))
+  (mew-oauth2-random-string))
 ;; (>= (length (mew-oauth2-pkce-code-verifier)) 43)
 
 ;; (mew-oauth2-pkce-code-challenge rfc7636-verifier)
