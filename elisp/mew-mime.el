@@ -934,22 +934,64 @@ See `mew-mime-content-type' to know how actions can be defined."
 	(mew-decode-syntax-adjust-message part threshold inc)))
       (setq i (1+ i)))))
 
+(defvar mew-unzip-password nil
+  "Bound while unzip is running so that `mew-unzip-filter' can answer
+the prompt.  A process filter is handed nothing but the process and
+the output, so the password has to reach it through a variable.")
+
+(defvar mew-unzip-idle-max 600
+  "Give up if unzip says nothing for this many tenths of a second.")
+
+(defun mew-unzip-filter (process string)
+  (mew-filter
+   (goto-char (point-max))
+   (insert string)
+   (cond
+    ((string-match "incorrect" string)
+     ;; unzip asks again when the password is wrong.  Answering again
+     ;; only makes it ask once more, so give up here.  Otherwise it
+     ;; would sit on the pty waiting for an answer.
+     (setq mew-unzip-password nil)
+     (delete-process process))
+    ((and mew-unzip-password (string-match "password:" string))
+     (process-send-string process (concat mew-unzip-password "\n"))))))
+
+(defun mew-unzip-extracted-file ()
+  "Return the file name which unzip reported on its last line."
+  (goto-char (point-max))
+  (forward-line -1)
+  (beginning-of-line)
+  ;; "\r" has to be excluded because the output comes through a pty.
+  (if (looking-at "^ *[a-z]+: \\([^ \r\n]+\\)")
+      (mew-match-string 1)))
+
 (defun mew-unzip-file (buf beg end dir file)
   (let* ((zipfile (expand-file-name file dir))
 	 (encrypted (mew-zip-encrypted-p buf beg))
-	 (password (if encrypted (read-passwd "Zip password: ")))
-	 (args0 (list "-o" "-d" dir zipfile))
-	 (args (if password (cons "-P" (cons password args0)) args0)))
+	 (mew-unzip-password (if encrypted (read-passwd "Zip password: ")))
+	 ;; The password is answered to the prompt of unzip through a
+	 ;; pty.  "-P" would put it on the command line, where "ps"
+	 ;; shows it to everybody on the machine.
+	 (process-connection-type mew-connection-type2)
+	 (args (list "-o" "-d" dir zipfile))
+	 (idle 0)
+	 pro)
     (with-current-buffer buf
       (mew-frwlet mew-cs-dummy mew-cs-binary
 	(write-region beg end zipfile nil 'no-msg)))
     (with-temp-buffer
-      (apply 'call-process "unzip" nil t nil args)
-      (goto-char (point-max))
-      (forward-line -1)
-      (beginning-of-line)
-      (when (looking-at "^ *[a-z]+: \\([^ ]+\\)")
-	(mew-match-string 1)))))
+      (if (null mew-unzip-password)
+	  (apply 'call-process "unzip" nil t nil args)
+	(setq pro (apply 'start-process "unzip" (current-buffer) "unzip" args))
+	(mew-process-silent-exit pro)
+	(set-process-sentinel pro 'ignore) ;; no "Process unzip finished"
+	(set-process-filter pro 'mew-unzip-filter)
+	(while (and (process-live-p pro) (< idle mew-unzip-idle-max))
+	  (if (accept-process-output pro 0.1)
+	      (setq idle 0)
+	    (setq idle (1+ idle))))
+	(if (process-live-p pro) (delete-process pro)))
+      (mew-unzip-extracted-file))))
 
 (defun mew-zip-encrypted-p (buf beg)
   (with-current-buffer buf

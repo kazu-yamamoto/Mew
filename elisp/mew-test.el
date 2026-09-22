@@ -502,10 +502,82 @@ called at all, and the message shown to the user."
   (should (equal (mew-test-unzip-dispatch "application/zip" nil)
                  '(none . "No file name to unzip"))))
 
+(ert-deftest mew-test-unzip-extracted-file ()
+  "The file name is taken from the last line unzip printed.
+The output arrives through a pty now, so it ends with CR."
+  (with-temp-buffer
+    (insert "Archive:  /tmp/mew/a.zip\n"
+            "[/tmp/mew/a.zip] hello.txt password: \r\n"
+            " extracting: /tmp/mew/hello.txt\r\n")
+    (should (equal (mew-unzip-extracted-file) "/tmp/mew/hello.txt")))
+  (with-temp-buffer
+    (insert "Archive:  /tmp/mew/a.zip\n"
+            "  inflating: /tmp/mew/a b.txt   \n")
+    (should (equal (mew-unzip-extracted-file) "/tmp/mew/a")))
+  (with-temp-buffer
+    (insert "Archive:  /tmp/mew/a.zip\n"
+            "   skipping: hello.txt               unable to get password\n")
+    (should (equal (mew-unzip-extracted-file) "hello.txt"))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; mew-oauth2.el
 ;;;
+
+(ert-deftest mew-test-oauth2-query-get ()
+  "The value comes back decoded."
+  (let ((req "/?code=4%2F0Ab&state=xyz&scope=mail"))
+    (should (equal (mew-oauth2-query-get req "code") "4/0Ab"))
+    (should (equal (mew-oauth2-query-get req "state") "xyz"))
+    (should-not (mew-oauth2-query-get req "nosuch")))
+  ;; The key must not match a suffix of another key.
+  (should-not (mew-oauth2-query-get "/?scope=x" "ope")))
+
+(defun mew-test-oauth2-redirect (request)
+  "Feed REQUEST to `mew-oauth2-redirect-handler-filter'.
+Return a cons of `mew-oauth2-code' afterwards and the status line of
+the reply, or nil when nothing was replied."
+  (let ((sent nil))
+    (setq mew-oauth2-code nil)
+    (cl-letf (((symbol-function 'process-send-string)
+               (lambda (_proc str) (setq sent (car (split-string str "\r\n")))))
+              ((symbol-function 'delete-process) #'ignore))
+      (mew-oauth2-redirect-handler-filter nil request))
+    (cons mew-oauth2-code sent)))
+
+(ert-deftest mew-test-oauth2-state ()
+  "An authorization code without our state must be refused.
+The redirect handler listens on localhost, so a page in the browser
+could otherwise make Mew redeem a code of the attacker's choosing."
+  (let ((mew-oauth2-state "st4te"))
+    (should (equal (mew-test-oauth2-redirect
+                    "GET /?code=good&state=st4te HTTP/1.1\r\n")
+                   '("good" . "HTTP/1.1 200 OK")))
+    (should (equal (mew-test-oauth2-redirect
+                    "GET /?code=evil&state=other HTTP/1.1\r\n")
+                   '(nil . "HTTP/1.1 400 Bad Request")))
+    (should (equal (mew-test-oauth2-redirect
+                    "GET /?code=evil HTTP/1.1\r\n")
+                   '(nil . "HTTP/1.1 400 Bad Request")))
+    ;; Something which is not the redirect is left alone.
+    (should (equal (mew-test-oauth2-redirect "GET /favicon.ico HTTP/1.1\r\n")
+                   '(nil . nil))))
+  ;; No state of our own means we are not waiting for anything.
+  (let ((mew-oauth2-state nil))
+    (should (equal (mew-test-oauth2-redirect
+                    "GET /?code=evil&state=other HTTP/1.1\r\n")
+                   '(nil . "HTTP/1.1 400 Bad Request")))))
+
+(ert-deftest mew-test-oauth2-random-string ()
+  "The state and the PKCE verifier must use the whole byte range.
+\(% x 255) can never give 255, so one value out of 256 was missing."
+  (cl-letf (((symbol-function 'mew-random) (lambda () 255)))
+    (should (equal (mew-random-binary-string 2) (unibyte-string 255 255))))
+  (cl-letf (((symbol-function 'mew-random) (lambda () 256)))
+    (should (equal (mew-random-binary-string 2) (unibyte-string 0 0))))
+  (should (= (length (mew-random-binary-string 32)) 32))
+  (should (>= (length (mew-oauth2-random-string)) 43))
+  (should (string-match "\\`[-_A-Za-z0-9]+\\'" (mew-oauth2-random-string))))
 
 (ert-deftest mew-test-oauth2-params ()
   "Values have to be percent-encoded.

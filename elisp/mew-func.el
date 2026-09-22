@@ -1109,7 +1109,7 @@ and sets buffer-file-coding-system."
 (defun mew-random-binary-string (len)
   (let ((ret (mew-make-string len)))
     (dotimes (i len)
-      (aset ret i (% (mew-random) 255)))
+      (aset ret i (% (mew-random) 256)))
     ret))
 
 (defun mew-random-filename (dir len nump &optional suffix)
