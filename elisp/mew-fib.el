@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-fib.el --- Filling blanks for Mew
 
 ;; Author:  Mew developing team
