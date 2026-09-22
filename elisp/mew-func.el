@@ -1232,6 +1232,28 @@ and sets buffer-file-coding-system."
     (if disp (setenv "DISPLAY" disp))
     (apply 'start-process name buffer program program-args)))
 
+(defvar mew-process-password nil
+  "Bound while a program which asks for a password is running, so that
+its filter can answer.  A process filter is handed nothing but the
+process and the output, so the password has to reach it through a
+variable.  Answering the prompt keeps the password off the command
+line, where \"ps\" would show it to everybody on the machine.")
+
+(defvar mew-process-idle-max 600
+  "Give up on a program which says nothing for this many tenths of a
+second.  One which asks for a password sits on its pty for ever if
+nobody answers.")
+
+(defun mew-process-wait (pro)
+  "Wait for PRO to finish, or to fall silent for `mew-process-idle-max'.
+PRO is killed if it is still alive by then."
+  (let ((idle 0))
+    (while (and (process-live-p pro) (< idle mew-process-idle-max))
+      (if (accept-process-output pro 0.1)
+	  (setq idle 0)
+	(setq idle (1+ idle))))
+    (if (process-live-p pro) (delete-process pro))))
+
 (defvar mew-process-prior-locale-category "LC_ALL")
 (defvar mew-process-prior-locale-value
   (let ((case-fold-search t)

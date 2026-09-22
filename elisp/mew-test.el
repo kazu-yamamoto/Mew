@@ -1106,6 +1106,46 @@ and none of the checks in \"make detect\" reach it."
     ;; guard against looking at the wrong directory
     (should (> count 60))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-func.el: process
+;;;
+
+(ert-deftest mew-test-process-wait-idle ()
+  "A program which says nothing is killed rather than waited on for ever.
+unzip and zip ask for a password on a pty and sit there until someone
+answers."
+  (let* ((mew-process-idle-max 3) ;; 0.3 seconds
+	 (start (current-time))
+	 (pro (start-process "sleep" nil "sleep" "10")))
+    (unwind-protect
+	(progn
+	  (mew-process-wait pro)
+	  (should-not (process-live-p pro))
+	  (should (< (float-time (time-since start)) 5)))
+      (if (process-live-p pro) (delete-process pro)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-attach.el
+;;;
+
+(ert-deftest mew-test-zip-password-not-on-command-line ()
+  "The password is answered to the prompt of zip, never passed as an
+argument, where \"ps\" would show it to everybody on the machine."
+  (let (captured)
+    (cl-letf (((symbol-function 'start-process)
+	       (lambda (&rest args) (setq captured args) 'fake))
+	      ((symbol-function 'mew-process-silent-exit) #'ignore)
+	      ((symbol-function 'set-process-sentinel) #'ignore)
+	      ((symbol-function 'set-process-filter) #'ignore)
+	      ((symbol-function 'mew-process-wait) #'ignore))
+      (mew-zip-file "s3cret" "a.zip" "a.txt"))
+    ;; name, buffer, then the command and its arguments
+    (should (equal (cddr captured) (list mew-prog-zip "-e" "a.zip" "a.txt")))
+    (should-not (member "s3cret" captured))
+    (should-not (member "-P" captured))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
