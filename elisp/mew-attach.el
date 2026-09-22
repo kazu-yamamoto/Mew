@@ -639,6 +639,36 @@ is not effective other objects. For example, JPEG is already compressed."
 	(mew-syntax-set-cte syntax mew-xg)
 	(mew-encode-syntax-print mew-encode-syntax)))))
 
+(defun mew-zip-filter (process string)
+  (mew-filter
+   (goto-char (point-max))
+   (insert string)
+   ;; "Enter password: " and then "Verify password: ".  Mew has asked
+   ;; twice already, so the same answer goes to both.
+   (if (and mew-process-password (string-match "password:" string))
+       (process-send-string process (concat mew-process-password "\n")))))
+
+(defun mew-zip-file (password zname name)
+  "Make an encrypted zip of NAME called ZNAME with PASSWORD.
+The password is answered to the prompt of zip through a pty.  \"-P\"
+would put it on the command line, where \"ps\" shows it to everybody
+on the machine.  \"-e\" is what asks for it, and zip refuses to run
+with it unless it has a tty, hence the pty.
+
+Nothing is created if zip was built without encryption, or if PASSWORD
+is empty, which zip does not take.  The caller looks for the file to
+tell."
+  (let ((mew-process-password password)
+	(process-connection-type mew-connection-type2)
+	pro)
+    (with-temp-buffer
+      (setq pro (start-process "zip" (current-buffer)
+			       mew-prog-zip "-e" zname name))
+      (mew-process-silent-exit pro)
+      (set-process-sentinel pro 'ignore) ;; no "Process zip finished"
+      (set-process-filter pro 'mew-zip-filter)
+      (mew-process-wait pro))))
+
 (defun mew-attach-zip ()
   "Put the `Z' mark and encrypt it with \"zip\" in attachments."
   (interactive)
@@ -665,9 +695,7 @@ is not effective other objects. For example, JPEG is already compressed."
 		     (zfullname (concat fullname ".zip"))
 		     (zct "application/zip")
 		     (default-directory (file-name-directory fullname)))
-		;; must not specify the "-e" option due to
-		;; variety of zip versions.
-		(call-process mew-prog-zip nil nil nil "-P" password zname name)
+		(mew-zip-file password zname name)
 		(if (not (file-exists-p zfullname))
                     (if (string= password "")
                         (message "\"zip\" does not allow zero length password")
