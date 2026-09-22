@@ -60,8 +60,8 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   '(("+language=en" "+batchmode=off")
     ("+language=en" "+batchmode=off")
     ("+language=en" "+batchmode=off")
-    ("--decrypt")
-    ("--decrypt")))
+    ("--decrypt" "--status-fd" "1")
+    ("--decrypt" "--status-fd" "1")))
 
 (defvar mew-prog-pgps-arg ;; local binding
   '(("-sba" "+language=en" "+batchmode=off")
@@ -74,8 +74,8 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   '(("+batchmode=on" "+language=en")
     ("+batchmode=on" "+language=en" "+force=on")
     ("+batchmode=on" "+language=en")
-    ("--verify" "--batch")
-    ("--verify" "--batch")))
+    ("--verify" "--batch" "--status-fd" "1")
+    ("--verify" "--batch" "--status-fd" "1")))
 
 (defconst mew-prog-old-pgpv-arg
   '(("+batchmode=on" "+language=en")
@@ -336,7 +336,8 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 ;;; PGP verifying
 ;;;
 
-(defun mew-pgp-verify-check ()
+(defun mew-pgp-verify-check-text ()
+  ;; Used for PGP 2, 5 and 6, which have no status output.
   (let (ret keyid)
     (goto-char (point-min))
     (if (not (re-search-forward (mew-pgp-get mew-pgp-msg-signature) nil t))
@@ -391,6 +392,77 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 	      (setq ret (concat ret " COMPLETE")))))))
     ret))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Reading the status output of GnuPG
+;;;
+
+;; GnuPG says not to parse what it prints for people: the wording
+;; changes between versions and part of it, the user id, comes from
+;; the key of whoever signed the message.  "--status-fd" is the
+;; interface meant for programs.  See "Format of the --status-fd
+;; output" in doc/DETAILS of the GnuPG distribution.
+
+(defconst mew-pgp-status-regex
+  ;; The output of a decryption comes through a pty, hence the CR.
+  "^\\[GNUPG:\\] \\([A-Z_]+\\)\\(?: \\([^\r\n]*\\)\\)?\r?$")
+
+(defun mew-pgp-gnupg-p ()
+  (memq mew-pgp-ver (list mew-pgp-verg mew-pgp-verg2)))
+
+(defun mew-pgp-status-get (key)
+  "Return the arguments of the first KEY line, \"\" if it has none.
+Return nil if there is no such line."
+  (save-excursion
+    (goto-char (point-min))
+    (catch 'found
+      (while (re-search-forward mew-pgp-status-regex nil t)
+	(if (string= (mew-match-string 1) key)
+	    (throw 'found (or (mew-match-string 2) "")))))))
+
+(defun mew-pgp-status-uid (args)
+  "Take the user id out of ARGS of a GOODSIG or BADSIG line.
+The key id comes first, then the user id."
+  (if (string-match "\\`[0-9A-Fa-f]+ \\(.*\\)\\'" args)
+      (concat "\"" (mew-match-string 1 args) "\"")
+    (concat "\"" args "\"")))
+
+(defun mew-pgp-status-trust ()
+  (cond
+   ((mew-pgp-status-get "TRUST_ULTIMATE")  " COMPLETE")
+   ((mew-pgp-status-get "TRUST_FULLY")     " COMPLETE")
+   ((mew-pgp-status-get "TRUST_MARGINAL")  " MARGINAL")
+   ((mew-pgp-status-get "TRUST_NEVER")     " UNTRUSTED")
+   ((mew-pgp-status-get "TRUST_UNDEFINED") " UNDEFINED")
+   (t "")))
+
+(defun mew-pgp-verify-check-status ()
+  "Read the result of a verification out of the status output.
+Return nil when the output says nothing about a signature, which is
+what happens for a message which is encrypted but not signed."
+  (let (args)
+    (cond
+     ((setq args (mew-pgp-status-get "GOODSIG"))
+      (concat "Good PGP sign " (mew-pgp-status-uid args) (mew-pgp-status-trust)))
+     ((setq args (mew-pgp-status-get "EXPKEYSIG"))
+      (concat "Good PGP sign " (mew-pgp-status-uid args) " EXPIRED"))
+     ((setq args (mew-pgp-status-get "REVKEYSIG"))
+      (concat "Good PGP sign " (mew-pgp-status-uid args) " REVOKED"))
+     ((setq args (mew-pgp-status-get "EXPSIG"))
+      (concat "Good PGP sign " (mew-pgp-status-uid args) " EXPIRED"))
+     ((setq args (mew-pgp-status-get "BADSIG"))
+      (concat "BAD PGP sign " (mew-pgp-status-uid args)))
+     ((setq args (mew-pgp-status-get "NO_PUBKEY"))
+      (concat mew-pgp-result-pubkey ": ID = 0x" args))
+     ((mew-pgp-status-get "ERRSIG")
+      mew-pgp-result-other)
+     (t nil))))
+
+(defun mew-pgp-verify-check ()
+  (if (mew-pgp-gnupg-p)
+      (mew-pgp-verify-check-status)
+    (mew-pgp-verify-check-text)))
+
 (defun mew-pgp-verify (file1 file2)
   (message "PGP verifying...")
   (let ((ioption (mew-pgp-get mew-prog-pgp-arg-input)) ;; detached signature
@@ -401,7 +473,11 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
       (if ioption
 	  (setq files (list ioption file1 file2))
 	(setq files (list file2 file1)))
-      (apply 'mew-call-process-lang pgpv nil t nil (append voptions files))
+      ;; Only the standard output, which carries the status lines, is
+      ;; kept.  What GnuPG writes for people is dropped so that it
+      ;; cannot be taken for a status line.
+      (apply 'mew-call-process-lang pgpv nil (list t nil) nil
+	     (append voptions files))
       (setq ret (mew-pgp-verify-check)))
     (message "PGP verifying...done")
     ret))
