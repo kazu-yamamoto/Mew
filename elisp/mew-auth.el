@@ -40,18 +40,32 @@
 ;; (mew-hmac-md5 "what do ya want for nothing?" "Jefe")
 ;; -> 0x750c783e6ab0b503eaa86e310a5db738
 
+(defun mew-string-to-octets (str)
+  "Convert STR into a unibyte string of octets.
+MD5 and HMAC are defined on octets, so a multibyte string has to be
+encoded first.  UTF-8 is used because SASL says so."
+  (if (mew-multibyte-string-p str)
+      (mew-cs-encode-string str 'utf-8)
+    str))
+
 (defun mew-hmac-md5 (message key)
   "HMAC-MD5 defined in RFC 2104"
-  (let* ((keylen (length key))
-	 (ipad 54) ;; 0x36
+  (let* ((ipad 54) ;; 0x36
 	 (opad 92) ;; 0x5c
-	 (ikey (make-string 64 0))
-	 okey digest)
-    (when (< keylen 64)
-      (dotimes (i keylen)
-	(aset ikey i (aref key i))))
+	 (blocksize 64) ;; B in RFC 2104
+	 (ikey (make-string blocksize 0))
+	 keylen okey digest)
+    (setq message (mew-string-to-octets message))
+    (setq key (mew-string-to-octets key))
+    ;; RFC 2104 says that a key longer than the block size is
+    ;; hashed first.
+    (if (> (length key) blocksize)
+	(setq key (mew-md5-raw key)))
+    (setq keylen (length key))
+    (dotimes (i keylen)
+      (aset ikey i (aref key i)))
     (setq okey (copy-sequence ikey))
-    (dotimes (i 64)
+    (dotimes (i blocksize)
       (aset ikey i (logxor (aref ikey i) ipad))
       (aset okey i (logxor (aref okey i) opad)))
     (setq digest (mew-md5-raw (concat ikey message)))
