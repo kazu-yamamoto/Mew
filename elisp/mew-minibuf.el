@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-minibuf.el --- Minibuffer input methods for Mew
 
 ;; Author:  Mew developing team
