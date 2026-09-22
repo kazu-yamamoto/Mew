@@ -20,6 +20,11 @@
 ;;; Listing directories
 ;;;
 
+;; Defined in mew-unix.el, mew-darwin.el or mew-win32.el, whichever
+;; mew-init requires.  That happens at run time, so say here that the
+;; name is a variable.
+(defvar mew-dir-list-function)
+
 (defun mew-dir-list (dir)
   (if (file-directory-p (expand-file-name dir))
       (funcall mew-dir-list-function dir)

@@ -133,17 +133,26 @@ install-elisp: $(OBJS)
 
 ################################################################
 
+# Compile everything and refuse to let a warning pass.  This used to
+# force lexical-binding on, back when the files still said nil; they
+# all say t now, so there is nothing left to force and the job of this
+# target is to keep the build silent.
 .PHONY: detect
 detect: $(TEMPFILE2) mew.el
-	@echo 'Compiling EL files of Mew ... '
+	@echo 'Detecting warnings in EL files of Mew ... '
 	$(DETECT) -batch -q -no-site-file -l ./$(TEMPFILE2) -f mew-compile
-	@echo 'Compiling EL files of Mew ... done'
+	@echo 'Detecting warnings in EL files of Mew ... done'
 
-$(TEMPFILE2):
-	@echo '(setq mew-compiling t)' > $(TEMPFILE2)
+$(TEMPFILE2): $(SRCS)
+	@echo ';;; -*- lexical-binding: t; -*-' > $(TEMPFILE2)
+	@echo '(setq mew-compiling t)' >> $(TEMPFILE2)
 	@echo '(setq load-path (cons "." load-path))' >> $(TEMPFILE2)
-	@echo '(setq hack-local-variables-hook (lambda () (setq lexical-binding t)))' >> $(TEMPFILE2)
-	@echo "(defun mew-compile () (mapcar (lambda (x) (byte-compile-file (symbol-name x))) '($(SRCS))))" >> $(TEMPFILE2)
+	@echo '(setq byte-compile-error-on-warn t)' >> $(TEMPFILE2)
+	@echo "(defun mew-compile ()" >> $(TEMPFILE2)
+	@echo "  (let ((ok t))" >> $(TEMPFILE2)
+	@echo "    (dolist (x '($(SRCS)))" >> $(TEMPFILE2)
+	@echo "      (unless (byte-compile-file (symbol-name x)) (setq ok nil)))" >> $(TEMPFILE2)
+	@echo "    (unless ok (kill-emacs 1))))" >> $(TEMPFILE2)
 
 ################################################################
 

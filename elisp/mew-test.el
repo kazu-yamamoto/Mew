@@ -1009,6 +1009,31 @@ stay dynamic."
 	(should (fboundp f))
 	(should (equal (funcall f) (concat "<" a ">")))))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; The tree itself
+;;;
+
+(ert-deftest mew-test-lexical-binding-cookie ()
+  "Every file of Mew says lexical-binding: t on its first line.
+A file that says nil, or says nothing, compiles under dynamic binding
+and none of the checks in \"make detect\" reach it."
+  (let ((dir (file-name-directory (locate-library "mew-func")))
+	(count 0)
+	offenders)
+    (dolist (file (directory-files dir t "\\`mew.*\\.el\\'"))
+      (setq count (1+ count))
+      (with-temp-buffer
+	(insert-file-contents file nil 0 200)
+	(goto-char (point-min))
+	(unless (string-match-p
+		 "lexical-binding: t"
+		 (buffer-substring (point-min) (line-end-position)))
+	  (push (file-name-nondirectory file) offenders))))
+    (should-not offenders)
+    ;; guard against looking at the wrong directory
+    (should (> count 60))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
