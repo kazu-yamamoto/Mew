@@ -168,7 +168,7 @@
     mew-prog-mspowerpoint           mew-icon-text)
    ("application/vnd.ms-powerpoint.presentation.macroEnabled.12" "\\.pptm$" mew-b64
     mew-prog-mspowerpoint           mew-icon-text)
-   ("application/vnd.ms-powerpoint.presentation.macroEnabled.12" "\\.potm$" mew-b64
+   ("application/vnd.ms-powerpoint.template.macroEnabled.12" "\\.potm$" mew-b64
     mew-prog-mspowerpoint           mew-icon-text)
    ("application/vnd.ms-powerpoint.slideshow.macroEnabled.12" "\\.ppsm$" mew-b64
     mew-prog-mspowerpoint           mew-icon-text)
