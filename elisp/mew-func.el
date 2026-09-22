@@ -383,7 +383,8 @@ Words are separated by '/' and '-'."
 	(setq ret (cons (substring str start) ret)))
     (nreverse ret)))
 
-(if (>= emacs-major-version 31)
+;; string-replace came in with Emacs 28.1.
+(if (>= emacs-major-version 28)
     (defun mew-remove-single-quote (str)
       (string-replace "'" "" str))
   (defun mew-remove-single-quote (str)
@@ -1522,7 +1523,13 @@ by side-effect."
 
 (defalias 'mew-set-buffer-multibyte 'set-buffer-multibyte)
 
-(defalias 'mew-set-string-multibyte 'string-as-multibyte)
+(defun mew-set-string-multibyte (str)
+  "Read the bytes of STR as Emacs's own multibyte representation.
+A string which is multibyte already comes back as it is.  This is
+what the obsolete `string-as-multibyte' did."
+  (if (multibyte-string-p str)
+      str
+    (decode-coding-string str 'utf-8-emacs)))
 
 (defalias 'mew-multibyte-string-p 'multibyte-string-p)
 
