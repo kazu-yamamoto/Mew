@@ -220,36 +220,34 @@
 				    katakana-jisx0201
 				    unicode))
 
-(if (fboundp 'set-charset-priority)
-    (defun mew-find-cs-region (beg end)
-      (let ((charset-list (charset-priority-list))
-	    ret)
-	(catch 'find
-	  (set-charset-priority 'latin-iso8859-1)
-	  (setq ret (find-charset-region beg end))
-	  (if (equal ret '(ascii latin-iso8859-1))
-	      (throw 'find nil))
-	  ;;
-	  (set-charset-priority 'latin-iso8859-15)
-	  (setq ret (find-charset-region beg end))
-	  (if (equal ret '(ascii latin-iso8859-15))
-	      (throw 'find nil))
-	  ;;
-	  (set-charset-priority 'cyrillic-iso8859-5)
-	  (setq ret (find-charset-region beg end))
-	  (if (equal ret '(ascii cyrillic-iso8859-5))
-	      (throw 'find nil))
-	  ;;
-	  (set-charset-priority 'greek-iso8859-7)
-	  (setq ret (find-charset-region beg end))
-	  (if (equal ret '(ascii greek-iso8859-7))
-	      (throw 'find nil))
-	  ;;
-	  (apply 'set-charset-priority mew-charset-priority-list)
-	  (setq ret (find-charset-region beg end)))
-	(apply 'set-charset-priority charset-list)
-	ret))
-  (defalias 'mew-find-cs-region 'find-charset-region))
+(defun mew-find-cs-region (beg end)
+  (let ((charset-list (charset-priority-list))
+	ret)
+    (catch 'find
+      (set-charset-priority 'latin-iso8859-1)
+      (setq ret (find-charset-region beg end))
+      (if (equal ret '(ascii latin-iso8859-1))
+	  (throw 'find nil))
+      ;;
+      (set-charset-priority 'latin-iso8859-15)
+      (setq ret (find-charset-region beg end))
+      (if (equal ret '(ascii latin-iso8859-15))
+	  (throw 'find nil))
+      ;;
+      (set-charset-priority 'cyrillic-iso8859-5)
+      (setq ret (find-charset-region beg end))
+      (if (equal ret '(ascii cyrillic-iso8859-5))
+	  (throw 'find nil))
+      ;;
+      (set-charset-priority 'greek-iso8859-7)
+      (setq ret (find-charset-region beg end))
+      (if (equal ret '(ascii greek-iso8859-7))
+	  (throw 'find nil))
+      ;;
+      (apply 'set-charset-priority mew-charset-priority-list)
+      (setq ret (find-charset-region beg end)))
+    (apply 'set-charset-priority charset-list)
+    ret))
 
 ;; to internal
 (defun mew-cs-decode-region (beg end cs)

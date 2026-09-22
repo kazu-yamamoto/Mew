@@ -70,8 +70,29 @@ character."
   (should (equal (mew-quote-string "ab" ?\\ '(?\")) "ab")))
 
 (ert-deftest mew-test-remove-single-quote ()
+  "Both branches are covered: `string-replace' from Emacs 28.1, and
+the loop before it, which the oldest Emacs of the CI matrix runs."
   (should (equal (mew-remove-single-quote "'a'b'") "ab"))
-  (should (equal (mew-remove-single-quote "ab") "ab")))
+  (should (equal (mew-remove-single-quote "ab") "ab"))
+  (should (equal (mew-remove-single-quote "") ""))
+  (should (equal (mew-remove-single-quote "'''") ""))
+  (should (equal (mew-remove-single-quote "'日'本'") "日本")))
+
+(ert-deftest mew-test-set-string-multibyte ()
+  "The bytes of a unibyte string are read as Emacs's own encoding.
+This is what the obsolete `string-as-multibyte' did."
+  ;; Already multibyte: unchanged.
+  (should (equal (mew-set-string-multibyte "日本語") "日本語"))
+  ;; The utf-8 bytes of a string are read back into it.
+  (should (equal (mew-set-string-multibyte
+                  (encode-coding-string "日本語" 'utf-8))
+                 "日本語"))
+  (should (equal (mew-set-string-multibyte (unibyte-string 226 128 148)) "—"))
+  ;; A byte which is not valid utf-8 stays one byte instead of signalling.
+  (let ((raw (mew-set-string-multibyte (unibyte-string 233 233))))
+    (should (multibyte-string-p raw))
+    (should (= (length raw) 2)))
+  (should (equal (mew-set-string-multibyte "") "")))
 
 (ert-deftest mew-test-replace-white-space ()
   (should (equal (mew-replace-white-space "a \t\n  b") "a b"))
@@ -697,16 +718,19 @@ compatibility code of mew-env.el belongs here."
                base64-encode-region
                called-interactively-p
                characterp
+               charset-priority-list
                coding-system-p
                create-image
                face-all-attributes
                fill-match-adaptive-prefix
+               find-charset-region
                make-symbolic-link
                match-string-no-properties
                minibuffer-prompt-end
                multibyte-string-p
                run-mode-hooks
                set-buffer-multibyte
+               set-charset-priority
                set-coding-system-priority
                set-file-times
                set-process-query-on-exit-flag
