@@ -569,15 +569,41 @@ could otherwise make Mew redeem a code of the attacker's choosing."
                    '(nil . "HTTP/1.1 400 Bad Request")))))
 
 (ert-deftest mew-test-oauth2-random-string ()
-  "The state and the PKCE verifier must use the whole byte range.
-\(% x 255) can never give 255, so one value out of 256 was missing."
-  (cl-letf (((symbol-function 'mew-random) (lambda () 255)))
-    (should (equal (mew-random-binary-string 2) (unibyte-string 255 255))))
-  (cl-letf (((symbol-function 'mew-random) (lambda () 256)))
-    (should (equal (mew-random-binary-string 2) (unibyte-string 0 0))))
-  (should (= (length (mew-random-binary-string 32)) 32))
+  (let ((str (mew-random-binary-string 32)))
+    (should (= (length str) 32))
+    (should-not (multibyte-string-p str)))
+  (should-not (equal (mew-random-binary-string 32) (mew-random-binary-string 32)))
   (should (>= (length (mew-oauth2-random-string)) 43))
   (should (string-match "\\`[-_A-Za-z0-9]+\\'" (mew-oauth2-random-string))))
+
+(ert-deftest mew-test-random-device ()
+  "The state and the PKCE verifier come from the random device, not
+from `mew-random', which is not fit for a secret."
+  (when (mew-random-device-string 1) ;; a system which has one
+    (let ((str (mew-random-device-string 32)))
+      (should (= (length str) 32))
+      (should-not (multibyte-string-p str))
+      (should-not (equal str (mew-random-device-string 32))))
+    ;; mew-random is not consulted at all while the device answers
+    (cl-letf (((symbol-function 'mew-random) (lambda () 7)))
+      (should-not (equal (mew-random-binary-string 32)
+			 (make-string 32 7)))))
+  (should (equal (mew-random-device-string 0) ""))
+  (let ((mew-random-device "/no/such/device"))
+    (should-not (mew-random-device-string 32)))
+  (let ((mew-random-device nil))
+    (should-not (mew-random-device-string 32))))
+
+(ert-deftest mew-test-random-fallback ()
+  "Without a device `mew-random' provides the bytes, and it has to use
+the whole range.  (% x 255) can never give 255, so one value out of
+256 was missing."
+  (let ((mew-random-device nil))
+    (cl-letf (((symbol-function 'mew-random) (lambda () 255)))
+      (should (equal (mew-random-binary-string 2) (unibyte-string 255 255))))
+    (cl-letf (((symbol-function 'mew-random) (lambda () 256)))
+      (should (equal (mew-random-binary-string 2) (unibyte-string 0 0))))
+    (should (= (length (mew-random-binary-string 32)) 32))))
 
 (ert-deftest mew-test-oauth2-params ()
   "Values have to be percent-encoded.
