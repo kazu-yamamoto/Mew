@@ -14,11 +14,8 @@
   (mew-no-warning-defun charset-priority-list))
 
 ;; must be here
-(if (fboundp 'find-coding-system)
-    (defun mew-coding-system-p (cs)
-      (if (null cs) t (find-coding-system cs)))
-  (defun mew-coding-system-p (cs)
-    (if (null cs) t (coding-system-p cs))))
+(defun mew-coding-system-p (cs)
+  (if (null cs) t (coding-system-p cs)))
 
 ;; In the context of Mew, 'charset' means MIME charset.
 ;; 'cs' means the internal representation of Emacs (was known as Mule).
@@ -378,8 +375,6 @@
     (dolist (pri priority)
       (set (car rest-ctgs) pri)
       (setq rest-ctgs (cdr rest-ctgs)))
-    (if (fboundp 'update-coding-systems-internal)
-	(update-coding-systems-internal))
     (mew-set-coding-priority categories)))
 
 (defun mew-set-language-environment-coding-systems (language-name)

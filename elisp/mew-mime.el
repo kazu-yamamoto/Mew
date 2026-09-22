@@ -533,12 +533,6 @@
 
 (defun mew-mime-application/msoffice (prog cache begin end &optional _parameter)
   (let ((doit t) file1 file2)
-    (unless mew-internal-utf-8p
-      (condition-case nil
-	  (require 'un-define)
-	(file-error
-	 (setq doit nil)
-	 (insert "To display this, install Mule-UCS for UTF-8.\n"))))
     (unless (mew-which-exec prog)
       (setq doit nil)
       (insert "To display this, install \"" prog "\".\n"))

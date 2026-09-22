@@ -540,10 +540,7 @@
 ;;;
 
 (unless mew-input-map
-  (setq mew-input-map
-	(if (boundp 'minibuffer-local-map)
-	    (copy-keymap minibuffer-local-map)
-	  (make-sparse-keymap)))
+  (setq mew-input-map (copy-keymap minibuffer-local-map))
   (define-key mew-input-map "\r"     'mew-input-exit-minibuffer)
   (define-key mew-input-map "\n"     'mew-input-exit-minibuffer)
   (define-key mew-input-map ","      'mew-input-comma)

@@ -173,13 +173,9 @@ CONTINUE, YANK-ACTION and SEND-ACTIONS are ignored."
     (condition-case nil
 	(progn
 	  ;; sanity check
-	  (cond
-	   ((featurep 'xemacs)
-	    (setq error-message "Not support XEmacs\n")
+	  (when (< emacs-major-version 27)
+	    (setq error-message "Mew supports Emacs 27.1 or later only\n")
 	    (error ""))
-	   ((string-match "^\\(18\\|19\\|20\\)" emacs-version)
-	    (setq error-message "Not support Emacs 18/19/20 nor Mule 1\n")
-	    (error "")))
 	  ;; initializing
 	  (or no-dir (mew-buffers-init))
 	  (or no-dir (mew-temp-dir-init))
