@@ -10,6 +10,40 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; Multiple set
+;;;
+
+;; This is a macro, and it is here at the top because a macro has to
+;; be known before the first use in this file.
+;;
+;; It used to be a function which assigned with "set".  "set" reaches
+;; the value of the symbol itself, which under dynamic binding is the
+;; binding the caller made, and under lexical binding is not: the
+;; caller's local variable is left alone and the value goes nowhere.
+;; Nothing says so, because the symbol is only known at run time.
+;;
+;; Expanding to setq instead means the variables stay ordinary local
+;; ones, with no need to declare any of them special, and a caller
+;; which forgot to bind one is reported as an assignment to a free
+;; variable.
+
+(defmacro mew-set (vars vals)
+  "Set each variable of VARS to the corresponding value of VALS.
+VARS is a quoted list of symbols.  A nil in it skips a value."
+  (unless (eq (car-safe vars) 'quote)
+    (error "VARS of mew-set must be a quoted list"))
+  (let ((tmp (make-symbol "vals"))
+	(i -1)
+	forms)
+    (dolist (var (cadr vars))
+      (setq i (1+ i))
+      (if var (push `(setq ,var (nth ,i ,tmp)) forms)))
+    `(let ((,tmp ,vals))
+       ,@(nreverse forms)
+       nil)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; Mode
 ;;;
 
@@ -1586,16 +1620,6 @@ what the obsolete `string-as-multibyte' did."
 
 (defun mew-timing ()
   (sit-for 0.01))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Multiple set
-;;;
-
-(defun mew-set (vars vals)
-  (dolist (var vars)
-    (if var (set var (car vals))) ;; var can be nil to skip
-    (setq vals (cdr vals))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

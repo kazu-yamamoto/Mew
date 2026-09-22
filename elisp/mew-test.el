@@ -124,6 +124,28 @@ This is what the obsolete `string-as-multibyte' did."
   (should (equal (mew-assoc-case-equal "B" '(("a" 1) ("b" 2)) 0) '("b" 2)))
   (should-not (mew-assoc-case-equal "c" '(("a" 1) ("b" 2)) 0)))
 
+(ert-deftest mew-test-set ()
+  "The variables have to be the caller's own.
+This file is compiled with lexical binding, so a `mew-set' which
+assigns with `set' reaches the global value of the symbol and leaves
+the local variables below alone."
+  (let (a b c)
+    (mew-set '(a b c) '(1 2 3))
+    (should (equal (list a b c) '(1 2 3))))
+  ;; nil in VARS skips a value.
+  (let (a c)
+    (mew-set '(a nil c) '(1 2 3))
+    (should (equal (list a c) '(1 3))))
+  ;; Fewer values than variables: the rest are nil.
+  (let ((a 'x) (b 'y))
+    (mew-set '(a b) '(1))
+    (should (equal (list a b) '(1 nil))))
+  ;; VALS is evaluated once, as it was when this was a function.
+  (let ((n 0) a b)
+    (mew-set '(a b) (progn (setq n (1+ n)) '(1 2)))
+    (should (= n 1))
+    (should (equal (list a b) '(1 2)))))
+
 (ert-deftest mew-test-join ()
   (should (equal (mew-join "," '("a" "b" "c")) "a,b,c"))
   (should (equal (mew-join "," nil) "")))
