@@ -768,6 +768,29 @@ file is compiled with lexical binding."
   (should (equal (mew-net-msg-pack '("1")) '("1")))
   (should-not (mew-net-msg-pack nil)))
 
+(ert-deftest mew-test-net-msg-cat ()
+  ;; note that mew-net-msg-cat destroys its argument with setcdr,
+  ;; so each call needs a fresh list
+  (should (equal (mew-net-msg-cat (mapcar #'number-to-string
+					  (number-sequence 1 23)))
+		 '("1,2,3,4,5,6,7,8,9,10"
+		   "11,12,13,14,15,16,17,18,19,20"
+		   "21,22,23")))
+  (should-not (mew-net-msg-cat nil))
+  ;; a single message is passed through, a run becomes a range
+  (should (equal (mew-net-msg-group '("9")) '("9")))
+  (should (equal (mew-net-msg-group (mapcar #'number-to-string
+					    (number-sequence 1 23)))
+		 '("1:23"))))
+
+(ert-deftest mew-test-imap-mailbox-arrange ()
+  "A mailbox with children gets the separator appended."
+  (let ((lst (list (list "inbox") (list "inbox/sub")
+		   (list "work") (list "work/a") (list "zz"))))
+    (mew-imap-mailbox-arrange lst "/")
+    (should (equal lst '(("inbox/") ("inbox/sub")
+			 ("work/") ("work/a") ("zz"))))))
+
 (ert-deftest mew-test-serv-to-port ()
   (should (equal (mew-serv-to-port "imaps") 993))
   (should (equal (mew-serv-to-port "587") 587))
