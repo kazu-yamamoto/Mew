@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-scan.el --- Scanning messages for Mew
 
 ;; Author:  Mew developing team
