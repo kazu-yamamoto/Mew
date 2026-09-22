@@ -297,19 +297,51 @@ called at all, and the message shown to the user."
   (should (equal (mew-test-unzip-dispatch "application/zip" nil)
                  '(none . "No file name to unzip"))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-auth.el
 ;;;
 
-;; Note: RFC 2202 also defines cases whose key is longer than 64 bytes.
-;; They are not tested here because mew-hmac-md5 does not hash such a
-;; key first, as RFC 2104 requires.
+(defun mew-test-bytes (n byte)
+  "Return a unibyte string of N BYTEs.
+`make-string' would give a multibyte string for a byte over 127."
+  (apply #'unibyte-string (make-list n byte)))
 
 (ert-deftest mew-test-hmac-md5 ()
-  ;; Test vectors of RFC 2202 section 2.
-  (should (equal (mew-hmac-md5 "Hi There" (make-string 16 ?\x0b))
+  "Test vectors 1 to 5 of RFC 2202 section 2."
+  (should (equal (mew-hmac-md5 "Hi There" (mew-test-bytes 16 #x0b))
                  "9294727a3638bb1c13f48ef8158bfc9d"))
   (should (equal (mew-hmac-md5 "what do ya want for nothing?" "Jefe")
-                 "750c783e6ab0b503eaa86e310a5db738")))
+                 "750c783e6ab0b503eaa86e310a5db738"))
+  (should (equal (mew-hmac-md5 (mew-test-bytes 50 #xdd)
+                               (mew-test-bytes 16 #xaa))
+                 "56be34521d144c88dbb8c733f0e8b3f6"))
+  (should (equal (mew-hmac-md5 (mew-test-bytes 50 #xcd)
+                               (apply #'unibyte-string (number-sequence 1 25)))
+                 "697eaf0aca3a3aea3a75164746ffaa79"))
+  (should (equal (mew-hmac-md5 "Test With Truncation" (mew-test-bytes 16 #x0c))
+                 "56461ef2342edc00f9bab995690efd4c")))
+
+(ert-deftest mew-test-hmac-md5-long-key ()
+  "A key longer than the block size has to be hashed first, RFC 2104.
+Test vectors 6 and 7 of RFC 2202 section 2."
+  (should (equal (mew-hmac-md5
+                  "Test Using Larger Than Block-Size Key - Hash Key First"
+                  (mew-test-bytes 80 #xaa))
+                 "6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd"))
+  (should (equal (mew-hmac-md5
+                  (concat "Test Using Larger Than Block-Size Key and "
+                          "Larger Than One Block-Size Data")
+                  (mew-test-bytes 80 #xaa))
+                 "6f630fad67cda0ee1fb1f562db3aa53e")))
+
+(ert-deftest mew-test-hmac-md5-non-ascii-key ()
+  "A non-ASCII key has to be encoded, not rejected.
+`aset' into a unibyte string signals an error for a character over 255,
+which is what a password typed in Japanese used to do."
+  (should (equal (mew-hmac-md5 "challenge" "ひみつ")
+                 (mew-hmac-md5 "challenge"
+                               (encode-coding-string "ひみつ" 'utf-8)))))
 
 (ert-deftest mew-test-cram-md5 ()
   ;; RFC 2195: base64("<user> " + HMAC-MD5(challenge, password))
