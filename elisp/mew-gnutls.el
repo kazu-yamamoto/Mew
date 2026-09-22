@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-gnutls.el
 
 ;; Author:  Mew developing team
@@ -81,10 +81,13 @@ keep this as nil.")
 		 "STARTTLS\n"))))
     ))
 
-(defun mew-gnutls-get-param (proto key evalp)
+(defun mew-gnutls-get-param (proto key evalp case)
   "Get parameter from mew-gnutls-plist"
   (let ((p (plist-get (cdr (assq proto mew-gnutls-plist)) key)))
-    (if evalp (eval p) p)))
+    ;; The forms in mew-gnutls-plist refer to CASE, so it must be
+    ;; handed to eval explicitly.  It used to be picked up from the
+    ;; dynamic binding of the caller's argument.
+    (if evalp (eval p `((case . ,case))) p)))
 
 ;;; XXX: (mew-open-network-stream) always returns a list
 ;;       and is also used for non-SMTP protocols.
@@ -125,32 +128,32 @@ keep this as nil.")
 		     :priority-string
 		     (plist-get boot-params :priority)))))
 
-(defun mew-gnutls-parameters (proto starttlsp)
+(defun mew-gnutls-parameters (proto starttlsp case)
   (list
    :always-query-capabilities
    (and starttlsp
 	(mew-gnutls-get-param
-	 proto :always-query-capabilities nil))
+	 proto :always-query-capabilities nil case))
    :capability-command
    (and starttlsp
 	(mew-gnutls-get-param
-	 proto :capability-command t))
+	 proto :capability-command t case))
    :end-of-capability
    (and starttlsp
 	(mew-gnutls-get-param
-	 proto :end-of-capability t))
+	 proto :end-of-capability t case))
    :end-of-command
    (and starttlsp
 	(mew-gnutls-get-param
-	 proto :end-of-command t))
+	 proto :end-of-command t case))
    :success
    (and starttlsp
 	(mew-gnutls-get-param
-	 proto :success t))
+	 proto :success t case))
    :starttls-function
    (and starttlsp
 	(mew-gnutls-get-param
-	 proto :starttls-function nil))))
+	 proto :starttls-function nil case))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -194,7 +197,7 @@ keep this as nil.")
 		       :coding mew-cs-text-for-net
 		       :type type
 		       :return-list t
-		       (mew-gnutls-parameters proto starttlsp))))
+		       (mew-gnutls-parameters proto starttlsp case))))
     (advice-remove 'gnutls-negotiate
 		   #'mew--advice-filter-args-gnutls-negotiate)
     pro-plist))

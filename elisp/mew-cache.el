@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-cache.el --- Cache management for Mew
 
 ;; Author:  Mew developing team

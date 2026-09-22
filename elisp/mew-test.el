@@ -817,6 +817,31 @@ compatibility code of mew-env.el belongs here."
                temporary-file-directory))
     (should (boundp v))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-gnutls.el
+;;;
+
+(ert-deftest mew-test-gnutls-capability-command ()
+  "The forms in mew-gnutls-plist are evaluated and refer to CASE.
+CASE used to be picked up from the dynamic binding of the caller's
+argument, which stops working under lexical binding."
+  (let ((cmd (plist-get (mew-gnutls-parameters 'smtp t "default")
+		        :capability-command)))
+    (should (stringp cmd))
+    (should (string-match "\\`EHLO .+\n\\'" cmd)))
+  (should (equal (plist-get (mew-gnutls-parameters 'imap t "default")
+			    :capability-command)
+		 "1 CAPABILITY\n"))
+  (should (functionp (plist-get (mew-gnutls-parameters 'smtp t "default")
+				:starttls-function))))
+
+(ert-deftest mew-test-gnutls-no-starttls ()
+  (let ((params (mew-gnutls-parameters 'smtp nil "default")))
+    (should-not (plist-get params :capability-command))
+    (should-not (plist-get params :starttls-function))
+    (should-not (plist-get params :success))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
