@@ -375,6 +375,28 @@ which is what a password typed in Japanese used to do."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew-passwd.el
+;;;
+
+(ert-deftest mew-test-passwd-pinentry-mode ()
+  "The loopback pinentry mode has to reach epg.
+`epg-pinentry-mode' is the variable epg reads.  Binding
+`epa-pinentry-mode' instead only works when epa happens to be loaded
+already, because that name is an obsolete alias which epa.el creates,
+and the binding is lost altogether once this file is compiled with
+lexical-binding unless the compiler is told the variable is special.
+In a batch run epa is not loaded, so this test tells the two apart."
+  (let ((mew-master-passwd-type 'auth-source)
+        (seen 'unset))
+    (cl-letf (((symbol-function 'auth-source-search)
+               (lambda (&rest _)
+                 (setq seen (bound-and-true-p epg-pinentry-mode))
+                 nil)))
+      (mew-passwd-auth-source-get-passwd "user@host:993"))
+    (should (eq seen 'loopback))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-net.el
 ;;;
 
