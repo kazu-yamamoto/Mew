@@ -8,6 +8,9 @@
 
 (require 'mew)
 
+(declare-function dnd-get-local-file-name "dnd")
+(declare-function dnd-get-local-file-uri "dnd")
+
 (eval-when-compile
   (require 'mew-env0)
   (mew-no-warning-defvar mew-prog-audio2))
