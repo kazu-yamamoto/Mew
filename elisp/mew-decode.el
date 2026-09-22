@@ -92,7 +92,7 @@
 
 (defun mew-decode-error (error-msg)
   (mew-xinfo-set-decode-err error-msg)
-  (error error-msg))
+  (error "%s" error-msg))
 
 (defun mew-decode-error2 (error-msg)
   (mew-xinfo-set-decode-err error-msg))

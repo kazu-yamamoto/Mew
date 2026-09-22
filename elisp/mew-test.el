@@ -215,6 +215,22 @@ character."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew-decode.el
+;;;
+
+(ert-deftest mew-test-decode-error-percent ()
+  "A % in the text must not be read as a format specifier.
+`mew-decode-error' is called with text taken from the message, as in
+\(mew-decode-error (concat \"Unknown CTE: \" cte)), so a crafted or
+broken header could turn the error into \"Format string ends in middle
+of format specifier\" and hide the real one."
+  (with-temp-buffer
+    (let ((err (should-error (mew-decode-error "Unknown CTE: 100%"))))
+      (should (equal (cadr err) "Unknown CTE: 100%")))
+    (should (equal (mew-xinfo-get-decode-err) "Unknown CTE: 100%"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-encode.el
 ;;;
 

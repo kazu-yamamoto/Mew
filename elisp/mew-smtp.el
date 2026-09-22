@@ -597,8 +597,8 @@
 	(mew-smtp-log pnm error)
 
 	(if (memq system-type '(windows-nt ms-dos cygwin))
-	    (message (format "%s  This mail has been queued to %s" error qfld))
-	  (message-box (format "%s  This mail has been queued to %s" error qfld))))
+	    (message "%s  This mail has been queued to %s" error qfld)
+	  (message-box "%s  This mail has been queued to %s" error qfld)))
        (done
 	(message "Sending in background...done"))
        (t

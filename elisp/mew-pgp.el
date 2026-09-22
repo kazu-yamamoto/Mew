@@ -820,7 +820,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 	(progn
 	  (mew-delete-file file1)
 	  (mew-delete-file file2)
-	  (error errmsg))
+	  (error "%s" errmsg))
       (delete-region (point) (point-max))
       (mew-frwlet cs mew-cs-dummy
 	(insert-file-contents file2))
@@ -854,7 +854,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 	  (mew-delete-file file1)
 	  (mew-delete-file file2)
 	  (mew-delete-file file3)
-	  (error errmsg))
+	  (error "%s" errmsg))
       ;; Create multipart content-header
       (delete-region (point) (point-max))
       (mew-frwlet cs mew-cs-dummy
@@ -919,7 +919,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 	(progn
 	  (mew-delete-file file1)
 	  (mew-delete-file file2)
-	  (error (or mew-pgp-sign-msg check)))
+	  (error "%s" (or mew-pgp-sign-msg check)))
       (delete-region (point) (point-max))
       (mew-frwlet cs mew-cs-dummy
 	(insert-file-contents file2))

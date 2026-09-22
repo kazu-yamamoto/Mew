@@ -977,7 +977,7 @@ it is deleted automatically."
   (let ((ociea cursor-in-echo-area) char)
     (unwind-protect
 	(progn
-	  (message (or msg "Input mark: "))
+	  (message "%s" (or msg "Input mark: "))
 	  (setq cursor-in-echo-area t)
 	  (setq char (read-char))
 	  (unless (char-equal char ?\r)

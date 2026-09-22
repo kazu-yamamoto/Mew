@@ -1113,7 +1113,7 @@
 	 (namespace (assoc mew-imap-inbox-folder alist)))
     (if (= (length namespace) mew-imap-namespace-length)
 	namespace
-      (error (mew-substitute-for-summary "Type '\\[universal-argument]\\[mew-status-update]' to collect IMAP folders!")))))
+      (error "%s" (mew-substitute-for-summary "Type '\\[universal-argument]\\[mew-status-update]' to collect IMAP folders!")))))
 
 (defun mew-imap-namespace-sep (namespace)
   (nth 1 namespace))
