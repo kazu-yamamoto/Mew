@@ -34,11 +34,6 @@ requires PTY.")
 
 (defvar mew-icon-p (and (featurep 'tool-bar) window-system))
 
-(defvar mew-internal-utf-8p nil)
-(if (or (fboundp 'utf-translate-cjk-mode) ;; Emacs 22.1 or later
-	(coding-system-p 'utf-8-emacs))
-    (setq mew-internal-utf-8p t))
-
 (require 'mew-key)
 (require 'mew-gemacs)
 (require 'mew-mule3)
@@ -54,43 +49,23 @@ requires PTY.")
 
 (defun mew-timer (sec func) (run-at-time sec sec func))
 
-(if (fboundp 'characterp)
-    (defalias 'mew-characterp 'characterp)
-  (defalias 'mew-characterp 'integerp))
+(defalias 'mew-characterp 'characterp)
 
 (if (fboundp 'mouse-region-match)
     (defalias 'mew-mouse-region-p 'mouse-region-match)
   (defmacro mew-mouse-region-p (&rest _args) nil))
 
-(cond
- ((boundp 'auto-hscroll-mode) ;; Emacs 21.3.50 or later
-  (defun mew-hscroll ()
-    (set (make-local-variable 'auto-hscroll-mode) t)))
- ((boundp 'automatic-hscrolling) ;; Emacs 21.3 or earlier
-  (defun mew-hscroll ()
-    (set (make-local-variable 'automatic-hscrolling) t))))
+(defun mew-hscroll ()
+  (set (make-local-variable 'auto-hscroll-mode) t))
 
-(if (fboundp 'minibuffer-prompt-end)
-    (defalias 'mew-minibuf-point-min 'minibuffer-prompt-end)
-  (defalias 'mew-minibuf-point-min 'point-min))
+(defalias 'mew-minibuf-point-min 'minibuffer-prompt-end)
 
-(eval-when-compile
-  (unless (fboundp 'with-no-warnings)
-    (defmacro with-no-warnings (&rest body)
-      (declare (debug (&rest form)))
-      `(progn ,@body))))
+(defun mew-process-silent-exit (pro)
+  (set-process-query-on-exit-flag pro nil))
 
-(if (fboundp 'set-process-query-on-exit-flag)
-    (defun mew-process-silent-exit (pro)
-      (set-process-query-on-exit-flag pro nil))
-  (with-no-warnings
-    (defun mew-process-silent-exit (pro)
-      (process-kill-without-query pro)))) ;; Emacs 21.4
-
-(with-no-warnings
-  (defun mew-set-coding-priority (pri)
-    (apply 'set-coding-system-priority
-	   (mapcar (lambda (x) (symbol-value x)) pri))))
+(defun mew-set-coding-priority (pri)
+  (apply 'set-coding-system-priority
+	 (mapcar (lambda (x) (symbol-value x)) pri)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -138,31 +113,20 @@ requires PTY.")
 ;;; File operations
 ;;;
 
-(cond
- ((fboundp 'make-symbolic-link)
-  (defun mew-symbolic-link (filename newname &optional OK-IF-ALREADY-EXISTS)
-    (if (file-directory-p (file-chase-links filename))
-	(error "Cannot make a symbolic link to directory")
-      (make-symbolic-link filename newname OK-IF-ALREADY-EXISTS)))
-  (defun mew-link (filename newname &optional OK-IF-ALREADY-EXISTS)
-    (if (file-directory-p (file-chase-links filename))
-	(error "Cannot make a link to directory")
-      (condition-case nil
-	  (add-name-to-file filename newname OK-IF-ALREADY-EXISTS)
-	(file-error
-	 (copy-file filename newname OK-IF-ALREADY-EXISTS 'keepdate))))))
- (t
-  (defun mew-symbolic-link (filename newname &optional OK-IF-ALREADY-EXISTS)
-    (if (file-directory-p filename)
-	(error "Cannot make a copy of directory")
-      (copy-file filename newname OK-IF-ALREADY-EXISTS 'keepdate)))
-  (defun mew-link (filename newname &optional OK-IF-ALREADY-EXISTS)
-    (if (file-directory-p filename)
-	(error "Cannot make a copy of directory")
-      (copy-file filename newname OK-IF-ALREADY-EXISTS 'keepdate)))))
+(defun mew-symbolic-link (filename newname &optional OK-IF-ALREADY-EXISTS)
+  (if (file-directory-p (file-chase-links filename))
+      (error "Cannot make a symbolic link to directory")
+    (make-symbolic-link filename newname OK-IF-ALREADY-EXISTS)))
 
-(if (and (fboundp 'set-file-times)
-	 (memq system-type '(darwin windows-nt cygwin)))
+(defun mew-link (filename newname &optional OK-IF-ALREADY-EXISTS)
+  (if (file-directory-p (file-chase-links filename))
+      (error "Cannot make a link to directory")
+    (condition-case nil
+	(add-name-to-file filename newname OK-IF-ALREADY-EXISTS)
+      (file-error
+       (copy-file filename newname OK-IF-ALREADY-EXISTS 'keepdate)))))
+
+(if (memq system-type '(darwin windows-nt cygwin))
     (defalias 'mew-set-file-times 'set-file-times)
   (defmacro mew-set-file-times (&rest _args) nil))
 
@@ -173,9 +137,7 @@ requires PTY.")
 
 (defalias 'mew-buffer-substring 'buffer-substring-no-properties)
 
-(if (fboundp 'match-string-no-properties)
-    (defalias 'mew-match-string 'match-string-no-properties)
-  (defalias 'mew-match-string 'match-string))
+(defalias 'mew-match-string 'match-string-no-properties)
 
 (defun mew-insert-buffer-substring (buf beg end)
   (insert (with-current-buffer buf (mew-buffer-substring beg end))))
@@ -216,64 +178,38 @@ requires PTY.")
     (defalias 'mew-unix-sync 'unix-sync)
   (defmacro mew-unix-sync (&rest _args) nil))
 
-(if (fboundp 'mac-set-file-type)
-    (defalias 'mew-mac-set-file-type 'mac-set-file-type)
-  (defmacro mew-mac-set-file-type (&rest _args) nil))
+;; mac-set-file-type only existed in the Carbon port.
+(defmacro mew-mac-set-file-type (&rest _args) nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Face
 ;;;
 
-(cond
- ((fboundp 'face-all-attributes) ;; Emacs 23
-  (defalias 'mew-face-spec-func 'cons)
-  (defun mew-face-spec-primitive (col bold)
-    (if col
-	(if bold
-	    (list :foreground col :weight 'bold)
-	  (list :foreground col :weight 'normal))
+(defalias 'mew-face-spec-func 'cons)
+
+(defun mew-face-spec-primitive (col bold)
+  (if col
       (if bold
-	  (list :weight 'bold)
-	(list :weight 'normal)))))
- (t
-  (defalias 'mew-face-spec-func 'list)
-  (defun mew-face-spec-primitive (col bold)
-    (if col
-	(if bold
-	    (list :foreground col :bold t)
-	  (list :foreground col))
-      (if bold
-	  (list :bold t)
-	nil)))))
+	  (list :foreground col :weight 'bold)
+	(list :foreground col :weight 'normal))
+    (if bold
+	(list :weight 'bold)
+      (list :weight 'normal))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Misc
 ;;;
 
-(if (fboundp 'fill-match-adaptive-prefix)
-    (defalias 'mew-fill-match-adaptive-prefix 'fill-match-adaptive-prefix)
-  ;; Emacs 21.4
-  (defun mew-fill-match-adaptive-prefix ()
-    (let ((str (or
-		(and adaptive-fill-function (funcall adaptive-fill-function))
-		(and adaptive-fill-regexp (looking-at adaptive-fill-regexp)
-		     (match-string-no-properties 0)))))
-      (if (>= (+ (current-left-margin) (length str)) (current-fill-column))
-	  ;; Death to insanely long prefixes.
-	  nil
-	str))))
+(defalias 'mew-fill-match-adaptive-prefix 'fill-match-adaptive-prefix)
 
 (if (fboundp 'create-animated-image)
     (defalias 'mew-create-image 'create-animated-image)
   (defalias 'mew-create-image 'create-image))
 
-(if (fboundp 'run-mode-hooks)
-    (defun mew-run-mode-hooks (&rest funcs)
-      (apply 'run-mode-hooks funcs))
-  (defun mew-run-mode-hooks (&rest funcs)
-    (apply 'run-hooks funcs)))
+(defun mew-run-mode-hooks (&rest funcs)
+  (apply 'run-mode-hooks funcs))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

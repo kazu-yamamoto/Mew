@@ -268,14 +268,12 @@ and return (beg . end)."
     (mew-summary-buffer-process mew-summary-buffer-process-status)))
 
 (defun mew-summary-setup-mode-line ()
-  (when (boundp 'mode-line-format)
-    (make-local-variable 'mode-line-format)
-    (setq mode-line-format
-	  (copy-sequence (default-value 'mode-line-format)))
-    (nconc mode-line-format mew-mode-line-format))
-  (when (boundp 'line-number-mode)
-    (make-local-variable 'line-number-mode)
-    (setq line-number-mode nil))
+  (make-local-variable 'mode-line-format)
+  (setq mode-line-format
+	(copy-sequence (default-value 'mode-line-format)))
+  (nconc mode-line-format mew-mode-line-format)
+  (make-local-variable 'line-number-mode)
+  (setq line-number-mode nil)
   (or (assq 'mew-summary-buffer-process mode-line-process)
       (setq mode-line-process
 	    (append mew-mode-line-process mode-line-process))))

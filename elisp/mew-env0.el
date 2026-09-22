@@ -1,12 +1,8 @@
 ;;; -*- lexical-binding: nil; -*-
-(cond
- ((>= emacs-major-version 24)
-  ;; this must be macro. If implemented as a function, its behavior
-  ;; is changed.
-  (defmacro mew-called-interactively-p ()
-    '(called-interactively-p 'interactive)))
- (t
-  (defalias 'mew-called-interactively-p 'called-interactively-p)))
+;; this must be macro. If implemented as a function, its behavior
+;; is changed.
+(defmacro mew-called-interactively-p ()
+  '(called-interactively-p 'interactive))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

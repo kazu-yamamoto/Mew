@@ -411,6 +411,47 @@ In a batch run epa is not loaded, so this test tells the two apart."
   (should (equal (mew-serv-to-port "587") 587))
   (should (equal (mew-serv-to-port 25) 25)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; What Mew relies on
+;;;
+
+(ert-deftest mew-test-emacs-features ()
+  "Everything Mew uses without a guard has to be there.
+INSTALL.md says Emacs 27.1 or later, and the oldest Emacs of the CI
+matrix is what really checks this list.  A guard removed from the
+compatibility code of mew-env.el belongs here."
+  (dolist (f '(add-name-to-file
+               base64-decode-region
+               base64-encode-region
+               called-interactively-p
+               characterp
+               coding-system-p
+               create-image
+               face-all-attributes
+               fill-match-adaptive-prefix
+               make-symbolic-link
+               match-string-no-properties
+               minibuffer-prompt-end
+               multibyte-string-p
+               run-mode-hooks
+               set-buffer-multibyte
+               set-coding-system-priority
+               set-file-times
+               set-process-query-on-exit-flag
+               string-as-multibyte
+               string-bytes
+               subst-char-in-string
+               time-equal-p
+               with-no-warnings))
+    (should (fboundp f)))
+  (dolist (v '(auto-hscroll-mode
+               line-number-mode
+               minibuffer-local-map
+               mode-line-format
+               temporary-file-directory))
+    (should (boundp v))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:

@@ -530,7 +530,7 @@ Return a part syntax after moving the beginning of the content body."
 	 (beg (point))
 	 opt file decoded switch)
     (unless (or (null cte) (mew-cte-composite-p cte))
-      (when (and (mew-case-equal cte mew-b64) (fboundp 'base64-decode-region))
+      (when (mew-case-equal cte mew-b64)
 	(condition-case nil
 	    (setq decoded (base64-decode-region beg (point-max)))
 	  (error (setq decoded nil)))

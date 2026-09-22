@@ -2745,11 +2745,7 @@ Otherwise, the old cases are overridden."
 ;;;
 
 (defcustom mew-temp-file-initial
-  (expand-file-name (user-login-name) (if (fboundp 'temp-directory)
-					  (temp-directory)
-					(if (boundp 'temporary-file-directory)
-					    temporary-file-directory
-					  "/tmp")))
+  (expand-file-name (user-login-name) temporary-file-directory)
   "*Hint to make a secure directory on the local file system. On
 setup phase Mew make a secure directory from this variable and set
 mew-temp-file a file name prefix contained the directory name. The

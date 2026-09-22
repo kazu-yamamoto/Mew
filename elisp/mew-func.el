@@ -296,15 +296,9 @@ in the context of FUNC."
 (defun mew-make-string (len)
   (make-string len ?a))
 
-(if (fboundp 'subst-char-in-string)
-    (defun mew-replace-character (string from to)
-      (subst-char-in-string from to string))
-  (defun mew-replace-character (string from to)
-    "Replace characters equal to FROM to TO in STRING."
-    (dotimes (cnt (length string))
-      (if (char-equal (aref string cnt) from)
-	  (aset string cnt to)))
-    string))
+(defun mew-replace-character (string from to)
+  "Replace characters equal to FROM to TO in STRING."
+  (subst-char-in-string from to string))
 
 (defun mew-replace-white-space (string)
   "Replace white characters to a space."
@@ -1121,13 +1115,8 @@ and sets buffer-file-coding-system."
     (push-mark (point) t t)))
 
 (defun mew-region-bytes (beg end buf)
-  ;; string-bytes() acts differently on each Emacs.
-  ;; set-buffer-multibyte is also buggy.
-  ;; So, use this way.
   (with-current-buffer buf
-    (if (fboundp 'string-as-unibyte)
-	(length (string-as-unibyte (mew-buffer-substring beg end)))
-      (- end beg))))
+    (string-bytes (mew-buffer-substring beg end))))
 
 (defun mew-count-lines (beg end)
   "Return number of lines between BEG and END."
@@ -1524,29 +1513,16 @@ by side-effect."
 
 ;; Emacs 27 introduced time-equal-p,
 ;; but Mew assumes only Emacs 26.
-(unless (fboundp 'time-equal-p)
-  (defun time-equal-p (a b)
-    "Non-nil if time values A and B are equal."
-    (not (or (time-less-p a b)
-             (time-less-p b a)))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Multibyte
 ;;;
 
-(defun mew-set-buffer-multibyte (arg)
-  (if (fboundp 'set-buffer-multibyte)
-      (set-buffer-multibyte arg)))
+(defalias 'mew-set-buffer-multibyte 'set-buffer-multibyte)
 
-(defun mew-set-string-multibyte (str)
-  (if (fboundp 'string-as-multibyte)
-      (string-as-multibyte str)
-    str))
+(defalias 'mew-set-string-multibyte 'string-as-multibyte)
 
-(defun mew-multibyte-string-p (str)
-  (if (fboundp 'multibyte-string-p)
-      (multibyte-string-p str)))
+(defalias 'mew-multibyte-string-p 'multibyte-string-p)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

@@ -15,11 +15,7 @@
 
 (defun mew-charset-m17n ()
   (if (string= mew-charset-m17n mew-utf-8)
-      (if mew-internal-utf-8p
-	  mew-utf-8
-	(if (condition-case nil (require 'un-define) (file-error nil))
-	    mew-utf-8
-	  mew-iso-2022-jp-2))
+      mew-utf-8
     mew-iso-2022-jp-2))
 
 (defun mew-charset-guess-string (str)

@@ -683,7 +683,7 @@
 	  (setq cte mew-7bit)
 	  (narrow-to-region beg (point-max))
 	  (mew-convert-message))))
-     ((and (mew-case-equal cte mew-b64) (fboundp 'base64-encode-region))
+     ((mew-case-equal cte mew-b64)
       (unless textp
 	(mew-frwlet (if linebasep mew-cs-text-for-read mew-cs-binary) mew-cs-dummy
 	  (mew-insert-file-contents file)))
@@ -1144,7 +1144,7 @@
     (save-restriction
       (narrow-to-region beg end)
       (cond
-       ((and (mew-case-equal cte mew-b64) (fboundp 'base64-encode-region))
+       ((mew-case-equal cte mew-b64)
 	(when linebasep
 	  (goto-char (point-min))
 	  (mew-lf-to-crlf))
