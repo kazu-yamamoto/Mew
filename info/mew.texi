@@ -25,7 +25,6 @@
 
 @titlepage
 @sp 10
-@center
 @title Mew
 @ifset ja
 @author Copyright @copyright{}1996-2026 Mew developing team.
@@ -2873,7 +2872,7 @@ Toggle warning level. If @samp{mew-warning-field-level} is 2, set it to
 @ifset en
 @section Invalid messages
 @end ifset
-@vindex mew-decode-quoted
+@vindex mew-decode-broken
 @kindex C-u. (Summary)
 @kindex C-cC-l (Summary)
 @kindex C-uC-cC-l (Summary)
@@ -4653,7 +4652,7 @@ the header and the body
 @kindex C-f (Attach)
 @kindex C-b (Attach)
 @kindex c (Attach)
-@kindex i (Attach)
+@kindex l (Attach)
 @kindex d (Attach)
 @kindex m (Attach)
 @kindex f (Attach)
@@ -4665,6 +4664,7 @@ the header and the body
 @kindex D (Attach)
 @kindex T (Attach)
 @kindex t (Attach)
+@kindex I (Attach)
 @kindex C (Attach)
 @kindex P (Attach)
 
@@ -4840,7 +4840,7 @@ The following is a summary of commands in the attachments region.
 ルをコピーする場合は、"/[user@@]hostname:/filepath" の形式でファイルを指
 定。
 @item l
-ファイルへシンボッリクリンクを張る。"." 上で有効。添付ファイルを 
+ファイルへシンボリックリンクを張る。"." 上で有効。添付ファイルを 
 @samp{f} を使って読み込んで編集する場合は、実体を編集してしまわないよう
 に、@samp{l} ではなく @samp{c} でコピーすべき。
 @item d
@@ -8298,7 +8298,7 @@ messages. If you want to limit it to 3000 messages, put the following to
 @end ifset
 @ifset en
 The function name to provide this feature is
-@samp{mew-refile-guess-by-message-id}.
+@samp{mew-refile-guess-by-thread}.
 @end ifset
 
 @c %%%%%%%%%%%%%%%%%
@@ -9698,7 +9698,7 @@ A reverse version of @samp{C-uM-n}.
 @kindex ( (Virtual)
 @kindex ) (Virtual)
 @kindex t* (Virtual)
-@kindex t@ (Virtual)
+@kindex t$ (Virtual)
 @kindex td (Virtual)
 @kindex tM-d (Virtual)
 @kindex to (Virtual)
@@ -11786,7 +11786,7 @@ message-id = *random*.nntp-msgid-user@@nntp-msgid-domain
 
 @ifset ja
 Mew では、メッセージを送信する際に SMTP を利用します。SMTP サーバが認証
-を要求した場合、Mew は自動的にユーザにバスワードの入力を求めます。ここ
+を要求した場合、Mew は自動的にユーザにパスワードの入力を求めます。ここ
 では、SMTP を制御するための以下の変数についてまとめます。
 @end ifset
 @ifset en
@@ -13342,7 +13342,7 @@ non-employee's addresses to red.
 トになります。Mew は以下のルールに従って、警告するアドレスを決めます。
 @end ifset
 @ifset en
-There are four variables to decide which address should trun red.
+There are four variables to decide which address should turn red.
 They are all a list of strings. Mew takes the following rules:
 @end ifset
 
@@ -13825,10 +13825,10 @@ continue to use "mewencode". (If Base64 is implemented by Emacs, Mew
 uses the native function.)
 
 @item Why does the cursor jump onto the end of line when searching(@samp{C-s}, @samp{C-r})?
-Thread informations are not displayed in Summary mode. This is because
-the "invisible" property is dynamically put onto them when
-displayed. Strings with this property is not a target of the string
-search. But, thread informations of undisplayed lines do not have this
+Thread information is not displayed in Summary mode. This is because
+the "invisible" property is dynamically put onto it when
+displayed. Strings with this property are not targets of the string
+search. But, thread information of undisplayed lines does not have this
 property, so the string search targets them. Then a matched line is
 displayed and the "invisible" property is put. So, it seems to you that
 the string search matches the end of the line. Mew puts the "invisible"
