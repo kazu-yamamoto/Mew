@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-vars.el --- Variables and Constants for Mew
 
 ;; Author:  Mew developing team
