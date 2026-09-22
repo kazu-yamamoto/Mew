@@ -1271,10 +1271,13 @@
   (let* ((case-fold-search nil) ;; boundary is case sensitive
 	 (ct (mew-syntax-get-value ctl 'cap))
 	 (dctl (if (string= ct mew-ct-mld) mew-type-msg))
-	 (boundary (regexp-quote (mew-syntax-get-param ctl "boundary")))
-	 obound ebound bregex start break)
-    (unless boundary
+	 (raw-boundary (mew-syntax-get-param ctl "boundary"))
+	 boundary obound ebound bregex start break)
+    ;; The check has to come before regexp-quote, which would signal
+    ;; wrong-type-argument on nil first.
+    (unless raw-boundary
       (mew-encode-error "No boundary parameter for multipart"))
+    (setq boundary (regexp-quote raw-boundary))
     (setq obound (concat "--" boundary))
     (setq ebound (concat "--" boundary "--"))
     (setq bregex (concat "^--" boundary "\\(\\|--\\)$"))

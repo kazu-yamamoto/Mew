@@ -1460,10 +1460,12 @@ by side-effect."
 	    (min  (mew-time-rfc-min))
 	    (sec  (mew-time-rfc-sec))
 	    (tmzn (mew-time-rfc-tmzn)))
+	;; RFC 5322 4.3: two digits under 50 are 20xx, and anything else
+	;; of two or three digits is 19xx.
 	(cond
 	 ((< year 50)
 	  (setq year (+ year 2000)))
-	 ((< year 150)
+	 ((< year 1000)
 	  (setq year (+ year 1900))))
 	(condition-case nil
 	    ;; This uses local zone which ensures correct behavior

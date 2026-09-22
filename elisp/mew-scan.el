@@ -175,10 +175,12 @@ effect to this function."
     (if (not (string-match mew-time-rfc-regex s))
 	"0000"
       (setq year (mew-time-rfc-year))
+      ;; RFC 5322 4.3: two digits under 50 are 20xx, and anything else
+      ;; of two or three digits is 19xx.
       (cond
        ((< year 50)
 	(setq year (+ year 2000)))
-       ((< year 100)
+       ((< year 1000)
 	(setq year (+ year 1900))))
       (number-to-string year))))
 
