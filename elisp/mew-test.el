@@ -877,6 +877,32 @@ argument, which stops working under lexical binding."
   (should (mew-sort-string '(1 . "a") '(2 . "a")))
   (should (mew-sort-number '(1 . 1) '(2 . 1))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-func.el: structures
+;;;
+
+(ert-deftest mew-test-defstruct-accessors ()
+  "mew-defstruct and mew-info-defun install their accessors with fset,
+handing a raw list to it instead of a function."
+  (let ((e (mew-make-ecsdb :lcs 'utf-8 :cs 'utf-8 :cte "8bit")))
+    (should (eq (mew-ecsdb-get-lcs e) 'utf-8))
+    (should (equal (mew-ecsdb-get-cte e) "8bit"))
+    (mew-ecsdb-set-cte e "base64")
+    (should (equal (mew-ecsdb-get-cte e) "base64")))
+  (should-error (mew-make-ecsdb :nosuch 1))
+  (should-error (mew-make-ecsdb 'lcs 1)))
+
+(ert-deftest mew-test-info-defun-accessors ()
+  (mew-info-defun "mew-test-info-" '("alpha" "beta"))
+  (let ((v (make-vector 2 nil)))
+    (funcall (intern "mew-test-info-set-alpha") v "a")
+    (funcall (intern "mew-test-info-set-beta")  v "b")
+    (should (equal (funcall (intern "mew-test-info-get-alpha") v) "a"))
+    (should (equal (funcall (intern "mew-test-info-get-beta")  v) "b"))
+    ;; a non vector, non string argument yields nil
+    (should-not (funcall (intern "mew-test-info-get-alpha") 'sym))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
