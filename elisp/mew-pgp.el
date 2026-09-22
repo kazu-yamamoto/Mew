@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-pgp.el --- PGP/MIME for Mew
 
 ;; Author:  Mew developing team
