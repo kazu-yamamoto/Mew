@@ -8,6 +8,8 @@
 
 (require 'mew-vars)
 
+(declare-function image-size "image.c")
+
 (defvar mew-logo nil)
 
 (defconst mew-icon-mew "Mew.png")

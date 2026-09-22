@@ -8,6 +8,8 @@
 
 (require 'mew)
 
+(defvar tool-bar-map)
+
 (defvar mew-prog-pamscale (or (executable-find "pamscale") "pnmscale"))
 (defvar mew-prog-pamscale-opt
   (cond

@@ -36,3 +36,8 @@ jobs:
 
       - name: Run the tests
         run: make -C elisp test EMACS=emacs
+
+      # Compiles everything again with byte-compile-error-on-warn, so a
+      # new warning fails the build instead of scrolling past.
+      - name: Detect warnings
+        run: make -C elisp detect EMACS=emacs DETECT=emacs

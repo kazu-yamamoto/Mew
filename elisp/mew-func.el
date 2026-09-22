@@ -8,6 +8,8 @@
 
 (require 'mew)
 
+(declare-function string-replace "subr")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Multiple set
