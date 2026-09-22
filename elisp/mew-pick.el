@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-pick.el --- Picking up messages for Mew
 
 ;; Author:  Mew developing team

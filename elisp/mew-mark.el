@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-mark.el --- Marking for Mew Summary and Virtual mode
 
 ;; Author:  Mew developing team

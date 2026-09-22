@@ -990,6 +990,25 @@ handing a raw list to it instead of a function."
     ;; a non vector, non string argument yields nil
     (should-not (funcall (intern "mew-test-info-get-alpha") 'sym))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-scan.el
+;;;
+
+(ert-deftest mew-test-scan-accessors ()
+  "mew-scan-setup installs a (MEW-FOO) for each of
+`mew-scan-fields-alias\=', and each of them reads `mew-vec\='.
+mew-scan-get-line binds mew-vec with a let, so the binding has to
+stay dynamic."
+  (require 'mew-varsx)
+  (mew-scan-setup)
+  (let ((mew-vec (vconcat (mapcar (lambda (a) (concat "<" a ">"))
+				  mew-scan-fields-alias))))
+    (dolist (a mew-scan-fields-alias)
+      (let ((f (intern (concat "MEW-" a))))
+	(should (fboundp f))
+	(should (equal (funcall f) (concat "<" a ">")))))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
