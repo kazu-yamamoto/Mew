@@ -151,27 +151,27 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
     "No encryption keys"
     "public key matching"
     "public key not found"
-    "public key not found"))
+    "No public key"))
 
 (defconst mew-pgp-msg-no-validkey
   '("DUMMY"
     "^WARNING:[ -9;-~\n]+belongs? to:"
     "^WARNING:[ -9;-~\n]+belongs? to:"
     "There is no indication that this key really belongs to the owner"
-    "There is no indication that this key really belongs to the owner"))
+    "There is no assurance this key belongs to the named user"))
 
 (defconst mew-pgp-msg-pubkey-expired
   '("xxx"
     "xxx"
     "xxx"
     "encryption failed: unusable public key"
-    "encryption failed: unusable public key"))
+    "encryption failed: Unusable public key"))
 
 (defconst mew-pgp-msg-no-vrfkey
   '("Key matching" "unknown keyid" "key does not meet" "public key not found" "public key not found"))
 
 (defconst mew-pgp-msg-no-keyring
-  '("Keyring file" "Keyring file" "NO MESSAGE" "public key not found" "public key not found"))
+  '("Keyring file" "Keyring file" "NO MESSAGE" "public key not found" "No public key"))
 
 (defconst mew-pgp-msg-no-seckey-or-secring
   '("You do not have the secret key"
