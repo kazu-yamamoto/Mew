@@ -1335,7 +1335,7 @@
 	  (setq mew-encode-syntax nil))
       (mew-tinfo-set-case (cdr (assoc "Case:" syntax)))
       (mew-tinfo-set-flowed (cdr (assoc "Flowed:" syntax)))
-      (mew-tinfo-set-flowed (cdr (assoc "Use-Flowed:" syntax)))
+      (mew-tinfo-set-use-flowed (cdr (assoc "Use-Flowed:" syntax)))
       (mew-tinfo-set-hdr-file (cdr (assoc "Message:" syntax))) ;; Header mode
       t)))
 
