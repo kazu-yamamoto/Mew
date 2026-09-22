@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-decode.el --- MIME syntax decoder for Mew
 
 ;; Author:  Mew developing team

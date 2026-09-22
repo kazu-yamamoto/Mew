@@ -346,6 +346,42 @@ of format specifier\" and hide the real one."
       (should (equal (cadr err) "Unknown CTE: 100%")))
     (should (equal (mew-xinfo-get-decode-err) "Unknown CTE: 100%"))))
 
+(ert-deftest mew-test-decode-multipart ()
+  "Parse a real multipart and look at what came out.
+The parts of a multipart syntax live from index 9 onwards."
+  (mew-regex-setup) ;; mew-eoh and friends
+  (with-temp-buffer
+    (insert "Content-Type: multipart/mixed; boundary=\"BOUND\"\n"
+	    "\n"
+	    "--BOUND\n"
+	    "Content-Type: text/plain; charset=us-ascii\n"
+	    "\n"
+	    "hello\n"
+	    "--BOUND\n"
+	    "Content-Type: application/octet-stream\n"
+	    "Content-Transfer-Encoding: base64\n"
+	    "Content-Disposition: attachment; filename=\"a.bin\"\n"
+	    "\n"
+	    "AAEC\n"
+	    "--BOUND--\n")
+    (goto-char (point-min))
+    (let* ((syn (mew-decode-singlepart 0))
+	   (ctl (mew-syntax-get-ct syn))
+	   (p1  (aref syn 9))
+	   (p2  (aref syn 10)))
+      (should (equal (mew-syntax-get-value ctl 'cap) "Multipart/Mixed"))
+      (should (equal (mew-syntax-get-param ctl "boundary") "BOUND"))
+      (should (equal (- (length syn) 9) 2))
+      (should (equal (mew-syntax-get-value (mew-syntax-get-ct p1) 'cap)
+		     "Text/Plain"))
+      (should (equal (mew-syntax-get-param (mew-syntax-get-ct p1) "charset")
+		     "us-ascii"))
+      (should (equal (mew-syntax-get-value (mew-syntax-get-ct p2) 'cap)
+		     "Application/Octet-Stream"))
+      (should (equal (mew-syntax-get-cte p2) "base64"))
+      (should (equal (mew-syntax-get-filename (mew-syntax-get-cdp p2))
+		     "a.bin")))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; mew-encode.el
@@ -388,8 +424,6 @@ should be encoded as format=flowed."
               (kill-buffer))))
       (delete-directory dir 'recursive))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; mew-mime.el

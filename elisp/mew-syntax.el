@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-syntax.el --- Internal syntax for Mew
 
 ;; Author:  Mew developing team

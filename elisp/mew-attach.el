@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-attach.el --- attachments for Mew Draft mode
 
 ;; Author:  Mew developing team
