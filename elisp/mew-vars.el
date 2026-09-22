@@ -2813,7 +2813,7 @@ Its format is key:mode where more is found in `mew-sort-mode'."
 of a specific folder. An example is follows:
 \(setq mew-sort-default-key-alist
       \\='((\"+tmp/beginners\" \"x-sequence\")
-        (\"+tmp/elips\" \"x-mail-count\")))"
+        (\"+tmp/elisp\" \"x-mail-count\")))"
   :group 'mew-summary
   :type '(list (list string string)))
 
