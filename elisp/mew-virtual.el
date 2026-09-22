@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-virtual.el --- Virtual mode for Mew
 
 ;; Author:  Mew developing team

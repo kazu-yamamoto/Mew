@@ -842,6 +842,41 @@ argument, which stops working under lexical binding."
     (should-not (plist-get params :starttls-function))
     (should-not (plist-get params :success))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-sort.el
+;;;
+
+(ert-deftest mew-test-sort-key-mlnum ()
+  (let ((nul (string 0)))
+    (should (equal (mew-sort-key-mlnum "[mew-dist: 12345] Hello" nil nil)
+		   (concat "[mew-dist:" nul "0000012345")))
+    (should (equal (mew-sort-key-mlnum "(ml 7) Hi" nil nil)
+		   (concat "(ml" nul "0000000007")))
+    (should (equal (mew-sort-key-mlnum "42" nil nil)
+		   (concat nul "0000000042")))
+    ;; no number at all sorts as zero
+    (should (equal (mew-sort-key-mlnum "plain subject" nil nil)
+		   (concat nul "0000000000")))))
+
+(ert-deftest mew-test-sort-key-postnum ()
+  (should (equal (mew-sort-key-postnum "msg-100" nil nil) 100))
+  (should (equal (mew-sort-key-postnum "7" nil nil) 7))
+  (should (equal (mew-sort-key-num "42" nil nil) 42)))
+
+(ert-deftest mew-test-sort-key-text ()
+  (should (equal (mew-sort-key-text "Re: Re: Fw: Hello" nil nil) "Hello"))
+  (should (equal (mew-sort-key-text "[foo] Bar (was: Baz)" nil nil) "[foo] Bar")))
+
+(ert-deftest mew-test-sort-predicates ()
+  (should (equal (sort (list '(1 . "c") '(2 . "a") '(3 . "b")) 'mew-sort-string)
+		 '((2 . "a") (3 . "b") (1 . "c"))))
+  (should (equal (sort (list '(1 . 30) '(2 . 10) '(3 . 20)) 'mew-sort-number)
+		 '((2 . 10) (3 . 20) (1 . 30))))
+  ;; both predicates must accept equal keys
+  (should (mew-sort-string '(1 . "a") '(2 . "a")))
+  (should (mew-sort-number '(1 . 1) '(2 . 1))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
