@@ -70,6 +70,10 @@ this variable is set to \='t\=`.")
 
 (autoload 'auth-source-search "auth-source")
 
+;; Declared, not required, so that the let below is a dynamic binding
+;; even when this file is compiled with lexical-binding.
+(defvar epg-pinentry-mode)
+
 (defun mew-passwd-use-auth-source-p ()
   (eq mew-master-passwd-type 'auth-source))
 
@@ -90,14 +94,14 @@ this variable is set to \='t\=`.")
 	   :host nil
 	   :port nil)))
 
-;;; XXX epa-pinentry-mode is set to 'loopback to avoid GUI pinentry
+;;; XXX epg-pinentry-mode is set to 'loopback to avoid GUI pinentry
 ;;; window.  This might not be a recommended way but it works.
 ;;;
 ;;; XXX when the backend is an encrypted file and an wrong passphrase
 ;;; is provided, a password prompt will be displayed.  This may be
 ;;; confusing.
 (defun mew-passwd-auth-source-get-passwd (key)
-  (let* ((epa-pinentry-mode 'loopback)
+  (let* ((epg-pinentry-mode 'loopback)
 	 (slist (mew-passwd-auth-source-parse-key key))
 	 found)
     (cond
@@ -123,7 +127,7 @@ this variable is set to \='t\=`.")
     )
    (val
     ;; Authenticated successfully.
-    (let* ((epa-pinentry-mode 'loopback)
+    (let* ((epg-pinentry-mode 'loopback)
 	   (slist (mew-passwd-auth-source-parse-key key))
 	   (entry (apply #'auth-source-search
 			 (append slist (list
@@ -136,7 +140,7 @@ this variable is set to \='t\=`.")
     ;;
     ;; XXX: removal of the wrong password is not supported by any
     ;;      backends (i.e. auth-source-delete is noop).
-    (let* ((epa-pinentry-mode 'loopback)
+    (let* ((epg-pinentry-mode 'loopback)
 	   (slist (mew-passwd-auth-source-parse-key key))
 	   (entry (apply #'auth-source-delete (nconc slist)))
 	   (save-function (plist-get (nth 0 entry) :save-function)))
