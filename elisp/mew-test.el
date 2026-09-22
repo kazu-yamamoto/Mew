@@ -229,6 +229,36 @@ the local variables below alone."
   (should (equal (mew-idstr-to-id-list "<a@b>\n\t<c@d>") '("<a@b>" "<c@d>")))
   (should-not (mew-idstr-get-first-id "no id here")))
 
+(defvar mew-test-header-name "Kazu")
+
+(ert-deftest mew-test-header-replace-value ()
+  "A value that is a list of a string and more becomes a format call,
+which is then evaluated.  Only global variables are in reach."
+  (mew-regex-setup) ;; mew-header-separator and friends
+  (cl-flet ((subject (value)
+	      (with-temp-buffer
+		(insert "To: a@example.org\n"
+			"Subject: old\n"
+			mew-header-separator "\n")
+		(mew-header-replace-value "Subject:" value)
+		(goto-char (point-min))
+		(mew-header-get-value "Subject:"))))
+    (should (equal (subject "new subject") "new subject"))
+    (should (equal (subject '("hello %s" mew-test-header-name)) "hello Kazu"))
+    ;; a form that fails leaves the error in the field, not a backtrace
+    (should (equal (subject '("%s" mew-test-no-such-variable))
+		   "*** ERROR: void-variable: mew-test-no-such-variable ***"))))
+
+(ert-deftest mew-test-header-delete-lines ()
+  (mew-regex-setup)
+  (with-temp-buffer
+    (insert "To: a@example.org\nCc: b@example.org\nSubject: s\n"
+	    mew-header-separator "\n")
+    (should (equal (mew-header-get-value "To:") "a@example.org"))
+    (mew-header-delete-lines '("Cc:"))
+    (should-not (mew-header-get-value "Cc:"))
+    (should (equal (mew-header-get-value "Subject:") "s"))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; mew-bq.el: RFC 2047

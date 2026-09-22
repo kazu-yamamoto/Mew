@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;; mew-header.el --- Mail header stuff for Mew
 
 ;; Author:  Mew developing team
