@@ -1106,11 +1106,38 @@ and sets buffer-file-coding-system."
       (aset ret i (aref base (% (mew-random) baselen))))
     ret))
 
+(defvar mew-random-device "/dev/urandom"
+  "Where random bytes for secrets come from, or nil to do without one.
+`mew-random' will not do for a secret: it is built on `random', whose
+output can be worked out from enough other output, and the Message-ID
+and the MIME boundary of every message Mew sends are built on it too.")
+
+(defun mew-random-device-string (len)
+  "Read LEN bytes from `mew-random-device'.
+Return nil if they cannot be read, as on a system without one."
+  (when (stringp mew-random-device)
+    (condition-case nil
+	(let ((str (with-temp-buffer
+		     (set-buffer-multibyte nil)
+		     (let ((coding-system-for-read 'binary))
+		       ;; A start position is only allowed on a regular
+		       ;; file, so read from the beginning of the device.
+		       (insert-file-contents-literally
+			mew-random-device nil nil len))
+		     (buffer-string))))
+	  (if (= (length str) len) str))
+      (error nil))))
+
 (defun mew-random-binary-string (len)
-  (let ((ret (mew-make-string len)))
-    (dotimes (i len)
-      (aset ret i (% (mew-random) 256)))
-    ret))
+  "Return a string of LEN random bytes.
+They come from `mew-random-device' when it can be read.  Otherwise
+`mew-random' provides them, which is the best that can be done without
+a device, but see the warning there."
+  (or (mew-random-device-string len)
+      (let ((ret (mew-make-string len)))
+	(dotimes (i len)
+	  (aset ret i (% (mew-random) 256)))
+	ret)))
 
 (defun mew-random-filename (dir len nump &optional suffix)
   (let ((cnt 0) (max 20) ;; ad hoc
