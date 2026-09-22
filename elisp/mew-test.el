@@ -315,6 +315,89 @@ called at all, and the message shown to the user."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew-oauth2.el
+;;;
+
+(ert-deftest mew-test-oauth2-params ()
+  "Values have to be percent-encoded.
+A client secret with \"+\" or \"&\" in it used to arrive mangled."
+  (should (equal (mew-oauth2-params '(("grant_type" . "refresh_token")
+                                      ("client_id" . "abc")))
+                 "grant_type=refresh_token&client_id=abc"))
+  (should (equal (mew-oauth2-params '(("client_secret" . "a+b&c=d")))
+                 "client_secret=a%2Bb%26c%3Dd"))
+  ;; nil is sent as the empty string, as it was before.
+  (should (equal (mew-oauth2-params '(("client_secret" . nil)))
+                 "client_secret=")))
+
+(ert-deftest mew-test-oauth2-query-decode ()
+  "The code comes off the query string percent-encoded."
+  (should (equal (mew-oauth2-query-decode "4%2F0Ab-c_d") "4/0Ab-c_d"))
+  ;; "+" is a space in a query string.
+  (should (equal (mew-oauth2-query-decode "a+b") "a b"))
+  (should (equal (mew-oauth2-query-decode "plain") "plain"))
+  ;; What goes to the token server must be what the browser handed us.
+  (dolist (raw '("4%2F0Ab-c_d" "simple" "a%20b" "x%2Byz"))
+    (should (equal (url-hexify-string (mew-oauth2-query-decode raw))
+                   (url-hexify-string (url-unhex-string raw))))))
+
+(ert-deftest mew-test-oauth2-post-without-curl ()
+  "A missing curl must give nil, not an error."
+  (let (msg)
+    (cl-letf (((symbol-function 'mew-which-exec) (lambda (&rest _) nil))
+              ((symbol-function 'message)
+               (lambda (fmt &rest args) (setq msg (apply #'format fmt args)))))
+      (should-not (mew-oauth2-post "https://example.org/token" "a=b"))
+      (should (string-match "does not exist" msg)))))
+
+(ert-deftest mew-test-xoauth2-refresh-refused ()
+  "A refused refresh token must lead to a new authorization.
+Going on without one made Mew send the literal \"Bearer nil\"."
+  (let ((token (make-hash-table))
+        (authorized nil))
+    (puthash :refresh_token "old-refresh" token)
+    (cl-letf (((symbol-function 'mew-oauth2-refresh-access-token)
+               (lambda (&rest _)
+                 (let ((h (make-hash-table :test 'equal)))
+                   (puthash "error" "invalid_grant" h)
+                   h)))
+              ((symbol-function 'mew-xoauth2-authorize)
+               (lambda (&rest _) (setq authorized t) "fresh-access"))
+              ((symbol-function 'message) #'ignore))
+      (should (equal (mew-xoauth2-get-access-token token nil) "fresh-access"))
+      (should authorized)
+      ;; The refresh token we had must not be thrown away.
+      (should (equal (gethash :refresh_token token) "old-refresh")))))
+
+(ert-deftest mew-test-xoauth2-refresh-kept ()
+  "A refresh which answers without a new refresh token keeps the old one."
+  (let ((token (make-hash-table)))
+    (puthash :refresh_token "old-refresh" token)
+    (cl-letf (((symbol-function 'mew-oauth2-refresh-access-token)
+               (lambda (&rest _)
+                 (let ((h (make-hash-table :test 'equal)))
+                   (puthash "access_token" "fresh-access" h)
+                   (puthash "expires_in" 3600 h)
+                   h)))
+              ((symbol-function 'message) #'ignore))
+      (should (equal (mew-xoauth2-get-access-token token nil) "fresh-access"))
+      (should (equal (gethash :refresh_token token) "old-refresh"))
+      (should (equal (gethash :access_token token) "fresh-access")))))
+
+(ert-deftest mew-test-xoauth2-auth-string-without-token ()
+  "Without an access token nothing resembling one may be sent."
+  (cl-letf (((symbol-function 'mew-passwd-setup-master) #'ignore)
+            ((symbol-function 'mew-passwd-get-passwd) (lambda (&rest _) nil))
+            ((symbol-function 'mew-passwd-set-passwd) #'ignore)
+            ((symbol-function 'mew-passwd-set-counter) #'ignore)
+            ((symbol-function 'mew-xoauth2-get-access-token) (lambda (&rest _) nil))
+            ((symbol-function 'message) #'ignore))
+    (let ((s (mew-xoauth2-auth-string "me@example.org" "tag" nil)))
+      (should (equal s ""))
+      (should-not (string-match "nil" (base64-decode-string (concat s "")))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-auth.el
 ;;;
 
