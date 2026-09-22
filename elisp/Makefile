@@ -147,6 +147,14 @@ $(TEMPFILE2):
 
 ################################################################
 
+.PHONY: test
+test: mew-test.el
+	@echo 'Testing EL files of Mew ... '
+	$(EMACS) -batch -q -no-site-file -L . -l mew-test.el -f ert-run-tests-batch-and-exit
+	@echo 'Testing EL files of Mew ... done'
+
+################################################################
+
 .PHONY: format
 format: $(TEMPFILE3) mew.el
 	@echo 'Formatting EL files of Mew ... '

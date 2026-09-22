@@ -1,0 +1,293 @@
+;;; -*- lexical-binding: t; -*-
+;;; mew-test.el --- ERT tests for Mew
+
+;; Author:  Mew developing team
+;; Created: Sep 22, 2026
+
+;;; Commentary:
+
+;; Tests for functions which do not depend on the user's environment,
+;; that is, no folders, no network and no external programs.
+;;
+;; Run them with:
+;;
+;;	make test
+;;
+;; or directly:
+;;
+;;	emacs -Q -batch -L . -l mew-test.el -f ert-run-tests-batch-and-exit
+
+;;; Code:
+
+(require 'ert)
+(require 'mew)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-func.el: strings
+;;;
+
+(ert-deftest mew-test-split ()
+  (should (equal (mew-split "a:b::c" ?:) '("a" "b" "" "c")))
+  (should (equal (mew-split "abc" ?:) '("abc")))
+  (should (equal (mew-split "" ?:) nil)))
+
+(ert-deftest mew-test-split-quoted ()
+  (should (equal (mew-split-quoted "a,b,c" ?,) '("a" "b" "c")))
+  ;; A separator in a quoted string is not a separator.
+  (should (equal (mew-split-quoted "\"a,b\",c" ?,) '("\"a,b\"" "c")))
+  ;; Single quotes are removed unless NO-SINGLE.
+  (should (equal (mew-split-quoted "'x','y'" ?,) '("x" "y")))
+  (should (equal (mew-split-quoted "'x','y'" ?, nil nil 'no-single)
+                 '("'x'" "'y'")))
+  ;; QOPEN/QCLOSE, as mew-encode-canonicalize-address uses it.
+  (should (equal (mew-split-quoted "to:a,b;,c" ?, ?: ?\; 'no-single)
+                 '("to:a,b;" "c"))))
+
+(ert-deftest mew-test-split-quoted-backslash ()
+  "A backslash escapes the next character.
+`dotimes' rebinds its variable for each iteration since Emacs 28, so
+the loop must not rely on `setq' of the loop variable to skip a
+character."
+  ;; An escaped double quote must not toggle the quoted state.
+  (should (equal (mew-split-quoted "\"a\\\"b\",c" ?,) '("\"a\\\"b\"" "c")))
+  ;; An escaped separator is not a separator.
+  (should (equal (mew-split-quoted "a\\,b,c" ?,) '("a\\,b" "c")))
+  ;; A trailing backslash must not run off the end of the string.
+  (should (equal (mew-split-quoted "a,b\\" ?,) '("a" "b\\"))))
+
+(ert-deftest mew-test-chop ()
+  (should (equal (mew-chop "  a b \t") "a b"))
+  (should (equal (mew-chop "abc") "abc")))
+
+(ert-deftest mew-test-capitalize ()
+  (should (equal (mew-capitalize "content-type") "Content-Type"))
+  (should (equal (mew-capitalize "TEXT/PLAIN") "Text/Plain")))
+
+(ert-deftest mew-test-quote-string ()
+  (should (equal (mew-quote-string "a\"b" ?\\ '(?\")) "a\\\"b"))
+  (should (equal (mew-quote-string "ab" ?\\ '(?\")) "ab")))
+
+(ert-deftest mew-test-remove-single-quote ()
+  (should (equal (mew-remove-single-quote "'a'b'") "ab"))
+  (should (equal (mew-remove-single-quote "ab") "ab")))
+
+(ert-deftest mew-test-replace-white-space ()
+  (should (equal (mew-replace-white-space "a \t\n  b") "a b"))
+  (should (equal (mew-replace-white-space2 "a \t\r\n b") "a_b")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-func.el: lists
+;;;
+
+(ert-deftest mew-test-uniq-list ()
+  (should (equal (mew-uniq-list (list 1 2 1 3 2)) '(1 2 3))))
+
+(ert-deftest mew-test-delete ()
+  (should (equal (mew-delete "k" (list (list "k" 1) (list "j" 2) (list "k" 3)))
+                 '(("j" 2))))
+  (should (equal (mew-delete nil (list (list "k" 1))) '(("k" 1)))))
+
+(ert-deftest mew-test-get-next ()
+  (should (eq (mew-get-next '(a b c) 'b) 'c))
+  ;; The next member of the last one is the first one.
+  (should (eq (mew-get-next '(a b c) 'c) 'a)))
+
+(ert-deftest mew-test-member-case-equal ()
+  (should (equal (mew-member-case-equal "CC" '("to" "cc" "bcc")) 1))
+  (should-not (mew-member-case-equal "x" '("to" "cc"))))
+
+(ert-deftest mew-test-assoc-case-equal ()
+  (should (equal (mew-assoc-case-equal "B" '(("a" 1) ("b" 2)) 0) '("b" 2)))
+  (should-not (mew-assoc-case-equal "c" '(("a" 1) ("b" 2)) 0)))
+
+(ert-deftest mew-test-join ()
+  (should (equal (mew-join "," '("a" "b" "c")) "a,b,c"))
+  (should (equal (mew-join "," nil) "")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-func.el: Date:
+;;;
+
+(ert-deftest mew-test-time-rfc-to-sortkey ()
+  ;; The sort key is in the local zone, so it cannot be compared with a
+  ;; literal.  What matters is that the same instant gives the same key
+  ;; and that the order is preserved.
+  (let ((key (mew-time-rfc-to-sortkey "Wed, 26 Jul 2000 21:18:35 +0900")))
+    (should (equal key (mew-time-rfc-to-sortkey
+                        "Wed, 26 Jul 2000 12:18:35 +0000")))
+    (should (equal key (mew-time-rfc-to-sortkey
+                        "Wed, 26 Jul 2000 12:18:35 GMT")))
+    (should (equal key (mew-time-rfc-to-sortkey
+                        "Wed, 26 Jul 2000 07:18:35 -0500")))
+    (should (string-match "\\`[0-9]\\{14\\}\\'" key)))
+  ;; The seconds are optional.
+  (should (mew-time-rfc-to-sortkey "26 Jul 2000 21:18 +0900"))
+  ;; Older messages sort first.
+  (should (string< (mew-time-rfc-to-sortkey "26 Jul 2000 00:00:00 +0000")
+                   (mew-time-rfc-to-sortkey "27 Jul 2000 00:00:00 +0000")))
+  (should (string< (mew-time-rfc-to-sortkey "31 Dec 1999 23:59:59 +0000")
+                   (mew-time-rfc-to-sortkey "01 Jan 2000 00:00:01 +0000")))
+  ;; A two digit year is 19xx or 20xx.
+  (should (string-prefix-p "20" (mew-time-rfc-to-sortkey
+                                 "26 Jul 00 12:00:00 +0000")))
+  (should (string-prefix-p "19" (mew-time-rfc-to-sortkey
+                                 "26 Jul 99 12:00:00 +0000")))
+  ;; Garbage gives nil instead of an error.
+  (should-not (mew-time-rfc-to-sortkey "not a date")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-header.el
+;;;
+
+(ert-deftest mew-test-addrstr-parse-address ()
+  (should (equal (mew-addrstr-parse-address "a@b.c") "a@b.c"))
+  (should (equal (mew-addrstr-parse-address "A B <a@b.c>") "a@b.c"))
+  (should (equal (mew-addrstr-parse-address "a@b.c (Foo Bar)") "a@b.c"))
+  (should (equal (mew-addrstr-parse-address "\"A, B\" <a@b.c>") "a@b.c")))
+
+(ert-deftest mew-test-addrstr-parse-address-list ()
+  (should (equal (mew-addrstr-parse-address-list "A <a@x>, \"B, C\" <b@y>, c@z")
+                 '("a@x" "b@y" "c@z")))
+  (should-not (mew-addrstr-parse-address-list nil)))
+
+(ert-deftest mew-test-addrstr-extract-user ()
+  (should (equal (mew-addrstr-extract-user "kazu@example.org") "kazu")))
+
+(ert-deftest mew-test-idstr ()
+  (should (equal (mew-idstr-get-first-id "<a@b> <c@d>") "<a@b>"))
+  (should (equal (mew-idstr-get-last-id "<a@b> <c@d>") "<c@d>"))
+  (should (equal (mew-idstr-to-id-list "<a@b>\n\t<c@d>") '("<a@b>" "<c@d>")))
+  (should-not (mew-idstr-get-first-id "no id here")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-bq.el: RFC 2047
+;;;
+
+(ert-deftest mew-test-q-encode-decode ()
+  (should (equal (mew-q-encode-string "a b=c?") "a_b=3Dc=3F"))
+  (should (equal (mew-q-decode-string "a_b=3Dc=3F") "a b=c?"))
+  ;; Broken input gives nil instead of an error.
+  (should-not (mew-q-decode-string "=ZZ")))
+
+(ert-deftest mew-test-header-encode-decode ()
+  (let ((encoded (car (mew-header-encode-string "日本語"))))
+    (should (string-match
+             "\\`=\\?\\([^?]+\\)\\?\\(.\\)\\?\\([^?]+\\)\\?=\\'" encoded))
+    (should (equal (mew-header-decode (match-string 1 encoded)
+                                      (match-string 2 encoded)
+                                      (match-string 3 encoded))
+                   "日本語"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-bq.el: RFC 2231
+;;;
+
+(ert-deftest mew-test-param-decode ()
+  (should (equal (mew-param-decode "text/plain; charset=us-ascii")
+                 '("text/plain" ("charset" "us-ascii"))))
+  (should (equal (mew-param-decode "text/plain; charset=\"us-ascii\"")
+                 '("text/plain" ("charset" "us-ascii"))))
+  ;; Extended parameter, RFC 2231 section 4.
+  (should (equal (mew-param-decode "attachment; filename*=utf-8''%E6%97%A5")
+                 '("attachment" ("filename" "日")))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-bq.el: RFC 3492 punycode
+;;;
+
+(ert-deftest mew-test-punycode ()
+  ;; Test vectors of RFC 3492 section 7.1.
+  (dolist (tc '(("bücher"             . "xn--bcher-kva")
+                ("ひとつ屋根の下2"    . "xn--2-u9tlzr9756bt3uc0v")
+                ("そのスピードで"     . "xn--d9juau41awczczp")
+                ("MajiでKoiする5秒前" . "xn--MajiKoi5-783gue6qz075azm5e")
+                ("パフィーdeルンバ"   . "xn--de-jg4avhby1noc0d")))
+    (should (equal (mew-puny-encode (car tc)) (cdr tc)))
+    (should (equal (mew-puny-decode (cdr tc)) (car tc)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-auth.el
+;;;
+
+;; Note: RFC 2202 also defines cases whose key is longer than 64 bytes.
+;; They are not tested here because mew-hmac-md5 does not hash such a
+;; key first, as RFC 2104 requires.
+
+(ert-deftest mew-test-hmac-md5 ()
+  ;; Test vectors of RFC 2202 section 2.
+  (should (equal (mew-hmac-md5 "Hi There" (make-string 16 ?\x0b))
+                 "9294727a3638bb1c13f48ef8158bfc9d"))
+  (should (equal (mew-hmac-md5 "what do ya want for nothing?" "Jefe")
+                 "750c783e6ab0b503eaa86e310a5db738")))
+
+(ert-deftest mew-test-cram-md5 ()
+  ;; RFC 2195: base64("<user> " + HMAC-MD5(challenge, password))
+  (let ((challenge (mew-base64-encode-string "what do ya want for nothing?")))
+    (should (equal (mew-base64-decode-string
+                    (mew-cram-md5 "user" "Jefe" challenge))
+                   "user 750c783e6ab0b503eaa86e310a5db738"))))
+
+(ert-deftest mew-test-auth-select ()
+  ;; The earlier one in the preference list wins.
+  (should (equal (mew-auth-select2 '("LOGIN" "CRAM-MD5")
+                                   '("CRAM-MD5" "PLAIN" "LOGIN"))
+                 "CRAM-MD5"))
+  (should-not (mew-auth-select2 '("GSSAPI") '("CRAM-MD5" "LOGIN"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-net.el
+;;;
+
+(ert-deftest mew-test-net-msg-pack ()
+  (should (equal (mew-net-msg-pack '("1" "3" "4" "5" "7" "8" "10"))
+                 '("1" "3:5" "7:8" "10")))
+  (should (equal (mew-net-msg-pack '("1")) '("1")))
+  (should-not (mew-net-msg-pack nil)))
+
+(ert-deftest mew-test-serv-to-port ()
+  (should (equal (mew-serv-to-port "imaps") 993))
+  (should (equal (mew-serv-to-port "587") 587))
+  (should (equal (mew-serv-to-port 25) 25)))
+
+(provide 'mew-test)
+
+;;; Copyright Notice:
+
+;; Copyright (C) 2026 Mew developing team.
+;; All rights reserved.
+
+;; Redistribution and use in source and binary forms, with or without
+;; modification, are permitted provided that the following conditions
+;; are met:
+;;
+;; 1. Redistributions of source code must retain the above copyright
+;;    notice, this list of conditions and the following disclaimer.
+;; 2. Redistributions in binary form must reproduce the above copyright
+;;    notice, this list of conditions and the following disclaimer in the
+;;    documentation and/or other materials provided with the distribution.
+;; 3. Neither the name of the team nor the names of its contributors
+;;    may be used to endorse or promote products derived from this software
+;;    without specific prior written permission.
+;;
+;; THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+;; ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+;; PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+;; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+;; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+;; SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+;; BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+;; WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+;; OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+;; IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+;;; mew-test.el ends here

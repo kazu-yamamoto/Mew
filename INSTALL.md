@@ -2,7 +2,7 @@
 
 ## Platforms
 
-Mew now supports Emacs 26.1 or later only.
+Mew now supports Emacs 27.1 or later only.
 
 ## Installation
 
