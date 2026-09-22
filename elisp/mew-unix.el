@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-unix.el -- Settings for Mew on Unix
 
 ;; Author:  Mew developing team

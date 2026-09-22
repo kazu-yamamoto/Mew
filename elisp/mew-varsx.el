@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-varsx.el --- Variables depends on other variables
 
 ;; Author:  Mew developing team
