@@ -19,6 +19,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'ert)
 (require 'mew)
 
@@ -248,6 +249,54 @@ should be encoded as format=flowed."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-mime.el
+;;;
+
+(defun mew-test-unzip-dispatch (ct cdp)
+  "Run `mew-summary-unzip' for a part of CT with CDP and report what it did.
+Summary mode and the cache are stubbed because only the dispatch is
+of interest here, and `mew-unzip-file' is stubbed so that neither a
+zip file nor the \"unzip\" command is needed.  Return a cons of the
+file name handed to `mew-unzip-file', which is `none' if it was not
+called at all, and the message shown to the user."
+  (let ((stx (vector 'single 1 10 nil (list ct) nil nil nil cdp))
+        (called 'none)
+        (msg nil))
+    (cl-letf (((symbol-function 'mew-summary-folder-name)
+               (lambda (&rest _) "+inbox"))
+              ((symbol-function 'mew-summary-message-number2)
+               (lambda (&rest _) "1"))
+              ((symbol-function 'mew-syntax-nums) (lambda (&rest _) nil))
+              ((symbol-function 'mew-cache-hit)
+               (lambda (&rest _) (current-buffer)))
+              ((symbol-function 'mew-cache-decode-syntax) (lambda (&rest _) nil))
+              ((symbol-function 'mew-syntax-get-entry) (lambda (&rest _) stx))
+              ((symbol-function 'mew-unzip-file)
+               (lambda (_buf _beg _end _dir file) (setq called file) nil))
+              ((symbol-function 'message)
+               (lambda (fmt &rest args) (setq msg (apply #'format fmt args)) nil)))
+      (mew-summary-unzip))
+    (cons called msg)))
+
+(ert-deftest mew-test-summary-unzip-dispatch ()
+  "`mew-summary-unzip' must not run unzip on a part it cannot unzip."
+  ;; A zip part with a file name is handed to unzip.
+  (should (equal (car (mew-test-unzip-dispatch
+                       "application/zip" '(("filename" "a.zip"))))
+                 "a.zip"))
+  ;; Application/Octet-Stream is in mew-ct-zip-list, too.
+  (should (equal (car (mew-test-unzip-dispatch
+                       "application/octet-stream" '(("filename" "a.bin"))))
+                 "a.bin"))
+  ;; A part which is not a zip must not reach unzip at all.
+  (should (equal (mew-test-unzip-dispatch "text/plain" '(("filename" "a.txt")))
+                 '(none . "Cannot unzip")))
+  ;; Without a file name there is nowhere to write the zip.
+  (should (equal (mew-test-unzip-dispatch "application/zip" nil)
+                 '(none . "No file name to unzip"))))
+
 ;;; mew-auth.el
 ;;;
 
