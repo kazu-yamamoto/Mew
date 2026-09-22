@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-bq.el --- Base64 and Quoted-Printable encoding for Mew
 
 ;; Author:  Mew developing team
