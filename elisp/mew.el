@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew.el --- Messaging in the Emacs World
 
 ;; Author:  Mew developing team
