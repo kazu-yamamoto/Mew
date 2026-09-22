@@ -214,6 +214,40 @@ character."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew-encode.el
+;;;
+
+(ert-deftest mew-test-encode-load-syntax ()
+  "The draft info file must restore Flowed: and Use-Flowed: separately.
+They are different things: Flowed: is the format=flowed parameter of
+the message being re-edited, while Use-Flowed: is whether this draft
+should be encoded as format=flowed."
+  (let* ((dir (make-temp-file "mew-test" 'dir))
+         (draft (expand-file-name "1" dir))
+         (info (concat draft mew-draft-info-suffix)))
+    (unwind-protect
+        (progn
+          (with-temp-file draft (insert "\n"))
+          (with-temp-file info
+            (prin1 (list (cons "Syntax:" nil)
+                         (cons "Case:" "default")
+                         (cons "Flowed:" "yes")
+                         (cons "Use-Flowed:" t)
+                         (cons "Message:" nil))
+                   (current-buffer)))
+          (with-current-buffer (find-file-noselect draft)
+            (unwind-protect
+                (progn
+                  (should (mew-encode-load-syntax))
+                  (should (equal (mew-tinfo-get-case) "default"))
+                  (should (equal (mew-tinfo-get-flowed) "yes"))
+                  (should (eq (mew-tinfo-get-use-flowed) t)))
+              (set-buffer-modified-p nil)
+              (kill-buffer))))
+      (delete-directory dir 'recursive))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-auth.el
 ;;;
 
