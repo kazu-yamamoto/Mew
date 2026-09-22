@@ -107,7 +107,7 @@ with a search method. Then put the '*' mark onto them. "
 			   (read-string (concat name " pick pattern: "))
 			 (mew-input-pick-pattern (concat name " pick"))))
 	 (if (and (string= pattern "") (not (fboundp flt-func)))
-	     (message (mew-substitute-for-summary "Keyword must be specified. You may use '\\[mew-summary-pick]' instead"))
+	     (message "%s" (mew-substitute-for-summary "Keyword must be specified. You may use '\\[mew-summary-pick]' instead"))
 	   (when (and canon-func (fboundp canon-func))
 	     (setq pattern (funcall canon-func pattern)))
 	   (if (fboundp flt-func)
@@ -141,7 +141,7 @@ with a search method."
 			   (read-string (concat name " virtual pattern: "))
 			 (mew-input-pick-pattern (concat name " virtual"))))
 	(if (and (string= opattern "") (not (fboundp flt-func)))
-	    (message (mew-substitute-for-summary "Keyword must be specified"))
+	    (message "%s" (mew-substitute-for-summary "Keyword must be specified"))
 	  (if (string= opattern "") (setq opattern " "))
 	  (if (and canon-func (fboundp canon-func))
 	      (setq pattern (funcall canon-func opattern))
@@ -781,7 +781,7 @@ Return the generated filename and match-count."
   (mew-summary-only
    (cond
     ((not (file-exists-p (expand-file-name mew-id-db-file mew-mail-path)))
-     (message (mew-substitute-for-summary "Type '\\[mew-summary-make-id-index-all]' to create ID database")))
+     (message "%s" (mew-substitute-for-summary "Type '\\[mew-summary-make-id-index-all]' to create ID database")))
     ((not (mew-which-exec mew-prog-cmew))
      (message "%s not found" mew-prog-cmew))
     (t

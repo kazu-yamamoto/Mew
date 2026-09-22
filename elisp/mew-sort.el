@@ -440,8 +440,8 @@ If this command is used in a remote folder,
 local cache messages are packed."
   (interactive "P")
   (if (not force)
-      (message (mew-substitute-for-summary
-		"Pack breaks search index, so pack was obsoleted. Type '\\[universal-argument]\\[mew-summary-pack]' to force pack."))
+      (message "%s" (mew-substitute-for-summary
+		     "Pack breaks search index, so pack was obsoleted. Type '\\[universal-argument]\\[mew-summary-pack]' to force pack."))
     (mew-summary-only
      (mew-summary-local-only
       (mew-summary-not-in-queue
