@@ -235,7 +235,7 @@
     (mew-smtp-log pnm)
     (if (mew-smtp-get-bcc pnm)
 	(mew-smtp-bcc pro pnm back)
-      (mew-smtp-set-status pro "next")
+      (mew-smtp-set-status pnm "next")
       (mew-smtp-command-next pro pnm))))
 
 (defun mew-smtp-command-quit (pro pnm)

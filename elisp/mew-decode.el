@@ -280,7 +280,7 @@ Return the existence MIME-Version: and the value of Subject:."
 	       "Too large, truncated (the 'T' mark). To get the entire message, type '\\[mew-summary-retrieve-message]'"))))
 	  ((string-match "^Content-" key)
 	   ;; Due to PGP/MIME, properties are not put here.
-	   :; This must be "buffer-substring".
+	   ;; This must be "buffer-substring".
 	   (setq mimep2 t)
 	   (setq contents (cons (buffer-substring beg (point)) contents))
 	   (delete-region beg (point)))

@@ -323,7 +323,8 @@
   (let ((win (selected-window))
 	(key nil) (idx nil)
 	(files nil) (range nil) (func1 nil) (func2 nil) diag)
-    (mew-set '(range beg end) (mew-sort-get-range arg))
+    ;; nil skips a value; this one does not narrow to the region.
+    (mew-set '(range nil nil) (mew-sort-get-range arg))
     (mew-set '(key func1 func2) (mew-sort-ask-key folder))
     (setq diag (if arg folder (format "%s: %s" folder range)))
     ;;

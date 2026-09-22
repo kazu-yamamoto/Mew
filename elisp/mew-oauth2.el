@@ -129,16 +129,18 @@ It serves http://localhost:PORT"
 	  "&code_challenge=" challenge
 	  "&code_challenge_method=S256")))
     (mew-oauth2-cleanup-redirect-handler port)
-    (condition-case nil
-	(progn
-	  (mew-oauth2-setup-redirect-handler port)
-	  (browse-url url-params)
-	  (mew-rendezvous (null mew-oauth2-code))
-	  ;; fixme condition-case
-	  (mew-oauth2-cleanup-redirect-handler port)
-	  mew-oauth2-code)
-      (error "")
-      (quit ""))))
+    ;; The listening socket has to go even when the user gives up, or
+    ;; the port stays taken for the rest of the session.
+    (unwind-protect
+	(condition-case nil
+	    (progn
+	      (mew-oauth2-setup-redirect-handler port)
+	      (browse-url url-params)
+	      (mew-rendezvous (null mew-oauth2-code))
+	      mew-oauth2-code)
+	  (error "")
+	  (quit ""))
+      (mew-oauth2-cleanup-redirect-handler port))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -209,11 +211,13 @@ which does not exist."
          (ignore-errors
            (json-read-from-string
             (base64-decode-string status-string)))))
-    (if json-status
-        (if (string-match "^2" (cdr (assoc 'status json-status)))
-            "OK" ;; 2XX
-          "NO") ;; XXX: Anyway NO?
-      "OK"))) ;; XXX: Maybe OK if not JSON.
+    ;; The status may be a number as well as a string, and it may not
+    ;; be there at all.
+    (let ((status (and (listp json-status) (cdr (assoc 'status json-status)))))
+      (cond
+       ((null status) "OK") ;; XXX: Maybe OK if not JSON.
+       ((string-match "^2" (format "%s" status)) "OK") ;; 2XX
+       (t "NO"))))) ;; XXX: Anyway NO?
 
 (defun mew-xoauth2-auth-string (user tag case)
   (mew-passwd-setup-master)
@@ -355,4 +359,4 @@ that case, so that the refresh token is not thrown away."
 ;; OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ;; IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-;;; mew-summary.el ends here
+;;; mew-oauth2.el ends here

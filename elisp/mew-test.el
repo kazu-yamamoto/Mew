@@ -131,11 +131,21 @@ character."
                    (mew-time-rfc-to-sortkey "27 Jul 2000 00:00:00 +0000")))
   (should (string< (mew-time-rfc-to-sortkey "31 Dec 1999 23:59:59 +0000")
                    (mew-time-rfc-to-sortkey "01 Jan 2000 00:00:01 +0000")))
-  ;; A two digit year is 19xx or 20xx.
-  (should (string-prefix-p "20" (mew-time-rfc-to-sortkey
-                                 "26 Jul 00 12:00:00 +0000")))
-  (should (string-prefix-p "19" (mew-time-rfc-to-sortkey
-                                 "26 Jul 99 12:00:00 +0000")))
+  ;; RFC 5322 4.3: two digits under 50 are 20xx, and anything else of
+  ;; two or three digits is 19xx.  A mid-year date is used so that the
+  ;; year does not depend on the zone.
+  (should (string-prefix-p "2000" (mew-time-rfc-to-sortkey
+                                   "26 Jul 00 12:00:00 +0000")))
+  (should (string-prefix-p "2049" (mew-time-rfc-to-sortkey
+                                   "26 Jul 49 12:00:00 +0000")))
+  (should (string-prefix-p "1950" (mew-time-rfc-to-sortkey
+                                   "26 Jul 50 12:00:00 +0000")))
+  (should (string-prefix-p "1999" (mew-time-rfc-to-sortkey
+                                   "26 Jul 99 12:00:00 +0000")))
+  (should (string-prefix-p "2000" (mew-time-rfc-to-sortkey
+                                   "26 Jul 100 12:00:00 +0000")))
+  (should (string-prefix-p "2899" (mew-time-rfc-to-sortkey
+                                   "26 Jul 999 12:00:00 +0000")))
   ;; Garbage gives nil instead of an error.
   (should-not (mew-time-rfc-to-sortkey "not a date")))
 
@@ -233,6 +243,14 @@ of format specifier\" and hide the real one."
 ;;;
 ;;; mew-encode.el
 ;;;
+
+(ert-deftest mew-test-convert-multipart-without-boundary ()
+  "A multipart without a boundary has to give the encode error.
+`regexp-quote' used to run first and signal wrong-type-argument."
+  (with-temp-buffer
+    (should-error (mew-convert-multipart '("multipart/mixed")))
+    (should (equal (mew-tinfo-get-encode-err)
+                   "No boundary parameter for multipart"))))
 
 (ert-deftest mew-test-encode-load-syntax ()
   "The draft info file must restore Flowed: and Use-Flowed: separately.
@@ -340,6 +358,33 @@ A client secret with \"+\" or \"&\" in it used to arrive mangled."
   (dolist (raw '("4%2F0Ab-c_d" "simple" "a%20b" "x%2Byz"))
     (should (equal (url-hexify-string (mew-oauth2-query-decode raw))
                    (url-hexify-string (url-unhex-string raw))))))
+
+
+(ert-deftest mew-test-xoauth2-json-status ()
+  "The status may be a number, and it may not be there at all.
+Both used to signal wrong-type-argument."
+  (let ((status (lambda (s) (mew-xoauth2-json-status (base64-encode-string s t)))))
+    (should (equal (funcall status "{\"status\":\"200\"}") "OK"))
+    (should (equal (funcall status "{\"status\":\"400\"}") "NO"))
+    (should (equal (funcall status "{\"status\":200}") "OK"))
+    (should (equal (funcall status "{\"status\":400}") "NO"))
+    (should (equal (funcall status "{\"other\":1}") "OK"))
+    (should (equal (funcall status "not json") "OK"))))
+
+(ert-deftest mew-test-oauth2-auth-code-cleanup ()
+  "The listening socket has to go even when the user gives up.
+Otherwise the port stays taken for the rest of the session."
+  (let ((cleanups 0))
+    (cl-letf (((symbol-function 'mew-oauth2-cleanup-redirect-handler)
+               (lambda (&rest _) (setq cleanups (1+ cleanups))))
+              ((symbol-function 'mew-oauth2-setup-redirect-handler) #'ignore)
+              ((symbol-function 'browse-url) (lambda (&rest _) (signal 'quit nil))))
+      (should (equal (mew-oauth2-get-auth-code
+                      "https://example.org/auth" "id" "scope"
+                      "http://localhost:8080" "challenge" 8080)
+                     ""))
+      ;; once before setting up, once on the way out
+      (should (= cleanups 2)))))
 
 (ert-deftest mew-test-oauth2-post-without-curl ()
   "A missing curl must give nil, not an error."
