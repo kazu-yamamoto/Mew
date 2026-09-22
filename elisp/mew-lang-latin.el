@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-lang-latin.el --- Latin specific stuff for Mew
 
 ;; Author:  Mew developing team

@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-mule.el --- Environment of Mule common for Mew
 
 ;; Author:  Mew developing team
