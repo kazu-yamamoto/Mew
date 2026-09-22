@@ -22,6 +22,8 @@
 
 (mew-info-defun "mew-oauth2-" mew-oauth2-info-list)
 
+(defvar mew-prog-curl "curl")
+
 (defvar mew-oauth2-client-id nil)
 
 (defvar mew-oauth2-client-secret nil)
@@ -93,9 +95,14 @@ It serves http://localhost:PORT"
 (defun mew-oauth2-redirect-handler-sentinel (_proc _event)
   )
 
+(defun mew-oauth2-query-decode (str)
+  "Decode STR, one value taken from a query string.
+\"+\" stands for a space there, which `url-unhex-string' does not know."
+  (url-unhex-string (subst-char-in-string ?+ ?\s str)))
+
 (defun mew-oauth2-redirect-handler-filter (proc string)
   (if (string-match "^GET .*[?&]code=\\([^& ]+\\)" string)
-      (let ((code (match-string 1 string)))
+      (let ((code (mew-oauth2-query-decode (match-string 1 string))))
         (process-send-string
          proc
 	 (concat "HTTP/1.1 200 OK\r\n"
@@ -138,18 +145,44 @@ It serves http://localhost:PORT"
 ;;; Getting access_token with authorization code
 ;;;
 
-(defun mew-oauth2-get-access-token (url client-id client-secret redirect-url code verifier)
-  (let ((params (concat
-		 "grant_type=authorization_code"
-		 "&code=" code
-		 "&code_verifier=" verifier
-		 "&client_id=" client-id
-		 "&client_secret=" client-secret
-		 "&redirect_uri=" (url-hexify-string redirect-url))))
+(defun mew-oauth2-params (alist)
+  "Make a form-urlencoded body out of ALIST of (KEY . VALUE).
+A VALUE of nil is sent as the empty string.  Without the encoding, a
+client secret containing \"+\" or \"&\" would arrive mangled."
+  (mapconcat (lambda (kv)
+	       (concat (car kv) "=" (url-hexify-string (or (cdr kv) ""))))
+	     alist "&"))
+
+(defun mew-oauth2-post (url params)
+  "POST PARAMS to URL with curl and return the parsed JSON.
+Return nil if curl is missing or if the answer is not JSON, so that
+the caller can ask for a new authorization instead of sending a token
+which does not exist."
+  (cond
+   ((not (mew-which-exec mew-prog-curl))
+    (message "%s does not exist" mew-prog-curl)
+    nil)
+   (t
     (with-temp-buffer
-      (call-process "curl" nil t nil "-XPOST" url "--data" params "--silent")
+      (call-process mew-prog-curl nil t nil
+		    "-XPOST" url "--data" params "--silent")
       (goto-char (point-min))
-      (json-parse-buffer))))
+      (condition-case nil
+	  (json-parse-buffer)
+	(error
+	 (message "OAuth2: the token server did not answer with JSON")
+	 nil))))))
+
+(defun mew-oauth2-get-access-token (url client-id client-secret redirect-url code verifier)
+  (mew-oauth2-post
+   url
+   (mew-oauth2-params
+    (list (cons "grant_type"    "authorization_code")
+	  (cons "code"          code)
+	  (cons "code_verifier" verifier)
+	  (cons "client_id"     client-id)
+	  (cons "client_secret" client-secret)
+	  (cons "redirect_uri"  redirect-url)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -157,15 +190,13 @@ It serves http://localhost:PORT"
 ;;;
 
 (defun mew-oauth2-refresh-access-token (url client-id client-secret refresh-token)
-  (let ((params (concat
-		 "grant_type=refresh_token"
-		 "&client_id=" client-id
-		 "&client_secret=" client-secret
-		 "&refresh_token=" refresh-token)))
-    (with-temp-buffer
-      (call-process "curl" nil t nil "-XPOST" url "--data" params "--silent")
-      (goto-char (point-min))
-      (json-parse-buffer))))
+  (mew-oauth2-post
+   url
+   (mew-oauth2-params
+    (list (cons "grant_type"    "refresh_token")
+	  (cons "client_id"     client-id)
+	  (cons "client_secret" client-secret)
+	  (cons "refresh_token" refresh-token)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -194,54 +225,75 @@ It serves http://localhost:PORT"
     (when mew-passwd-master
       (mew-passwd-save))
     ;; base64(user=user@example.com^Aauth=Bearer ya29vF9dft4...^A^A)
-    (base64-encode-string (format "user=%s\1auth=Bearer %s\1\1" user access-token) t)))
+    (if access-token
+	(base64-encode-string
+	 (format "user=%s\1auth=Bearer %s\1\1" user access-token) t)
+      ;; Sending "Bearer nil" only looks like an attempt to the server.
+      (message "OAuth2: no access token for %s" tag)
+      "")))
+
+(defun mew-xoauth2-store (token json)
+  "Keep the tokens of JSON in TOKEN.
+The refresh token is kept only when the answer carries one, since the
+server does not repeat it on every refresh."
+  (let ((access-token (gethash "access_token" json))
+	(refresh-token (gethash "refresh_token" json))
+	(expires-in (gethash "expires_in" json)))
+    (puthash :access_token access-token token)
+    (if refresh-token (puthash :refresh_token refresh-token token))
+    (puthash :expire (if expires-in (time-add (- expires-in 100) nil)) token)
+    access-token))
+
+(defun mew-xoauth2-refresh (token case)
+  "Get a new access token with the refresh token kept in TOKEN.
+Return nil when there is none or when the server refused it, which
+happens once it is revoked or has expired.  TOKEN is left untouched in
+that case, so that the refresh token is not thrown away."
+  (let ((refresh-token (gethash :refresh_token token))
+	json)
+    (when refresh-token
+      (setq json (mew-oauth2-refresh-access-token
+		  (mew-oauth2-token-url case)
+		  (mew-oauth2-client-id case)
+		  (mew-oauth2-client-secret case)
+		  refresh-token))
+      (if (and json (gethash "access_token" json))
+	  (mew-xoauth2-store token json)
+	(message "OAuth2: the refresh token was refused")
+	nil))))
+
+(defun mew-xoauth2-authorize (token case)
+  "Run the authorization code flow and keep the result in TOKEN."
+  (let* ((verifier (mew-oauth2-pkce-code-verifier))
+	 (challenge (mew-oauth2-pkce-code-challenge verifier))
+	 (auth-code (mew-oauth2-get-auth-code
+		     (mew-oauth2-auth-url case)
+		     (mew-oauth2-client-id case)
+		     (mew-oauth2-resource-url case)
+		     (mew-oauth2-redirect-url case)
+		     challenge
+		     (mew-oauth2-redirect-port case)))
+	 (json (mew-oauth2-get-access-token
+		(mew-oauth2-token-url case)
+		(mew-oauth2-client-id case)
+		(mew-oauth2-client-secret case)
+		(mew-oauth2-redirect-url case)
+		auth-code
+		verifier)))
+    (if (and json (gethash "access_token" json))
+	(mew-xoauth2-store token json)
+      (message "OAuth2: no access token was given")
+      nil)))
 
 (defun mew-xoauth2-get-access-token (token case)
-  (let* ((expire (gethash :expire token))
-	 (access-token (gethash :access_token token))
-	 (refresh-token (gethash :refresh_token token)))
-    (cond
-     ((and access-token (time-less-p nil expire))
-      access-token)
-     (refresh-token
-      (let* ((json (mew-oauth2-refresh-access-token
-		    (mew-oauth2-token-url case)
-		    (mew-oauth2-client-id case)
-		    (mew-oauth2-client-secret case)
-		    refresh-token))
-	     (expires-in (gethash "expires_in" json))
-	     (refresh-token (gethash "refresh_token" json)))
-	(setq access-token (gethash "access_token" json))
-	(setq expire (if expires-in (time-add (- expires-in 100) nil) nil))
-	(puthash :access_token access-token token)
-	(if refresh-token (puthash :refresh_token refresh-token token))
-	(puthash :expire expire token)
-	access-token))
-     (t
-      (let* ((verifier (mew-oauth2-pkce-code-verifier))
-	     (challenge (mew-oauth2-pkce-code-challenge verifier))
-	     (auth-code (mew-oauth2-get-auth-code
-			 (mew-oauth2-auth-url case)
-			 (mew-oauth2-client-id case)
-			 (mew-oauth2-resource-url case)
-			 (mew-oauth2-redirect-url case)
-			 challenge
-			 (mew-oauth2-redirect-port case)))
-	     (json (mew-oauth2-get-access-token
-		    (mew-oauth2-token-url case)
-		    (mew-oauth2-client-id case)
-		    (mew-oauth2-client-secret case)
-		    (mew-oauth2-redirect-url case)
-		    auth-code
-		    verifier))
-	     (expires-in (gethash "expires_in" json)))
-	(setq access-token (gethash "access_token" json))
-	(setq refresh-token (gethash "refresh_token" json))
-	(setq expire (if expires-in (time-add (- expires-in 100) nil) nil))
-	(puthash :access_token access-token token)
-	(puthash :refresh_token refresh-token token)
-	(puthash :expire expire token)
-	access-token)))))
+  (let ((access-token (gethash :access_token token))
+	(expire (gethash :expire token)))
+    (if (and access-token expire (time-less-p nil expire))
+	access-token
+      ;; A refused refresh token is not the end: ask for a new
+      ;; authorization instead of going on without a token.
+      (or (mew-xoauth2-refresh token case)
+	  (mew-xoauth2-authorize token case)))))
 ;;;
 
 ;; RFC 7636 Appendix A
