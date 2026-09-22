@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-message.el --- Message mode for Mew
 
 ;; Author:  Mew developing team

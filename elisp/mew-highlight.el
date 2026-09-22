@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: nil; -*-
+;;; -*- lexical-binding: t; -*-
 ;;; mew-highlight.el --- Highlight for Mew
 
 ;; Author:  Mew developing team
