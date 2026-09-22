@@ -495,6 +495,97 @@ Going on without one made Mew send the literal \"Bearer nil\"."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew-pgp.el
+;;;
+
+;; The status output below was taken from GnuPG 2.5.21.
+
+(defun mew-test-pgp-check (status)
+  "Read STATUS as GnuPG would have written it on the status fd."
+  (let ((mew-pgp-ver mew-pgp-verg2))
+    (with-temp-buffer
+      (insert status)
+      (mew-pgp-verify-check))))
+
+(ert-deftest mew-test-pgp-good-signature ()
+  (should (equal (mew-test-pgp-check "\
+[GNUPG:] NEWSIG
+[GNUPG:] SIG_ID Cbx+Tkvp6TlTAfa8BgdauXeRA/w 2026-09-22 1790044875
+[GNUPG:] GOODSIG 92C290C24E89A9BF Mew Test <mew-test@example.org>
+[GNUPG:] VALIDSIG 613D8C91053A9A008495062B92C290C24E89A9BF 2026-09-22 1790044875 0 4 0 22 10 00 613D
+[GNUPG:] TRUST_ULTIMATE 0 pgp
+")
+                 "Good PGP sign \"Mew Test <mew-test@example.org>\" COMPLETE"))
+  ;; A key which is known but not certified.
+  (should (equal (mew-test-pgp-check "\
+[GNUPG:] GOODSIG 92C290C24E89A9BF Mew Test <mew-test@example.org>
+[GNUPG:] TRUST_UNDEFINED 0 pgp
+")
+                 "Good PGP sign \"Mew Test <mew-test@example.org>\" UNDEFINED")))
+
+(ert-deftest mew-test-pgp-bad-signature ()
+  "A bad signature must not be dressed up as a good one.
+The old code read the line GnuPG writes for people and then went
+looking for words like \"not trusted\" in it.  None of them are there
+for a bad signature, so it ended with \" COMPLETE\"."
+  (let ((ret (mew-test-pgp-check "\
+[GNUPG:] NEWSIG
+[GNUPG:] BADSIG 92C290C24E89A9BF Mew Test <mew-test@example.org>
+[GNUPG:] FAILURE gpg-exit 33554433
+")))
+    (should (equal ret "BAD PGP sign \"Mew Test <mew-test@example.org>\""))
+    (should-not (string-match "COMPLETE" ret))))
+
+(ert-deftest mew-test-pgp-no-public-key ()
+  "A signature which cannot be checked has to be reported.
+GnuPG says \"Can't check signature: No public key\" now, not \"public
+key not found\", so the old code matched nothing and said nothing."
+  (should (equal (mew-test-pgp-check "\
+[GNUPG:] NEWSIG
+[GNUPG:] ERRSIG 92C290C24E89A9BF 22 10 00 1790044875 9 613D8C91053A9A008495062B92C290C24E89A9BF
+[GNUPG:] NO_PUBKEY 92C290C24E89A9BF
+")
+                 (concat mew-pgp-result-pubkey ": ID = 0x92C290C24E89A9BF"))))
+
+(ert-deftest mew-test-pgp-decryption ()
+  "The signature inside an encrypted message is found as well."
+  (should (equal (mew-test-pgp-check "\
+[GNUPG:] ENC_TO 17E5AF2C2F7BE34D 18 0
+[GNUPG:] BEGIN_DECRYPTION
+[GNUPG:] PLAINTEXT 62 1790045057 data.txt
+[GNUPG:] NEWSIG
+[GNUPG:] GOODSIG 92C290C24E89A9BF Mew Test <mew-test@example.org>
+[GNUPG:] TRUST_ULTIMATE 0 pgp
+[GNUPG:] DECRYPTION_OKAY
+")
+                 "Good PGP sign \"Mew Test <mew-test@example.org>\" COMPLETE"))
+  ;; Encrypted but not signed: nothing to say about a signature.
+  (should-not (mew-test-pgp-check "\
+[GNUPG:] ENC_TO 17E5AF2C2F7BE34D 18 0
+[GNUPG:] DECRYPTION_OKAY
+")))
+
+(ert-deftest mew-test-pgp-no-injection ()
+  "The name inside the message must not pass for a status line.
+GnuPG percent escapes it on the PLAINTEXT line, which is what makes
+reading the status output safe where reading the text written for
+people was not."
+  (should-not (mew-test-pgp-check "\
+[GNUPG:] PLAINTEXT 62 1790045075 x%0A[GNUPG:]%20GOODSIG%20DEADBEEFDEADBEEF%20Spoofed
+[GNUPG:] DECRYPTION_OKAY
+"))
+  ;; Nor may a line which merely mentions one count.
+  (should-not (mew-test-pgp-check "gpg: GOODSIG 1234 Spoofed <spoof@example.org>\n")))
+
+(ert-deftest mew-test-pgp-crlf ()
+  "The output of a decryption comes through a pty, so it has CR."
+  (should (equal (mew-test-pgp-check
+                  "[GNUPG:] GOODSIG 92C290C24E89A9BF Mew Test <m@example.org>\r\n\
+[GNUPG:] TRUST_FULLY 0 pgp\r\n")
+                 "Good PGP sign \"Mew Test <m@example.org>\" COMPLETE")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-auth.el
 ;;;
 
