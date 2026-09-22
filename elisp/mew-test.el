@@ -100,6 +100,18 @@ This is what the obsolete `string-as-multibyte' did."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew-func.el: files
+;;;
+
+(ert-deftest mew-test-file-get-links ()
+  "A file which has not been linked to has one link."
+  (let ((file (make-temp-file "mew-test")))
+    (unwind-protect
+        (should (equal (mew-file-get-links file) 1))
+      (delete-file file))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-func.el: lists
 ;;;
 
@@ -708,6 +720,42 @@ In a batch run epa is not loaded, so this test tells the two apart."
                  nil)))
       (mew-passwd-auth-source-get-passwd "user@host:993"))
     (should (eq seen 'loopback))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-pick.el
+;;;
+
+(ert-deftest mew-test-pick-parse ()
+  "The pattern of a pick, from the text to the parse tree.
+`mew-pick-parse1' and the rest read and set
+`mew-inherit-pick-tokens', so the binding has to stay dynamic."
+  (should (equal (mew-pick-parse (mew-pick-lex "from=kazu"))
+                 '(("=" "from" "kazu"))))
+  (should (equal (mew-pick-parse (mew-pick-lex "from=kazu & subject=test"))
+                 '(("=" "from" "kazu") and ("=" "subject" "test"))))
+  (should (equal (mew-pick-parse (mew-pick-lex "from=a | from=b"))
+                 '(("=" "from" "a") or ("=" "from" "b"))))
+  (should (equal (mew-pick-parse (mew-pick-lex "! from=spam"))
+                 '(not ("=" "from" "spam"))))
+  (should (equal (mew-pick-parse (mew-pick-lex "(from=a | from=b) & subject=x"))
+                 '(open ("=" "from" "a") or ("=" "from" "b") close
+                        and ("=" "subject" "x"))))
+  (should-not (mew-pick-parse (mew-pick-lex ""))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-summary.el
+;;;
+
+(ert-deftest mew-test-summary-multi-msgs-binds-on-demand ()
+  "FLD-MSG-LIST is bound only for a body which mentions it.
+Binding it for a body which does not is an unused variable once this
+file is compiled with lexical binding."
+  (let ((with (macroexpand '(mew-summary-multi-msgs (ignore FLD-MSG-LIST))))
+        (without (macroexpand '(mew-summary-multi-msgs (ignore FILES)))))
+    (should (member '(FLD-MSG-LIST FLD-MSGS) (cadr with)))
+    (should-not (member '(FLD-MSG-LIST FLD-MSGS) (cadr without)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
