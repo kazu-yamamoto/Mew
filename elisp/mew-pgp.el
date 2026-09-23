@@ -168,7 +168,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
     "encryption failed: Unusable public key"))
 
 (defconst mew-pgp-msg-no-vrfkey
-  '("Key matching" "unknown keyid" "key does not meet" "public key not found" "public key not found"))
+  '("Key matching" "unknown keyid" "key does not meet" "public key not found" "No public key"))
 
 (defconst mew-pgp-msg-no-keyring
   '("Keyring file" "Keyring file" "NO MESSAGE" "public key not found" "No public key"))
