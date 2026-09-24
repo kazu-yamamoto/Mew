@@ -637,11 +637,33 @@ flowed or not.  Here is an example:
 ;;; Misc
 ;;;
 
+(defun mew-draft-body-clear-read-only ()
+  "Take the read-only property off the body of this draft.
+In a draft only the header separator and the attachments are meant to
+carry it.  A body which has somehow come by it can be neither edited
+nor sent, and nothing takes it off again, so the draft stays that way
+for as long as the buffer lives.  See #128."
+  (let ((end (mew-header-end)))
+    (when end
+      (save-excursion
+	(goto-char end)
+	(forward-line) ;; over the separator
+	(let ((beg (point))
+	      ;; the attachments keep theirs
+	      (fin (or (mew-attach-begin) (point-max))))
+	  (when (< beg fin)
+	    (mew-elet
+	     (put-text-property beg fin 'read-only nil))))))))
+
 (defun mew-draft-save-buffer ()
   "Save this draft."
   (interactive)
   (let ((after-change-functions nil))
     (save-excursion
+      ;; This runs at the end of every draft preparation and again on
+      ;; every C-x C-s, so a body which has come by the property is
+      ;; freed rather than staying stuck.
+      (mew-draft-body-clear-read-only)
       (mew-header-clear 'keep-read-only)
       (insert-before-markers "\n") ;; for mew-summary-reply
       (save-buffer)
