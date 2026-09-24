@@ -1223,6 +1223,49 @@ underscore and a space the wrong way round and matches nothing."
   (should (equal (mew-q-encode-string "Mail_local/" ?%) "Mail%5Flocal/"))
   (should (equal (mew-q-encode-string "Mail dir/" ?%) "Mail_dir/")))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-encode.el: a failing encoder
+;;;
+
+(ert-deftest mew-test-encode-mime-body-check ()
+  "What the encoder printed has to go when it failed, since it sits
+where the encoded body would be and would be sent as the message."
+  (with-temp-buffer
+    (insert "kept")
+    (let ((beg (point-max)))
+      (insert "encoded body")
+      (mew-encode-mime-body-check 0 beg) ;; 0 means it worked
+      (should (equal (buffer-string) "keptencoded body"))))
+  (with-temp-buffer
+    (insert "kept")
+    (let ((beg (point-max)))
+      (insert "junk from a failing encoder")
+      (should-error (mew-encode-mime-body-check 1 beg))
+      (should (equal (buffer-string) "kept"))
+      (should (equal (mew-tinfo-get-encode-err)
+		     (concat mew-prog-mime-encode " failed")))))
+  ;; nil is a program which could not be run at all
+  (with-temp-buffer
+    (insert "junk")
+    (should-error (mew-encode-mime-body-check nil (point-min)))
+    (should (equal (buffer-string) ""))))
+
+(ert-deftest mew-test-convert-mime-body-failure ()
+  "The whole path, with an encoder which prints and then fails."
+  (let* ((dir (make-temp-file "mew-test" 'dir))
+	 (mew-temp-dir dir)
+	 (mew-temp-file (expand-file-name "mew" dir)))
+    (unwind-protect
+	(cl-letf (((symbol-function 'mew-which-exec) (lambda (&rest _) "mewencode"))
+		  ((symbol-function 'call-process)
+		   (lambda (&rest _) (insert "junk from a failing encoder\n") 1)))
+	  (with-temp-buffer
+	    (insert "hello\n")
+	    (should-error (mew-convert-mime-body (point-min) (point-max) mew-qp t))
+	    (should (equal (buffer-string) ""))))
+      (delete-directory dir 'recursive))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
