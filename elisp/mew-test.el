@@ -1266,6 +1266,25 @@ where the encoded body would be and would be sent as the message."
 	    (should (equal (buffer-string) ""))))
       (delete-directory dir 'recursive))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-func.el: my own addresses
+;;;
+
+(ert-deftest mew-test-my-address-regex-list ()
+  "A bare user name is mine, which is how locally delivered mail
+arrives.  Anything else has to be a whole address."
+  (let ((mew-config-alist '(("default" ("user" "kazu")
+			     ("mail-domain" "example.org"))))
+	(mew-mail-address-list nil))
+    (let ((me (mew-get-my-address-regex-list)))
+      (should (mew-is-my-address me "kazu@example.org"))
+      (should (mew-is-my-address me "kazu"))  ;; no domain
+      (should (mew-is-my-address me "KAZU"))  ;; case is ignored
+      (should-not (mew-is-my-address me "kazu@elsewhere.example.com"))
+      (should-not (mew-is-my-address me "other@example.org"))
+      (should-not (mew-is-my-address me "kazu@")))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:

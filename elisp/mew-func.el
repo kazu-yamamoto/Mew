@@ -1398,6 +1398,16 @@ PRO is killed if it is still alive by then."
   "This creates a list of regular expression used to tell
 whether or not a given address is mine. The list is created
 from (mew-user), (mew-mail-address), and `mew-mail-address-list'."
+  ;; The first one has no domain in it, on purpose: mail delivered
+  ;; locally tends to arrive with a bare user name in From:, and that
+  ;; is mine as well.  Mew itself always writes a whole address, so a
+  ;; From: without a domain comes from somewhere else.
+  ;;
+  ;; Everything else is a whole address.  mew-mail-address-list is
+  ;; built by mew-config-setup out of (mew-mail-address case) of every
+  ;; case, each anchored at both ends.
+  ;;
+  ;; The match ignores case; see mew-is-my-address.
   (cons (concat "^" (regexp-quote (mew-user)) "$")
 	(cons (concat "^" (regexp-quote (mew-mail-address)) "$")
 	      mew-mail-address-list)))
