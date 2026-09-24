@@ -707,7 +707,7 @@ Return a part syntax after moving the beginning of the content body."
 	       (string-match mew-buffer-cache-prefix (buffer-name)))
       (mew-highlight-body-region (mew-syntax-get-begin syntax) (point-max)))
     (unless hend
-      (mew-syntax-set-end syntax (point-max))) ;; ajusting
+      (mew-syntax-set-end syntax (point-max))) ;; adjusting
     (if encap
 	;; Mew allows text/plain and multipart/* for body.
 	;; If other CT: is embedded under message, it should be

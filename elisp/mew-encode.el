@@ -736,7 +736,7 @@ region and would go out as the message, so that is removed first."
     (when (and file (string-match mew-regex-nonascii file))
       (setq name (car (mew-header-encode-string file)))
       ;; name must not be double-quoted here.
-      ;; mew-heaer-insert will do this later
+      ;; mew-header-insert will do this later
       (list "name" name))))
 
 (defun mew-encode-flowed (beg end)

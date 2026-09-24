@@ -118,7 +118,7 @@
 (defun mew-mail-address (&optional case)
   (concat (mew-user case) "@" (mew-mail-domain case)))
 
-;; mew-from is really strange to maintain backword compatibility.
+;; mew-from is really strange to maintain backward compatibility.
 (defun mew-from (&optional case)
   (or (unless mew-config-alist
 	(if mew-generate-from-list
