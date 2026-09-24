@@ -1,5 +1,4 @@
-;;; -*- lexical-binding: t; -*-
-;;-*-coding:iso-2022-7bit;-*-
+;;; -*- coding: iso-2022-7bit; lexical-binding: t; -*-
 ;;; mew-lang-jp.el --- Japanese specific stuff for Mew
 
 ;; Author:  Mew developing team
