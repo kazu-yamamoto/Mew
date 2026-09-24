@@ -1171,6 +1171,41 @@ argument, where \"ps\" would show it to everybody on the machine."
     (should-not (member "s3cret" captured))
     (should-not (member "-P" captured))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-pgp.el: the passphrase of GnuPG 2
+;;;
+
+(ert-deftest mew-test-pgp-loopback-options ()
+  "GnuPG 2 hands the passphrase inquiry to pinentry unless it is told
+to ask over its command channel, which is the only channel Mew can
+answer on."
+  (let ((mew-use-pgp-loopback-pinentry t))
+    (let ((mew-pgp-ver mew-pgp-verg2))
+      (should (equal (mew-pgp-loopback-options '("--detach-sign"))
+		     '("--detach-sign" "--pinentry-mode" "loopback"))))
+    ;; older programs ask on their own terminal, which Mew reads
+    (let ((mew-pgp-ver mew-pgp-verg))
+      (should (equal (mew-pgp-loopback-options '("--detach-sign"))
+		     '("--detach-sign")))))
+  ;; the way out for an agent told no-allow-loopback-pinentry
+  (let ((mew-use-pgp-loopback-pinentry nil)
+	(mew-pgp-ver mew-pgp-verg2))
+    (should (equal (mew-pgp-loopback-options '("--detach-sign"))
+		   '("--detach-sign")))))
+
+(ert-deftest mew-test-pgp-passphrase-prompt ()
+  "GnuPG 2 asks for the passphrase on the status channel and never
+prints a prompt of its own."
+  (let* ((mew-pgp-ver mew-pgp-verg2)
+	 (regex (mew-pgp-get mew-pgp-msg-enter-pass)))
+    (should (string-match regex "[GNUPG:] GET_HIDDEN passphrase.enter\n"))
+    ;; a gpg which does print the prompt is still understood
+    (should (string-match regex "Enter passphrase: "))
+    ;; the line which merely announces the need is not the inquiry
+    (should-not (string-match regex
+			      "[GNUPG:] NEED_PASSPHRASE 680C9B8A 680C9B8A 22 0\n"))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:

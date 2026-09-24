@@ -135,7 +135,9 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
     "Enter pass phrase: "
     "Enter pass phrase: "
     "Enter passphrase: "
-    "Enter passphrase: "))
+    ;; GnuPG 2 asks over the command channel and says so on the status
+    ;; channel.  It never prints the prompt itself.
+    "\\[GNUPG:\\] GET_HIDDEN passphrase\\.enter\\|Enter passphrase: "))
 
 (defconst mew-pgp-msg-reenter-pass
   '("Enter pass phrase: "
@@ -322,6 +324,27 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 ;; xxx how about multiple users on local machine?
 (defun mew-pgp-passtag ()
   (mew-pgp-get mew-pgp-list))
+
+(defcustom mew-use-pgp-loopback-pinentry t
+  "*If non-nil, Mew asks for the passphrase itself and hands it to
+GnuPG 2 over its command channel.  If nil, GnuPG asks through its own
+pinentry program, which Mew cannot answer.
+
+Set this to nil if gpg-agent is told \"no-allow-loopback-pinentry\",
+where GnuPG refuses to start at all:
+
+	gpg: setting pinentry mode \='loopback\=' failed: Not supported"
+  :group 'mew-privacy
+  :type 'boolean)
+
+(defun mew-pgp-loopback-options (options)
+  "Add the loopback pinentry option to OPTIONS for GnuPG 2.
+Older programs ask on their own terminal, which Mew reads through a
+pty, so they need nothing here."
+  (if (and mew-use-pgp-loopback-pinentry
+	   (eq mew-pgp-ver mew-pgp-verg2))
+      (append options '("--pinentry-mode" "loopback"))
+    options))
 
 (defun mew-pgp-passphrase (&optional again)
   (let ((prompt (if again
@@ -610,7 +633,7 @@ what happens for a message which is encrypted but not signed."
   (let ((process-connection-type mew-connection-type2)
 	(loption (mew-pgp-get mew-prog-pgp-arg-luserid))
 	(ooption (mew-pgp-get mew-prog-pgp-arg-output))
-	(soptions (mew-pgp-get mew-prog-pgps-arg))
+	(soptions (mew-pgp-loopback-options (mew-pgp-get mew-prog-pgps-arg)))
 	(pgps (mew-pgp-get mew-prog-pgps))
 	file2 process)
     (setq file2 (concat (mew-make-temp-name) mew-pgp-ascii-suffix))
@@ -627,7 +650,12 @@ what happens for a message which is encrypted but not signed."
     (mew-rendezvous mew-pgp-running)
     (message "PGP signing...done")
     (unless (file-exists-p file2) ;; for unpredictable error
-      (mew-passwd-set-passwd (mew-pgp-passtag) nil))
+      (mew-passwd-set-passwd (mew-pgp-passtag) nil)
+      ;; Say something.  Handing back a file which is not there leaves
+      ;; the caller to read it and get a file-error, which reaches the
+      ;; user as a backtrace instead of a message.
+      (unless mew-pgp-sign-msg
+	(setq mew-pgp-sign-msg mew-pgp-result-other)))
     (list file2 nil (mew-pgp-get-micalg) mew-pgp-sign-msg))) ;; return
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
