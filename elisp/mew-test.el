@@ -1285,6 +1285,62 @@ arrives.  Anything else has to be a whole address."
       (should-not (mew-is-my-address me "other@example.org"))
       (should-not (mew-is-my-address me "kazu@")))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-draft.el: a read-only body
+;;;
+
+(defun mew-test-draft-buffer (contaminate attach)
+  "Build a draft in the current buffer, as mew-header-set does it.
+With CONTAMINATE, the body gets the read-only property, which is #128.
+With ATTACH, an attachments region is there and keeps its own."
+  (let ((inhibit-read-only t))
+    (insert "To: a@example.org\n")
+    (let ((sep (point)))
+      (insert mew-header-separator "\n")
+      (put-text-property sep (point) 'read-only t))
+    (let ((body (point)))
+      (insert "one\ntwo\n")
+      (when contaminate
+	(put-text-property body (point-max) 'read-only t)))
+    (when attach
+      (let ((beg (point)))
+	(insert "\n--attachments--\nend\n")
+	(put-text-property beg (1+ beg) 'mew-attach-begin t)
+	(put-text-property (1- (point-max)) (point-max) 'mew-attach-end t)
+	(put-text-property (mew-attach-begin) (point-max) 'read-only t)))))
+
+(ert-deftest mew-test-draft-body-clear-read-only ()
+  "A body with the read-only property can be neither edited nor sent."
+  (mew-regex-setup)
+  (with-temp-buffer
+    (mew-test-draft-buffer 'contaminate nil)
+    (should (get-text-property (- (point-max) 2) 'read-only))
+    (mew-draft-body-clear-read-only)
+    (should-not (get-text-property (- (point-max) 2) 'read-only))
+    ;; the separator keeps its own
+    (should (get-text-property (mew-header-end) 'read-only)))
+  ;; a body which is already right is left alone
+  (with-temp-buffer
+    (mew-test-draft-buffer nil nil)
+    (mew-draft-body-clear-read-only)
+    (should-not (get-text-property (- (point-max) 2) 'read-only))
+    (should (get-text-property (mew-header-end) 'read-only))))
+
+(ert-deftest mew-test-draft-body-clear-read-only-with-attach ()
+  "The attachments are meant to be read-only, so they stay that way."
+  (mew-regex-setup)
+  (with-temp-buffer
+    (mew-test-draft-buffer 'contaminate 'attach)
+    (let ((attach (mew-attach-begin)))
+      (should attach)
+      (mew-draft-body-clear-read-only)
+      ;; the body is free
+      (should-not (get-text-property (- attach 2) 'read-only))
+      ;; the attachments are not
+      (should (get-text-property attach 'read-only))
+      (should (get-text-property (- (point-max) 2) 'read-only)))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
