@@ -165,7 +165,7 @@ VERSION = `git tag --sort=authordate | tail -1 | sed -e 's/v//'`
 
 # The branch to make the tarball from.  Say "make archive BRANCH=6.11rc"
 # to cut one from a release branch instead.
-BRANCH = master
+BRANCH = main
 
 .PHONY: archive
 archive:
