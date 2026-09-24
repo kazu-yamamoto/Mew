@@ -157,7 +157,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   '("DUMMY"
     "^WARNING:[ -9;-~\n]+belongs? to:"
     "^WARNING:[ -9;-~\n]+belongs? to:"
-    "There is no indication that this key really belongs to the owner"
+    "There is no assurance this key belongs to the named user"
     "There is no assurance this key belongs to the named user"))
 
 (defconst mew-pgp-msg-pubkey-expired
