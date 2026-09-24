@@ -288,7 +288,7 @@
   (let* ((user (mew-imap2-get-user pnm))
 	 (tag (mew-imap2-passtag pnm))
          (auth-string (mew-xoauth2-auth-string user tag (mew-imap2-get-case pnm))))
-    ;; XXX: need to reset satus if token is nil.
+    ;; XXX: need to reset status if token is nil.
     (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
     (mew-imap2-set-status pnm "auth-xoauth2")))
 

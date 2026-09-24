@@ -388,7 +388,7 @@ exp_not(struct pat *top) {
 }
 
 /* Binding logical and/or to the previous one and the next one.
- * This is processed barkward from the tail so that the result
+ * This is processed backward from the tail so that the result
  * P_EXP can be evaluated naturally.
  *
  * P_EXP1 P_ANDa P_EXP2 P_ANDb P_EXP3
