@@ -7,6 +7,7 @@
 ;;; Code:
 
 (require 'mew)
+(require 'url-util) ;; url-path-allowed-chars
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -512,6 +513,12 @@ with a search method."
 (defvar mew-search-est-db "casket")
 (defvar mew-prog-est-update "mewest")
 
+(defun mew-search-est-path-encode (path)
+  "Encode PATH the way Hyper Estraier stores it in the @uri attribute.
+That is a percent-encoded file URI, where a space becomes %20 while an
+underscore and a slash are left alone."
+  (url-hexify-string path url-path-allowed-chars))
+
 (defun mew-search-est (pattern path filter)
   (setq pattern (mew-cs-encode-string pattern mew-cs-est))
   (if (string= filter "")
@@ -536,7 +543,8 @@ with a search method."
       (setq path (substring path (match-end 0)))
       (mew-plet
        (mew-alet
-	(setq attr (format "@uri STRINC %s" (mew-q-encode-string path ?%)))
+	(setq attr (format "@uri STRINC %s"
+			   (mew-search-est-path-encode path)))
 	(cond
 	 ((string-match "^ *ANDNOT " pattern)
 	  (setq pattern (concat "[UVSET] " pattern)))

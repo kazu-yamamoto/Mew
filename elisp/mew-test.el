@@ -1206,6 +1206,23 @@ prints a prompt of its own."
     (should-not (string-match regex
 			      "[GNUPG:] NEED_PASSPHRASE 680C9B8A 680C9B8A 22 0\n"))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-search.el
+;;;
+
+(ert-deftest mew-test-search-est-path-encode ()
+  "Hyper Estraier stores a file URI percent-encoded, so a folder is
+looked up that way.  Mew used to apply Q encoding here, which gets an
+underscore and a space the wrong way round and matches nothing."
+  (should (equal (mew-search-est-path-encode "Mail/") "Mail/"))
+  (should (equal (mew-search-est-path-encode "Mail/inbox/") "Mail/inbox/"))
+  (should (equal (mew-search-est-path-encode "Mail_local/") "Mail_local/"))
+  (should (equal (mew-search-est-path-encode "Mail dir/") "Mail%20dir/"))
+  ;; what Q encoding gave, neither of which Hyper Estraier has
+  (should (equal (mew-q-encode-string "Mail_local/" ?%) "Mail%5Flocal/"))
+  (should (equal (mew-q-encode-string "Mail dir/" ?%) "Mail_dir/")))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
