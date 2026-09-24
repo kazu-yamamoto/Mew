@@ -559,6 +559,15 @@
 
 (defvar mew-draft-keep-text-charset nil)
 
+(defun mew-encode-mime-body-check (ret beg)
+  "Complain unless the encoder exited with 0.
+RET is what call-process gave back, or nil if it could not be run at
+all.  Whatever the encoder printed sits between BEG and the end of the
+region and would go out as the message, so that is removed first."
+  (unless (eq ret 0)
+    (delete-region beg (point-max))
+    (mew-encode-error (concat mew-prog-mime-encode " failed"))))
+
 (defun mew-encode-mime-body (ctl cte file no-encoding)
   ;; If file is 't', target is buffered.
   ;; text should be buffered
@@ -703,9 +712,13 @@
 	    ;; NEVER use call-process-region for privacy reasons
 	    (write-region beg (point-max) file nil 'no-msg))
 	  (delete-region beg (point-max)))
-	(mew-piolet mew-cs-text-for-read mew-cs-dummy
-	  (apply 'call-process mew-prog-mime-encode file t nil opt))
-	(if textp (mew-delete-file file))))
+	(let ((ret (condition-case nil
+		       (mew-piolet mew-cs-text-for-read mew-cs-dummy
+			 (apply 'call-process mew-prog-mime-encode file t nil opt))
+		     ;; a program which cannot be run at all
+		     (error nil))))
+	  (if textp (mew-delete-file file))
+	  (mew-encode-mime-body-check ret beg))))
      (t
       (mew-encode-error (concat mew-prog-mime-encode " does not exist"))))
     (list cte charset flowed delsp)))
@@ -1160,9 +1173,13 @@
 	    ;; NEVER use call-process-region for privacy reasons
 	    (write-region (point-min) (point-max) file nil 'no-msg)
 	    (delete-region (point-min) (point-max)))
-	  (mew-piolet mew-cs-text-for-read mew-cs-dummy
-	    (apply 'call-process mew-prog-mime-encode file t nil opt))
-	  (mew-delete-file file)))
+	  (let ((ret (condition-case nil
+			 (mew-piolet mew-cs-text-for-read mew-cs-dummy
+			   (apply 'call-process mew-prog-mime-encode file t nil opt))
+		       ;; a program which cannot be run at all
+		       (error nil))))
+	    (mew-delete-file file)
+	    (mew-encode-mime-body-check ret (point-min)))))
        (t
 	(mew-encode-error (concat mew-prog-mime-encode " does not exist")))))))
 
