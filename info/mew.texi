@@ -9335,6 +9335,26 @@ separate them with ",". You can also use a wildcard "*".
 @end ifset
 @end table
 
+@ifset ja
+@samp{?} と @samp{/} は、メールのファイルをそのままの形で走査します。ヘッ
+ダの非 ASCII 文字は RFC 2047 にしたがって符号化されており、本文も Base64
+などで符号化されていることが多いので、日本語などを指定しても見つかりませ
+ん。これらで探せるのは ASCII だけです。
+
+検索エンジンを使う @samp{k?} と @samp{k/} は、符号化を解いた後の内容に対
+して索引を作ります。よって、非 ASCII の文字列はこちらで探して下さい。
+@end ifset
+@ifset en
+@samp{?} and @samp{/} read the message files as they are. Non-ASCII
+characters in a header are encoded as RFC 2047 says, and a body is
+often encoded with Base64 or the like, so a pattern which is not ASCII
+matches nothing. Only ASCII can be found with them.
+
+The search engines behind @samp{k?} and @samp{k/} index a message
+after its encodings are undone. So, look for a non-ASCII string with
+those instead.
+@end ifset
+
 @c %%%%%%%%%%%%%%%%%
 @node condition, dbsearch, search, Virtual
 @ifset ja
