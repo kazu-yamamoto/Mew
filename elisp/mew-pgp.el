@@ -512,22 +512,23 @@ what happens for a message which is encrypted but not signed."
 
 (defun mew-pgp-encrypt-check-status ()
   "Create error message from GnuPG encryption status output."
-  (let (args inv_recp reason)
+  (let (args inv_recp reason requested_recipient)
     (setq inv_recp (mew-split (mew-pgp-status-get "INV_RECP") ?\s))
     (if (not inv_recp)
 	nil ;; no error
       (setq reason (string-to-number (car inv_recp)))
+      (setq requested_recipient (cadr inv_recp))
       (cond
        ((setq args (mew-pgp-status-get "KEYEXPIRED"))
-	mew-pgp-result-expired)
+	(concat mew-pgp-result-expired ":" requested_recipient))
        ((eq reason 1) ;; Not Found
-	mew-pgp-result-pubkey)
+	(concat mew-pgp-result-pubkey ":" requested_recipient))
        ((eq reason 5) ;; Key expired. GnuPG seems not to return "5"
-	mew-pgp-result-expired) ;; Unreachable (handled by KEYEXPIRED above)
+	(concat mew-pgp-result-expired ":" requested_recipient)) ;; Unreachable (handled by KEYEXPIRED above)
        ((eq reason 10) ;; Key not trusted
-	mew-pgp-result-invalid)
+	(concat mew-pgp-result-invalid ":" requested_recipient))
        (t
-	mew-pgp-result-other)))))
+	(concat mew-pgp-result-other ":" requested_recipient))))))
 
 (defun mew-pgp-encrypt-check-text ()
   (let (ret) ;; this should be nil
