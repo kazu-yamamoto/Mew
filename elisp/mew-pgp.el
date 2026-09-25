@@ -53,8 +53,8 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   '(("-ea" "+language=en" "+batchmode=on" "+armorlines=0")
     ("-a" "+language=en" "+batchmode=on" "+armorlines=0")
     ("-ea" "+language=en" "+batchmode=on" "+armorlines=0")
-    ("--encrypt" "--armor" "--batch")
-    ("--encrypt" "--armor" "--batch")))
+    ("--status-fd" "1" "--encrypt" "--armor" "--batch")
+    ("--status-fd" "1" "--encrypt" "--armor" "--batch")))
 
 (defconst mew-prog-pgpd-arg
   '(("+language=en" "+batchmode=off")
@@ -510,7 +510,26 @@ what happens for a message which is encrypted but not signed."
 ;;; PGP encrypting
 ;;;
 
-(defun mew-pgp-encrypt-check ()
+(defun mew-pgp-encrypt-check-status ()
+  "Create error message from GnuPG encryption status output."
+  (let (args inv_recp reason)
+    (setq inv_recp (mew-split (mew-pgp-status-get "INV_RECP") ?\s))
+    (if (not inv_recp)
+	nil ;; no error
+      (setq reason (string-to-number (car inv_recp)))
+      (cond
+       ((setq args (mew-pgp-status-get "KEYEXPIRED"))
+	mew-pgp-result-expired)
+       ((eq reason 1) ;; Not Found
+	mew-pgp-result-pubkey)
+       ((eq reason 5) ;; Key expired. GnuPG seems not to return "5"
+	mew-pgp-result-expired) ;; Unreachable (handled by KEYEXPIRED above)
+       ((eq reason 10) ;; Key not trusted
+	mew-pgp-result-invalid)
+       (t
+	mew-pgp-result-other)))))
+
+(defun mew-pgp-encrypt-check-text ()
   (let (ret) ;; this should be nil
     (goto-char (point-min))
     (if (re-search-forward (mew-pgp-get mew-pgp-msg-no-validkey) nil t)
@@ -525,6 +544,11 @@ what happens for a message which is encrypted but not signed."
 	  (if (search-forward (mew-pgp-get mew-pgp-msg-pubkey-expired) nil t)
 	      (setq ret mew-pgp-result-expired)))))
     ret))
+
+(defun mew-pgp-encrypt-check ()
+  (if (mew-pgp-gnupg-p)
+      (mew-pgp-encrypt-check-status)
+    (mew-pgp-encrypt-check-text)))
 
 (defun mew-pgp-encrypt (file1 decrypters)
   (message "PGP encrypting...")
@@ -552,7 +576,7 @@ what happens for a message which is encrypted but not signed."
        decrypters)
       (setq args (append eoptions decs (list ooption file3 file1))))
     (with-temp-buffer
-      (apply 'mew-call-process-lang pgpe nil t nil args)
+      (apply 'mew-call-process-lang pgpe nil (list t nil) nil args)
       (setq check (mew-pgp-encrypt-check)))
     (message "PGP encrypting...done")
     (list file2 mew-7bit file3 mew-7bit check))) ;; both ctes are 7bit
