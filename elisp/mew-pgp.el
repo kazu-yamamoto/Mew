@@ -254,9 +254,11 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 (defvar mew-pgp-result-invalid
   "His/her public key is invalid. Sign the key by yourself, first")
 (defvar mew-pgp-result-seckey   "No your secret key")
+(defvar mew-pgp-result-seckey-expired "Your secret key is expired")
 (defvar mew-pgp-result-seckey-or-secring
   "No secret keyring or no your secret key")
 (defvar mew-pgp-result-nousable "No usable public key")
+(defvar mew-pgp-result-seckey-nousable "No usable secret key")
 (defvar mew-pgp-result-other    "PGP failed for some reasons")
 (defvar mew-pgp-result-sec-succ "PGP decrypted")
 (defvar mew-pgp-result-dec-fail "PGP NOT decrypted for some reasons")
@@ -633,6 +635,25 @@ what happens for a message which is encrypted but not signed."
 ;;; PGP signing
 ;;;
 
+(defun mew-pgp-sign-check-status ()
+  "Create error message from GnuPG signing status output."
+  (let ((inv-sgnr (mew-split (mew-pgp-status-get "INV_SGNR") ?\s))
+	reason signer)
+    (when inv-sgnr
+      (setq reason (string-to-number (car inv-sgnr)))
+      (setq signer (cadr inv-sgnr))
+      (concat
+       (cond
+	((mew-pgp-status-get "KEYEXPIRED") mew-pgp-result-seckey-expired)
+	((not (mew-pgp-status-get "KEY_CONSIDERED")) mew-pgp-result-seckey) ;; Not Found.
+	((eq reason 9) mew-pgp-result-seckey-nousable) ;; Not self-signed.
+	(t mew-pgp-result-other))
+       ": " signer))))
+
+(defun mew-pgp-sign-check ()
+  (if (mew-pgp-gnupg-p)
+      (mew-pgp-sign-check-status)))
+
 (defun mew-pgp-canonicalize ()
   (save-excursion
     (goto-char (point-min))
@@ -682,6 +703,9 @@ what happens for a message which is encrypted but not signed."
       ;; Say something.  Handing back a file which is not there leaves
       ;; the caller to read it and get a file-error, which reaches the
       ;; user as a backtrace instead of a message.
+      (with-temp-buffer
+	(insert mew-pgp-string)
+	(setq mew-pgp-sign-msg (mew-pgp-sign-check)))
       (unless mew-pgp-sign-msg
 	(setq mew-pgp-sign-msg mew-pgp-result-other)))
     (list file2 nil (mew-pgp-get-micalg) mew-pgp-sign-msg))) ;; return
