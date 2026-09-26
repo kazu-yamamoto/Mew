@@ -256,6 +256,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 (defvar mew-pgp-result-seckey   "No your secret key")
 (defvar mew-pgp-result-seckey-or-secring
   "No secret keyring or no your secret key")
+(defvar mew-pgp-result-nousable "No usable public key")
 (defvar mew-pgp-result-other    "PGP failed for some reasons")
 (defvar mew-pgp-result-sec-succ "PGP decrypted")
 (defvar mew-pgp-result-dec-fail "PGP NOT decrypted for some reasons")
@@ -512,23 +513,25 @@ what happens for a message which is encrypted but not signed."
 
 (defun mew-pgp-encrypt-check-status ()
   "Create error message from GnuPG encryption status output."
-  (let (args inv_recp reason requested_recipient)
-    (setq inv_recp (mew-split (mew-pgp-status-get "INV_RECP") ?\s))
-    (if (not inv_recp)
-	nil ;; no error
-      (setq reason (string-to-number (car inv_recp)))
-      (setq requested_recipient (cadr inv_recp))
-      (cond
-       ((setq args (mew-pgp-status-get "KEYEXPIRED"))
-	(concat mew-pgp-result-expired ":" requested_recipient))
-       ((eq reason 1) ;; Not Found
-	(concat mew-pgp-result-pubkey ":" requested_recipient))
-       ((eq reason 5) ;; Key expired. GnuPG seems not to return "5"
-	(concat mew-pgp-result-expired ":" requested_recipient)) ;; Unreachable (handled by KEYEXPIRED above)
-       ((eq reason 10) ;; Key not trusted
-	(concat mew-pgp-result-invalid ":" requested_recipient))
-       (t
-	(concat mew-pgp-result-other ":" requested_recipient))))))
+  (let ((inv-recp (mew-split (mew-pgp-status-get "INV_RECP") ?\s))
+	reason recipient)
+    (when inv-recp
+      (setq reason (string-to-number (car inv-recp)))
+      (setq recipient (cadr inv-recp))
+      (concat
+       (cond
+	((mew-pgp-status-get "KEYEXPIRED") mew-pgp-result-expired)
+	((eq reason 1)  mew-pgp-result-pubkey)  ;; Not Found
+	((eq reason 10) mew-pgp-result-invalid) ;; Key not trusted
+	;; 0 is "no reason given", which is what GnuPG says when it
+	;; went looking for the key, through WKD for instance, and came
+	;; back with nothing.  That is the usual answer with the
+	;; settings GnuPG ships with, so it is worth more than "PGP
+	;; failed for some reasons"; but it is not quite "not found"
+	;; either, so it does not claim to be.
+	((eq reason 0)  mew-pgp-result-nousable)
+	(t mew-pgp-result-other))
+       ": " recipient))))
 
 (defun mew-pgp-encrypt-check-text ()
   (let (ret) ;; this should be nil
