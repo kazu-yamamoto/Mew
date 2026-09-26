@@ -1373,6 +1373,31 @@ key up, so the recipient is the part which is always there."
     (should (equal (check "[GNUPG:] INV_RECP 4 <a@example.org>\n")
 		   (concat mew-pgp-result-other ": <a@example.org>")))))
 
+(ert-deftest mew-test-pgp-sign-check-status ()
+  "GnuPG names the key it would not sign with.  The reason code is 9
+whether the key is missing or merely unusable, so the two are told
+apart by whether GnuPG says it considered a key at all."
+  (cl-flet ((check (status)
+	      (with-temp-buffer
+		(insert status)
+		(mew-pgp-sign-check-status))))
+    ;; nothing wrong
+    (should-not (check "[GNUPG:] BEGIN_SIGNING H10\n[GNUPG:] SIG_CREATED D 22 10 00 1 AAAA\n"))
+    ;; no key of that name: nothing was considered
+    (should (equal (check "[GNUPG:] INV_SGNR 9 nosuch@example.org\n")
+		   (concat mew-pgp-result-seckey ": nosuch@example.org")))
+    ;; a key was considered and is expired
+    (should (equal (check (concat "[GNUPG:] KEYEXPIRED 1790419717\n"
+				  "[GNUPG:] KEY_CONSIDERED AAAA 3\n"
+				  "[GNUPG:] INV_SGNR 9 short@example.org\n"))
+		   (concat mew-pgp-result-seckey-expired ": short@example.org")))
+    ;; a key was considered and cannot be used, not self-signed say
+    (should (equal (check (concat "[GNUPG:] KEY_CONSIDERED AAAA 2\n"
+				  "[GNUPG:] INV_SGNR 9 noselfsig@example.org\n"))
+		   (concat mew-pgp-result-seckey-nousable ": noselfsig@example.org")))
+    ;; GnuPG 1 says nothing of this sort, so the old path keeps its say
+    (should-not (check "gpg: skipped \"a@example.org\": secret key not available\n"))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:

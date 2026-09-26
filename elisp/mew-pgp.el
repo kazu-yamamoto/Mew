@@ -703,9 +703,13 @@ what happens for a message which is encrypted but not signed."
       ;; Say something.  Handing back a file which is not there leaves
       ;; the caller to read it and get a file-error, which reaches the
       ;; user as a backtrace instead of a message.
-      (with-temp-buffer
-	(insert mew-pgp-string)
-	(setq mew-pgp-sign-msg (mew-pgp-sign-check)))
+      (let ((status (with-temp-buffer
+		      (insert mew-pgp-string)
+		      (mew-pgp-sign-check))))
+	;; Only when it has something to say.  Assigning either way
+	;; would throw out what the sentinel worked out, and GnuPG 1
+	;; says nothing here at all.
+	(if status (setq mew-pgp-sign-msg status)))
       (unless mew-pgp-sign-msg
 	(setq mew-pgp-sign-msg mew-pgp-result-other)))
     (list file2 nil (mew-pgp-get-micalg) mew-pgp-sign-msg))) ;; return
