@@ -1341,6 +1341,38 @@ With ATTACH, an attachments region is there and keeps its own."
       (should (get-text-property attach 'read-only))
       (should (get-text-property (- (point-max) 2) 'read-only)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-pgp.el: who GnuPG would not encrypt to
+;;;
+
+(ert-deftest mew-test-pgp-encrypt-check-status ()
+  "GnuPG names the recipient it would not encrypt to, and sometimes
+says why.  Whether it says why depends on how it was asked to look the
+key up, so the recipient is the part which is always there."
+  (cl-flet ((check (status)
+	      (with-temp-buffer
+		(insert status)
+		(mew-pgp-encrypt-check-status))))
+    ;; nothing wrong
+    (should-not (check "[GNUPG:] BEGIN_ENCRYPTION 0 9 2\n[GNUPG:] END_ENCRYPTION\n"))
+    ;; 1 is Not Found, which is what GnuPG says when it did not go looking
+    (should (equal (check "[GNUPG:] INV_RECP 1 <a@example.org>\n")
+		   (concat mew-pgp-result-pubkey ": <a@example.org>")))
+    ;; 0 is no reason given, which is what it says when a lookup found
+    ;; nothing.  That is the usual answer with the settings GnuPG ships.
+    (should (equal (check "[GNUPG:] INV_RECP 0 <a@example.org>\n")
+		   (concat mew-pgp-result-nousable ": <a@example.org>")))
+    ;; 10 is Key not trusted
+    (should (equal (check "[GNUPG:] INV_RECP 10 <a@example.org>\n")
+		   (concat mew-pgp-result-invalid ": <a@example.org>")))
+    ;; an expired key is said so on its own line, which wins
+    (should (equal (check "[GNUPG:] KEYEXPIRED 1758790000\n[GNUPG:] INV_RECP 0 <a@example.org>\n")
+		   (concat mew-pgp-result-expired ": <a@example.org>")))
+    ;; a reason with nothing to say about it still names the recipient
+    (should (equal (check "[GNUPG:] INV_RECP 4 <a@example.org>\n")
+		   (concat mew-pgp-result-other ": <a@example.org>")))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:

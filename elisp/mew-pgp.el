@@ -53,8 +53,8 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
   '(("-ea" "+language=en" "+batchmode=on" "+armorlines=0")
     ("-a" "+language=en" "+batchmode=on" "+armorlines=0")
     ("-ea" "+language=en" "+batchmode=on" "+armorlines=0")
-    ("--encrypt" "--armor" "--batch")
-    ("--encrypt" "--armor" "--batch")))
+    ("--status-fd" "1" "--encrypt" "--armor" "--batch")
+    ("--status-fd" "1" "--encrypt" "--armor" "--batch")))
 
 (defconst mew-prog-pgpd-arg
   '(("+language=en" "+batchmode=off")
@@ -151,27 +151,27 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
     "No encryption keys"
     "public key matching"
     "public key not found"
-    "public key not found"))
+    "No public key"))
 
 (defconst mew-pgp-msg-no-validkey
   '("DUMMY"
     "^WARNING:[ -9;-~\n]+belongs? to:"
     "^WARNING:[ -9;-~\n]+belongs? to:"
-    "There is no indication that this key really belongs to the owner"
-    "There is no indication that this key really belongs to the owner"))
+    "There is no assurance this key belongs to the named user"
+    "There is no assurance this key belongs to the named user"))
 
 (defconst mew-pgp-msg-pubkey-expired
   '("xxx"
     "xxx"
     "xxx"
     "encryption failed: unusable public key"
-    "encryption failed: unusable public key"))
+    "encryption failed: Unusable public key"))
 
 (defconst mew-pgp-msg-no-vrfkey
-  '("Key matching" "unknown keyid" "key does not meet" "public key not found" "public key not found"))
+  '("Key matching" "unknown keyid" "key does not meet" "public key not found" "No public key"))
 
 (defconst mew-pgp-msg-no-keyring
-  '("Keyring file" "Keyring file" "NO MESSAGE" "public key not found" "public key not found"))
+  '("Keyring file" "Keyring file" "NO MESSAGE" "public key not found" "No public key"))
 
 (defconst mew-pgp-msg-no-seckey-or-secring
   '("You do not have the secret key"
@@ -256,6 +256,7 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 (defvar mew-pgp-result-seckey   "No your secret key")
 (defvar mew-pgp-result-seckey-or-secring
   "No secret keyring or no your secret key")
+(defvar mew-pgp-result-nousable "No usable public key")
 (defvar mew-pgp-result-other    "PGP failed for some reasons")
 (defvar mew-pgp-result-sec-succ "PGP decrypted")
 (defvar mew-pgp-result-dec-fail "PGP NOT decrypted for some reasons")
@@ -510,7 +511,29 @@ what happens for a message which is encrypted but not signed."
 ;;; PGP encrypting
 ;;;
 
-(defun mew-pgp-encrypt-check ()
+(defun mew-pgp-encrypt-check-status ()
+  "Create error message from GnuPG encryption status output."
+  (let ((inv-recp (mew-split (mew-pgp-status-get "INV_RECP") ?\s))
+	reason recipient)
+    (when inv-recp
+      (setq reason (string-to-number (car inv-recp)))
+      (setq recipient (cadr inv-recp))
+      (concat
+       (cond
+	((mew-pgp-status-get "KEYEXPIRED") mew-pgp-result-expired)
+	((eq reason 1)  mew-pgp-result-pubkey)  ;; Not Found
+	((eq reason 10) mew-pgp-result-invalid) ;; Key not trusted
+	;; 0 is "no reason given", which is what GnuPG says when it
+	;; went looking for the key, through WKD for instance, and came
+	;; back with nothing.  That is the usual answer with the
+	;; settings GnuPG ships with, so it is worth more than "PGP
+	;; failed for some reasons"; but it is not quite "not found"
+	;; either, so it does not claim to be.
+	((eq reason 0)  mew-pgp-result-nousable)
+	(t mew-pgp-result-other))
+       ": " recipient))))
+
+(defun mew-pgp-encrypt-check-text ()
   (let (ret) ;; this should be nil
     (goto-char (point-min))
     (if (re-search-forward (mew-pgp-get mew-pgp-msg-no-validkey) nil t)
@@ -525,6 +548,11 @@ what happens for a message which is encrypted but not signed."
 	  (if (search-forward (mew-pgp-get mew-pgp-msg-pubkey-expired) nil t)
 	      (setq ret mew-pgp-result-expired)))))
     ret))
+
+(defun mew-pgp-encrypt-check ()
+  (if (mew-pgp-gnupg-p)
+      (mew-pgp-encrypt-check-status)
+    (mew-pgp-encrypt-check-text)))
 
 (defun mew-pgp-encrypt (file1 decrypters)
   (message "PGP encrypting...")
@@ -552,7 +580,7 @@ what happens for a message which is encrypted but not signed."
        decrypters)
       (setq args (append eoptions decs (list ooption file3 file1))))
     (with-temp-buffer
-      (apply 'mew-call-process-lang pgpe nil t nil args)
+      (apply 'mew-call-process-lang pgpe nil (list t nil) nil args)
       (setq check (mew-pgp-encrypt-check)))
     (message "PGP encrypting...done")
     (list file2 mew-7bit file3 mew-7bit check))) ;; both ctes are 7bit
