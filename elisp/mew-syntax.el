@@ -834,7 +834,7 @@ system."
 	(save-restriction
 	  (narrow-to-region beg (point))
 	  (goto-char (point-min))
-	  (while (re-search-forward "BAD.*sign" nil t)
+	  (while (re-search-forward "BAD.*?sign" nil t)
 	    (put-text-property
 	     (match-beginning 0)
 	     (match-end 0)
