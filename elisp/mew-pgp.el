@@ -436,13 +436,30 @@ pty, so they need nothing here."
 (defun mew-pgp-gnupg-p ()
   (memq mew-pgp-ver (list mew-pgp-verg mew-pgp-verg2)))
 
-(defun mew-pgp-status-get (key)
+(defun mew-pgp-get-status-ranges (regexp)
+  "Search for headers matching REGEXP and return a list of (BEG END) ranges.
+Text before the first REGEXP is include in the first range.
+If no header is found, return the whole buffer as a single range."
+  (let (pre-point ranges)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward regexp nil t)
+	(if (not pre-point) ;; 1st match
+	    (setq pre-point (point-min))
+	  (push (list pre-point (match-beginning 0)) ranges)
+	  (setq pre-point (match-beginning 0))))
+      (if pre-point
+	  (push (list pre-point (point-max)) ranges) ;; last match
+	(push (list (point-min) (point-max)) ranges))) ;; no match
+    (nreverse ranges)))
+
+(defun mew-pgp-status-get (key &optional beg end)
   "Return the arguments of the first KEY line, \"\" if it has none.
 Return nil if there is no such line."
   (save-excursion
-    (goto-char (point-min))
+    (goto-char (or beg (point-min)))
     (catch 'found
-      (while (re-search-forward mew-pgp-status-regex nil t)
+      (while (re-search-forward mew-pgp-status-regex end t)
 	(if (string= (mew-match-string 1) key)
 	    (throw 'found (or (mew-match-string 2) "")))))))
 
@@ -453,36 +470,46 @@ The key id comes first, then the user id."
       (concat "\"" (mew-match-string 1 args) "\"")
     (concat "\"" args "\"")))
 
-(defun mew-pgp-status-trust ()
+(defun mew-pgp-status-trust (&optional beg end)
   (cond
-   ((mew-pgp-status-get "TRUST_ULTIMATE")  " COMPLETE")
-   ((mew-pgp-status-get "TRUST_FULLY")     " COMPLETE")
-   ((mew-pgp-status-get "TRUST_MARGINAL")  " MARGINAL")
-   ((mew-pgp-status-get "TRUST_NEVER")     " UNTRUSTED")
-   ((mew-pgp-status-get "TRUST_UNDEFINED") " UNDEFINED")
+   ((mew-pgp-status-get "TRUST_ULTIMATE"  beg end) " COMPLETE")
+   ((mew-pgp-status-get "TRUST_FULLY"     beg end) " COMPLETE")
+   ((mew-pgp-status-get "TRUST_MARGINAL"  beg end) " MARGINAL")
+   ((mew-pgp-status-get "TRUST_NEVER"     beg end) " UNTRUSTED")
+   ((mew-pgp-status-get "TRUST_UNDEFINED" beg end) " UNDEFINED")
    (t "")))
 
 (defun mew-pgp-verify-check-status ()
   "Read the result of a verification out of the status output.
 Return nil when the output says nothing about a signature, which is
 what happens for a message which is encrypted but not signed."
-  (let (args)
-    (cond
-     ((setq args (mew-pgp-status-get "GOODSIG"))
-      (concat "Good PGP sign " (mew-pgp-status-uid args) (mew-pgp-status-trust)))
-     ((setq args (mew-pgp-status-get "EXPKEYSIG"))
-      (concat "Good PGP sign " (mew-pgp-status-uid args) " EXPIRED"))
-     ((setq args (mew-pgp-status-get "REVKEYSIG"))
-      (concat "Good PGP sign " (mew-pgp-status-uid args) " REVOKED"))
-     ((setq args (mew-pgp-status-get "EXPSIG"))
-      (concat "Good PGP sign " (mew-pgp-status-uid args) " EXPIRED"))
-     ((setq args (mew-pgp-status-get "BADSIG"))
-      (concat "BAD PGP sign " (mew-pgp-status-uid args)))
-     ((setq args (mew-pgp-status-get "NO_PUBKEY"))
-      (concat mew-pgp-result-pubkey ": ID = 0x" args))
-     ((mew-pgp-status-get "ERRSIG")
-      mew-pgp-result-other)
-     (t nil))))
+  (let ((ranges (mew-pgp-get-status-ranges "^\\[GNUPG:\\] NEWSIG$"))
+	(buf '())
+	args range str)
+    (dolist (range ranges)
+      (let ((beg (car range))
+	    (end (cadr range)))
+	(push (cond
+	       ((setq args (mew-pgp-status-get "GOODSIG" beg end))
+		(concat "Good PGP sign " (mew-pgp-status-uid args) (mew-pgp-status-trust beg end)))
+	       ((setq args (mew-pgp-status-get "EXPKEYSIG" beg end))
+		(concat "Good PGP sign " (mew-pgp-status-uid args) " EXPIRED"))
+	       ((setq args (mew-pgp-status-get "REVKEYSIG" beg end))
+		(concat "Good PGP sign " (mew-pgp-status-uid args) " REVOKED"))
+	       ((setq args (mew-pgp-status-get "EXPSIG" beg end))
+		(concat "Good PGP sign " (mew-pgp-status-uid args) " EXPIRED"))
+	       ((setq args (mew-pgp-status-get "BADSIG" beg end))
+		(concat "BAD PGP sign " (mew-pgp-status-uid args)))
+	       ((setq args (mew-pgp-status-get "NO_PUBKEY" beg end))
+		(concat mew-pgp-result-pubkey ": ID = 0x" args))
+	       ((mew-pgp-status-get "ERRSIG" beg end)
+		mew-pgp-result-other)
+	       (t nil))
+	      buf)))
+    (setq str (mew-join ";\n\t" (nreverse buf)))
+    (if (string-match-p "\\`[; \t\n]*\\'" str)
+	nil
+      str)))
 
 (defun mew-pgp-verify-check ()
   (if (mew-pgp-gnupg-p)
