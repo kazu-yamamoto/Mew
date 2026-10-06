@@ -486,6 +486,7 @@ what happens for a message which is encrypted but not signed."
   (let ((ranges (mew-pgp-get-status-ranges "^\\[GNUPG:\\] NEWSIG$"))
 	(buf '())
 	args range str)
+    (mew-pgp-debug "mew-pgp-verify-check-status" (mew-buffer-substring (point-min) (point-max)))
     (dolist (range ranges)
       (let ((beg (car range))
 	    (end (cadr range)))
