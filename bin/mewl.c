@@ -20,7 +20,11 @@ private char version_message[] = "version 6.11 20260414 Mew developing team";
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 #include <sys/stat.h>
+#ifdef HAVE_ICONV
+# include <iconv.h>
+#endif /* HAVE_ICONV */
 
 #ifdef HAVE_DIRENT_H
 # include <dirent.h>
@@ -90,6 +94,12 @@ struct fld_rng {
 	unsigned int num;
 };
 
+struct dbuf {
+	char *buf;
+	size_t len;	/* excluding the terminating NUL */
+	size_t siz;
+};
+
 private char Buf_header[MAX_HEADER];
 private char Buf_filenm[MAX_FILE_NAME_LEN];
 private char Buf_filenm2[MAX_FILE_NAME_LEN];
@@ -146,6 +156,16 @@ private void exec_init(unsigned int);
 private FILE *exec_getfile(char **, char **);
 private void stdin_init(unsigned int);
 private void set_fld_rng(struct fld_rng *, char *, char *);
+#ifdef HAVE_ICONV
+private void dbuf_reserve(struct dbuf *, size_t);
+private void dbuf_append(struct dbuf *, const char *, size_t);
+private char *decode_field(const char *);
+private int  decode_word(const char *, size_t, struct dbuf *);
+private iconv_t get_iconv_to_utf8(const char *);
+private int  iconv_to_utf8(const char *, const char *, size_t, struct dbuf *,
+    int);
+private int  b64_pton(const char *, unsigned char *, size_t);
+#endif /* HAVE_ICONV */
 
 /****************************************************************
  * 
@@ -558,7 +578,7 @@ mystrcasestr(char *s1, char *s2) {
 public int
 search_string(char *key, char *value, int case_sensitive) {
 	unsigned int len = strlen(key);
-	char *beg = NULL, *end = NULL;
+	char *beg = NULL, *end = NULL, *val = NULL, *dec;
 	char *p = Search_ctx_buf, *limp = p + Search_ctx_lim, tmp;
 
 	if (strcmp(HEAD, key) == 0) {
@@ -582,6 +602,7 @@ search_string(char *key, char *value, int case_sensitive) {
 		
 	for (;;) {
 		if (strncasecmp(key, p, len) == 0) {
+			dec = NULL;
 			beg = p + len;
 			p = nextfield(p, limp, &end, NULL, YES);
 			if (end != NULL)
@@ -592,18 +613,31 @@ search_string(char *key, char *value, int case_sensitive) {
 				end = p - 1;	/* end == LF */
 			tmp = *end;
 			*end = NUL;
+
+#ifdef HAVE_ICONV
+			if (strstr(beg, "=?") != NULL)
+				/* the field body begins after ":" */
+				val = dec = decode_field(*beg == ':' ?
+				    beg + 1 : beg);
+			else
+#endif /* HAVE_ICONV */
+				val = beg;
+
 			if (case_sensitive == YES) {
-				if (strstr(beg, value) != NULL) {
+				if (strstr(val, value) != NULL) {
+					free(dec);
 					*end = tmp;
 					return TRUE;
 				}
 			} else {
-				if (mystrcasestr(beg, value) != NULL) {
+				if (mystrcasestr(val, value) != NULL) {
+					free(dec);
 					*end = tmp;
 					return TRUE;
 				}
 			}
 			*end = tmp;
+			free(dec);
 		} else
 			p = nextfield(p, limp, &end, NULL, YES);
 		if (p == NULL)
@@ -622,6 +656,350 @@ int ends_with(const char *str, const char *suffix) {
 	if (str_len < suffix_len) return FALSE;
 	return strncmp(str + str_len - suffix_len, suffix, suffix_len) == 0;
 }
+
+#ifdef HAVE_ICONV
+/****************************************************************
+ *
+ * RFC 2047 decoding
+ *
+ */
+
+/* Make room for "n" more bytes, growing the buffer as needed. */
+private void
+dbuf_reserve(struct dbuf *d, size_t n) {
+	while (d->len + n > d->siz) {
+		d->siz *= 2;
+		REALLOC(d->buf, d->siz);
+	}
+}
+
+private void
+dbuf_append(struct dbuf *d, const char *s, size_t n) {
+	dbuf_reserve(d, n + 1);
+	memcpy(d->buf + d->len, s, n);
+	d->len += n;
+	d->buf[d->len] = NUL;
+}
+
+#define IS_LWSP(c)	((c) == SP || (c) == TAB || (c) == CR || (c) == LF)
+
+/* Decode RFC 2047 encoded-words delimited by white space in a field body. */
+private char *
+decode_field(const char *str) {
+	struct dbuf ret;
+	const char *p = str, *q, *e;
+	int prev = NO;
+
+	ret.len = 0;
+	ret.siz = strlen(str) + 1;
+	MALLOC(ret.buf, ret.siz);
+	ret.buf[0] = NUL;
+	while (*p != NUL) {
+		for (q = p; IS_LWSP(*q); q++)	/* white space */
+			;
+		for (e = q; *e != NUL && !IS_LWSP(*e); e++)	/* a word */
+			;
+		/* white space between encoded-words is removed */
+		if (prev == YES && q < e && decode_word(q, e - q, &ret) == 0) {
+			p = e;
+			continue;
+		}
+		for (; p < q; p++) {
+			if (*p != CR && *p != LF)	/* unfolding */
+				dbuf_append(&ret, p, 1);
+		}
+		if (prev == NO && q < e && decode_word(q, e - q, &ret) == 0)
+			prev = YES;
+		else {
+			dbuf_append(&ret, q, e - q);
+			prev = NO;
+		}
+		p = e;
+	}
+
+	return ret.buf;
+}
+
+/* MIME charsets renamed for iconv, and supersets to retry with on failure */
+private struct {
+	const char *mime;
+	const char *iconv;		/* NULL: as it is */
+	const char *retry;		/* NULL: no retry */
+} rfc2047_charsets[] = {
+	{	"ks_c_5601-1987",	"CP949",	NULL		},
+	{	"windows-31j",		"CP932",	NULL		},
+	{	"iso-8859-8-i",		"ISO-8859-8",	NULL		},
+	{	"iso-2022-jp",		NULL,		"CP50221"	},
+	{	"shift_jis",		NULL,		"CP932"		},
+	{	"euc-jp",		NULL,		"EUC-JP-MS"	},
+	{	"gb2312",		NULL,		"GB18030"	},
+	{	"big5",			NULL,		"BIG5-HKSCS"	},
+	{	"euc-kr",		NULL,		"CP949"		},
+	{	"tis-620",		NULL,		"CP874"		}
+};
+
+#define CHARSET_MAX	64
+
+/* token of RFC 2047, with "\" of erratum 506 */
+#define IS_TOKEN(c) (						\
+	(c) > SP && (c) < DEL &&				\
+	strchr("()<>@,;:\\\"/[]?.=", (c)) == NULL)
+
+#ifndef nitems
+#define nitems(x)	(sizeof((x)) / sizeof((x)[0]))
+#endif
+
+#define IS_XDIGIT(c) (				\
+	(('0' <= (c) && (c) <= '9')) ||	\
+	(('a' <= (c) && (c) <= 'f')) ||	\
+	(('A' <= (c) && (c) <= 'F')))
+#define XDIGIT(c) (						\
+	(('0' <= (c) && (c) <= '9'))? (c) - '0' :		\
+	(('a' <= (c) && (c) <= 'f'))? (c) - 'a' + 10 :	\
+	(('A' <= (c) && (c) <= 'F'))? (c) - 'A' + 10 : -1)
+
+/* Decode the word of "size" bytes at "str" if it is an encoded-word. */
+private int
+decode_word(const char *str, size_t size, struct dbuf *out) {
+	int i, j, len, enc, retsz;
+	const char *p, *name, *retry = NULL;
+	char cs[CHARSET_MAX];
+	char *tmp = NULL, *in;
+	size_t tmpsz = 0, insz, olen, s, d;
+
+	/* "=?" charset "?" encoding "?" encoded-text "?=" */
+	if (size < 9 || str[0] != '=' || str[1] != '?' ||
+	    str[size - 2] != '?' || str[size - 1] != '=')
+		goto fail;
+	p = str + 2;
+	len = size - 2;		/* where the last "?" is */
+
+	/* charset, ignoring the language of RFC 2231 */
+	for (i = 0; p[i] != '?'; i++) {
+		if (!IS_TOKEN(p[i]))
+			goto fail;
+	}
+	if (i + 5 >= len)
+		goto fail;	/* no encoding or empty encoded-text */
+	for (j = 0; j < i && p[j] != '*'; j++)
+		;
+	if (j == 0 || j >= (int)sizeof(cs))
+		goto fail;
+	memcpy(cs, p, j);
+	cs[j] = NUL;
+
+	p += i + 1;
+	len -= i + 1;
+
+	if ((p[0] == 'B' || p[0] == 'Q' || p[0] == 'b' || p[0] == 'q') &&
+	    p[1] == '?') {
+		enc = toupper(p[0]);
+		p += 2;
+		len -= 4;
+	} else
+		goto fail;	/* unknown encoding */
+
+	switch (enc) {
+	case 'B':	/* "B" encoding, similar to base64 */
+		tmpsz = 4 * ((len + 3) / 4) + 1;
+		MALLOC(tmp, tmpsz);
+		/* repair the padding of a buggy client, as Mew does */
+		while (len > 0 && p[len - 1] == '=')
+			len--;
+		memcpy(tmp, p, len);
+		switch (len % 4) {
+		case 2:
+			tmp[len++] = '=';
+			tmp[len++] = '=';
+			break;
+		case 3:
+			tmp[len++] = '=';
+			break;
+		}
+		tmp[len] = NUL;
+		if ((retsz = b64_pton(tmp, (unsigned char *)tmp, tmpsz)) == -1)
+			goto fail;
+		in = tmp;
+		insz = retsz;
+		break;
+	case 'Q':	/* "Q" encoding, similar to quoted printable */
+		tmpsz = len + 1;
+		MALLOC(tmp, tmpsz);
+		memcpy(tmp, p, len);
+		tmp[len] = NUL;
+		i = j = 0;
+		while (i < len) {
+			if (tmp[i] == '=') {
+				if (IS_XDIGIT(tmp[i + 1]) &&
+				    IS_XDIGIT(tmp[i + 2])) {
+					tmp[j++] = (XDIGIT(tmp[i + 1]) << 4) |
+					    XDIGIT(tmp[i + 2]);
+					i += 3;
+				} else
+					goto fail;
+			} else if (tmp[i] == '_') {
+				tmp[j++] = SP;
+				i++;
+			} else if ((unsigned char)tmp[i] > SP &&
+			    (unsigned char)tmp[i] < DEL && tmp[i] != '?')
+				tmp[j++] = tmp[i++];
+			else
+				goto fail;	/* not in encoded-text */
+		}
+		tmp[j] = NUL;
+		in = tmp;
+		insz = j;
+		break;
+	default:
+		goto fail;
+		break;
+	}
+
+	name = cs;
+	for (i = 0; i < (int)nitems(rfc2047_charsets); i++) {
+		if (strlen(rfc2047_charsets[i].mime) == strlen(cs) &&
+		    strncasecmp(rfc2047_charsets[i].mime, cs, strlen(cs)) == 0) {
+			if (rfc2047_charsets[i].iconv != NULL)
+				name = rfc2047_charsets[i].iconv;
+			retry = rfc2047_charsets[i].retry;
+			break;
+		}
+	}
+	olen = out->len;
+	if (iconv_to_utf8(name, in, insz, out, NO) != 0 &&
+	    (retry == NULL || iconv_to_utf8(retry, in, insz, out, NO) != 0) &&
+	    (retry == NULL || iconv_to_utf8(retry, in, insz, out, YES) != 0) &&
+	    iconv_to_utf8(name, in, insz, out, YES) != 0)
+		goto fail;	/* unknown charset */
+
+	/* remove control characters but TAB as Mew does */
+	for (s = d = olen; s < out->len; s++) {
+		if (out->buf[s] == TAB ||
+		    ((unsigned char)out->buf[s] >= SP && out->buf[s] != DEL))
+			out->buf[d++] = out->buf[s];
+	}
+	out->len = d;
+	out->buf[out->len] = NUL;
+	free(tmp);
+
+	return 0;
+fail:
+	free(tmp);
+	return -1;
+}
+
+private iconv_t
+get_iconv_to_utf8(const char *cs) {
+	static char last[CHARSET_MAX];
+	static iconv_t ic = (iconv_t)-1;
+
+	if (strcmp(last, cs) == 0) {	/* also remembers a failure */
+		if (ic != (iconv_t)-1)
+			iconv(ic, NULL, NULL, NULL, NULL); /* initial state */
+		return ic;
+	}
+	if (ic != (iconv_t)-1)
+		iconv_close(ic);
+	ic = iconv_open("UTF-8", cs);
+	STRCPY(last, cs);
+	return ic;
+}
+
+private int
+iconv_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out,
+    int keep_invalid) {
+	iconv_t ic;
+	char *ip = (char *)in, *op;
+	size_t outsz, olen = out->len, r;
+
+	if ((ic = get_iconv_to_utf8(cs)) == (iconv_t)-1)
+		return -1;
+	dbuf_reserve(out, insz + 1);	/* just a guess, grows on E2BIG */
+	for (;;) {
+		op = out->buf + out->len;
+		outsz = out->siz - out->len - 1;	/* keep room for NUL */
+		/* void * absorbs char ** or const char ** of the prototype */
+		r = iconv(ic, (void *)&ip, &insz, &op, &outsz);
+		out->len = op - out->buf;
+		if (r != (size_t)-1)
+			break;
+		if (errno == E2BIG)
+			dbuf_reserve(out, out->siz - out->len + 1); /* double */
+		else if (keep_invalid == YES && errno == EILSEQ) {
+			dbuf_append(out, ip, 1);
+			ip++;
+			insz--;
+		} else if (keep_invalid == YES && errno == EINVAL) {
+			dbuf_append(out, ip, insz);	/* truncated at the end */
+			break;
+		} else {
+			out->len = olen;
+			out->buf[out->len] = NUL;
+			return -1;
+		}
+	}
+	out->buf[out->len] = NUL;
+	return 0;
+}
+
+private int
+b64_pton(const char *src, unsigned char *dst, size_t dstsiz) {
+	int i, j, k, pad = 0;
+	unsigned int val3 = 0;
+	const char b64_tbl[] =
+	    "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+	    "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+	    "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\x3e\xff\xff\xff\x3f"
+	    "\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\xff\xff\xff\x00\xff\xff"
+	    "\xff\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e"
+	    "\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\xff\xff\xff\xff\xff"
+	    "\xff\x1a\x1b\x1c\x1d\x1e\x1f\x20\x21\x22\x23\x24\x25\x26\x27\x28"
+	    "\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\xff\xff\xff\xff\xff"
+	    "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+	    "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+	    "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+	    "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+	    "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+	    "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+	    "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+	    "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff";
+
+	for (i = j = k = 0; src[i] != NUL; i++) {
+		if (b64_tbl[(unsigned char)src[i]] == (char)0xff)
+			return -1;
+		if (src[i] == '=') {
+			/* up to 2 paddings at the end of the last quantum */
+			if (j % 4 < 2 || ++pad > 2)
+				return -1;
+		} else if (pad > 0)
+			return -1;
+		val3 |= b64_tbl[(unsigned char)src[i]];
+		if (src[i] != '=') {
+			if (dst != NULL && (size_t)k >= dstsiz)
+				return -1;
+			if (j % 4 == 1) {
+				if (dst != NULL)
+					dst[k] = val3 >> 4;
+				k++;
+			} else if (j % 4 == 2) {
+				if (dst != NULL)
+					dst[k] = val3 >> 2;
+				k++;
+			} else if (j % 4 == 3) {
+				if (dst != NULL)
+					dst[k] = val3;
+				k++;
+			}
+		}
+		val3 <<= 6;
+		j++;
+	}
+	if (j % 4 != 0)
+		return -1;
+
+	return k;
+}
+#endif /* HAVE_ICONV */
 
 /****************************************************************
  * 
