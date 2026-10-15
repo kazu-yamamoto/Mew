@@ -640,6 +640,7 @@ ac_includes_default="\
 ac_header_c_list=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+ICONV_LIBS
 INSTALL_DATA
 INSTALL_SCRIPT
 INSTALL_PROGRAM
@@ -4242,6 +4243,42 @@ if test x$mew_cv_sighup = xyes; then
   printf "%s\n" "#define HAVE_SIGHUP 1" >>confdefs.h
 
 fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for iconv" >&5
+printf %s "checking for iconv... " >&6; }
+ICONV_LIBS=
+mew_cv_iconv=no
+mew_save_LIBS=$LIBS
+for mew_lib in "" -liconv; do
+  if test x$mew_cv_iconv = xno; then
+    LIBS="$mew_save_LIBS $mew_lib"
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <iconv.h>
+int
+main (void)
+{
+iconv_t cd = iconv_open("UTF-8", "ISO-2022-JP"); iconv_close(cd);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  mew_cv_iconv=yes; ICONV_LIBS=$mew_lib
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+  fi
+done
+LIBS=$mew_save_LIBS
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $mew_cv_iconv $ICONV_LIBS" >&5
+printf "%s\n" "$mew_cv_iconv $ICONV_LIBS" >&6; }
+if test x$mew_cv_iconv = xyes; then
+  printf "%s\n" "#define HAVE_ICONV 1" >>confdefs.h
+
+fi
+
 
 if test "$GCC" = "yes"; then
   CFLAGS="$CFLAGS -Wall"
