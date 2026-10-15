@@ -33,6 +33,9 @@ so POP needs `mewl` as well.
 
 * Type `./configure`.
 
+  * If iconv is available, `mewl` uses it to decode encoded-words
+     (RFC 2047) in header fields when picking messages.
+
 * Type `make`.
 
   * Mew's info is formatted by one particular Emacs, so it may not be
