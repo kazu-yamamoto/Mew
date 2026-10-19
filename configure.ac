@@ -1,9 +1,15 @@
 AC_INIT
 AC_CONFIG_SRCDIR([elisp/mew.el])
 AC_CONFIG_SUBDIRS([bin])
+AC_ARG_VAR([EMACS], [the Emacs executable to use])
 AC_ARG_WITH(emacs,
     [  --with-emacs=EMACS      use EMACS],
     emacsbin="${withval}")
+dnl --with-emacs wins over EMACS. Emacs 24 and older set EMACS=t for
+dnl subprocesses, so that value is not a program name.
+if test -z "${emacsbin}" && test "${EMACS}" != t; then
+    emacsbin="${EMACS}"
+fi
 AC_SUBST(emacsbin)
 AC_ARG_WITH(elispdir,
     [  --with-elispdir=DIR     where elisp files should go],
