@@ -139,6 +139,7 @@ private void ch_folder(char *);
 private char *nextline(char *, char *, int);
 private char *nextfield(char *, char *, char **, char **, int);
 private char *eoh(char *, char *);
+private int  field_is(const char *, unsigned int, char *, char *);
 private void init_fields(char *);
 private void print_field(char *, int, char *, char *);
 private void init_search(char *, int);
@@ -575,6 +576,20 @@ mystrcasestr(char *s1, char *s2) {
 	return NULL;
 }
 
+/*
+ * TRUE if the field that p points to is named key. The name has to end
+ * at the ":", so that the key "to" does not also match "Token:". A key
+ * may spell the ":" out itself, as "to:" does.
+ */
+private int
+field_is(const char *key, unsigned int len, char *p, char *limp) {
+	if (len == 0 || p >= limp || len >= (unsigned int)(limp - p))
+		return FALSE;
+	if (strncasecmp(key, p, len) != 0)
+		return FALSE;
+	return (key[len - 1] == ':' || p[len] == ':');
+}
+
 public int
 search_string(char *key, char *value, int case_sensitive) {
 	unsigned int len = strlen(key);
@@ -601,7 +616,7 @@ search_string(char *key, char *value, int case_sensitive) {
 	}
 		
 	for (;;) {
-		if (strncasecmp(key, p, len) == 0) {
+		if (field_is(key, len, p, limp)) {
 			dec = NULL;
 			beg = p + len;
 			p = nextfield(p, limp, &end, NULL, YES);
@@ -1022,7 +1037,7 @@ print_for_sort(FILE *fp, char *fname, char *fld) {
 	char *p = Buf_header, *limp = p + lim;
 
 	for (;;) {
-		if (strncasecmp(Key_field, p, len) == 0) {
+		if (field_is(Key_field, len, p, limp)) {
 			beg = p + len;
 			p = nextfield(p, limp, &end, NULL, YES);
 			if (end != NULL)
