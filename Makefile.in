@@ -46,7 +46,10 @@ elispdir = @elispdir@
 etcdir = @etcdir@
 #etcdir = $(prefix)/share/emacs/site-lisp/mew/etc
 
-DETECT = emacs
+## The Emacs that "make detect" compiles with. Override it to look for
+## warnings with a newer Emacs than the one Mew is built with.
+
+DETECT = $(EMACS)
 
 CP = cp
 RM = rm -f
@@ -81,7 +84,7 @@ install-elisp:
 
 .PHONY: detect
 detect:
-	cd elisp; $(MAKE) detect EMACS=$(EMACS)
+	cd elisp; $(MAKE) detect EMACS=$(EMACS) DETECT=$(DETECT)
 
 ################################################################
 
