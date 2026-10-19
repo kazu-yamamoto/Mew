@@ -74,6 +74,7 @@ private void write_binary(void);
 private void base64_decode(int);
 private void gzip64_decode(int);
 private void quoted_printable_encode(int);
+private int  xlate(const signed char *, unsigned int, int);
 private int  puthexchar(int, int);
 private void quoted_printable_decode(void);
 private void uu_decode(int);
@@ -459,6 +460,20 @@ private byte d_buf2[BUFSIZ];
 private byte d_buf3[BUFSIZ];
 
 /*
+ * The tables below cover every octet, but getchar() also yields EOF, and
+ * puthexchar() takes whatever its caller hands it. Casting to unsigned
+ * folds a negative c into a large one, so one comparison covers both ends.
+ * XLATE() wants the table itself, not a pointer to it.
+ */
+private int
+xlate(const signed char *tbl, unsigned int size, int c)
+{
+	return ((unsigned int)c < size) ? tbl[c] : OOB;
+}
+
+#define XLATE(tbl, c)	xlate((tbl), sizeof(tbl), (c))
+
+/*
  * getchar() yields any of the 256 octets, so a table it indexes has to
  * cover all of them. OOB is -1, so the upper half is spelled out rather
  * than left to the default initializer, which would fill it with 0 --
@@ -507,7 +522,7 @@ read_base64(byte *p, unsigned int max)
 			done = YES;
 			return out;
 		}
-		d = base256[c];
+		d = XLATE(base256, c);
 		switch (d) {
 		case OOB:
 			warning("invalid base64 character.");
@@ -873,7 +888,8 @@ puthexchar(int c1, int c2)
 	int a1, a2;
 	static int warned = NO;
 
-	if (((a1 = base128[c1]) != OOB) && ((a2 = base128[c2]) != OOB)) {
+	if (((a1 = XLATE(base128, c1)) != OOB) &&
+	    ((a2 = XLATE(base128, c2)) != OOB)) {
 		putchar(((a1 << 4) | a2));
 		return(TRUE);
 	} else {
