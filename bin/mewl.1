@@ -116,6 +116,16 @@ N | [start]-[end] | last:N
 .I pattern
 \'key=val' | 'key!=val' | '!<pattern>' | '(<pattern>)'
 | '<pattern>&<pattern>' | '<pattern>|<pattern>' 
+.PP
+If built with iconv,
+.B mewl
+decodes encoded-words of RFC 2047 in a field body into UTF-8 before
+comparing it with
+.IR val ,
+so
+.I val
+should be given in UTF-8.
+The key "head" (the whole header) and the body are compared as they are.
 
 .\"
 .SH BUGS

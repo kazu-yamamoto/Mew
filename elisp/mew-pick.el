@@ -172,7 +172,8 @@ target is the region."
 	(opts (list "-b" mew-mail-path
 		    "-l" (number-to-string mew-scan-max-field-length)
 		    "-x" mew-suffix
-		    "-p" pattern))
+		    ;; mewl expects UTF-8
+		    "-p" (mew-cs-encode-string pattern 'utf-8)))
 	msgs)
     (if range
 	(setq opts (nconc opts (list pfolder range)))
