@@ -25,6 +25,9 @@ private char version_message[] = "version 6.11 20260414 Mew developing team";
 #ifdef HAVE_ICONV
 # include <iconv.h>
 #endif /* HAVE_ICONV */
+#ifdef HAVE_UTF8PROC
+# include <utf8proc.h>
+#endif /* HAVE_UTF8PROC */
 
 #ifdef HAVE_DIRENT_H
 # include <dirent.h>
@@ -145,6 +148,11 @@ private void print_field(char *, int, char *, char *);
 private void init_search(char *, int);
 private char *mystrcasechr(char *, int);
 private char *mystrcasestr(char *, char *);
+#ifdef HAVE_UTF8PROC
+private char *casefold_utf8(const char *);
+private void free_utf8(char *);
+#endif /* HAVE_UTF8PROC */
+private int  caseless_match(char *, char *);
 private int  print_for_scan(FILE *, char *, char *);
 private int  print_for_sort(FILE *, char *, char *);
 private int  print_for_pick(FILE *, char *, char *);
@@ -576,6 +584,77 @@ mystrcasestr(char *s1, char *s2) {
 	return NULL;
 }
 
+#ifdef HAVE_UTF8PROC
+/*
+ * Case-fold s, a NUL-terminated UTF-8 string, for caseless comparison:
+ * Unicode full case folding (so that the sharp s matches both "ss" and
+ * "SS") and canonical composition, so that precomposed and decomposed
+ * spellings compare equal.  With UTF8PROC_CHAR_FOLD (configure
+ * --enable-utf8proc-char-fold, or -DUTF8PROC_CHAR_FOLD on
+ * Windows) also compatibility decomposition, so that fullwidth
+ * letters and halfwidth katakana match their ordinary forms, and
+ * removal of default ignorable code points such as variation
+ * selectors; that is Unicode's NFKC_Casefold.
+ * Returns a malloc()ed string, or NULL if s is not valid UTF-8 or on
+ * any other utf8proc error; on failure utf8proc_map() allocates
+ * nothing.
+ */
+private char *
+casefold_utf8(const char *s) {
+	utf8proc_option_t options = UTF8PROC_NULLTERM | UTF8PROC_STABLE |
+	    UTF8PROC_CASEFOLD | UTF8PROC_COMPOSE;
+	utf8proc_uint8_t *out;
+
+#ifdef UTF8PROC_CHAR_FOLD
+	options |= UTF8PROC_COMPAT | UTF8PROC_IGNORE;
+#endif /* UTF8PROC_CHAR_FOLD */
+	if (utf8proc_map((const utf8proc_uint8_t *)s, 0, &out, options) < 0)
+		return NULL;
+	return (char *)out;
+}
+
+/*
+ * Free a string returned by casefold_utf8().  utf8proc_free(), new in
+ * utf8proc 2.12, frees it with the C library that utf8proc itself
+ * uses, which matters when that is not the one mewl is linked with.
+ */
+private void
+free_utf8(char *s) {
+#ifdef HAVE_UTF8PROC_FREE
+	utf8proc_free((utf8proc_uint8_t *)s);
+#else
+	free(s);
+#endif /* HAVE_UTF8PROC_FREE */
+}
+#endif /* HAVE_UTF8PROC */
+
+/*
+ * TRUE if value occurs in s ignoring case.  With utf8proc both strings
+ * are case-folded and composed first.  When either is not valid UTF-8
+ * (a raw header in another charset, or a pattern given as bytes), or
+ * when value consists of ignorable code points only and so folds to
+ * nothing, the comparison falls back to the byte-wise one that ignores
+ * the case of ASCII letters only.
+ */
+private int
+caseless_match(char *s, char *value) {
+#ifdef HAVE_UTF8PROC
+	char *fs, *fv;
+	int found;
+
+	if ((fv = casefold_utf8(value)) != NULL) {
+		if (*fv != NUL && (fs = casefold_utf8(s)) != NULL) {
+			found = strstr(fs, fv) != NULL;
+			free_utf8(fs);
+			free_utf8(fv);
+			return found;
+		}
+		free_utf8(fv);
+	}
+#endif /* HAVE_UTF8PROC */
+	return mystrcasestr(s, value) != NULL;
+}
+
 /*
  * TRUE if the field that p points to is named key. The name has to end
  * at the ":", so that the key "to" does not also match "Token:". A key
@@ -645,7 +724,7 @@ search_string(char *key, char *value, int case_sensitive) {
 					return TRUE;
 				}
 			} else {
-				if (mystrcasestr(val, value) != NULL) {
+				if (caseless_match(val, value)) {
 					free(dec);
 					*end = tmp;
 					return TRUE;
