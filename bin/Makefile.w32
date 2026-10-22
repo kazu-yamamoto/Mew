@@ -16,14 +16,30 @@
 #    to suitable directory.
 # 2. If you want to use Borland C++ Compiler, you need import library.
 #    > implib -a <filename_of_import_library> <filename_of_zlib.dll>
+# 3. utf8proc is optional: without it, mewl.exe compares the pick
+#    patterns byte by byte.  If you want the Unicode comparison, please
+#    download original tarball (2.2 or later) from
+#      https://github.com/JuliaStrings/utf8proc/releases,
+#    and put
+#      utf8proc.h, utf8proc.c, utf8proc_data.c
+#    to w32\vendor (see w32\vendor\README.md), and uncomment the two
+#    UTF8PROC lines below.  utf8proc is then compiled into mewl.exe
+#    with the same flags as mewl.c; -DUTF8PROC_STATIC tells utf8proc.h
+#    that the functions are not in a DLL.  Add -DUTF8PROC_CHAR_FOLD
+#    for NFKC_Casefold matching; see w32\vendor\README.md.
+#    utf8proc has not been tried with Borland C++.
 
 # **** Please modify ****
 ZLIBINC = C:/usr/local/zlib
 ZLIBLIB = C:/usr/local/zlib/zlib.lib
+UTF8PROCFLAGS =
+UTF8PROCOBJ   =
+#UTF8PROCFLAGS = -Iw32\vendor -DUTF8PROC_STATIC -DHAVE_UTF8PROC
+#UTF8PROCOBJ   = utf8proc.obj
 
 # for Visual C++
 CC      = cl
-CFLAGS  = -nologo -O2 -W3 -MT -Iw32 -I$(ZLIBINC) \
+CFLAGS  = -nologo -O2 -W3 -MT -Iw32 -I$(ZLIBINC) $(UTF8PROCFLAGS) \
 	-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS
 EXEFLAG = -Fe
 
@@ -38,7 +54,7 @@ EXEFLAG = -Fe
 TARGET = mewencode.exe mewl.exe
 
 MEWENCODEOBJS = mewencode.obj utils.obj
-MEWLOBJS      = mewl.obj utils.obj pattern.obj dirent.obj
+MEWLOBJS      = mewl.obj utils.obj pattern.obj dirent.obj $(UTF8PROCOBJ)
 
 all : $(TARGET)
 
@@ -60,3 +76,5 @@ pattern.obj : pattern.c mew.h config.h
 	$(CC) $(CFLAGS) -c pattern.c
 dirent.obj : w32\dirent.c w32\dirent.h w32\w32.h
 	$(CC) $(CFLAGS) -c w32\dirent.c
+utf8proc.obj : w32\vendor\utf8proc.c w32\vendor\utf8proc_data.c w32\vendor\utf8proc.h
+	$(CC) $(CFLAGS) -c w32\vendor\utf8proc.c
