@@ -555,11 +555,11 @@ init_search(char *buf, int lim) {
 
 private char *
 mystrcasechr(char *s, int c) {
-	int lc = tolower(c);
-	int uc = toupper(c);
+	int lc = tolower((unsigned char)c);
+	int uc = toupper((unsigned char)c);
 	
 	do {
-		if (*s == lc || *s == uc)
+		if ((unsigned char)*s == lc || (unsigned char)*s == uc)
 			return s;
 	} while (*s++);
 	return NULL;
