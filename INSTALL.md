@@ -36,6 +36,26 @@ so POP needs `mewl` as well.
   * If iconv is available, `mewl` uses it to decode encoded-words
      (RFC 2047) in header fields when picking messages.
 
+  * If utf8proc (1.3 or later) is available, `mewl` uses it to compare
+     header fields by the Unicode rules when picking messages: `==` and
+     `!==` ignore the difference between precomposed and decomposed
+     characters, and `=` and `!=` also apply Unicode full case folding
+     (which equates a few compatibility characters as well, such as
+     the ligature ﬁ and fi).
+     Install the utf8proc development package beforehand:
+     `libutf8proc-dev` on Debian and Ubuntu, `utf8proc-devel` on Fedora
+     and on RHEL and its derivatives (from EPEL or CodeReady Builder),
+     or `utf8proc` with Homebrew.  If it is installed where the
+     compiler does not look, as Homebrew on Apple silicon does under
+     /opt/homebrew, say
+     `./configure CPPFLAGS=-I/opt/homebrew/include LDFLAGS=-L/opt/homebrew/lib`.
+     With `./configure --enable-utf8proc-char-fold`, `=` and `!=`
+     also ignore compatibility differences such as width (fullwidth
+     letters and halfwidth katakana match their ordinary forms) and
+     default ignorable characters such as variation selectors; that is,
+     they compare by NFKC_Casefold.
+     To build without utf8proc, type `./configure --disable-utf8proc`.
+
 * Type `make`.
 
   * Mew's info is formatted by one particular Emacs, so it may not be
