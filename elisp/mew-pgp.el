@@ -438,7 +438,7 @@ pty, so they need nothing here."
 
 (defun mew-pgp-get-status-ranges (regexp)
   "Search for headers matching REGEXP and return a list of (BEG END) ranges.
-Text before the first REGEXP is include in the first range.
+Text before the first REGEXP is included in the first range.
 If no header is found, return the whole buffer as a single range."
   (let (pre-point ranges)
     (save-excursion
@@ -483,9 +483,9 @@ The key id comes first, then the user id."
   "Read the result of a verification out of the status output.
 Return nil when the output says nothing about a signature, which is
 what happens for a message which is encrypted but not signed."
-  (let ((ranges (mew-pgp-get-status-ranges "^\\[GNUPG:\\] NEWSIG$"))
+  (let ((ranges (mew-pgp-get-status-ranges "^\\[GNUPG:\\] NEWSIG[ \r\n]"))
 	(buf '())
-	args range str)
+	args str)
     (mew-pgp-debug "mew-pgp-verify-check-status" (mew-buffer-substring (point-min) (point-max)))
     (dolist (range ranges)
       (let ((beg (car range))
