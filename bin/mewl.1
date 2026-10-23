@@ -136,8 +136,8 @@ The case-insensitive operators (= and !=) compare them
 by Unicode full case folding and canonical composition (NFC), so that
 "Stra\(sse" matches "STRASSE" and precomposed and decomposed spellings
 agree.
-If built with UTF8PROC_CHAR_FOLD
-(configure --enable-utf8proc-char-fold; see INSTALL.md),
+If configured with --enable-utf8proc-char-fold
+(see INSTALL.md),
 they also ignore compatibility differences such as width and default
 ignorable characters such as variation selectors (NFKC_Casefold), so
 that fullwidth and halfwidth forms match their ordinary ones.
