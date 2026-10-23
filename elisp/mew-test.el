@@ -763,6 +763,42 @@ key not found\", so the old code matched nothing and said nothing."
 ")
                  (concat mew-pgp-result-pubkey ": ID = 0x92C290C24E89A9BF"))))
 
+(ert-deftest mew-test-pgp-multiple-signatures ()
+  "Each signature is reported, so one which fails is not hidden behind a
+good one.  NEWSIG carries the signer's user id when GnuPG signed."
+  (should (equal (mew-test-pgp-check "\
+[GNUPG:] NEWSIG bob@example.org
+[GNUPG:] GOODSIG 19C793F3C9077C41 bob <bob@example.org>
+[GNUPG:] TRUST_ULTIMATE 0 pgp bob@example.org
+[GNUPG:] NEWSIG alice@example.org
+[GNUPG:] BADSIG 627EF3AB122F9CAE alice <alice@example.org>
+[GNUPG:] FAILURE gpg-exit 33554433
+")
+                 "Good PGP sign \"bob <bob@example.org>\" COMPLETE;
+	BAD PGP sign \"alice <alice@example.org>\""))
+  (should (equal (mew-test-pgp-check "\
+[GNUPG:] NEWSIG
+[GNUPG:] GOODSIG 19DF85F733400613 CCCCC <test1@example.com>
+[GNUPG:] TRUST_UNDEFINED 0 pgp
+[GNUPG:] NEWSIG
+[GNUPG:] ERRSIG CAE5F02472CC2D6C 1 8 00 1792645734 9 DE13594E905E1E5AC5F4BE1ACAE5F02472CC2D6C
+[GNUPG:] NO_PUBKEY CAE5F02472CC2D6C
+")
+                 (concat "Good PGP sign \"CCCCC <test1@example.com>\" UNDEFINED;\n\t"
+                         mew-pgp-result-pubkey ": ID = 0xCAE5F02472CC2D6C")))
+  ;; GnuPG 1 writes no NEWSIG
+  (should (equal (mew-test-pgp-check "\
+[GNUPG:] SIG_ID OovOi21T1J0okCQb00Iu+3SCWeE 2026-10-07 1791379579
+[GNUPG:] GOODSIG 19DF85F733400613 CCCCC <test1@example.com>
+[GNUPG:] VALIDSIG F2AEB68F0E814A50000F00B219DF85F733400613 2026-10-07 1791379579 0 4 0 1 10 00 F2AEB68F0E814A50000F00B219DF85F733400613
+[GNUPG:] TRUST_ULTIMATE
+[GNUPG:] KEYEXPIRED 1791466100
+[GNUPG:] SIGEXPIRED deprecated-use-keyexpired-instead
+[GNUPG:] BADSIG CAE5F02472CC2D6C DDDDD <test1@example.com>
+")
+                 "Good PGP sign \"CCCCC <test1@example.com>\" COMPLETE;
+	BAD PGP sign \"DDDDD <test1@example.com>\"")))
+
 (ert-deftest mew-test-pgp-decryption ()
   "The signature inside an encrypted message is found as well."
   (should (equal (mew-test-pgp-check "\
