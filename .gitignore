@@ -18,6 +18,7 @@ bin/mewencode
 bin/mewencode.exe
 bin/mewl
 bin/mewl.exe
+bin/w32/vendor/utf8proc*
 bin/hs/smew
 bin/hs/smew.exe
 bin/hs/cmew

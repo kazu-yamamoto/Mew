@@ -55,6 +55,8 @@ so POP needs `mewl` as well.
      default ignorable characters such as variation selectors; that is,
      they compare by NFKC_Casefold.
      To build without utf8proc, type `./configure --disable-utf8proc`.
+     On Windows, utf8proc is off by default; `bin/w32/vendor/README.md`
+     says how to turn it on.
 
 * Type `make`.
 
