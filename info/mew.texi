@@ -9339,7 +9339,9 @@ separate them with ",". You can also use a wildcard "*".
 @samp{?} と @samp{/} で @samp{subject=...} のような条件式を入力すると
 @samp{mewl} が呼ばれます。@samp{mewl} が iconv を使えるようにビルドされて
 いれば、ヘッダの RFC 2047 の符号化を解いてから比較するので、Subject: や
-From: などの日本語も見つかります(@samp{head=} は除きます)。ただし、本文は
+From: などの日本語も見つかります(@samp{head=} は除きます)。utf8proc も使
+えるなら、大文字小文字や、合成済みの文字と分解された文字の違いを Unicode
+の規則で吸収します。詳しくは、@xref{condition} を参照して下さい。ただし、本文は
 符号化されたまま検索するので、本文の非 ASCII の文字列は見つかりません。文字
 列だけを入力して @samp{grep} が呼ばれた場合は、メールのファイルをそのままの
 形で検索するので、ASCII しか見つかりません。
@@ -9352,7 +9354,10 @@ With an expression such as @samp{subject=...}, @samp{?} and @samp{/}
 call @samp{mewl}. If @samp{mewl} is built with iconv, it decodes the
 encoded-words of RFC 2047 in a header before matching, so a non-ASCII
 string in Subject:, From: and so on can be found (except with
-@samp{head=}). A body is read as it is, so a non-ASCII string in a
+@samp{head=}). If it is built with utf8proc as well, differences in
+case and between precomposed and decomposed characters are settled by
+the Unicode rules; see @ref{condition}. A body is read as it is, so a
+non-ASCII string in a
 body matches nothing. With a plain string, @samp{grep} is called,
 which reads the message files as they are, so only ASCII can be found
 with it.
@@ -9449,6 +9454,29 @@ Match if <pattern1> AND <pattern2>. You can omit this.
 Match if <pattern1> OR <pattern2>.
 @end ifset
 @end table
+
+@ifset ja
+@samp{mewl} が utf8proc を使えるようにビルドされていれば、比較は Unicode
+の規則に従います。@samp{=} と @samp{!=} は Unicode の大文字小文字の畳み込
+みを行うので、「Straße」と「STRASSE」、「Ä」と「ä」が一致します。その分、
+@samp{!=} が除外するものも増えます。どの演算子でも、合成済みの文字と分解さ
+れた文字(NFC と NFD)は同じものとして扱います。configure に
+@samp{--enable-utf8proc-char-fold} を付けた場合は、@samp{=} と @samp{!=}
+は全角と半角の違いなども無視します。utf8proc を使わない場合や、値が UTF-8
+として正しくない場合は、バイト単位で比較し、大文字小文字を区別しないのは
+ASCII の英字だけです。@samp{head} は、いずれの場合もそのまま比較します。
+@end ifset
+@ifset en
+If @samp{mewl} is built with utf8proc, it compares by the Unicode rules.
+@samp{=} and @samp{!=} apply Unicode case folding, so "Straße" matches
+"STRASSE" and "Ä" matches "ä"; @samp{!=} excludes accordingly more.
+With every operator, precomposed and decomposed characters (NFC and
+NFD) are taken to be the same. If configure is given
+@samp{--enable-utf8proc-char-fold}, @samp{=} and @samp{!=} also ignore
+differences such as width. Without utf8proc, or when a value is not
+valid UTF-8, the comparison is byte by byte, and only ASCII letters
+match regardless of case. @samp{head} is compared as it is in any case.
+@end ifset
 
 @ifset ja
 以下に例を示します。
