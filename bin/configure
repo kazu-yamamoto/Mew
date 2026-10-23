@@ -624,6 +624,7 @@ ac_includes_default="\
 ac_header_c_list=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+UTF8PROC_LIBS
 ICONV_LIBS
 INSTALL_DATA
 INSTALL_SCRIPT
@@ -677,6 +678,8 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
+enable_utf8proc
+enable_utf8proc_char_fold
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1298,6 +1301,16 @@ if test -n "$ac_init_help"; then
 
   cat <<\_ACEOF
 
+Optional Features:
+  --disable-option-checking  ignore unrecognized --enable/--with options
+  --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+  --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --disable-utf8proc      do not use utf8proc even if it is available
+  --enable-utf8proc-char-fold
+                          compare = and != of mewl pick by NFKC_Casefold,
+                          ignoring width and default ignorable characters as
+                          well [default=no]
+
 Some influential environment variables:
   CC          C compiler command
   CFLAGS      C compiler flags
@@ -1633,6 +1646,60 @@ printf '%s\n' "$ac_res" >&6; }
   eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } # ac_fn_c_check_func
+
+# ac_fn_check_decl LINENO SYMBOL VAR INCLUDES EXTRA-OPTIONS FLAG-VAR
+# ------------------------------------------------------------------
+# Tests whether SYMBOL is declared in INCLUDES, setting cache variable VAR
+# accordingly. Pass EXTRA-OPTIONS to the compiler, using FLAG-VAR.
+ac_fn_check_decl ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  as_decl_name=`echo $2|sed 's/ *(.*//'`
+  { printf '%s\n' "$as_me:${as_lineno-$LINENO}: checking whether $as_decl_name is declared" >&5
+printf %s "checking whether $as_decl_name is declared... " >&6; }
+if eval test \${$3+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) as_decl_use=`echo $2|sed -e 's/(/((/' -e 's/)/) 0&/' -e 's/,/) 0& (/g'`
+  eval ac_save_FLAGS=\$$6
+  as_fn_append $6 " $5"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main (void)
+{
+#ifndef $as_decl_name
+#ifdef __cplusplus
+  (void) $as_decl_use;
+#else
+  (void) $as_decl_name;
+#endif
+#endif
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  eval "$3=yes"
+else case e in #(
+  e) eval "$3=no" ;;
+esac
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+  eval $6=\$ac_save_FLAGS
+ ;;
+esac
+fi
+eval ac_res=\$$3
+	       { printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+printf '%s\n' "$ac_res" >&6; }
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+
+} # ac_fn_check_decl
 ac_configure_args_raw=
 for ac_arg
 do
@@ -4445,6 +4512,304 @@ printf '%s\n' "$mew_cv_iconv $ICONV_LIBS" >&6; }
 if test x$mew_cv_iconv = xyes; then
   printf '%s\n' "#define HAVE_ICONV 1" >>confdefs.h
 
+fi
+
+
+
+
+
+# Check whether --enable-utf8proc was given.
+if test ${enable_utf8proc+y}
+then :
+  enableval=$enable_utf8proc;
+else case e in #(
+  e) enable_utf8proc=yes ;;
+esac
+fi
+
+# Check whether --enable-utf8proc-char-fold was given.
+if test ${enable_utf8proc_char_fold+y}
+then :
+  enableval=$enable_utf8proc_char_fold; case $enableval in #(
+  yes|no) :
+     ;; #(
+  *) :
+    as_fn_error $? "bad value $enableval for --enable-utf8proc-char-fold" "$LINENO" 5 ;;
+esac
+else case e in #(
+  e) enable_utf8proc_char_fold=no ;;
+esac
+fi
+
+UTF8PROC_LIBS=
+mew_cv_utf8proc=no
+if test "x$enable_utf8proc" != xno; then
+  ac_fn_c_check_header_compile "$LINENO" "utf8proc.h" "ac_cv_header_utf8proc_h" "$ac_includes_default"
+if test "x$ac_cv_header_utf8proc_h" = xyes
+then :
+  ac_fn_c_check_type "$LINENO" "utf8proc_uint8_t" "ac_cv_type_utf8proc_uint8_t" "#include <utf8proc.h>
+"
+if test "x$ac_cv_type_utf8proc_uint8_t" = xyes
+then :
+  { printf '%s\n' "$as_me:${as_lineno-$LINENO}: checking for utf8proc_map in -lutf8proc" >&5
+printf %s "checking for utf8proc_map in -lutf8proc... " >&6; }
+if test ${ac_cv_lib_utf8proc_utf8proc_map+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) ac_check_lib_save_LIBS=$LIBS
+LIBS="-lutf8proc  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.
+   The 'extern "C"' is for builds by C++ compilers;
+   although this is not generally supported in C code supporting it here
+   has little cost and some practical benefit (sr 110532).  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char utf8proc_map (void);
+int
+main (void)
+{
+return utf8proc_map ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ac_cv_lib_utf8proc_utf8proc_map=yes
+else case e in #(
+  e) ac_cv_lib_utf8proc_utf8proc_map=no ;;
+esac
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS ;;
+esac
+fi
+{ printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_utf8proc_utf8proc_map" >&5
+printf '%s\n' "$ac_cv_lib_utf8proc_utf8proc_map" >&6; }
+if test "x$ac_cv_lib_utf8proc_utf8proc_map" = xyes
+then :
+  mew_cv_utf8proc=yes; UTF8PROC_LIBS=-lutf8proc
+fi
+
+fi
+
+fi
+
+fi
+{ printf '%s\n' "$as_me:${as_lineno-$LINENO}: checking whether to use utf8proc" >&5
+printf %s "checking whether to use utf8proc... " >&6; }
+if test "x$enable_utf8proc" = xno; then
+  { printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: no (disabled)" >&5
+printf '%s\n' "no (disabled)" >&6; }
+else
+  { printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: $mew_cv_utf8proc" >&5
+printf '%s\n' "$mew_cv_utf8proc" >&6; }
+fi
+if test "x$mew_cv_utf8proc" = xyes; then
+  printf '%s\n' "#define HAVE_UTF8PROC 1" >>confdefs.h
+
+  { printf '%s\n' "$as_me:${as_lineno-$LINENO}: checking whether = and != fold characters" >&5
+printf %s "checking whether = and != fold characters... " >&6; }
+  if test "x$enable_utf8proc_char_fold" != xno; then
+    printf '%s\n' "#define UTF8PROC_CHAR_FOLD 1" >>confdefs.h
+
+    { printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: yes (NFKC_Casefold)" >&5
+printf '%s\n' "yes (NFKC_Casefold)" >&6; }
+  else
+    { printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: no (case folding and NFC)" >&5
+printf '%s\n' "no (case folding and NFC)" >&6; }
+  fi
+        { printf '%s\n' "$as_me:${as_lineno-$LINENO}: checking for $CC options to detect undeclared functions" >&5
+printf %s "checking for $CC options to detect undeclared functions... " >&6; }
+if test ${ac_cv_c_undeclared_builtin_options+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) ac_save_CFLAGS=$CFLAGS
+   ac_cv_c_undeclared_builtin_options='cannot detect'
+   for ac_arg in '' -fno-builtin; do
+     CFLAGS="$ac_save_CFLAGS $ac_arg"
+     # This test program should *not* compile successfully.
+     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+(void) strchr;
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+
+else case e in #(
+  e) # This test program should compile successfully.
+        # No library function is consistently available on
+        # freestanding implementations, so test against a dummy
+        # declaration.  Include always-available headers on the
+        # off chance that they somehow elicit warnings.
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <float.h>
+#include <limits.h>
+#include <stdarg.h>
+#include <stddef.h>
+extern void ac_decl (int, char *);
+
+int
+main (void)
+{
+(void) ac_decl (0, (char *) 0);
+  (void) ac_decl;
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  if test x"$ac_arg" = x
+then :
+  ac_cv_c_undeclared_builtin_options='none needed'
+else case e in #(
+  e) ac_cv_c_undeclared_builtin_options=$ac_arg ;;
+esac
+fi
+          break
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
+esac
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+    done
+    CFLAGS=$ac_save_CFLAGS
+   ;;
+esac
+fi
+{ printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_undeclared_builtin_options" >&5
+printf '%s\n' "$ac_cv_c_undeclared_builtin_options" >&6; }
+  case $ac_cv_c_undeclared_builtin_options in #(
+  'cannot detect') :
+    { { printf '%s\n' "$as_me:${as_lineno-$LINENO}: error: in '$ac_pwd':" >&5
+printf '%s\n' "$as_me: error: in '$ac_pwd':" >&2;}
+as_fn_error $? "cannot make $CC report undeclared builtins
+See 'config.log' for more details" "$LINENO" 5; } ;; #(
+  'none needed') :
+    ac_c_undeclared_builtin_options='' ;; #(
+  *) :
+    ac_c_undeclared_builtin_options=$ac_cv_c_undeclared_builtin_options ;;
+esac
+
+{ printf '%s\n' "$as_me:${as_lineno-$LINENO}: checking for $CC options to ignore future-version functions" >&5
+printf %s "checking for $CC options to ignore future-version functions... " >&6; }
+if test ${ac_cv_c_future_darwin_options+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e)       ac_compile_saved="$ac_compile"
+   ac_compile="$ac_compile -Werror=unguarded-availability-new"
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#if ! (defined __APPLE__ && defined __MACH__)
+	   #error "-Werror=unguarded-availability-new not needed here"
+	  #endif
+
+int
+main (void)
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  ac_cv_c_future_darwin_options='-Werror=unguarded-availability-new'
+else case e in #(
+  e) ac_cv_c_future_darwin_options='none needed' ;;
+esac
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+   ac_compile="$ac_compile_saved"
+   ;;
+esac
+fi
+{ printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_future_darwin_options" >&5
+printf '%s\n' "$ac_cv_c_future_darwin_options" >&6; }
+ case $ac_cv_c_future_darwin_options in #(
+  'none needed') :
+    ac_c_future_darwin_options='' ;; #(
+  *) :
+    ac_c_future_darwin_options=$ac_cv_c_future_darwin_options ;;
+esac
+
+ac_fn_check_decl "$LINENO" "utf8proc_free" "ac_cv_have_decl_utf8proc_free" "#include <utf8proc.h>
+" "$ac_c_undeclared_builtin_options$ac_c_future_darwin_options" "CFLAGS"
+if test "x$ac_cv_have_decl_utf8proc_free" = xyes
+then :
+  { printf '%s\n' "$as_me:${as_lineno-$LINENO}: checking for utf8proc_free in -lutf8proc" >&5
+printf %s "checking for utf8proc_free in -lutf8proc... " >&6; }
+if test ${ac_cv_lib_utf8proc_utf8proc_free+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) ac_check_lib_save_LIBS=$LIBS
+LIBS="-lutf8proc  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.
+   The 'extern "C"' is for builds by C++ compilers;
+   although this is not generally supported in C code supporting it here
+   has little cost and some practical benefit (sr 110532).  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char utf8proc_free (void);
+int
+main (void)
+{
+return utf8proc_free ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ac_cv_lib_utf8proc_utf8proc_free=yes
+else case e in #(
+  e) ac_cv_lib_utf8proc_utf8proc_free=no ;;
+esac
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS ;;
+esac
+fi
+{ printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_utf8proc_utf8proc_free" >&5
+printf '%s\n' "$ac_cv_lib_utf8proc_utf8proc_free" >&6; }
+if test "x$ac_cv_lib_utf8proc_utf8proc_free" = xyes
+then :
+  printf '%s\n' "#define HAVE_UTF8PROC_FREE 1" >>confdefs.h
+
+fi
+
+fi
+fi
+if test "x$mew_cv_utf8proc" != xyes && test "x$enable_utf8proc_char_fold" != xno; then
+  as_fn_error $? "--enable-utf8proc-char-fold needs utf8proc, which is not used" "$LINENO" 5
 fi
 
 

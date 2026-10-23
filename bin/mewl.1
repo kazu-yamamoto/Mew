@@ -114,8 +114,9 @@ Definitions of the symbols above are as follows:
 N | [start]-[end] | last:N
 .TP 8
 .I pattern
-\'key=val' | 'key!=val' | '!<pattern>' | '(<pattern>)'
-| '<pattern>&<pattern>' | '<pattern>|<pattern>' 
+\&'key=val' | 'key==val' | 'key!=val' | 'key!==val'
+| '!<pattern>' | '(<pattern>)'
+| '<pattern>&<pattern>' | '<pattern>|<pattern>'
 .PP
 If built with iconv,
 .B mewl
@@ -125,7 +126,26 @@ comparing it with
 so
 .I val
 should be given in UTF-8.
-The key "head" (the whole header) and the body are compared as they are.
+.PP
+If built with utf8proc,
+the case-sensitive operators (== and !==) compare a field body with
+.I val
+after canonical composition (NFC), so that precomposed and decomposed
+spellings of the same text agree while everything else is distinct.
+The case-insensitive operators (= and !=) compare them
+by Unicode full case folding and canonical composition (NFC), so that
+"Stra\(sse" matches "STRASSE" and precomposed and decomposed spellings
+agree.
+If built with UTF8PROC_CHAR_FOLD
+(configure --enable-utf8proc-char-fold; see INSTALL.md),
+they also ignore compatibility differences such as width and default
+ignorable characters such as variation selectors (NFKC_Casefold), so
+that fullwidth and halfwidth forms match their ordinary ones.
+Without utf8proc, or when either side is not valid UTF-8, they are
+compared byte by byte; = and != then ignore the case of ASCII letters
+only.
+The key "head" (the whole header) and the body are compared as they
+are, neither decoded nor normalized.
 
 .\"
 .SH BUGS

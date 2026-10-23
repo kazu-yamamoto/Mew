@@ -126,6 +126,12 @@
 /* Define to 1 if you have the 'usleep' function. */
 #undef HAVE_USLEEP
 
+/* Define to 1 if utf8proc is available */
+#undef HAVE_UTF8PROC
+
+/* Define to 1 if utf8proc has utf8proc_free */
+#undef HAVE_UTF8PROC_FREE
+
 /* Define to 1 if you have the 'utimes' function. */
 #undef HAVE_UTIMES
 
@@ -157,6 +163,9 @@
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
+
+/* Define to 1 if = and != compare by NFKC_Casefold */
+#undef UTF8PROC_CHAR_FOLD
 
 /* Define to empty if 'const' does not conform to ANSI C. */
 #undef const
