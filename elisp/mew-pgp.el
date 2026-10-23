@@ -483,7 +483,10 @@ The key id comes first, then the user id."
   "Read the result of a verification out of the status output.
 Return nil when the output says nothing about a signature, which is
 what happens for a message which is encrypted but not signed."
-  (let ((ranges (mew-pgp-get-status-ranges "^\\[GNUPG:\\] NEWSIG[ \r\n]"))
+  ;; One of these lines is written for each signature, by GnuPG 1 too,
+  ;; which has no NEWSIG.  What is read below comes on or after it.
+  (let ((ranges (mew-pgp-get-status-ranges
+		 "^\\[GNUPG:\\] \\(GOODSIG\\|BADSIG\\|EXPSIG\\|EXPKEYSIG\\|REVKEYSIG\\|ERRSIG\\) "))
 	(buf '())
 	args str)
     (mew-pgp-debug "mew-pgp-verify-check-status" (mew-buffer-substring (point-min) (point-max)))

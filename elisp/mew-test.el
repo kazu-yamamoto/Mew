@@ -785,7 +785,19 @@ good one.  NEWSIG carries the signer's user id when GnuPG signed."
 [GNUPG:] NO_PUBKEY CAE5F02472CC2D6C
 ")
                  (concat "Good PGP sign \"CCCCC <test1@example.com>\" UNDEFINED;\n\t"
-                         mew-pgp-result-pubkey ": ID = 0xCAE5F02472CC2D6C"))))
+                         mew-pgp-result-pubkey ": ID = 0xCAE5F02472CC2D6C")))
+  ;; GnuPG 1 writes no NEWSIG
+  (should (equal (mew-test-pgp-check "\
+[GNUPG:] SIG_ID OovOi21T1J0okCQb00Iu+3SCWeE 2026-10-07 1791379579
+[GNUPG:] GOODSIG 19DF85F733400613 CCCCC <test1@example.com>
+[GNUPG:] VALIDSIG F2AEB68F0E814A50000F00B219DF85F733400613 2026-10-07 1791379579 0 4 0 1 10 00 F2AEB68F0E814A50000F00B219DF85F733400613
+[GNUPG:] TRUST_ULTIMATE
+[GNUPG:] KEYEXPIRED 1791466100
+[GNUPG:] SIGEXPIRED deprecated-use-keyexpired-instead
+[GNUPG:] BADSIG CAE5F02472CC2D6C DDDDD <test1@example.com>
+")
+                 "Good PGP sign \"CCCCC <test1@example.com>\" COMPLETE;
+	BAD PGP sign \"DDDDD <test1@example.com>\"")))
 
 (ert-deftest mew-test-pgp-decryption ()
   "The signature inside an encrypted message is found as well."
