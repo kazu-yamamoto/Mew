@@ -157,7 +157,7 @@ $(TEMPFILE2): $(SRCS)
 ################################################################
 
 .PHONY: test
-test: mew-test.el
+test: $(OBJS) mew-test.el
 	@echo 'Testing EL files of Mew ... '
 	$(EMACS) -batch -q -no-site-file -L . -l mew-test.el -f ert-run-tests-batch-and-exit
 	@echo 'Testing EL files of Mew ... done'

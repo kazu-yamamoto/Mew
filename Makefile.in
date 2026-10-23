@@ -86,6 +86,10 @@ install-elisp:
 detect:
 	cd elisp; $(MAKE) detect EMACS=$(EMACS) DETECT=$(DETECT)
 
+.PHONY: test
+test:
+	cd elisp; $(MAKE) test EMACS=$(EMACS)
+
 ################################################################
 
 .PHONY: bin
