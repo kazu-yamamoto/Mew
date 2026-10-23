@@ -1398,6 +1398,31 @@ apart by whether GnuPG says it considered a key at all."
     ;; GnuPG 1 says nothing of this sort, so the old path keeps its say
     (should-not (check "gpg: skipped \"a@example.org\": secret key not available\n"))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-syntax.el: the part of a security result painted as bad
+;;;
+
+(ert-deftest mew-test-syntax-bad-sign-face ()
+  "Only the verdict of a bad signature is painted, not the user id."
+  (cl-flet ((bad (result)
+	      (with-temp-buffer
+		(mew-xinfo-set-pri-result result)
+		(mew-decode-syntax-insert-privacy)
+		(let ((pos (point-min)) ret next)
+		  (while (< pos (point-max))
+		    (setq next (next-single-property-change pos 'face nil (point-max)))
+		    (if (eq (get-text-property pos 'face) 'mew-face-header-xmew-bad)
+			(push (buffer-substring-no-properties pos next) ret))
+		    (setq pos next))
+		  (nreverse ret)))))
+    (should (equal (bad "BAD PGP sign \"Alice <signer@example.org>\"")
+		   '("BAD PGP sign")))
+    (should (equal (bad "Bad PGP sign \"Carol <carol@example.org>\"")
+		   '("Bad PGP sign")))
+    (should (equal (bad "BAD S/MIME sign") '("BAD S/MIME sign")))
+    (should-not (bad "Good PGP sign \"Tom Badger <tom@designs.example>\" COMPLETE"))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
