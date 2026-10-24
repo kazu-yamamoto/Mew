@@ -72,9 +72,9 @@ keep this as nil.")
 	     :end-of-capability
 	     (format "^\\.\n")
 	     :end-of-command
-	     (format "^\\.\n")
+	     (format "^[0-9]+ .*\n")
 	     :success
-	     (format "^2.+ \n")
+	     (format "^382 ")
 	     :starttls-function
 	     (lambda (capabilities)
 	       (when (string-match-p "STARTTLS" capabilities)
