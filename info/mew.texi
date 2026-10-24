@@ -7290,11 +7290,14 @@ Apply "uudecode" on messages marked with @samp{*}.
 @ifset ja
 @samp{M-t} では、@samp{*} マークの付いたメッセージがきちんと分割順になっ
 ている必要があります。順番がくるっているなら、@samp{S} でソートするとよ
-いかもしれません。
+いかもしれません。保存するファイル名は尋ねられます。"begin" 行の名前は、
+ディレクトリ部分を除いて既定値として使われるだけです。
 @end ifset
 @ifset en
 For @samp{M-t}, messages marked with @samp{*} are supposed to be in
 the right order. If out of order, sorting with @samp{S} would help.
+Mew asks for the file to save to; the name on the "begin" line,
+without its directory part, is only offered as the default.
 @end ifset
 
 @c %%%%%%%%%%%%%%%%%
