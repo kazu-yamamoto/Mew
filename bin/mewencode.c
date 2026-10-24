@@ -77,7 +77,7 @@ private void quoted_printable_encode(int);
 private int  xlate(const signed char *, unsigned int, int);
 private int  puthexchar(int, int);
 private void quoted_printable_decode(void);
-private void uu_decode(int);
+private void uu_decode(void);
 private void check_8bit(void);
 
 /****************************************************************
@@ -118,7 +118,6 @@ help_message[] = {
 	"Default is Encoding, Base64, Length = 70, Binary.",
 	"If <infile> is \"-\", it means the standard input.",
 	"If <outfile> is \"-\", it means the standard output.",
-	"If <outfile> is given for uudecoding, an embedded file is used.",
 	NULL
 };
 
@@ -951,29 +950,19 @@ quoted_printable_decode()
  */
 
 private char Uu_read_buf[BUFSIZ];
-private char Uu_flnm_buf[BUFSIZ];
 
 #define uuchar(c) (((c) - SP) & 0x3f)
 
 private void
-uu_decode(int use_file_name)
+uu_decode(void)
 {
 	int n, c1, c2, c3, c4;
-	char *p, *q;
+	char *p;
 
+	/* The name on the begin line is not used: it comes from the data. */
 	while (fgets(Uu_read_buf, sizeof(Uu_read_buf), stdin) != NULL) {
-		if (STRCMP(Uu_read_buf, "begin ") == 0) {
-			if (use_file_name == YES) {
-				if ((p = strchr(Uu_read_buf + 6, SP)) == NULL)
-					warn_exit("no filename for uudecode.");
-				p++;
-				for (q = Uu_flnm_buf; *p != LF; p++, q++)
-					*q = *p;
-				if (freopen(Uu_flnm_buf, FDWRITE, stdout) == NULL)
-					warn_exit("can't open a file.");
-			}
+		if (STRCMP(Uu_read_buf, "begin ") == 0)
 			break;
-		}
 	}
 
 	while (fgets(Uu_read_buf, sizeof(Uu_read_buf), stdin) != NULL) {
@@ -1010,8 +999,6 @@ uu_decode(int use_file_name)
 			n = n - 3;
 		}
 	}
-	if (use_file_name == YES)
-		fprintf(stderr, "filename: %s\n", Uu_flnm_buf);
 }
 
 /****************************************************************
@@ -1050,7 +1037,6 @@ main(int argc, char **argv)
 	char encode = BASE64;	/* -b -q -g */
 	int  length = LINELEN;	/* -l num */
 	int  text   = NO;	/* -t */
-	int  use_file_name = NO;
 	char *progname = getprognm(argv[0]);
 
 	warn_prog = progname;
@@ -1131,8 +1117,6 @@ main(int argc, char **argv)
 		Optind++;
 		if (STRCMP(argv[Optind], "-") == 0)
 			;
-		else if (encode == UU)
-			use_file_name = YES;
 		else if (freopen(argv[Optind], FDWRITE, stdout) == NULL)
 			warn_exit("can't open file %s.", argv[Optind]);
 		break;
@@ -1171,7 +1155,7 @@ main(int argc, char **argv)
 			gzip64_decode(text);
 			break;
 		case UU:
-			uu_decode(use_file_name);
+			uu_decode();
 			break;
 		}
 		break;
