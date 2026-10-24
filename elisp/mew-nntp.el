@@ -88,10 +88,11 @@
          (pass (mew-nntp-input-passwd prompt pnm)))
     (mew-nntp-process-send-string pro "AUTHINFO PASS %s" pass)))
 
-(defun mew-nntp-command-wpwd (_pro pnm)
+(defun mew-nntp-command-wpwd (pro pnm)
   (mew-nntp-message pnm "NNTP password is wrong!")
   (mew-passwd-set-passwd (mew-nntp-passtag pnm) nil)
-  (mew-nntp-set-status pnm "pre-quit"))
+  ;; Nothing was sent, so "pre-quit" would wait for no reply.
+  (mew-nntp-command-quit2 pro pnm))
 
 (defun mew-nntp-command-group (pro pnm)
   (let ((directive (mew-nntp-get-directive pnm))
