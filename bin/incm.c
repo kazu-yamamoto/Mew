@@ -698,6 +698,7 @@ process_mbox(int seq)
 	char inboxfile[PATH_MAX];
 	char emptyline[3];
 	char *ln;
+	size_t len;
 	int srcfd, oflag;
 	FILE *srcfp = NULL;
 	FILE *dstfp = NULL;
@@ -726,7 +727,7 @@ process_mbox(int seq)
 		warning("fdopen(%s) for read", Mbox);  goto rerr;
 	}
 
-	while ((ln = Getline(srcfp)) != NULL) {
+	while ((ln = Getline(srcfp, &len)) != NULL) {
 		if (Exit)
 			goto werr;
 		switch (state) {
@@ -736,7 +737,7 @@ process_mbox(int seq)
 				if (dstfp == NULL)
 					goto rerr;
 				if (PreserveUnixFrom &&
-				    fputs(ln, dstfp) == EOF) {
+				    fwrite(ln, 1, len, dstfp) != len) {
 					warning("fputs(%s)", inboxfile);
 					goto werr;
 				}
@@ -744,7 +745,7 @@ process_mbox(int seq)
 			}
 			break;
 		case ST_HEADER:
-			if (strlen(ln) < 3 &&
+			if (len < 3 &&
 			    (ln[0] == '\n' || ln[0] == '\r')) {
 				STRCPY(emptyline, ln);
 				state = ST_BODY_AFTER_EMPTY_LINE;
@@ -752,7 +753,7 @@ process_mbox(int seq)
 					bytes = -1;
 				break;
 			}
-			if (fputs(ln, dstfp) == EOF) {
+			if (fwrite(ln, 1, len, dstfp) != len) {
 				warning("fputs(%s)", inboxfile);  goto werr;
 			}
 			if (UseCL &&
@@ -776,7 +777,7 @@ process_mbox(int seq)
 				if (dstfp == NULL)
 					goto rerr;
 				if (PreserveUnixFrom &&
-				    fputs(ln, dstfp) == EOF) {
+				    fwrite(ln, 1, len, dstfp) != len) {
 					warning("fputs(%s)", inboxfile);
 					goto werr;
 				}
@@ -787,7 +788,7 @@ process_mbox(int seq)
 				goto werr;
 			/* FALLTHRU */
 		case ST_BODY:
-			if (strlen(ln) < 3 &&
+			if (len < 3 &&
 			    (ln[0] == '\n' || ln[0] == '\r')) {
 				STRCPY(emptyline, ln);
 				state = ST_BODY_AFTER_EMPTY_LINE;
@@ -795,10 +796,10 @@ process_mbox(int seq)
 			else
 				state = ST_BODY;
 
-			if (state == ST_BODY && fputs(ln, dstfp) == EOF)
+			if (state == ST_BODY && fwrite(ln, 1, len, dstfp) != len)
 				goto werr;
 			if (bytes >= 0) {
-				bytes -= strlen(ln);
+				bytes -= len;
 				if (bytes <= 0) {
 					if (fclose(dstfp))
 						goto rerr;
@@ -843,16 +844,17 @@ process_stdin(int seq)
 {
 	char inboxfile[PATH_MAX];
 	char *ln;
+	size_t len;
 	FILE *srcfp = stdin;
 	FILE *dstfp;
 
 	if ((dstfp = open_new_inbox_file(&seq, inboxfile)) == NULL)
 		goto rerr;
 
-	while ((ln = Getline(srcfp)) != NULL) {
+	while ((ln = Getline(srcfp, &len)) != NULL) {
 		if (Exit)
 			goto werr;
-		if (fputs(ln, dstfp) == EOF) {
+		if (fwrite(ln, 1, len, dstfp) != len) {
 			warning("fputs(%s)", inboxfile);  goto werr;
 		}
 		free(ln);

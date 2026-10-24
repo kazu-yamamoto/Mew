@@ -82,40 +82,30 @@ snprintf(char *buf, int len, const char *fmt, ...)
 #endif
 
 #ifndef HAVE_FGETLN
+/* As BSD's fgetln: *len bytes of a line, NULs and all, not terminated. */
 private char*
 fgetln(FILE *fp, size_t *len)
 {
 	static size_t bufsize = 0;
 	static char *buf = NULL;
-	char tmp[BUFSIZ];
-	size_t readlen;
-
-	if (buf == NULL) {
-		bufsize = BUFSIZ;
-		MALLOC(buf, bufsize);
-	}
+	int c;
 
 	*len = 0;
-	while (1) {
-		if (fgets(tmp, BUFSIZ, fp) == NULL)
-			return NULL;
-		readlen = strlen(tmp);
-
-		if (*len + readlen > bufsize) {
+	while ((c = getc(fp)) != EOF) {
+		if (*len == bufsize) {
 			bufsize += BUFSIZ;
 			REALLOC(buf, bufsize);
 		}
-		memmove(&buf[*len], tmp, readlen);
-		*len += readlen;
-		if (readlen < BUFSIZ - 1 || tmp[BUFSIZ - 2] == '\n')
+		buf[(*len)++] = c;
+		if (c == '\n')
 			break;
 	}
-	return buf;
+	return *len > 0 ? buf : NULL;
 }
 #endif
 
 char*
-Getline(FILE* fp)
+Getline(FILE* fp, size_t *lenp)
 {
 	char *s, *t;
 	size_t len;
@@ -124,6 +114,7 @@ Getline(FILE* fp)
 	MALLOC(s, len+1);
 	memmove(s, t, len);
 	s[len] = '\0';
+	*lenp = len;
 	return s;
 }
 

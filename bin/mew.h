@@ -132,7 +132,7 @@ public void warn_exit(const char *, ...);
 public int search_string(char *, char *, int);
 public void pattern_init(char *);
 public int pattern_match(void);
-public char *Getline(FILE *);
+public char *Getline(FILE *, size_t *);
 public int Getopt(int, char **, const char *);
 
 extern char *warn_prog;
