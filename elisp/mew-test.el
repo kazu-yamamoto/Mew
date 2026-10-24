@@ -1548,6 +1548,14 @@ apart by whether GnuPG says it considered a key at all."
       (mew-passwd-set-passwd "u@h:pop" "pass")
       (should (equal stored '(("u@h:pop" . "pass")))))))
 
+(ert-deftest mew-test-save-file-name-default ()
+  "A name from a message never makes a dot file or leaves the directory."
+  (dolist (c '((".zshenv" . "zshenv") ("report.pdf" . "report.pdf")
+	       ("../../.bashrc" . "bashrc") ("/etc/passwd" . "passwd")
+	       (".config/autostart/x.desktop" . "x.desktop")
+	       ("..." . nil) (nil . nil)))
+    (should (equal (mew-save-file-name-default (car c)) (cdr c)))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:

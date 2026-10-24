@@ -1067,6 +1067,15 @@ and sets buffer-file-coding-system."
 ;;; temp name
 ;;;
 
+(defun mew-save-file-name-default (file)
+  "Make FILE, a name taken from a message, a default name to save to.
+Drop the directory and leading dots, so that RET does not write a
+dot file such as ~/.zshenv or outside the directory."
+  (when (stringp file)
+    (setq file (replace-regexp-in-string
+		"\\`\\.+" "" (file-name-nondirectory file)))
+    (unless (string= file "") file)))
+
 (defun mew-make-temp-name (&optional fname)
   (unless (file-exists-p mew-temp-dir)
     (mew-make-directory mew-temp-dir)) ;; just in case

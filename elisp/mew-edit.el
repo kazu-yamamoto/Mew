@@ -296,7 +296,8 @@ a text object to be saved can be specified."
 		file
 		(string-match mew-regex-nonascii file))
 	   (setq file (mew-samba-encoding file)))
-       (setq file (mew-summary-input-file-name nil file))
+       (setq file (mew-summary-input-file-name
+		   nil (mew-save-file-name-default file)))
        (let ((dir (mew-parent-directory file)))
          (if (and (not (file-exists-p dir))
                   (y-or-n-p (format "Make directory %s? " dir)))
