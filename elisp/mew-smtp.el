@@ -367,7 +367,7 @@
 
 (defun mew-smtp-process-send-string (pro &rest args)
   (let ((str (apply 'format args)))
-    (mew-smtp-debug "=SEND=" str)
+    (mew-smtp-debug "=SEND=" (mew-debug-redact str))
     (if (and (processp pro) (eq (process-status pro) 'open))
 	(process-send-string pro (concat str mew-cs-eol))
       (message "SMTP time out"))))

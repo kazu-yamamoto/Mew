@@ -1067,6 +1067,18 @@ and sets buffer-file-coding-system."
 ;;; temp name
 ;;;
 
+(defun mew-debug-redact (str)
+  "Hide the credentials in STR, a line sent to a server, for debug output."
+  (let ((case-fold-search t))
+    (cond
+     ((string-match "\\`\\(?:\\(?:AUTHINFO \\)?PASS\\|LOGIN [^ ]+\\|AUTH\\(?:ENTICATE\\)? [^ ]+\\) " str)
+      (concat (match-string 0 str) "********"))
+     ;; A SASL response alone; commands are upper case letters only.
+     ((let ((case-fold-search nil))
+	(string-match "\\`[A-Za-z0-9+/]*[a-z0-9=][A-Za-z0-9+/]*=*\\'" str))
+      "********")
+     (t str))))
+
 (defun mew-save-file-name-default (file)
   "Make FILE, a name taken from a message, a default name to save to.
 Drop the directory and leading dots, so that RET does not write a

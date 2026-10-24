@@ -582,7 +582,7 @@
 
 (defun mew-pop-process-send-string (pro &rest args)
   (let ((str (apply 'format args)))
-    (mew-pop-debug "=SEND=" str)
+    (mew-pop-debug "=SEND=" (mew-debug-redact str))
     (if (and (processp pro) (eq (process-status pro) 'open))
 	(process-send-string pro (concat str mew-cs-eol))
       (message "POP time out")))) ;; not mew-pop-message

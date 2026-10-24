@@ -1574,6 +1574,17 @@ apart by whether GnuPG says it considered a key at all."
       (should (pass own-pass '("MX.example.net")))
       (should-not (pass "")))))
 
+(ert-deftest mew-test-debug-redact ()
+  "Credentials do not reach the debug buffer; other commands do."
+  (dolist (c '(("PASS secret" . "PASS ********")
+	       ("AUTHINFO PASS secret" . "AUTHINFO PASS ********")
+	       ("LOGIN \"kazu\" \"secret\"" . "LOGIN \"kazu\" ********")
+	       ("AUTH PLAIN AGthenUAc2VjcmV0" . "AUTH PLAIN ********")
+	       ("c2VjcmV0" . "********")
+	       ("AUTH LOGIN" . "AUTH LOGIN") ("STARTTLS" . "STARTTLS")
+	       ("USER kazu" . "USER kazu") ("RETR 3" . "RETR 3")))
+    (should (equal (mew-debug-redact (car c)) (cdr c)))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
