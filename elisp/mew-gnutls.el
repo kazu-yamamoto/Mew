@@ -190,16 +190,29 @@ keep this as nil.")
 		:filter-args #'mew--advice-filter-args-gnutls-negotiate)
     ;;
     ;; Override key functions when using a tunnel.
-    (with-temp-message status-msg
-      (setq pro-plist (apply
-		       'open-network-stream
-		       name buf server port
-		       :coding mew-cs-text-for-net
-		       :type type
-		       :return-list t
-		       (mew-gnutls-parameters proto starttlsp case))))
-    (advice-remove 'gnutls-negotiate
-		   #'mew--advice-filter-args-gnutls-negotiate)
+    ;; A timeout or C-g during the handshake must neither leave the
+    ;; advice for every later TLS connection nor a half-open process
+    ;; holding NAME.
+    (let ((procs (process-list)) done)
+      (unwind-protect
+	  (progn
+	    (with-temp-message status-msg
+	      (setq pro-plist (apply
+			       'open-network-stream
+			       name buf server port
+			       :coding mew-cs-text-for-net
+			       :type type
+			       :return-list t
+			       (mew-gnutls-parameters proto starttlsp case))))
+	    (setq done t))
+	(advice-remove 'gnutls-negotiate
+		       #'mew--advice-filter-args-gnutls-negotiate)
+	(unless done
+	  (let ((regex (concat "\\`" (regexp-quote name) "\\(<[0-9]+>\\)?\\'")))
+	    (dolist (pro (process-list))
+	      (and (not (memq pro procs))
+		   (string-match regex (process-name pro))
+		   (delete-process pro)))))))
     pro-plist))
 
 (defun mew-check-process (pro-plist status-msg)
