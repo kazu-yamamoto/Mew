@@ -67,20 +67,6 @@ warn_exit(const char *fmt, ...)
 	exit(EXIT_FAILURE);
 }
 
-#ifndef HAVE_SNPRINTF
-public int
-snprintf(char *buf, int len, const char *fmt, ...)
-{
-	int ret;
-	va_list ap;
-
-	va_start(ap, fmt);
-	ret = vsprintf(buf, fmt, ap);
-	va_end(ap);
-	return ret;
-}
-#endif
-
 #ifndef HAVE_FGETLN
 /* As BSD's fgetln: *len bytes of a line, NULs and all, not terminated. */
 private char*
