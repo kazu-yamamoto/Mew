@@ -574,41 +574,48 @@ any, are killed."
     ((not (y-or-n-p "Uudecode these messages? "))
      ())
     (t
-     (let ((dir (mew-summary-input-directory-name))
-	   (fn nil)
-	   (tmp (mew-make-temp-name))
+     (let ((tmp (mew-make-temp-name))
 	   (case-fold-search nil)
-	   (files FILES) start)
-       (with-temp-buffer
-	 (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
-	   (dolist (file files)
-	     (mew-erase-buffer)
-	     (mew-insert-file-contents file)
-	     (goto-char (point-min))
-	     (if (re-search-forward mew-eoh nil t)
-		 (forward-line))
-	     (setq start (point))
-	     (goto-char (point-max))
-	     (unless (bolp) (insert "\n"))
-	     (write-region start (point-max) tmp 'append 'no-msg)))
-	 (mew-erase-buffer)
-	 (cd dir)
-	 ;; mew-folder-local is dummy to let mewencode use
-	 ;; the embedded filename
-	 (call-process mew-prog-mime-decode tmp t nil
-		       "-d" "-u" "-" mew-folder-local)
-	 (mew-delete-file tmp)
-	 (goto-char (point-min))
-	 (if (not (looking-at "^filename: \\(.*\\)"))
-	     (message "Failed to execute %s" mew-prog-mime-decode)
-	   (setq fn (mew-match-string 1))
-	   (setq fn (mew-summary-prog-exec mew-prog-compress "-df" "Z" fn))
-	   (setq fn (mew-summary-prog-exec mew-prog-gzip "-df" "gz" fn))
-	   (when (and (string-match "^\\(.*\\)\\.tar$" fn)
-		      (y-or-n-p (format "Execute %s for %s? " mew-prog-tar fn)))
-	     (message "Executing %s for %s..." mew-prog-tar fn)
-	     (call-process mew-prog-tar nil nil nil "-xf" fn)
-	     (message "Executing %s for %s...done" mew-prog-tar fn)))))))))
+	   (files FILES) start name fn)
+       (unwind-protect
+	   (with-temp-buffer
+	     (mew-frwlet mew-cs-text-for-read mew-cs-text-for-write
+	       (dolist (file files)
+		 (mew-erase-buffer)
+		 (mew-insert-file-contents file)
+		 (goto-char (point-min))
+		 (if (re-search-forward mew-eoh nil t)
+		     (forward-line))
+		 (setq start (point))
+		 (unless name
+		   (if (re-search-forward "^begin [0-7]+ \\(.+\\)$" nil t)
+		       (setq name (file-name-nondirectory (mew-match-string 1)))))
+		 (goto-char (point-max))
+		 (unless (bolp) (insert "\n"))
+		 (write-region start (point-max) tmp 'append 'no-msg)))
+	     ;; mewencode writes to the file given here, never to the
+	     ;; name on the begin line, which comes from the message.
+	     (setq fn (mew-summary-input-file-name "Uudecode to: " name))
+	     (cond
+	      ((file-directory-p fn)
+	       (message "%s is a directory" fn))
+	      ((and (file-exists-p fn)
+		    (not (y-or-n-p (format "File exists. Overwrite %s? " fn))))
+	       (message "Not decoded"))
+	      ((not (eq (call-process mew-prog-mime-decode nil nil nil
+				      "-d" "-u" tmp fn)
+			0))
+	       (message "Failed to execute %s" mew-prog-mime-decode))
+	      (t
+	       (cd (file-name-directory fn))
+	       (setq fn (mew-summary-prog-exec mew-prog-compress "-df" "Z" fn))
+	       (setq fn (mew-summary-prog-exec mew-prog-gzip "-df" "gz" fn))
+	       (when (and (string-match "^\\(.*\\)\\.tar$" fn)
+			  (y-or-n-p (format "Execute %s for %s? " mew-prog-tar fn)))
+		 (message "Executing %s for %s..." mew-prog-tar fn)
+		 (call-process mew-prog-tar nil nil nil "-xf" fn)
+		 (message "Executing %s for %s...done" mew-prog-tar fn)))))
+	 (mew-delete-file tmp)))))))
 
 (defun mew-summary-prog-exec (prog opts suffix tarfile)
   (if (string-match (format "^\\(.*\\)\\.%s$" suffix) tarfile)
