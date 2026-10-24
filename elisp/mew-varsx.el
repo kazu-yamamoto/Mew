@@ -78,6 +78,9 @@
    ("audio/x-aiff" "\\.aif?f$" mew-b64 mew-prog-audio mew-icon-audio)
    ("audio/x-midi" "\\.midi?$" mew-b64 mew-prog-audio mew-icon-audio)
    ("audio/x-mpeg" "\\.mpga$\\|\\.mp[23]$" mew-b64 mew-prog-audio mew-icon-audio)
+   ("audio/mp4"    "\\.m4a$"    mew-b64 mew-prog-audio mew-icon-audio)
+   ("audio/ogg"    "\\.og[ga]$" mew-b64 mew-prog-audio mew-icon-audio)
+   ("audio/flac"   "\\.flac$"   mew-b64 mew-prog-audio mew-icon-audio)
    ;;
    ("image/gif"   "\\.gif$"   mew-b64 mew-prog-image mew-icon-image gif)
    ("image/tiff"  "\\.tif?f$" mew-b64 mew-prog-image mew-icon-image tiff)
@@ -99,6 +102,9 @@
    ("image/x-portable-pixmap" "\\.ppm$" mew-b64 mew-prog-image mew-icon-image pbm)
    ("image/x-portable-anymap" "\\.pnm$" mew-b64 mew-prog-image mew-icon-image pbm)
    ("image/x-portable-arbitrarymap" "\\.pam$" mew-b64 mew-prog-image mew-icon-image PAM)
+   ("image/webp"  "\\.webp$"  mew-b64 mew-prog-image mew-icon-image webp)
+   ("image/svg\\+xml" "\\.svg$" mew-b64 mew-prog-image mew-icon-image svg)
+   ("image/heic"  "\\.heic$"  mew-b64 mew-prog-image mew-icon-image)
    ("image"       "^$"        mew-b64 mew-prog-image mew-icon-image)
    ;;
    ("model/iges" "\\.ige?s$" mew-b64 mew-prog-iges  mew-icon-image) ;; xxx
@@ -109,6 +115,8 @@
    ("video/mpeg"      "\\.mpe?g$" mew-b64 mew-prog-video mew-icon-video)
    ("video/quicktime" "\\.mov$"   mew-b64 mew-prog-video mew-icon-video)
    ("video/x-msvideo" "\\.avi$"   mew-b64 mew-prog-video mew-icon-video)
+   ("video/mp4"       "\\.mp4$\\|\\.m4v$" mew-b64 mew-prog-video mew-icon-video)
+   ("video/webm"      "\\.webm$"  mew-b64 mew-prog-video mew-icon-video)
    ;;
    ("message/rfc822"          ,(format "^[0-9]+\\(%s\\)?$" mew-suffix) nil
     mew-prog-rfc822           mew-icon-message/rfc822)
@@ -195,6 +203,15 @@
    ("application/octet-stream"
     "\\.tar$\\|\\.tar\\.\\|\\.jar$\\|\\.gz$\\|\\.Z$\\|\\.taz$\\|\\.tgz$\\|\\.xz$\\|\\.txz$\\|\\.lzma?$\\|\\.tlz$\\|\\.tbz$\\|\\.bz2?$\\|\\.lzh$\\|\\.bin$\\|\\.pgp$\\|\\.gpg$\\|\\.exe$\\|\\.dll$\\|\\.class$"
     mew-b64 mew-prog-octet-stream mew-icon-application/octet-stream)
+   ;; After the entry above, which still decides the type when attaching.
+   ("application/gzip"              "\\.gz$\\|\\.tgz$" mew-b64
+    mew-prog-octet-stream           mew-icon-application/octet-stream)
+   ("application/x-gzip"            "\\.gz$\\|\\.tgz$" mew-b64
+    mew-prog-octet-stream           mew-icon-application/octet-stream)
+   ("application/x-7z-compressed"   "\\.7z$"  mew-b64
+    mew-prog-octet-stream           mew-icon-application/octet-stream)
+   ("application/json"              "\\.json$" mew-b64
+    mew-prog-octet-stream           mew-icon-text)
    ;;
    ("text/html"     "\\.html?$" nil     mew-prog-html      mew-icon-text)
    ("text/enriched" "\\.rtf$"   nil     mew-prog-enriched  mew-icon-text)

@@ -1495,6 +1495,25 @@ apart by whether GnuPG says it considered a key at all."
 	  (should (equal (mew-lisp-load file) data)))
       (delete-file file))))
 
+(ert-deftest mew-test-mime-suffix-agree-p ()
+  "A suffix that does not fit Content-Type: is asked about."
+  (require 'mew-varsx)
+  (let (asked)
+    (cl-letf (((symbol-function 'y-or-n-p) (lambda (_) (setq asked t) nil))
+	      ((symbol-function 'message) #'ignore))
+      (dolist (c '(("clip.mpg" "Video/Mpeg") ("a.zip" "Application/X-Zip-Compressed")
+		   ("song.mp3" "Audio/Mpeg") ("a.wav" "Audio/Wav")
+		   ("photo.JPG" "Image/Jpeg") ("report" "Application/Pdf")
+		   (nil "Application/Pdf")))
+	(setq asked nil)
+	(should (mew-mime-suffix-agree-p (car c) (cadr c)))
+	(should-not asked))
+      (dolist (c '(("clip.hta" "Video/Mpeg") ("invoice.pdf.exe" "Application/Pdf")
+		   ("evil.terminal" "Image/Png")))
+	(setq asked nil)
+	(should-not (mew-mime-suffix-agree-p (car c) (cadr c)))
+	(should asked)))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
