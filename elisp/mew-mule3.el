@@ -40,8 +40,30 @@
 (defvar mew-cs-text-for-write 'mew-cs-text-lf)
 (defvar mew-cs-text-for-net   'mew-cs-text-net)
 (defvar mew-cs-autoconv       'undecided)
-;; xxx should be utf-8-unix someday.
-(defvar mew-cs-m17n (if (mew-coding-system-p 'ctext-unix) 'ctext-unix 'ctext))
+
+;; Drafts, .mew-summary and Lisp data files used to be written in
+;; ctext, which cannot hold characters such as emoji.  They are now
+;; written in UTF-8, and old ctext files are still read correctly.
+(defun mew-cs-m17n-post-read (len)
+  (let ((beg (point)) (end (+ (point) len)))
+    (save-excursion
+      (save-restriction
+	(narrow-to-region beg end)
+	;; ctext uses ESC sequences and bytes invalid in UTF-8.
+	(when (re-search-forward (format "[\e%c-%c]" #x3fff80 #x3fffff) nil t)
+	  (encode-coding-region (point-min) (point-max) 'utf-8-emacs-unix)
+	  (decode-coding-region (point-min) (point-max) 'ctext-unix))
+	(- (point-max) (point-min))))))
+
+(define-coding-system 'mew-cs-m17n-utf-8
+  "UTF-8 for writing; reads files written in ctext by old Mew, too."
+  :coding-type 'utf-8
+  :mnemonic ?U
+  :charset-list '(emacs)
+  :eol-type 'unix
+  :post-read-conversion 'mew-cs-m17n-post-read)
+
+(defvar mew-cs-m17n 'mew-cs-m17n-utf-8)
 (defvar mew-cs-utf-16be
   (cond
    ((mew-coding-system-p 'utf-16-be-no-signature) 'utf-16-be-no-signature)
