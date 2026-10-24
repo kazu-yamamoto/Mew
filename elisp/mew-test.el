@@ -1548,6 +1548,43 @@ apart by whether GnuPG says it considered a key at all."
       (mew-passwd-set-passwd "u@h:pop" "pass")
       (should (equal stored '(("u@h:pop" . "pass")))))))
 
+(ert-deftest mew-test-save-file-name-default ()
+  "A name from a message never makes a dot file or leaves the directory."
+  (dolist (c '((".zshenv" . "zshenv") ("report.pdf" . "report.pdf")
+	       ("../../.bashrc" . "bashrc") ("/etc/passwd" . "passwd")
+	       (".config/autostart/x.desktop" . "x.desktop")
+	       ("..." . nil) (nil . nil)))
+    (should (equal (mew-save-file-name-default (car c)) (cdr c)))))
+
+(ert-deftest mew-test-bimi-pass-p ()
+  "Only the topmost Authentication-Results: counts for BIMI."
+  (mew-regex-setup) ;; mew-eoh
+  (cl-flet ((pass (hdr &optional ids)
+	      (with-temp-buffer
+		(insert hdr "Subject: s\n\nbody\n")
+		(goto-char (point-min))
+		(let ((mew-bimi-authserv-id-list ids))
+		  (and (mew-bimi-pass-p) t)))))
+    (let ((own "Authentication-Results: mx.example.net; dkim=pass\n")
+	  (own-pass "Authentication-Results: mx.example.net; bimi=pass\n")
+	  (forged "Authentication-Results: x; bimi=pass\n"))
+      (should (pass own-pass))
+      (should-not (pass (concat own forged)))
+      (should-not (pass forged '("mx.example.net")))
+      (should (pass own-pass '("MX.example.net")))
+      (should-not (pass "")))))
+
+(ert-deftest mew-test-debug-redact ()
+  "Credentials do not reach the debug buffer; other commands do."
+  (dolist (c '(("PASS secret" . "PASS ********")
+	       ("AUTHINFO PASS secret" . "AUTHINFO PASS ********")
+	       ("LOGIN \"kazu\" \"secret\"" . "LOGIN \"kazu\" ********")
+	       ("AUTH PLAIN AGthenUAc2VjcmV0" . "AUTH PLAIN ********")
+	       ("c2VjcmV0" . "********")
+	       ("AUTH LOGIN" . "AUTH LOGIN") ("STARTTLS" . "STARTTLS")
+	       ("USER kazu" . "USER kazu") ("RETR 3" . "RETR 3")))
+    (should (equal (mew-debug-redact (car c)) (cdr c)))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:

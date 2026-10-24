@@ -329,7 +329,8 @@
     (setq filepath (mew-remove-drive-letter filepath))
     (setq username (read-string (format "User name at %s: " site) (mew-user)))
     (setq remotefile (format "/%s@%s:%s" username site filepath))
-    (setq localfile (mew-summary-input-file-name "Save to: " name))
+    (setq localfile (mew-summary-input-file-name
+		     "Save to: " (mew-save-file-name-default name)))
     (setq lfname (file-name-nondirectory localfile))
     (if (file-exists-p localfile)
 	(if (y-or-n-p (format "%s exists. Overwrite? " lfname))
@@ -386,7 +387,8 @@
       (setq filepath name))
     (setq filepath (mew-remove-drive-letter filepath))
     (setq remotefile (format "/%s@%s:%s" "anonymous" site filepath))
-    (setq localfile (mew-summary-input-file-name "Save to: " name))
+    (setq localfile (mew-summary-input-file-name
+		     "Save to: " (mew-save-file-name-default name)))
     (setq lfname (file-name-nondirectory localfile))
     (if (file-exists-p localfile)
 	(if (y-or-n-p (format "%s exists. Overwrite? " lfname))

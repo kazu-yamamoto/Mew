@@ -466,7 +466,7 @@ local cache messages are packed."
     ;;
     (message "Packing %s..." folder)
     (mew-summary-lock t "Packing")
-    (condition-case nil
+    (condition-case err
 	(progn
 	  (setq msgs (mew-dir-messages "."))
 	  (setq msgs (mapcar 'string-to-number msgs))
@@ -495,7 +495,12 @@ local cache messages are packed."
 	  (message "Packing %s...done (the last is %d). Type '%s' to update ID database" folder (1- n) (mew-substitute-for-summary "\\[mew-summary-make-id-index-folder]")))
       (quit
        (set-buffer-modified-p nil)
-       (mew-summary-unlock)))))
+       (mew-summary-unlock))
+      ;; e.g. rename-file failed: do not leave the summary locked.
+      (error
+       (set-buffer-modified-p nil)
+       (mew-summary-unlock)
+       (signal (car err) (cdr err))))))
 
 (provide 'mew-sort)
 

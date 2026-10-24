@@ -154,7 +154,7 @@
 
 (defun mew-nntp2-process-send-string (pro &rest args)
   (let ((str (apply 'format args)))
-    (mew-nntp2-debug "=SEND=" str)
+    (mew-nntp2-debug "=SEND=" (mew-debug-redact str))
     (if (and (processp pro) (eq (process-status pro) 'open))
 	(process-send-string pro (concat str mew-cs-eol))
       (message "NNTP time out"))))

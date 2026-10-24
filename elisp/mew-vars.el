@@ -2537,6 +2537,8 @@ circular domain completion."
 (defcustom mew-field-delete-for-others
   (list mew-received: "Return-Path:" "Delivery-Date:" "Delivered-To:"
 	mew-to: mew-cc: mew-from: mew-organization:
+	;; The original sender's, which would be obeyed silently.
+	mew-bcc: mew-dcc: mew-fcc:
 	"Lines:" "Status:" "Posted:" "Forwarded:" "Replied:" "X-UIDL:"
 	"DomainKey-Signature:" "DKIM-Signature:")
   "*A field list to be deleted when send with different To: and Cc:."
@@ -2932,6 +2934,15 @@ in Summary/Virtual mode."
   "*If non-nil, check BIMI status before displaying BIMI logo."
   :group 'mew-highlight
   :type 'boolean)
+
+(defcustom mew-bimi-authserv-id-list nil
+  "*A list of authserv-ids of your receiving servers, such as
+\"mx.google.com\".  If non-nil, BIMI logo is displayed only when the
+topmost Authentication-Results: comes from one of them.  If nil, the
+topmost one is trusted, which the sender can forge if your server adds
+none."
+  :group 'mew-highlight
+  :type '(repeat string))
 
 (defcustom mew-bimi-logo-size 24
   "*Number of BIMI logo size."

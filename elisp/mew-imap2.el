@@ -324,7 +324,7 @@
 (defun mew-imap2-process-send-string (pro pnm &rest args)
   (let ((str (apply 'format args))
 	(tag (mew-imap2-tag)))
-    (mew-imap2-debug "=SEND=" (concat tag " " str))
+    (mew-imap2-debug "=SEND=" (concat tag " " (mew-debug-redact str)))
     (mew-imap2-set-tag pnm tag)
     (if (and (processp pro) (eq (process-status pro) 'open))
 	(process-send-string pro (concat tag " " str mew-cs-eol))

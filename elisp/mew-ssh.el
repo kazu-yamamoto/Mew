@@ -163,7 +163,10 @@ after ':'."
 	   (case (mew-ssh-get-case pnm))
 	   pass)
       (cond
-       ((string-match (mew-ssh-get case mew-ssh-msg-passwd) string)
+       ;; Once connected, "password:" is output of the remote side,
+       ;; which must not get the password.
+       ((and (not (eq (mew-ssh-get-status pnm) t))
+	     (string-match (mew-ssh-get case mew-ssh-msg-passwd) string))
 	(if (= (mew-ssh-get-try pnm) 0)
 	    (setq pass (mew-input-passwd (format "SSH password (%s): "
 						 (mew-ssh-get-account pnm))

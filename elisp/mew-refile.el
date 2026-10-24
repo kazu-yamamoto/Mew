@@ -376,6 +376,9 @@ values."
 	 (from (downcase (or addr (mew-header-parse-address mew-from:) ""))))
     (if mew-refile-guess-strip-domainpart
 	(setq from (mew-addrstr-extract-user from)))
+    ;; From: is the sender's: keep the guess one level below fld.
+    (setq from (replace-regexp-in-string "[/\\]" "_" from))
+    (setq from (replace-regexp-in-string "\\`\\.+" "" from))
     (mew-concat-folder2 fld from case)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

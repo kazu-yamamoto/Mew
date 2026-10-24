@@ -125,8 +125,16 @@ It serves http://localhost:PORT"
   (when (string-match "^GET \\([^ \r\n]*\\)" string)
     (let* ((request (mew-match-string 1 string))
 	   (code (mew-oauth2-query-get request "code"))
+	   (err (mew-oauth2-query-get request "error"))
 	   (state (mew-oauth2-query-get request "state")))
       (cond
+       ((and err (null code) (stringp mew-oauth2-state)
+	     (equal state mew-oauth2-state))
+	;; The user denied it, for instance: stop waiting.
+	(mew-oauth2-respond
+	 proc "200 OK" (concat "Mew was not authorized: " err "\n"))
+	(message "OAuth2: not authorized (%s)" err)
+	(setq mew-oauth2-code ""))
        ((null code)
 	()) ;; not the redirect we are waiting for
        ((not (and (stringp mew-oauth2-state)
