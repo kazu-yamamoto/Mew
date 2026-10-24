@@ -488,6 +488,9 @@
     (unless newsgroups (mew-encode-error "No newsgroups!"))
     ;; Header modifications which are not remained.
     (mew-header-delete-lines (list mew-fcc: mew-resent-fcc:)) ;; anyway
+    ;; NNTP cannot deliver blind copies; never post their addresses.
+    (mew-header-delete-lines (list mew-bcc: mew-resent-bcc:
+				   mew-dcc: mew-resent-dcc:))
     (mew-nntp2-set-fcc pnm fcc)
     ;;
     (mew-encode-from case nil)
