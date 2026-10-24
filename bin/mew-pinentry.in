@@ -4,13 +4,26 @@
 #
 # Author:  Mew developing team
 # Created: Jul 24, 2006
-# Revised: May 15, 2007
+# Revised: Oct 24, 2026
 
 PROMPT="Enter passphrase:"
 TTY=`tty`
 
+# Assuan data lines must escape "%" (a line read from the tty has no LF).
+encode () {
+	rest=$1 enc=
+	while :; do
+		case $rest in
+		*%*)	enc=$enc${rest%%\%*}%25
+			rest=${rest#*\%} ;;
+		*)	enc=$enc$rest
+			break ;;
+		esac
+	done
+}
+
 echo "OK"
-while read cmd arg; do
+while read -r cmd arg; do
 	case $cmd in
 	"OPTION")
 		key=${arg%%=*}
@@ -23,19 +36,25 @@ while read cmd arg; do
 #		PROMPT=$arg
 #		;;
 	"GETPIN")
-		echo @ECHO_N@ "$PROMPT @ECHO_C@" > $TTY
-		stty -echo  < $TTY
-		read passwd < $TTY
-		stty  echo  < $TTY
-		echo "" > $TTY
-		echo "D $passwd"
+		echo @ECHO_N@ "$PROMPT @ECHO_C@" > "$TTY"
+		stty -echo  < "$TTY"
+		IFS= read -r passwd < "$TTY"
+		ok=$?
+		stty  echo  < "$TTY"
+		echo "" > "$TTY"
+		if [ $ok -ne 0 ]; then
+			echo "ERR 83886179 Operation cancelled"
+			continue
+		fi
+		encode "$passwd"
+		printf 'D %s\n' "$enc"
 		;;
 	"BYE")
 #		echo "OK"
 		exit 0
 		;;
 	"SETERROR")
-		echo $arg > $TTY
+		printf '%s\n' "$arg" > "$TTY"
 		;;
 	esac
 	echo "OK"
