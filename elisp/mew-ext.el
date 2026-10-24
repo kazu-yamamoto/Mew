@@ -48,19 +48,14 @@
     ("tftp"        mew-ext-tftp        nil)
     ("anon-ftp"    mew-ext-anon-ftp    mew-ext-anon-ftp-ext)
     ("mail-server" mew-ext-mail-server mew-ext-mail-server-ext)
-    ("url"         mew-ext-url         mew-ext-url-ext))) ;; RFC 2017
+    ("url"         mew-ext-url         mew-ext-url-ext) ;; RFC 2017
+    ("local-file"  mew-ext-local-file  mew-ext-local-file-ext)))
 
 (defun mew-ext-get-func (acc-type)
   (nth 1 (mew-assoc-match acc-type mew-ext-switch 0)))
 
 (defun mew-ext-get-func-ext (acc-type)
   (nth 2 (mew-assoc-match acc-type mew-ext-switch 0)))
-
-(defvar mew-ext-include-switch
-  '(("local-file" mew-ext-include-local-file)))
-
-(defun mew-ext-include-get-func (acc-type)
-  (nth 1 (mew-assoc-case-equal acc-type mew-ext-include-switch 0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -487,14 +482,31 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;
-;; include
+;; local-file
 ;;
 
-(defun mew-ext-include-local-file (params)
-  (mew-flet
-   (let* ((file (mew-syntax-get-param params "name")))
-     (if (file-exists-p file)
-	 (mew-insert-file-contents file)))))
+(defun mew-ext-local-file (_cache _begin _end &optional params)
+  (mew-elet
+   (let ((name (mew-syntax-get-param params "name")))
+     (mew-erase-buffer)
+     (insert "This part refers to a local file\n\n")
+     (mew-insert "File:\t%s\n" name)
+     (insert "\n")
+     (mew-insert-manual
+      "To view this file, type "
+      "'\\<mew-summary-mode-map>\\[mew-summary-execute-external]'.\n"))))
+
+(defun mew-ext-local-file-ext (_cache _begin _end &optional params)
+  ;; The name comes from the message: open only a local regular file.
+  (let ((name (mew-syntax-get-param params "name")))
+    (if (and (stringp name)
+	     (file-name-absolute-p name)
+	     (not (string-match "\\`[/\\\\][/\\\\]" name)) ;; UNC
+	     (not (file-remote-p name))
+	     (file-regular-p name)
+	     (file-readable-p name))
+	(find-file-read-only-other-window name)
+      (message "%s is not a readable local file" name))))
 
 (provide 'mew-ext)
 
