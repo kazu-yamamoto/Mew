@@ -755,6 +755,13 @@
       (mew-imap-set-bytes pnm nil)
       (mew-imap-command-fetch pro pnm))))
 
+(defun mew-imap-command-skip-fetch (pro pnm)
+  ;; The message was expunged by another client, for instance.
+  (mew-imap-set-rtrs pnm (cdr (mew-imap-get-rtrs pnm)))
+  (mew-imap-set-status pnm "fetch")
+  (mew-imap-set-bytes pnm nil)
+  (mew-imap-command-fetch pro pnm))
+
 (defun mew-imap-command-expunge (pro pnm)
   (mew-imap-process-send-string pro pnm "EXPUNGE"))
 
@@ -1507,16 +1514,28 @@
 	 (goto-char (point-min))
 	 (while (and (looking-at "^\\*") (= (forward-line) 0))
 	   (delete-region (point-min) (point))))
-       (if (or (null bytes) (< (point-max) bytes)
-	       (save-excursion (goto-char (point-max)) (not (bolp))))
-	   (setq stay t)
+       (cond
+	((and (null bytes)
+	      (save-excursion
+		(goto-char (point-max))
+		(and (bolp) (= (forward-line -1) 0) (looking-at eos))))
+	 ;; Tagged response without a literal: the message has gone
+	 ;; (OK), or the server refused (NO/BAD).
+	 (mew-imap-set-tag pnm nil)
+	 (if (string= (mew-match-string 1) "OK")
+	     (setq next "skip-fetch")
+	   (mew-imap-message pnm "Cannot retrieve a message")))
+	((or (null bytes) (< (point-max) bytes)
+	     (save-excursion (goto-char (point-max)) (not (bolp))))
+	 (setq stay t))
+	(t
 	 (goto-char (point-max))
 	 (forward-line -1)
 	 (while (looking-at "^\\*") (forward-line -1))
 	 (if (not (looking-at eos))
 	     (setq stay t)
 	   (delete-region (1+ bytes) (point-max))
-	   (setq next (mew-imap-fsm-next status "OK")))))
+	   (setq next (mew-imap-fsm-next status "OK"))))))
       ((and (goto-char (point-max)) (= (forward-line -1) 0) (looking-at "^\\*"))
        ;; untagged message
        (if (string= status "greeting")
