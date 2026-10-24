@@ -2537,6 +2537,8 @@ circular domain completion."
 (defcustom mew-field-delete-for-others
   (list mew-received: "Return-Path:" "Delivery-Date:" "Delivered-To:"
 	mew-to: mew-cc: mew-from: mew-organization:
+	;; The original sender's, which would be obeyed silently.
+	mew-bcc: mew-dcc: mew-fcc:
 	"Lines:" "Status:" "Posted:" "Forwarded:" "Replied:" "X-UIDL:"
 	"DomainKey-Signature:" "DKIM-Signature:")
   "*A field list to be deleted when send with different To: and Cc:."
