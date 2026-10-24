@@ -49,15 +49,21 @@ this variable is set to \='t\=`.")
 ;;; External functions
 ;;;
 
+(defun mew-passwd-token-p (key val)
+  ;; OAuth2 tokens are hash tables, which auth-source cannot store.
+  ;; They are kept in mew-passwd-alist even with auth-source.
+  (or (hash-table-p val)
+      (hash-table-p (nth 1 (assoc key mew-passwd-alist)))))
+
 (defun mew-passwd-get-passwd (key)
   (cond
-   ((mew-passwd-use-auth-source-p)
+   ((and (mew-passwd-use-auth-source-p) (not (mew-passwd-token-p key nil)))
     (mew-passwd-auth-source-get-passwd key))
    (t (nth 1 (assoc key mew-passwd-alist)))))
 
 (defun mew-passwd-set-passwd (key val)
   (cond
-   ((mew-passwd-use-auth-source-p)
+   ((and (mew-passwd-use-auth-source-p) (not (mew-passwd-token-p key val)))
     (mew-passwd-auth-source-set-passwd key val))
    (t (if (assoc key mew-passwd-alist)
 	  (setcar (nthcdr 1 (assoc key mew-passwd-alist)) val)
