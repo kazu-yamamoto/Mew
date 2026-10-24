@@ -41,9 +41,6 @@
 (defconst mew-header-decode-regex2
   "[ \t]*=\\?\\([^? \t]+\\)\\?\\(.\\)\\?\\([^? \t]+\\)\\?=")
 
-(defconst mew-header-decode-regex3
-  "^\\([ \t]+\\)=\\?[^? \t]+\\?.\\?[^? \t]+\\?=")
-
 (defconst mew-header-param-regex
   "^\\([^=*]+\\)\\(\\|\\*[0-9]+\\)\\(\\*?\\)=\\(.*\\)$")
 
@@ -965,19 +962,25 @@ That is, each line may be more than 75."
     (mew-decode-warning-params name 'raw)
     (setq value (mew-cs-decode-string value mew-cs-autoconv)))
   (when (string-match mew-header-decode-regex value)
-    (let (pre med pst)
+    ;; One pass from left to right: rescanning the whole value after
+    ;; each word took time quadratic in the number of words.
+    (let ((start 0) (ret nil) (after-word nil)
+	  beg end cs b-or-q etext gap)
       (mew-decode-warning-params name 'enc)
-      (while (string-match mew-header-decode-regex value)
-	;; We cannot ensure that sub-function does not use match functions.
-	;; So, pre/pst prevents infinite loop.
-	(setq pre (substring value 0 (match-beginning 0)))
-	(setq pst (substring value (match-end 0)))
-	(setq med (mew-header-decode (match-string 1 value)
-				     (match-string 2 value)
-				     (match-string 3 value)))
-	(if (string-match mew-header-decode-regex3 pst)
-	    (setq pst (substring pst (match-end 1))))
-	(setq value (concat pre med pst)))))
+      (while (string-match mew-header-decode-regex value start)
+	(setq beg (match-beginning 0) end (match-end 0))
+	;; mew-header-decode may use match functions.
+	(setq cs (match-string 1 value))
+	(setq b-or-q (match-string 2 value))
+	(setq etext (match-string 3 value))
+	(setq gap (substring value start beg))
+	;; Spaces between encoded words are dropped.
+	(unless (and after-word (string-match "\\`[ \t]+\\'" gap))
+	  (push gap ret))
+	(push (mew-header-decode cs b-or-q etext) ret)
+	(setq start end after-word t))
+      (push (substring value start) ret)
+      (setq value (apply #'concat (nreverse ret)))))
   value)
 
 (defun mew-param-sanity-check (ent)

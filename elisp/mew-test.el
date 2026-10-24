@@ -1514,6 +1514,21 @@ apart by whether GnuPG says it considered a key at all."
 	(should-not (mew-mime-suffix-agree-p (car c) (cadr c)))
 	(should asked)))))
 
+(ert-deftest mew-test-param-analyze-broken ()
+  "Encoded words in a parameter are decoded once, left to right."
+  (cl-letf (((symbol-function 'mew-decode-warning-params) #'ignore))
+    (dolist (c '(("=?utf-8?B?5pel5pys?= =?utf-8?B?6Kqe?=.pdf" . "日本語.pdf")
+		 ("head =?utf-8?B?5pel?= mid =?utf-8?Q?=E6=9C=AC?=end"
+		  . "head 日 mid 本end")
+		 ("=?utf-8?B?5pel?==?utf-8?B?5pys?=" . "日本")
+		 ("plain.txt" . "plain.txt")
+		 ;; Decoded text is not decoded again.
+		 ("=?utf-8?Q?=3D=3Futf-8=3FB=3F5pel=3F=3D?=" . "=?utf-8?B?5pel?=")))
+      (should (equal (mew-param-analyze-broken (car c) "filename") (cdr c))))
+    (let ((v (apply #'concat (make-list 20000 "=?utf-8?B?YQ==?="))))
+      (should (equal (mew-param-analyze-broken v "filename")
+		     (make-string 20000 ?a))))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
