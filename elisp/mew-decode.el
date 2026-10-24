@@ -602,7 +602,7 @@ Return a part syntax after moving the beginning of the content body."
 
 (defun mew-decode-singlepart (cnt &optional dct parent)
   ;; Called on the beginning of the content header in the narrowed region
-  (let* ((case-fold-search t) (begin (point))
+  (let* ((case-fold-search t)
 	 (syntax (mew-decode-mime-header dct))
 	 (ctl (mew-syntax-get-ct syntax))
 	 (ct (mew-syntax-get-value ctl 'cap))
@@ -624,14 +624,9 @@ Return a part syntax after moving the beginning of the content body."
 	    (narrow-to-region (point) (point-max))
 	    (setq syntax (mew-decode-message syntax cnt))))
 	 ((string= mew-ct-ext ct)
-	  (let* ((at (mew-syntax-get-param ctl "access-type"))
-		 (func (mew-ext-include-get-func at)))
-	    (when (and func (fboundp func))
-	      (save-excursion
-		(goto-char (point-max)) ;; phantom body
-		(funcall func ctl))
-	      (delete-region begin (point))
-	      (setq syntax (mew-decode-singlepart cnt)))))
+	  ;; Never include the file of local-file here: its name comes
+	  ;; from the message.  See mew-ext-local-file-ext.
+	  )
 	 ((string= mew-ct-sts ct)
 	  ;; do nothing
 	  )
