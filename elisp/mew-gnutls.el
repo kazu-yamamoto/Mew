@@ -97,7 +97,14 @@ keep this as nil.")
 (defvar mew--advice-tls-parameters-plist nil)
 
 (defun mew--advice-filter-args-gnutls-negotiate (&rest args)
-  (nconc (car args) mew--advice-tls-parameters-plist))
+  ;; cl-defun takes the first of duplicated keywords, and callers
+  ;; pass their own :keylist (nil), so Mew's non-nil ones go first.
+  (let ((plist mew--advice-tls-parameters-plist) ours)
+    (while plist
+      (if (cadr plist)
+	  (setq ours (nconc ours (list (car plist) (cadr plist)))))
+      (setq plist (cddr plist)))
+    (append ours (car args))))
 
 (defun mew-gnutls-boot-parameters (case hostname)
   (cons 'gnutls-x509pki
