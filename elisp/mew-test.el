@@ -1556,6 +1556,24 @@ apart by whether GnuPG says it considered a key at all."
 	       ("..." . nil) (nil . nil)))
     (should (equal (mew-save-file-name-default (car c)) (cdr c)))))
 
+(ert-deftest mew-test-bimi-pass-p ()
+  "Only the topmost Authentication-Results: counts for BIMI."
+  (mew-regex-setup) ;; mew-eoh
+  (cl-flet ((pass (hdr &optional ids)
+	      (with-temp-buffer
+		(insert hdr "Subject: s\n\nbody\n")
+		(goto-char (point-min))
+		(let ((mew-bimi-authserv-id-list ids))
+		  (and (mew-bimi-pass-p) t)))))
+    (let ((own "Authentication-Results: mx.example.net; dkim=pass\n")
+	  (own-pass "Authentication-Results: mx.example.net; bimi=pass\n")
+	  (forged "Authentication-Results: x; bimi=pass\n"))
+      (should (pass own-pass))
+      (should-not (pass (concat own forged)))
+      (should-not (pass forged '("mx.example.net")))
+      (should (pass own-pass '("MX.example.net")))
+      (should-not (pass "")))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:

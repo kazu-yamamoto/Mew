@@ -2933,6 +2933,15 @@ in Summary/Virtual mode."
   :group 'mew-highlight
   :type 'boolean)
 
+(defcustom mew-bimi-authserv-id-list nil
+  "*A list of authserv-ids of your receiving servers, such as
+\"mx.google.com\".  If non-nil, BIMI logo is displayed only when the
+topmost Authentication-Results: comes from one of them.  If nil, the
+topmost one is trusted, which the sender can forge if your server adds
+none."
+  :group 'mew-highlight
+  :type '(repeat string))
+
 (defcustom mew-bimi-logo-size 24
   "*Number of BIMI logo size."
   :group 'mew-highlight

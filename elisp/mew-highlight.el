@@ -284,6 +284,18 @@
 (defvar mew-highlight-bimi-function (if mew-icon-p 'mew-highlight-bimi-original)
   "*A function to display BIMI logo.")
 
+(defun mew-bimi-pass-p ()
+  "Return non-nil if the topmost Authentication-Results: says bimi=pass.
+Only the topmost one is added by your own server; the sender can put
+others below it.  See also `mew-bimi-authserv-id-list'."
+  (let* ((ar (car (mew-header-get-value "Authentication-Results:" t)))
+	 (id (and ar (car (split-string ar "[ \t\n;]+" t))))
+	 (case-fold-search t))
+    (and ar
+	 (or (null mew-bimi-authserv-id-list)
+	     (member-ignore-case id mew-bimi-authserv-id-list))
+	 (string-match "\\bbimi=pass\\b" ar))))
+
 (defun mew-highlight-bimi-original (beg end)
   (save-excursion
     (goto-char beg)
@@ -291,7 +303,7 @@
      (let ((regex1 "^BIMI-Indicator: *\\(.*\\)\n")
            (wmsg "No 'bimi=pass' in Authentication-Results: regarding BIMI-Indicator:")
 	   overlay bimi-logo bimi-pass svgb64 scale)
-       (setq bimi-pass (string-match "\\bbimi=pass\\b" (or (mew-header-get-value "Authentication-Results:") "")))
+       (setq bimi-pass (mew-bimi-pass-p))
        (when (re-search-forward regex1 end t)
 	 (setq svgb64 (match-string-no-properties 1))
 	 (cond
