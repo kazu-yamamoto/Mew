@@ -316,7 +316,7 @@ destination is the same as that of the current message are processed."
 (defun mew-summary-exec-local (beg end &optional func-decide)
   (when (mew-summary-exclusive-p)
     (save-excursion
-      (condition-case nil
+      (condition-case err
 	  (let* ((marks (mew-mark-get-all-marks))
 		 (src (mew-summary-folder-name 'ext))
 		 (lbuf (mew-refile-log-buffer src))
@@ -374,7 +374,12 @@ destination is the same as that of the current message are processed."
 	      (message "Refiling and deleting...done")))
 	(quit
 	 (set-buffer-modified-p nil)
-	 (mew-summary-unlock))))))
+	 (mew-summary-unlock))
+	;; e.g. rename-file failed: do not leave the summary locked.
+	(error
+	 (set-buffer-modified-p nil)
+	 (mew-summary-unlock)
+	 (signal (car err) (cdr err)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
