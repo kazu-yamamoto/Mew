@@ -1459,6 +1459,42 @@ apart by whether GnuPG says it considered a key at all."
     (should (equal (bad "BAD S/MIME sign") '("BAD S/MIME sign")))
     (should-not (bad "Good PGP sign \"Tom Badger <tom@designs.example>\" COMPLETE"))))
 
+(ert-deftest mew-test-cs-m17n ()
+  "Files are written in UTF-8, and old ctext files still read back."
+  (let ((file (make-temp-file "mew-test"))
+	(strs '("abc" "漢字かな" "한국어" "Ελληνικά" "ไทย" "See you 👍")))
+    (cl-flet ((rd ()
+		(with-temp-buffer
+		  (let ((coding-system-for-read mew-cs-m17n))
+		    (insert-file-contents file))
+		  (buffer-string)))
+	      (wr (s cs)
+		(let ((coding-system-for-write cs))
+		  (write-region s nil file nil 'silent))))
+      (unwind-protect
+	  (dolist (s strs)
+	    (wr s mew-cs-m17n)
+	    (should (equal (rd) s))
+	    (should (equal (with-temp-buffer
+			     (set-buffer-multibyte nil)
+			     (insert-file-contents-literally file)
+			     (buffer-string))
+			   (encode-coding-string s 'utf-8-unix)))
+	    (unless (string-match "👍" s)
+	      (wr s 'ctext-unix)
+	      (should (equal (rd) s))))
+	(delete-file file)))))
+
+(ert-deftest mew-test-lisp-save-load-emoji ()
+  "Lisp data files keep characters that ctext cannot hold."
+  (let ((file (make-temp-file "mew-test"))
+	(data '(("a@example.org" "Taro 👍") ("x" . "漢字"))))
+    (unwind-protect
+	(progn
+	  (mew-lisp-save file data nil 'unlimit)
+	  (should (equal (mew-lisp-load file) data)))
+      (delete-file file))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
