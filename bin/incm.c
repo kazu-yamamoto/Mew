@@ -18,6 +18,7 @@ private char version_message[] = "version 6.11 20260414 Mew developing team";
 #include <sys/types.h>
 #include <signal.h>
 #include <errno.h>
+#include <limits.h>
 
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
@@ -104,6 +105,7 @@ private int	get_from_dir(int, char *, char *, int);
 private int	process_maildir(int);
 private int	lock_mbox(char *);
 private void	unlock_mbox(char *);
+private int	cl_ends_message(FILE *, long);
 private int	process_mbox(int);
 private int	process_stdin(int);
 private void	process(void);
@@ -664,6 +666,34 @@ unlock_mbox(char *lockfile)
 		unlink(lockfile);
 }
 
+/*
+ * TRUE if a body of n bytes from here ends a line and is followed only by
+ * blank lines and then "From " or the end, so that Content-Length cannot
+ * take in the next message.
+ */
+private int
+cl_ends_message(FILE *fp, long n)
+{
+	off_t here = ftello(fp);
+	struct stat sb;
+	char from[5];
+	int c, ok = FALSE;
+
+	if (here < 0 || fstat(fileno(fp), &sb) < 0 || here + n > sb.st_size)
+		return FALSE;
+	if (fseeko(fp, here + n - (n > 0), SEEK_SET) == 0 &&
+	    (n == 0 || getc(fp) == '\n')) {
+		while ((c = getc(fp)) == '\n' || c == '\r')
+			;
+		from[0] = c;
+		ok = c == EOF ||
+		     (fread(from + 1, 1, 4, fp) == 4 && memcmp(from, "From ", 5) == 0);
+	}
+	if (fseeko(fp, here, SEEK_SET) != 0)
+		error("fseeko(%s)", Mbox);
+	return ok;
+}
+
 private int
 process_mbox(int seq)
 {
@@ -720,18 +750,22 @@ process_mbox(int seq)
 			    (ln[0] == '\n' || ln[0] == '\r')) {
 				STRCPY(emptyline, ln);
 				state = ST_BODY_AFTER_EMPTY_LINE;
+				if (bytes >= 0 && !cl_ends_message(srcfp, bytes))
+					bytes = -1;
 				break;
 			}
 			if (fputs(ln, dstfp) == EOF) {
 				warning("fputs(%s)", inboxfile);  goto werr;
 			}
 			if (UseCL &&
-			    strncasecmp(ln, "Content-Length", 14) == 0) {
-				int i;
-				for (i = 14; i < strlen(ln); i++)
-					if (isdigit((unsigned char)ln[i]))
-						break;
-				bytes = atoi(&ln[i]);
+			    strncasecmp(ln, "Content-Length:", 15) == 0) {
+				char *end;
+				long n;
+
+				errno = 0;
+				n = strtol(ln + 15, &end, 10);
+				bytes = (end != ln + 15 && errno == 0 &&
+					 n >= 0 && n <= INT_MAX) ? (int)n : -1;
 			}
 			break;
 		case ST_BODY_AFTER_EMPTY_LINE:
