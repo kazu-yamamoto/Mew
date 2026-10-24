@@ -1676,6 +1676,14 @@ If you want to use `mew-use-text/html-list', this value should be `nil'."
   :group 'mew-message
   :type 'boolean)
 
+(defcustom mew-html-blocked-images "."
+  "*A regexp of image URLs that are not fetched when HTML is rendered
+with shr.  The default blocks all remote images, so that opening a
+message does not tell its sender.  Inline (cid: and data:) images are
+not affected.  If nil, all images are fetched."
+  :group 'mew-message
+  :type '(choice (const :tag "Fetch all" nil) regexp))
+
 (defcustom mew-use-text/html-list nil
   "*A list of (KEY VALUE) to define whether or not HTML should be parsed
 for each folder.

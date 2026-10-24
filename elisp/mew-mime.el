@@ -10,6 +10,8 @@
 (eval-when-compile
   (require 'mew-env0))
 
+(defvar shr-blocked-images)
+
 (eval-when-compile
   (cond
    ((memq system-type '(windows-nt cygwin))
@@ -262,7 +264,8 @@
 					mew-use-text/html-list-type)))
 	      (progn
 		(save-window-excursion
-		  (funcall mew-prog-text/html start (point-max)))
+		  (let ((shr-blocked-images mew-html-blocked-images))
+		    (funcall mew-prog-text/html start (point-max))))
                 (delete-trailing-whitespace start (point-max))
 		(mew-highlight-body-region start (point-max)))
 	    (mew-message-for-summary "To parse HTML, type '\\[mew-summary-analyze-again]'"))))
