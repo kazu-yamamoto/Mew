@@ -103,7 +103,7 @@ struct dbuf {
 	size_t siz;
 };
 
-private char Buf_header[MAX_HEADER];
+private char Buf_header[MAX_HEADER + 1]; /* + 1 for a NUL after what is read */
 private char Buf_filenm[MAX_FILE_NAME_LEN];
 private char Buf_filenm2[MAX_FILE_NAME_LEN];
 private char *Mail_home;
@@ -142,6 +142,7 @@ private void ch_folder(char *);
 private char *nextline(char *, char *, int);
 private char *nextfield(char *, char *, char **, char **, int);
 private char *eoh(char *, char *);
+private int  read_header(FILE *);
 private int  field_is(const char *, unsigned int, char *, char *);
 private void init_fields(char *);
 private void print_field(char *, int, char *, char *);
@@ -393,7 +394,19 @@ eoh(char *p, char *lim) {
 			return p + 1;
 		p++;
 	}
-	return lim - 1;
+	return lim;	/* Buf_header keeps a NUL there */
+}
+
+/*
+ * Read the start of a message into Buf_header and end it with a NUL, so
+ * that nothing which scans it runs past what was read, even when it is empty.
+ */
+private int
+read_header(FILE *fp) {
+	int lim = fread(Buf_header, sizeof(char), MAX_HEADER, fp);
+
+	Buf_header[lim] = NUL;
+	return lim;
 }
 
 /****************************************************************
@@ -1102,14 +1115,14 @@ b64_pton(const char *src, unsigned char *dst, size_t dstsiz) {
 
 private int
 print_for_scan(FILE *fp, char *fname, char *fld) {
-	int lim = fread(Buf_header, sizeof(char), sizeof(Buf_header), fp);
+	int lim = read_header(fp);
 	print_field(Buf_header, lim, fname, fld);
 	return TRUE;
 }
 
 private int
 print_for_sort(FILE *fp, char *fname, char *fld) {
-	int lim = fread(Buf_header, sizeof(char), sizeof(Buf_header), fp);
+	int lim = read_header(fp);
 	unsigned int len = strlen(Key_field);
 	char *beg = NULL, *end = NULL;
 	char *p = Buf_header, *limp = p + lim;
@@ -1146,7 +1159,7 @@ print_for_sort(FILE *fp, char *fname, char *fld) {
 
 private int
 print_for_pick(FILE *fp, char *fname, char *fld) {
-	int lim = fread(Buf_header, sizeof(char), sizeof(Buf_header), fp);
+	int lim = read_header(fp);
 
 	init_search(Buf_header, lim);
 	if (pattern_match() == TRUE) {
