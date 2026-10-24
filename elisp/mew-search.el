@@ -731,7 +731,12 @@ Return the generated filename and match-count."
 	   crnt start prev opts dfunc myid)
       (mew-sumsyn-match mew-regex-sumsyn-long)
       (setq myid (mew-sumsyn-my-id))
-      ;;
+      ;; The name comes from Subject:, e.g. "*scratch*" for "scratch*".
+      ;; Never take over (and erase) a buffer of something else.
+      (let ((buf (get-buffer vfolder)))
+	(if (and buf (not (eq (buffer-local-value 'major-mode buf)
+			      'mew-virtual-mode)))
+	    (setq vfolder (generate-new-buffer-name vfolder))))
       (mew-summary-switch-to-folder vfolder)
       (mew-vinfo-set-mode 'selection)
       (mew-vinfo-set-physical-folder nil)
