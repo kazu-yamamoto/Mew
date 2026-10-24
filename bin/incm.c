@@ -515,9 +515,8 @@ new_inbox_file(int seq, char inboxfile[])
 
 	do {
 		snprintf(num, sizeof(num), "%d%s", ++seq, suffix);
-		if (strlen(InboxDir) + strlen(num) + 2 > PATH_MAX)
+		if (snprintf(inboxfile, PATH_MAX, "%s/%s", InboxDir, num) >= PATH_MAX)
 			error("pathname too long (%s/%s)", InboxDir, num);
-		snprintf(inboxfile, PATH_MAX, "%s/%s", InboxDir, num);
 		if (access(inboxfile, F_OK) && errno == ENOENT)
 			break;
 	} while (TRUE);
@@ -536,9 +535,8 @@ open_new_inbox_file(int *seq, char inboxfile[])
 
 	for (;;) {
 		snprintf(num, sizeof(num), "%d%s", ++*seq, suffix);
-		if (strlen(InboxDir) + strlen(num) + 2 > PATH_MAX)
+		if (snprintf(inboxfile, PATH_MAX, "%s/%s", InboxDir, num) >= PATH_MAX)
 			error("pathname too long (%s/%s)", InboxDir, num);
-		snprintf(inboxfile, PATH_MAX, "%s/%s", InboxDir, num);
 		if ((fd = open(inboxfile, flag, FileMode)) >= 0 ||
 		    errno != EEXIST)
 			break;
@@ -902,9 +900,9 @@ process(void)
 	/* update .mew-mtime file if new mail arrived */
 	if (!CreateMTime || newseq <= seq)
 		return;		/* no new mail */
-	if (strlen(InboxDir) + strlen(MEW_MTIME_FILE) + 1 > PATH_MAX)
-		error("pathname too long (%s%s)", InboxDir, MEW_MTIME_FILE);
-	snprintf(mtimefile, sizeof(mtimefile), "%s/%s", InboxDir, MEW_MTIME_FILE);
+	if (snprintf(mtimefile, sizeof(mtimefile), "%s/%s", InboxDir,
+		     MEW_MTIME_FILE) >= (int)sizeof(mtimefile))
+		error("pathname too long (%s/%s)", InboxDir, MEW_MTIME_FILE);
 
 	if ((fp = fopen(mtimefile, FDWRITE)) == NULL)
 		error("can't create file (%s)", mtimefile);
