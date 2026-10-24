@@ -1529,6 +1529,25 @@ apart by whether GnuPG says it considered a key at all."
       (should (equal (mew-param-analyze-broken v "filename")
 		     (make-string 20000 ?a))))))
 
+(ert-deftest mew-test-passwd-token-with-auth-source ()
+  "OAuth2 tokens are kept in memory; passwords still go to auth-source."
+  (let ((mew-master-passwd-type 'auth-source)
+	(mew-passwd-alist nil)
+	(token (make-hash-table))
+	stored)
+    (cl-letf (((symbol-function 'mew-passwd-auth-source-get-passwd)
+	       (lambda (_key) "secret"))
+	      ((symbol-function 'mew-passwd-auth-source-set-passwd)
+	       (lambda (key val) (push (cons key val) stored))))
+      (should (equal (mew-passwd-get-passwd "u@h:imap") "secret"))
+      (mew-passwd-set-passwd "u@h:imap" token)
+      (should (eq (mew-passwd-get-passwd "u@h:imap") token))
+      (should-not stored)
+      (mew-passwd-set-passwd "u@h:imap" nil)
+      (should-not stored)
+      (mew-passwd-set-passwd "u@h:pop" "pass")
+      (should (equal stored '(("u@h:pop" . "pass")))))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
