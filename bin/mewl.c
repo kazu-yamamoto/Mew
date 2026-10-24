@@ -116,7 +116,6 @@ private char *Exec_cmd = NULL;
 private char *Exec_arg = NULL;
 private char *Input_file = NULL;
 private char *Suffix = NULL;
-private char *Suffix_fmt = NULL;
 
 private int All_fields = 0;
 private int Field_len = MAX_FIELD_LEN;
@@ -1289,7 +1288,7 @@ scan_getfile(char **filename, char **foldername) {
 					    
 	while (i < Scan_ctx_messages) {
 		snprintf(Buf_filenm, sizeof(Buf_filenm), "%d", *(Scan_ctx_buf + i));
-		snprintf(Buf_filenm2, sizeof(Buf_filenm2), Suffix_fmt, "", *(Scan_ctx_buf + i));
+		snprintf(Buf_filenm2, sizeof(Buf_filenm2), "%d%s", *(Scan_ctx_buf + i), Suffix);
 		fp = fopen(Buf_filenm2, FDREAD);
 		if (fp == NULL) fp = fopen(Buf_filenm, FDREAD);
 		if (fp != NULL) {
@@ -1298,7 +1297,7 @@ scan_getfile(char **filename, char **foldername) {
 			return fp;
 		}
 		snprintf(Buf_filenm, sizeof(Buf_filenm), "0%d", *(Scan_ctx_buf + i));
-		snprintf(Buf_filenm2, sizeof(Buf_filenm2), Suffix_fmt, "0", *(Scan_ctx_buf + i));
+		snprintf(Buf_filenm2, sizeof(Buf_filenm2), "0%d%s", *(Scan_ctx_buf + i), Suffix);
 		fp = fopen(Buf_filenm2, FDREAD);
 		if (fp == NULL) fp = fopen(Buf_filenm, FDREAD);
 		if (fp != NULL) {
@@ -1565,8 +1564,6 @@ main(int argc, char **argv) {
 	/* Suffix */
 	if (Suffix == NULL) STRDUP(Suffix, SUFFIX);
 	Suffix_len = strlen(Suffix);
-	MALLOC(Suffix_fmt, (Suffix_len + 10)); /* xxx */
-	snprintf(Suffix_fmt, Suffix_len + 10, "%%s%%d%s", Suffix);
 
 	if (sflag == 0) 
 		switch (rest) { /* lim == 0 */
