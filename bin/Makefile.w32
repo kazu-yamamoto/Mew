@@ -1,21 +1,14 @@
 # -*- Mode: makefile; -*-
 
 #
-# Makefile for mewl.exe/mewencode.exe
-#                             for Visual C++ / Borland C++ Compiler
+# Makefile for mewl.exe/mewencode.exe for Visual C+~
 #
 
 # Note:
 # 1. If you want to use Cygwin, read ../00readme and follow its
 #    instructionx.
-# 2. You need pre-compiled and original zlib packages.
-#    Please download original tarball from
-#      http://www.gzip.org/zlib/,
-#    and put
-#      zconf.h, zlib.h, zlib.lib
-#    to suitable directory.
-# 2. If you want to use Borland C++ Compiler, you need import library.
-#    > implib -a <filename_of_import_library> <filename_of_zlib.dll>
+# 2. You need zlib from vcpkg. Please install "zlib:x86-windows-static"
+#    via vcpkg and modify it's path in this file.
 # 3. utf8proc is optional: without it, mewl.exe compares the pick
 #    patterns byte by byte.  If you want the Unicode comparison, please
 #    download original tarball (2.2 or later) from
@@ -30,8 +23,9 @@
 #    utf8proc has not been tried with Borland C++.
 
 # **** Please modify ****
-ZLIBINC = C:/usr/local/zlib
-ZLIBLIB = C:/usr/local/zlib/zlib.lib
+VCPKGDIR = C:/data/source/vcpkg/installed/x86-windows-static
+ZLIBINC = $(VCPKGDIR)/include
+ZLIBLIB = $(VCPKGDIR)/lib/zs.lib
 UTF8PROCFLAGS =
 UTF8PROCOBJ   =
 #UTF8PROCFLAGS = -Iw32\vendor -DUTF8PROC_STATIC -DHAVE_UTF8PROC
