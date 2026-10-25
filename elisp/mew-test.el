@@ -1641,6 +1641,16 @@ apart by whether GnuPG says it considered a key at all."
 	       ("USER kazu" . "USER kazu") ("RETR 3" . "RETR 3")))
     (should (equal (mew-debug-redact (car c)) (cdr c)))))
 
+(ert-deftest mew-test-mewl-pattern-args ()
+  "On Windows, a non-ASCII pick pattern goes to mewl in hex."
+  (let ((system-type 'windows-nt))
+    (should (equal (mew-mewl-pattern-args "subject=日本")
+		   '("-P" "7375626a6563743de697a5e69cac")))
+    (should (equal (mew-mewl-pattern-args "from=kazu") '("-p" "from=kazu"))))
+  (let ((system-type 'gnu/linux))
+    (should (equal (mew-mewl-pattern-args "subject=日本")
+		   (list "-p" (encode-coding-string "subject=日本" 'utf-8))))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
