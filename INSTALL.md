@@ -86,6 +86,13 @@ automatically added to the "dir" file.  Otherwise, add it by yourself.
   See also ["conf/dot.emacs"](conf/dot.emacs) and
   ["conf/dot.mew"](conf/dot.mew).
 
+## Windows without Cygwin
+
+Build `mewl.exe` and `mewencode.exe` with Visual C++ by typing
+`nmake -f Makefile.w32` in `bin`, and put them on `exec-path`.  The
+notes at the top of `bin/Makefile.w32` say how to get zlib and iconv
+with vcpkg.
+
 ## If you installed Mew from MELPA
 
 MELPA carries the Emacs Lisp of Mew and none of the programs above, so

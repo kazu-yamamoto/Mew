@@ -1,21 +1,19 @@
 # -*- Mode: makefile; -*-
 
 #
-# Makefile for mewl.exe/mewencode.exe
-#                             for Visual C++ / Borland C++ Compiler
+# Makefile for mewl.exe/mewencode.exe for Visual C++
 #
 
 # Note:
-# 1. If you want to use Cygwin, read ../00readme and follow its
-#    instructionx.
-# 2. You need pre-compiled and original zlib packages.
-#    Please download original tarball from
-#      http://www.gzip.org/zlib/,
-#    and put
-#      zconf.h, zlib.h, zlib.lib
-#    to suitable directory.
-# 2. If you want to use Borland C++ Compiler, you need import library.
-#    > implib -a <filename_of_import_library> <filename_of_zlib.dll>
+# 1. With Cygwin, use configure and make as on Unix; see ../INSTALL.md.
+# 2. zlib and iconv come from vcpkg (https://github.com/microsoft/vcpkg).
+#    Clone and bootstrap vcpkg, set the environment variable VCPKG_ROOT
+#    to its directory, and type
+#      vcpkg install zlib:x86-windows-static libiconv:x86-windows-static
+#    The vcpkg bundled with Visual Studio cannot install packages this
+#    way.  To use another directory, set VCPKGDIR below or on the nmake
+#    command line.  With iconv, mewl.exe decodes encoded-words when
+#    picking; to build without it, empty the two ICONV lines below.
 # 3. utf8proc is optional: without it, mewl.exe compares the pick
 #    patterns byte by byte.  If you want the Unicode comparison, please
 #    download original tarball (2.2 or later) from
@@ -27,27 +25,28 @@
 #    with the same flags as mewl.c; -DUTF8PROC_STATIC tells utf8proc.h
 #    that the functions are not in a DLL.  Add -DUTF8PROC_CHAR_FOLD
 #    for NFKC_Casefold matching; see w32\vendor\README.md.
-#    utf8proc has not been tried with Borland C++.
 
 # **** Please modify ****
-ZLIBINC = C:/usr/local/zlib
-ZLIBLIB = C:/usr/local/zlib/zlib.lib
+!IFNDEF VCPKGDIR
+!IFDEF VCPKG_ROOT
+VCPKGDIR = $(VCPKG_ROOT)/installed/x86-windows-static
+!ELSE
+!ERROR Set the environment variable VCPKG_ROOT, or VCPKGDIR.
+!ENDIF
+!ENDIF
+ZLIBLIB    = $(VCPKGDIR)/lib/zs.lib
+ICONVFLAGS = -DHAVE_ICONV
+ICONVLIB   = $(VCPKGDIR)/lib/iconv.lib
 UTF8PROCFLAGS =
 UTF8PROCOBJ   =
 #UTF8PROCFLAGS = -Iw32\vendor -DUTF8PROC_STATIC -DHAVE_UTF8PROC
 #UTF8PROCOBJ   = utf8proc.obj
 
-# for Visual C++
 CC      = cl
-CFLAGS  = -nologo -O2 -W3 -MT -Iw32 -I$(ZLIBINC) $(UTF8PROCFLAGS) \
+CFLAGS  = -nologo -O2 -W3 -MT -Iw32 -I$(VCPKGDIR)/include \
+	$(ICONVFLAGS) $(UTF8PROCFLAGS) \
 	-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS
 EXEFLAG = -Fe
-
-# for Borland C++
-#CC      = bcc32
-#CFLAGS  = -O2 -w -Iw32 -I$(ZLIBINC)
-#EXEFLAG = -e
-
 
 ################################################################
 
@@ -64,7 +63,7 @@ config.h : w32\config.h
 mewencode.exe : $(MEWENCODEOBJS)
 	$(CC) $(CFLAGS) $(EXEFLAG)mewencode.exe $(MEWENCODEOBJS) $(ZLIBLIB)
 mewl.exe : $(MEWLOBJS)
-	$(CC) $(CFLAGS) $(EXEFLAG)mewl.exe $(MEWLOBJS)
+	$(CC) $(CFLAGS) $(EXEFLAG)mewl.exe $(MEWLOBJS) $(ICONVLIB)
 
 mewencode.obj : mewencode.c mew.h config.h
 	$(CC) $(CFLAGS) -c mewencode.c
