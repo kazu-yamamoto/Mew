@@ -11,7 +11,7 @@ elispdir = $(prefix)/share/emacs/site-lisp/mew
 
 ################################################################
 ##
-## DO NOT EDIT THE FOLLOWINGS
+## DO NOT EDIT THE FOLLOWING
 ##
 
 # This Makefile doesn't get remade.

@@ -624,7 +624,7 @@ In remote folders, visit an inbox folder and scan with `update'."
 	  (when (and (mew-sinfo-get-disp-msg)
 		     (equal msg (mew-current-get-msg nfid))
 		     (mew-summary-search-msg msg))
-	    ;; The message was truncated probaby because it's too large.
+	    ;; The message was truncated probably because it's too large.
 	    (mew-summary-analyze-again))
 	  (goto-char m))))))
 

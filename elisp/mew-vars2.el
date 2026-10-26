@@ -307,7 +307,7 @@ Quoted-Printable, respectively. This is used as an appropriate
 content-transfer-encoding when composing.
 
 Each symbol specified at <symbol for visualizer> should have a value
-whose format is one of followings:
+whose format is one of the following:
 
 - \"prog\"
 	\"prog\" is an external program.

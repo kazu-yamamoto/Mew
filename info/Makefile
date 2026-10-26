@@ -12,7 +12,7 @@
 
 ################################################################
 ##
-## EDIT THE FOLLOWINGS
+## EDIT THE FOLLOWING
 ##
 
 prefix=/usr/local
@@ -39,7 +39,7 @@ PWD =
 
 ################################################################
 ##
-## DO NOT EDIT THE FOLLOWINGS
+## DO NOT EDIT THE FOLLOWING
 ##
 
 # This Makefile doesn't get remade.

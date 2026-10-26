@@ -579,7 +579,7 @@ Mew を起動するには、組織の設定ファイルか自分の "~/.emacs" �
 が必要です。
 @end ifset
 @ifset en
-To execute Mew, the followings are necessary either in the site
+To execute Mew, the following are necessary either in the site
 configuration file or in your "~/.emacs".
 @end ifset
 
@@ -647,7 +647,7 @@ should be written in this file.
 メールアドレスを指定するために、以下の設定が必要です。
 @end ifset
 @ifset en
-To configure your e-mail address, the followings are necessary.
+To configure your e-mail address, the following are necessary.
 @end ifset
 
 @lisp
@@ -671,7 +671,7 @@ To send e-mail messages by SMTP, the following is necessary.
 POP を使ってメッセージを受信する場合は、以下の設定が必要です。
 @end ifset
 @ifset en
-If you want to use POP to receive e-mail messages, the followings are
+If you want to use POP to receive e-mail messages, the following are
 necessary.
 @end ifset
 
@@ -686,7 +686,7 @@ necessary.
 @end ifset
 @ifset en
 If you want to use a local mailbox to receive e-mail messages, the
-followings are necessary.
+following are necessary.
 @end ifset
 
 @lisp
@@ -702,7 +702,7 @@ followings are necessary.
 IMAP を使ってメッセージを受信する場合は、以下の設定が必要です。
 @end ifset
 @ifset en
-If you want to use IMAP to receive e-mail messages, the followings are
+If you want to use IMAP to receive e-mail messages, the following are
 necessary.
 @end ifset
 
@@ -716,7 +716,7 @@ necessary.
 ニュースを読み書きする場合は、以下の設定が必要です。
 @end ifset
 @ifset en
-To read and/or write articles of NetNews, the followings are necessary.
+To read and/or write articles of NetNews, the following are necessary.
 @end ifset
 
 @lisp
@@ -1898,7 +1898,7 @@ kazu@@example.org という ID の付いた秘密鍵で署名されたときか�
 @ifset en
 The number enclosed by "<>" indicates which part was protected with
 PGP. "body" means the body was protected. This example tells us that the
-body was singed by kazu then encrypted for the reader. Mew first
+body was signed by kazu then encrypted for the reader. Mew first
 decrypted the message and then verified its signature of the decrypted
 message. The fact that the signature is valid indicates that no one has
 modified the content of the message since it was signed by the secret
@@ -4962,8 +4962,8 @@ supported suffixes are as follows:
 .tga       Image/X-Tga
 .au        Audio/Basic
 .wav       Audio/X-Wav
-.aif?f     Auido/X-Aiff
-.midi?     Auido/X-Midi
+.aif?f     Audio/X-Aiff
+.midi?     Audio/X-Midi
 .mpga|.mp[23]  Audio/X-Mpeg
 .mpe?g     Video/Mpeg
 .mov       Video/Quicktime
@@ -6825,7 +6825,7 @@ mark on the previous message, configure as follows:
 以下に @samp{U} マークに関するコマンドをまとめます。
 @end ifset
 @ifset en
-The followings are summary of commands related to the @samp{U} mark.
+The following is a summary of the commands related to the @samp{U} mark.
 @end ifset
 
 @table @samp
@@ -7497,7 +7497,7 @@ marks.
 マークを強い順に示します。
 @end ifset
 @ifset en
-The followings shows the marks in the strong order:
+The following shows the marks in the strong order:
 @end ifset
 
 @table @asis
@@ -7633,7 +7633,7 @@ Mew がマークの整合性を取る方法を以下に示します。
 @ifset en
 To allow off-line operations, Mew synchronizes marks with an IMAP
 server every time when a user makes an action. Mew does not
-automatically synchronize marks repeatedly. The followings are how Mew
+automatically synchronize marks repeatedly. The following is how Mew
 synchronizes marks.
 @end ifset
 
@@ -9623,7 +9623,7 @@ Switch one search engine to another.
 以下に、それぞれの検索エンジンの説明を示します。
 @end ifset
 @ifset en
-The followings are expiation of each search engines.
+The following explains each search engine.
 @end ifset
 
 @table @samp
@@ -11971,8 +11971,8 @@ SMTP サーバが認証を要求すると、ユーザにパスワードを尋ね
 いでしょう。
 @end ifset
 @ifset en
-Some SMTP servers are mis-configured. They requests authentication
-though errors occur if passwords are received. Mew automatically ask a
+Some SMTP servers are mis-configured. They request authentication
+though errors occur if passwords are received. Mew automatically asks a
 user to input user's password and send it to an SMTP server if it
 requires authentication. To get along with such SMTP servers above,
 configure as follows:
@@ -13557,7 +13557,7 @@ Edit モードは、既存のメッセージを編集し、新しいメッセー
 @end ifset
 @ifset en
 Edit mode is a mode to edit a message to generate another new message.
-The followings are typical examples:
+The following are typical examples:
 @end ifset
 
 @itemize @minus
