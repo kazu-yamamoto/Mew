@@ -1811,13 +1811,13 @@ latter message was first signed then the body was encrypted.
 @ifset ja
 本文全体、あるいは、一部のパートが暗号化されている場合、Mew はパスフレー
 ズを訊いてきます。パスフレーズを入力する際の注意事項については、
-@xref{start} を参照して下さい。入力されたパスフレーズは、あなたの秘密鍵
+@xref{password} を参照して下さい。入力されたパスフレーズは、あなたの秘密鍵
 を復号化するのに使われます。そして、復号化された秘密鍵によって、暗号化さ
 れているメッセージを解くわけです。
 @end ifset
 @ifset en
 If some parts or the entire body is encrypted, Mew asks you to input
-your pass-phrase to get plain text. Please refer to @ref{start} to know
+your pass-phrase to get plain text. Please refer to @ref{password} to know
 what you should pay attention when inputting pass-phrase. The pass-phrase
 is used to decrypt your secret key. The secret key is then used to
 decrypt cipher text.
@@ -2963,12 +2963,12 @@ X-Mew: Charset for body is not specified.
 @ifset ja
 もし、規格に厳密に復号化したいのなら、@samp{mew-decode-broken} を @samp{nil} に
 設定して下さい。この値は @samp{C-u.} を使うと動的に反転できます
-(@xref{singlepart} を参照)。
+(@xref{analysis} を参照)。
 @end ifset
 @ifset en
 If you want to decode messages strictly, set @samp{mew-decode-broken} to
 @samp{nil}. This value can be toggled dynamically by @samp{C-u.} (see
-@ref{singlepart}).
+@ref{analysis}).
 @end ifset
 
 @ifset ja
