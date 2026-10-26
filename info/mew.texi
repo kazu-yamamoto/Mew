@@ -1063,7 +1063,7 @@ configured.
 @end table
 
 @ifset ja
-Emacs で Mew を起動すると可愛い 2 匹の子が猫現れます。
+Emacs で Mew を起動すると可愛い 2 匹の子猫が現れます。
 @end ifset
 @ifset en
 When Mew is executed on Emacs, two cute cats appear on the cover page.
@@ -5281,7 +5281,7 @@ displayed with "*". Otherwise, "guess" is displayed.
 @end ifset
 
 @ifset ja
-以下の例の見て下さい。パート 1 は、本文ですからあらかじめバッファ内にあり
+以下の例を見て下さい。パート 1 は、本文ですからあらかじめバッファ内にあり
 ます。"guess" と表示されていますから、配送時の文字コードを Mew が定めた
 規則に従って決定します。
 @end ifset
@@ -5306,7 +5306,7 @@ is decided according to rules defined by Mew.
 
 @ifset ja
 パート 3 の入力文字コードは、この例だけからだと明示的に指定されているか
-分かりません。(しかし、ユーザ自身はは実際に指定したか分かっているはずで
+分かりません。(しかし、ユーザ自身は実際に指定したか分かっているはずで
 す。) とにかく、ファイルは内部表現に直され、配送時の文字コードに指定され
 ている EUC-JP に変換されます。
 @end ifset
@@ -5391,7 +5391,7 @@ There are two ways to apply the flowed folding.
 @ifset ja
 このコマンドは、草稿に長い行があるかを調べます。
 @samp{mew-flowed-fold-threshold} を越える行が見つかったら、flowed で
-折り返しを実行します。この変数の値は 78 です。
+折り返しを実行します。この変数の初期値は 78 です。
 @end ifset
 @ifset en
 Then, Mew sees if long lines exist in a draft. If long lines whose
@@ -5440,10 +5440,10 @@ took into account automatically at composing with @samp{C-cC-c} or
 @end ifset
 
 @ifset ja
-3) @samp{C-cC-pC-f} で、@samp{mew-use-format-flowed} の値を反転できます。
+また、@samp{C-cC-pC-f} で、@samp{mew-use-format-flowed} の値を反転できます。
 @end ifset
 @ifset en
-3) You can toggle the value of @samp{mew-use-format-flowed} by
+You can also toggle the value of @samp{mew-use-format-flowed} by
 @samp{C-cC-pC-f}.
 @end ifset
 
@@ -5656,10 +5656,10 @@ This is read as follows:
 @enumerate
 @ifset ja
 @item
-Follwup-To: の値が "poster" であれば、From: の値を新しい To: へコピーす
+Followup-To: の値が "poster" であれば、From: の値を新しい To: へコピーす
 る。
 @item
-Follwup-To: が存在すれば、Follwup-To: と Newsgroups: の値を新しい
+Followup-To: が存在すれば、Followup-To: と Newsgroups: の値を新しい
 Newsgroups: へコピーする。
 @item
 Newsgroups: が存在すれば、Newsgroups: の値を新しい Newsgroups: へコピー
@@ -5713,7 +5713,7 @@ You may want to set @samp{mew-reply-all-alist} like this:
 @end lisp
 
 @ifset ja
-あるアドレスが複数ある場合は、自動的に 1 つになります。また、匿名の宛先
+同じアドレスが複数ある場合は、自動的に 1 つになります。また、匿名の宛先
 を表す ":;" で終わるアドレスも、自動的に消去されます。
 @end ifset
 @ifset en
@@ -6049,7 +6049,7 @@ secret key that is not identified the address of From:, type
 @ifset ja
 メッセージを暗号化するには、@samp{C-cC-e} とタイプして下さい。To: や Cc: 
 からアドレスを切り出して、その受信者が復号化できるよう暗号化します。暗号
-化するだけのなので、パスフレーズを訊かれることはありません。作成されたメッ
+化するだけなので、パスフレーズを訊かれることはありません。作成されたメッ
 セージは、+queue に格納されます。
 @end ifset
 @ifset en
@@ -6110,7 +6110,7 @@ If you want to protect privacy of all drafts, set
 暗号化されたメッセージに対する返答メッセージのプライバシを保護したいなら、
 @samp{mew-protect-privacy-encrypted} を @samp{t} にして、
 @samp{mew-protect-privacy-encrypted-type} に利用したいサービスを設定しま
-す。この設定は、暗号化されたメッセージへの返答する場合、上記のすべてのメー
+す。この設定は、暗号化されたメッセージへ返答する場合、上記のすべてのメー
 ルに対する設定よりも優先されます。
 @end ifset
 @ifset en
@@ -6582,7 +6582,7 @@ From: Pooh <winnie-the-pooh@@example.net>
 @ifset ja
 "party" という説明文字列の後に ":" があります。そして、いくつかアドレス
 が "," で区切られながら列挙され、";" で終端されています。このような形式
-でアドレスを書くと、Mew は ":" と ";" のアドレスにメッセージを届けますが、
+でアドレスを書くと、Mew は ":" と ";" の間のアドレスにメッセージを届けますが、
 ヘッダからは削り取ります。この例では、piglet と roo は以下のようなメッセー
 ジを受け取ります。
 @end ifset
@@ -7065,7 +7065,7 @@ Delete all messages in a specified folder.
 @ifset ja
 メッセージを整頓するには @samp{o} を押して、移動先のフォルダを入力し、
 @samp{o} マークを付けます。移動先のフォルダは、賢く推測してくれるので、
-ほどんどの場合はフォルダ名を入力する代わりに @samp{RET} を押すだけです。
+ほとんどの場合はフォルダ名を入力する代わりに @samp{RET} を押すだけです。
 "," で区切って複数のフォルダを入力することもできます。もちろん、
 @samp{TAB} で補完できます。詳しくは @xref{Refile} を参照して下さい。
 @end ifset
@@ -8040,7 +8040,7 @@ has a folder for his friend, Piglet. So, +from/piglet may be chosen.
 @ifset ja
 そこで、Mew では無視するフォルダを設定できるようになっています。デフォル
 トでは、+from 以下を無視します。ですから、個人からのメッセージは +from 
-以下に収めて下さい
+以下に収めて下さい。
 @end ifset
 @ifset en
 To avoid this, Mew allows you to specify which folders are to be
@@ -8315,7 +8315,7 @@ The function name to provide this feature is
 @vindex mew-refile-guess-from-me-is-special
 
 @ifset ja
-@xref{by-folder} で説明したメーリングリスト用のフォルダを推測するに加え
+@xref{by-folder} で説明したメーリングリスト用のフォルダを推測するのに加え
 て、個人用のフォルダを推測する機能があります。個人用のフォルダは +from 
 以下にありますから、+from 以下のフォルダを選択する機能だともいえます。以
 下の例を考えてみましょう。
@@ -8796,9 +8796,9 @@ message, the message is not marked with @samp{o}. Insert
 @ifset ja
 これまで説明した整頓とは、同じ世界の中でメッセージを移動させることでし
 た。これに対し、ある世界から他の世界へメッセージを移動させたいこともあ
-るでしょう。これは、ある世界から他の世界へメッセージへコピーし、その後
+るでしょう。これは、ある世界から他の世界へメッセージをコピーし、その後
 元のメッセージを削除することで実現できます。ここでは、ある世界から他の
-世界へメッセージへコピーする方法について説明します。
+世界へメッセージをコピーする方法について説明します。
 @end ifset
 @ifset en
 "Refile" described above is moving messages in the same world. By
@@ -8844,7 +8844,7 @@ To copy messages marked with @samp{*} to an IMAP folder, use @samp{mli}.
 @end ifset
 
 @ifset ja
-ある世界から他の世界へメッセージへコピーするコマンドを以下にまとめます。
+ある世界から他の世界へメッセージをコピーするコマンドを以下にまとめます。
 @end ifset
 @ifset en
 Here is a summary of commands which copy messages from a world to
@@ -9224,7 +9224,7 @@ up messages in order of time.
 対話の機能を使うには、まず @samp{kI} を実行し、データベースを作る必要が
 あります。新しく届くメッセージはデータベースに入らないので、@samp{kI}
 は定期的に実行して下さい。@samp{kI} は、データベースを差分更新します。
-この方式は早いのですが、ゴミが残ることは避けられないので、ときどき
+この方式は速いのですが、ゴミが残ることは避けられないので、ときどき
 @samp{C-ukI} を実行し、データベースを一から作り直して下さい。
 @end ifset
 @ifset en
@@ -9524,7 +9524,7 @@ From: contains "kazu".
 @end example
 
 @ifset ja
-@samp{?} や @samp{/} で、パターンに入力の際に単純に @samp{RET} を押すと、
+@samp{?} や @samp{/} で、パターンの入力の際に単純に @samp{RET} を押すと、
 以下のように利用するコマンドまで入力できるようになります。
 @end ifset
 @ifset en
@@ -9810,7 +9810,7 @@ To make thread, the following commands exist.
 @table @samp
 @ifset ja
 @item tt
-Summary モード、あるは、セレクションからスレッドを作る。そして、カーソ
+Summary モード、あるいは、セレクションからスレッドを作る。そして、カーソ
 ルを現在のメッセージに移動する。もし、対応するスレッドがすでに存在して
 いるなら、スレッドに表示を切り替える。スレッドで使用された際は、元のフォ
 ルダへ移り、カーソルを現在のメッセージへ移動する。
@@ -10270,7 +10270,7 @@ C: Kazuhiko Yamamoto (Kazu) <kazu@@example.org>
 @end example
 
 @ifset ja
-それぞの要素は、以下のような意味を持ちます。
+それぞれの要素は、以下のような意味を持ちます。
 @end ifset
 @ifset en
 Each element returns the following value:
@@ -10482,7 +10482,7 @@ buffer.
 @end ifset
 
 @ifset ja
-以下の設定を "~/mew.el"に加えれば、Text/Html を Message バッファに表示
+以下の設定を "~/.mew.el" に加えれば、Text/Html を Message バッファに表示
 できるようになります。
 @end ifset
 @ifset en
@@ -11031,7 +11031,7 @@ ISO-8859-1 に収まるなら "iso-8859-1" を利用
 @samp{unify-8859-on-decoding-mode} を利用していない場合：
 @enumerate
 @item
-ISO-8859-1 と ISO-8859-15 のどちらにも収まる場合、@w{"}ISO-8859-1"
+ISO-8859-1 と ISO-8859-15 のどちらにも収まる場合、@w{"}ISO-8859-1" を利用
 @item
 ISO-8859-1 に収まるなら "iso-8859-1" を利用
 @item
@@ -11343,7 +11343,7 @@ Draft モードに入るときに評価される。
 +draft でないフォルダにある古い草稿を再編集した際に、Draft モードにおい
 て評価される。
 @item mew-draft-mode-reedit-draft-hook
-+draft でないフォルダにある草稿を再編集した際に、Draft モードにおいて評
++draft フォルダにある草稿を再編集した際に、Draft モードにおいて評
 価される。
 @item mew-draft-mode-reedit-queue-hook
 +queue または +postq フォルダにあるメッセージを再編集した際に、Draft モー
@@ -11368,7 +11368,7 @@ Draft モードで MIME メッセージを作る前、つまり @samp{C-cC-m} �
 メッセージを SMTP で送信/キューイングする前に評価される。メッセージの最
 終形が作られた後に評価されることに注意。
 @item mew-real-post-hook
-メッセージを NNTP で送信/キューイングする前に評価される。メッセージの最
+メッセージを NNTP で投稿/キューイングする前に評価される。メッセージの最
 終形が作られた後に評価されることに注意。
 @item mew-smtp-flush-hook
 +queue フォルダにメッセージがある場合に、SMTP が起動される前に評価され
@@ -12963,7 +12963,7 @@ will be no change with @samp{network-security-level} when
 @ifset ja
 GnuTLS には、証明書の検証方法を制御するための
 @samp{gnutls-verify-error} という変数もあります。GnuTLS は TCP 接続の
-確立時に証明書を検証します、この変数は、検証に失敗した時に切断するかど
+確立時に証明書を検証します。この変数は、検証に失敗した時に切断するかど
 うかを制御します。デフォルトでは @samp{nil} に設定されており、検証に失
 敗してもすぐには切断しません。前述の Network Security Managerが、TCP
 接続の確立後に検証し、切断するかどうかを決定します。すぐに切断しない設
@@ -13082,7 +13082,7 @@ in the mode line.
 
 @ifset ja
 Mew では、各プロトコルの STARTTLS 拡張を使い、TCP 接続の確立後に
-TLS を有効にすることもできます。STARTTLS を利用したい場合、ますは
+TLS を有効にすることもできます。STARTTLS を利用したい場合、まずは
 @xref{TLS/SSL} の説明に従って設定して下さい。
 @end ifset
 @ifset en
