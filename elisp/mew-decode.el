@@ -252,7 +252,7 @@ Return the existence MIME-Version: and the value of Subject:."
 	 (prop mew-use-highlight-header)
 	 key beg med subj from contents others
 	 key-face val-face N nspec visiblep
-	 mimep mimep2
+	 mimep mimep2 ar-seen
 	 size ext ext-str ext-face)
     (mew-decode-narrow-to-header
      (while (not (eobp))
@@ -268,6 +268,11 @@ Return the existence MIME-Version: and the value of Subject:."
 	 (setq visiblep (mew-nspec-visiblep nspec))
 	 (if (fboundp visiblep)
 	     (setq visiblep (funcall visiblep (mew-buffer-substring med (1- (point))))))
+	 ;; Visible fields are moved below, so mark the topmost
+	 ;; Authentication-Results: for `mew-bimi-pass-p'.
+	 (when (and (not ar-seen) (string= key "Authentication-Results:"))
+	   (setq ar-seen t)
+	   (put-text-property beg med 'mew-topmost-ar t))
 	 (cond
 	  ((string= key mew-x-mew:)
 	   ;; deleting X-Mew: on the RFC822 header

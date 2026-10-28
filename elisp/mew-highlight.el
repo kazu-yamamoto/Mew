@@ -284,11 +284,27 @@
 (defvar mew-highlight-bimi-function (if mew-icon-p 'mew-highlight-bimi-original)
   "*A function to display BIMI logo.")
 
+(defun mew-bimi-topmost-ar ()
+  "Return the value of the topmost Authentication-Results:.
+In a decoded header, it is the one marked by `mew-decode-rfc822-header'."
+  (save-excursion
+    (mew-header-goto-end)
+    (let ((pos (text-property-any (point-min) (point) 'mew-topmost-ar t))
+	  beg)
+      (if (null pos)
+	  (car (mew-header-get-value "Authentication-Results:" t))
+	(goto-char pos)
+	(when (looking-at "Authentication-Results:[ \t]*")
+	  (setq beg (match-end 0))
+	  (forward-line)
+	  (mew-header-goto-next)
+	  (mew-buffer-substring beg (1- (point))))))))
+
 (defun mew-bimi-pass-p ()
   "Return non-nil if the topmost Authentication-Results: says bimi=pass.
 Only the topmost one is added by your own server; the sender can put
 others below it.  See also `mew-bimi-authserv-id-list'."
-  (let* ((ar (car (mew-header-get-value "Authentication-Results:" t)))
+  (let* ((ar (mew-bimi-topmost-ar))
 	 (id (and ar (car (split-string ar "[ \t\n;]+" t))))
 	 (case-fold-search t))
     (and ar
