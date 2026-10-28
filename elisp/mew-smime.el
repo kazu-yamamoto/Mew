@@ -190,7 +190,7 @@
 (defvar mew-smime-inv-recp-alist
   '(( "0" . "No specific reason given")
     ( "1" . "Not Found")
-    ( "2" . "Ambigious specification")
+    ( "2" . "Ambiguous specification")
     ( "3" . "Wrong key usage")
     ( "4" . "Key revoked")
     ( "5" . "Key expired")
@@ -199,7 +199,7 @@
     ( "8" . "Policy mismatch")
     ( "9" . "Not a secret key")
     ("10" . "Key not trusted")
-    ("11" . "Missing certifciate")))
+    ("11" . "Missing certificate")))
 
 (defun mew-smime-encrypt-check ()
   (let (ret) ;; this should be nil
@@ -386,7 +386,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Decription
+;;; Decryption
 ;;;
 
 (defun mew-smime-decrypt (file1 file2)

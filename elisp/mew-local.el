@@ -274,7 +274,7 @@ Binary search is used for speed reasons."
      (mew-local-set-directive pnm directive)
      (mew-local-set-bnm pnm bnm)
      (mew-local-set-buf pnm buf)
-     (mew-local-set-case pnm mew-case) ;; xxx specfy to mew-local-retrieve?
+     (mew-local-set-case pnm mew-case) ;; xxx specify to mew-local-retrieve?
      (cond
       ((eq directive 'inc)
        (mew-sinfo-set-unread-mark (mew-get-unread-mark bnm))

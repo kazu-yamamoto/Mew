@@ -14,7 +14,7 @@ Users need to configure their e-mail addresses and e-mail servers but such infor
 
 - Installation by hand: [INSTALL.md](INSTALL.md)
 
-- Developers: if you want to use Mew cloned from this repository, put the followings to your ".emacs".
+- Developers: if you want to use Mew cloned from this repository, put the following in your ".emacs".
 
 ```elisp
 (setq mew-icon-directory (expand-file-name "SHOMEWHERE/mew/etc"))

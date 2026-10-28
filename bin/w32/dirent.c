@@ -30,7 +30,7 @@ opendir(const char *filename)
     dir = malloc(sizeof(DIR));
     if (dir == NULL) return NULL;
 
-    /* initialize DIR strucure */
+    /* initialize DIR structure */
     memset(dir, 0, sizeof(DIR));
     dir->hFind = INVALID_HANDLE_VALUE;
 

@@ -264,7 +264,7 @@
 (defconst mew-regex-singlebyte-nonascii
   "\\(\\`\\|[\000-\177]\\)[^\000-\177]\\([\000-\177]\\|\\'\\)")
 
-;; The followings MUST contain "+" for conversion.
+;; The following MUST contain "+" for conversion.
 ;; \011 = tab, \012 = lf
 (defconst mew-regex-ctls "[\000-\037\177]+")
 (defconst mew-regex-ctls-wo-tab "[\000-\010\012-\037\177]+")

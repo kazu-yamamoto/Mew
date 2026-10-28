@@ -597,7 +597,7 @@ If called with `\\[universal-argument]', it stays writable."
   "This function is called by mew-summary-down(). This is a very
 ad-hoc solution for putting the review mark on a thread.")
 
-(defun mew-re-search-forward-visibile (regex)
+(defun mew-re-search-forward-visible (regex)
   (catch 'loop
     (while (re-search-forward regex nil t)
       (unless (eq (get-text-property (point) 'invisible) t)
@@ -612,7 +612,7 @@ ad-hoc solution for putting the review mark on a thread.")
 (defun mew-summary-down ()
   (funcall mew-summary-down-function)
   (cond
-   ((mew-re-search-forward-visibile mew-regex-msg-or-part)
+   ((mew-re-search-forward-visible mew-regex-msg-or-part)
     (mew-thread-move-cursor)
     (mew-sinfo-set-direction 'down)
     t)

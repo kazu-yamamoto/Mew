@@ -668,7 +668,7 @@
       (format "Charset (%s) for body is not supported.\n" msg))
      ((eq err 'no-charset)
       (if msg
-	  (format "Charset (%s) for body is mis-matched.\n" msg)
+	  (format "Charset (%s) for body is mismatched.\n" msg)
 	"Charset for body is not specified.\n"))
      ((eq err 'multi)
       (format "Invalid encoding (%s) for multipart.\n" msg)))
