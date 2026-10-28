@@ -49,8 +49,13 @@
     (save-excursion
       (save-restriction
 	(narrow-to-region beg end)
-	;; ctext uses ESC sequences and bytes invalid in UTF-8.
-	(when (re-search-forward (format "[\e%c-%c]" #x3fff80 #x3fffff) nil t)
+	;; ctext uses ESC sequences and bytes invalid in UTF-8.  A UTF-8
+	;; file may contain such bytes from a broken header, so a file
+	;; with a valid non-ASCII character is not ctext.
+	(when (and (re-search-forward (format "[\e%c-%c]" #x3fff80 #x3fffff) nil t)
+		   (progn
+		     (goto-char (point-min))
+		     (not (re-search-forward (format "[%c-%c]" #x80 #x3fff7f) nil t))))
 	  (encode-coding-region (point-min) (point-max) 'utf-8-emacs-unix)
 	  (decode-coding-region (point-min) (point-max) 'ctext-unix))
 	(- (point-max) (point-min))))))

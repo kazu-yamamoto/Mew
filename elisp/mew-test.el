@@ -1485,6 +1485,21 @@ apart by whether GnuPG says it considered a key at all."
 	      (should (equal (rd) s))))
 	(delete-file file)))))
 
+(ert-deftest mew-test-cs-m17n-invalid-bytes ()
+  "A UTF-8 file with a few invalid bytes is not read as ctext."
+  (let ((file (make-temp-file "mew-test")))
+    (unwind-protect
+	(progn
+	  (with-temp-file file
+	    (set-buffer-multibyte nil)
+	    (insert (encode-coding-string "漢字 " 'utf-8-unix) "\xc8\x7e\n"))
+	  (with-temp-buffer
+	    (let ((coding-system-for-read mew-cs-m17n))
+	      (insert-file-contents file))
+	    (should (equal (buffer-substring 1 4) "漢字 "))
+	    (should (eq (char-after 4) #x3fffc8))))
+      (delete-file file))))
+
 (ert-deftest mew-test-lisp-save-load-emoji ()
   "Lisp data files keep characters that ctext cannot hold."
   (let ((file (make-temp-file "mew-test"))
