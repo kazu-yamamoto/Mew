@@ -60,12 +60,21 @@
 	  (decode-coding-region (point-min) (point-max) 'ctext-unix))
 	(- (point-max) (point-min))))))
 
+(defvar mew-cs-m17n-encode-table
+  ;; Raw bytes, from a header in a wrong charset, are written as
+  ;; U+FFFD so that the file stays valid UTF-8.
+  (let ((table (make-translation-table)))
+    (dotimes (i 128)
+      (aset table (+ #x3fff80 i) #xfffd))
+    table))
+
 (define-coding-system 'mew-cs-m17n-utf-8
   "UTF-8 for writing; reads files written in ctext by old Mew, too."
   :coding-type 'utf-8
   :mnemonic ?U
   :charset-list '(emacs)
   :eol-type 'unix
+  :encode-translation-table mew-cs-m17n-encode-table
   :post-read-conversion 'mew-cs-m17n-post-read)
 
 (defvar mew-cs-m17n 'mew-cs-m17n-utf-8)

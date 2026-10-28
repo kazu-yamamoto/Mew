@@ -1500,6 +1500,24 @@ apart by whether GnuPG says it considered a key at all."
 	    (should (eq (char-after 4) #x3fffc8))))
       (delete-file file))))
 
+(ert-deftest mew-test-cs-m17n-raw-bytes ()
+  "Raw bytes are written as U+FFFD, even next to read-only text."
+  (let ((file (make-temp-file "mew-test"))
+	(coding-system-for-write mew-cs-m17n))
+    (unwind-protect
+	(progn
+	  (should (equal (encode-coding-string
+			  (concat "漢字 " (string #x3fffc8) "~") mew-cs-m17n)
+			 (encode-coding-string "漢字 \ufffd~" 'utf-8-unix)))
+	  ;; A draft has read-only text.
+	  (with-temp-buffer
+	    (insert "a\n" (propertize "----\n" 'read-only t))
+	    (write-region nil nil file nil 'silent))
+	  (with-temp-buffer
+	    (insert "b\n")
+	    (write-region nil nil file nil 'silent)))
+      (delete-file file))))
+
 (ert-deftest mew-test-lisp-save-load-emoji ()
   "Lisp data files keep characters that ctext cannot hold."
   (let ((file (make-temp-file "mew-test"))
