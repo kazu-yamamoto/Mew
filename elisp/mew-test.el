@@ -1518,6 +1518,13 @@ apart by whether GnuPG says it considered a key at all."
 	    (write-region nil nil file nil 'silent)))
       (delete-file file))))
 
+(ert-deftest mew-test-charset-gb2312 ()
+  "GB2312 is decoded as GBK, and cn-gb-2312 is still named GB2312."
+  (should (equal (mew-header-decode "gb2312" "B" "x6fIfrmktPOhobyazO+9zMra")
+		 "千葉工大　細田教授"))
+  (should (equal (mew-cs-to-charset 'cn-gb-2312) "gb2312"))
+  (should (equal (mew-cs-to-charset 'gbk) "gbk")))
+
 (ert-deftest mew-test-lisp-save-load-emoji ()
   "Lisp data files keep characters that ctext cannot hold."
   (let ((file (make-temp-file "mew-test"))

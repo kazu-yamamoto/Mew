@@ -192,9 +192,12 @@
     ("iso-2022-cn"       iso-2022-cn)
     ("iso-2022-cn-ext"   iso-2022-cn-ext)
     ("gbk"               gbk)
+    ;; Text labeled GB2312 is often GBK, its superset.  The second
+    ;; entry names cn-gb-2312 for `mew-cs-to-charset'.
+    ("gb2312"            gbk)
     ("gb2312"            cn-gb-2312) ;; should be before cn-gb
     ("gb18030"           gb18030)
-    ("cn-gb"             cn-gb-2312)
+    ("cn-gb"             gbk)
     ("hz-gb-2312"        hz-gb-2312)
     ("big5"              chinese-big5)
     ("cn-big5"           chinese-big5)
