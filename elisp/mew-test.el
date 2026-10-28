@@ -1574,6 +1574,22 @@ apart by whether GnuPG says it considered a key at all."
       (should (pass own-pass '("MX.example.net")))
       (should-not (pass "")))))
 
+(ert-deftest mew-test-bimi-pass-p-decoded ()
+  "The topmost Authentication-Results: counts even after it is moved."
+  (mew-regex-setup) ;; mew-eoh
+  (cl-flet ((pass (hdr)
+	      (with-temp-buffer
+		(insert hdr "Subject: s\n\nbody\n")
+		(goto-char (point-min))
+		(mew-decode-rfc822-header)
+		(goto-char (point-min))
+		(and (mew-bimi-pass-p) t))))
+    ;; A field with "=softfail" is visible and moved below the others.
+    (should (pass (concat "Authentication-Results: own; sender-id=softfail; bimi=pass\n"
+			  "Authentication-Results: relay; dkim=pass\n")))
+    (should-not (pass (concat "Authentication-Results: own; dkim=fail\n"
+			      "Authentication-Results: forged; bimi=pass\n")))))
+
 (ert-deftest mew-test-debug-redact ()
   "Credentials do not reach the debug buffer; other commands do."
   (dolist (c '(("PASS secret" . "PASS ********")
