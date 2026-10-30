@@ -164,6 +164,8 @@ private FILE *scan_getfile(char **, char **);
 private void exec_init(unsigned int);
 private FILE *exec_getfile(char **, char **);
 private void stdin_init(unsigned int);
+private int  hexval(int);
+private char *unhex(const char *);
 private void set_fld_rng(struct fld_rng *, char *, char *);
 #ifdef HAVE_ICONV
 private void dbuf_reserve(struct dbuf *, size_t);
@@ -201,6 +203,7 @@ help_message[] = {
 	" -l  <length>  Field max length to dump. (0 means no limit)",
 	" -n            Don't use fstat().",
 	" -p  <pattern> Pick pattern.",
+	" -P  <hex>     Pick pattern in hexadecimal.",
 	" -s  <src>     Message source: '+folder range'.",
 	" -w            Wait for stdio input to synchronize.",
 	" -v            Display the version.",
@@ -1477,6 +1480,36 @@ set_fld_rng(struct fld_rng *fr, char *arg1, char *arg2) {
  *
  */
 
+/*
+ * Emacs on Windows passes arguments through the ANSI code page, which
+ * mangles UTF-8.  So Mew may send the pattern as hex digits instead.
+ */
+private int
+hexval(int c) {
+	if (c >= '0' && c <= '9') return c - '0';
+	if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+	if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+	return -1;
+}
+
+private char *
+unhex(const char *hex) {
+	size_t len = strlen(hex), i;
+	char *buf;
+
+	if (len % 2 != 0)
+		warn_exit("odd length of hex pattern.");
+	MALLOC(buf, len / 2 + 1);
+	for (i = 0; i < len; i += 2) {
+		int hi = hexval(hex[i]), lo = hexval(hex[i + 1]);
+		if (hi < 0 || lo < 0)
+			warn_exit("invalid hex pattern.");
+		buf[i / 2] = (char)(hi << 4 | lo);
+	}
+	buf[len / 2] = NUL;
+	return buf;
+}
+
 int
 main(int argc, char **argv) {
 	int optc, rest;
@@ -1495,7 +1528,7 @@ main(int argc, char **argv) {
 	warn_prog = progname;
 	STRDUP(Mail_home, MAILHOME);
 
-	while ((optc = Getopt(argc, argv, "ab:c:d:e:f:hi:l:m:np:s:vwx:")) != EOF) {
+	while ((optc = Getopt(argc, argv, "ab:c:d:e:f:hi:l:m:np:P:s:vwx:")) != EOF) {
 		switch (optc) {
 		case 'a':
 			All_fields++;
@@ -1535,6 +1568,9 @@ main(int argc, char **argv) {
 			break;
 		case 'p':
 			STRDUP(pattern, Optarg);
+			break;
+		case 'P':
+			pattern = unhex(Optarg);
 			break;
 		case 's':
 			if (lim >= MAX_FOLDER)
