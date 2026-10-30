@@ -49,11 +49,24 @@
     (save-excursion
       (save-restriction
 	(narrow-to-region beg end)
-	;; ctext uses ESC sequences and bytes invalid in UTF-8.
-	(when (re-search-forward (format "[\e%c-%c]" #x3fff80 #x3fffff) nil t)
+	;; ctext uses ESC sequences and bytes invalid in UTF-8.  A UTF-8
+	;; file may contain such bytes from a broken header, so a file
+	;; with a valid non-ASCII character is not ctext.
+	(when (and (re-search-forward (format "[\e%c-%c]" #x3fff80 #x3fffff) nil t)
+		   (progn
+		     (goto-char (point-min))
+		     (not (re-search-forward (format "[%c-%c]" #x80 #x3fff7f) nil t))))
 	  (encode-coding-region (point-min) (point-max) 'utf-8-emacs-unix)
 	  (decode-coding-region (point-min) (point-max) 'ctext-unix))
 	(- (point-max) (point-min))))))
+
+(defvar mew-cs-m17n-encode-table
+  ;; Raw bytes, from a header in a wrong charset, are written as
+  ;; U+FFFD so that the file stays valid UTF-8.
+  (let ((table (make-translation-table)))
+    (dotimes (i 128)
+      (aset table (+ #x3fff80 i) #xfffd))
+    table))
 
 (define-coding-system 'mew-cs-m17n-utf-8
   "UTF-8 for writing; reads files written in ctext by old Mew, too."
@@ -61,6 +74,7 @@
   :mnemonic ?U
   :charset-list '(emacs)
   :eol-type 'unix
+  :encode-translation-table mew-cs-m17n-encode-table
   :post-read-conversion 'mew-cs-m17n-post-read)
 
 (defvar mew-cs-m17n 'mew-cs-m17n-utf-8)
@@ -178,9 +192,12 @@
     ("iso-2022-cn"       iso-2022-cn)
     ("iso-2022-cn-ext"   iso-2022-cn-ext)
     ("gbk"               gbk)
+    ;; Text labeled GB2312 is often GBK, its superset.  The second
+    ;; entry names cn-gb-2312 for `mew-cs-to-charset'.
+    ("gb2312"            gbk)
     ("gb2312"            cn-gb-2312) ;; should be before cn-gb
     ("gb18030"           gb18030)
-    ("cn-gb"             cn-gb-2312)
+    ("cn-gb"             gbk)
     ("hz-gb-2312"        hz-gb-2312)
     ("big5"              chinese-big5)
     ("cn-big5"           chinese-big5)

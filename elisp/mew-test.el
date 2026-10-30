@@ -1485,6 +1485,46 @@ apart by whether GnuPG says it considered a key at all."
 	      (should (equal (rd) s))))
 	(delete-file file)))))
 
+(ert-deftest mew-test-cs-m17n-invalid-bytes ()
+  "A UTF-8 file with a few invalid bytes is not read as ctext."
+  (let ((file (make-temp-file "mew-test")))
+    (unwind-protect
+	(progn
+	  (with-temp-file file
+	    (set-buffer-multibyte nil)
+	    (insert (encode-coding-string "漢字 " 'utf-8-unix) "\xc8\x7e\n"))
+	  (with-temp-buffer
+	    (let ((coding-system-for-read mew-cs-m17n))
+	      (insert-file-contents file))
+	    (should (equal (buffer-substring 1 4) "漢字 "))
+	    (should (eq (char-after 4) #x3fffc8))))
+      (delete-file file))))
+
+(ert-deftest mew-test-cs-m17n-raw-bytes ()
+  "Raw bytes are written as U+FFFD, even next to read-only text."
+  (let ((file (make-temp-file "mew-test"))
+	(coding-system-for-write mew-cs-m17n))
+    (unwind-protect
+	(progn
+	  (should (equal (encode-coding-string
+			  (concat "漢字 " (string #x3fffc8) "~") mew-cs-m17n)
+			 (encode-coding-string "漢字 \ufffd~" 'utf-8-unix)))
+	  ;; A draft has read-only text.
+	  (with-temp-buffer
+	    (insert "a\n" (propertize "----\n" 'read-only t))
+	    (write-region nil nil file nil 'silent))
+	  (with-temp-buffer
+	    (insert "b\n")
+	    (write-region nil nil file nil 'silent)))
+      (delete-file file))))
+
+(ert-deftest mew-test-charset-gb2312 ()
+  "GB2312 is decoded as GBK, and cn-gb-2312 is still named GB2312."
+  (should (equal (mew-header-decode "gb2312" "B" "x6fIfrmktPOhobyazO+9zMra")
+		 "千葉工大　細田教授"))
+  (should (equal (mew-cs-to-charset 'cn-gb-2312) "gb2312"))
+  (should (equal (mew-cs-to-charset 'gbk) "gbk")))
+
 (ert-deftest mew-test-lisp-save-load-emoji ()
   "Lisp data files keep characters that ctext cannot hold."
   (let ((file (make-temp-file "mew-test"))
