@@ -52,9 +52,6 @@
 /* Define to 1 if you have the 'lockf' function. */
 #undef HAVE_LOCKF
 
-/* Define to 1 if you have the 'memmove' function. */
-#undef HAVE_MEMMOVE
-
 /* Define to 1 if you have the <ndir.h> header file, and it defines 'DIR'. */
 #undef HAVE_NDIR_H
 

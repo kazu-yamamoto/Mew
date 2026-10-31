@@ -15,9 +15,7 @@
 #include <ctype.h>
 #include <stdarg.h>
 
-#if !HAVE_MEMMOVE
-#define memmove(d, s, n) bcopy((s), (d), (n))
-#endif
+/* memmove() is standard C (C89), so no fallback to bcopy() is needed. */
 
 char *warn_prog;
 
