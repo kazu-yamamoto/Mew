@@ -108,7 +108,7 @@ struct dbuf {
 	size_t siz;
 };
 
-private char Buf_header[MAX_HEADER + 1]; /* + 1 for a NUL after what is read */
+private char Buf_header[MAX_HEADER + 2]; /* + 1 for an appended LF, + 1 for a NUL */
 private char Buf_filenm[MAX_FILE_NAME_LEN];
 private char Buf_filenm2[MAX_FILE_NAME_LEN];
 private char *Mail_home;
@@ -361,10 +361,8 @@ nextline(char *p, char *lim, int hdr_only) {
 	p++;
 	if (p < lim)
 		return p;
-	else {
-		*(lim - 1) = LF;
+	else
 		return NULL;
-	}
 }
 
 /*
@@ -413,13 +411,19 @@ eoh(char *p, char *lim) {
 }
 
 /*
- * Read the start of a message into Buf_header and end it with a NUL, so
- * that nothing which scans it runs past what was read, even when it is empty.
+ * Read the start of a message into Buf_header, end it with a newline when
+ * it has none, and then with a NUL, so that nothing which scans it runs past
+ * what was read, even when it is empty.
  */
 private int
 read_header(FILE *fp) {
 	int lim = fread(Buf_header, sizeof(char), MAX_HEADER, fp);
 
+	/* End the data with a newline when it has none, so that the line
+	   scanning always finds a terminator without overwriting the last
+	   byte that was read. */
+	if (lim > 0 && Buf_header[lim - 1] != LF)
+		Buf_header[lim++] = LF;
 	Buf_header[lim] = NUL;
 	return lim;
 }
@@ -737,7 +741,7 @@ search_string(char *key, char *value, int case_sensitive) {
 			if (end != NULL)
 				end--;		/* end == LF */
 			else if (p == NULL)
-				end = limp - 1;	/* end == LF, see nextline */
+				end = limp - 1;	/* end == LF, see read_header() */
 			else
 				end = p - 1;	/* end == LF */
 			tmp = *end;
@@ -1149,7 +1153,7 @@ print_for_sort(FILE *fp, char *fname, char *fld) {
 			if (end != NULL)
 				end--;
 			else if (p == NULL) {
-				end = limp;
+				end = limp - 1;
 			} else
 				end = p - 1;
 			break;
