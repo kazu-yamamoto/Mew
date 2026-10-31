@@ -502,6 +502,11 @@ parse_pattern(char *pattern) {
 
 	top = exp_eq(top);
 	top = exp_exp(top);
+	/* A well-formed pattern reduces to exactly one expression node;
+	   leftover siblings (e.g. "a=b c=d") or a bare string (e.g. "abc")
+	   mean the pattern is malformed. */
+	if (top->nxt != NULL || top->typ != P_EXP)
+		warn_exit("broken pattern.");
 	return top;
 }
 
