@@ -203,7 +203,8 @@ token(char **ret) {
 					type = P_CNE;
 				} else {
 					type = P_NEQ;
-					Ungetc();
+					if (c != EOF)
+						Ungetc(); /* nothing consumed at EOF */
 				}
 				break;
 			} else {
