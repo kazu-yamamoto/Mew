@@ -207,7 +207,7 @@ help_message[] = {
 	" -s  <src>     Message source: '+folder range'.",
 	" -w            Wait for stdio input to synchronize.",
 	" -v            Display the version.",
-	" -x            Use this suffix.",
+	" -x  <suffix>  Use this suffix.",
 	"",
 	"<range> = N | [start]-[end] | last:N", 
 	"<pattern> = 'key=val' | 'key!=val' | '!<pattern>' | '(<pattern>)' ",
