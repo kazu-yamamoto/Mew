@@ -392,6 +392,8 @@ nextfield(char *p, char *lim, char **truncated_end, char **prev_beg, int hdr_onl
 
 private char *
 eoh(char *p, char *lim) {
+	if (p < lim && *p == LF)
+		return p + 1; /* empty header: the body begins immediately */
 	while (p < lim) {
 		if (*p == LF && p + 1 < lim && *(p + 1) == LF)
 			return p + 1;
