@@ -59,6 +59,10 @@ private char version_message[] = "version 6.11 20260414 Mew developing team";
 # include <pwd.h>
 #endif /* HAVE_PWD_H */
 
+#ifdef HAVE_FORK
+# include <sys/wait.h>
+#endif /* HAVE_FORK */
+
 /****************************************************************
  * 
  * Macro, structure, and tables
@@ -167,6 +171,7 @@ private FILE *scan_getfile(char **, char **);
 private void exec_init(unsigned int);
 private char *read_filename_line(char *, size_t);
 private FILE *exec_getfile(char **, char **);
+private int  exec_wait(void);
 private void stdin_init(unsigned int);
 private void set_fld_rng(struct fld_rng *, char *, char *);
 #ifdef HAVE_ICONV
@@ -1375,6 +1380,8 @@ scan_getfile(char **filename, char **foldername) {
  */
 
 #ifdef HAVE_FORK
+private int Exec_pid = 0; /* pid of the -e child, 0 if none */
+
 private void
 exec_init(unsigned int num) { /* num == 0 */
 	int childpid;
@@ -1394,8 +1401,10 @@ exec_init(unsigned int num) { /* num == 0 */
 		int lim = MAX_ARGC - 2;
 		char *p;
 	
-		if (dup2(pipes[WRITE], WRITE) < 0)
-			warn_exit("can't redirect pipe.");
+		if (dup2(pipes[WRITE], WRITE) < 0) {
+			warning("can't redirect pipe.");
+			_exit(EXIT_FAILURE);
+		}
 		if (pipes[WRITE] != WRITE)
 			close(pipes[WRITE]); /* reachable as fd 1 now */
 		close(pipes[READ]);
@@ -1414,15 +1423,37 @@ exec_init(unsigned int num) { /* num == 0 */
 		Argvec[i++] = NULL;
 		
 		execvp(Exec_cmd, Argvec);
-		warn_exit("'%s' command not found.", Exec_cmd);
+		/* _exit(): exit() would flush stdio buffers inherited from
+		   the parent and run its atexit handlers in the child. */
+		warning("'%s' command not found.", Exec_cmd);
+		_exit(EXIT_FAILURE);
 	}
 
 	/* I'm the parent. */
+	Exec_pid = childpid;
 	if (dup2(pipes[READ], READ) < 0)
 		warn_exit("can't redirect pipe.");
 	if (pipes[READ] != READ)
 		close(pipes[READ]); /* reachable as fd 0 now */
 	close(pipes[WRITE]);
+}
+
+/*
+ * Reap the -e child so it does not linger as a zombie, and report
+ * whether it failed (non-zero exit or killed by a signal) so that
+ * mewl's own exit status reflects it.
+ */
+private int
+exec_wait(void) {
+	int status;
+
+	if (Exec_pid <= 0)
+		return 0;
+	if (waitpid(Exec_pid, &status, 0) < 0)
+		return 1;
+	if (WIFEXITED(status))
+		return WEXITSTATUS(status) != 0;
+	return 1; /* terminated by a signal */
 }
 #else  /* HAVE_FORK */
 private void
@@ -1431,6 +1462,11 @@ exec_init(unsigned int num) { /* num == 0 */
 		warn_exit("folder name is too long.");
 	STRCPY(Current_folder, Folders[0].folder);
 	ch_folder(Current_folder);
+}
+
+private int
+exec_wait(void) {
+	return 0; /* no child without fork() */
 }
 #endif /* HAVE_FORK */
 
@@ -1707,7 +1743,7 @@ main(int argc, char **argv) {
 		fclose(fp);
 	}
 
-	exit(EXIT_SUCCESS);
+	exit(exec_wait() ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
 /* 
