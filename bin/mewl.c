@@ -165,6 +165,7 @@ private void scan_init(unsigned int);
 private FILE *open_message(const char *);
 private FILE *scan_getfile(char **, char **);
 private void exec_init(unsigned int);
+private char *read_filename_line(char *, size_t);
 private FILE *exec_getfile(char **, char **);
 private void stdin_init(unsigned int);
 private void set_fld_rng(struct fld_rng *, char *, char *);
@@ -1432,20 +1433,34 @@ exec_init(unsigned int num) { /* num == 0 */
 }
 #endif /* HAVE_FORK */
 
+/*
+ * Read one newline-terminated line from stdin into buf, without the LF.
+ * Unlike fgets()+strchr(LF), this consumes bytes up to the newline even
+ * when the line contains an embedded NUL, so the following line is never
+ * dropped.  An overlong line is truncated to the buffer and the
+ * rest is consumed.  Returns NULL only at end of input with no data.
+ */
+private char *
+read_filename_line(char *buf, size_t size) {
+	size_t n = 0;
+	int c;
+
+	while ((c = getc(stdin)) != EOF && c != LF)
+		if (n < size - 1)
+			buf[n++] = (char)c;
+	if (c == EOF && n == 0)
+		return NULL;
+	buf[n] = NUL;
+	return buf;
+}
+
 private FILE *
 exec_getfile(char **filename, char **foldername) {
 	FILE *fp;
-	char *p, *q, *r;
-	int c;
+	char *p, *r;
 
 	*foldername = Current_folder;
-	while ((p = fgets(Buf_filenm, sizeof(Buf_filenm), stdin)) != NULL) {
-		if ((q = strchr(Buf_filenm, LF)) != NULL)
-			*q = NUL;
-		else {
-			Buf_filenm[MAX_FILE_NAME_LEN - 1] = NUL;
-			while ((c = getchar()) != LF && c != EOF) ;
-		}
+	while ((p = read_filename_line(Buf_filenm, sizeof(Buf_filenm))) != NULL) {
 		if (STRCMP(p, CHDIR) == 0) {
 			no_fld_flag = 0;
 			default_fld_error_flag = 0;
