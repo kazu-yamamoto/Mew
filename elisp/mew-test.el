@@ -1436,6 +1436,19 @@ apart by whether GnuPG says it considered a key at all."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew-bq.el: control characters in parameters
+;;;
+
+(ert-deftest mew-test-param-decode-ctl ()
+  "No control character survives in a parameter value."
+  (let ((mew-decode-broken t))
+    (dolist (hdr '("message/external-body; site=\"=?us-ascii?Q?x=0A!id?=\""
+		   "message/external-body; site*=us-ascii''x%0A%21id"))
+      (should (equal (mew-syntax-get-param (cdr (mew-param-decode hdr)) "site")
+		     "x!id")))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-ext.el: URL of message/external-body
 ;;;
 
