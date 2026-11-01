@@ -1409,6 +1409,14 @@ key up, so the recipient is the part which is always there."
     (should (equal (check "[GNUPG:] INV_RECP 4 <a@example.org>\n")
 		   (concat mew-pgp-result-other ": <a@example.org>")))))
 
+(ert-deftest mew-test-pgp-verify-check-text-signer ()
+  "The signer's address is text, not a regexp, for PGP 2."
+  (let ((mew-pgp-ver mew-pgp-ver2)
+	(mew-inherit-decode-signer "a[b@example.org"))
+    (with-temp-buffer
+      (insert "\nGood signature from user \"A <a[b@example.org>\".\n")
+      (should (string-match "\\`Good PGP sign " (mew-pgp-verify-check-text))))))
+
 (ert-deftest mew-test-pgp-sign-check-status ()
   "GnuPG names the key it would not sign with.  The reason code is 9
 whether the key is missing or merely unusable, so the two are told

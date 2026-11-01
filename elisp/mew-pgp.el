@@ -392,7 +392,9 @@ pty, so they need nothing here."
       (setq ret (concat (mew-match-string 1) " PGP sign "))
       (goto-char (point-max))
       (if (and mew-inherit-decode-signer
-	       (re-search-backward (concat (mew-pgp-get mew-pgp-verify-addr) ".*" mew-inherit-decode-signer) nil t))
+	       (re-search-backward (concat (mew-pgp-get mew-pgp-verify-addr) ".*"
+					   (regexp-quote mew-inherit-decode-signer))
+				   nil t))
 	  (progn
 	    (beginning-of-line)
 	    (looking-at (concat (mew-pgp-get mew-pgp-verify-addr) "\\(.*\\)"))
