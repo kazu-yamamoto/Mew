@@ -80,7 +80,7 @@ private int	UseCL;
 private int	PreserveUnixFrom;
 private int	CreateMTime = TRUE;
 private int	FileMode = S_IRUSR | S_IWUSR;
-private int	Exit = 0;
+private volatile sig_atomic_t	Exit = 0;
 
 /****************************************************************
  *
@@ -95,7 +95,7 @@ private void	version(const char *);
 private void	init_env(int, char **);
 private int	get_number(char *);
 private int	get_last_seq(void);
-private int	compare_string(char **, char **);
+private int	compare_string(const void *, const void *);
 private int	copyfile(char *, char *);
 private int	movefile(char *, char *, char *, int);
 private int	maildir_names(const char *, char **, char **, char **);
@@ -360,6 +360,8 @@ get_number(char *s)
 	unsigned char c;
 
 	while ((c = *s) != NUL && isdigit(c)) {
+		if (num > (INT_MAX - 9) / 10)
+			return 0; /* too large to be a message number */
 		num = num * 10 + c - '0';
 		s++;
 	}
@@ -394,9 +396,9 @@ get_last_seq(void)
 }
 
 private int
-compare_string(char **i, char **j)
+compare_string(const void *i, const void *j)
 {
-	return strcmp(*i, *j);
+	return strcmp(*(char * const *)i, *(char * const *)j);
 }
 
 /* Copy src to dst, which must not exist.  Returns 1 if dst exists.
@@ -620,8 +622,7 @@ get_from_dir(int seq, char *fromdir, char *backupdir, int backup)
 	}
 	closedir(dirp);
 
-	qsort(list, listend, sizeof(char *),
-	      (int (*)(const void *, const void *))compare_string);
+	qsort(list, listend, sizeof(char *), compare_string);
 
 	for (i = 0; i < listend; i++) {
 		if (strlen(fromdir) + strlen(list[i]) + 2 > PATH_MAX)
@@ -694,8 +695,12 @@ lock_mbox(char *lockfile)
 private void
 unlock_mbox(char *lockfile)
 {
-	if (strlen(lockfile) > 0)
+	/* Forget the name so that error() does not remove a lock file
+	   that another process has created since. */
+	if (strlen(lockfile) > 0) {
 		unlink(lockfile);
+		lockfile[0] = NUL;
+	}
 }
 
 /*
@@ -975,7 +980,7 @@ process(void)
 		error("can't create file (%s)", mtimefile);
 	if ((wb = fwrite(MEW_MTIME_PHRASE, sizeof(char), len, fp)) != len) {
 		fclose(fp);
-		error("fwrite failed (%d, %s)", wb, mtimefile);
+		error("fwrite failed (%lu, %s)", (unsigned long)wb, mtimefile);
 	}
 	fclose(fp);
 }
@@ -1039,7 +1044,15 @@ main(int argc, char **argv)
 			Suffix_len = strlen(Suffix);
 			break;
 		case 'p':
-			sscanf(Optarg, "%i", &FileMode);
+			{
+				/* Base 0 as "%i" of sscanf(): 0600 is octal. */
+				char *end;
+				long mode = strtol(Optarg, &end, 0);
+				if (end == Optarg || *end != NUL ||
+				    mode < 0 || mode > 07777)
+					error("invalid file mode (%s)", Optarg);
+				FileMode = (int)mode;
+			}
 			break;
 		case 's':
 			MboxType = T_STDIN;
