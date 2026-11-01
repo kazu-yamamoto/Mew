@@ -1436,6 +1436,42 @@ apart by whether GnuPG says it considered a key at all."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew-smime.el: verification
+;;;
+
+;; The output below was taken from gpgsm 2.5.21 with a self-signed
+;; certificate whose CN was chosen by the signer.
+
+(ert-deftest mew-test-smime-verify-check ()
+  "Only status lines count; the signer's DN must not change the result."
+  (cl-flet ((check (out)
+	      (with-temp-buffer
+		(insert out)
+		(mew-smime-verify-check))))
+    ;; the message was changed after it was signed
+    (should (equal (check "\
+[GNUPG:] NEWSIG
+gpgsm: Signature made 2026-11-01 21:56:18 UTC
+gpgsm: invalid signature: message digest attribute does not match computed one
+[GNUPG:] BADSIG 51643A25B9281020EB27675C062A72D3F906AEA4 /CN=Mallory GOODSIG TRUST_FULLY/EMail=ceo@bank.example
+[GNUPG:] FAILURE gpgsm-exit 50331649
+")
+		   "BAD S/MIME sign \"/CN=Mallory GOODSIG TRUST_FULLY/EMail=ceo@bank.example\""))
+    ;; a good signature from a certificate nobody vouches for
+    (should (equal (check "\
+[GNUPG:] NEWSIG
+[GNUPG:] GOODSIG 51643A25B9281020EB27675C062A72D3F906AEA4 /CN=Mallory GOODSIG TRUST_FULLY/EMail=ceo@bank.example
+[GNUPG:] VALIDSIG 51643A25B9281020EB27675C062A72D3F906AEA4 2026-11-01 20261101T215618 20261201T215618 0 0 1 8 00
+gpgsm: invalid certification chain: No agent running
+[GNUPG:] TRUST_UNDEFINED 77
+")
+		   "Good S/MIME sign \"/CN=Mallory GOODSIG TRUST_FULLY/EMail=ceo@bank.example\" UNDEFINED"))
+    ;; no status at all
+    (should (equal (check "gpgsm: GOODSIG TRUST_FULLY EMail=x@example.org\n")
+		   "BAD S/MIME sign"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-syntax.el: the part of a security result painted as bad
 ;;;
 
