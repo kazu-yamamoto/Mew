@@ -185,6 +185,7 @@ private char *unhex(const char *);
 private void set_fld_rng(struct fld_rng *, char *, char *);
 private void dbuf_reserve(struct dbuf *, size_t);
 private void dbuf_append(struct dbuf *, const char *, size_t);
+private void append_unfolded(struct dbuf *, const char *, const char *);
 private char *decode_field(const char *);
 private int  decode_word(const char *, size_t, struct dbuf *);
 #ifdef HAVE_ICONV
@@ -826,38 +827,73 @@ dbuf_append(struct dbuf *d, const char *s, size_t n) {
 
 #define IS_LWSP(c)	((c) == SP || (c) == TAB || (c) == CR || (c) == LF)
 
-/* Decode RFC 2047 encoded-words delimited by white space in a field body. */
+/* Append the white space from "start" up to "end", unfolding it. */
+private void
+append_unfolded(struct dbuf *d, const char *start, const char *end) {
+	const char *p;
+
+	for (p = start; p < end; p++) {
+		if (*p != CR && *p != LF)
+			dbuf_append(d, p, 1);
+	}
+}
+
+/*
+ * Decode RFC 2047 encoded-words delimited by white space in a field body.
+ * In a comment, an encoded-word may also be delimited by "(" and ")"
+ * (RFC 2047 5(3)), so these are kept around the decoded text.
+ */
 private char *
 decode_field(const char *str) {
 	struct dbuf ret;
-	const char *p = str, *q, *e;
-	int prev = NO;
+	const char *space = str;	/* the white space before a word */
+	const char *word, *word_end;	/* the word */
+	const char *inner, *inner_end;	/* the word without the "(" at
+					   its start and the ")" at its end */
+	const char *p;
+	int joinable = NO;	/* the previous word was decoded and has
+				   no ")" after it */
+	int adjacent;		/* the word is right after such a word and
+				   has no "(" at its start */
 
 	ret.len = 0;
 	ret.siz = strlen(str) + 1;
 	MALLOC(ret.buf, ret.siz);
 	ret.buf[0] = NUL;
-	while (*p != NUL) {
-		for (q = p; IS_LWSP(*q); q++)	/* white space */
+	while (*space != NUL) {
+		for (p = space; IS_LWSP(*p); p++)
 			;
-		for (e = q; *e != NUL && !IS_LWSP(*e); e++)	/* a word */
+		word = p;
+		for (; *p != NUL && !IS_LWSP(*p); p++)
 			;
-		/* white space between encoded-words is removed */
-		if (prev == YES && q < e && decode_word(q, e - q, &ret) == 0) {
-			p = e;
-			continue;
+		word_end = p;
+		for (p = word; p < word_end && *p == '('; p++)
+			;
+		inner = p;
+		for (p = word_end; p > inner && *(p - 1) == ')'; p--)
+			;
+		inner_end = p;
+		/*
+		 * The white space between encoded-words is removed, so it
+		 * is appended only after the word turns out not to be one.
+		 * decode_word() appends nothing when it fails.
+		 */
+		adjacent = (joinable == YES && inner == word) ? YES : NO;
+		if (adjacent == NO) {
+			append_unfolded(&ret, space, word);
+			dbuf_append(&ret, word, inner - word);	/* "(" */
 		}
-		for (; p < q; p++) {
-			if (*p != CR && *p != LF)	/* unfolding */
-				dbuf_append(&ret, p, 1);
+		if (inner < inner_end &&
+		    decode_word(inner, inner_end - inner, &ret) == 0) {
+			dbuf_append(&ret, inner_end, word_end - inner_end);
+			joinable = (inner_end == word_end) ? YES : NO;
+		} else {
+			if (adjacent == YES)	/* there is no "(" */
+				append_unfolded(&ret, space, word);
+			dbuf_append(&ret, inner, word_end - inner);
+			joinable = NO;
 		}
-		if (prev == NO && q < e && decode_word(q, e - q, &ret) == 0)
-			prev = YES;
-		else {
-			dbuf_append(&ret, q, e - q);
-			prev = NO;
-		}
-		p = e;
+		space = word_end;
 	}
 
 	return ret.buf;
