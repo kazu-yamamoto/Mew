@@ -769,8 +769,9 @@ process_mbox(int seq)
 			break;
 		case ST_BODY_AFTER_EMPTY_LINE:
 			if (bytes < 0 && strncmp(ln, "From ", 5) == 0) {
-				if (fclose(dstfp))
-					goto rerr;
+				if (fclose(dstfp)) {
+					dstfp = NULL;  goto cerr;
+				}
 				printf("%d\n", seq);
 
 				dstfp = open_new_inbox_file(&seq, inboxfile);
@@ -801,8 +802,9 @@ process_mbox(int seq)
 			if (bytes >= 0) {
 				bytes -= len;
 				if (bytes <= 0) {
-					if (fclose(dstfp))
-						goto rerr;
+					if (fclose(dstfp)) {
+						dstfp = NULL;  goto cerr;
+					}
 					dstfp = NULL;
 					printf("%d\n", seq);
 					state = ST_UNKNOWN;
@@ -814,9 +816,13 @@ process_mbox(int seq)
 		}
 		free(ln);
 	}
+	if (ferror(srcfp)) {
+		warning("read(%s)", Mbox);  goto werr;
+	}
 	if (dstfp) {
-		if (fclose(dstfp))
-			goto rerr;
+		if (fclose(dstfp)) {
+			dstfp = NULL;  goto cerr;
+		}
 		printf("%d\n", seq);
 	}
 	if (!Backup && ftruncate(srcfd, 0)) {
@@ -828,8 +834,15 @@ process_mbox(int seq)
 	return seq;
 
  werr:
-	if (dstfp)
+	/* Only a message being written is removed; inboxfile may be
+	   unset or name a finished message when dstfp is NULL. */
+	if (dstfp) {
 		fclose(dstfp);
+		unlink(inboxfile);
+	}
+	goto rerr;
+ cerr:
+	warning("fclose(%s)", inboxfile);
 	unlink(inboxfile);
  rerr:
 	if (srcfp)
