@@ -825,9 +825,23 @@ process_mbox(int seq)
 		}
 		printf("%d\n", seq);
 	}
-	if (!Backup && ftruncate(srcfd, 0)) {
-		unlock_mbox(MboxLock);
-		error("ftruncate");
+	if (!Backup) {
+		/* An MDA that does not honor our locks may have appended
+		   mail after we hit EOF; truncating would lose it.  Keep
+		   the mbox then; the next run takes the mail in again. */
+		struct stat sb;
+		off_t end = ftello(srcfp);
+
+		if (end < 0 || fstat(srcfd, &sb)) {
+			unlock_mbox(MboxLock);
+			error("fstat(%s)", Mbox);
+		}
+		if (sb.st_size != end)
+			warning("%s changed while reading; not truncated", Mbox);
+		else if (ftruncate(srcfd, 0)) {
+			unlock_mbox(MboxLock);
+			error("ftruncate");
+		}
 	}
 	fclose(srcfp);
 	unlock_mbox(MboxLock);
