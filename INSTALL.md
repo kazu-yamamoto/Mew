@@ -90,8 +90,8 @@ automatically added to the "dir" file.  Otherwise, add it by yourself.
 
 Build `mewl.exe` and `mewencode.exe` with Visual C++ by typing
 `nmake -f Makefile.w32` in `bin`, and put them on `exec-path`.  The
-notes at the top of `bin/Makefile.w32` say how to get zlib and iconv
-with vcpkg.
+notes at the top of `bin/Makefile.w32` say how to get zlib, iconv
+and utf8proc with vcpkg.
 
 ## If you installed Mew from MELPA
 
