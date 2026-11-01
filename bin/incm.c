@@ -399,6 +399,8 @@ compare_string(char **i, char **j)
 	return strcmp(*i, *j);
 }
 
+/* Copy src to dst, which must not exist.  On failure, a warning is
+   printed, dst is removed and -1 is returned. */
 private int
 copyfile(char *src, char *dst)
 {
@@ -407,28 +409,31 @@ copyfile(char *src, char *dst)
 	int srcfd, dstfd;
 	ssize_t rlen, wlen;
 
-	if ((srcfd = open(src, O_RDONLY, 0)) < 0)
-		error("open(%s) for read", src);
-	if (fstat(srcfd, &sb))
-		error("fstat(%s)", src);
-	if ((dstfd = open(dst, O_EXCL | O_CREAT | O_WRONLY | O_TRUNC, 0)) < 0)
-		error("open(%s) for write", dst);
+	if ((srcfd = open(src, O_RDONLY, 0)) < 0) {
+		warning("open(%s) for read", src);
+		return -1;
+	}
+	if (fstat(srcfd, &sb)) {
+		warning("fstat(%s)", src);
+		close(srcfd);
+		return -1;
+	}
+	if ((dstfd = open(dst, O_EXCL | O_CREAT | O_WRONLY | O_TRUNC, 0)) < 0) {
+		warning("open(%s) for write", dst);
+		close(srcfd);
+		return -1;
+	}
 	while ((rlen = read(srcfd, FileBuf, FBUFSIZ)) > 0) {
 		if ((wlen = write(dstfd, FileBuf, rlen)) != rlen) {
-			if (close(dstfd))
-				goto werr;
-			unlink(dst);
-			error("write(%s) (read %d bytes/write %d bytes)",
-			      dst, rlen, wlen);
+			warning("write(%s) (read %ld bytes/write %ld bytes)",
+				dst, (long)rlen, (long)wlen);
+			goto err;
 		}
 	}
 	if (rlen < 0) {
-		if (close(dstfd))
-			goto werr;
-		unlink(dst);
-		error("read(%s)", src);
+		warning("read(%s)", src);
+		goto err;
 	}
-	close(srcfd);
 
 	tv[0].tv_sec = sb.st_atime;
 	tv[0].tv_usec = 0;
@@ -442,7 +447,17 @@ copyfile(char *src, char *dst)
 	if (fchmod(dstfd, sb.st_mode))
 		warning("fchmod(%s) failed", dst);
 #endif
-	close(dstfd);
+	/* The caller may remove src next, so the copy must be on disk. */
+	if (fsync(dstfd)) {
+		warning("fsync(%s)", dst);
+		goto err;
+	}
+	if (close(dstfd)) {
+		dstfd = -1;
+		warning("close(%s)", dst);
+		goto err;
+	}
+	close(srcfd);
 #if !HAVE_FUTIMES && HAVE_UTIMES
 	if (utimes(dst, tv))
 		warning("utimes(%s) failed", dst);
@@ -453,8 +468,11 @@ copyfile(char *src, char *dst)
 #endif
 	return 0;
 
- werr:
+ err:
+	if (dstfd >= 0)
+		close(dstfd);
 	close(srcfd);
+	unlink(dst);
 	return -1;
 }
 
