@@ -6,7 +6,8 @@
 
 # Note:
 # 1. With Cygwin, use configure and make as on Unix; see ../INSTALL.md.
-# 2. zlib, iconv and utf8proc come from vcpkg (https://github.com/microsoft/vcpkg).
+# 2. zlib, iconv and utf8proc come from vcpkg
+#    (https://github.com/microsoft/vcpkg).
 #    Clone and bootstrap vcpkg, set the environment variable VCPKG_ROOT
 #    to its directory, and type
 #      vcpkg install zlib:x86-windows-static libiconv:x86-windows-static utf8proc:x86-windows-static
@@ -15,14 +16,14 @@
 #    command line.
 # 3. With iconv, mewl.exe decodes encoded-words when picking; to build
 #    without it, empty the two ICONV lines below.
-# 4. With utf8proc, mewl.exe compares the pick patterns as Unicode; to
-#    build without it, empty two UTF8PROC lines below.
-#    `==` and `!==` then compare after NFC, and `=` and `!=` apply Unicode
+# 4. With utf8proc, mewl.exe compares the pick patterns as Unicode:
+#    `==` and `!==` compare after NFC, and `=` and `!=` apply Unicode
 #    full case folding and NFC.  To make `=` and `!=` also ignore
 #    compatibility differences such as width and default ignorable
-#    characters such as variation selectors (NFKC_Casefold), change
-#    a UTF8PROCFLAGS line `UTF8PROC_CHAR_FOLD` is enabled; this is what
-#    `configure --enable-utf8proc-char-fold` does on Unix.
+#    characters such as variation selectors (NFKC_Casefold), use the
+#    UTF8PROCFLAGS line with -DUTF8PROC_CHAR_FOLD instead; this is what
+#    `configure --enable-utf8proc-char-fold` does on Unix.  To build
+#    without utf8proc, empty the two UTF8PROC lines below.
 
 # **** Please modify ****
 !IFNDEF VCPKGDIR
