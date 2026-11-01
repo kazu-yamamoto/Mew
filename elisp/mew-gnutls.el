@@ -6,6 +6,12 @@
 
 ;;; Code:
 
+;; Bound in mew-open-gnutls-stream.  nsm.el may not be loaded when
+;; this file is compiled alone, as native compilation does; without
+;; these, the bindings would be lexical and NSM would not see them.
+(defvar nsm-noninteractive)
+(defvar network-security-level)
+
 (defvar mew-gnutls-min-prime-bits 2048
   "Default prime bits for GnuTLS connection.")
 
