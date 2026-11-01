@@ -16,6 +16,7 @@ private char version_message[] = "version 6.11 20260414 Mew developing team";
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -540,7 +541,7 @@ read_base64(byte *p, unsigned int max)
 		lf = cr = 0;
 		*p++ = d;
 		out++;
-		cnt++;
+		cnt = 1; /* only tested against 0; ++ could overflow */
 	}
 	return out;
  skiptail:
@@ -1049,7 +1050,8 @@ main(int argc, char **argv)
 	char encode = BASE64;	/* -b -q -g */
 	int  length = LINELEN;	/* -l num */
 	int  text   = NO;	/* -t */
-	char *progname = getprognm(argv[0]);
+	static char default_name[] = ENCODE_NAME;
+	char *progname = getprognm(argc > 0 ? argv[0] : default_name);
 
 	warn_prog = progname;
 
@@ -1078,8 +1080,18 @@ main(int argc, char **argv)
 			action = CHECK8;
 			break;
 		case 'l':
-			length = atoi(Optarg);
-			if (length == 0) length = LINELEN;
+			{
+				/* atoi() accepted negative numbers and
+				   overflowed; 0 or a bad number means
+				   the default as before. */
+				char *end;
+				long l = strtol(Optarg, &end, 10);
+				if (end == Optarg || *end != NUL ||
+				    l <= 0 || l > INT_MAX)
+					length = LINELEN;
+				else
+					length = (int)l;
+			}
 			break;
 		case 't':
 			text = YES;
