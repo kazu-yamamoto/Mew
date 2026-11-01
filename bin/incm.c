@@ -859,11 +859,15 @@ process_stdin(int seq)
 		}
 		free(ln);
 	}
-
-	if (dstfp) {
-		fclose(dstfp);
-		printf("%d\n", seq);
+	if (ferror(srcfp)) {
+		warning("read(stdin)");  goto werr;
 	}
+	/* fclose() flushes the data; a failure means a short message. */
+	if (fclose(dstfp)) {
+		dstfp = NULL;
+		warning("fclose(%s)", inboxfile);  goto werr;
+	}
+	printf("%d\n", seq);
 	return seq;
 
  werr:
