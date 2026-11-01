@@ -633,6 +633,9 @@ inflate_gzip(byte *p, unsigned int max)
 		size = (*D_ctx.d_func2)(d_buf2, sizeof(d_buf2));
 		q = d_buf2;
 		r = q + size;
+		/* The header must be in the first buffer; each step is
+		   checked against r not to read past the decoded data. */
+		if (r - q < 10) warn_exit("not gzip format (too short).");
 		if (*q++ != 0x1f) warn_exit("not gzip format (ID1).");
 		if (*q++ != 0x8b) warn_exit("not gzip format (ID2).");
 		if (*q++ != Z_DEFLATED) warn_exit("not gzip format (CM).");
@@ -643,19 +646,26 @@ inflate_gzip(byte *p, unsigned int max)
 		 * Optional header, probably omitted.
 		 */
 		if (flag & 0x04) { /* xlen */
+			if (r - q < 2) warn_exit("broken gzip header (XLEN).");
 			len = *q++;
 			len = len + (*q++ << 8);
+			if ((uInt)(r - q) < len)
+				warn_exit("broken gzip header (EXTRA).");
 			q += len;
 		}
-		if (flag & 0x08) /* file name */
-			while (*q++ != NUL);
-			
-		if (flag & 0x10) /* comment */
-			while (*q++ != NUL);
-
-		if (flag & 0x02) /* crc */
+		if (flag & 0x08) { /* file name */
+			while (q < r && *q != NUL) q++;
+			if (q++ == r) warn_exit("broken gzip header (FNAME).");
+		}
+		if (flag & 0x10) { /* comment */
+			while (q < r && *q != NUL) q++;
+			if (q++ == r) warn_exit("broken gzip header (FCOMMENT).");
+		}
+		if (flag & 0x02) { /* crc */
+			if (r - q < 2) warn_exit("broken gzip header (HCRC).");
 			q += 2;
-		
+		}
+
 		z.next_in  = q;
 		z.avail_in = r - q;
 	}
