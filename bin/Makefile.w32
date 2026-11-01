@@ -6,44 +6,41 @@
 
 # Note:
 # 1. With Cygwin, use configure and make as on Unix; see ../INSTALL.md.
-# 2. zlib and iconv come from vcpkg (https://github.com/microsoft/vcpkg).
+# 2. zlib, iconv and utf8proc come from vcpkg (https://github.com/microsoft/vcpkg).
 #    Clone and bootstrap vcpkg, set the environment variable VCPKG_ROOT
 #    to its directory, and type
-#      vcpkg install zlib:x86-windows-static libiconv:x86-windows-static
+#      vcpkg install zlib:x86-windows-static libiconv:x86-windows-static utf8proc:x86-windows-static
 #    The vcpkg bundled with Visual Studio cannot install packages this
 #    way.  To use another directory, set VCPKGDIR below or on the nmake
-#    command line.  With iconv, mewl.exe decodes encoded-words when
-#    picking; to build without it, empty the two ICONV lines below.
-# 3. utf8proc is optional: without it, mewl.exe compares the pick
-#    patterns byte by byte.  If you want the Unicode comparison, please
-#    download original tarball (2.2 or later) from
-#      https://github.com/JuliaStrings/utf8proc/releases,
-#    and put
-#      utf8proc.h, utf8proc.c, utf8proc_data.c
-#    to w32\vendor (see w32\vendor\README.md), and uncomment the two
-#    UTF8PROC lines below.  utf8proc is then compiled into mewl.exe
-#    with the same flags as mewl.c; -DUTF8PROC_STATIC tells utf8proc.h
-#    that the functions are not in a DLL.  Add -DUTF8PROC_CHAR_FOLD
-#    for NFKC_Casefold matching; see w32\vendor\README.md.
+#    command line.
+# 3. With iconv, mewl.exe decodes encoded-words when picking; to build
+#    without it, empty the two ICONV lines below.
+# 4. With utf8proc, mewl.exe compares the pick patterns as Unicode; to
+#    build without it, empty two UTF8PROC lines below.
+#    `==` and `!==` then compare after NFC, and `=` and `!=` apply Unicode
+#    full case folding and NFC.  To make `=` and `!=` also ignore
+#    compatibility differences such as width and default ignorable
+#    characters such as variation selectors (NFKC_Casefold), change
+#    a UTF8PROCFLAGS line `UTF8PROC_CHAR_FOLD` is enabled; this is what
+#    `configure --enable-utf8proc-char-fold` does on Unix.
 
 # **** Please modify ****
 !IFNDEF VCPKGDIR
 !IFDEF VCPKG_ROOT
-VCPKGDIR = $(VCPKG_ROOT)/installed/x86-windows-static
+VCPKGDIR = $(VCPKG_ROOT)\installed\x86-windows-static
 !ELSE
 !ERROR Set the environment variable VCPKG_ROOT, or VCPKGDIR.
 !ENDIF
 !ENDIF
-ZLIBLIB    = $(VCPKGDIR)/lib/zs.lib
+ZLIBLIB    = $(VCPKGDIR)\lib\zs.lib
 ICONVFLAGS = -DHAVE_ICONV
-ICONVLIB   = $(VCPKGDIR)/lib/iconv.lib
-UTF8PROCFLAGS =
-UTF8PROCOBJ   =
-#UTF8PROCFLAGS = -Iw32\vendor -DUTF8PROC_STATIC -DHAVE_UTF8PROC
-#UTF8PROCOBJ   = utf8proc.obj
+ICONVLIB   = $(VCPKGDIR)\lib\iconv.lib
+UTF8PROCFLAGS = -DHAVE_UTF8PROC
+#UTF8PROCFLAGS = -DHAVE_UTF8PROC -DUTF8PROC_CHAR_FOLD
+UTF8PROCLIB   = $(VCPKGDIR)\lib\utf8proc_static.lib
 
 CC      = cl
-CFLAGS  = -nologo -O2 -W3 -MT -Iw32 -I$(VCPKGDIR)/include \
+CFLAGS  = -nologo -O2 -W3 -MT -Iw32 -I$(VCPKGDIR)\include \
 	$(ICONVFLAGS) $(UTF8PROCFLAGS) \
 	-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS
 EXEFLAG = -Fe
@@ -53,7 +50,7 @@ EXEFLAG = -Fe
 TARGET = mewencode.exe mewl.exe
 
 MEWENCODEOBJS = mewencode.obj utils.obj
-MEWLOBJS      = mewl.obj utils.obj pattern.obj dirent.obj $(UTF8PROCOBJ)
+MEWLOBJS      = mewl.obj utils.obj pattern.obj dirent.obj
 
 all : $(TARGET)
 
@@ -63,7 +60,7 @@ config.h : w32\config.h
 mewencode.exe : $(MEWENCODEOBJS)
 	$(CC) $(CFLAGS) $(EXEFLAG)mewencode.exe $(MEWENCODEOBJS) $(ZLIBLIB)
 mewl.exe : $(MEWLOBJS)
-	$(CC) $(CFLAGS) $(EXEFLAG)mewl.exe $(MEWLOBJS) $(ICONVLIB)
+	$(CC) $(CFLAGS) $(EXEFLAG)mewl.exe $(MEWLOBJS) $(ICONVLIB) $(UTF8PROCLIB)
 
 mewencode.obj : mewencode.c mew.h config.h
 	$(CC) $(CFLAGS) -c mewencode.c
@@ -75,5 +72,3 @@ pattern.obj : pattern.c mew.h config.h
 	$(CC) $(CFLAGS) -c pattern.c
 dirent.obj : w32\dirent.c w32\dirent.h w32\w32.h
 	$(CC) $(CFLAGS) -c w32\dirent.c
-utf8proc.obj : w32\vendor\utf8proc.c w32\vendor\utf8proc_data.c w32\vendor\utf8proc.h
-	$(CC) $(CFLAGS) -c w32\vendor\utf8proc.c
