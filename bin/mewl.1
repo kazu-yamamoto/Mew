@@ -146,6 +146,16 @@ compared byte by byte; = and != then ignore the case of ASCII letters
 only.
 The key "head" (the whole header) and the body are compared as they
 are, neither decoded nor normalized.
+.PP
+A
+.I val
+that contains a space or one of the pattern characters
+(=, !=, &, |, !, ( or )) must be enclosed in double quotes,
+as in subject=\(dqfoo bar\(dq.
+Single quotes are not recognized as quotes.
+A malformed pattern, such as one with an unquoted space,
+is rejected with \(lqbroken pattern.\(rq instead of being
+evaluated in part.
 
 .\"
 .SH BUGS

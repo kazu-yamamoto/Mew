@@ -213,6 +213,7 @@ help_message[] = {
 	"<pattern> = 'key=val' | 'key!=val' | '!<pattern>' | '(<pattern>)' ",
 	"          | '<pattern>&<pattern>' ",
 	"          | '<pattern>|<pattern>' ",
+	"          A value with a space must be double-quoted, e.g. key=\"a b\".",
 	"",
 	"Default is mdir = ~/Mail,",
 	"length = 5, folder = +inbox, range = 0, bodylen = 20",
