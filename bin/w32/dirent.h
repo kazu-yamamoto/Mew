@@ -8,8 +8,8 @@
  * Code:
  */
 
-#ifndef __DIRENT_H__
-#define __DIRENT_H__
+#ifndef MEW_DIRENT_H
+#define MEW_DIRENT_H
 
 
 /*
@@ -20,7 +20,7 @@
 
 struct dirent {
     DWORD         d_fileno;
-    BYTE          d_namlen;
+    WORD          d_namlen;	/* up to MAX_PATH - 1 */
     char          d_name[MAX_PATH + 1];
 };
 
@@ -40,7 +40,7 @@ struct dirent *readdir(DIR *);
 int closedir(DIR *);
 
 
-#endif /* __DIRENT_H__ */
+#endif /* MEW_DIRENT_H */
 
 /* 
  * Copyright (C) 2001-2003 Mew developing team.

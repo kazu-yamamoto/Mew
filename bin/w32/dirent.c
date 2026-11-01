@@ -9,6 +9,7 @@
  */
 
 #include <windows.h>
+#include <errno.h>
 #include <stdio.h>
 #include <mbstring.h>
 
@@ -25,7 +26,8 @@ opendir(const char *filename)
 {
     DIR *dir;
     size_t len = strlen(filename);
-    char *pt;
+    unsigned char *pt;
+    int n;
 
     dir = malloc(sizeof(DIR));
     if (dir == NULL) return NULL;
@@ -34,19 +36,27 @@ opendir(const char *filename)
     memset(dir, 0, sizeof(DIR));
     dir->hFind = INVALID_HANDLE_VALUE;
 
-    if (strlen(filename) == 0){
+    if (len == 0){
 	strcpy(dir->dd_filename, "*.*");
-    } else {
-	while ((pt=_mbschr(dir->dd_filename, '/')) != NULL )
-	    *pt = '\\';
-	if (filename[len-1] == '\\')
-	    _snprintf(dir->dd_filename, sizeof(dir->dd_filename),
-		      "%s*.*", filename);
-	else
-	    _snprintf(dir->dd_filename, sizeof(dir->dd_filename),
-		      "%s\\*.*", filename);
+	return dir;
     }
-    
+
+    /* Look at the last character, not the last byte: a trail byte
+       of CP932 can be 0x5C. */
+    pt = _mbsdec((const unsigned char *)filename,
+		 (const unsigned char *)filename + len);
+    n = _snprintf(dir->dd_filename, sizeof(dir->dd_filename),
+		  (*pt == '\\' || *pt == '/') ? "%s*.*" : "%s\\*.*",
+		  filename);
+    /* _snprintf() does not terminate a truncated string. */
+    if (n < 0 || n >= (int)sizeof(dir->dd_filename)) {
+	free(dir);
+	errno = ENAMETOOLONG;
+	return NULL;
+    }
+    while ((pt = _mbschr((unsigned char *)dir->dd_filename, '/')) != NULL)
+	*pt = '\\';
+
     return dir;
 }
 
@@ -64,7 +74,7 @@ readdir(DIR *dir)
 
     /* store file attributes */
     dir->dir.d_ino++;		/* XXX fake */
-    dir->dir.d_namlen = strlen(wfd.cFileName);
+    dir->dir.d_namlen = (WORD)strlen(wfd.cFileName);
     strcpy(dir->dir.d_name, wfd.cFileName);
     
     return &dir->dir;
