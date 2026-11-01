@@ -11,8 +11,7 @@
 ;;; Code:
 
 (eval-when-compile
-  (mew-no-warning-defvar w32-start-process-show-window)
-  (mew-no-warning-defun dos-to-unix-filename))
+  (mew-no-warning-defvar w32-start-process-show-window))
 
 ;;
 ;;  ~/.mew settings
@@ -155,28 +154,6 @@
 (setq mew-prog-grep-max-msgs 2000) ;; for external grep (pick & virtual)
 
 (defvar mew-dir-list-function 'mew-dir-list-without-link-count)
-
-(defun mew-draft-dnd-for-meadow (event)
-  (interactive "e")
-  (when (eq (posn-window (event-start event)) (selected-window))
-    (let ((files (car (cdr (cdr event))))
-	  to)
-      (if (stringp files)
-	  (setq files (list files)))
-      (dolist (from files)
-	(setq from (dos-to-unix-filename from))
-	(when (file-exists-p from)
-	  (setq to (file-name-nondirectory from))
-	  (unless (mew-attach-p)
-	    (mew-draft-prepare-attachments))
-	  (goto-char (point-max))
-	  (forward-line -2)
-	  (mew-attach-next)
-	  (cond
-	   ((file-directory-p from)
-	    (message "Directory cannot be attached"))
-	   (t
-	    (mew-attach-copy from to))))))))
 
 ;;
 
