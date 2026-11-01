@@ -1436,6 +1436,28 @@ apart by whether GnuPG says it considered a key at all."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew-ext.el: URL of message/external-body
+;;;
+
+(ert-deftest mew-test-ext-url-valid ()
+  "Only http, https and ftp URLs go to the browser."
+  (require 'mew-ext)
+  (should (equal (mew-ext-url-valid "https://www.example.org/a?b=c")
+		 "https://www.example.org/a?b=c"))
+  (should (equal (mew-ext-url-valid "ftp://ftp.example.org/pub/a.tgz")
+		 "ftp://ftp.example.org/pub/a.tgz"))
+  ;; RFC 2017: white space is ignored
+  (should (equal (mew-ext-url-valid "http://www.example.org/very/\n long")
+		 "http://www.example.org/very/long"))
+  (should-not (mew-ext-url-valid "-aCalculator"))
+  (should-not (mew-ext-url-valid "file:///Applications/Calculator.app"))
+  (should-not (mew-ext-url-valid "/Applications/Calculator.app"))
+  (should-not (mew-ext-url-valid "C:\\Windows\\System32\\calc.exe"))
+  (should-not (mew-ext-url-valid "http://x/\e[31m"))
+  (should-not (mew-ext-url-valid nil)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-smime.el: verification
 ;;;
 

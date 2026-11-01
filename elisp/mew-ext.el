@@ -473,13 +473,27 @@
       "To operate this URL, type "
       "'\\<mew-summary-mode-map>\\[mew-summary-execute-external]'.\n"))))
 
+(defun mew-ext-url-valid (url)
+  "Return URL without white space if it is an http, https or ftp URL.
+The URL comes from the message and goes to a browser or a launcher
+such as \"open\", which would take \"-...\" as an option and a file
+or file: URL as something to run."
+  (when (stringp url)
+    ;; RFC 2017: white space in the URL parameter is ignored.
+    (setq url (replace-regexp-in-string "[ \t\n\r]+" "" url))
+    (if (string-match-p "\\`\\(?:https?\\|ftp\\)://[^[:cntrl:]]+\\'" url)
+	url)))
+
 (defun mew-ext-url-ext (_cache _begin _end &optional params)
-  (let* ((url (mew-syntax-get-param params "url"))
+  (let* ((url0 (mew-syntax-get-param params "url"))
+	 (url (mew-ext-url-valid url0))
 	 (process-connection-type mew-connection-type1)
 	 (spec mew-prog-text/html-ext)
-	 (prog (mew-progspec-get-prog spec))
-	 (args (mew-progsec-args-convert (mew-progspec-get-args spec) url)))
-    (apply 'call-process prog nil nil nil args)))
+	 (prog (mew-progspec-get-prog spec)))
+    (if (null url)
+	(message "Not an http, https or ftp URL: %s" (or url0 ""))
+      (apply 'call-process prog nil nil nil
+	     (mew-progsec-args-convert (mew-progspec-get-args spec) url)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
