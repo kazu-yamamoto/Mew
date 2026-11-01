@@ -13,8 +13,8 @@
  * Typedefs, definitions and functions for Win32 environment.
  */
 
-#ifndef __W32_H__
-#define __W32_H__
+#ifndef MEW_W32_H
+#define MEW_W32_H
 
 
 /* includes */
@@ -56,7 +56,8 @@ typedef u_int32_t gid_t;	/* group ID */
 
 /* definitions */
 
-#ifndef inline
+/* Old Visual C++ has only __inline in C. */
+#if defined(_MSC_VER) && !defined(__cplusplus) && !defined(inline)
 #define inline __inline
 #endif
 
@@ -123,10 +124,10 @@ typedef u_int32_t gid_t;	/* group ID */
 #define strcasecmp     stricmp
 #define strncasecmp    strnicmp
 /* Visual C++ 2015 and later have snprintf; stdio.h rejects the macro. */
-#if _MSC_VER < 1900
+#if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf       _snprintf
 #endif
-#if _MSC_VER < 1500
+#if defined(_MSC_VER) && _MSC_VER < 1500
 #define vsnprintf      _vsnprintf
 #endif
 #define lstat          stat
@@ -155,7 +156,7 @@ void wsa_perror(char *);
 
 
 
-#endif /* __W32_H__ */
+#endif /* MEW_W32_H */
 
 /* 
  * Copyright (C) 2001-2003 Mew developing team.
