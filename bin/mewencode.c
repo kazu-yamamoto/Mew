@@ -1026,6 +1026,8 @@ check_8bit()
 			printf("8bit\n");
 			exit(EXIT_FAILURE);
 		}
+	if (ferror(stdin))
+		warn_exit("can't read input.");
 	printf("7bit\n");
 	exit(EXIT_SUCCESS);
 }
@@ -1174,8 +1176,15 @@ main(int argc, char **argv)
 		break;
 	}
 
+	/* A read or write error, such as a full disk, must not look
+	   like success to the caller. */
+	if (ferror(stdin))
+		warn_exit("can't read input.");
+	if (fflush(stdout) == EOF || ferror(stdout))
+		warn_exit("can't write output.");
 	fclose(stdin);
-	fclose(stdout);
+	if (fclose(stdout) == EOF)
+		warn_exit("can't write output.");
 	exit(EXIT_SUCCESS);
 }
 
