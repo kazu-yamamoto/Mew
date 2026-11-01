@@ -97,7 +97,7 @@ private int	get_number(char *);
 private int	get_last_seq(void);
 private int	compare_string(char **, char **);
 private int	copyfile(char *, char *);
-private void	movefile(char *, char *, char *, int);
+private int	movefile(char *, char *, char *, int);
 private int	maildir_names(const char *, char **, char **, char **);
 private int	new_inbox_file(int, char[]);
 private FILE	*open_new_inbox_file(int *, char[]);
@@ -399,8 +399,9 @@ compare_string(char **i, char **j)
 	return strcmp(*i, *j);
 }
 
-/* Copy src to dst, which must not exist.  On failure, a warning is
-   printed, dst is removed and -1 is returned. */
+/* Copy src to dst, which must not exist.  Returns 1 if dst exists.
+   On other failures, a warning is printed, dst is removed and -1 is
+   returned. */
 private int
 copyfile(char *src, char *dst)
 {
@@ -419,9 +420,11 @@ copyfile(char *src, char *dst)
 		return -1;
 	}
 	if ((dstfd = open(dst, O_EXCL | O_CREAT | O_WRONLY | O_TRUNC, 0)) < 0) {
-		warning("open(%s) for write", dst);
+		int exists = errno == EEXIST;
+		if (!exists)
+			warning("open(%s) for write", dst);
 		close(srcfd);
-		return -1;
+		return exists ? 1 : -1;
 	}
 	while ((rlen = read(srcfd, FileBuf, FBUFSIZ)) > 0) {
 		if ((wlen = write(dstfd, FileBuf, rlen)) != rlen) {
@@ -476,29 +479,41 @@ copyfile(char *src, char *dst)
 	return -1;
 }
 
-private void
+/* Never replaces tofile: returns 1 if it exists, so that the caller
+   can try the next number.  Another incm may have taken the number
+   since new_inbox_file() checked it. */
+private int
 movefile(char *fromfile, char *tofile, char *backupfile, int backup)
 {
-	if (backup && backupfile != NULL) {
-		if (copyfile(fromfile, tofile))
+	int ret;
+
+	if (backup) {
+		if ((ret = copyfile(fromfile, tofile)) != 0) {
+			if (ret > 0)
+				return 1;
 			error("copyfile(%s, %s)", fromfile, tofile);
-		if (rename(fromfile, backupfile))
-			error("rename(%s, %s)", fromfile, backupfile);
-	}
-	else if (backup) {
-		if (copyfile(fromfile, tofile))
-			error("copyfile(%s, %s)", fromfile, tofile);
-	}
-	else {
-		if (rename(fromfile, tofile)) {
-			if (errno != EXDEV)
-				error("rename(%s, %s)", fromfile, tofile);
-			if (copyfile(fromfile, tofile))
-				error("copyfile(%s, %s)", fromfile, tofile);
-			if (unlink(fromfile))
-				error("unlink(%s)", fromfile);
 		}
+		if (backupfile != NULL && rename(fromfile, backupfile))
+			error("rename(%s, %s)", fromfile, backupfile);
+		return 0;
 	}
+	/* Unlike rename(), link() fails if tofile exists. */
+	if (link(fromfile, tofile) == 0) {
+		if (unlink(fromfile))
+			error("unlink(%s)", fromfile);
+		return 0;
+	}
+	if (errno == EEXIST)
+		return 1;
+	/* EXDEV, or no hard links on this file system. */
+	if ((ret = copyfile(fromfile, tofile)) != 0) {
+		if (ret > 0)
+			return 1;
+		error("copyfile(%s, %s)", fromfile, tofile);
+	}
+	if (unlink(fromfile))
+		error("unlink(%s)", fromfile);
+	return 0;
 }
 
 /* maildir has {new,cur,tmp} subdirectory. */
@@ -609,7 +624,6 @@ get_from_dir(int seq, char *fromdir, char *backupdir, int backup)
 	      (int (*)(const void *, const void *))compare_string);
 
 	for (i = 0; i < listend; i++) {
-		seq = new_inbox_file(seq, inboxfile);
 		if (strlen(fromdir) + strlen(list[i]) + 2 > PATH_MAX)
 			error("pathname too long (%s/%s)",
 			      fromdir, list[i]);
@@ -619,10 +633,12 @@ get_from_dir(int seq, char *fromdir, char *backupdir, int backup)
 				error("pathname too long (%s/%s)",
 				      backupdir, list[i]);
 			snprintf(backupfile, sizeof(backupfile), "%s/%s:2,S", backupdir, list[i]);
-			movefile(mailfile, inboxfile, backupfile, backup);
 		}
-		else
-			movefile(mailfile, inboxfile, NULL, backup);
+		do
+			seq = new_inbox_file(seq, inboxfile);
+		while (movefile(mailfile, inboxfile,
+				backup && backupdir != NULL ? backupfile : NULL,
+				backup) > 0);
 		printf("%d\n", seq);
 	}
 	return seq;
