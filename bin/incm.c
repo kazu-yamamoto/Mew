@@ -80,7 +80,7 @@ private int	UseCL;
 private int	PreserveUnixFrom;
 private int	CreateMTime = TRUE;
 private int	FileMode = S_IRUSR | S_IWUSR;
-private int	Exit = 0;
+private volatile sig_atomic_t	Exit = 0;
 
 /****************************************************************
  *
@@ -95,9 +95,9 @@ private void	version(const char *);
 private void	init_env(int, char **);
 private int	get_number(char *);
 private int	get_last_seq(void);
-private int	compare_string(char **, char **);
+private int	compare_string(const void *, const void *);
 private int	copyfile(char *, char *);
-private void	movefile(char *, char *, char *, int);
+private int	movefile(char *, char *, char *, int);
 private int	maildir_names(const char *, char **, char **, char **);
 private int	new_inbox_file(int, char[]);
 private FILE	*open_new_inbox_file(int *, char[]);
@@ -360,6 +360,8 @@ get_number(char *s)
 	unsigned char c;
 
 	while ((c = *s) != NUL && isdigit(c)) {
+		if (num > (INT_MAX - 9) / 10)
+			return 0; /* too large to be a message number */
 		num = num * 10 + c - '0';
 		s++;
 	}
@@ -394,11 +396,14 @@ get_last_seq(void)
 }
 
 private int
-compare_string(char **i, char **j)
+compare_string(const void *i, const void *j)
 {
-	return strcmp(*i, *j);
+	return strcmp(*(char * const *)i, *(char * const *)j);
 }
 
+/* Copy src to dst, which must not exist.  Returns 1 if dst exists.
+   On other failures, a warning is printed, dst is removed and -1 is
+   returned. */
 private int
 copyfile(char *src, char *dst)
 {
@@ -407,28 +412,33 @@ copyfile(char *src, char *dst)
 	int srcfd, dstfd;
 	ssize_t rlen, wlen;
 
-	if ((srcfd = open(src, O_RDONLY, 0)) < 0)
-		error("open(%s) for read", src);
-	if (fstat(srcfd, &sb))
-		error("fstat(%s)", src);
-	if ((dstfd = open(dst, O_EXCL | O_CREAT | O_WRONLY | O_TRUNC, 0)) < 0)
-		error("open(%s) for write", dst);
+	if ((srcfd = open(src, O_RDONLY, 0)) < 0) {
+		warning("open(%s) for read", src);
+		return -1;
+	}
+	if (fstat(srcfd, &sb)) {
+		warning("fstat(%s)", src);
+		close(srcfd);
+		return -1;
+	}
+	if ((dstfd = open(dst, O_EXCL | O_CREAT | O_WRONLY | O_TRUNC, 0)) < 0) {
+		int exists = errno == EEXIST;
+		if (!exists)
+			warning("open(%s) for write", dst);
+		close(srcfd);
+		return exists ? 1 : -1;
+	}
 	while ((rlen = read(srcfd, FileBuf, FBUFSIZ)) > 0) {
 		if ((wlen = write(dstfd, FileBuf, rlen)) != rlen) {
-			if (close(dstfd))
-				goto werr;
-			unlink(dst);
-			error("write(%s) (read %d bytes/write %d bytes)",
-			      dst, rlen, wlen);
+			warning("write(%s) (read %ld bytes/write %ld bytes)",
+				dst, (long)rlen, (long)wlen);
+			goto err;
 		}
 	}
 	if (rlen < 0) {
-		if (close(dstfd))
-			goto werr;
-		unlink(dst);
-		error("read(%s)", src);
+		warning("read(%s)", src);
+		goto err;
 	}
-	close(srcfd);
 
 	tv[0].tv_sec = sb.st_atime;
 	tv[0].tv_usec = 0;
@@ -442,7 +452,17 @@ copyfile(char *src, char *dst)
 	if (fchmod(dstfd, sb.st_mode))
 		warning("fchmod(%s) failed", dst);
 #endif
-	close(dstfd);
+	/* The caller may remove src next, so the copy must be on disk. */
+	if (fsync(dstfd)) {
+		warning("fsync(%s)", dst);
+		goto err;
+	}
+	if (close(dstfd)) {
+		dstfd = -1;
+		warning("close(%s)", dst);
+		goto err;
+	}
+	close(srcfd);
 #if !HAVE_FUTIMES && HAVE_UTIMES
 	if (utimes(dst, tv))
 		warning("utimes(%s) failed", dst);
@@ -453,34 +473,49 @@ copyfile(char *src, char *dst)
 #endif
 	return 0;
 
- werr:
+ err:
+	if (dstfd >= 0)
+		close(dstfd);
 	close(srcfd);
+	unlink(dst);
 	return -1;
 }
 
-private void
+/* Never replaces tofile: returns 1 if it exists, so that the caller
+   can try the next number.  Another incm may have taken the number
+   since new_inbox_file() checked it. */
+private int
 movefile(char *fromfile, char *tofile, char *backupfile, int backup)
 {
-	if (backup && backupfile != NULL) {
-		if (copyfile(fromfile, tofile))
+	int ret;
+
+	if (backup) {
+		if ((ret = copyfile(fromfile, tofile)) != 0) {
+			if (ret > 0)
+				return 1;
 			error("copyfile(%s, %s)", fromfile, tofile);
-		if (rename(fromfile, backupfile))
-			error("rename(%s, %s)", fromfile, backupfile);
-	}
-	else if (backup) {
-		if (copyfile(fromfile, tofile))
-			error("copyfile(%s, %s)", fromfile, tofile);
-	}
-	else {
-		if (rename(fromfile, tofile)) {
-			if (errno != EXDEV)
-				error("rename(%s, %s)", fromfile, tofile);
-			if (copyfile(fromfile, tofile))
-				error("copyfile(%s, %s)", fromfile, tofile);
-			if (unlink(fromfile))
-				error("unlink(%s)", fromfile);
 		}
+		if (backupfile != NULL && rename(fromfile, backupfile))
+			error("rename(%s, %s)", fromfile, backupfile);
+		return 0;
 	}
+	/* Unlike rename(), link() fails if tofile exists. */
+	if (link(fromfile, tofile) == 0) {
+		if (unlink(fromfile))
+			error("unlink(%s)", fromfile);
+		return 0;
+	}
+	if (errno == EEXIST)
+		return 1;
+	/* EXDEV, or no hard links on this file system. */
+	if ((ret = copyfile(fromfile, tofile)) != 0) {
+		if (ret > 0)
+			return 1;
+		error("copyfile(%s, %s)", fromfile, tofile);
+	}
+	if (unlink(fromfile))
+		error("unlink(%s)", fromfile);
+	return 0;
 }
 
 /* maildir has {new,cur,tmp} subdirectory. */
@@ -587,11 +622,9 @@ get_from_dir(int seq, char *fromdir, char *backupdir, int backup)
 	}
 	closedir(dirp);
 
-	qsort(list, listend, sizeof(char *),
-	      (int (*)(const void *, const void *))compare_string);
+	qsort(list, listend, sizeof(char *), compare_string);
 
 	for (i = 0; i < listend; i++) {
-		seq = new_inbox_file(seq, inboxfile);
 		if (strlen(fromdir) + strlen(list[i]) + 2 > PATH_MAX)
 			error("pathname too long (%s/%s)",
 			      fromdir, list[i]);
@@ -601,10 +634,12 @@ get_from_dir(int seq, char *fromdir, char *backupdir, int backup)
 				error("pathname too long (%s/%s)",
 				      backupdir, list[i]);
 			snprintf(backupfile, sizeof(backupfile), "%s/%s:2,S", backupdir, list[i]);
-			movefile(mailfile, inboxfile, backupfile, backup);
 		}
-		else
-			movefile(mailfile, inboxfile, NULL, backup);
+		do
+			seq = new_inbox_file(seq, inboxfile);
+		while (movefile(mailfile, inboxfile,
+				backup && backupdir != NULL ? backupfile : NULL,
+				backup) > 0);
 		printf("%d\n", seq);
 	}
 	return seq;
@@ -660,8 +695,12 @@ lock_mbox(char *lockfile)
 private void
 unlock_mbox(char *lockfile)
 {
-	if (strlen(lockfile) > 0)
+	/* Forget the name so that error() does not remove a lock file
+	   that another process has created since. */
+	if (strlen(lockfile) > 0) {
 		unlink(lockfile);
+		lockfile[0] = NUL;
+	}
 }
 
 /*
@@ -769,8 +808,9 @@ process_mbox(int seq)
 			break;
 		case ST_BODY_AFTER_EMPTY_LINE:
 			if (bytes < 0 && strncmp(ln, "From ", 5) == 0) {
-				if (fclose(dstfp))
-					goto rerr;
+				if (fclose(dstfp)) {
+					dstfp = NULL;  goto cerr;
+				}
 				printf("%d\n", seq);
 
 				dstfp = open_new_inbox_file(&seq, inboxfile);
@@ -801,8 +841,9 @@ process_mbox(int seq)
 			if (bytes >= 0) {
 				bytes -= len;
 				if (bytes <= 0) {
-					if (fclose(dstfp))
-						goto rerr;
+					if (fclose(dstfp)) {
+						dstfp = NULL;  goto cerr;
+					}
 					dstfp = NULL;
 					printf("%d\n", seq);
 					state = ST_UNKNOWN;
@@ -814,22 +855,47 @@ process_mbox(int seq)
 		}
 		free(ln);
 	}
+	if (ferror(srcfp)) {
+		warning("read(%s)", Mbox);  goto werr;
+	}
 	if (dstfp) {
-		if (fclose(dstfp))
-			goto rerr;
+		if (fclose(dstfp)) {
+			dstfp = NULL;  goto cerr;
+		}
 		printf("%d\n", seq);
 	}
-	if (!Backup && ftruncate(srcfd, 0)) {
-		unlock_mbox(MboxLock);
-		error("ftruncate");
+	if (!Backup) {
+		/* An MDA that does not honor our locks may have appended
+		   mail after we hit EOF; truncating would lose it.  Keep
+		   the mbox then; the next run takes the mail in again. */
+		struct stat sb;
+		off_t end = ftello(srcfp);
+
+		if (end < 0 || fstat(srcfd, &sb)) {
+			unlock_mbox(MboxLock);
+			error("fstat(%s)", Mbox);
+		}
+		if (sb.st_size != end)
+			warning("%s changed while reading; not truncated", Mbox);
+		else if (ftruncate(srcfd, 0)) {
+			unlock_mbox(MboxLock);
+			error("ftruncate");
+		}
 	}
 	fclose(srcfp);
 	unlock_mbox(MboxLock);
 	return seq;
 
  werr:
-	if (dstfp)
+	/* Only a message being written is removed; inboxfile may be
+	   unset or name a finished message when dstfp is NULL. */
+	if (dstfp) {
 		fclose(dstfp);
+		unlink(inboxfile);
+	}
+	goto rerr;
+ cerr:
+	warning("fclose(%s)", inboxfile);
 	unlink(inboxfile);
  rerr:
 	if (srcfp)
@@ -859,11 +925,15 @@ process_stdin(int seq)
 		}
 		free(ln);
 	}
-
-	if (dstfp) {
-		fclose(dstfp);
-		printf("%d\n", seq);
+	if (ferror(srcfp)) {
+		warning("read(stdin)");  goto werr;
 	}
+	/* fclose() flushes the data; a failure means a short message. */
+	if (fclose(dstfp)) {
+		dstfp = NULL;
+		warning("fclose(%s)", inboxfile);  goto werr;
+	}
+	printf("%d\n", seq);
 	return seq;
 
  werr:
@@ -910,7 +980,7 @@ process(void)
 		error("can't create file (%s)", mtimefile);
 	if ((wb = fwrite(MEW_MTIME_PHRASE, sizeof(char), len, fp)) != len) {
 		fclose(fp);
-		error("fwrite failed (%d, %s)", wb, mtimefile);
+		error("fwrite failed (%lu, %s)", (unsigned long)wb, mtimefile);
 	}
 	fclose(fp);
 }
@@ -974,7 +1044,15 @@ main(int argc, char **argv)
 			Suffix_len = strlen(Suffix);
 			break;
 		case 'p':
-			sscanf(Optarg, "%i", &FileMode);
+			{
+				/* Base 0 as "%i" of sscanf(): 0600 is octal. */
+				char *end;
+				long mode = strtol(Optarg, &end, 0);
+				if (end == Optarg || *end != NUL ||
+				    mode < 0 || mode > 07777)
+					error("invalid file mode (%s)", Optarg);
+				FileMode = (int)mode;
+			}
 			break;
 		case 's':
 			MboxType = T_STDIN;
