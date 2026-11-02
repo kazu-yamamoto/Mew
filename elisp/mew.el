@@ -489,7 +489,8 @@ for privacy/speed reasons."
     (unless (file-directory-p parent)
       (mew-make-directory parent)))
   (setq mew-temp-dir (make-temp-file mew-temp-file-initial t))
-  (set-file-modes mew-temp-dir mew-folder-mode)
+  ;; Not mew-folder-mode: that may be opened up to share folders.
+  (set-file-modes mew-temp-dir #o700)
   (setq mew-temp-file (expand-file-name "mew" mew-temp-dir))
   (add-hook 'kill-emacs-hook 'mew-temp-dir-clean-up))
 
