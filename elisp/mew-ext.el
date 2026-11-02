@@ -44,9 +44,9 @@
 ;;;
 
 (defvar mew-ext-switch
-  '(("ftp"         mew-ext-ftp         mew-ext-ftp-ext)
+  '(("ftp"         mew-ext-ftp         nil)
     ("tftp"        mew-ext-tftp        nil)
-    ("anon-ftp"    mew-ext-anon-ftp    mew-ext-anon-ftp-ext)
+    ("anon-ftp"    mew-ext-anon-ftp    nil)
     ("mail-server" mew-ext-mail-server mew-ext-mail-server-ext)
     ("url"         mew-ext-url         mew-ext-url-ext) ;; RFC 2017
     ("local-file"  mew-ext-local-file  mew-ext-local-file-ext)))
@@ -78,13 +78,7 @@
  ;;       (setq exp (efs-expand-file-name (format "/%s@%s:%s" user host dir)))
  ;;       (if (string-match ".*:\\(.*\\)$" exp)
  ;;	 (match-string 1 exp))))
- ;;   (defun mew-ext-copy-file-internal (remote local passwd)
- ;;     (require 'efs)
- ;;     (let ((efs-tmp-name-template mew-temp-file)
- ;;	  (efs-generate-anonymous-password passwd)
- ;;	  (parsed (efs-ftp-path remote)))
- ;;       (efs-copy-file-internal remote parsed local nil
- ;;			      nil nil nil nil t 'image))))
+ ;;   )
  ((mew-which-el "ange-ftp")
   (defun mew-ext-file-name-completion (file path)
     (require 'ange-ftp)
@@ -99,12 +93,7 @@
     (let ((ange-ftp-tmp-name-template mew-temp-file) exp)
       (setq exp (ange-ftp-expand-file-name (format "/%s@%s:%s" user host dir)))
       (if (string-match ".*:\\(.*\\)$" exp)
-	  (match-string 1 exp))))
-  (defun mew-ext-copy-file-internal (remote local passwd)
-    (require 'ange-ftp)
-    (let ((ange-ftp-tmp-name-template mew-temp-file)
-	  (ange-ftp-generate-anonymous-password passwd))
-      (ange-ftp-copy-file-internal remote local t nil nil nil t)))))
+	  (match-string 1 exp))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -283,8 +272,9 @@
 (defun mew-mime-external-body-ext (cache begin end &optional params)
   (let* ((access-type (mew-syntax-get-param params "access-type"))
 	 (func (mew-ext-get-func-ext access-type)))
-    (if (and (symbolp func) (fboundp func))
-	(funcall func cache begin end params))))
+    (if (and func (symbolp func) (fboundp func))
+	(funcall func cache begin end params)
+      (message "Mew cannot get a part of access-type %s" (or access-type "")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -313,31 +303,7 @@
      (mew-insert "File:\t%s\n" filepath)
      (mew-insert "Size:\t%s bytes\n" size)
      (insert "\n")
-     (mew-insert-manual
-      "To get this file, type "
-      "'\\<mew-summary-mode-map>\\[mew-summary-execute-external]'.\n"))))
-
-(defun mew-ext-ftp-ext (_cache _begin _end &optional params)
-  (let* ((site (mew-syntax-get-param params "site"))
-	 (directory (mew-syntax-get-param params "directory"))
-	 (name (mew-syntax-get-param params "name"))
-	 (getit t) (username "")
-	 filepath localfile lfname remotefile)
-    (if directory
-	(setq filepath (mew-concat-folder directory name))
-      (setq filepath name))
-    (setq filepath (mew-remove-drive-letter filepath))
-    (setq username (read-string (format "User name at %s: " site) (mew-user)))
-    (setq remotefile (format "/%s@%s:%s" username site filepath))
-    (setq localfile (mew-summary-input-file-name
-		     "Save to: " (mew-save-file-name-default name)))
-    (setq lfname (file-name-nondirectory localfile))
-    (if (file-exists-p localfile)
-	(if (y-or-n-p (format "%s exists. Overwrite? " lfname))
-	    (mew-delete-file localfile)
-	  (setq getit nil)
-	  (message "The file was not retrieved")))
-    (if getit (mew-ext-copy-file-internal remotefile localfile nil))))
+     (insert "Get this file with an FTP client.\n"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -372,30 +338,7 @@
      (mew-insert "File:\t%s\n" filepath)
      (mew-insert "Size:\t%s bytes\n" size)
      (insert "\n")
-     (mew-insert-manual
-      "To get this file, type "
-      "'\\<mew-summary-mode-map>\\[mew-summary-execute-external]'.\n"))))
-
-(defun mew-ext-anon-ftp-ext (_cache _begin _end &optional params)
-  (let* ((site (mew-syntax-get-param params "site"))
-	 (directory (mew-syntax-get-param params "directory"))
-	 (name (mew-syntax-get-param params "name"))
-	 (getit t)
-	 filepath localfile lfname remotefile)
-    (if directory
-	(setq filepath (mew-concat-folder directory name))
-      (setq filepath name))
-    (setq filepath (mew-remove-drive-letter filepath))
-    (setq remotefile (format "/%s@%s:%s" "anonymous" site filepath))
-    (setq localfile (mew-summary-input-file-name
-		     "Save to: " (mew-save-file-name-default name)))
-    (setq lfname (file-name-nondirectory localfile))
-    (if (file-exists-p localfile)
-	(if (y-or-n-p (format "%s exists. Overwrite? " lfname))
-	    (mew-delete-file localfile)
-	  (setq getit nil)
-	  (message "The file was not retrieved")))
-    (if getit (mew-ext-copy-file-internal remotefile localfile (mew-mail-address)))))
+     (insert "Get this file with an FTP client.\n"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -473,13 +416,27 @@
       "To operate this URL, type "
       "'\\<mew-summary-mode-map>\\[mew-summary-execute-external]'.\n"))))
 
+(defun mew-ext-url-valid (url)
+  "Return URL without white space if it is an http, https or ftp URL.
+The URL comes from the message and goes to a browser or a launcher
+such as \"open\", which would take \"-...\" as an option and a file
+or file: URL as something to run."
+  (when (stringp url)
+    ;; RFC 2017: white space in the URL parameter is ignored.
+    (setq url (replace-regexp-in-string "[ \t\n\r]+" "" url))
+    (if (string-match-p "\\`\\(?:https?\\|ftp\\)://[^[:cntrl:]]+\\'" url)
+	url)))
+
 (defun mew-ext-url-ext (_cache _begin _end &optional params)
-  (let* ((url (mew-syntax-get-param params "url"))
+  (let* ((url0 (mew-syntax-get-param params "url"))
+	 (url (mew-ext-url-valid url0))
 	 (process-connection-type mew-connection-type1)
 	 (spec mew-prog-text/html-ext)
-	 (prog (mew-progspec-get-prog spec))
-	 (args (mew-progsec-args-convert (mew-progspec-get-args spec) url)))
-    (apply 'call-process prog nil nil nil args)))
+	 (prog (mew-progspec-get-prog spec)))
+    (if (null url)
+	(message "Not an http, https or ftp URL: %s" (or url0 ""))
+      (apply 'call-process prog nil nil nil
+	     (mew-progsec-args-convert (mew-progspec-get-args spec) url)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

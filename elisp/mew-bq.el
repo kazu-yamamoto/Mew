@@ -872,7 +872,9 @@ That is, each line may be more than 75."
 	  (setq num (nth 2 paramname-value))
 	  (if (> num max) (setq max num)))))
     (if (null ext)
-	(cons value (nreverse ret)) ;; fast return
+	;; A plain value may have an encoded-word decoded by
+	;; mew-param-analyze-broken, which can carry a control character.
+	(cons value (mapcar 'mew-param-sanity-check (nreverse ret)))
       (setq max (1+ max))
       (dolist (ea ext)
 	(mew-set '(paramname paramvalue num) ea)

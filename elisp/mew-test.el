@@ -1409,6 +1409,14 @@ key up, so the recipient is the part which is always there."
     (should (equal (check "[GNUPG:] INV_RECP 4 <a@example.org>\n")
 		   (concat mew-pgp-result-other ": <a@example.org>")))))
 
+(ert-deftest mew-test-pgp-verify-check-text-signer ()
+  "The signer's address is text, not a regexp, for PGP 2."
+  (let ((mew-pgp-ver mew-pgp-ver2)
+	(mew-inherit-decode-signer "a[b@example.org"))
+    (with-temp-buffer
+      (insert "\nGood signature from user \"A <a[b@example.org>\".\n")
+      (should (string-match "\\`Good PGP sign " (mew-pgp-verify-check-text))))))
+
 (ert-deftest mew-test-pgp-sign-check-status ()
   "GnuPG names the key it would not sign with.  The reason code is 9
 whether the key is missing or merely unusable, so the two are told
@@ -1433,6 +1441,77 @@ apart by whether GnuPG says it considered a key at all."
 		   (concat mew-pgp-result-seckey-nousable ": noselfsig@example.org")))
     ;; GnuPG 1 says nothing of this sort, so the old path keeps its say
     (should-not (check "gpg: skipped \"a@example.org\": secret key not available\n"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-bq.el: control characters in parameters
+;;;
+
+(ert-deftest mew-test-param-decode-ctl ()
+  "No control character survives in a parameter value."
+  (let ((mew-decode-broken t))
+    (dolist (hdr '("message/external-body; site=\"=?us-ascii?Q?x=0A!id?=\""
+		   "message/external-body; site*=us-ascii''x%0A%21id"))
+      (should (equal (mew-syntax-get-param (cdr (mew-param-decode hdr)) "site")
+		     "x!id")))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-ext.el: URL of message/external-body
+;;;
+
+(ert-deftest mew-test-ext-url-valid ()
+  "Only http, https and ftp URLs go to the browser."
+  (require 'mew-ext)
+  (should (equal (mew-ext-url-valid "https://www.example.org/a?b=c")
+		 "https://www.example.org/a?b=c"))
+  (should (equal (mew-ext-url-valid "ftp://ftp.example.org/pub/a.tgz")
+		 "ftp://ftp.example.org/pub/a.tgz"))
+  ;; RFC 2017: white space is ignored
+  (should (equal (mew-ext-url-valid "http://www.example.org/very/\n long")
+		 "http://www.example.org/very/long"))
+  (should-not (mew-ext-url-valid "-aCalculator"))
+  (should-not (mew-ext-url-valid "file:///Applications/Calculator.app"))
+  (should-not (mew-ext-url-valid "/Applications/Calculator.app"))
+  (should-not (mew-ext-url-valid "C:\\Windows\\System32\\calc.exe"))
+  (should-not (mew-ext-url-valid "http://x/\e[31m"))
+  (should-not (mew-ext-url-valid nil)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-smime.el: verification
+;;;
+
+;; The output below was taken from gpgsm 2.5.21 with a self-signed
+;; certificate whose CN was chosen by the signer.
+
+(ert-deftest mew-test-smime-verify-check ()
+  "Only status lines count; the signer's DN must not change the result."
+  (cl-flet ((check (out)
+	      (with-temp-buffer
+		(insert out)
+		(mew-smime-verify-check))))
+    ;; the message was changed after it was signed
+    (should (equal (check "\
+[GNUPG:] NEWSIG
+gpgsm: Signature made 2026-11-01 21:56:18 UTC
+gpgsm: invalid signature: message digest attribute does not match computed one
+[GNUPG:] BADSIG 51643A25B9281020EB27675C062A72D3F906AEA4 /CN=Mallory GOODSIG TRUST_FULLY/EMail=ceo@bank.example
+[GNUPG:] FAILURE gpgsm-exit 50331649
+")
+		   "BAD S/MIME sign \"/CN=Mallory GOODSIG TRUST_FULLY/EMail=ceo@bank.example\""))
+    ;; a good signature from a certificate nobody vouches for
+    (should (equal (check "\
+[GNUPG:] NEWSIG
+[GNUPG:] GOODSIG 51643A25B9281020EB27675C062A72D3F906AEA4 /CN=Mallory GOODSIG TRUST_FULLY/EMail=ceo@bank.example
+[GNUPG:] VALIDSIG 51643A25B9281020EB27675C062A72D3F906AEA4 2026-11-01 20261101T215618 20261201T215618 0 0 1 8 00
+gpgsm: invalid certification chain: No agent running
+[GNUPG:] TRUST_UNDEFINED 77
+")
+		   "Good S/MIME sign \"/CN=Mallory GOODSIG TRUST_FULLY/EMail=ceo@bank.example\" UNDEFINED"))
+    ;; no status at all
+    (should (equal (check "gpgsm: GOODSIG TRUST_FULLY EMail=x@example.org\n")
+		   "BAD S/MIME sign"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

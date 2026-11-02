@@ -7,6 +7,7 @@
 ;;; Code:
 
 (require 'mew)
+(require 'mew-pgp) ;; mew-pgp-status-get
 
 ;; for gpgsm only
 
@@ -154,38 +155,34 @@
 ;;;
 
 (defun mew-smime-verify-check ()
-  (let (addr warning result trust ret)
-    (goto-char (point-min))
-    (if (re-search-forward "EMail=\\(.*\\)" nil t)
-	(setq addr (mew-match-string 1)))
-    (goto-char (point-min))
+  "Read the result of a verification out of the status output.
+Only \"[GNUPG:]\" lines are read: the rest is for people, and both
+contain the signer's DN, which whoever made the certificate chooses."
+  (let (args result warning trust)
     (cond
-     ((search-forward "GOODSIG" nil t)
+     ((setq args (mew-pgp-status-get "GOODSIG"))
       (setq result "Good S/MIME sign"))
-     ((search-forward "EXPSIG" nil t)
+     ((setq args (mew-pgp-status-get "EXPSIG"))
       (setq result "Good S/MIME sign")
       (setq warning "signature has expired"))
-     ((search-forward "EXPKEYSIG" nil t)
+     ((setq args (mew-pgp-status-get "EXPKEYSIG"))
       (setq result "Good S/MIME sign")
       (setq warning "certificate has expired"))
-     ((search-forward "REVKEYSIG" nil t)
+     ((setq args (mew-pgp-status-get "REVKEYSIG"))
       (setq result "Good S/MIME sign")
       (setq warning "certificate has been revoked"))
-     ((search-forward "BADSIG" nil t)
+     ((setq args (mew-pgp-status-get "BADSIG"))
       (setq result "BAD S/MIME sign"))
-     ((search-forward "ERRORSIG" nil t)
-      (setq result "BAD S/MIME sign")) ;; xxx
      (t
       (setq result "BAD S/MIME sign")))
-    (goto-char (point-min))
-    ;; xxx error code check for TRUST_UNDEFINED/NEVER?
-    (if (re-search-forward "TRUST_\\([A-Z]*\\)" nil t)
-	(setq trust (mew-match-string 1)))
-    (setq ret result)
-    (if addr (setq ret (concat ret " <" addr ">")))
-    (if trust (setq ret (concat ret " " trust)))
-    (if warning (setq ret (concat ret " -" warning)))
-    ret))
+    (dolist (level '("ULTIMATE" "FULLY" "MARGINAL" "NEVER" "UNDEFINED"))
+      (if (and (null trust) (mew-pgp-status-get (concat "TRUST_" level)))
+	  (setq trust level)))
+    ;; The DN, quoted as a whole as the PGP user id is.
+    (if args (setq result (concat result " " (mew-pgp-status-uid args))))
+    (if trust (setq result (concat result " " trust)))
+    (if warning (setq result (concat result " -" warning)))
+    result))
 
 (defvar mew-smime-inv-recp-alist
   '(( "0" . "No specific reason given")
