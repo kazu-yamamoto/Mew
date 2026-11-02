@@ -77,11 +77,17 @@
   (mew-nntp-process-send-string pro "MODE READER"))
 
 (defun mew-nntp-command-authinfo (pro pnm)
-  (let ((user (mew-nntp-get-user pnm)))
-    (if user
-	(mew-nntp-process-send-string pro "AUTHINFO USER %s" user)
+  (let ((user (mew-nntp-get-user pnm))
+	(case (mew-nntp-get-case pnm)))
+    (cond
+     ((null user)
       (mew-nntp-set-status pnm "group")
-      (mew-nntp-command-group pro pnm))))
+      (mew-nntp-command-group pro pnm))
+     ((mew-auth-cleartext-refused-p "AUTHINFO" (mew-nntp-get-secure pnm) case)
+      (mew-nntp-message pnm (mew-auth-cleartext-refuse "NNTP" "AUTHINFO" case))
+      (mew-nntp-command-quit2 pro pnm))
+     (t
+      (mew-nntp-process-send-string pro "AUTHINFO USER %s" user)))))
 
 (defun mew-nntp-command-authpass (pro pnm)
   (let* ((prompt (format "NNTP password (%s): " (mew-nntp-get-account pnm)))

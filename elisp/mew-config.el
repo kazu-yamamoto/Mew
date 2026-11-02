@@ -232,6 +232,9 @@
 (defun mew-use-smtp-auth (&optional case)
   (mew-cfent-value case "use-smtp-auth" mew-use-smtp-auth))
 
+(defun mew-auth-cleartext-allowed (&optional case)
+  (mew-cfent-value case "auth-cleartext-allowed" mew-auth-cleartext-allowed))
+
 (defun mew-smtp-auth-plain-authorize-id (&optional case)
   (mew-cfent-value case "smtp-auth-plain-authorize-id" mew-smtp-auth-plain-authorize-id))
 

@@ -57,12 +57,24 @@
 (defun mew-nntp2-command-mode-reader (pro _pnm)
   (mew-nntp2-process-send-string pro "MODE READER"))
 
+(defun mew-nntp2-secure-p (pro pnm)
+  ;; Unlike mew-nntp, the session does not keep whether it is secure.
+  (or (mew-nntp2-get-ssh-process pnm)
+      (mew-nntp2-get-ssl-process pnm)
+      (and (fboundp 'gnutls-peer-status) (gnutls-peer-status pro) t)))
+
 (defun mew-nntp2-command-authinfo (pro pnm)
-  (let ((user (mew-nntp2-get-user pnm)))
-    (if user
-	(mew-nntp2-process-send-string pro "AUTHINFO USER %s" user)
+  (let ((user (mew-nntp2-get-user pnm))
+	(case (mew-nntp2-get-case pnm)))
+    (cond
+     ((null user)
       (mew-nntp2-set-status pnm "next")
-      (mew-nntp2-command-next pro pnm))))
+      (mew-nntp2-command-next pro pnm))
+     ((mew-auth-cleartext-refused-p "AUTHINFO" (mew-nntp2-secure-p pro pnm) case)
+      (mew-nntp2-set-error pnm (mew-auth-cleartext-refuse "NNTP" "AUTHINFO" case))
+      (mew-nntp2-command-quit2 pro pnm))
+     (t
+      (mew-nntp2-process-send-string pro "AUTHINFO USER %s" user)))))
 
 (defun mew-nntp2-command-authpass (pro pnm)
   (let* ((prompt (format "NNTP password (%s): " (mew-nntp2-get-account pnm)))

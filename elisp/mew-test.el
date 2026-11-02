@@ -1586,6 +1586,101 @@ apart by whether GnuPG says it considered a key at all."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew-auth.el: passwords over an unencrypted connection
+;;;
+
+(ert-deftest mew-test-auth-cleartext-refused-p ()
+  (let ((mew-auth-cleartext-allowed nil)
+	(mew-config-alist nil))
+    (should (mew-auth-cleartext-refused-p "PLAIN" nil nil))
+    (should (mew-auth-cleartext-refused-p "login" nil nil))
+    (should (mew-auth-cleartext-refused-p "XOAUTH2" nil nil))
+    (should (mew-auth-cleartext-refused-p "AUTHINFO" nil nil))
+    (should-not (mew-auth-cleartext-refused-p "CRAM-MD5" nil nil))
+    (should-not (mew-auth-cleartext-refused-p "PLAIN" t nil))
+    ;; allowed for one case only
+    (let ((mew-config-alist '(("lan" (auth-cleartext-allowed t)))))
+      (should-not (mew-auth-cleartext-refused-p "PLAIN" nil "lan"))
+      (should (mew-auth-cleartext-refused-p "PLAIN" nil "other")))
+    (let ((mew-auth-cleartext-allowed t))
+      (should-not (mew-auth-cleartext-refused-p "PLAIN" nil nil)))))
+
+(defmacro mew-test-with-auth-stubs (&rest body)
+  "Run BODY with the sending side stubbed; `sent' records what happens."
+  `(let ((sent nil)
+	 (mew-auth-cleartext-allowed nil)
+	 (mew-config-alist nil))
+     (cl-letf (((symbol-function 'display-warning) #'ignore)
+	       ((symbol-function 'mew-smtp-command-quit2)
+		(lambda (&rest _) (push 'quit sent)))
+	       ((symbol-function 'mew-smtp-command-auth-plain)
+		(lambda (&rest _) (push 'plain sent)))
+	       ((symbol-function 'mew-smtp-command-auth-cram-md5)
+		(lambda (&rest _) (push 'cram-md5 sent)))
+	       ((symbol-function 'mew-imap-command-logout2)
+		(lambda (&rest _) (push 'logout sent)))
+	       ((symbol-function 'mew-imap-command-login)
+		(lambda (&rest _) (push 'login sent)))
+	       ((symbol-function 'mew-nntp-command-quit2)
+		(lambda (&rest _) (push 'quit sent)))
+	       ((symbol-function 'mew-nntp-message) #'ignore)
+	       ((symbol-function 'mew-nntp-process-send-string)
+		(lambda (&rest _) (push 'authinfo sent))))
+       ,@body)))
+
+(ert-deftest mew-test-auth-cleartext-smtp ()
+  "SMTP stops when only PLAIN is offered without TLS."
+  (let ((pnm "mew-smtp-info-test"))
+    (mew-test-with-auth-stubs
+     (mew-smtp-set-auth-list pnm '("CRAM-MD5" "PLAIN"))
+     (mew-smtp-set-capa pnm '(("AUTH" "PLAIN")))
+     (mew-smtp-set-secure pnm nil)
+     (mew-smtp-command-auth nil pnm)
+     (should (equal sent '(quit)))
+     (should (string-match "needs TLS" (mew-smtp-get-error pnm)))
+     ;; CRAM-MD5 does not send the password
+     (setq sent nil)
+     (mew-smtp-set-capa pnm '(("AUTH" "PLAIN" "CRAM-MD5")))
+     (mew-smtp-command-auth nil pnm)
+     (should (equal sent '(cram-md5)))
+     ;; over TLS
+     (setq sent nil)
+     (mew-smtp-set-capa pnm '(("AUTH" "PLAIN")))
+     (mew-smtp-set-secure pnm t)
+     (mew-smtp-command-auth nil pnm)
+     (should (equal sent '(plain))))))
+
+(ert-deftest mew-test-auth-cleartext-imap-fallback ()
+  "IMAP does not fall back to LOGIN without TLS when AUTH= is gone."
+  (let ((pnm "mew-imap-info-test"))
+    (mew-test-with-auth-stubs
+     (mew-imap-set-auth pnm t)
+     (mew-imap-set-auth-list pnm '("CRAM-MD5"))
+     (mew-imap-set-authl pnm nil)
+     (mew-imap-set-secure pnm nil)
+     (mew-imap-command-authentication nil pnm)
+     (should (equal sent '(logout)))
+     ;; LOGIN chosen by the user is left alone
+     (setq sent nil)
+     (mew-imap-set-auth pnm nil)
+     (mew-imap-command-authentication nil pnm)
+     (should (equal sent '(login))))))
+
+(ert-deftest mew-test-auth-cleartext-nntp ()
+  "NNTP AUTHINFO is not sent without TLS."
+  (let ((pnm "mew-nntp-info-test"))
+    (mew-test-with-auth-stubs
+     (mew-nntp-set-user pnm "user")
+     (mew-nntp-set-secure pnm nil)
+     (mew-nntp-command-authinfo nil pnm)
+     (should (equal sent '(quit)))
+     (setq sent nil)
+     (mew-nntp-set-secure pnm t)
+     (mew-nntp-command-authinfo nil pnm)
+     (should (equal sent '(authinfo))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-bq.el: control characters in parameters
 ;;;
 

@@ -113,7 +113,10 @@
       (if (and (setq auth (mew-auth-select2 auths auth-list))
 	       (setq func (mew-smtp-auth-get-func auth))
 	       (fboundp func))
-	  (progn
+	  (if (mew-auth-cleartext-refused-p auth (mew-smtp-get-secure pnm) case)
+	      (progn
+		(mew-smtp-set-error pnm (mew-auth-cleartext-refuse "SMTP" auth case))
+		(mew-smtp-command-quit2 pro pnm))
 	    (mew-smtp-set-auth-selected pnm auth)
 	    (funcall func pro pnm))
 	(mew-smtp-debug "<AUTH>" "No preferred SMTP AUTH.\n")

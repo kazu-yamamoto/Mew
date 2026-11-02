@@ -137,20 +137,32 @@
    ((eq (mew-imap-get-auth pnm) t) ;; t means SASL
     (let* ((auth-list (mew-imap-get-auth-list pnm))
 	   (authl (mew-imap-get-authl pnm))
+	   (secure (mew-imap-get-secure pnm))
+	   (case (mew-imap-get-case pnm))
 	   auth func)
       (if (and authl
 	       (setq auth (mew-auth-select2 authl auth-list))
 	       (setq func (mew-imap-auth-get-func auth))
 	       (fboundp func))
-	  (progn
+	  (if (mew-auth-cleartext-refused-p auth secure case)
+	      (mew-imap-command-cleartext-refused pro pnm auth)
 	    (mew-imap-set-auth pnm auth)
 	    (funcall func pro pnm))
 	(mew-imap-debug "<AUTH>" "No preferred IMAP AUTH.\n")
-	(mew-imap-set-status pnm "login")
-	(mew-imap-command-login pro pnm))))
+	;; Not chosen by the user: an attacker may have hidden AUTH=.
+	(if (mew-auth-cleartext-refused-p "LOGIN" secure case)
+	    (mew-imap-command-cleartext-refused pro pnm "LOGIN")
+	  (mew-imap-set-status pnm "login")
+	  (mew-imap-command-login pro pnm)))))
    (t
     (mew-imap-set-status pnm "login")
     (mew-imap-command-login pro pnm))))
+
+(defun mew-imap-command-cleartext-refused (pro pnm auth)
+  (mew-imap-set-error
+   pnm (mew-auth-cleartext-refuse "IMAP" auth (mew-imap-get-case pnm)))
+  (mew-imap-set-status pnm "logout2")
+  (mew-imap-command-logout2 pro pnm))
 
 (defun mew-imap-command-login (pro pnm)
   (let* ((user (mew-imap-get-user pnm))

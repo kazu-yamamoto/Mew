@@ -108,7 +108,14 @@
       (if (and auth
 	       (setq func (mew-pop-auth-get-func auth))
 	       (fboundp func))
-	  (progn
+	  (if (mew-auth-cleartext-refused-p
+	       auth (mew-pop-get-secure pnm) (mew-pop-get-case pnm))
+	      (progn
+		(mew-pop-message
+		 pnm (mew-auth-cleartext-refuse "POP" auth (mew-pop-get-case pnm)))
+		(if (eq (mew-pop-get-directive pnm) 'exec)
+		    (mew-summary-visible-buffer (mew-pop-get-bnm pnm)))
+		(mew-pop-command-quit2 pro pnm))
 	    (mew-pop-set-auth pnm auth)
 	    (funcall func pro pnm))
 	(mew-pop-debug "<AUTH>" "No preferred POP AUTH.\n")
