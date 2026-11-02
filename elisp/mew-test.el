@@ -325,13 +325,27 @@ which is then evaluated.  Only global variables are in reach."
           (mew-temp-dir-init)
           (setq first mew-temp-dir)
           (should (file-directory-p first))
-          (should (equal (file-modes first) mew-folder-mode))
+          (should (equal (file-modes first) #o700))
           (should (string-prefix-p mew-temp-file-initial first))
           (should-not (directory-files first nil "\\`[^.]"))
           (should (equal mew-temp-file (expand-file-name "mew" first)))
           ;; A second call must not land on the first one.
           (mew-temp-dir-init)
           (should-not (equal mew-temp-dir first)))
+      (remove-hook 'kill-emacs-hook 'mew-temp-dir-clean-up)
+      (delete-directory base t))))
+
+(ert-deftest mew-test-temp-dir-init-private ()
+  "The temporary directory stays private when folders are shared."
+  (let* ((base (make-temp-file "mew-test-base" t))
+         (mew-temp-file-initial (expand-file-name "mew" base))
+         (mew-folder-mode #o750)
+         (mew-temp-dir nil)
+         (mew-temp-file nil))
+    (unwind-protect
+        (progn
+          (mew-temp-dir-init)
+          (should (equal (file-modes mew-temp-dir) #o700)))
       (remove-hook 'kill-emacs-hook 'mew-temp-dir-clean-up)
       (delete-directory base t))))
 
