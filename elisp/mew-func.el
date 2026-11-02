@@ -1088,9 +1088,21 @@ dot file such as ~/.zshenv or outside the directory."
 		"\\`\\.+" "" (file-name-nondirectory file)))
     (unless (string= file "") file)))
 
+(defun mew-temp-dir-ok-p ()
+  "Return t if `mew-temp-dir' is still our private directory."
+  (and mew-temp-dir
+       (file-directory-p mew-temp-dir)
+       (or (eq system-type 'windows-nt) ;; no owner and modes to rely on
+	   (let ((attr (file-attributes mew-temp-dir 'integer)))
+	     (and (eq (file-attribute-type attr) t) ;; not a symlink
+		  (eql (file-attribute-user-id attr) (user-uid))
+		  (eql (file-modes mew-temp-dir) #o700))))))
+
 (defun mew-make-temp-name (&optional fname)
-  (unless (file-exists-p mew-temp-dir)
-    (mew-make-directory mew-temp-dir)) ;; just in case
+  ;; A cleaner of /tmp may have removed the directory, and someone
+  ;; else may have put one with the same name there since.
+  (unless (mew-temp-dir-ok-p)
+    (mew-temp-dir-init))
   (if fname
       (let ((exist (file-exists-p (expand-file-name fname mew-temp-dir))))
 	(if (and (not exist)

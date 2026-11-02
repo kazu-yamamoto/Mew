@@ -349,6 +349,30 @@ which is then evaluated.  Only global variables are in reach."
       (remove-hook 'kill-emacs-hook 'mew-temp-dir-clean-up)
       (delete-directory base t))))
 
+(ert-deftest mew-test-make-temp-name-after-removal ()
+  "A directory put where the removed one was is not taken over."
+  (skip-unless (not (eq system-type 'windows-nt)))
+  (let* ((base (make-temp-file "mew-test-base" t))
+         (other (make-temp-file "mew-test-other" t))
+         (mew-temp-file-initial (expand-file-name "mew" base))
+         (mew-temp-dir nil)
+         (mew-temp-file nil)
+         old)
+    (unwind-protect
+        (dolist (squat (list (lambda (d) (make-directory d) (set-file-modes d #o777))
+                             (lambda (d) (make-symbolic-link other d))))
+          (mew-temp-dir-init)
+          (setq old mew-temp-dir)
+          (delete-directory old)
+          (funcall squat old)
+          (should-not (string-prefix-p (file-name-as-directory old)
+                                       (mew-make-temp-name)))
+          (should (mew-temp-dir-ok-p))
+          (if (file-symlink-p old) (delete-file old) (delete-directory old)))
+      (remove-hook 'kill-emacs-hook 'mew-temp-dir-clean-up)
+      (delete-directory base t)
+      (delete-directory other t))))
+
 (ert-deftest mew-test-temp-dir-init-does-not-reuse ()
   "A directory which is already there must not be taken over.
 `make-temp-name' only makes up a name.  Between that and creating the
