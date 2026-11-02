@@ -13,12 +13,20 @@ This is stable releases of Mew 6.12.
   Mew shows their non-ASCII text garbled; rescan to rebuild
   `.mew-summary` if you go back.
   [#301](https://github.com/kazu-yamamoto/Mew/pull/301)
+  [#315](https://github.com/kazu-yamamoto/Mew/pull/315)
 * HTML messages no longer fetch remote images.  Set
   `mew-html-blocked-images` to nil to fetch them as before.
   [#305](https://github.com/kazu-yamamoto/Mew/pull/305)
 * A Message/External-Body part with access-type=local-file is no longer
   read while displaying.  Type C-c C-e to open the file.
+  access-type=ftp and anon-ftp are no longer fetched, and only http,
+  https and ftp URLs are passed to the browser.
   [#299](https://github.com/kazu-yamamoto/Mew/pull/299)
+  [#328](https://github.com/kazu-yamamoto/Mew/pull/328)
+* If encrypting or signing a draft failed, sending it again asks
+  whether to send it without protection, instead of sending it as it
+  is silently.
+  [#333](https://github.com/kazu-yamamoto/Mew/pull/333)
 * Before an external viewer opens a part whose file name suffix does
   not fit its Content-Type:, Mew asks for confirmation.  More content
   types (mp4, webp, heic, svg, json, ...) are known, also when
@@ -32,8 +40,10 @@ This is stable releases of Mew 6.12.
   Message-Id:), RFC 2047 encoded header fields are decoded, and, if
   mewl is built with utf8proc, `=` compares with Unicode case folding
   and NFC.
+  On Windows, non-ASCII patterns work.
   [#275](https://github.com/kazu-yamamoto/Mew/pull/275)
   [#279](https://github.com/kazu-yamamoto/Mew/pull/279)
+  [#313](https://github.com/kazu-yamamoto/Mew/pull/313)
 * `incm -c` trusts Content-Length: only when it ends exactly at the
   next "From " line.
   [#295](https://github.com/kazu-yamamoto/Mew/pull/295)
@@ -56,6 +66,16 @@ This is stable releases of Mew 6.12.
   [#294](https://github.com/kazu-yamamoto/Mew/pull/294)
   [#295](https://github.com/kazu-yamamoto/Mew/pull/295)
   [#296](https://github.com/kazu-yamamoto/Mew/pull/296)
+* The C helpers were reviewed again: mewl rejects malformed patterns
+  and keeps descriptors from leaking to the -e child, mewencode
+  bounds-checks the gzip header, and incm no longer loses or
+  truncates mail when a write fails or a mailbox grows while read.
+  [#318](https://github.com/kazu-yamamoto/Mew/pull/318)
+  [#319](https://github.com/kazu-yamamoto/Mew/pull/319)
+  [#320](https://github.com/kazu-yamamoto/Mew/pull/320)
+  [#321](https://github.com/kazu-yamamoto/Mew/pull/321)
+  [#324](https://github.com/kazu-yamamoto/Mew/pull/324)
+  [#325](https://github.com/kazu-yamamoto/Mew/pull/325)
 * A posted news article no longer carries Bcc: or Dcc:.
   [#300](https://github.com/kazu-yamamoto/Mew/pull/300)
 * A forged "bimi=pass" below your server's Authentication-Results: is
@@ -63,27 +83,41 @@ This is stable releases of Mew 6.12.
   in the debug output.  The SSH password is sent only until the
   tunnel is up.
   [#309](https://github.com/kazu-yamamoto/Mew/pull/309)
+  [#316](https://github.com/kazu-yamamoto/Mew/pull/316)
 * Secrets are kept off command lines, taken from the random device,
-  and the temporary directory is created atomically.
+  and the temporary directory is created atomically with mode 700
+  and is not taken over from someone else.  The password list is
+  written with mode 600 while gpg encrypts it.
   [#235](https://github.com/kazu-yamamoto/Mew/pull/235)
   [#239](https://github.com/kazu-yamamoto/Mew/pull/239)
   [#255](https://github.com/kazu-yamamoto/Mew/pull/255)
   [#256](https://github.com/kazu-yamamoto/Mew/pull/256)
+  [#330](https://github.com/kazu-yamamoto/Mew/pull/330)
+* The backup of a draft ("#1" etc.), which holds the text before
+  encryption, is deleted when the draft is sent or killed.  Old ones
+  are left as they are.
+  [#332](https://github.com/kazu-yamamoto/Mew/pull/332)
 * PGP results are read from the status output of GnuPG, and each of
   several signatures is reported.
   [#240](https://github.com/kazu-yamamoto/Mew/pull/240)
   [#272](https://github.com/kazu-yamamoto/Mew/pull/272)
   [#273](https://github.com/kazu-yamamoto/Mew/pull/273)
   [#287](https://github.com/kazu-yamamoto/Mew/pull/287)
+* S/MIME results are also read only from the status output, so a
+  crafted certificate cannot make a bad signature look good.  Control
+  characters are removed from every parameter value.
+  [#328](https://github.com/kazu-yamamoto/Mew/pull/328)
 
 ### New features
 
 * XOAUTH2 for POP.
   [#224](https://github.com/kazu-yamamoto/Mew/pull/224)
 * mewl can be built with utf8proc, also on Windows; Visual C++ 2015
-  and later are supported.
+  and later are supported.  On Windows, zlib, iconv and utf8proc are
+  taken from vcpkg.
   [#283](https://github.com/kazu-yamamoto/Mew/pull/283)
   [#284](https://github.com/kazu-yamamoto/Mew/pull/284)
+  [#313](https://github.com/kazu-yamamoto/Mew/pull/313)
 * `./configure EMACS=...` selects the Emacs; `make test` runs the ERT
   tests, which also run on GitHub Actions.
   [#229](https://github.com/kazu-yamamoto/Mew/pull/229)
@@ -109,6 +143,8 @@ This is stable releases of Mew 6.12.
 * A message with many encoded words in a file name no longer freezes
   Emacs.
   [#307](https://github.com/kazu-yamamoto/Mew/pull/307)
+* GB2312 messages are decoded as GBK.
+  [#315](https://github.com/kazu-yamamoto/Mew/pull/315)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
@@ -122,7 +158,10 @@ This is stable releases of Mew 6.12.
   [#232](https://github.com/kazu-yamamoto/Mew/pull/232)
   [#238](https://github.com/kazu-yamamoto/Mew/pull/238)
   [#261](https://github.com/kazu-yamamoto/Mew/pull/261)
-  [#262](https://github.com/kazu-yamamoto/Mew/pull/262).
+  [#262](https://github.com/kazu-yamamoto/Mew/pull/262)
+  [#317](https://github.com/kazu-yamamoto/Mew/pull/317)
+  [#323](https://github.com/kazu-yamamoto/Mew/pull/323)
+  [#329](https://github.com/kazu-yamamoto/Mew/pull/329).
 
 ## Differences between Mew 6.11 and Mew 6.10
 
