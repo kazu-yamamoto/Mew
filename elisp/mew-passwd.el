@@ -335,11 +335,13 @@ this variable is set to \='t\=`.")
 	  (catch 'loop
 	    (dotimes (_i N) ;; prevent byte-compile warning
 	      (when mew-passwd-agent-hack (mew-passwd-clear-passphrase file))
-	      (setq pro (apply 'mew-start-process-lang
-			       mew-passwd-decryption-name
-			       (current-buffer)
-			       mew-prog-passwd
-			       args))
+	      ;; gpg writes the passwords in plain text to tfile.
+	      (setq pro (with-file-modes #o600
+			  (apply 'mew-start-process-lang
+				 mew-passwd-decryption-name
+				 (current-buffer)
+				 mew-prog-passwd
+				 args)))
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
 	      (mew-passwd-rendezvous pro)
@@ -373,7 +375,9 @@ this variable is set to \='t\=`.")
     (unwind-protect
 	(with-temp-buffer
 	  (pp mew-passwd-alist (current-buffer))
-	  (write-region (point-min) (point-max) tfile nil 'no-msg)
+	  ;; The passwords in plain text until gpg has encrypted them.
+	  (with-file-modes #o600
+	    (write-region (point-min) (point-max) tfile nil 'no-msg))
 	  (catch 'loop
 	    (dotimes (_i N) ;; prevent byte-compile warning
 	      (setq pro (apply

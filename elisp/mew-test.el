@@ -373,6 +373,27 @@ which is then evaluated.  Only global variables are in reach."
       (delete-directory base t)
       (delete-directory other t))))
 
+(ert-deftest mew-test-passwd-save-private ()
+  "The plain text handed to gpg is readable by the user only."
+  (let* ((base (make-temp-file "mew-test-base" t))
+         (mew-temp-file-initial (expand-file-name "mew" base))
+         (mew-conf-path base)
+         (mew-passwd-alist '(("tag" "secret" 0)))
+         (mew-temp-dir nil)
+         (mew-temp-file nil)
+         seen)
+    (unwind-protect
+        (with-file-modes #o644
+          (mew-temp-dir-init)
+          (cl-letf (((symbol-function 'mew-start-process-lang)
+                     (lambda (&rest args)
+                       (setq seen (file-modes (car (last args))))
+                       (error "no gpg here"))))
+            (ignore-errors (mew-passwd-save)))
+          (should (eql seen #o600)))
+      (remove-hook 'kill-emacs-hook 'mew-temp-dir-clean-up)
+      (delete-directory base t))))
+
 (ert-deftest mew-test-temp-dir-init-does-not-reuse ()
   "A directory which is already there must not be taken over.
 `make-temp-name' only makes up a name.  Between that and creating the
