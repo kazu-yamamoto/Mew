@@ -322,8 +322,6 @@
 ;;;
 
 (defun mew-draft-share-keymap (symmap)
-  (if (featurep 'meadow)
-      (define-key (symbol-value symmap) [drag-n-drop] 'mew-draft-dnd-for-meadow))
   (define-key (symbol-value symmap) "\C-x\C-s" 'mew-draft-save-buffer)
   (define-key (symbol-value symmap) "\C-c\C-m" 'mew-draft-make-message)
   (define-key (symbol-value symmap) "\C-c\C-c" 'mew-draft-send-message)

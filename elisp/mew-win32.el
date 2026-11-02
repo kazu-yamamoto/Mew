@@ -5,98 +5,12 @@
 ;; Created: Dec 05, 1997
 
 (require 'mew)
-(eval-when-compile
-  (require 'mew-env0))
 
 ;;; Code:
 
-(eval-when-compile
-  (mew-no-warning-defvar w32-start-process-show-window)
-  (mew-no-warning-defun mw32script-init)
-  (mew-no-warning-defun mw32script-make-pathext-regexp)
-  (mew-no-warning-defun mw32script-openp)
-  (mew-no-warning-defun mw32script-argument-editing-function)
-  (mew-no-warning-defun dos-to-unix-filename))
-
-;;; for NTEmacs User
-;;
-;; put mw32script.el (in Meadow's archive) into load-path.
-;;
-
-;;
-;;  ~/.mew settings
-;;
-
-;;; for PRINTING
-;;    mew-w32-prog-print     ---  print command
-;;    mew-w32-prog-print-arg ---  print command argument
-;;    mew-w32-cs-print       ---  coding-system for printing
-;;    define-process-argument-editing  ---  for argument-editing
-;;
-;;; example
-;;   (setq mew-w32-prog-print     "notepad.exe")
-;;   (setq mew-w32-prog-print-arg "/p")
-;;   (setq mew-w32-cs-print       'shift_jis-dos)  ;; Meadow
-;;   (define-process-argument-editing "/notepad\\.exe$"
-;;     (lambda (x)
-;;       (general-process-argument-editing-function x nil t)))
-;;   (setq mew-print-function 'mew-w32-print-buffer)
-
-
-;; Emacs version dependent variables.
-(cond
- ((featurep 'meadow) ;; Meadow
-  (require 'mw32script)
-  (mw32script-init))
- ((condition-case nil
-      (progn
-	(require 'mw32script)
-	(load "mw32misc"))
-    (file-error nil)) ;; NTEmacs
-  (mw32script-make-pathext-regexp)
-  (defun mew-w32-argument-editing-function (program args)
-    (let ((default-process-argument-editing-function 'identity)
-	  (process-argument-editing-alist nil)
-	  prog sargs)
-      (setq prog (mw32script-openp program))
-      (if (and (null prog)
-	       (setq prog (mew-which-exec program))
-	       (setq sargs (mw32script-argument-editing-function (list prog))))
-	  (cons (car sargs) (cons prog args))
-	(cons program args))))
-
-  (defun mew-w32--call-process-advice
-      (orig-fun program &optional infile buffer display &rest args)
-    (let ((sargs (mew-w32-argument-editing-function program args)))
-      (apply orig-fun (car sargs) infile buffer display (cdr sargs))))
-  (advice-add 'call-process :around #'mew-w32--call-process-advice)
-
-  (defun mew-w32--call-process-region-advice
-      (orig-fun start end program &optional infile buffer display &rest args)
-    (let ((sargs (mew-w32-argument-editing-function program args)))
-      (apply orig-fun start end (car sargs) infile buffer display (cdr sargs))))
-  (advice-add 'call-process-region :around #'mew-w32--call-process-region-advice)
-
-  (defun mew-w32--start-process-advice
-      (orig-fun name buffer program &rest program-args)
-    (let ((sargs (mew-w32-argument-editing-function program program-args)))
-      (apply orig-fun name buffer (car sargs) (cdr sargs))))
-  (advice-add 'start-process :around #'mew-w32--start-process-advice)))
-
-;; printing
-(defun mew-w32-print-buffer ()
-  (let ((tempfile (mew-make-temp-name)))
-    (mew-frwlet mew-cs-dummy mew-w32-cs-print
-      (write-region (point-min) (point-max) tempfile nil nil))
-    (setq w32-start-process-show-window t)
-    (cond
-     ((eq mew-w32-prog-print-arg nil)
-      (call-process mew-w32-prog-print nil nil nil tempfile))
-     (t
-      (call-process mew-w32-prog-print nil nil nil mew-w32-prog-print-arg tempfile)))
-    (setq w32-start-process-show-window nil)
-    (mew-delete-file tempfile)))
-
+;; To print with Notepad:
+;;   (setq lpr-command "notepad.exe")
+;;   (setq lpr-switches '("/p"))
 
 ;;;
 ;;; MIME setting
@@ -108,10 +22,6 @@
 				       exec-suffixes)
 				  exec-suffixes
 				'(".exe" ".com" ".bat" ".cmd" "")))
-
-(defvar mew-w32-prog-print     "notepad.exe")
-(defvar mew-w32-prog-print-arg nil)
-(defvar mew-w32-cs-print nil)
 
 (defvar mew-prog-plain    'mew-mime-text/plain)
 (defvar mew-prog-html     '(mew-mime-text/html mew-mime-text/html-ext))
@@ -208,28 +118,6 @@
 (setq mew-prog-grep-max-msgs 2000) ;; for external grep (pick & virtual)
 
 (defvar mew-dir-list-function 'mew-dir-list-without-link-count)
-
-(defun mew-draft-dnd-for-meadow (event)
-  (interactive "e")
-  (when (eq (posn-window (event-start event)) (selected-window))
-    (let ((files (car (cdr (cdr event))))
-	  to)
-      (if (stringp files)
-	  (setq files (list files)))
-      (dolist (from files)
-	(setq from (dos-to-unix-filename from))
-	(when (file-exists-p from)
-	  (setq to (file-name-nondirectory from))
-	  (unless (mew-attach-p)
-	    (mew-draft-prepare-attachments))
-	  (goto-char (point-max))
-	  (forward-line -2)
-	  (mew-attach-next)
-	  (cond
-	   ((file-directory-p from)
-	    (message "Directory cannot be attached"))
-	   (t
-	    (mew-attach-copy from to))))))))
 
 ;;
 
