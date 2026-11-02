@@ -337,9 +337,20 @@ If called with `\\[universal-argument]', you can specify a printer name."
     (when (y-or-n-p "Print this message? ")
       (with-temp-buffer
 	(insert str)
+	(mew-delete-images)
 	(if have-header
 	    (mew-header-delete-other-lines mew-field-for-printing))
 	(funcall mew-print-function)))))
+
+(defun mew-delete-images ()
+  "Delete the characters which display images, e.g. X-Face: and BIMI.
+They are printed as blanks."
+  (let ((pos (point-min)) next)
+    (while (< pos (point-max))
+      (setq next (next-single-property-change pos 'display nil (point-max)))
+      (if (eq (car-safe (get-text-property pos 'display)) 'image)
+	  (delete-region pos next)
+	(setq pos next)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
