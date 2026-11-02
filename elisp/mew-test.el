@@ -416,6 +416,25 @@ which is then evaluated.  Only global variables are in reach."
       (remove-hook 'kill-emacs-hook 'mew-temp-dir-clean-up)
       (delete-directory base t))))
 
+(ert-deftest mew-test-encode-set-privacy-after-failure ()
+  "After encryption failed, sending again asks before going out as it is."
+  (with-temp-buffer
+    (let ((mew-encode-syntax (mew-encode-syntax-single "text.txt" (list mew-ct-txt)))
+	  asked)
+      (mew-tinfo-set-privacy-err t)
+      (mew-tinfo-set-encode-err "No his/her public key: a@example.org")
+      ;; no
+      (cl-letf (((symbol-function 'y-or-n-p)
+		 (lambda (prompt) (setq asked prompt) nil)))
+	(should-error (mew-encode-set-privacy nil nil nil)))
+      (should (string-match "No his/her public key: a@example.org" asked))
+      (should (equal (mew-tinfo-get-encode-err)
+		     "No his/her public key: a@example.org"))
+      ;; yes: nothing is protected
+      (cl-letf (((symbol-function 'y-or-n-p) (lambda (_) t)))
+	(mew-encode-set-privacy nil nil nil))
+      (should-not (mew-syntax-get-privacy mew-encode-syntax)))))
+
 (ert-deftest mew-test-temp-dir-init-does-not-reuse ()
   "A directory which is already there must not be taken over.
 `make-temp-name' only makes up a name.  Between that and creating the

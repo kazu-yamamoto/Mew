@@ -300,9 +300,15 @@
 ;;;
 
 (defun mew-encode-set-privacy (pnm privacy case)
-  (unless (or (mew-syntax-get-privacy mew-encode-syntax) ;; specified
-	      ;; encryption previously failed, so bypass.
-	      (and (null privacy) (mew-tinfo-get-privacy-err)))
+  (cond
+   ((mew-syntax-get-privacy mew-encode-syntax)) ;; specified
+   ((and (null privacy) (mew-tinfo-get-privacy-err))
+    ;; Protecting failed last time.  Sending again would go out as
+    ;; it is, so say so instead of doing it silently.
+    (let ((err (or (mew-tinfo-get-encode-err) "Protecting this message failed")))
+      (unless (y-or-n-p (format "%s.  Send it without protection? " err))
+	(mew-encode-error err))))
+   (t
     (let (type)
       (cond
        (privacy
@@ -318,7 +324,7 @@
        (mew-pcdb-ct (mew-pcdb-by-service type)))
       ;; recipients are ignored when signing
       (mew-syntax-set-decrypters
-       mew-encode-syntax (mew-smtp-get-recipients pnm)))))
+       mew-encode-syntax (mew-smtp-get-recipients pnm))))))
 
 (defun mew-encode-make-header (&optional addsep resentp)
   (unless (mew-header-existp mew-mv:)
