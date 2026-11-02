@@ -10,40 +10,6 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (mew-no-warning-defvar w32-start-process-show-window))
-
-;;
-;;  ~/.mew settings
-;;
-
-;;; for PRINTING
-;;    mew-w32-prog-print     ---  print command
-;;    mew-w32-prog-print-arg ---  print command argument
-;;    mew-w32-cs-print       ---  coding-system for printing
-;;
-;;; example
-;;   (setq mew-w32-prog-print     "notepad.exe")
-;;   (setq mew-w32-prog-print-arg "/p")
-;;   (setq mew-w32-cs-print       'shift_jis-dos)
-;;   (setq mew-print-function 'mew-w32-print-buffer)
-
-
-;; printing
-(defun mew-w32-print-buffer ()
-  (let ((tempfile (mew-make-temp-name)))
-    (mew-frwlet mew-cs-dummy mew-w32-cs-print
-      (write-region (point-min) (point-max) tempfile nil nil))
-    (setq w32-start-process-show-window t)
-    (cond
-     ((eq mew-w32-prog-print-arg nil)
-      (call-process mew-w32-prog-print nil nil nil tempfile))
-     (t
-      (call-process mew-w32-prog-print nil nil nil mew-w32-prog-print-arg tempfile)))
-    (setq w32-start-process-show-window nil)
-    (mew-delete-file tempfile)))
-
-
 ;;;
 ;;; MIME setting
 ;;;
@@ -54,10 +20,6 @@
 				       exec-suffixes)
 				  exec-suffixes
 				'(".exe" ".com" ".bat" ".cmd" "")))
-
-(defvar mew-w32-prog-print     "notepad.exe")
-(defvar mew-w32-prog-print-arg nil)
-(defvar mew-w32-cs-print nil)
 
 (defvar mew-prog-plain    'mew-mime-text/plain)
 (defvar mew-prog-html     '(mew-mime-text/html mew-mime-text/html-ext))
