@@ -91,9 +91,9 @@
 /* generic windows header */
 #include <windows.h>
 
-/* HAVE_UTF8PROC and UTF8PROC_CHAR_FOLD come from Makefile.w32; see
-   w32/vendor/README.md.  HAVE_UTF8PROC_FREE is not needed: utf8proc is
-   compiled into mewl.exe with the same C runtime. */
+/* HAVE_UTF8PROC and UTF8PROC_CHAR_FOLD come from Makefile.w32.
+   HAVE_UTF8PROC_FREE is not needed: the static utf8proc from vcpkg
+   uses the same C runtime as mewl.exe. */
 
 /* windows specific definitions */
 #include <w32.h>

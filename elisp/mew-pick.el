@@ -165,15 +165,24 @@ target is the region."
 	(if (> i max) (setq max i)))
       (format "%d-%d" min max))))
 
+(defun mew-mewl-pattern-args (pattern)
+  "Return the options to give PATTERN to `mewl', which expects UTF-8.
+Emacs on Windows passes arguments through the ANSI code page,
+which mangles UTF-8, so non-ASCII patterns are sent in hex there."
+  (let ((utf8 (mew-cs-encode-string pattern 'utf-8)))
+    (if (and (eq system-type 'windows-nt)
+	     (string-match-p "[^[:ascii:]]" pattern))
+	(list "-P" (mapconcat (lambda (c) (format "%02x" c)) utf8 ""))
+      (list "-p" utf8))))
+
 (defun mew-summary-pick-with-mewl (pattern folder src-msgs)
   "A function to pick messages matching PATTERN with `mewl'"
   (let ((pfolder (mew-scan-mewl-folder (mew-expand-folder2 folder)))
 	(range (mew-summary-pick-range src-msgs))
-	(opts (list "-b" mew-mail-path
-		    "-l" (number-to-string mew-scan-max-field-length)
-		    "-x" mew-suffix
-		    ;; mewl expects UTF-8
-		    "-p" (mew-cs-encode-string pattern 'utf-8)))
+	(opts (append (list "-b" mew-mail-path
+			    "-l" (number-to-string mew-scan-max-field-length)
+			    "-x" mew-suffix)
+		      (mew-mewl-pattern-args pattern)))
 	msgs)
     (if range
 	(setq opts (nconc opts (list pfolder range)))

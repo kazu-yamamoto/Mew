@@ -55,8 +55,8 @@ so POP needs `mewl` as well.
      default ignorable characters such as variation selectors; that is,
      they compare by NFKC_Casefold.
      To build without utf8proc, type `./configure --disable-utf8proc`.
-     On Windows, utf8proc is off by default; `bin/w32/vendor/README.md`
-     says how to turn it on.
+     On Windows, the notes at the top of `bin/Makefile.w32` say how to
+     build without utf8proc or with NFKC_Casefold.
 
 * Type `make`.
 
@@ -85,6 +85,13 @@ automatically added to the "dir" file.  Otherwise, add it by yourself.
 * See info for configuring a site file/.emacs/.mew.el.
   See also ["conf/dot.emacs"](conf/dot.emacs) and
   ["conf/dot.mew"](conf/dot.mew).
+
+## Windows without Cygwin
+
+Build `mewl.exe` and `mewencode.exe` with Visual C++ by typing
+`nmake -f Makefile.w32` in `bin`, and put them on `exec-path`.  The
+notes at the top of `bin/Makefile.w32` say how to get zlib, iconv
+and utf8proc with vcpkg.
 
 ## If you installed Mew from MELPA
 

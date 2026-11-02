@@ -106,9 +106,9 @@
 
 (defun mew-summary-selection-by-pick-with-mewl (pattern _folder src-msgs rfolder lra)
   "Create selection with `mewl'"
-  ;; mewl expects UTF-8
-  (let ((opts (list "-a" "-p" (mew-cs-encode-string pattern 'utf-8)
-		    "-b" mew-mail-path))
+  (let ((opts (append (list "-a")
+		      (mew-mewl-pattern-args pattern)
+		      (list "-b" mew-mail-path)))
 	(range (mew-summary-pick-range src-msgs)))
     (setq rfolder (mew-scan-mewl-folder rfolder))
     (if range
