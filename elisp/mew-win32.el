@@ -5,10 +5,12 @@
 ;; Created: Dec 05, 1997
 
 (require 'mew)
-(eval-when-compile
-  (require 'mew-env0))
 
 ;;; Code:
+
+;; To print with Notepad:
+;;   (setq lpr-command "notepad.exe")
+;;   (setq lpr-switches '("/p"))
 
 ;;;
 ;;; MIME setting
