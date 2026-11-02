@@ -394,6 +394,28 @@ which is then evaluated.  Only global variables are in reach."
       (remove-hook 'kill-emacs-hook 'mew-temp-dir-clean-up)
       (delete-directory base t))))
 
+(ert-deftest mew-test-passwd-save-cleans-up ()
+  "The plain text is removed even when the first save fails."
+  (let* ((base (make-temp-file "mew-test-base" t))
+         (mew-temp-file-initial (expand-file-name "mew" base))
+         (mew-conf-path base)
+         (mew-passwd-alist '(("tag" "secret" 0)))
+         (mew-temp-dir nil)
+         (mew-temp-file nil)
+         tfile)
+    (unwind-protect
+        (progn
+          (mew-temp-dir-init)
+          (cl-letf (((symbol-function 'mew-start-process-lang)
+                     (lambda (&rest args)
+                       (setq tfile (car (last args)))
+                       (error "no gpg here"))))
+            (ignore-errors (mew-passwd-save)))
+          (should tfile)
+          (should-not (file-exists-p tfile)))
+      (remove-hook 'kill-emacs-hook 'mew-temp-dir-clean-up)
+      (delete-directory base t))))
+
 (ert-deftest mew-test-temp-dir-init-does-not-reuse ()
   "A directory which is already there must not be taken over.
 `make-temp-name' only makes up a name.  Between that and creating the

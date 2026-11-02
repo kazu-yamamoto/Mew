@@ -392,8 +392,10 @@ this variable is set to \='t\=`.")
 	      (if (file-exists-p file) (throw 'loop nil)))
 	    (message "Master password is wrong! Passwords not saved")
 	    (mew-let-user-read)))
-      (unless (file-exists-p file)
-	(rename-file (concat file mew-backup-suffix) file))
+      ;; There is no backup the first time; the plain text must go anyway.
+      (let ((backup (concat file mew-backup-suffix)))
+	(if (and (not (file-exists-p file)) (file-exists-p backup))
+	    (rename-file backup file)))
       (mew-passwd-delete-file tfile))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
