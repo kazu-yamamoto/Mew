@@ -15,9 +15,7 @@
 #include <ctype.h>
 #include <stdarg.h>
 
-#if !HAVE_MEMMOVE
-#define memmove(d, s, n) bcopy((s), (d), (n))
-#endif
+/* memmove() is standard C (C89), so no fallback to bcopy() is needed. */
 
 char *warn_prog;
 
@@ -124,6 +122,9 @@ Getopt(int argc, char *argv[], const char *fmt)
 		return EOF;
 	if (*(p + 1) != NUL)
 		warn_exit("unknown long option '-%s'.", p);
+	/* ':' marks an argument in fmt; it is never an option letter. */
+	if (c == ':')
+		warn_exit("unknown option '-%c'.", c);
 	if ((q = strchr(fmt, c)) == NULL)
 		warn_exit("unknown option '-%c'.", c);
 	if (++q != NULL && *q == ':') {

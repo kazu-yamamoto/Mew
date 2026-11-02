@@ -4307,12 +4307,6 @@ then :
   printf '%s\n' "#define HAVE_STRNICMP 1" >>confdefs.h
 
 fi
-ac_fn_c_check_func "$LINENO" "memmove" "ac_cv_func_memmove"
-if test "x$ac_cv_func_memmove" = xyes
-then :
-  printf '%s\n' "#define HAVE_MEMMOVE 1" >>confdefs.h
-
-fi
 ac_fn_c_check_func "$LINENO" "fgetln" "ac_cv_func_fgetln"
 if test "x$ac_cv_func_fgetln" = xyes
 then :

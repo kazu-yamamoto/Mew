@@ -59,9 +59,6 @@
 /* Define if you have the Sleep function.  */
 #define HAVE_SLEEP 1
 
-/* Define if you have the memmove function.  */
-#define HAVE_MEMMOVE 1
-
 /* Define if you have the snprintf function.  */
 #if _MSC_VER >= 1900
 #define HAVE_SNPRINTF 1
