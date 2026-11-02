@@ -685,6 +685,8 @@ for as long as the buffer lives.  See #128."
       (save-buffer)
       (mew-delete-file draft)
       (mew-delete-file mdi)
+      ;; save-buffer has just made it
+      (mew-delete-file (mew-prepend-prefix draft mew-backup-prefix))
       (if (and (mew-tinfo-get-other-frame) (> (length (frame-list)) 1))
 	  (delete-frame)
 	(mew-current-get-window-config))
@@ -874,8 +876,8 @@ Set privacy service which will be effective when \\[mew-draft-make-message]."
 	  (save-window-excursion
 	    (set-buffer buf)
 	    (if (mew-smtp-encode pnm case resentp fcc privacy signer)
-		(let ((mdi (concat (buffer-file-name) mew-draft-info-suffix)))
-		  (mew-delete-file mdi)
+		(progn
+		  (mew-encode-delete-backup)
 		  (setq msg (mew-smtp-queue case "from Draft mode"))
 		  (mew-remove-buffer buf)
 		  (if (eq action 'send)
@@ -919,8 +921,8 @@ Set privacy service which will be effective when \\[mew-draft-make-message]."
 	  (save-window-excursion
 	    (set-buffer buf)
 	    (if (mew-nntp2-encode pnm case fcc privacy signer)
-		(let ((mdi (concat (buffer-file-name) mew-draft-info-suffix)))
-		  (mew-delete-file mdi)
+		(progn
+		  (mew-encode-delete-backup)
 		  (setq msg (mew-nntp2-queue case "from Draft mode"))
 		  (mew-remove-buffer buf)
 		  (if (eq action 'send)

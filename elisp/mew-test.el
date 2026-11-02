@@ -435,6 +435,25 @@ which is then evaluated.  Only global variables are in reach."
 	(mew-encode-set-privacy nil nil nil))
       (should-not (mew-syntax-get-privacy mew-encode-syntax)))))
 
+(ert-deftest mew-test-encode-delete-backup ()
+  "Sending or killing a draft leaves no plain text backup behind."
+  (let* ((dir (make-temp-file "mew-test-draft" t))
+         (draft (expand-file-name "1" dir))
+         (back (expand-file-name "#1" dir))
+         (mdi (concat draft mew-draft-info-suffix)))
+    (unwind-protect
+        (progn
+          (dolist (f (list draft back mdi))
+            (write-region "x" nil f nil 'no-msg))
+          (with-temp-buffer
+            (setq buffer-file-name draft)
+            (mew-encode-delete-backup)
+            (setq buffer-file-name nil))
+          (should (file-exists-p draft))
+          (should-not (file-exists-p back))
+          (should-not (file-exists-p mdi)))
+      (delete-directory dir t))))
+
 (ert-deftest mew-test-temp-dir-init-does-not-reuse ()
   "A directory which is already there must not be taken over.
 `make-temp-name' only makes up a name.  Between that and creating the

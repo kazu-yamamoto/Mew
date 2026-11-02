@@ -1352,6 +1352,15 @@ region and would go out as the message, so that is removed first."
      'nobackup)
     nil)) ;; to save
 
+(defun mew-encode-delete-backup ()
+  "Delete the backup and the info file of this draft.
+They are of no use once the draft is sent or killed, and the backup
+is the draft before encoding: the plain text of an encrypted message."
+  (let ((file (buffer-file-name)))
+    (when file
+      (mew-delete-file (mew-prepend-prefix file mew-backup-prefix))
+      (mew-delete-file (concat file mew-draft-info-suffix)))))
+
 (defun mew-encode-load-syntax ()
   (let* ((file (buffer-file-name))
 	 (info (concat file mew-draft-info-suffix))

@@ -140,8 +140,8 @@ by a header re-write."
 	      (mew-header-delete-lines mew-field-delete-common)
 	      (mew-header-delete-lines (mew-tinfo-get-field-del)))
 	    (if (mew-smtp-encode pnm case resentp fcc nil nil 'header)
-		(let ((mdi (concat (buffer-file-name) mew-draft-info-suffix)))
-		  (mew-delete-file mdi)
+		(progn
+		  (mew-encode-delete-backup)
 		  (setq msg (mew-smtp-queue case "from Draft mode"))
 		  (mew-remove-buffer buf)
 		  (if (eq action 'send)
@@ -188,8 +188,8 @@ by a header re-write."
 	      (mew-header-delete-lines mew-field-delete-common)
 	      (mew-header-delete-lines (mew-tinfo-get-field-del)))
 	    (if (mew-nntp2-encode pnm case fcc nil nil 'header)
-		(let ((mdi (concat (buffer-file-name) mew-draft-info-suffix)))
-		  (mew-delete-file mdi)
+		(progn
+		  (mew-encode-delete-backup)
 		  (setq msg (mew-nntp2-queue case "from Draft mode"))
 		  (mew-remove-buffer buf)
 		  (if (eq action 'send)
