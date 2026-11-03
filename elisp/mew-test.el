@@ -1849,6 +1849,16 @@ gpgsm: invalid certification chain: No agent running
     (should (equal (mew-mewl-pattern-args "subject=日本")
 		   (list "-p" (encode-coding-string "subject=日本" 'utf-8))))))
 
+(ert-deftest mew-test-delete-images ()
+  "Images such as X-Face: are not printed as blanks."
+  (with-temp-buffer
+    (let ((img '(image :type xbm :data "")))
+      (insert "From:" (propertize " " 'display img) " kazu\n"
+	      (propertize "x" 'display "y") "\n"
+	      (propertize "  " 'display img)))
+    (mew-delete-images)
+    (should (equal (buffer-string) "From: kazu\nx\n"))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
