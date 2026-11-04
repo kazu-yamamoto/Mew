@@ -853,7 +853,7 @@ which comes from the message, not by CT."
 			    begin end))
 			mew-cs-text-for-write)))))
 	(mew-frwlet mew-cs-dummy wcs
-		    (write-region begin end file nil 'no-msg))
+	  (write-region begin end file nil 'no-msg))
 	(if async
 	    (mew-mime-start-process program options file)
 	  (mew-mime-call-process program options file)))))))
