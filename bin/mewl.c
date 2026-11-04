@@ -558,6 +558,8 @@ print_field(char *buf, int lim, char *fname, char *fld) {
 		while (i < Body_len) {
 			q = p;
 			p = nextline(q, limp, NO);
+			/* Double a leading dot, also on the last line. */
+			if (q < limp && *q == '.') printf(".");
 			if (p == NULL) {
 				while (q < limp) {
 					putchar(*q);
@@ -566,7 +568,6 @@ print_field(char *buf, int lim, char *fname, char *fld) {
 				break;
 			}
 			i++;
-			if (*q == '.') printf(".");
 			while (q < p) {
 				putchar(*q);
 				q++;
