@@ -32,10 +32,8 @@ private char version_message[] = "version 6.11 20260414 Mew developing team";
 
 #ifdef HAVE_DIRENT_H
 # include <dirent.h>
-# define NAMLEN(dirent) strlen((dirent)->d_name)
 #else /* HAVE_DIRENT_H */
 # define dirent direct
-# define NAMLEN(dirent) (dirent)->d_namlen
 # ifdef HAVE_SYS_NDIR_H
 #  include <sys/ndir.h>
 # endif /* HAVE_SYS_NDIR_H */
