@@ -37,22 +37,22 @@ opendir(const char *filename)
     dir->hFind = INVALID_HANDLE_VALUE;
 
     if (len == 0){
-	strcpy(dir->dd_filename, "*.*");
-	return dir;
+        strcpy(dir->dd_filename, "*.*");
+        return dir;
     }
 
     /* Look at the last character, not the last byte: a trail byte
        of CP932 can be 0x5C. */
     pt = _mbsdec((const unsigned char *)filename,
-		 (const unsigned char *)filename + len);
+        (const unsigned char *)filename + len);
     n = _snprintf(dir->dd_filename, sizeof(dir->dd_filename),
-		  (*pt == '\\' || *pt == '/') ? "%s*.*" : "%s\\*.*",
-		  filename);
+        (*pt == '\\' || *pt == '/') ? "%s*.*" : "%s\\*.*",
+        filename);
     /* _snprintf() does not terminate a truncated string. */
     if (n < 0 || n >= (int)sizeof(dir->dd_filename)) {
-	free(dir);
-	errno = ENAMETOOLONG;
-	return NULL;
+        free(dir);
+        errno = ENAMETOOLONG;
+        return NULL;
     }
     while ((pt = _mbschr((unsigned char *)dir->dd_filename, '/')) != NULL)
 	*pt = '\\';
