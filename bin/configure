@@ -678,6 +678,7 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
+enable_iconv
 enable_utf8proc
 enable_utf8proc_char_fold
 '
@@ -1305,6 +1306,7 @@ Optional Features:
   --disable-option-checking  ignore unrecognized --enable/--with options
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --disable-iconv         do not use iconv even if it is available
   --disable-utf8proc      do not use utf8proc even if it is available
   --enable-utf8proc-char-fold
                           compare = and != of mewl pick by NFKC_Casefold,
@@ -4473,15 +4475,25 @@ if test x$mew_cv_sighup = xyes; then
 
 fi
 
+# Check whether --enable-iconv was given.
+if test ${enable_iconv+y}
+then :
+  enableval=$enable_iconv;
+else case e in #(
+  e) enable_iconv=yes ;;
+esac
+fi
+
 { printf '%s\n' "$as_me:${as_lineno-$LINENO}: checking for iconv" >&5
 printf %s "checking for iconv... " >&6; }
 ICONV_LIBS=
 mew_cv_iconv=no
-mew_save_LIBS=$LIBS
-for mew_lib in "" -liconv; do
-  if test x$mew_cv_iconv = xno; then
-    LIBS="$mew_save_LIBS $mew_lib"
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+if test "x$enable_iconv" != xno; then
+  mew_save_LIBS=$LIBS
+  for mew_lib in "" -liconv; do
+    if test x$mew_cv_iconv = xno; then
+      LIBS="$mew_save_LIBS $mew_lib"
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <iconv.h>
 int
@@ -4498,11 +4510,15 @@ then :
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam \
     conftest$ac_exeext conftest.$ac_ext
-  fi
-done
-LIBS=$mew_save_LIBS
-{ printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: $mew_cv_iconv $ICONV_LIBS" >&5
+    fi
+  done
+  LIBS=$mew_save_LIBS
+  { printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: $mew_cv_iconv $ICONV_LIBS" >&5
 printf '%s\n' "$mew_cv_iconv $ICONV_LIBS" >&6; }
+else
+  { printf '%s\n' "$as_me:${as_lineno-$LINENO}: result: no (disabled)" >&5
+printf '%s\n' "no (disabled)" >&6; }
+fi
 if test x$mew_cv_iconv = xyes; then
   printf '%s\n' "#define HAVE_ICONV 1" >>confdefs.h
 
