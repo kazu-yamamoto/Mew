@@ -179,6 +179,7 @@ private void dbuf_append(struct dbuf *, const char *, size_t);
 private char *decode_field(const char *);
 private int  decode_word(const char *, size_t, struct dbuf *);
 #ifdef HAVE_ICONV
+private int  charset_to_utf8(const char *, const char *, size_t, struct dbuf *);
 private iconv_t get_iconv_to_utf8(const char *);
 private int  iconv_to_utf8(const char *, const char *, size_t, struct dbuf *,
     int);
@@ -841,26 +842,6 @@ decode_field(const char *str) {
 	return ret.buf;
 }
 
-#ifdef HAVE_ICONV
-/* MIME charsets renamed for iconv, and supersets to retry with on failure */
-private struct {
-	const char *mime;
-	const char *iconv;		/* NULL: as it is */
-	const char *retry;		/* NULL: no retry */
-} rfc2047_charsets[] = {
-	{	"ks_c_5601-1987",	"CP949",	NULL		},
-	{	"windows-31j",		"CP932",	NULL		},
-	{	"iso-8859-8-i",		"ISO-8859-8",	NULL		},
-	{	"iso-2022-jp",		NULL,		"CP50221"	},
-	{	"shift_jis",		NULL,		"CP932"		},
-	{	"euc-jp",		NULL,		"EUC-JP-MS"	},
-	{	"gb2312",		NULL,		"GB18030"	},
-	{	"big5",			NULL,		"BIG5-HKSCS"	},
-	{	"euc-kr",		NULL,		"CP949"		},
-	{	"tis-620",		NULL,		"CP874"		}
-};
-#endif /* HAVE_ICONV */
-
 #define CHARSET_MAX	64
 
 /* token of RFC 2047, with "\" of erratum 506 */
@@ -885,10 +866,7 @@ private struct {
 private int
 decode_word(const char *str, size_t size, struct dbuf *out) {
 	int i, j, len, enc, retsz;
-#ifdef HAVE_ICONV
-	const char *name;
-#endif /* HAVE_ICONV */
-	const char *p, *retry = NULL;
+	const char *p;
 	char cs[CHARSET_MAX];
 	char *tmp = NULL, *in;
 	size_t tmpsz = 0, insz, olen, s, d;
@@ -981,30 +959,18 @@ decode_word(const char *str, size_t size, struct dbuf *out) {
 		break;
 	}
 
+	olen = out->len;
 #ifdef HAVE_ICONV
-	name = cs;
-	for (i = 0; i < (int)nitems(rfc2047_charsets); i++) {
-		if (strlen(rfc2047_charsets[i].mime) == strlen(cs) &&
-		    strncasecmp(rfc2047_charsets[i].mime, cs, strlen(cs)) == 0) {
-			if (rfc2047_charsets[i].iconv != NULL)
-				name = rfc2047_charsets[i].iconv;
-			retry = rfc2047_charsets[i].retry;
-			break;
-		}
-	}
-	olen = out->len;
-	if (iconv_to_utf8(name, in, insz, out, NO) != 0 &&
-	    (retry == NULL || iconv_to_utf8(retry, in, insz, out, NO) != 0) &&
-	    (retry == NULL || iconv_to_utf8(retry, in, insz, out, YES) != 0) &&
-	    iconv_to_utf8(name, in, insz, out, YES) != 0)
+	if (charset_to_utf8(cs, in, insz, out) != 0)
 		goto fail;	/* unknown charset */
-#else
-	/* without iconv, use decoded buffer when encoding is utf-8. */
-	if (strncasecmp(&cs[0], "utf-8", strlen("utf-8")) != 0)
-		goto fail;
-	olen = out->len;
+#else /* HAVE_ICONV */
+	/*
+	 * Without iconv, append the bytes as they are whatever the charset
+	 * is: UTF-8 and US-ASCII are right as they are, and ASCII in the
+	 * others, such as the name of a mailing list, can still be found.
+	 */
 	dbuf_append(out, in, insz);
-#endif
+#endif /* HAVE_ICONV */
 
 	/* remove control characters but TAB as Mew does */
 	for (s = d = olen; s < out->len; s++) {
@@ -1023,6 +989,50 @@ fail:
 }
 
 #ifdef HAVE_ICONV
+/* MIME charsets renamed for iconv, and supersets to retry with on failure */
+private struct {
+	const char *mime;
+	const char *iconv;		/* NULL: as it is */
+	const char *retry;		/* NULL: no retry */
+} rfc2047_charsets[] = {
+	{	"ks_c_5601-1987",	"CP949",	NULL		},
+	{	"windows-31j",		"CP932",	NULL		},
+	{	"iso-8859-8-i",		"ISO-8859-8",	NULL		},
+	{	"iso-2022-jp",		NULL,		"CP50221"	},
+	{	"shift_jis",		NULL,		"CP932"		},
+	{	"euc-jp",		NULL,		"EUC-JP-MS"	},
+	{	"gb2312",		NULL,		"GB18030"	},
+	{	"big5",			NULL,		"BIG5-HKSCS"	},
+	{	"euc-kr",		NULL,		"CP949"		},
+	{	"tis-620",		NULL,		"CP874"		}
+};
+
+/*
+ * Append "insz" bytes at "in" in the charset "cs" to "out" as UTF-8.
+ * Return -1, leaving "out" as it was, if the charset is unknown.
+ */
+private int
+charset_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out) {
+	const char *name = cs, *retry = NULL;
+	int i;
+
+	for (i = 0; i < (int)nitems(rfc2047_charsets); i++) {
+		if (strlen(rfc2047_charsets[i].mime) == strlen(cs) &&
+		    strncasecmp(rfc2047_charsets[i].mime, cs, strlen(cs)) == 0) {
+			if (rfc2047_charsets[i].iconv != NULL)
+				name = rfc2047_charsets[i].iconv;
+			retry = rfc2047_charsets[i].retry;
+			break;
+		}
+	}
+	if (iconv_to_utf8(name, in, insz, out, NO) != 0 &&
+	    (retry == NULL || iconv_to_utf8(retry, in, insz, out, NO) != 0) &&
+	    (retry == NULL || iconv_to_utf8(retry, in, insz, out, YES) != 0) &&
+	    iconv_to_utf8(name, in, insz, out, YES) != 0)
+		return -1;
+	return 0;
+}
+
 private iconv_t
 get_iconv_to_utf8(const char *cs) {
 	static char last[CHARSET_MAX];
