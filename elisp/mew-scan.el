@@ -349,6 +349,7 @@ Address is converted by `mew-summary-form-extract-addr'. See also
 		    (concat mew-summary-form-func-prefix (symbol-name func))))
 	(when (fboundp func)
 	  (setq str (funcall func))
+	  (if (stringp str) (setq str (mew-strip-bidi-control str)))
 	  (if rightp
 	      (if (<= (string-width str) width)
 		  (format (format "%%%ds" width) str)

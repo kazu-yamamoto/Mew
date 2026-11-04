@@ -344,6 +344,18 @@ in the context of FUNC."
     (setq string (replace-match " " nil t string)))
   string)
 
+(defconst mew-regex-bidi-control
+  "[؜‎‏‪-‮⁦-⁩]"
+  "Bidirectional control characters, as `bidi-control-characters'.")
+
+(defun mew-strip-bidi-control (string)
+  "Remove bidirectional control characters from STRING.
+An embedding or override left open by truncation would reorder the
+rest of the line."
+  (if (string-match mew-regex-bidi-control string)
+      (replace-regexp-in-string mew-regex-bidi-control "" string t t)
+    string))
+
 (defun mew-replace-white-space2 (string)
   "Replace white characters to under score."
   (while (string-match "[\n\t\r ]+" string)

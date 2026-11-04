@@ -1261,6 +1261,19 @@ stay dynamic."
 	(should (fboundp f))
 	(should (equal (funcall f) (concat "<" a ">")))))))
 
+(ert-deftest mew-test-scan-get-piece-bidi ()
+  "A column truncated in the middle of a bidi override must not leave
+it open; that reversed the rest of the summary line (#335)."
+  (let ((from (concat "⁦‮" "【 せ ら 知 お 庁 税 国 】" "‬⁩"))
+	(mew-inherit-total 0)
+	(mew-inherit-width 80)
+	piece)
+    (cl-letf (((symbol-function 'mew-summary-form-from) (lambda () from)))
+      (setq piece (mew-scan-get-piece '(17 from))))
+    (should (= (string-width piece) 17))
+    (should (string-prefix-p "【" piece))
+    (should-not (string-match mew-regex-bidi-control piece))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; The tree itself
