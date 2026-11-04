@@ -174,16 +174,16 @@ private void stdin_init(unsigned int);
 private int  hexval(int);
 private char *unhex(const char *);
 private void set_fld_rng(struct fld_rng *, char *, char *);
-#ifdef HAVE_ICONV
 private void dbuf_reserve(struct dbuf *, size_t);
 private void dbuf_append(struct dbuf *, const char *, size_t);
 private char *decode_field(const char *);
 private int  decode_word(const char *, size_t, struct dbuf *);
+#ifdef HAVE_ICONV
 private iconv_t get_iconv_to_utf8(const char *);
 private int  iconv_to_utf8(const char *, const char *, size_t, struct dbuf *,
     int);
-private int  b64_pton(const char *, unsigned char *, size_t);
 #endif /* HAVE_ICONV */
+private int  b64_pton(const char *, unsigned char *, size_t);
 
 /****************************************************************
  * 
@@ -746,13 +746,11 @@ search_string(char *key, char *value, int case_sensitive) {
 			tmp = *end;
 			*end = NUL;
 
-#ifdef HAVE_ICONV
 			if (strstr(beg, "=?") != NULL)
 				/* the field body begins after ":" */
 				val = dec = decode_field(*beg == ':' ?
 				    beg + 1 : beg);
 			else
-#endif /* HAVE_ICONV */
 				val = beg;
 
 			if (field_match(val, value, case_sensitive)) {
@@ -781,7 +779,6 @@ int ends_with(const char *str, const char *suffix) {
 	return strncmp(str + str_len - suffix_len, suffix, suffix_len) == 0;
 }
 
-#ifdef HAVE_ICONV
 /****************************************************************
  *
  * RFC 2047 decoding
@@ -844,6 +841,7 @@ decode_field(const char *str) {
 	return ret.buf;
 }
 
+#ifdef HAVE_ICONV
 /* MIME charsets renamed for iconv, and supersets to retry with on failure */
 private struct {
 	const char *mime;
@@ -861,6 +859,7 @@ private struct {
 	{	"euc-kr",		NULL,		"CP949"		},
 	{	"tis-620",		NULL,		"CP874"		}
 };
+#endif /* HAVE_ICONV */
 
 #define CHARSET_MAX	64
 
@@ -886,7 +885,10 @@ private struct {
 private int
 decode_word(const char *str, size_t size, struct dbuf *out) {
 	int i, j, len, enc, retsz;
-	const char *p, *name, *retry = NULL;
+#ifdef HAVE_ICONV
+	const char *name;
+#endif /* HAVE_ICONV */
+	const char *p, *retry = NULL;
 	char cs[CHARSET_MAX];
 	char *tmp = NULL, *in;
 	size_t tmpsz = 0, insz, olen, s, d;
@@ -979,6 +981,7 @@ decode_word(const char *str, size_t size, struct dbuf *out) {
 		break;
 	}
 
+#ifdef HAVE_ICONV
 	name = cs;
 	for (i = 0; i < (int)nitems(rfc2047_charsets); i++) {
 		if (strlen(rfc2047_charsets[i].mime) == strlen(cs) &&
@@ -995,6 +998,13 @@ decode_word(const char *str, size_t size, struct dbuf *out) {
 	    (retry == NULL || iconv_to_utf8(retry, in, insz, out, YES) != 0) &&
 	    iconv_to_utf8(name, in, insz, out, YES) != 0)
 		goto fail;	/* unknown charset */
+#else
+	/* without iconv, use decoded buffer when encoding is utf-8. */
+	if (strncasecmp(&cs[0], "utf-8", strlen("utf-8")) != 0)
+		goto fail;
+	olen = out->len;
+	dbuf_append(out, in, insz);
+#endif
 
 	/* remove control characters but TAB as Mew does */
 	for (s = d = olen; s < out->len; s++) {
@@ -1012,6 +1022,7 @@ fail:
 	return -1;
 }
 
+#ifdef HAVE_ICONV
 private iconv_t
 get_iconv_to_utf8(const char *cs) {
 	static char last[CHARSET_MAX];
@@ -1065,6 +1076,7 @@ iconv_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out,
 	out->buf[out->len] = NUL;
 	return 0;
 }
+#endif /* HAVE_ICONV */
 
 private int
 b64_pton(const char *src, unsigned char *dst, size_t dstsiz) {
@@ -1123,7 +1135,6 @@ b64_pton(const char *src, unsigned char *dst, size_t dstsiz) {
 
 	return k;
 }
-#endif /* HAVE_ICONV */
 
 /****************************************************************
  * 
