@@ -52,7 +52,7 @@
     (notmuch "Notmuch" ,mew-prog-notmuch
 	     nil mew-search-virtual-with-notmuch
 	     mew-notmuch-index-folder mew-notmuch-index-all
-	     nilnil nil nil)))
+	     nil nil nil nil)))
 
 (defun mew-search-get-list (func)
   (let ((sw mew-search-switch)

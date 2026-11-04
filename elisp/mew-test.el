@@ -1378,6 +1378,16 @@ underscore and a space the wrong way round and matches nothing."
   (should (equal (mew-q-encode-string "Mail_local/" ?%) "Mail%5Flocal/"))
   (should (equal (mew-q-encode-string "Mail dir/" ?%) "Mail_dir/")))
 
+(ert-deftest mew-test-search-switch-notmuch ()
+  "Notmuch has no function to canonicalize a pattern, register or
+unregister a folder, or filter the input."
+  (let ((ent (mew-search-get-ent 'notmuch)))
+    (should (= (length ent) 11))
+    (should-not (mew-search-get-func-canonicalize-pattern ent))
+    (should-not (mew-search-get-func-register ent))
+    (should-not (mew-search-get-func-unregister ent))
+    (should-not (mew-search-get-func-filter ent))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; mew-encode.el: a failing encoder
