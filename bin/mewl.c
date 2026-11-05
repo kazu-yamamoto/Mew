@@ -998,6 +998,7 @@ private struct {
 	{	"ks_c_5601-1987",	"CP949",	NULL		},
 	{	"windows-31j",		"CP932",	NULL		},
 	{	"iso-8859-8-i",		"ISO-8859-8",	NULL		},
+	{	"utf8",			"UTF-8",	NULL		},
 	{	"iso-2022-jp",		NULL,		"CP50221"	},
 	{	"shift_jis",		NULL,		"CP932"		},
 	{	"euc-jp",		NULL,		"EUC-JP-MS"	},
