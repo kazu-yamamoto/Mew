@@ -27,6 +27,16 @@ This is stable releases of Mew 6.12.
   whether to send it without protection, instead of sending it as it
   is silently.
   [#333](https://github.com/kazu-yamamoto/Mew/pull/333)
+* Over a connection without TLS, SSH or stunnel, Mew stops before
+  sending a password or a token as it is (PLAIN, LOGIN, XOAUTH2, the
+  IMAP LOGIN command and NNTP AUTHINFO).  Use TLS, or set
+  `mew-auth-cleartext-allowed` (or `auth-cleartext-allowed` in
+  `mew-config-alist`) to allow it.
+  [#331](https://github.com/kazu-yamamoto/Mew/pull/331)
+* The code for Meadow and for printing on Windows is removed.  To print
+  with Notepad, set `lpr-command` to "notepad.exe" and `lpr-switches`
+  to ("/p").
+  [#327](https://github.com/kazu-yamamoto/Mew/pull/327)
 * Before an external viewer opens a part whose file name suffix does
   not fit its Content-Type:, Mew asks for confirmation.  More content
   types (mp4, webp, heic, svg, json, ...) are known, also when
@@ -40,10 +50,14 @@ This is stable releases of Mew 6.12.
   Message-Id:), RFC 2047 encoded header fields are decoded, and, if
   mewl is built with utf8proc, `=` compares with Unicode case folding
   and NFC.
-  On Windows, non-ASCII patterns work.
+  On Windows, non-ASCII patterns work.  Without iconv, encoded words
+  are still decoded, so UTF-8 text and the ASCII part of the others
+  (e.g. a mailing list name) can be found.  `./configure
+  --disable-iconv` builds mewl without iconv.
   [#275](https://github.com/kazu-yamamoto/Mew/pull/275)
   [#279](https://github.com/kazu-yamamoto/Mew/pull/279)
   [#313](https://github.com/kazu-yamamoto/Mew/pull/313)
+  [#342](https://github.com/kazu-yamamoto/Mew/pull/342)
 * `incm -c` trusts Content-Length: only when it ends exactly at the
   next "From " line.
   [#295](https://github.com/kazu-yamamoto/Mew/pull/295)
@@ -145,6 +159,21 @@ This is stable releases of Mew 6.12.
   [#307](https://github.com/kazu-yamamoto/Mew/pull/307)
 * GB2312 messages are decoded as GBK.
   [#315](https://github.com/kazu-yamamoto/Mew/pull/315)
+* Bidirectional control characters such as RLO no longer reorder the
+  columns of a Summary line.  Rescan (`s` with range `all`) folders
+  scanned before.
+  [#340](https://github.com/kazu-yamamoto/Mew/pull/340)
+* mewl no longer drops the last byte of a message without a final
+  newline, nor the leading "." of the last body line.
+  [#336](https://github.com/kazu-yamamoto/Mew/pull/336)
+  [#339](https://github.com/kazu-yamamoto/Mew/pull/339)
+* Images such as X-Face: and BIMI logos are dropped before printing,
+  instead of being printed as blanks.
+  [#334](https://github.com/kazu-yamamoto/Mew/pull/334)
+* On Windows, mewl rejects a too long folder path instead of leaving
+  it unterminated, and reads a folder whose path ends with a CP932
+  character whose second byte is "\".
+  [#326](https://github.com/kazu-yamamoto/Mew/pull/326)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
@@ -160,8 +189,10 @@ This is stable releases of Mew 6.12.
   [#261](https://github.com/kazu-yamamoto/Mew/pull/261)
   [#262](https://github.com/kazu-yamamoto/Mew/pull/262)
   [#317](https://github.com/kazu-yamamoto/Mew/pull/317)
+  [#322](https://github.com/kazu-yamamoto/Mew/pull/322)
   [#323](https://github.com/kazu-yamamoto/Mew/pull/323)
-  [#329](https://github.com/kazu-yamamoto/Mew/pull/329).
+  [#329](https://github.com/kazu-yamamoto/Mew/pull/329)
+  [#338](https://github.com/kazu-yamamoto/Mew/pull/338).
 
 ## Differences between Mew 6.11 and Mew 6.10
 
