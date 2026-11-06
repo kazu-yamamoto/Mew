@@ -14,8 +14,11 @@
 #    The vcpkg bundled with Visual Studio cannot install packages this
 #    way.  To use another directory, set VCPKGDIR below or on the nmake
 #    command line.
-# 3. With iconv, mewl.exe decodes encoded-words when picking; to build
-#    without it, empty the two ICONV lines below.
+# 3. mewl.exe decodes encoded-words when picking, and with iconv it
+#    converts them into UTF-8.  Without iconv, the decoded bytes are
+#    compared as they are, so that encoded-words in UTF-8 and ASCII in
+#    the other charsets can still be found.  To build without iconv,
+#    empty the two ICONV lines below.
 # 4. With utf8proc, mewl.exe compares the pick patterns as Unicode:
 #    `==` and `!==` compare after NFC, and `=` and `!=` apply Unicode
 #    full case folding and NFC.  To make `=` and `!=` also ignore

@@ -33,8 +33,14 @@ so POP needs `mewl` as well.
 
 * Type `./configure`.
 
-  * If iconv is available, `mewl` uses it to decode encoded-words
-     (RFC 2047) in header fields when picking messages.
+  * `mewl` decodes encoded-words (RFC 2047) in header fields when
+     picking messages.  If iconv is available, `mewl` uses it to
+     convert them into UTF-8.  Without iconv, the decoded bytes are
+     compared as they are, so that encoded-words in UTF-8 and ASCII in
+     the other charsets, such as the name of a mailing list, can still
+     be found.  To build without iconv, type
+     `./configure --disable-iconv`.  On Windows, the notes at the top
+     of `bin/Makefile.w32` say how to build without iconv.
 
   * If utf8proc (1.3 or later) is available, `mewl` uses it to compare
      header fields by the Unicode rules when picking messages: `==` and
