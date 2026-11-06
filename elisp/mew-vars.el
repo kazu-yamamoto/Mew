@@ -1923,6 +1923,20 @@ returns the AUTH capability."
   :group 'mew-smtp
   :type 'boolean)
 
+(defcustom mew-auth-cleartext-allowed nil
+  "*If nil, Mew stops before sending a password or a token as it is
+over a connection which uses none of TLS, SSH and stunnel.  This
+applies to the SASL methods PLAIN, LOGIN and XOAUTH2 which Mew picks
+for SMTP, POP and IMAP, to the IMAP LOGIN command which Mew falls
+back to, and to NNTP AUTHINFO.  It does not apply to a plain password
+which you chose yourself with `mew-pop-auth' or `mew-imap-auth'.
+On a network where someone can change what the server says, the
+safer methods can be hidden so that Mew picks one of these.
+If non-nil, these are used anyway.  This can be set for each case
+in `mew-config-alist' as (auth-cleartext-allowed t)."
+  :group 'mew-privacy
+  :type 'boolean)
+
 (defcustom mew-smtp-auth-plain-authorize-id nil
   "*If nil, SMTP AUTH PLAIN is created as follow:
 	NUL authenticate-id NUL password

@@ -25,6 +25,42 @@
 	(setq strongest auth))))
     strongest))
 
+;;
+;; Passwords and tokens over an unencrypted connection
+;;
+
+(defvar mew-auth-cleartext-list '("PLAIN" "LOGIN" "XOAUTH2" "AUTHINFO")
+  "Methods which send a password or a token as it is.
+\"LOGIN\" is also the IMAP command and \"AUTHINFO\" the NNTP one.")
+
+(defun mew-auth-cleartext-refused-p (auth secure case)
+  "Return t if AUTH may not be used since the connection is not SECURE."
+  (and (not secure)
+       (mew-member-case-equal auth mew-auth-cleartext-list)
+       (not (mew-auth-cleartext-allowed case))))
+
+(defun mew-auth-cleartext-refuse (proto auth case)
+  "Explain in the *Warnings* buffer why PROTO stopped before AUTH.
+Return a one-line message for the error of the session."
+  (let ((ssl (format "%s-ssl" (downcase proto))))
+    (display-warning
+     'mew
+     (format "%s: %s would send your password or token unencrypted%s,
+so Mew stopped before sending it.
+
+To protect it, connect to the server with TLS: set mew-%s
+\(see its documentation), or add (%s ...) to the entry of the case
+in mew-config-alist.
+
+To send it as it is anyway, for example to a server on your own LAN,
+add (auth-cleartext-allowed t) to the entry of the case in
+mew-config-alist, or set mew-auth-cleartext-allowed to t for all cases."
+	     proto auth
+	     (if (mew-case-default-p case) "" (format " (case %s)" case))
+	     ssl ssl)
+     :error)
+    (format "%s %s needs TLS: see the *Warnings* buffer" proto auth)))
+
 (defun mew-md5-raw (str)
   (let* ((md5str (mew-md5 str))
 	 (len (length md5str))
