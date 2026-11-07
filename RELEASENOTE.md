@@ -90,6 +90,9 @@ This is stable releases of Mew 6.12.
   [#321](https://github.com/kazu-yamamoto/Mew/pull/321)
   [#324](https://github.com/kazu-yamamoto/Mew/pull/324)
   [#325](https://github.com/kazu-yamamoto/Mew/pull/325)
+* mewl no longer accesses memory out of bounds when the iconv of glibc
+  skips invalid bytes, e.g. in a ks_c_5601-1987 encoded word.
+  [#343](https://github.com/kazu-yamamoto/Mew/pull/343)
 * A posted news article no longer carries Bcc: or Dcc:.
   [#300](https://github.com/kazu-yamamoto/Mew/pull/300)
 * A forged "bimi=pass" below your server's Authentication-Results: is
