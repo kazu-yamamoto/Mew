@@ -1055,7 +1055,7 @@ private int
 iconv_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out,
     int keep_invalid) {
 	iconv_t ic;
-	char *ip = (char *)in, *op;
+	char *ip = (char *)in, *op, *prev;
 	size_t outsz, olen = out->len, r;
 
 	if ((ic = get_iconv_to_utf8(cs)) == (iconv_t)-1)
@@ -1064,6 +1064,7 @@ iconv_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out,
 	for (;;) {
 		op = out->buf + out->len;
 		outsz = out->siz - out->len - 1;	/* keep room for NUL */
+		prev = ip;
 		/* void * absorbs char ** or const char ** of the prototype */
 		r = iconv(ic, (void *)&ip, &insz, &op, &outsz);
 		out->len = op - out->buf;
@@ -1072,9 +1073,18 @@ iconv_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out,
 		if (errno == E2BIG)
 			dbuf_reserve(out, out->siz - out->len + 1); /* double */
 		else if (keep_invalid == YES && errno == EILSEQ) {
-			dbuf_append(out, ip, 1);
-			ip++;
-			insz--;
+			/*
+			 * If ip has moved, go on from there: the converter
+			 * has converted the bytes before the invalid ones,
+			 * or skipped the invalid ones as some converters of
+			 * glibc, such as CP949, do.  Otherwise the byte at
+			 * ip is invalid.
+			 */
+			if (ip == prev) {
+				dbuf_append(out, ip, 1);
+				ip++;
+				insz--;
+			}
 		} else if (keep_invalid == YES && errno == EINVAL) {
 			dbuf_append(out, ip, insz);	/* truncated at the end */
 			break;
