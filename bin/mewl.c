@@ -181,6 +181,7 @@ private int  decode_word(const char *, size_t, struct dbuf *);
 #ifdef HAVE_ICONV
 private int  charset_to_utf8(const char *, const char *, size_t, struct dbuf *);
 private const char *utf16_by_bom(const char **, size_t *);
+private int  looks_like_euc_kr(const char *, size_t);
 private iconv_t get_iconv_to_utf8(const char *);
 private void iconv_flush(iconv_t, struct dbuf *);
 private int  iconv_to_utf8(const char *, const char *, size_t, struct dbuf *,
@@ -995,23 +996,32 @@ fail:
 }
 
 #ifdef HAVE_ICONV
-/* MIME charsets renamed for iconv, and supersets to retry with on failure */
+/*
+ * MIME charsets renamed for iconv, and charsets to retry with on failure.
+ * EUC-KR is opened as CP949, which extends it, since the converter of glibc
+ * for EUC-KR takes the lead bytes 0x81-0x9F of CP949 for C1 controls
+ * and succeeds, so that a retry would never happen.  It is retried as
+ * EUC-KR for U+327E (A2 E8), added to KS X 1001 later, which CP949 of
+ * glibc and GNU libiconv lacks.  Since EUC-KR is a subset of CP949, it
+ * is tried only strictly (see charset_to_utf8()).
+ */
 private struct {
 	const char *mime;
 	const char *iconv;		/* NULL: as it is */
 	const char *retry;		/* NULL: no retry */
+	int subset;			/* the retry is a subset */
 } rfc2047_charsets[] = {
-	{	"ks_c_5601-1987",	"CP949",	NULL		},
-	{	"windows-31j",		"CP932",	NULL		},
-	{	"iso-8859-8-i",		"ISO-8859-8",	NULL		},
-	{	"utf8",			"UTF-8",	NULL		},
-	{	"iso-2022-jp",		NULL,		"CP50221"	},
-	{	"shift_jis",		NULL,		"CP932"		},
-	{	"euc-jp",		NULL,		"EUC-JP-MS"	},
-	{	"gb2312",		NULL,		"GB18030"	},
-	{	"big5",			NULL,		"BIG5-HKSCS"	},
-	{	"euc-kr",		NULL,		"CP949"		},
-	{	"tis-620",		NULL,		"CP874"		}
+	{ "ks_c_5601-1987",	"CP949",	NULL,		NO	},
+	{ "euc-kr",		"CP949",	"EUC-KR",	YES	},
+	{ "windows-31j",	"CP932",	NULL,		NO	},
+	{ "iso-8859-8-i",	"ISO-8859-8",	NULL,		NO	},
+	{ "utf8",		"UTF-8",	NULL,		NO	},
+	{ "iso-2022-jp",	NULL,		"CP50221",	NO	},
+	{ "shift_jis",		NULL,		"CP932",	NO	},
+	{ "euc-jp",		NULL,		"EUC-JP-MS",	NO	},
+	{ "gb2312",		NULL,		"GB18030",	NO	},
+	{ "big5",		NULL,		"BIG5-HKSCS",	NO	},
+	{ "tis-620",		NULL,		"CP874",	NO	}
 };
 
 /*
@@ -1021,27 +1031,43 @@ private struct {
 private int
 charset_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out) {
 	const char *name = cs, *retry = NULL;
-	int i;
+	int i, subset = NO;
 
 	for (i = 0; i < (int)nitems(rfc2047_charsets); i++) {
 		if (strcasecmp(rfc2047_charsets[i].mime, cs) == 0) {
 			if (rfc2047_charsets[i].iconv != NULL)
 				name = rfc2047_charsets[i].iconv;
 			retry = rfc2047_charsets[i].retry;
+			subset = rfc2047_charsets[i].subset;
 			break;
 		}
 	}
+	/*
+	 * Fall back on the charset itself if iconv cannot open the name
+	 * given by the table, which other implementations may lack.
+	 */
+	if (name != cs && get_iconv_to_utf8(name) == (iconv_t)-1)
+		name = cs;
 	if (strcasecmp(cs, "UTF-16") == 0)
 		name = utf16_by_bom(&in, &insz);
 	/*
-	 * Strictly, the charset and then its superset; then keeping invalid
-	 * bytes, the superset and then the charset.
+	 * A subset, which is only EUC-KR, is tried only if the bytes look
+	 * like EUC-KR.  Otherwise the converter of glibc takes 0x80-0x9F for
+	 * C1 controls, and that of macOS takes a trailing byte 0x21-0x7E for
+	 * 0xA1-0xFE, and they succeed with other characters.
+	 */
+	if (subset == YES && looks_like_euc_kr(in, insz) == NO)
+		retry = NULL;
+	/*
+	 * Strictly, the charset and then the retry; then keeping invalid
+	 * bytes, the retry if it is a superset and then the charset.
 	 */
 	if (iconv_to_utf8_strict(name, in, insz, out) == 0)
 		return 0;
 	if (retry != NULL && iconv_to_utf8_strict(retry, in, insz, out) == 0)
 		return 0;
-	if (retry != NULL && iconv_to_utf8_lenient(retry, in, insz, out) == 0)
+	if (retry != NULL && subset == NO &&
+	    iconv_to_utf8_lenient(retry, in, insz, out) == 0)
 		return 0;
 	return iconv_to_utf8_lenient(name, in, insz, out);
 }
@@ -1070,6 +1096,27 @@ utf16_by_bom(const char **in, size_t *insz) {
 		*insz -= 2;
 	}
 	return "UTF-16BE";
+}
+
+/*
+ * Return YES if every byte 0x80 or above of "insz" bytes at "in" is in
+ * a pair of bytes 0xA1-0xFE, as in EUC-KR, or NO otherwise.
+ */
+private int
+looks_like_euc_kr(const char *in, size_t insz) {
+	const unsigned char *p = (const unsigned char *)in, *lim = p + insz;
+
+	while (p < lim) {
+		if (*p < 0x80) {
+			p++;
+			continue;
+		}
+		if (lim - p < 2 || *p < 0xA1 || *p > 0xFE ||
+		    p[1] < 0xA1 || p[1] > 0xFE)
+			return NO;
+		p += 2;
+	}
+	return YES;
 }
 
 private iconv_t
