@@ -1018,8 +1018,7 @@ charset_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out) {
 	int i;
 
 	for (i = 0; i < (int)nitems(rfc2047_charsets); i++) {
-		if (strlen(rfc2047_charsets[i].mime) == strlen(cs) &&
-		    strncasecmp(rfc2047_charsets[i].mime, cs, strlen(cs)) == 0) {
+		if (strcasecmp(rfc2047_charsets[i].mime, cs) == 0) {
 			if (rfc2047_charsets[i].iconv != NULL)
 				name = rfc2047_charsets[i].iconv;
 			retry = rfc2047_charsets[i].retry;
