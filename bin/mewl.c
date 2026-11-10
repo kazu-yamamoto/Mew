@@ -1000,10 +1000,11 @@ fail:
  * MIME charsets renamed for iconv, and charsets to retry with on failure.
  * EUC-KR is opened as CP949, which extends it, since the converter of glibc
  * for EUC-KR takes the lead bytes 0x81-0x9F of CP949 for C1 controls
- * and succeeds, so that a retry would never happen.  It is retried as
- * EUC-KR for U+327E (A2 E8), added to KS X 1001 later, which CP949 of
- * glibc and GNU libiconv lacks.  Since EUC-KR is a subset of CP949, it
- * is tried only strictly (see charset_to_utf8()).
+ * and succeeds, so that a retry would never happen.  Both EUC-KR and
+ * ks_c_5601-1987 are retried as EUC-KR for U+327E (A2 E8), added to
+ * KS X 1001 later, which CP949 of glibc and GNU libiconv lacks.  Since
+ * EUC-KR is a subset of CP949, it is tried only strictly (see
+ * charset_to_utf8()).
  */
 private struct {
 	const char *mime;
@@ -1011,7 +1012,7 @@ private struct {
 	const char *retry;		/* NULL: no retry */
 	int subset;			/* the retry is a subset */
 } rfc2047_charsets[] = {
-	{ "ks_c_5601-1987",	"CP949",	NULL,		NO	},
+	{ "ks_c_5601-1987",	"CP949",	"EUC-KR",	YES	},
 	{ "euc-kr",		"CP949",	"EUC-KR",	YES	},
 	{ "windows-31j",	"CP932",	NULL,		NO	},
 	{ "iso-8859-8-i",	"ISO-8859-8",	NULL,		NO	},
