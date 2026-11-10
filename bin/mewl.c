@@ -180,6 +180,7 @@ private char *decode_field(const char *);
 private int  decode_word(const char *, size_t, struct dbuf *);
 #ifdef HAVE_ICONV
 private int  charset_to_utf8(const char *, const char *, size_t, struct dbuf *);
+private const char *utf16_by_bom(const char **, size_t *);
 private iconv_t get_iconv_to_utf8(const char *);
 private void iconv_flush(iconv_t, struct dbuf *);
 private int  iconv_to_utf8(const char *, const char *, size_t, struct dbuf *,
@@ -1030,6 +1031,8 @@ charset_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out) {
 			break;
 		}
 	}
+	if (strcasecmp(cs, "UTF-16") == 0)
+		name = utf16_by_bom(&in, &insz);
 	/*
 	 * Strictly, the charset and then its superset; then keeping invalid
 	 * bytes, the superset and then the charset.
@@ -1041,6 +1044,32 @@ charset_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out) {
 	if (retry != NULL && iconv_to_utf8_lenient(retry, in, insz, out) == 0)
 		return 0;
 	return iconv_to_utf8_lenient(name, in, insz, out);
+}
+
+/*
+ * Return the charset for UTF-16 at "*in", "*insz" bytes long, in the
+ * byte order of its BOM, or big endian without one (RFC 2781), and
+ * skip the BOM.  A converter of glibc for "UTF-16" keeps the order of
+ * the first BOM it saw even after a reset, and takes the host order
+ * without a BOM.  The BOM is skipped since the converters for an
+ * explicit order keep it as U+FEFF.
+ */
+private const char *
+utf16_by_bom(const char **in, size_t *insz) {
+	const unsigned char *p = (const unsigned char *)*in;
+
+	if (*insz < 2)
+		return "UTF-16BE";
+	if (p[0] == 0xFF && p[1] == 0xFE) {
+		*in += 2;
+		*insz -= 2;
+		return "UTF-16LE";
+	}
+	if (p[0] == 0xFE && p[1] == 0xFF) {
+		*in += 2;
+		*insz -= 2;
+	}
+	return "UTF-16BE";
 }
 
 private iconv_t
