@@ -181,6 +181,7 @@ private int  decode_word(const char *, size_t, struct dbuf *);
 #ifdef HAVE_ICONV
 private int  charset_to_utf8(const char *, const char *, size_t, struct dbuf *);
 private iconv_t get_iconv_to_utf8(const char *);
+private void iconv_flush(iconv_t, struct dbuf *);
 private int  iconv_to_utf8(const char *, const char *, size_t, struct dbuf *,
     int);
 private int  iconv_to_utf8_strict(const char *, const char *, size_t,
@@ -1059,6 +1060,30 @@ get_iconv_to_utf8(const char *cs) {
 	return ic;
 }
 
+/*
+ * Write out what the converter still holds.  The converters of glibc
+ * for CP1255 and CP1258 hold back the last base letter, since a
+ * combining mark that follows could compose with it.
+ */
+private void
+iconv_flush(iconv_t ic, struct dbuf *out) {
+	char *op;
+	size_t outsz;
+
+	for (;;) {
+		op = out->buf + out->len;
+		outsz = out->siz - out->len - 1;	/* keep room for NUL */
+		if (iconv(ic, NULL, NULL, &op, &outsz) != (size_t)-1) {
+			out->len = op - out->buf;
+			break;
+		}
+		out->len = op - out->buf;
+		if (errno != E2BIG)
+			break;
+		dbuf_reserve(out, out->siz - out->len + 1); /* double */
+	}
+}
+
 private int
 iconv_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out,
     int keep_invalid) {
@@ -1098,6 +1123,7 @@ iconv_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out,
 			insz--;
 		}
 	}
+	iconv_flush(ic, out);
 	dbuf_append(out, ip, insz);	/* the truncated bytes, if any */
 	return 0;
 fail:
