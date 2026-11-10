@@ -1005,6 +1005,12 @@ fail:
  * KS X 1001 later, which CP949 of glibc and GNU libiconv lacks.  Since
  * EUC-KR is a subset of CP949, it is tried only strictly (see
  * charset_to_utf8()).
+ * TIS-620 is opened as CP874, its superset, since the converter of macOS
+ * for TIS-620 takes the byte 0x80 of CP874 for a C1 control, as glibc
+ * does for EUC-KR.  Big5 has the same problem on macOS, whose converter
+ * for Big5 takes 88 40 of Big5-HKSCS for private use, but is not opened
+ * as BIG5-HKSCS, since the two map 0xC6A1-0xC8FE differently in glibc
+ * and GNU libiconv.
  */
 private struct {
 	const char *mime;
@@ -1017,12 +1023,12 @@ private struct {
 	{ "windows-31j",	"CP932",	NULL,		NO	},
 	{ "iso-8859-8-i",	"ISO-8859-8",	NULL,		NO	},
 	{ "utf8",		"UTF-8",	NULL,		NO	},
+	{ "tis-620",		"CP874",	NULL,		NO	},
 	{ "iso-2022-jp",	NULL,		"CP50221",	NO	},
 	{ "shift_jis",		NULL,		"CP932",	NO	},
 	{ "euc-jp",		NULL,		"EUC-JP-MS",	NO	},
 	{ "gb2312",		NULL,		"GB18030",	NO	},
-	{ "big5",		NULL,		"BIG5-HKSCS",	NO	},
-	{ "tis-620",		NULL,		"CP874",	NO	}
+	{ "big5",		NULL,		"BIG5-HKSCS",	NO	}
 };
 
 /*
