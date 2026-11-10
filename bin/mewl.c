@@ -183,6 +183,10 @@ private int  charset_to_utf8(const char *, const char *, size_t, struct dbuf *);
 private iconv_t get_iconv_to_utf8(const char *);
 private int  iconv_to_utf8(const char *, const char *, size_t, struct dbuf *,
     int);
+private int  iconv_to_utf8_strict(const char *, const char *, size_t,
+    struct dbuf *);
+private int  iconv_to_utf8_lenient(const char *, const char *, size_t,
+    struct dbuf *);
 #endif /* HAVE_ICONV */
 private int  b64_pton(const char *, unsigned char *, size_t);
 
@@ -1025,12 +1029,17 @@ charset_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out) {
 			break;
 		}
 	}
-	if (iconv_to_utf8(name, in, insz, out, NO) != 0 &&
-	    (retry == NULL || iconv_to_utf8(retry, in, insz, out, NO) != 0) &&
-	    (retry == NULL || iconv_to_utf8(retry, in, insz, out, YES) != 0) &&
-	    iconv_to_utf8(name, in, insz, out, YES) != 0)
-		return -1;
-	return 0;
+	/*
+	 * Strictly, the charset and then its superset; then keeping invalid
+	 * bytes, the superset and then the charset.
+	 */
+	if (iconv_to_utf8_strict(name, in, insz, out) == 0)
+		return 0;
+	if (retry != NULL && iconv_to_utf8_strict(retry, in, insz, out) == 0)
+		return 0;
+	if (retry != NULL && iconv_to_utf8_lenient(retry, in, insz, out) == 0)
+		return 0;
+	return iconv_to_utf8_lenient(name, in, insz, out);
 }
 
 private iconv_t
@@ -1095,6 +1104,23 @@ fail:
 	out->len = olen;
 	out->buf[out->len] = NUL;
 	return -1;
+}
+
+/* Fail on an invalid or truncated sequence. */
+private int
+iconv_to_utf8_strict(const char *cs, const char *in, size_t insz,
+    struct dbuf *out) {
+	return iconv_to_utf8(cs, in, insz, out, NO);
+}
+
+/*
+ * Keep invalid and truncated bytes as they are, as Mew does
+ * (decode-coding-string keeps them as raw bytes).
+ */
+private int
+iconv_to_utf8_lenient(const char *cs, const char *in, size_t insz,
+    struct dbuf *out) {
+	return iconv_to_utf8(cs, in, insz, out, YES);
 }
 #endif /* HAVE_ICONV */
 
