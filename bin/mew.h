@@ -50,6 +50,7 @@
 #define TAB  '\t'
 #define SP   ' '
 #define DOT  '.'
+#define ESC  '\033'
 #define DEL 127
 
 /*
