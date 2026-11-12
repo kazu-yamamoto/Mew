@@ -162,6 +162,11 @@ This is stable releases of Mew 6.12.
   [#307](https://github.com/kazu-yamamoto/Mew/pull/307)
 * GB2312 messages are decoded as GBK.
   [#315](https://github.com/kazu-yamamoto/Mew/pull/315)
+* Pick decodes encoded words in windows-1255, windows-1258, UTF-16,
+  EUC-KR, ks_c_5601-1987 and TIS-620 correctly: the last character is
+  no longer lost, UTF-16 follows its BOM, and characters only in CP949
+  or CP874 are found.
+  [#344](https://github.com/kazu-yamamoto/Mew/pull/344)
 * Bidirectional control characters such as RLO no longer reorder the
   columns of a Summary line.  Rescan (`s` with range `all`) folders
   scanned before.
