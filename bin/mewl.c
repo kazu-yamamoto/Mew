@@ -180,9 +180,16 @@ private char *decode_field(const char *);
 private int  decode_word(const char *, size_t, struct dbuf *);
 #ifdef HAVE_ICONV
 private int  charset_to_utf8(const char *, const char *, size_t, struct dbuf *);
+private const char *utf16_by_bom(const char **, size_t *);
+private int  looks_like_euc_kr(const char *, size_t);
 private iconv_t get_iconv_to_utf8(const char *);
+private void iconv_flush(iconv_t, struct dbuf *);
 private int  iconv_to_utf8(const char *, const char *, size_t, struct dbuf *,
     int);
+private int  iconv_to_utf8_strict(const char *, const char *, size_t,
+    struct dbuf *);
+private int  iconv_to_utf8_lenient(const char *, const char *, size_t,
+    struct dbuf *);
 #endif /* HAVE_ICONV */
 private int  b64_pton(const char *, unsigned char *, size_t);
 
@@ -989,23 +996,39 @@ fail:
 }
 
 #ifdef HAVE_ICONV
-/* MIME charsets renamed for iconv, and supersets to retry with on failure */
+/*
+ * MIME charsets renamed for iconv, and charsets to retry with on failure.
+ * EUC-KR is opened as CP949, which extends it, since the converter of glibc
+ * for EUC-KR takes the lead bytes 0x81-0x9F of CP949 for C1 controls
+ * and succeeds, so that a retry would never happen.  Both EUC-KR and
+ * ks_c_5601-1987 are retried as EUC-KR for U+327E (A2 E8), added to
+ * KS X 1001 later, which CP949 of glibc and GNU libiconv lacks.  Since
+ * EUC-KR is a subset of CP949, it is tried only strictly (see
+ * charset_to_utf8()).
+ * TIS-620 is opened as CP874, its superset, since the converter of macOS
+ * for TIS-620 takes the byte 0x80 of CP874 for a C1 control, as glibc
+ * does for EUC-KR.  Big5 has the same problem on macOS, whose converter
+ * for Big5 takes 88 40 of Big5-HKSCS for private use, but is not opened
+ * as BIG5-HKSCS, since the two map 0xC6A1-0xC8FE differently in glibc
+ * and GNU libiconv.
+ */
 private struct {
 	const char *mime;
 	const char *iconv;		/* NULL: as it is */
 	const char *retry;		/* NULL: no retry */
+	int subset;			/* the retry is a subset */
 } rfc2047_charsets[] = {
-	{	"ks_c_5601-1987",	"CP949",	NULL		},
-	{	"windows-31j",		"CP932",	NULL		},
-	{	"iso-8859-8-i",		"ISO-8859-8",	NULL		},
-	{	"utf8",			"UTF-8",	NULL		},
-	{	"iso-2022-jp",		NULL,		"CP50221"	},
-	{	"shift_jis",		NULL,		"CP932"		},
-	{	"euc-jp",		NULL,		"EUC-JP-MS"	},
-	{	"gb2312",		NULL,		"GB18030"	},
-	{	"big5",			NULL,		"BIG5-HKSCS"	},
-	{	"euc-kr",		NULL,		"CP949"		},
-	{	"tis-620",		NULL,		"CP874"		}
+	{ "ks_c_5601-1987",	"CP949",	"EUC-KR",	YES	},
+	{ "euc-kr",		"CP949",	"EUC-KR",	YES	},
+	{ "windows-31j",	"CP932",	NULL,		NO	},
+	{ "iso-8859-8-i",	"ISO-8859-8",	NULL,		NO	},
+	{ "utf8",		"UTF-8",	NULL,		NO	},
+	{ "tis-620",		"CP874",	NULL,		NO	},
+	{ "iso-2022-jp",	NULL,		"CP50221",	NO	},
+	{ "shift_jis",		NULL,		"CP932",	NO	},
+	{ "euc-jp",		NULL,		"EUC-JP-MS",	NO	},
+	{ "gb2312",		NULL,		"GB18030",	NO	},
+	{ "big5",		NULL,		"BIG5-HKSCS",	NO	}
 };
 
 /*
@@ -1015,23 +1038,92 @@ private struct {
 private int
 charset_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out) {
 	const char *name = cs, *retry = NULL;
-	int i;
+	int i, subset = NO;
 
 	for (i = 0; i < (int)nitems(rfc2047_charsets); i++) {
-		if (strlen(rfc2047_charsets[i].mime) == strlen(cs) &&
-		    strncasecmp(rfc2047_charsets[i].mime, cs, strlen(cs)) == 0) {
+		if (strcasecmp(rfc2047_charsets[i].mime, cs) == 0) {
 			if (rfc2047_charsets[i].iconv != NULL)
 				name = rfc2047_charsets[i].iconv;
 			retry = rfc2047_charsets[i].retry;
+			subset = rfc2047_charsets[i].subset;
 			break;
 		}
 	}
-	if (iconv_to_utf8(name, in, insz, out, NO) != 0 &&
-	    (retry == NULL || iconv_to_utf8(retry, in, insz, out, NO) != 0) &&
-	    (retry == NULL || iconv_to_utf8(retry, in, insz, out, YES) != 0) &&
-	    iconv_to_utf8(name, in, insz, out, YES) != 0)
-		return -1;
-	return 0;
+	/*
+	 * Fall back on the charset itself if iconv cannot open the name
+	 * given by the table, which other implementations may lack.
+	 */
+	if (name != cs && get_iconv_to_utf8(name) == (iconv_t)-1)
+		name = cs;
+	if (strcasecmp(cs, "UTF-16") == 0)
+		name = utf16_by_bom(&in, &insz);
+	/*
+	 * A subset, which is only EUC-KR, is tried only if the bytes look
+	 * like EUC-KR.  Otherwise the converter of glibc takes 0x80-0x9F for
+	 * C1 controls, and that of macOS takes a trailing byte 0x21-0x7E for
+	 * 0xA1-0xFE, and they succeed with other characters.
+	 */
+	if (subset == YES && looks_like_euc_kr(in, insz) == NO)
+		retry = NULL;
+	/*
+	 * Strictly, the charset and then the retry; then keeping invalid
+	 * bytes, the retry if it is a superset and then the charset.
+	 */
+	if (iconv_to_utf8_strict(name, in, insz, out) == 0)
+		return 0;
+	if (retry != NULL && iconv_to_utf8_strict(retry, in, insz, out) == 0)
+		return 0;
+	if (retry != NULL && subset == NO &&
+	    iconv_to_utf8_lenient(retry, in, insz, out) == 0)
+		return 0;
+	return iconv_to_utf8_lenient(name, in, insz, out);
+}
+
+/*
+ * Return the charset for UTF-16 at "*in", "*insz" bytes long, in the
+ * byte order of its BOM, or big endian without one (RFC 2781), and
+ * skip the BOM.  A converter of glibc for "UTF-16" keeps the order of
+ * the first BOM it saw even after a reset, and takes the host order
+ * without a BOM.  The BOM is skipped since the converters for an
+ * explicit order keep it as U+FEFF.
+ */
+private const char *
+utf16_by_bom(const char **in, size_t *insz) {
+	const unsigned char *p = (const unsigned char *)*in;
+
+	if (*insz < 2)
+		return "UTF-16BE";
+	if (p[0] == 0xFF && p[1] == 0xFE) {
+		*in += 2;
+		*insz -= 2;
+		return "UTF-16LE";
+	}
+	if (p[0] == 0xFE && p[1] == 0xFF) {
+		*in += 2;
+		*insz -= 2;
+	}
+	return "UTF-16BE";
+}
+
+/*
+ * Return YES if every byte 0x80 or above of "insz" bytes at "in" is in
+ * a pair of bytes 0xA1-0xFE, as in EUC-KR, or NO otherwise.
+ */
+private int
+looks_like_euc_kr(const char *in, size_t insz) {
+	const unsigned char *p = (const unsigned char *)in, *lim = p + insz;
+
+	while (p < lim) {
+		if (*p < 0x80) {
+			p++;
+			continue;
+		}
+		if (lim - p < 2 || *p < 0xA1 || *p > 0xFE ||
+		    p[1] < 0xA1 || p[1] > 0xFE)
+			return NO;
+		p += 2;
+	}
+	return YES;
 }
 
 private iconv_t
@@ -1049,6 +1141,30 @@ get_iconv_to_utf8(const char *cs) {
 	ic = iconv_open("UTF-8", cs);
 	STRCPY(last, cs);
 	return ic;
+}
+
+/*
+ * Write out what the converter still holds.  The converters of glibc
+ * for CP1255 and CP1258 hold back the last base letter, since a
+ * combining mark that follows could compose with it.
+ */
+private void
+iconv_flush(iconv_t ic, struct dbuf *out) {
+	char *op;
+	size_t outsz;
+
+	for (;;) {
+		op = out->buf + out->len;
+		outsz = out->siz - out->len - 1;	/* keep room for NUL */
+		if (iconv(ic, NULL, NULL, &op, &outsz) != (size_t)-1) {
+			out->len = op - out->buf;
+			break;
+		}
+		out->len = op - out->buf;
+		if (errno != E2BIG)
+			break;
+		dbuf_reserve(out, out->siz - out->len + 1); /* double */
+	}
 }
 
 private int
@@ -1069,33 +1185,51 @@ iconv_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out,
 		r = iconv(ic, (void *)&ip, &insz, &op, &outsz);
 		out->len = op - out->buf;
 		if (r != (size_t)-1)
-			break;
-		if (errno == E2BIG)
+			break;			/* all converted */
+		if (errno == E2BIG) {
 			dbuf_reserve(out, out->siz - out->len + 1); /* double */
-		else if (keep_invalid == YES && errno == EILSEQ) {
-			/*
-			 * If ip has moved, go on from there: the converter
-			 * has converted the bytes before the invalid ones,
-			 * or skipped the invalid ones as some converters of
-			 * glibc, such as CP949, do.  Otherwise the byte at
-			 * ip is invalid.
-			 */
-			if (ip == prev) {
-				dbuf_append(out, ip, 1);
-				ip++;
-				insz--;
-			}
-		} else if (keep_invalid == YES && errno == EINVAL) {
-			dbuf_append(out, ip, insz);	/* truncated at the end */
-			break;
-		} else {
-			out->len = olen;
-			out->buf[out->len] = NUL;
-			return -1;
+			continue;
+		}
+		if (keep_invalid == NO || (errno != EILSEQ && errno != EINVAL))
+			goto fail;
+		if (errno == EINVAL)
+			break;			/* truncated at the end */
+		/*
+		 * EILSEQ.  If ip has moved, go on from there: the converter
+		 * has converted the bytes before the invalid ones, or
+		 * skipped the invalid ones as some converters of glibc,
+		 * such as CP949, do.  Otherwise keep the invalid byte at ip.
+		 */
+		if (ip == prev) {
+			dbuf_append(out, ip, 1);
+			ip++;
+			insz--;
 		}
 	}
-	out->buf[out->len] = NUL;
+	iconv_flush(ic, out);
+	dbuf_append(out, ip, insz);	/* the truncated bytes, if any */
 	return 0;
+fail:
+	out->len = olen;
+	out->buf[out->len] = NUL;
+	return -1;
+}
+
+/* Fail on an invalid or truncated sequence. */
+private int
+iconv_to_utf8_strict(const char *cs, const char *in, size_t insz,
+    struct dbuf *out) {
+	return iconv_to_utf8(cs, in, insz, out, NO);
+}
+
+/*
+ * Keep invalid and truncated bytes as they are, as Mew does
+ * (decode-coding-string keeps them as raw bytes).
+ */
+private int
+iconv_to_utf8_lenient(const char *cs, const char *in, size_t insz,
+    struct dbuf *out) {
+	return iconv_to_utf8(cs, in, insz, out, YES);
 }
 #endif /* HAVE_ICONV */
 
