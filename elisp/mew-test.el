@@ -63,11 +63,14 @@ character."
 
 (ert-deftest mew-test-capitalize ()
   (should (equal (mew-capitalize "content-type") "Content-Type"))
-  (should (equal (mew-capitalize "TEXT/PLAIN") "Text/Plain")))
+  (should (equal (mew-capitalize "TEXT/PLAIN") "Text/Plain"))
+  ;; Emacs 31 signals an error for aset of a non-byte into a string.
+  (should (equal (mew-capitalize "件名-x") "件名-X")))
 
 (ert-deftest mew-test-quote-string ()
   (should (equal (mew-quote-string "a\"b" ?\\ '(?\")) "a\\\"b"))
-  (should (equal (mew-quote-string "ab" ?\\ '(?\")) "ab")))
+  (should (equal (mew-quote-string "ab" ?\\ '(?\")) "ab"))
+  (should (equal (mew-quote-string "山\"本" ?\\ '(?\")) "山\\\"本")))
 
 (ert-deftest mew-test-remove-single-quote ()
   "Both branches are covered: `string-replace' from Emacs 28.1, and
@@ -268,7 +271,11 @@ which is then evaluated.  Only global variables are in reach."
   (should (equal (mew-q-encode-string "a b=c?") "a_b=3Dc=3F"))
   (should (equal (mew-q-decode-string "a_b=3Dc=3F") "a b=c?"))
   ;; Broken input gives nil instead of an error.
-  (should-not (mew-q-decode-string "=ZZ")))
+  (should-not (mew-q-decode-string "=ZZ"))
+  ;; Decoded bytes stay bytes; a raw byte in the input is kept.
+  (should (equal (mew-q-decode-string "caf=E9") "caf\351"))
+  (should (equal (mew-q-decode-string (concat (string-to-multibyte "\351") "=41"))
+		 (concat (string-to-multibyte "\351") "A"))))
 
 (ert-deftest mew-test-header-encode-decode ()
   (let ((encoded (car (mew-header-encode-string "日本語"))))
