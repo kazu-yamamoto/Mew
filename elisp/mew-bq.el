@@ -201,23 +201,22 @@
 (defun mew-q-decode-string (qpstr &optional okey)
   (condition-case nil
       (let* ((len (length qpstr))
-	     (ret (mew-make-string len))
-	     (i 0) (j 0) char key)
+	     (i 0) char key ret)
 	(setq key (or okey ?=))
 	(while (< i len) ;; cannot use non-lexbind dotimes since Emacs 29 does not support it
 	  (setq char (aref qpstr i))
 	  (cond
 	   ((and (not okey) (char-equal char ?_))
-	    (aset ret j mew-sp))
+	    (setq ret (cons mew-sp ret)))
 	   ((char-equal char key)
-	    (aset ret j (+ (* (mew-hexchar-to-int (aref qpstr (1+ i))) 16)
-			   (mew-hexchar-to-int (aref qpstr (+ i 2)))))
+	    (setq ret (cons (+ (* (mew-hexchar-to-int (aref qpstr (1+ i))) 16)
+			       (mew-hexchar-to-int (aref qpstr (+ i 2))))
+			    ret))
 	    (setq i (+ i 2)))
 	   (t
-	    (aset ret j char)))
-	  (setq j (1+ j))
+	    (setq ret (cons char ret))))
 	  (setq i (1+ i)))
-	(substring ret 0 j))
+	(mew-chars-to-string (reverse ret)))
     (error nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
