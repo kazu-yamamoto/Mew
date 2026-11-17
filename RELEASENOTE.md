@@ -175,6 +175,9 @@ security, and all Lisp files now use lexical binding.
   no longer lost, UTF-16 follows its BOM, and characters only in CP949
   or CP874 are found.
   [#344](https://github.com/kazu-yamamoto/Mew/pull/344)
+* Pick finds the NEC and IBM extensions, such as circled digits, in
+  ISO-2022-JP and EUC-JP encoded words with any iconv.
+  [#346](https://github.com/kazu-yamamoto/Mew/pull/346)
 * Bidirectional control characters such as RLO no longer reorder the
   columns of a Summary line.  Rescan (`s` with range `all`) folders
   scanned before.
