@@ -336,8 +336,7 @@ in the context of FUNC."
   "Make a string of CHARS as `aset' into a unibyte string did.
 Characters below 256 are bytes unless some other is not.  Emacs 31
 signals an error for `aset' of a character which is not a byte."
-  (if (catch 'multi
-	(dolist (c chars) (if (>= c 256) (throw 'multi t))))
+  (if (memq t (mapcar (lambda (c) (>= c 256)) chars))
       (apply #'string (mapcar (lambda (c)
 				(if (and (>= c 128) (< c 256))
 				    (unibyte-char-to-multibyte c)
@@ -378,18 +377,19 @@ rest of the line."
 (defun mew-capitalize (ostr)
   "Syntax table independent version of capitalize.
 Words are separated by '/' and '-'."
-  (let ((topp t) ret)
-    (dolist (c (string-to-list ostr))
-      (cond
-       (topp
-	(push (upcase c) ret)
-	(setq topp nil))
-       ((or (char-equal c ?/) (char-equal c ?-))
-	(push c ret)
-	(setq topp t))
-       (t
-	(push (downcase c) ret))))
-    (mew-chars-to-string (nreverse ret))))
+  (let ((topp t))
+    (mew-chars-to-string
+     (mapcar (lambda (c)
+	       (cond
+		(topp
+		 (setq topp nil)
+		 (upcase c))
+		((or (char-equal c ?/) (char-equal c ?-))
+		 (setq topp t)
+		 c)
+		(t
+		 (downcase c))))
+	     (string-to-list ostr)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -508,11 +508,10 @@ also ignored."
 
 (defun mew-quote-string (str qchar targets)
   "If characters in STR is a member of TARGETS, QCHAR is prepended to them."
-  (let (ret)
-    (dolist (c (string-to-list str))
-      (if (member c targets) (push qchar ret))
-      (push c ret))
-    (mew-chars-to-string (nreverse ret))))
+  (mew-chars-to-string
+   (apply #'append
+	  (mapcar (lambda (c) (if (member c targets) (list qchar c) (list c)))
+		  (string-to-list str)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

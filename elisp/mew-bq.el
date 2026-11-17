@@ -207,16 +207,16 @@
 	  (setq char (aref qpstr i))
 	  (cond
 	   ((and (not okey) (char-equal char ?_))
-	    (push mew-sp ret))
+	    (setq ret (cons mew-sp ret)))
 	   ((char-equal char key)
-	    (push (+ (* (mew-hexchar-to-int (aref qpstr (1+ i))) 16)
-		     (mew-hexchar-to-int (aref qpstr (+ i 2))))
-		  ret)
+	    (setq ret (cons (+ (* (mew-hexchar-to-int (aref qpstr (1+ i))) 16)
+			       (mew-hexchar-to-int (aref qpstr (+ i 2))))
+			    ret))
 	    (setq i (+ i 2)))
 	   (t
-	    (push char ret)))
+	    (setq ret (cons char ret))))
 	  (setq i (1+ i)))
-	(mew-chars-to-string (nreverse ret)))
+	(mew-chars-to-string (reverse ret)))
     (error nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
