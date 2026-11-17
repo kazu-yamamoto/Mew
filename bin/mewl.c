@@ -106,6 +106,15 @@ struct dbuf {
 	size_t siz;
 };
 
+#ifdef HAVE_ICONV
+/* how to rewrite an encoded-word into Shift_JIS (see to_sjis()) */
+enum sjis {
+	SJIS_NONE,
+	SJIS_ISO2022,	/* rewrite ISO-2022-JP into Shift_JIS */
+	SJIS_EUC	/* rewrite EUC-JP into Shift_JIS */
+};
+#endif
+
 private char Buf_header[MAX_HEADER + 2]; /* + 1 for an appended LF, + 1 for a NUL */
 private char Buf_filenm[MAX_FILE_NAME_LEN];
 private char Buf_filenm2[MAX_FILE_NAME_LEN];
@@ -180,8 +189,13 @@ private char *decode_field(const char *);
 private int  decode_word(const char *, size_t, struct dbuf *);
 #ifdef HAVE_ICONV
 private int  charset_to_utf8(const char *, const char *, size_t, struct dbuf *);
+private int  charset_to_utf8_strict(const char *, enum sjis, const char *,
+    size_t, struct dbuf *);
 private const char *utf16_by_bom(const char **, size_t *);
 private int  looks_like_euc_kr(const char *, size_t);
+private int  leaks_ascii(const char *, size_t, const char *, size_t);
+private int  to_sjis(enum sjis, const char *, size_t, char *, size_t *);
+private int  sjis_to_utf8(enum sjis, const char *, size_t, struct dbuf *);
 private iconv_t get_iconv_to_utf8(const char *);
 private void iconv_flush(iconv_t, struct dbuf *);
 private int  iconv_to_utf8(const char *, const char *, size_t, struct dbuf *,
@@ -1011,6 +1025,12 @@ fail:
  * for Big5 takes 88 40 of Big5-HKSCS for private use, but is not opened
  * as BIG5-HKSCS, since the two map 0xC6A1-0xC8FE differently in glibc
  * and GNU libiconv.
+ *
+ * The NEC and IBM extensions in ISO-2022-JP and EUC-JP, such as the
+ * circled digits, are known to CP50221 and EUC-JP-MS, but glibc has no
+ * CP50221 and GNU libiconv has no EUC-JP-MS.  When those fail as well,
+ * the bytes are rewritten into Shift_JIS and converted with CP932, which
+ * both have (see to_sjis()).
  */
 private struct {
 	const char *mime;
@@ -1038,7 +1058,8 @@ private struct {
 private int
 charset_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out) {
 	const char *name = cs, *retry = NULL;
-	int i, subset = NO;
+	int i, r, subset = NO;
+	enum sjis sjis = SJIS_NONE;
 
 	for (i = 0; i < (int)nitems(rfc2047_charsets); i++) {
 		if (strcasecmp(rfc2047_charsets[i].mime, cs) == 0) {
@@ -1066,17 +1087,55 @@ charset_to_utf8(const char *cs, const char *in, size_t insz, struct dbuf *out) {
 	if (subset == YES && looks_like_euc_kr(in, insz) == NO)
 		retry = NULL;
 	/*
-	 * Strictly, the charset and then the retry; then keeping invalid
-	 * bytes, the retry if it is a superset and then the charset.
+	 * ISO-2022-JP and EUC-JP are rewritten into Shift_JIS as the last
+	 * resort (see to_sjis()).
 	 */
-	if (iconv_to_utf8_strict(name, in, insz, out) == 0)
+	if (strcasecmp(cs, "iso-2022-jp") == 0)
+		sjis = SJIS_ISO2022;
+	else if (strcasecmp(cs, "euc-jp") == 0)
+		sjis = SJIS_EUC;
+	/*
+	 * Strictly, the charset, the retry and then through Shift_JIS; then
+	 * keeping invalid bytes, the retry if it is a superset and then the
+	 * charset.  If the charset was rejected only for leaking ASCII, its
+	 * converter took every byte, so it is used without the retry and
+	 * keeps its own characters, such as U+301C for the wave dash.
+	 */
+	if ((r = charset_to_utf8_strict(name, sjis, in, insz, out)) == 0)
 		return 0;
-	if (retry != NULL && iconv_to_utf8_strict(retry, in, insz, out) == 0)
+	if (retry != NULL &&
+	    charset_to_utf8_strict(retry, sjis, in, insz, out) == 0)
 		return 0;
-	if (retry != NULL && subset == NO &&
+	if (sjis != SJIS_NONE && sjis_to_utf8(sjis, in, insz, out) == 0)
+		return 0;
+	if (retry != NULL && subset == NO && r != 1 &&
 	    iconv_to_utf8_lenient(retry, in, insz, out) == 0)
 		return 0;
 	return iconv_to_utf8_lenient(name, in, insz, out);
+}
+
+/*
+ * Append "insz" bytes at "in" in the charset "cs" to "out" as UTF-8, and
+ * return -1 on an invalid or truncated sequence.  The converters of macOS
+ * for ISO-2022-JP and CP50221 pass bytes that they cannot convert through
+ * as ASCII and succeed, so for ISO-2022-JP ("how" is SJIS_ISO2022) such a
+ * success counts as a failure and returns 1 (see leaks_ascii()).  "out"
+ * is left as it was on a failure.
+ */
+private int
+charset_to_utf8_strict(const char *cs, enum sjis how, const char *in,
+    size_t insz, struct dbuf *out) {
+	size_t olen = out->len;
+
+	if (iconv_to_utf8_strict(cs, in, insz, out) == -1)
+		return -1;
+	if (how == SJIS_ISO2022 &&
+	    leaks_ascii(in, insz, out->buf + olen, out->len - olen) == YES) {
+		out->len = olen;
+		out->buf[out->len] = NUL;
+		return 1;
+	}
+	return 0;
 }
 
 /*
@@ -1124,6 +1183,125 @@ looks_like_euc_kr(const char *in, size_t insz) {
 		p += 2;
 	}
 	return YES;
+}
+
+/*
+ * Return YES if "outsz" bytes at "out", converted from "insz" bytes at
+ * "in" in ISO-2022-JP, have more ASCII than "in" has, or NO otherwise.
+ * A byte 0x21-0x7E in another set than ASCII and JIS X 0201 Roman never
+ * becomes ASCII.  But the converters of macOS pass such bytes that they
+ * cannot convert, such as row 13 after a kanji, through, and that of
+ * glibc passes ESC ( I and the half-width katakana after it; all of
+ * them succeed.  Controls, space and DEL count in any set, since glibc
+ * and macOS pass them through.  The yen sign and the overline of JIS X
+ * 0201 Roman only make the ASCII fewer.
+ */
+private int
+leaks_ascii(const char *in, size_t insz, const char *out, size_t outsz) {
+	const unsigned char *p = (const unsigned char *)in, *lim = p + insz;
+	size_t n = 0;
+	int ascii = YES;
+
+	while (p < lim) {
+		if (*p == ESC && lim - p >= 3) {
+			ascii = p[1] == '(' && (p[2] == 'B' || p[2] == 'J');
+			p += 3;
+			continue;
+		}
+		if (*p < 0x80 && (ascii == YES || *p < 0x21 || *p == 0x7F))
+			n++;
+		p++;
+	}
+	for (p = (const unsigned char *)out, lim = p + outsz; p < lim; p++) {
+		if (*p < 0x80 && n-- == 0)
+			return YES;
+	}
+	return NO;
+}
+
+/*
+ * Rewrite "insz" bytes at "in" in ISO-2022-JP or EUC-JP, as "how" says,
+ * into Shift_JIS at "buf", which has room for "insz" bytes, and set
+ * "*len" to its length.  A JIS X 0208 row maps to Shift_JIS by
+ * arithmetic, which also places the NEC extensions (row 13) and the
+ * NEC-selected IBM extensions (rows 89-92) where CP932 has them.
+ * Return -1 if a byte has no place in Shift_JIS, such as JIS X 0212.
+ */
+private int
+to_sjis(enum sjis how, const char *in, size_t insz, char *buf, size_t *len) {
+	const unsigned char *p = (const unsigned char *)in, *lim = p + insz;
+	unsigned char *q = (unsigned char *)buf;
+	int c1, c2, mode = 0;	/* ISO-2022-JP: 0 ASCII, 1 kanji, 2 kana */
+
+	while (p < lim) {
+		if (how == SJIS_EUC) {
+			if (*p < 0x80) {
+				*q++ = *p++;
+				continue;
+			}
+			if (*p == 0x8E && lim - p >= 2 &&
+			    p[1] >= 0xA1 && p[1] <= 0xDF) {
+				*q++ = p[1];	/* half-width katakana */
+				p += 2;
+				continue;
+			}
+			if (*p < 0xA1 || *p > 0xFE || lim - p < 2 ||
+			    p[1] < 0xA1 || p[1] > 0xFE)
+				return -1;
+			c1 = p[0] - 0x80;
+			c2 = p[1] - 0x80;
+			p += 2;
+		} else if (*p == ESC) {
+			if (lim - p < 3)
+				return -1;
+			if (p[1] == '(' && (p[2] == 'B' || p[2] == 'J'))
+				mode = 0;
+			else if (p[1] == '$' && (p[2] == 'B' || p[2] == '@'))
+				mode = 1;
+			else if (p[1] == '(' && p[2] == 'I')
+				mode = 2;
+			else
+				return -1;
+			p += 3;
+			continue;
+		} else if (*p >= 0x80) {
+			return -1;
+		} else if (mode == 0 || *p < 0x21) {
+			*q++ = *p++;
+			continue;
+		} else if (mode == 2) {
+			if (*p > 0x5F)
+				return -1;
+			*q++ = *p++ + 0x80;
+			continue;
+		} else {
+			if (*p > 0x7E || lim - p < 2 ||
+			    p[1] < 0x21 || p[1] > 0x7E)
+				return -1;
+			c1 = p[0];
+			c2 = p[1];
+			p += 2;
+		}
+		/* JIS row c1 and cell c2, both 0x21-0x7E */
+		*q++ = ((c1 + 1) >> 1) + (c1 <= 0x5E ? 0x70 : 0xB0);
+		*q++ = c2 + ((c1 & 1) ? (c2 >= 0x60 ? 0x20 : 0x1F) : 0x7E);
+	}
+	*len = q - (unsigned char *)buf;
+	return 0;
+}
+
+/* Append ISO-2022-JP or EUC-JP to "out" through Shift_JIS and CP932. */
+private int
+sjis_to_utf8(enum sjis how, const char *in, size_t insz, struct dbuf *out) {
+	char *buf;
+	size_t len;
+	int ret = -1;
+
+	MALLOC(buf, insz + 1);
+	if (to_sjis(how, in, insz, buf, &len) == 0)
+		ret = iconv_to_utf8_strict("CP932", buf, len, out);
+	free(buf);
+	return ret;
 }
 
 private iconv_t
