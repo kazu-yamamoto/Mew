@@ -231,6 +231,8 @@ security, and all Lisp files now use lexical binding.
 * OAuth2: the state and the code are kept per redirect handler, so
   authorizations on different ports no longer clash.
   [#361](https://github.com/kazu-yamamoto/Mew/pull/361)
+* The queue flushed after receiving is the one of the receiving case.
+  [#362](https://github.com/kazu-yamamoto/Mew/pull/362)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
