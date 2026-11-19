@@ -208,6 +208,9 @@ security, and all Lisp files now use lexical binding.
 * POP: an XOAUTH2 token refused by Gmail is reported as a wrong token,
   instead of going on with an unauthenticated connection.
   [#353](https://github.com/kazu-yamamoto/Mew/pull/353)
+* OAuth2: an authorization started while another one waits for the
+  browser is refused, instead of breaking the first one.
+  [#354](https://github.com/kazu-yamamoto/Mew/pull/354)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
