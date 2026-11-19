@@ -769,6 +769,28 @@ Otherwise the port stays taken for the rest of the session."
       ;; once before setting up, once on the way out
       (should (= cleanups 2)))))
 
+(ert-deftest mew-test-oauth2-nested-auth-code ()
+  "An authorization started while waiting for the browser is refused.
+It used to overwrite the state and the handler of the first one."
+  (let ((inner 'not-called)
+        (mew-oauth2-code nil))
+    (cl-letf (((symbol-function 'mew-oauth2-cleanup-redirect-handler) #'ignore)
+              ((symbol-function 'mew-oauth2-setup-redirect-handler) #'ignore)
+              ((symbol-function 'message) #'ignore)
+              ((symbol-function 'browse-url)
+               (lambda (&rest _)
+                 ;; e.g. a biff timer while the user is in the browser
+                 (setq inner (mew-oauth2-get-auth-code
+                              "https://example.org/auth" "id" "scope"
+                              "http://localhost:8080" "challenge" 8080))
+                 (setq mew-oauth2-code "outer-code"))))
+      (should (equal (mew-oauth2-get-auth-code
+                      "https://example.org/auth" "id" "scope"
+                      "http://localhost:8080" "challenge" 8080)
+                     "outer-code"))
+      (should (equal inner ""))
+      (should-not mew-oauth2-authorizing))))
+
 (ert-deftest mew-test-oauth2-post-without-curl ()
   "A missing curl must give nil, not an error."
   (let (msg)
