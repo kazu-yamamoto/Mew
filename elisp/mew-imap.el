@@ -1464,7 +1464,7 @@
 	(set-process-filter process 'mew-imap-filter)
 	(set-process-buffer process buf)
 	;;
-	(when (and gnutlsp starttlsp)
+	(when gnutlsp
 	  (let ((greeting (plist-get (cdr pro-plist) :greeting)))
 	    (if (stringp greeting) (mew-imap-filter process greeting))))))))
 

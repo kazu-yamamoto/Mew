@@ -6,11 +6,13 @@
 
 ;;; Code:
 
-;; Bound in mew-open-gnutls-stream.  nsm.el may not be loaded when
-;; this file is compiled alone, as native compilation does; without
-;; these, the bindings would be lexical and NSM would not see them.
-(defvar nsm-noninteractive)
-(defvar network-security-level)
+;; Mew drives the connection itself instead of `open-network-stream',
+;; which does not pass Mew's TLS parameters to `gnutls-negotiate' for
+;; STARTTLS.  Nothing global is changed, so other connections opened
+;; meanwhile by timers or filters are not affected.
+
+(require 'gnutls)
+(require 'nsm)
 
 (defvar mew-gnutls-min-prime-bits 2048
   "Default prime bits for GnuTLS connection.")
@@ -26,206 +28,141 @@ keep this as nil.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Parameters
+;;; Protocol parameters
 ;;;
 
-(defvar mew-gnutls-plist
-  '(;; RFC 3207
-    (smtp . (:capability-command
-	     (format "EHLO %s\n" (mew-smtp-helo-domain case))
-	     :always-query-capabilities t
-	     :end-of-command
-	     (format "^[0-9]+ .*\n")
-	     :end-of-capability
-	     (format "^[0-9]+ .*\n")
-	     :success (format "^2.*\n")
-	     :starttls-function
-	     (lambda (capabilities)
-	       (and (string-match "[ -]STARTTLS" capabilities)
-		    "STARTTLS\n"))))
-    ;; RFC 2595
-    (imap . (:capability-command
-	     (format "1 CAPABILITY\n")
-	     :always-query-capabilities t
-	     :end-of-capability
-	     (format "\n")
-	     :end-of-command
-	     (format "\n")
-	     :success
-	     (format "^1 OK ")
-	     :starttls-function
-	     (lambda (capabilities)
-	       (when (string-match-p "STARTTLS" capabilities)
-		 "1 STARTTLS\n"))))
-    ;; RFC 2595
-    (pop . (:capability-command
-	    (format "CAPA\n")
-	    :always-query-capabilities nil
-	    :end-of-capability
-	    (format "^\\.\n\\|^-ERR")
-	    :end-of-command
-	    (format "^\\(-ERR\\|+OK\\).*\n")
-	    :success
-	    (format "^\\+OK.*\n")
-	    :starttls-function
-	    (lambda (capabilities)
-	      (and (string-match "\\bSTLS\\b" capabilities)
-		   "STLS\n"))))
-    ;; RFC 4642
-    (nntp . (:capability-command
-	     (format "CAPABILITIES\n")
-	     :always-query-capabilities t
-	     :end-of-capability
-	     (format "^\\.\n")
-	     :end-of-command
-	     (format "^[0-9]+ .*\n")
-	     :success
-	     (format "^382 ")
-	     :starttls-function
-	     (lambda (capabilities)
-	       (when (string-match-p "STARTTLS" capabilities)
-		 "STARTTLS\n"))))
-    ))
-
-(defun mew-gnutls-get-param (proto key evalp case)
-  "Get parameter from mew-gnutls-plist"
-  (let ((p (plist-get (cdr (assq proto mew-gnutls-plist)) key)))
-    ;; The forms in mew-gnutls-plist refer to CASE, so it must be
-    ;; handed to eval explicitly.  It used to be picked up from the
-    ;; dynamic binding of the caller's argument.
-    (if evalp (eval p `((case . ,case))) p)))
-
-;;; XXX: (mew-open-network-stream) always returns a list
-;;       and is also used for non-SMTP protocols.
-;;; XXX: port must be resolved by using mew-serv-to-port
-;;       because some service names are not in /etc/services.
-;;       mew-serv-to-port uses mew-port-db.
-(defvar mew--advice-tls-parameters-plist nil)
-
-(defun mew--advice-filter-args-gnutls-negotiate (&rest args)
-  ;; cl-defun takes the first of duplicated keywords, and callers
-  ;; pass their own :keylist (nil), so Mew's non-nil ones go first.
-  (let ((plist mew--advice-tls-parameters-plist) ours)
-    (while plist
-      (if (cadr plist)
-	  (setq ours (nconc ours (list (car plist) (cadr plist)))))
-      (setq plist (cddr plist)))
-    (append ours (car args))))
-
-(defun mew-gnutls-boot-parameters (case hostname)
-  (cons 'gnutls-x509pki
-	;; XXX: (gnutls-boot-parameters) returns
-	;; :priority key instead of :priority-string
-	;; while (gnutls-negotiate) accepts
-	;; :priority-string.  To handle this odd
-	;; mismatch, create :priority-string in the
-	;; result of (gnutls-boot-parameters) here.
-	(let ((boot-params
-	       (gnutls-boot-parameters
-		:type 'gnutls-x509pki
-		:keylist (mew-ssl-client-keycert-list case)
-		:trustfiles (mew-ssl-trustfiles case)
-		:priority-string (mew-ssl-algorithm-priority case)
-		:min-prime-bits mew-gnutls-min-prime-bits
-		;;
-		;; mew-gnutls-verify-error should be nil
-		;; to defer verification to NSM.  Note
-		;; that gnutls-verify-error overrides
-		;; verify-error when it is nil.
-		;; Setting gnutls-verify-error to t is
-		;; also discouraged.
-		;;
-		:verify-error mew-gnutls-verify-error
-		:hostname hostname)))
-	  (plist-put boot-params
-		     :priority-string
-		     (plist-get boot-params :priority)))))
-
-(defun mew-gnutls-parameters (proto starttlsp case)
-  (list
-   :always-query-capabilities
-   (and starttlsp
-	(mew-gnutls-get-param
-	 proto :always-query-capabilities nil case))
-   :capability-command
-   (and starttlsp
-	(mew-gnutls-get-param
-	 proto :capability-command t case))
-   :end-of-capability
-   (and starttlsp
-	(mew-gnutls-get-param
-	 proto :end-of-capability t case))
-   :end-of-command
-   (and starttlsp
-	(mew-gnutls-get-param
-	 proto :end-of-command t case))
-   :success
-   (and starttlsp
-	(mew-gnutls-get-param
-	 proto :success t case))
-   :starttls-function
-   (and starttlsp
-	(mew-gnutls-get-param
-	 proto :starttls-function nil case))))
+(defun mew-gnutls-protocol-params (proto case)
+  "Return the commands and the regexps for the greeting and STARTTLS.
+Each regexp matches the end of a reply."
+  (cond
+   ((eq proto 'smtp) ;; RFC 3207
+    (let ((reply "^[0-9]+ .*\n"))
+      (list :greeting reply
+	    :capability (format "EHLO %s\n" (mew-smtp-helo-domain case))
+	    :end-of-capability reply
+	    :starttls "^250[ -]STARTTLS\\b"
+	    :command "STARTTLS\n"
+	    :end-of-command reply
+	    :success "^220 ")))
+   ((eq proto 'imap) ;; RFC 2595
+    (list :greeting "\n"
+	  :capability "1 CAPABILITY\n"
+	  :end-of-capability "^1 \\(OK\\|NO\\|BAD\\).*\n"
+	  :starttls "^\\* CAPABILITY .*\\bSTARTTLS\\b"
+	  :command "2 STARTTLS\n"
+	  :end-of-command "^2 \\(OK\\|NO\\|BAD\\).*\n"
+	  :success "^2 OK"))
+   ((eq proto 'pop) ;; RFC 2595
+    (let ((reply "^\\(\\+OK\\|-ERR\\).*\n"))
+      (list :greeting reply
+	    :capability "CAPA\n"
+	    :end-of-capability "^\\.\n\\|^-ERR.*\n"
+	    :starttls "^STLS\\b"
+	    :command "STLS\n"
+	    :end-of-command reply
+	    :success "^\\+OK")))
+   ((eq proto 'nntp) ;; RFC 4642
+    (let ((reply "^[0-9]+ .*\n"))
+      (list :greeting reply
+	    :capability "CAPABILITIES\n"
+	    :end-of-capability "^\\.\n\\|^[45][0-9][0-9] .*\n"
+	    :starttls "^STARTTLS\\b"
+	    :command "STARTTLS\n"
+	    :end-of-command reply
+	    :success "^382 ")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;
+;;; Conversation
 ;;;
 
-(defun mew-open-gnutls-stream (name buf server port proto starttlsp case status-msg)
-  (let* ((hostname (puny-encode-domain server))
-	 ;; Note: on Emacs 26.3 and prior GnuTLS always uses
-	 ;; the system-wide default path first even if
-	 ;; trustfiles is specified.
-	 (nsm-noninteractive nil)
-	 (network-security-level network-security-level)
-	 (tlsparams (mew-gnutls-boot-parameters case hostname))
-	 (type (if starttlsp 'starttls 'tls))
-	 pro-plist)
-    (when (eq (mew-ssl-verify-level case) 0)
-      ;; Forcibly disable verification.
-      (setq network-security-level 'low))
-    ;; debug output: TLS params
+(defun mew-gnutls-receive (pro start regex)
+  "Wait until REGEX matches after START in the buffer of PRO.
+Return the text from START to the end of the match."
+  (with-current-buffer (process-buffer pro)
+    (let (end)
+      (while (progn
+	       (goto-char start)
+	       (not (setq end (re-search-forward regex nil t))))
+	(unless (process-live-p pro)
+	  (error "Connection closed by the server"))
+	(accept-process-output pro 0.05))
+      (buffer-substring start end))))
+
+(defun mew-gnutls-command (pro command regex)
+  "Send COMMAND to PRO and return the reply which ends with REGEX."
+  (let ((start (with-current-buffer (process-buffer pro) (point-max))))
+    (process-send-string pro command)
+    (mew-gnutls-receive pro start regex)))
+
+(defun mew-gnutls-starttls (pro params)
+  "Have the server of PRO start TLS and return its greeting."
+  (let* ((greeting (mew-gnutls-receive pro 1 (plist-get params :greeting)))
+	 (capa (mew-gnutls-command pro (plist-get params :capability)
+				   (plist-get params :end-of-capability))))
+    (unless (string-match (plist-get params :starttls) capa)
+      (error "Server does not support STARTTLS"))
+    (unless (string-match (plist-get params :success)
+			  (mew-gnutls-command
+			   pro (plist-get params :command)
+			   (plist-get params :end-of-command)))
+      (error "Server refused STARTTLS"))
+    greeting))
+
+(defun mew-gnutls-handshake (pro server port proto starttlsp case)
+  "Make PRO a TLS connection and return the greeting of the server.
+For STARTTLS, the greeting is the one before TLS."
+  (let* ((params (mew-gnutls-protocol-params proto case))
+	 (greeting (and starttlsp (mew-gnutls-starttls pro params))))
+    (gnutls-negotiate :process pro
+		      :type 'gnutls-x509pki
+		      :hostname (puny-encode-domain server)
+		      :keylist (mew-ssl-client-keycert-list case)
+		      :trustfiles (mew-ssl-trustfiles case)
+		      :priority-string (mew-ssl-algorithm-priority case)
+		      :min-prime-bits mew-gnutls-min-prime-bits
+		      ;; nil defers verification to NSM.
+		      :verify-error mew-gnutls-verify-error)
+    ;; Level 0 disables verification.
+    (unless (or (eq (mew-ssl-verify-level case) 0)
+		(nsm-verify-connection pro server port starttlsp))
+      (error "Server certificate is not accepted"))
+    (or greeting
+	(mew-gnutls-receive pro 1 (plist-get params :greeting)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Opening
+;;;
+
+(defun mew-open-gnutls-stream (name server port proto starttlsp case status-msg)
+  "Open a TLS connection and return (PROCESS :greeting GREETING).
+On failure, return (nil :error MESSAGE)."
+  (let ((buf (generate-new-buffer " *Mew GnuTLS*"))
+	pro pro-plist)
     (funcall (intern (concat "mew-" (symbol-name proto) "-debug"))
 	     (format "TLS proto=%s, server=%s:%s, starttlsp=%s"
-		     proto hostname port starttlsp)
-	     (format "verify-level=%s, network-security-level=%s, tlsparams=%s"
-		     (mew-ssl-verify-level case) network-security-level
-		     (apply #'concat (mapcar (lambda (a) (format "%s " a)) tlsparams))))
-    ;; XXX: (open-network-stream) does not pass tlsparams
-    ;; to (gnutls-negotiate) to start STARTTLS.  As a
-    ;; workaround, add an advice to forcibly append the
-    ;; parameters.  This should be fixed in
-    ;; (open-network-stream).
-    (setq mew--advice-tls-parameters-plist (cdr tlsparams))
-    (advice-add 'gnutls-negotiate
-		:filter-args #'mew--advice-filter-args-gnutls-negotiate)
-    ;;
-    ;; Override key functions when using a tunnel.
-    ;; A timeout or C-g during the handshake must neither leave the
-    ;; advice for every later TLS connection nor a half-open process
-    ;; holding NAME.
-    (let ((procs (process-list)) done)
-      (unwind-protect
-	  (progn
+		     proto server port starttlsp)
+	     (format "verify-level=%s" (mew-ssl-verify-level case)))
+    ;; A timeout or C-g must not leave a half-open process.
+    (unwind-protect
+	(condition-case err
 	    (with-temp-message status-msg
-	      (setq pro-plist (apply
-			       'open-network-stream
-			       name buf server port
-			       :coding mew-cs-text-for-net
-			       :type type
-			       :return-list t
-			       (mew-gnutls-parameters proto starttlsp case))))
-	    (setq done t))
-	(advice-remove 'gnutls-negotiate
-		       #'mew--advice-filter-args-gnutls-negotiate)
-	(unless done
-	  (let ((regex (concat "\\`" (regexp-quote name) "\\(<[0-9]+>\\)?\\'")))
-	    (dolist (pro (process-list))
-	      (and (not (memq pro procs))
-		   (string-match regex (process-name pro))
-		   (delete-process pro)))))))
+	      (setq pro (make-network-process
+			 :name name :buffer buf
+			 :host (puny-encode-domain server) :service port
+			 :coding mew-cs-text-for-net))
+	      (setq pro-plist
+		    (list pro :greeting
+			  (mew-gnutls-handshake pro server port proto
+						starttlsp case))))
+	  (error
+	   (setq pro-plist (list nil :error (error-message-string err)))))
+      (when (processp pro)
+	(if (car pro-plist)
+	    (set-process-buffer pro nil)
+	  (delete-process pro)))
+      (kill-buffer buf))
     pro-plist))
 
 (defun mew-check-process (pro-plist status-msg)
@@ -245,14 +182,14 @@ keep this as nil.")
 ;;;
 
 (defun mew-open-network-stream (name buf server port proto gnutlsp starttlsp case)
-  (let* ((tun-type nil)
-	 (status-msg (format "Opening a %s connection %s%s%s..."
+  "Open a connection and return (PROCESS . PLIST).
+With GNUTLSP, PLIST has :greeting, which the caller must handle
+since the server does not send it again."
+  (let* ((status-msg (format "Opening a %s connection %s%s..."
 			     (if gnutlsp "TLS" "TCP")
 			     (if gnutlsp "(GnuTLS" "")
 			     (if gnutlsp
 				 (if starttlsp ", STARTTLS)" ")")
-			       "")
-			     (if (eq tun-type 'ssh) " over SSH"
 			       "")))
 	 (pro-plist (list nil))
 	 family)
@@ -261,14 +198,10 @@ keep this as nil.")
       (setq family 'local)
       (setq server 'local))
     (cond
-     ;; Both GnuTLS and NSM are mandatory for 'native.
-     ((and gnutlsp (or (not (fboundp 'gnutls-available-p))
-		       (not (gnutls-available-p))
-		       (not (fboundp 'gnutls-boot-parameters))
-		       (not (fboundp 'nsm-level))))
-      (message "%s" (concat status-msg "FAILED (GnuTLS or NSM not available)")))
+     ((and gnutlsp (not (gnutls-available-p)))
+      (message "%s" (concat status-msg "FAILED (GnuTLS not available)")))
      (gnutlsp
-      (setq pro-plist (mew-open-gnutls-stream name buf server port proto starttlsp case status-msg))
+      (setq pro-plist (mew-open-gnutls-stream name server port proto starttlsp case status-msg))
       (mew-check-process pro-plist status-msg))
      (t
       (with-temp-message status-msg

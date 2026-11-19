@@ -286,10 +286,8 @@
       (set-process-sentinel process 'mew-nntp2-sentinel)
       (set-process-filter process 'mew-nntp2-filter)
       (message "Posting in background...")
-      (when (and gnutlsp starttlsp)
-	;; open-network-stream requires a client-initiated command after the
-	;; session is upgraded to use TLS because
-	;; no additional greeting from the server.
+      (when gnutlsp
+	;; The greeting was consumed when opening the connection.
 	(mew-nntp-command-mode-reader process pnm))
       )))
 (defun mew-nntp2-flush-queue (case &optional qfld)
