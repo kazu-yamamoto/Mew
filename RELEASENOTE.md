@@ -218,6 +218,9 @@ security, and all Lisp files now use lexical binding.
 * IMAP: without SASL-IR, the XOAUTH2 token is sent after a
   continuation instead of in the AUTHENTICATE command.
   [#356](https://github.com/kazu-yamamoto/Mew/pull/356)
+* OAuth2: a missing client id is reported instead of waiting for the
+  browser, and expires_in given as a string is accepted.
+  [#357](https://github.com/kazu-yamamoto/Mew/pull/357)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
