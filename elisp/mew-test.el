@@ -754,17 +754,6 @@ A client secret with \"+\" or \"&\" in it used to arrive mangled."
                    (url-hexify-string (url-unhex-string raw))))))
 
 
-(ert-deftest mew-test-xoauth2-json-status ()
-  "The status may be a number, and it may not be there at all.
-Both used to signal wrong-type-argument."
-  (let ((status (lambda (s) (mew-xoauth2-json-status (base64-encode-string s t)))))
-    (should (equal (funcall status "{\"status\":\"200\"}") "OK"))
-    (should (equal (funcall status "{\"status\":\"400\"}") "NO"))
-    (should (equal (funcall status "{\"status\":200}") "OK"))
-    (should (equal (funcall status "{\"status\":400}") "NO"))
-    (should (equal (funcall status "{\"other\":1}") "OK"))
-    (should (equal (funcall status "not json") "OK"))))
-
 (ert-deftest mew-test-oauth2-auth-code-cleanup ()
   "The listening socket has to go even when the user gives up.
 Otherwise the port stays taken for the rest of the session."
@@ -834,6 +823,39 @@ Going on without one made Mew send the literal \"Bearer nil\"."
     (let ((s (mew-xoauth2-auth-string "me@example.org" "tag" nil)))
       (should (equal s ""))
       (should-not (string-match "nil" (base64-decode-string (concat s "")))))))
+
+(ert-deftest mew-test-xoauth2-authorize-canceled ()
+  "Without an authorization code no token may be requested."
+  (let ((posted nil)
+        (token (make-hash-table)))
+    (cl-letf (((symbol-function 'mew-oauth2-get-auth-code) (lambda (&rest _) ""))
+              ((symbol-function 'mew-oauth2-get-access-token)
+               (lambda (&rest _) (setq posted t) nil))
+              ((symbol-function 'message) #'ignore))
+      (should-not (mew-xoauth2-authorize token nil))
+      (should-not posted))))
+
+(ert-deftest mew-test-passwd-forget-token ()
+  "A refused access token is forgotten, but its refresh token is kept
+unless the access token was just obtained."
+  (let ((mew-passwd-alist nil)
+        (token (make-hash-table)))
+    (cl-letf (((symbol-function 'mew-passwd-use-auth-source-p) #'ignore))
+      (puthash :access_token "old-access" token)
+      (puthash :refresh_token "refresh" token)
+      (puthash :expire (time-add 3600 nil) token)
+      (mew-passwd-set-passwd "tag" token)
+      (mew-passwd-forget-passwd "tag")
+      (let ((kept (mew-passwd-get-passwd "tag")))
+        (should (equal (gethash :refresh_token kept) "refresh"))
+        (should-not (gethash :access_token kept)))
+      (puthash :fresh t token)
+      (mew-passwd-set-passwd "tag" token)
+      (mew-passwd-forget-passwd "tag")
+      (should-not (mew-passwd-get-passwd "tag"))
+      (mew-passwd-set-passwd "tag" "secret")
+      (mew-passwd-forget-passwd "tag")
+      (should-not (mew-passwd-get-passwd "tag")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

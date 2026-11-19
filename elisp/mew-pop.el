@@ -180,7 +180,7 @@
      (t
       ;; pnm may be cleared already
       (mew-pop-message pnm "POP password is wrong!")))
-    (if clear-pass (mew-passwd-set-passwd (mew-pop-passtag pnm) nil))
+    (if clear-pass (mew-passwd-forget-passwd (mew-pop-passtag pnm)))
     (if (eq directive 'exec)
 	(mew-summary-visible-buffer bnm))
     (mew-pop-command-quit2 pro pnm)))

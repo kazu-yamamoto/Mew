@@ -61,6 +61,18 @@ this variable is set to \='t\=`.")
     (mew-passwd-auth-source-get-passwd key))
    (t (nth 1 (assoc key mew-passwd-alist)))))
 
+(defun mew-passwd-forget-passwd (key)
+  "Forget the password of KEY which the server refused.
+Of an OAuth2 token, only the access token is forgotten unless it was
+just obtained, so that the refresh token gets a new one next time."
+  (let ((val (nth 1 (assoc key mew-passwd-alist))))
+    (if (and (hash-table-p val) (not (gethash :fresh val)))
+	(let ((token (copy-hash-table val)))
+	  (remhash :access_token token)
+	  (remhash :expire token)
+	  (mew-passwd-set-passwd key token))
+      (mew-passwd-set-passwd key nil))))
+
 (defun mew-passwd-set-passwd (key val)
   (cond
    ((and (mew-passwd-use-auth-source-p) (not (mew-passwd-token-p key val)))
