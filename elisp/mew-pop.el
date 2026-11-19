@@ -866,6 +866,7 @@
 (defun mew-pop-sentinel (process event)
   (let* ((pnm (process-name process))
 	 (directive (mew-pop-get-directive pnm))
+	 (case (mew-pop-get-case pnm))
 	 (mdb (mew-pop-get-mdb pnm))
 	 (sshpro (mew-pop-get-ssh-process pnm))
 	 (sslpro (mew-pop-get-ssl-process pnm))
@@ -988,7 +989,7 @@
 	(run-hooks 'mew-pop-sentinel-non-biff-hook))
       (run-hooks 'mew-pop-sentinel-hook)
       (when (and mew-auto-flush-queue flush)
-	(mew-smtp-flush-queue mew-case)))))
+	(mew-smtp-flush-queue case)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
