@@ -659,40 +659,51 @@ The output arrives through a pty now, so it ends with CR."
   ;; The key must not match a suffix of another key.
   (should-not (mew-oauth2-query-get "/?scope=x" "ope")))
 
-(defun mew-test-oauth2-redirect (request)
-  "Feed REQUEST to `mew-oauth2-redirect-handler-filter'.
-Return a cons of `mew-oauth2-code' afterwards and the status line of
-the reply, or nil when nothing was replied."
-  (let ((sent nil))
-    (setq mew-oauth2-code nil)
-    (cl-letf (((symbol-function 'process-send-string)
-               (lambda (_proc str) (setq sent (car (split-string str "\r\n")))))
-              ((symbol-function 'delete-process) #'ignore))
-      (mew-oauth2-redirect-handler-filter nil request))
-    (cons mew-oauth2-code sent)))
+(defun mew-test-free-port ()
+  "Return a TCP port on localhost which nobody listens on."
+  (let* ((p (make-network-process :name "mew-test-port" :host 'local
+                                  :service t :server t))
+         (port (process-contact p :service)))
+    (delete-process p)
+    port))
+
+(defun mew-test-oauth2-redirect (state request)
+  "Feed REQUEST to `mew-oauth2-redirect-handler-filter' of a handler
+waiting with STATE.  Return a cons of the code it got and the status
+line of the reply, or nil when nothing was replied."
+  (let ((port (mew-test-free-port))
+        (sent nil))
+    (unwind-protect
+        (let ((server (mew-oauth2-setup-redirect-handler port state)))
+          (cl-letf (((symbol-function 'process-send-string)
+                     (lambda (_proc str) (setq sent (car (split-string str "\r\n")))))
+                    ((symbol-function 'delete-process) #'ignore))
+            ;; An accepted connection has the same plist as the server.
+            (mew-oauth2-redirect-handler-filter server request))
+          (cons (process-get server 'mew-oauth2-code) sent))
+      (mew-oauth2-cleanup-redirect-handler port))))
 
 (ert-deftest mew-test-oauth2-state ()
   "An authorization code without our state must be refused.
 The redirect handler listens on localhost, so a page in the browser
 could otherwise make Mew redeem a code of the attacker's choosing."
-  (let ((mew-oauth2-state "st4te"))
-    (should (equal (mew-test-oauth2-redirect
-                    "GET /?code=good&state=st4te HTTP/1.1\r\n")
-                   '("good" . "HTTP/1.1 200 OK")))
-    (should (equal (mew-test-oauth2-redirect
-                    "GET /?code=evil&state=other HTTP/1.1\r\n")
-                   '(nil . "HTTP/1.1 400 Bad Request")))
-    (should (equal (mew-test-oauth2-redirect
-                    "GET /?code=evil HTTP/1.1\r\n")
-                   '(nil . "HTTP/1.1 400 Bad Request")))
-    ;; Something which is not the redirect is left alone.
-    (should (equal (mew-test-oauth2-redirect "GET /favicon.ico HTTP/1.1\r\n")
-                   '(nil . nil))))
+  (should (equal (mew-test-oauth2-redirect
+                  "st4te" "GET /?code=good&state=st4te HTTP/1.1\r\n")
+                 '("good" . "HTTP/1.1 200 OK")))
+  (should (equal (mew-test-oauth2-redirect
+                  "st4te" "GET /?code=evil&state=other HTTP/1.1\r\n")
+                 '(nil . "HTTP/1.1 400 Bad Request")))
+  (should (equal (mew-test-oauth2-redirect
+                  "st4te" "GET /?code=evil HTTP/1.1\r\n")
+                 '(nil . "HTTP/1.1 400 Bad Request")))
+  ;; Something which is not the redirect is left alone.
+  (should (equal (mew-test-oauth2-redirect
+                  "st4te" "GET /favicon.ico HTTP/1.1\r\n")
+                 '(nil . nil)))
   ;; No state of our own means we are not waiting for anything.
-  (let ((mew-oauth2-state nil))
-    (should (equal (mew-test-oauth2-redirect
-                    "GET /?code=evil&state=other HTTP/1.1\r\n")
-                   '(nil . "HTTP/1.1 400 Bad Request")))))
+  (should (equal (mew-test-oauth2-redirect
+                  nil "GET /?code=evil&state=other HTTP/1.1\r\n")
+                 '(nil . "HTTP/1.1 400 Bad Request"))))
 
 (ert-deftest mew-test-oauth2-random-string ()
   (let ((str (mew-random-binary-string 32)))
@@ -766,30 +777,55 @@ Otherwise the port stays taken for the rest of the session."
                       "https://example.org/auth" "id" "scope"
                       "http://localhost:8080" "challenge" 8080)
                      ""))
-      ;; once before setting up, once on the way out
-      (should (= cleanups 2)))))
+      (should (= cleanups 1)))))
+
+(defun mew-test-oauth2-answer (port code)
+  "Hand CODE to the authorization waiting on PORT, as the browser would."
+  (process-put (get-process (mew-oauth2-redirect-handler-name port))
+               'mew-oauth2-code code))
 
 (ert-deftest mew-test-oauth2-nested-auth-code ()
-  "An authorization started while waiting for the browser is refused.
-It used to overwrite the state and the handler of the first one."
-  (let ((inner 'not-called)
-        (mew-oauth2-code nil))
-    (cl-letf (((symbol-function 'mew-oauth2-cleanup-redirect-handler) #'ignore)
-              ((symbol-function 'mew-oauth2-setup-redirect-handler) #'ignore)
-              ((symbol-function 'message) #'ignore)
+  "An authorization started while waiting for the browser is refused
+when it needs the same port.  It used to overwrite the state and the
+handler of the first one."
+  (let ((port (mew-test-free-port))
+        (inner 'not-called))
+    (cl-letf (((symbol-function 'message) #'ignore)
               ((symbol-function 'browse-url)
                (lambda (&rest _)
                  ;; e.g. a biff timer while the user is in the browser
                  (setq inner (mew-oauth2-get-auth-code
                               "https://example.org/auth" "id" "scope"
-                              "http://localhost:8080" "challenge" 8080))
-                 (setq mew-oauth2-code "outer-code"))))
+                              "http://localhost" "challenge" port))
+                 (mew-test-oauth2-answer port "outer-code"))))
       (should (equal (mew-oauth2-get-auth-code
                       "https://example.org/auth" "id" "scope"
-                      "http://localhost:8080" "challenge" 8080)
+                      "http://localhost" "challenge" port)
                      "outer-code"))
       (should (equal inner ""))
-      (should-not mew-oauth2-authorizing))))
+      (should-not (process-status (mew-oauth2-redirect-handler-name port))))))
+
+(ert-deftest mew-test-oauth2-nested-auth-code-other-port ()
+  "Authorizations on different ports do not share their state or code."
+  (let ((outer (mew-test-free-port))
+        (inner (mew-test-free-port))
+        (inner-code 'not-called)
+        (depth 0))
+    (cl-letf (((symbol-function 'browse-url)
+               (lambda (&rest _)
+                 (setq depth (1+ depth))
+                 (if (= depth 1)
+                     (progn
+                       (setq inner-code (mew-oauth2-get-auth-code
+                                         "https://example.org/auth" "id" "scope"
+                                         "http://localhost" "challenge" inner))
+                       (mew-test-oauth2-answer outer "outer-code"))
+                   (mew-test-oauth2-answer inner "inner-code")))))
+      (should (equal (mew-oauth2-get-auth-code
+                      "https://example.org/auth" "id" "scope"
+                      "http://localhost" "challenge" outer)
+                     "outer-code"))
+      (should (equal inner-code "inner-code")))))
 
 (ert-deftest mew-test-oauth2-post-without-curl ()
   "A missing curl must give nil, not an error."
@@ -839,7 +875,6 @@ Going on without one made Mew send the literal \"Bearer nil\"."
 (ert-deftest mew-test-xoauth2-without-client-id ()
   "Without a client id, neither the browser nor the server is asked."
   (let ((mew-oauth2-client-id nil)
-        (mew-oauth2-code nil)
         (token (make-hash-table))
         (asked nil))
     (puthash :refresh_token "old-refresh" token)
@@ -847,7 +882,7 @@ Going on without one made Mew send the literal \"Bearer nil\"."
                (lambda (&rest _) (setq asked t) nil))
               ;; Answer at once, or a regression would wait forever.
               ((symbol-function 'browse-url)
-               (lambda (&rest _) (setq asked t mew-oauth2-code "code")))
+               (lambda (&rest _) (setq asked t) (signal 'quit nil)))
               ((symbol-function 'message) #'ignore))
       (should-not (mew-xoauth2-get-access-token token nil))
       (should-not asked)
