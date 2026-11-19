@@ -215,6 +215,9 @@ security, and all Lisp files now use lexical binding.
   leak into other TLS connections opened while a STARTTLS connection
   is being set up, and nested connections no longer drop them.
   [#355](https://github.com/kazu-yamamoto/Mew/pull/355)
+* IMAP: without SASL-IR, the XOAUTH2 token is sent after a
+  continuation instead of in the AUTHENTICATE command.
+  [#356](https://github.com/kazu-yamamoto/Mew/pull/356)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
