@@ -226,6 +226,8 @@ security, and all Lisp files now use lexical binding.
   [#358](https://github.com/kazu-yamamoto/Mew/pull/358)
 * The unused mew-icon-* variables are removed.
   [#359](https://github.com/kazu-yamamoto/Mew/pull/359)
+* Compatibility aliases and XEmacs remnants are removed.
+  [#360](https://github.com/kazu-yamamoto/Mew/pull/360)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
