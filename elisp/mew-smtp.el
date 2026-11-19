@@ -127,7 +127,7 @@
 
 (defun mew-smtp-command-wpwd (pro pnm)
   (let ((auth (mew-smtp-get-auth-selected pnm)))
-    (mew-passwd-set-passwd (mew-smtp-passtag pnm) nil)
+    (mew-passwd-forget-passwd (mew-smtp-passtag pnm))
     (if auth
 	(mew-smtp-set-error pnm (format "SMTP %s password is wrong!" auth))
       (mew-smtp-set-error pnm "No SMTP AUTH available!"))

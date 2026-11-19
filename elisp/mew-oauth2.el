@@ -159,14 +159,14 @@ It serves http://localhost:PORT"
     ;; The listening socket has to go even when the user gives up, or
     ;; the port stays taken for the rest of the session.
     (unwind-protect
-	(condition-case nil
+	(condition-case err
 	    (progn
 	      (mew-oauth2-setup-redirect-handler port)
 	      (browse-url url-params)
 	      (mew-rendezvous (null mew-oauth2-code))
 	      mew-oauth2-code)
-	  (error "")
-	  (quit ""))
+	  (error (message "OAuth2: %s" (error-message-string err)) "")
+	  (quit (message "OAuth2: the authorization was canceled") ""))
       (mew-oauth2-cleanup-redirect-handler port))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -244,20 +244,6 @@ which does not exist."
 ;;; Interface
 ;;;
 
-(defun mew-xoauth2-json-status (status-string)
-  ;; https://developers.google.com/gmail/imap/xoauth2-protocol#error_response_2
-  (let ((json-status
-         (ignore-errors
-           (json-read-from-string
-            (base64-decode-string status-string)))))
-    ;; The status may be a number as well as a string, and it may not
-    ;; be there at all.
-    (let ((status (and (listp json-status) (cdr (assoc 'status json-status)))))
-      (cond
-       ((null status) "OK") ;; XXX: Maybe OK if not JSON.
-       ((string-match "^2" (format "%s" status)) "OK") ;; 2XX
-       (t "NO"))))) ;; XXX: Anyway NO?
-
 (defun mew-xoauth2-auth-string (user tag case)
   (mew-passwd-setup-master)
   (let* ((tk (mew-passwd-get-passwd tag))
@@ -285,6 +271,7 @@ server does not repeat it on every refresh."
     (puthash :access_token access-token token)
     (if refresh-token (puthash :refresh_token refresh-token token))
     (puthash :expire (if expires-in (time-add (- expires-in 100) nil)) token)
+    (puthash :fresh t token)
     access-token))
 
 (defun mew-xoauth2-refresh (token case)
@@ -316,23 +303,30 @@ that case, so that the refresh token is not thrown away."
 		     (mew-oauth2-redirect-url case)
 		     challenge
 		     (mew-oauth2-redirect-port case)))
-	 (json (mew-oauth2-get-access-token
-		(mew-oauth2-token-url case)
-		(mew-oauth2-client-id case)
-		(mew-oauth2-client-secret case)
-		(mew-oauth2-redirect-url case)
-		auth-code
-		verifier)))
-    (if (and json (gethash "access_token" json))
-	(mew-xoauth2-store token json)
+	 ;; "" if canceled, denied or failed, which is already reported
+	 (json (unless (string= auth-code "")
+		 (mew-oauth2-get-access-token
+		  (mew-oauth2-token-url case)
+		  (mew-oauth2-client-id case)
+		  (mew-oauth2-client-secret case)
+		  (mew-oauth2-redirect-url case)
+		  auth-code
+		  verifier))))
+    (cond
+     ((string= auth-code "") nil)
+     ((and json (gethash "access_token" json))
+      (mew-xoauth2-store token json))
+     (t
       (message "OAuth2: no access token was given")
-      nil)))
+      nil))))
 
 (defun mew-xoauth2-get-access-token (token case)
   (let ((access-token (gethash :access_token token))
 	(expire (gethash :expire token)))
     (if (and access-token expire (time-less-p nil expire))
-	access-token
+	(progn
+	  (puthash :fresh nil token)
+	  access-token)
       ;; A refused refresh token is not the end: ask for a new
       ;; authorization instead of going on without a token.
       (or (mew-xoauth2-refresh token case)

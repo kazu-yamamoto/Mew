@@ -1044,7 +1044,7 @@
 
 (defun mew-imap-command-xoauth2-wpwd (pro pnm)
   (mew-imap-set-done pnm t)
-  (mew-passwd-set-passwd (mew-imap-passtag pnm) nil)
+  (mew-passwd-forget-passwd (mew-imap-passtag pnm))
   (delete-process pro)
   ;; XXX: Should be cared more! Clear process and filter without sending LOGOUT.
   (error "IMAP XOAUTH2 token is wrong!"))
@@ -1555,9 +1555,9 @@
       ((and (goto-char (point-min)) (looking-at "\\+ *\\(.*\\)"))
        (setq next (mew-imap-fsm-next
                    status
-                   (if (string= status "auth-xoauth2")
-                       (mew-xoauth2-json-status (mew-match-string 1))
-                     "OK"))))
+                   ;; XOAUTH2 succeeds with a tagged OK.  A continuation
+                   ;; is an error, in JSON or empty without SASL-IR.
+                   (if (string= status "auth-xoauth2") "NO" "OK"))))
       ((and (goto-char (point-max)) (= (forward-line -1) 0) (looking-at eos))
        (mew-imap-set-tag pnm nil)
        (setq code (mew-match-string 1))
