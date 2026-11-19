@@ -198,6 +198,10 @@ security, and all Lisp files now use lexical binding.
   it unterminated, and reads a folder whose path ends with a CP932
   character whose second byte is "\".
   [#326](https://github.com/kazu-yamamoto/Mew/pull/326)
+* XOAUTH2: a refused access token no longer throws away the refresh
+  token, an IMAP error continuation is no longer taken as success,
+  and a canceled authorization no longer requests a token.
+  [#351](https://github.com/kazu-yamamoto/Mew/pull/351)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
