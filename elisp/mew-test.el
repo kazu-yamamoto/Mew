@@ -1207,6 +1207,54 @@ file is compiled with lexical binding."
 					    (number-sequence 1 23)))
 		 '("1:23"))))
 
+(defun mew-test-imap-xoauth2 (imap2 capability)
+  "Authenticate with XOAUTH2 after CAPABILITY through the filter.
+Use mew-imap2 if IMAP2.  Return the sent lines in order."
+  (let* ((p (if imap2 "mew-imap2-" "mew-imap-"))
+         (fn (lambda (name) (intern (concat p name))))
+         (buf (generate-new-buffer " *mew-test-imap*"))
+         (pro (make-pipe-process :name (concat p "info-test") :buffer buf
+                                 :noquery t))
+         (pnm (process-name pro))
+         (sent nil))
+    (unwind-protect
+        (cl-letf (((symbol-function (funcall fn "process-send-string"))
+                   (lambda (_pro _pnm &rest args)
+                     (funcall (funcall fn "set-tag") pnm "a1")
+                     (setq sent (cons (apply #'format args) sent))))
+                  ((symbol-function (funcall fn "process-send-string2"))
+                   (lambda (_pro &rest args)
+                     (setq sent (cons (apply #'format args) sent))))
+                  ((symbol-function 'mew-xoauth2-auth-string)
+                   (lambda (&rest _) "TOKEN"))
+                  ((symbol-function (funcall fn "command-next"))
+                   (lambda (&rest _) (setq sent (cons 'next sent)))))
+          (mew-info-clean-up pnm)
+          (funcall (funcall fn "set-auth") pnm t)
+          (if (fboundp (funcall fn "set-secure"))
+              (funcall (funcall fn "set-secure") pnm t))
+          (funcall (funcall fn "set-auth-list") pnm '("XOAUTH2"))
+          (funcall (funcall fn "set-status") pnm "capability")
+          (funcall (funcall fn "set-tag") pnm "a0")
+          (funcall (funcall fn "filter") pro
+                   (format "* CAPABILITY IMAP4rev1 %s AUTH=XOAUTH2\r\na0 OK done\r\n"
+                           capability))
+          (when (equal (funcall (funcall fn "get-status") pnm) "xoauth2")
+            (funcall (funcall fn "filter") pro "+ \r\n"))
+          (should (equal (funcall (funcall fn "get-status") pnm) "auth-xoauth2"))
+          (funcall (funcall fn "filter") pro "a1 OK Success\r\n")
+          (nreverse sent))
+      (delete-process pro)
+      (kill-buffer buf))))
+
+(ert-deftest mew-test-imap-xoauth2-sasl-ir ()
+  "The token goes with AUTHENTICATE only if the server has SASL-IR."
+  (dolist (imap2 '(nil t))
+    (should (equal (mew-test-imap-xoauth2 imap2 "SASL-IR")
+                   '("AUTHENTICATE XOAUTH2 TOKEN" next)))
+    (should (equal (mew-test-imap-xoauth2 imap2 "")
+                   '("AUTHENTICATE XOAUTH2" "TOKEN" next)))))
+
 (ert-deftest mew-test-imap-mailbox-arrange ()
   "A mailbox with children gets the separator appended."
   (let ((lst (list (list "inbox") (list "inbox/sub")

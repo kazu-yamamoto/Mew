@@ -47,7 +47,7 @@
     "spam" "spam-field" "spam-word" "spam-pattern"
     "new-mailbox" "my-prefix" "specials" "bytes"
     "gm-ext-1" "gm-thrid" "gm-msgid" "gm-labels"
-    "virtual-info" "disp-info" "status-buf" "mark-hist"))
+    "virtual-info" "disp-info" "status-buf" "mark-hist" "sasl-ir" "xoauth2"))
 
 (mew-info-defun "mew-imap-" mew-imap-info-list)
 
@@ -59,6 +59,7 @@
 (defvar mew-imap-fsm
   '(("greeting"      ("OK" . "capability"))
     ("capability"    ("OK" . "post-capability"))
+    ("xoauth2"       ("OK" . "token-xoauth2") ("NO\\|BAD" . "xoauth2-wpwd"))
     ("auth-xoauth2"  ("OK" .  "next") ("NO" . "xoauth2-wpwd"))
     ("auth-cram-md5" ("OK" . "pwd-cram-md5") ("NO" . "wpwd"))
     ("pwd-cram-md5"  ("OK" . "next") ("NO" . "wpwd"))
@@ -127,6 +128,8 @@
       (goto-char (point-min))
       (while (re-search-forward "AUTH=\\([^ \r\n]+\\)" nil t)
 	(setq authl (cons (mew-match-string 1) authl)))
+      (goto-char (point-min))
+      (mew-imap-set-sasl-ir pnm (and (re-search-forward "\\bSASL-IR\\b" nil t) t))
       (goto-char (point-min))
       (mew-imap-set-authl pnm authl)
       (mew-imap-set-status pnm "authentication")
@@ -1039,7 +1042,20 @@
   (let* ((user (mew-imap-get-user pnm))
 	 (tag (mew-imap-passtag pnm))
          (auth-string (mew-xoauth2-auth-string user tag (mew-imap-get-case pnm))))
-    (mew-imap-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
+    (if (mew-imap-get-sasl-ir pnm)
+	(progn
+	  (mew-imap-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
+	  (mew-imap-set-status pnm "auth-xoauth2"))
+      ;; Without SASL-IR (RFC 4959), the token waits for a continuation.
+      ;; It is obtained first so that the server does not wait for the browser.
+      (mew-imap-set-xoauth2 pnm auth-string)
+      (mew-imap-process-send-string pro pnm "AUTHENTICATE XOAUTH2")
+      (mew-imap-set-status pnm "xoauth2"))))
+
+(defun mew-imap-command-token-xoauth2 (pro pnm)
+  (let ((auth-string (mew-imap-get-xoauth2 pnm)))
+    (mew-imap-set-xoauth2 pnm nil)
+    (mew-imap-process-send-string2 pro auth-string)
     (mew-imap-set-status pnm "auth-xoauth2")))
 
 (defun mew-imap-command-xoauth2-wpwd (pro pnm)
@@ -1556,7 +1572,7 @@
        (setq next (mew-imap-fsm-next
                    status
                    ;; XOAUTH2 succeeds with a tagged OK.  A continuation
-                   ;; is an error, in JSON or empty without SASL-IR.
+                   ;; after the token is an error in JSON.
                    (if (string= status "auth-xoauth2") "NO" "OK"))))
       ((and (goto-char (point-max)) (= (forward-line -1) 0) (looking-at eos))
        (mew-imap-set-tag pnm nil)
