@@ -824,6 +824,32 @@ Going on without one made Mew send the literal \"Bearer nil\"."
       (should (equal s ""))
       (should-not (string-match "nil" (base64-decode-string (concat s "")))))))
 
+(ert-deftest mew-test-xoauth2-save-only-new-token ()
+  "The password file is saved only when a new token was obtained."
+  (let ((mew-passwd-master t)
+        (token (make-hash-table))
+        (saves 0))
+    (puthash :access_token "access" token)
+    (puthash :expire (time-add 3600 nil) token)
+    (cl-letf (((symbol-function 'mew-passwd-setup-master) #'ignore)
+              ((symbol-function 'mew-passwd-get-passwd) (lambda (&rest _) token))
+              ((symbol-function 'mew-passwd-set-passwd) #'ignore)
+              ((symbol-function 'mew-passwd-set-counter) #'ignore)
+              ((symbol-function 'mew-passwd-save)
+               (lambda () (setq saves (1+ saves)))))
+      (mew-xoauth2-auth-string "me@example.org" "tag" nil)
+      (should (= saves 0))
+      (remhash :access_token token)
+      (cl-letf (((symbol-function 'mew-xoauth2-refresh)
+                 (lambda (tk _case)
+                   (mew-xoauth2-store
+                    tk (let ((h (make-hash-table :test 'equal)))
+                         (puthash "access_token" "new" h)
+                         (puthash "expires_in" 3600 h)
+                         h)))))
+        (mew-xoauth2-auth-string "me@example.org" "tag" nil))
+      (should (= saves 1)))))
+
 (ert-deftest mew-test-xoauth2-authorize-canceled ()
   "Without an authorization code no token may be requested."
   (let ((posted nil)
