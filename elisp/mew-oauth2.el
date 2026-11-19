@@ -253,6 +253,11 @@ which does not exist."
 ;;;
 
 (defun mew-xoauth2-auth-string (user tag case)
+  ;; Without the password file loaded, a new authorization would start.
+  (unless (mew-passwd-loading-p)
+    (mew-xoauth2-auth-string1 user tag case)))
+
+(defun mew-xoauth2-auth-string1 (user tag case)
   (mew-passwd-setup-master)
   (let* ((tk (mew-passwd-get-passwd tag))
          (token (if (hash-table-p tk) tk (make-hash-table)))

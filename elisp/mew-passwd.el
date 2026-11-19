@@ -41,7 +41,10 @@ is used only for decryption (loading). After loading passwords,
 this variable is set to \='t\=`.")
 (defvar mew-passwd-alist nil)
 (defvar mew-passwd-timer-id nil)
-(defvar mew-passwd-rendezvous nil)
+(defvar mew-passwd-loading nil
+  "Non-nil while the password file is loaded.
+Filters of other connections run while the master password is read,
+so another load could start inside this one.")
 (defvar mew-passwd-agent-hack nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -213,9 +216,11 @@ just obtained, so that the refresh token gets a new one next time."
     ;;; do nothing
     )
    (t
-    (when (and (not mew-passwd-master) mew-use-master-passwd)
+    (when (and (not mew-passwd-master) mew-use-master-passwd
+	       (not mew-passwd-loading))
       (setq mew-passwd-agent-hack (mew-passwd-check-agent-hack))
-      (let ((file (expand-file-name mew-passwd-file mew-conf-path)))
+      (let ((file (expand-file-name mew-passwd-file mew-conf-path))
+	    (mew-passwd-loading t))
 	(if (file-exists-p file)
 	    (setq mew-passwd-alist (mew-passwd-load))
 	  (mew-passwd-read-master-passwd)))
@@ -248,22 +253,32 @@ just obtained, so that the refresh token gets a new one next time."
 ;;; Input
 ;;;
 
+(defun mew-passwd-loading-p ()
+  "Non-nil if the password file is being loaded.  Tell the user then."
+  (when mew-passwd-loading
+    (message "The master password is being asked.  Try again later")
+    t))
+
 (defun mew-input-passwd (prompt key)
-  (if (and key (or mew-use-cached-passwd mew-use-master-passwd))
-      (progn
-	(mew-passwd-setup-master)
-	(if (stringp (mew-passwd-get-passwd key))
-	    (progn
-	      (mew-timing)
-	      (if mew-passwd-reset-timer (mew-passwd-set-counter key 0))
-	      (mew-passwd-get-passwd key))
-	  (let ((pass (mew-read-passwd prompt)))
-	    (mew-passwd-set-passwd key pass)
-	    (mew-passwd-set-counter key 0)
-	    (when mew-passwd-master
-	      (mew-passwd-save))
-	    pass)))
-    (mew-read-passwd prompt)))
+  (cond
+   ((not (and key (or mew-use-cached-passwd mew-use-master-passwd)))
+    (mew-read-passwd prompt))
+   ;; The passwords are not there yet, and the minibuffer is in use.
+   ((mew-passwd-loading-p)
+    "")
+   (t
+    (mew-passwd-setup-master)
+    (if (stringp (mew-passwd-get-passwd key))
+	(progn
+	  (mew-timing)
+	  (if mew-passwd-reset-timer (mew-passwd-set-counter key 0))
+	  (mew-passwd-get-passwd key))
+      (let ((pass (mew-read-passwd prompt)))
+	(mew-passwd-set-passwd key pass)
+	(mew-passwd-set-counter key 0)
+	(when mew-passwd-master
+	  (mew-passwd-save))
+	pass)))))
 
 (defun mew-read-passwd (prompt)
   (let (;; A process filter sets inhibit-quit to t to prevent quitting.
@@ -313,14 +328,13 @@ just obtained, so that the refresh token gets a new one next time."
 ;;; Load and save
 ;;;
 
-(defmacro mew-passwd-rendezvous (pro)
-  `(condition-case nil
-       (let ((inhibit-quit nil))
-	 (setq mew-passwd-rendezvous t)
-	 (while mew-passwd-rendezvous
-	   (accept-process-output ,pro 0.1 nil t)))
-     (quit
-      (setq mew-passwd-rendezvous nil))))
+(defun mew-passwd-rendezvous (pro)
+  "Wait until gpg of PRO is done, whatever happens to other gpg."
+  (condition-case nil
+      (let ((inhibit-quit nil))
+	(while (not (process-get pro 'mew-passwd-done))
+	  (accept-process-output pro 0.1 nil t)))
+    (quit nil)))
 
 (defun mew-passwd-load ()
   (let* ((process-connection-type mew-connection-type2)
@@ -424,10 +438,10 @@ just obtained, so that the refresh token gets a new one next time."
 	(process-send-string process (mew-passwd-read-passwd "New master password again: "))
 	(process-send-string process "\n"))
        ((string-match "exiting" string)
-	(setq mew-passwd-rendezvous nil))))))
+	(process-put process 'mew-passwd-done t))))))
 
-(defun mew-passwd-sentinel (_process _event)
-  (setq mew-passwd-rendezvous nil))
+(defun mew-passwd-sentinel (process _event)
+  (process-put process 'mew-passwd-done t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
