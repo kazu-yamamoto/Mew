@@ -797,7 +797,7 @@
 	(set-process-sentinel process 'mew-pop-sentinel)
 	(set-process-filter process 'mew-pop-filter)
 	(set-process-buffer process buf)
-	(when (and gnutlsp starttlsp)
+	(when gnutlsp
 	  (let ((greeting (plist-get (cdr pro-plist) :greeting)))
 	    (if (stringp greeting) (mew-pop-filter process greeting))))))))
 

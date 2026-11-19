@@ -477,7 +477,7 @@
       (set-process-sentinel process 'mew-imap2-sentinel)
       (set-process-filter process 'mew-imap2-filter)
       (message "Copying in background...")
-      (when (and gnutlsp starttlsp)
+      (when gnutlsp
 	(let ((greeting (plist-get (cdr pro-plist) :greeting)))
 	  (if (stringp greeting) (mew-imap2-filter process greeting)))))))
 

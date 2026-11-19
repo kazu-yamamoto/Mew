@@ -501,7 +501,7 @@
       (set-process-filter process 'mew-smtp-filter)
       (message "Sending in background...")
       ;;
-      (when (and gnutlsp starttlsp)
+      (when gnutlsp
 	(let ((greeting (plist-get (cdr pro-plist) :greeting)))
 	  (if (stringp greeting) (mew-smtp-filter process greeting)))))))
 

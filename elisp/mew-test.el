@@ -1269,25 +1269,101 @@ compatibility code of mew-env.el belongs here."
 ;;; mew-gnutls.el
 ;;;
 
-(ert-deftest mew-test-gnutls-capability-command ()
-  "The forms in mew-gnutls-plist are evaluated and refer to CASE.
-CASE used to be picked up from the dynamic binding of the caller's
-argument, which stops working under lexical binding."
-  (let ((cmd (plist-get (mew-gnutls-parameters 'smtp t "default")
-		        :capability-command)))
-    (should (stringp cmd))
-    (should (string-match "\\`EHLO .+\n\\'" cmd)))
-  (should (equal (plist-get (mew-gnutls-parameters 'imap t "default")
-			    :capability-command)
-		 "1 CAPABILITY\n"))
-  (should (functionp (plist-get (mew-gnutls-parameters 'smtp t "default")
-				:starttls-function))))
+(defun mew-test-gnutls-handshake (proto starttlsp greeting replies &optional nsm)
+  "Run `mew-gnutls-handshake' against a fake server.
+GREETING is in the buffer from the start for STARTTLS, or comes with
+TLS otherwise.  REPLIES maps a command regexp to its reply.  Return
+the result and the keyword arguments given to `gnutls-negotiate'.
+NSM replaces `nsm-verify-connection'."
+  (let* ((buf (generate-new-buffer " *mew-test-gnutls*"))
+         (pro (make-pipe-process :name "mew-test-gnutls" :buffer buf
+                                 :noquery t))
+         (reply (lambda (str)
+                  (with-current-buffer buf
+                    (goto-char (point-max))
+                    (insert str))))
+         negotiated)
+    (unwind-protect
+        (cl-letf (((symbol-function 'process-send-string)
+                   (lambda (_pro cmd)
+                     (dolist (r replies)
+                       (if (string-match (car r) cmd)
+                           (funcall reply (cdr r))))))
+                  ((symbol-function 'gnutls-negotiate)
+                   (lambda (&rest args)
+                     (setq negotiated args)
+                     (unless starttlsp (funcall reply greeting))))
+                  ((symbol-function 'nsm-verify-connection)
+                   (or nsm (lambda (pro &rest _) pro))))
+          (if starttlsp (funcall reply greeting))
+          (list (condition-case err
+                    (mew-gnutls-handshake pro "mail.example.org" 25
+                                          proto starttlsp "default")
+                  (error (error-message-string err)))
+                negotiated))
+      (delete-process pro)
+      (kill-buffer buf))))
 
-(ert-deftest mew-test-gnutls-no-starttls ()
-  (let ((params (mew-gnutls-parameters 'smtp nil "default")))
-    (should-not (plist-get params :capability-command))
-    (should-not (plist-get params :starttls-function))
-    (should-not (plist-get params :success))))
+(ert-deftest mew-test-gnutls-starttls-smtp ()
+  "Mew's TLS parameters are given to `gnutls-negotiate' for STARTTLS."
+  (let* ((mew-ssl-algorithm-priority "SECURE256")
+         (ret (mew-test-gnutls-handshake
+               'smtp t "220-mail\n220 ready\n"
+               '(("\\`EHLO " . "250-mail\n250-STARTTLS\n250 8BITMIME\n")
+                 ("\\`STARTTLS" . "220 go ahead\n")))))
+    (should (equal (car ret) "220-mail\n220 ready\n"))
+    (should (equal (plist-get (nth 1 ret) :priority-string) "SECURE256"))
+    (should (equal (plist-get (nth 1 ret) :hostname) "mail.example.org"))))
+
+(ert-deftest mew-test-gnutls-starttls-not-supported ()
+  "Without STARTTLS, TLS is not negotiated."
+  (let ((ret (mew-test-gnutls-handshake
+              'smtp t "220 ready\n"
+              '(("\\`EHLO " . "250-mail\n250 8BITMIME\n")))))
+    (should (equal (car ret) "Server does not support STARTTLS"))
+    (should-not (nth 1 ret))))
+
+(ert-deftest mew-test-gnutls-starttls-imap ()
+  "IMAP replies end with the tagged line, not with the first line."
+  (let ((ret (mew-test-gnutls-handshake
+              'imap t "* OK ready\n"
+              '(("\\`1 CAPABILITY" . "* CAPABILITY IMAP4rev1 STARTTLS\n1 OK done\n")
+                ("\\`2 STARTTLS" . "2 OK begin\n")))))
+    (should (equal (car ret) "* OK ready\n"))
+    (should (nth 1 ret)))
+  (let ((ret (mew-test-gnutls-handshake
+              'imap t "* OK ready\n"
+              '(("\\`1 CAPABILITY" . "* CAPABILITY IMAP4rev1 STARTTLS\n1 OK done\n")
+                ("\\`2 STARTTLS" . "2 BAD no\n")))))
+    (should (equal (car ret) "Server refused STARTTLS"))
+    (should-not (nth 1 ret))))
+
+(ert-deftest mew-test-gnutls-nntp-no-capabilities ()
+  "An error reply to CAPABILITIES does not wait for the timeout."
+  (let ((ret (mew-test-gnutls-handshake
+              'nntp t "200 ready\n"
+              '(("\\`CAPABILITIES" . "500 what?\n")))))
+    (should (equal (car ret) "Server does not support STARTTLS"))))
+
+(ert-deftest mew-test-gnutls-tls-greeting ()
+  "With TLS, the greeting is read after the handshake."
+  (let ((ret (mew-test-gnutls-handshake 'pop nil "+OK ready\n" nil)))
+    (should (equal (car ret) "+OK ready\n"))
+    (should (nth 1 ret))))
+
+(ert-deftest mew-test-gnutls-verify-level-0 ()
+  "Level 0 skips NSM for this connection only."
+  (let ((mew-ssl-verify-level 0)
+        (nsm nil))
+    (should (equal (car (mew-test-gnutls-handshake
+                         'pop nil "+OK ready\n" nil
+                         (lambda (&rest _) (setq nsm t) nil)))
+                   "+OK ready\n"))
+    (should-not nsm))
+  (let ((mew-ssl-verify-level 1))
+    (should (equal (car (mew-test-gnutls-handshake
+                         'pop nil "+OK ready\n" nil #'ignore))
+                   "Server certificate is not accepted"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
