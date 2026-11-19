@@ -35,7 +35,9 @@ A file name of a certificate should be `cert-hash.0'.
     connection is not created. If not present, an SSL/TLS connection is
     not created.
 3 - verify server's certificate which locally installed (not one from
-    the server).")
+    the server).
+With GnuTLS (\='native), 0 skips the verification by NSM, and the
+other values all leave it to `network-security-level'.")
 
 (defvar mew-ssl-proxy-server nil)
 

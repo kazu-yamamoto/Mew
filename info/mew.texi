@@ -12946,23 +12946,25 @@ GnuTLS を使う場合は前述のとおり @samp{network-security-level} を設
 ることが推奨されます。一方で Mew は、Stunnel を用いた TLS 接続について、
 @samp{mew-ssl-verify-level} という変数を用いて証明書の検証レベルを設定
 していました。この変数で設定した場合との後方互換性を保つため、Mew は
-@samp{mew-ssl-verify-level} が @samp{0} の場合のみ、
-@samp{network-security-level} を @samp{'low} に自動設定します。
-この自動設定は、 Mew による接続のみに影響します。
+@samp{mew-ssl-verify-level} が @samp{0} の場合のみ、NSM による検証を
+行いません。これは、その case の Mew による接続のみに影響します。
 @samp{mew-ssl-verify-level} のデフォルト値は @samp{1} となっています。
-@samp{0} 以外の値の場合は、@samp{network-security-level} の設定に変更
-が加えられることはありません。
+@samp{0} 以外の値は、どれも同じ意味で、NSM が
+@samp{network-security-level} に従って検証します。ローカルにインストー
+ルされた証明書で検証する @samp{3} は、GnuTLS では使えません。
 @end ifset
 @ifset en
 It is recommended to use @samp{network-security-level} to specify the
 verification level when using GnuTLS.  However, Mew traditionally used
 @samp{mew-ssl-verify-level} variable to specify the verification level
-for Stunnel program.  To keep backward compatibility with it,
-@samp{network-security-level} will be temporarily set to @samp{'low}
-if and only if @samp{mew-ssl-verify-level} is @samp{0}.  Note that the
-default value of @samp{mew-ssl-verify-level} is @samp{1} and there
-will be no change with @samp{network-security-level} when
-@samp{mew-ssl-verify-level} is not @samp{0}.
+for Stunnel program.  To keep backward compatibility with it, NSM
+does not verify the server certificate if and only if
+@samp{mew-ssl-verify-level} is @samp{0}.  This affects only Mew's
+connections of that case.  Note that the default value of
+@samp{mew-ssl-verify-level} is @samp{1}.  All the other values mean
+the same: NSM verifies the certificate according to
+@samp{network-security-level}.  The level @samp{3}, verification with
+locally installed certificates, is not available with GnuTLS.
 @end ifset
 
 @ifset ja
