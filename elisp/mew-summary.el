@@ -342,7 +342,7 @@ and return (beg . end)."
   (mew-summary-setup-mode-line)
   (mew-summary-setup-decoration)
   (mew-highlight-cursor-line)
-  (mew-run-mode-hooks 'mew-summary-mode-hook))
+  (run-mode-hooks 'mew-summary-mode-hook))
 
 (defun mew-summary-kill ()
   "Kill this Summary mode."

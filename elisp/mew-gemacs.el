@@ -437,10 +437,9 @@ with fitting to frame size"
 ;;;
 
 (define-key mew-message-mode-map [mouse-2] 'mew-browse-url-at-mouse)
-(if (and (featurep 'emacs) ;; preventing XEmacs's byte compiler from hanging
-	 (eq system-type 'darwin))
-    ;; for Mac
-    (define-key mew-message-mode-map [M-down-mouse-1] 'mew-browse-url-at-mouse))
+(when (eq system-type 'darwin)
+  ;; for Mac
+  (define-key mew-message-mode-map [M-down-mouse-1] 'mew-browse-url-at-mouse))
 
 (provide 'mew-gemacs)
 

@@ -1979,7 +1979,6 @@ If you cite a message, the citation style of format=flowed is used. "
   :group 'mew-summary
   :type 'sexp)
 
-;; Indirect call of propertized-buffer-identification due to XEmacs
 (defun mew-mode-line-id ()
   (propertized-buffer-identification mew-mode-line-id))
 

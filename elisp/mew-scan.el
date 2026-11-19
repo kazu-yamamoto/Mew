@@ -70,7 +70,7 @@ effect to this function."
 	(unread (and mew-use-unread-mark (mew-sinfo-get-unread-mark)))
 	duplicated spam review id body md5)
     (when mew-summary-form-mark-delete
-      (if (mew-characterp mew-summary-form-mark-delete)
+      (if (characterp mew-summary-form-mark-delete)
 	  (setq mark-delete mew-summary-form-mark-delete))
       (when (setq id (mew-idstr-get-first-id (MEW-ID)))
 	(if (member id (mew-sinfo-get-scan-id))
@@ -79,7 +79,7 @@ effect to this function."
 	  (mew-sinfo-set-scan-id (cons id (mew-sinfo-get-scan-id))))))
     (when (and mew-summary-form-mark-spam
 	       (mew-sinfo-get-inboxp))
-      (if (mew-characterp mew-summary-form-mark-spam)
+      (if (characterp mew-summary-form-mark-spam)
 	  (setq mark-spam mew-summary-form-mark-spam))
       (setq body (MEW-BODY))
       (unless (string= body "")
@@ -89,7 +89,7 @@ effect to this function."
 	      (setq spam t))
 	  (mew-sinfo-set-scan-md5 (cons md5 (mew-sinfo-get-scan-md5))))))
     (when mew-summary-form-mark-review
-      (if (mew-characterp mew-summary-form-mark-review)
+      (if (characterp mew-summary-form-mark-review)
 	  (setq mark-review mew-summary-form-mark-review))
       (let* ((mew-header-max-depth nil)
 	     (to (mew-addrstr-parse-address-list (MEW-TO)))
@@ -441,7 +441,7 @@ Address is converted by `mew-summary-form-extract-addr'. See also
 	   (mew-summary-refile-log folder mark-or-dst)
 	   (setq med (+ med (mew-summary-refile-override-body mark-or-dst 'force)))
 	   (mew-mark-put mew-mark-refile))
-	  ((mew-characterp mark-or-dst) ;; mew-inbox-action-alist
+	  ((characterp mark-or-dst) ;; mew-inbox-action-alist
 	   (mew-mark-put mark-or-dst))
 	  (mark
 	   (mew-summary-mark-as mark))

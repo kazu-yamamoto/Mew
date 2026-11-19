@@ -36,7 +36,7 @@
   (setq page-delimiter mew-page-delimiter)
   (mew-message-setup-decoration)
   (mew-message-toolbar-update)
-  (mew-run-mode-hooks 'mew-message-mode-hook))
+  (run-mode-hooks 'mew-message-mode-hook))
 
 (defun mew-message-mode-line (fld message)
   (let* ((msg (or message
@@ -281,7 +281,7 @@ confused. Please use '\\[mew-message-forward]' instead."
 	    width start fill-prefix)
 	(while (not (eobp))
 	  (setq start (point))
-	  (setq fill-prefix (mew-fill-match-adaptive-prefix))
+	  (setq fill-prefix (fill-match-adaptive-prefix))
 	  (end-of-line)
 	  (setq width (current-column))
 	  (forward-line)

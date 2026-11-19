@@ -621,10 +621,10 @@ present, mew-face-header-marginal is used."
 	(face-val (intern (concat "mew-face-color-" val-color (if bold "-bold")))))
     (unless (facep face-key)
       (make-empty-face face-key)
-      (face-spec-set face-key (list (mew-face-spec-func t (mew-face-spec-primitive key-color bold)))))
+      (face-spec-set face-key (list (cons t (mew-face-spec-primitive key-color bold)))))
     (unless (facep face-val)
       (make-empty-face face-val)
-      (face-spec-set face-val (list (mew-face-spec-func t (mew-face-spec-primitive val-color bold)))))
+      (face-spec-set face-val (list (cons t (mew-face-spec-primitive val-color bold)))))
     (setq mew-header-color-alist
 	  (cons (list (capitalize field) face-key face-val) mew-header-color-alist))))
 
