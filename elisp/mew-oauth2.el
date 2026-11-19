@@ -56,32 +56,34 @@
 ;;; HTTP/1.1 server to get "code"
 ;;;
 
-(defvar mew-oauth2-code nil)
-
 ;; The redirect handler listens on localhost, so anything which can
 ;; reach that port, a page in the browser for instance, can send us an
 ;; authorization code of its own.  The state we generate here is what
 ;; tells the real redirect from such an injection.  RFC 6749 10.12.
-(defvar mew-oauth2-state nil)
+;; The state and the code live in the plist of the listening process,
+;; which accepted connections inherit.
 
-(defun mew-oauth2-setup-redirect-handler (port)
-  "Setup OAuth2 redirect server bound to PORT.
-It serves http://localhost:PORT"
-  (setq mew-oauth2-code nil)
-  (let ((proc-name (format "oauth2-redirect-handler:%d" port)))
-    (unless (process-status proc-name)
-      (make-network-process
-       :name proc-name
-       :buffer nil
-       :host 'local
-       :service port
-       :sentinel 'mew-oauth2-redirect-handler-sentinel
-       :filter 'mew-oauth2-redirect-handler-filter
-       :server t))))
+(defun mew-oauth2-redirect-handler-name (port)
+  (format "oauth2-redirect-handler:%d" port))
+
+(defun mew-oauth2-setup-redirect-handler (port state)
+  "Setup OAuth2 redirect server bound to PORT and return it.
+It serves http://localhost:PORT and accepts a code with STATE only."
+  (let ((server (make-network-process
+		 :name (mew-oauth2-redirect-handler-name port)
+		 :buffer nil
+		 :host 'local
+		 :service port
+		 :sentinel 'mew-oauth2-redirect-handler-sentinel
+		 :filter 'mew-oauth2-redirect-handler-filter
+		 :server t)))
+    (process-put server 'mew-oauth2-server server)
+    (process-put server 'mew-oauth2-state state)
+    server))
 
 (defun mew-oauth2-cleanup-redirect-handler (port)
   "Clean up OAuth2 redirect servers both LISTEN and ACCEPT."
-  (let ((proc-name (format "oauth2-redirect-handler:%d" port)))
+  (let ((proc-name (mew-oauth2-redirect-handler-name port)))
     (mapcar (lambda (p)
               (if (string= (process-contact p :name) proc-name)
                   (delete-process p)))
@@ -115,20 +117,21 @@ It serves http://localhost:PORT"
     (let* ((request (mew-match-string 1 string))
 	   (code (mew-oauth2-query-get request "code"))
 	   (err (mew-oauth2-query-get request "error"))
-	   (state (mew-oauth2-query-get request "state")))
+	   (state (mew-oauth2-query-get request "state"))
+	   (our-state (process-get proc 'mew-oauth2-state))
+	   (server (process-get proc 'mew-oauth2-server)))
       (cond
-       ((and err (null code) (stringp mew-oauth2-state)
-	     (equal state mew-oauth2-state))
+       ((and err (null code) (stringp our-state) (equal state our-state))
 	;; The user denied it, for instance: stop waiting.
 	(mew-oauth2-respond
 	 proc "200 OK" (concat "Mew was not authorized: " err "\n"))
 	(message "OAuth2: not authorized (%s)" err)
-	(setq mew-oauth2-code ""))
+	(process-put server 'mew-oauth2-code ""))
        ((null code)
 	()) ;; not the redirect we are waiting for
-       ((not (and (stringp mew-oauth2-state)
+       ((not (and (stringp our-state)
 		  (stringp state)
-		  (string= state mew-oauth2-state)))
+		  (string= state our-state)))
 	(mew-oauth2-respond
 	 proc "400 Bad Request"
 	 "Mew did not ask for this authorization code.\n"))
@@ -136,48 +139,43 @@ It serves http://localhost:PORT"
 	(mew-oauth2-respond
 	 proc "200 OK"
 	 (concat "Mew gets the following authorization code:\n" code "\n"))
-	(setq mew-oauth2-code code))))))
+	(process-put server 'mew-oauth2-code code))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Getting authorization code
 ;;;
 
-(defvar mew-oauth2-authorizing nil
-  "Non-nil while waiting for the browser.
-Timers and filters of other connections run meanwhile, so another
-authorization could start inside this one and overwrite its state.")
-
 (defun mew-oauth2-get-auth-code (url client-id resource-url redirect-url challenge port)
-  (if mew-oauth2-authorizing
+  ;; Timers and filters of other connections run while we wait for the
+  ;; browser, so another authorization may start inside this one.
+  ;; Only one at a time can listen on PORT.
+  (if (process-status (mew-oauth2-redirect-handler-name port))
       (progn
 	(message "OAuth2: another authorization is in progress")
 	"")
-    (let ((mew-oauth2-authorizing t))
-      (setq mew-oauth2-state (mew-oauth2-random-string))
-      (let ((url-params
-	     (concat
-	      url
-	      "?response_type=code"
-	      "&client_id=" (url-hexify-string client-id)
-	      "&scope=" (url-hexify-string resource-url)
-	      "&redirect_uri=" (url-hexify-string redirect-url)
-	      "&state=" mew-oauth2-state
-	      "&code_challenge=" challenge
-	      "&code_challenge_method=S256")))
-	(mew-oauth2-cleanup-redirect-handler port)
-	;; The listening socket has to go even when the user gives up, or
-	;; the port stays taken for the rest of the session.
-	(unwind-protect
-	    (condition-case err
-		(progn
-		  (mew-oauth2-setup-redirect-handler port)
-		  (browse-url url-params)
-		  (mew-rendezvous (null mew-oauth2-code))
-		  mew-oauth2-code)
-	      (error (message "OAuth2: %s" (error-message-string err)) "")
-	      (quit (message "OAuth2: the authorization was canceled") ""))
-	  (mew-oauth2-cleanup-redirect-handler port))))))
+    (let* ((state (mew-oauth2-random-string))
+	   (url-params
+	    (concat
+	     url
+	     "?response_type=code"
+	     "&client_id=" (url-hexify-string client-id)
+	     "&scope=" (url-hexify-string resource-url)
+	     "&redirect_uri=" (url-hexify-string redirect-url)
+	     "&state=" state
+	     "&code_challenge=" challenge
+	     "&code_challenge_method=S256")))
+      ;; The listening socket has to go even when the user gives up, or
+      ;; the port stays taken for the rest of the session.
+      (unwind-protect
+	  (condition-case err
+	      (let ((server (mew-oauth2-setup-redirect-handler port state)))
+		(browse-url url-params)
+		(mew-rendezvous (null (process-get server 'mew-oauth2-code)))
+		(process-get server 'mew-oauth2-code))
+	    (error (message "OAuth2: %s" (error-message-string err)) "")
+	    (quit (message "OAuth2: the authorization was canceled") ""))
+	(mew-oauth2-cleanup-redirect-handler port)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
