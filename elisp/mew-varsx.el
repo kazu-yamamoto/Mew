@@ -71,166 +71,166 @@
 
 (mew-defvar
  'mew-mime-content-type
- `(("multipart"    nil         nil     nil            mew-icon-multipart)
+ `(("multipart"    nil         nil     nil            nil)
    ;;
-   ("audio/basic"  "\\.au$"    mew-b64 mew-prog-audio mew-icon-audio)
-   ("audio/x-wav"  "\\.wav$"   mew-b64 mew-prog-audio mew-icon-audio)
-   ("audio/x-aiff" "\\.aif?f$" mew-b64 mew-prog-audio mew-icon-audio)
-   ("audio/x-midi" "\\.midi?$" mew-b64 mew-prog-audio mew-icon-audio)
-   ("audio/x-mpeg" "\\.mpga$\\|\\.mp[23]$" mew-b64 mew-prog-audio mew-icon-audio)
-   ("audio/mp4"    "\\.m4a$"    mew-b64 mew-prog-audio mew-icon-audio)
-   ("audio/ogg"    "\\.og[ga]$" mew-b64 mew-prog-audio mew-icon-audio)
-   ("audio/flac"   "\\.flac$"   mew-b64 mew-prog-audio mew-icon-audio)
+   ("audio/basic"  "\\.au$"    mew-b64 mew-prog-audio nil)
+   ("audio/x-wav"  "\\.wav$"   mew-b64 mew-prog-audio nil)
+   ("audio/x-aiff" "\\.aif?f$" mew-b64 mew-prog-audio nil)
+   ("audio/x-midi" "\\.midi?$" mew-b64 mew-prog-audio nil)
+   ("audio/x-mpeg" "\\.mpga$\\|\\.mp[23]$" mew-b64 mew-prog-audio nil)
+   ("audio/mp4"    "\\.m4a$"    mew-b64 mew-prog-audio nil)
+   ("audio/ogg"    "\\.og[ga]$" mew-b64 mew-prog-audio nil)
+   ("audio/flac"   "\\.flac$"   mew-b64 mew-prog-audio nil)
    ;;
-   ("image/gif"   "\\.gif$"   mew-b64 mew-prog-image mew-icon-image gif)
-   ("image/tiff"  "\\.tif?f$" mew-b64 mew-prog-image mew-icon-image tiff)
-   ("image/jpeg"  "\\.jpe?g$" mew-b64 mew-prog-image mew-icon-image jpeg)
-   ("image/pjpeg" "\\.jfif$"  mew-b64 mew-prog-image mew-icon-image jpeg) ;; MS
-   ("image/jpg"   "^$"        mew-b64 mew-prog-image mew-icon-image jpeg) ;; unofficial
-   ("image/png"   "\\.png$"   mew-b64 mew-prog-image mew-icon-image png)
-   ("image/x-xwd" "\\.xwd$"   mew-b64 mew-prog-image mew-icon-image xwd)
-   ("image/x-xbm" "\\.xbm$"   mew-b64 mew-prog-image mew-icon-image xbm)
-   ("image/x-xpm" "\\.xpm$"   mew-b64 mew-prog-image mew-icon-image xpm)
-   ("image/x-bmp" "\\.bmp$"   mew-b64 mew-prog-image mew-icon-image bmp)
-   ("image/bmp"   "^$"        mew-b64 mew-prog-image mew-icon-image bmp) ;; unofficial
-   ("image/x-pcx" "\\.pcx$"   mew-b64 mew-prog-image mew-icon-image PCX)
-   ("image/x-tga" "\\.tga$"   mew-b64 mew-prog-image mew-icon-image TGA)
-   ("image/vnd.ms-modi" "\\.mdi$" mew-b64 mew-prog-image mew-icon-image)
-   ("image/vnd.microsoft.icon" "\\.ico$" mew-b64 mew-prog-image mew-icon-image ICO)
-   ("image/x-portable-bitmap" "\\.pbm$" mew-b64 mew-prog-image mew-icon-image pbm)
-   ("image/x-portable-graymap" "\\.pgm$" mew-b64 mew-prog-image mew-icon-image pbm)
-   ("image/x-portable-pixmap" "\\.ppm$" mew-b64 mew-prog-image mew-icon-image pbm)
-   ("image/x-portable-anymap" "\\.pnm$" mew-b64 mew-prog-image mew-icon-image pbm)
-   ("image/x-portable-arbitrarymap" "\\.pam$" mew-b64 mew-prog-image mew-icon-image PAM)
-   ("image/webp"  "\\.webp$"  mew-b64 mew-prog-image mew-icon-image webp)
-   ("image/svg\\+xml" "\\.svg$" mew-b64 mew-prog-image mew-icon-image svg)
-   ("image/heic"  "\\.heic$"  mew-b64 mew-prog-image mew-icon-image)
-   ("image"       "^$"        mew-b64 mew-prog-image mew-icon-image)
+   ("image/gif"   "\\.gif$"   mew-b64 mew-prog-image nil gif)
+   ("image/tiff"  "\\.tif?f$" mew-b64 mew-prog-image nil tiff)
+   ("image/jpeg"  "\\.jpe?g$" mew-b64 mew-prog-image nil jpeg)
+   ("image/pjpeg" "\\.jfif$"  mew-b64 mew-prog-image nil jpeg) ;; MS
+   ("image/jpg"   "^$"        mew-b64 mew-prog-image nil jpeg) ;; unofficial
+   ("image/png"   "\\.png$"   mew-b64 mew-prog-image nil png)
+   ("image/x-xwd" "\\.xwd$"   mew-b64 mew-prog-image nil xwd)
+   ("image/x-xbm" "\\.xbm$"   mew-b64 mew-prog-image nil xbm)
+   ("image/x-xpm" "\\.xpm$"   mew-b64 mew-prog-image nil xpm)
+   ("image/x-bmp" "\\.bmp$"   mew-b64 mew-prog-image nil bmp)
+   ("image/bmp"   "^$"        mew-b64 mew-prog-image nil bmp) ;; unofficial
+   ("image/x-pcx" "\\.pcx$"   mew-b64 mew-prog-image nil PCX)
+   ("image/x-tga" "\\.tga$"   mew-b64 mew-prog-image nil TGA)
+   ("image/vnd.ms-modi" "\\.mdi$" mew-b64 mew-prog-image nil)
+   ("image/vnd.microsoft.icon" "\\.ico$" mew-b64 mew-prog-image nil ICO)
+   ("image/x-portable-bitmap" "\\.pbm$" mew-b64 mew-prog-image nil pbm)
+   ("image/x-portable-graymap" "\\.pgm$" mew-b64 mew-prog-image nil pbm)
+   ("image/x-portable-pixmap" "\\.ppm$" mew-b64 mew-prog-image nil pbm)
+   ("image/x-portable-anymap" "\\.pnm$" mew-b64 mew-prog-image nil pbm)
+   ("image/x-portable-arbitrarymap" "\\.pam$" mew-b64 mew-prog-image nil PAM)
+   ("image/webp"  "\\.webp$"  mew-b64 mew-prog-image nil webp)
+   ("image/svg\\+xml" "\\.svg$" mew-b64 mew-prog-image nil svg)
+   ("image/heic"  "\\.heic$"  mew-b64 mew-prog-image nil)
+   ("image"       "^$"        mew-b64 mew-prog-image nil)
    ;;
-   ("model/iges" "\\.ige?s$" mew-b64 mew-prog-iges  mew-icon-image) ;; xxx
-   ("model/vrml" "\\.wrl$"   mew-b64 mew-prog-vrml  mew-icon-image)
-   ("model/mesh" "\\.me?sh$" mew-b64 mew-prog-mesh  mew-icon-image)
-   ("model"      "^$"        mew-b64 mew-prog-model mew-icon-image)
+   ("model/iges" "\\.ige?s$" mew-b64 mew-prog-iges  nil) ;; xxx
+   ("model/vrml" "\\.wrl$"   mew-b64 mew-prog-vrml  nil)
+   ("model/mesh" "\\.me?sh$" mew-b64 mew-prog-mesh  nil)
+   ("model"      "^$"        mew-b64 mew-prog-model nil)
    ;;
-   ("video/mpeg"      "\\.mpe?g$" mew-b64 mew-prog-video mew-icon-video)
-   ("video/quicktime" "\\.mov$"   mew-b64 mew-prog-video mew-icon-video)
-   ("video/x-msvideo" "\\.avi$"   mew-b64 mew-prog-video mew-icon-video)
-   ("video/mp4"       "\\.mp4$\\|\\.m4v$" mew-b64 mew-prog-video mew-icon-video)
-   ("video/webm"      "\\.webm$"  mew-b64 mew-prog-video mew-icon-video)
+   ("video/mpeg"      "\\.mpe?g$" mew-b64 mew-prog-video nil)
+   ("video/quicktime" "\\.mov$"   mew-b64 mew-prog-video nil)
+   ("video/x-msvideo" "\\.avi$"   mew-b64 mew-prog-video nil)
+   ("video/mp4"       "\\.mp4$\\|\\.m4v$" mew-b64 mew-prog-video nil)
+   ("video/webm"      "\\.webm$"  mew-b64 mew-prog-video nil)
    ;;
    ("message/rfc822"          ,(format "^[0-9]+\\(%s\\)?$" mew-suffix) nil
-    mew-prog-rfc822           mew-icon-message/rfc822)
+    mew-prog-rfc822           nil)
    ("message/external-body"   "\\.ext$"  nil
-    mew-prog-external-body    mew-icon-message/external-body)
+    mew-prog-external-body    nil)
    ("message/delivery-status" "^$"       nil
-    mew-prog-delivery-status  mew-icon-text)
+    mew-prog-delivery-status  nil)
    ;;
    ("application/postscript"        "\\.e?ps$" mew-qp
-    mew-prog-postscript             mew-icon-application/postscript)
+    mew-prog-postscript             nil)
    ("application/pdf"               "\\.pdf$"  mew-b64
-    mew-prog-pdf                    mew-icon-application/postscript)
+    mew-prog-pdf                    nil)
    ;; Thunderbird/3.1.7 only, not registered in IANA
    ("text/pdf"                      "\\.pdf$"  mew-b64
-    mew-prog-pdf                    mew-icon-application/postscript)
+    mew-prog-pdf                    nil)
    ("application/octet-stream"      "\\.pages$"  mew-b64
-    mew-default-external-program    mew-icon-application/octet-stream)
+    mew-default-external-program    nil)
    ("application/octet-stream"      "\\.key$"  mew-b64
-    mew-default-external-program    mew-icon-application/octet-stream)
+    mew-default-external-program    nil)
    ("application/octet-stream"      "\\.numbers$"  mew-b64
-    mew-default-external-program    mew-icon-application/octet-stream)
+    mew-default-external-program    nil)
    ("application/msword"            "\\.do[ct]$"  mew-b64
-    mew-prog-msword                 mew-icon-text)
+    mew-prog-msword                 nil)
    ("application/vnd.ms-excel"      "\\.xl[ast]$" mew-b64
-    mew-prog-msexcel                mew-icon-text)
+    mew-prog-msexcel                nil)
    ("application/vnd.ms-powerpoint" "\\.p\\([op]t\\|p[as]\\)$" mew-b64
-    mew-prog-mspowerpoint           mew-icon-text)
+    mew-prog-mspowerpoint           nil)
    ("application/vnd.openxmlformats-officedocument.wordprocessingml.document" "\\.docx$" mew-b64
-    mew-prog-msword                 mew-icon-text)
+    mew-prog-msword                 nil)
    ("application/vnd.openxmlformats-officedocument.wordprocessingml.template" "\\.dotx$" mew-b64
-    mew-prog-msword                 mew-icon-text)
+    mew-prog-msword                 nil)
    ("application/vnd.ms-word.document.macroEnabled.12" "\\.docm$" mew-b64
-    mew-prog-msword                 mew-icon-text)
+    mew-prog-msword                 nil)
    ("application/vnd.ms-word.template.macroEnabled.12" "\\.dotm$" mew-b64
-    mew-prog-msword                 mew-icon-text)
+    mew-prog-msword                 nil)
    ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" "\\.xlsx$" mew-b64
-    mew-prog-msexcel                mew-icon-text)
+    mew-prog-msexcel                nil)
    ("application/vnd.openxmlformats-officedocument.spreadsheetml.template" "\\.xltx$" mew-b64
-    mew-prog-msexcel                mew-icon-text)
+    mew-prog-msexcel                nil)
    ("application/vnd.ms-excel.sheet.macroEnabled.12" "\\.xlsm$" mew-b64
-    mew-prog-msexcel                mew-icon-text)
+    mew-prog-msexcel                nil)
    ("application/vnd.ms-excel.template.macroEnabled.12" "\\.xltm$" mew-b64
-    mew-prog-msexcel                mew-icon-text)
+    mew-prog-msexcel                nil)
    ("application/vnd.ms-excel.addin.macroEnabled.12" "\\.xlam$" mew-b64
-    mew-prog-msexcel                mew-icon-text)
+    mew-prog-msexcel                nil)
    ("application/vnd.ms-excel.sheet.binary.macroEnabled.12" "\\.xlsb$" mew-b64
-    mew-prog-msexcel                mew-icon-text)
+    mew-prog-msexcel                nil)
    ("application/vnd.openxmlformats-officedocument.presentationml.presentation" "\\.pptx$" mew-b64
-    mew-prog-mspowerpoint           mew-icon-text)
+    mew-prog-mspowerpoint           nil)
    ("application/vnd.openxmlformats-officedocument.presentationml.slideshow" "\\.ppsx$" mew-b64
-    mew-prog-mspowerpoint           mew-icon-text)
+    mew-prog-mspowerpoint           nil)
    ("application/vnd.openxmlformats-officedocument.presentationml.template" "\\.potx$" mew-b64
-    mew-prog-mspowerpoint           mew-icon-text)
+    mew-prog-mspowerpoint           nil)
    ("application/vnd.openxmlformats-officedocument.presentationml.slide" "\\.sldx$" mew-b64
-    mew-prog-mspowerpoint           mew-icon-text)
+    mew-prog-mspowerpoint           nil)
    ("application/vnd.ms-powerpoint.addin.macroEnabled.12" "\\.ppam$" mew-b64
-    mew-prog-mspowerpoint           mew-icon-text)
+    mew-prog-mspowerpoint           nil)
    ("application/vnd.ms-powerpoint.presentation.macroEnabled.12" "\\.pptm$" mew-b64
-    mew-prog-mspowerpoint           mew-icon-text)
+    mew-prog-mspowerpoint           nil)
    ("application/vnd.ms-powerpoint.template.macroEnabled.12" "\\.potm$" mew-b64
-    mew-prog-mspowerpoint           mew-icon-text)
+    mew-prog-mspowerpoint           nil)
    ("application/vnd.ms-powerpoint.slideshow.macroEnabled.12" "\\.ppsm$" mew-b64
-    mew-prog-mspowerpoint           mew-icon-text)
+    mew-prog-mspowerpoint           nil)
    ("application/vnd.visio"         "\\.vsd$"  mew-b64
-    mew-prog-visio                  mew-icon-text)
+    mew-prog-visio                  nil)
    ("application/ms-tnef"           "\\.dat$" mew-b64
-    mew-prog-mstnef                 mew-icon-unknown)
+    mew-prog-mstnef                 nil)
    ("application/rtf"               "\\.rtf$" mew-b64
-    mew-prog-rtf                    mew-icon-text)
+    mew-prog-rtf                    nil)
    ("application/pgp-keys"          "\\.pka$"  nil
-    mew-prog-pgp-keys               mew-icon-unknown)
+    mew-prog-pgp-keys               nil)
    ("application/x-pkcs7-signature" "\\.p7s$"  mew-b64
-    nil			     mew-icon-unknown)
+    nil			     nil)
    ("application/vnd.fujitsu.oasys" "\\.oas$"  mew-b64
-    mew-prog-oasys                  mew-icon-text)
+    mew-prog-oasys                  nil)
    ("application/vnd.fujitsu.oasys2" "\\.oa2$" mew-b64
-    mew-prog-oasys                  mew-icon-text)
+    mew-prog-oasys                  nil)
    ("application/vnd.fujitsu.oasys3" "\\.oa3$" mew-b64
-    mew-prog-oasys                  mew-icon-text)
+    mew-prog-oasys                  nil)
    ("application/zip"               "\\.zip$" mew-b64
-    mew-prog-unzip                  mew-icon-application/octet-stream)
+    mew-prog-unzip                  nil)
    ("application/x-zip-compressed"  "\\.zip$" mew-b64
-    mew-prog-unzip                  mew-icon-application/octet-stream)
+    mew-prog-unzip                  nil)
    ("application/octet-stream"
     "\\.tar$\\|\\.tar\\.\\|\\.jar$\\|\\.gz$\\|\\.Z$\\|\\.taz$\\|\\.tgz$\\|\\.xz$\\|\\.txz$\\|\\.lzma?$\\|\\.tlz$\\|\\.tbz$\\|\\.bz2?$\\|\\.lzh$\\|\\.bin$\\|\\.pgp$\\|\\.gpg$\\|\\.exe$\\|\\.dll$\\|\\.class$"
-    mew-b64 mew-prog-octet-stream mew-icon-application/octet-stream)
+    mew-b64 mew-prog-octet-stream nil)
    ;; After the entry above, which still decides the type when attaching.
    ("application/gzip"              "\\.gz$\\|\\.tgz$" mew-b64
-    mew-prog-octet-stream           mew-icon-application/octet-stream)
+    mew-prog-octet-stream           nil)
    ("application/x-gzip"            "\\.gz$\\|\\.tgz$" mew-b64
-    mew-prog-octet-stream           mew-icon-application/octet-stream)
+    mew-prog-octet-stream           nil)
    ("application/x-7z-compressed"   "\\.7z$"  mew-b64
-    mew-prog-octet-stream           mew-icon-application/octet-stream)
+    mew-prog-octet-stream           nil)
    ("application/json"              "\\.json$" mew-b64
-    mew-prog-octet-stream           mew-icon-text)
+    mew-prog-octet-stream           nil)
    ;;
-   ("text/html"     "\\.html?$" nil     mew-prog-html      mew-icon-text)
-   ("text/enriched" "\\.rtf$"   nil     mew-prog-enriched  mew-icon-text)
-   ("text/css"      "\\.css$"   nil     mew-prog-text      mew-icon-text)
-   ("text/sgml"     "\\.sgml$"  nil     mew-prog-text      mew-icon-text)
-   ("text/xml"      "\\.xml$"   nil     mew-prog-xml       mew-icon-text)
-   ("text/calendar" "\\.ics$"   nil     mew-prog-text      mew-icon-text)
+   ("text/html"     "\\.html?$" nil     mew-prog-html      nil)
+   ("text/enriched" "\\.rtf$"   nil     mew-prog-enriched  nil)
+   ("text/css"      "\\.css$"   nil     mew-prog-text      nil)
+   ("text/sgml"     "\\.sgml$"  nil     mew-prog-text      nil)
+   ("text/xml"      "\\.xml$"   nil     mew-prog-xml       nil)
+   ("text/calendar" "\\.ics$"   nil     mew-prog-text      nil)
    ("text/x-patch"  "\\.diff$\\|\\.patch$"
-    nil     mew-prog-patch      mew-icon-text)
+    nil     mew-prog-patch      nil)
    ("text/plain"    "\\.txt$\\|\\.c$\\|\\.h$\\|\\.el$\\|\\.diff$\\|\\.patch$"
-    nil     mew-prog-plain     mew-icon-text)
+    nil     mew-prog-plain     nil)
    ("text/rfc822-headers" "\\.hdr$" nil
-    mew-prog-rfc822-headers    mew-icon-message/rfc822)
-   ("text/csv"      "\\.csv$"   nil     mew-prog-text      mew-icon-text)
-   ("text"         "^$"        nil     mew-prog-text      mew-icon-text)
+    mew-prog-rfc822-headers    nil)
+   ("text/csv"      "\\.csv$"   nil     mew-prog-text      nil)
+   ("text"         "^$"        nil     mew-prog-text      nil)
    ("application/xml"               "\\.xml$"  mew-b64
-    mew-prog-xml2              mew-icon-text)
+    mew-prog-xml2              nil)
    ;; Unknown CT: matches here.
-   (t               "^$"       nil   mew-prog-octet-stream mew-icon-unknown)
+   (t               "^$"       nil   mew-prog-octet-stream nil)
    ;; Unknown suffix matches here and return the entry specified
    ;; by mew-content-type.
    (nil             ".*")))
@@ -269,7 +269,7 @@
   (setq mew-mime-content-type
 	(nconc
 	 (mapcar
-	  (lambda (x) (list (nth 0 x) (nth 1 x) 'mew-b64 'mew-prog-ooffice 'mew-icon-text))
+	  (lambda (x) (list (nth 0 x) (nth 1 x) 'mew-b64 'mew-prog-ooffice nil))
 	  mew-mime-content-type-for-ooffice)
 	 mew-mime-content-type)))
 
