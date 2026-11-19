@@ -1210,6 +1210,59 @@ In a batch run epa is not loaded, so this test tells the two apart."
       (mew-passwd-auth-source-get-passwd "user@host:993"))
     (should (eq seen 'loopback))))
 
+(ert-deftest mew-test-passwd-rendezvous-own-process ()
+  "Waiting for gpg ends only when that gpg is done.
+Another gpg finishing meanwhile used to end the wait too early."
+  (let ((pro (make-process :name "mew-test-gpg" :command '("sleep" "0.5")
+                           :sentinel #'mew-passwd-sentinel :noquery t))
+        (other (make-pipe-process :name "mew-test-other-gpg" :noquery t)))
+    (unwind-protect
+        (progn
+          ;; e.g. gpg of a nested load exits while we are waiting
+          (run-at-time 0.05 nil #'mew-passwd-sentinel other "finished\n")
+          (mew-passwd-rendezvous pro)
+          (should-not (process-live-p pro)))
+      (delete-process other)
+      (when (process-live-p pro) (delete-process pro)))))
+
+(ert-deftest mew-test-passwd-nested-load ()
+  "A password asked for while the password file is loaded does not
+start another load nor use the minibuffer, which is in use."
+  (let* ((dir (make-temp-file "mew-test-conf" t))
+         (mew-conf-path dir)
+         (mew-passwd-file "mew-passwd-test")
+         (mew-use-master-passwd t)
+         (mew-use-cached-passwd nil)
+         (mew-master-passwd-type 'master)
+         (mew-passwd-master nil)
+         (mew-passwd-alist nil)
+         (loads 0)
+         (asked nil)
+         (inner 'not-called))
+    (unwind-protect
+        (progn
+          (write-region "" nil (expand-file-name mew-passwd-file dir) nil 'no-msg)
+          (cl-letf (((symbol-function 'mew-passwd-check-agent-hack) #'ignore)
+                    ((symbol-function 'mew-timing) #'ignore)
+                    ((symbol-function 'mew-passwd-save) #'ignore)
+                    ((symbol-function 'message) #'ignore)
+                    ((symbol-function 'mew-read-passwd)
+                     (lambda (&rest _) (setq asked t) "typed"))
+                    ((symbol-function 'mew-passwd-load)
+                     (lambda ()
+                       (setq loads (1+ loads))
+                       ;; another connection while the master password is read
+                       (when (= loads 1)
+                         (setq inner (mew-input-passwd "Password: " "other")))
+                       (setq mew-passwd-master t)
+                       (list (list "key" "secret" 0)))))
+            (should (equal (mew-input-passwd "Password: " "key") "secret"))
+            (should (= loads 1))
+            (should (equal inner ""))
+            (should-not asked)))
+      (remove-hook 'kill-emacs-hook 'mew-passwd-clean-up)
+      (delete-directory dir t))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; mew-pick.el
