@@ -251,7 +251,8 @@ which does not exist."
          (access-token (mew-xoauth2-get-access-token token case)))
     (mew-passwd-set-passwd tag token)
     (mew-passwd-set-counter tag 0)
-    (when mew-passwd-master
+    ;; Save only a new token: gpg runs synchronously on each save.
+    (when (and mew-passwd-master (gethash :fresh token))
       (mew-passwd-save))
     ;; base64(user=user@example.com^Aauth=Bearer ya29vF9dft4...^A^A)
     (if access-token
