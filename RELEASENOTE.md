@@ -221,6 +221,9 @@ security, and all Lisp files now use lexical binding.
 * OAuth2: a missing client id is reported instead of waiting for the
   browser, and expires_in given as a string is accepted.
   [#357](https://github.com/kazu-yamamoto/Mew/pull/357)
+* stunnel: a tunnel is reused only by a case with the same options,
+  and "Failed to initialize TLS" is a failure instead of a success.
+  [#358](https://github.com/kazu-yamamoto/Mew/pull/358)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
