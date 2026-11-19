@@ -19,9 +19,9 @@
 @c Try "M-x texinfo-format-buffer" or makeinfo to get the Info.
 @end ifset
 
-@set version 6.11
+@set version 7.1
 @set modified 2026/04/16
-@set X-Mailer Mew version 6.11 on Emacs 30.2
+@set X-Mailer Mew version 7.1 on Emacs 30.2
 
 @titlepage
 @sp 10

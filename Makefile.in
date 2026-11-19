@@ -170,7 +170,7 @@ diff:
 
 VERSION = `git tag --sort=authordate | tail -1 | sed -e 's/v//'`
 
-# The branch to make the tarball from.  Say "make archive BRANCH=6.11rc"
+# The branch to make the tarball from.  Say "make archive BRANCH=7.1rc"
 # to cut one from a release branch instead.
 BRANCH = main
 

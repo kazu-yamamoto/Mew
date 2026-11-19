@@ -1,4 +1,4 @@
-# Installing Mew 6.11
+# Installing Mew 7.1
 
 ## Platforms
 
