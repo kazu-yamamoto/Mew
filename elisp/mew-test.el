@@ -1445,6 +1445,39 @@ NSM replaces `nsm-verify-connection'."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mew-stunnel.el
+;;;
+
+(ert-deftest mew-test-stunnel-reuse-key ()
+  "A tunnel is not reused for other options, nor for a similar server."
+  (let* ((mew-ssl-verify-level 1)
+         (key1 (mew-stunnel-key nil nil))
+         (key2 (let ((mew-ssl-verify-level 0)) (mew-stunnel-key nil nil)))
+         (key3 (mew-stunnel-key nil "pop3"))
+         (name (mew-stunnel-info-name "mail.example.org" 995 key1 8001))
+         (regex (mew-stunnel-info-name-regex "mail.example.org" 995 key1)))
+    (should-not (equal key1 key2))
+    (should-not (equal key1 key3))
+    (should (equal key1 (mew-stunnel-key nil nil)))
+    (should (string-match regex name))
+    (should (equal (mew-ssl-pnm-to-lport name) "8001"))
+    (should-not (string-match regex (mew-stunnel-info-name "mailxexample.org" 995 key1 8001)))
+    (should-not (string-match regex (mew-stunnel-info-name "mail.example.org" 9950 key1 8001)))
+    (should-not (string-match regex (mew-stunnel-info-name "mail.example.org" 995 key2 8001)))))
+
+(ert-deftest mew-test-stunnel-failed-to-initialize ()
+  "\"Failed to initialize TLS\" is a failure, not a success."
+  (let* ((pro (make-pipe-process :name "mew-stunnel-info-test" :noquery t))
+         (pnm (process-name pro)))
+    (unwind-protect
+        (progn
+          (mew-info-clean-up pnm)
+          (mew-stunnel-filter2 pro "LOG3[0]: Failed to initialize TLS\n")
+          (should (eq (mew-stunnel-get-status pnm) 'tls-failure)))
+      (delete-process pro))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-sort.el
 ;;;
 
