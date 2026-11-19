@@ -42,6 +42,11 @@ security, and all Lisp files now use lexical binding.
   with Notepad, set `lpr-command` to "notepad.exe" and `lpr-switches`
   to ("/p").
   [#327](https://github.com/kazu-yamamoto/Mew/pull/327)
+* Unused code is removed, including options which had no effect:
+  `mew-ask-newsgroups`, `mew-multipart-icon-position`,
+  `mew-use-sorted-thread`, `mew-ssh-number-of-password-prompts`,
+  `mew-file-creator` and `mew-prog-image/*`.
+  [#350](https://github.com/kazu-yamamoto/Mew/pull/350)
 * Before an external viewer opens a part whose file name suffix does
   not fit its Content-Type:, Mew asks for confirmation.  More content
   types (mp4, webp, heic, svg, json, ...) are known, also when
