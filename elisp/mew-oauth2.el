@@ -143,31 +143,41 @@ It serves http://localhost:PORT"
 ;;; Getting authorization code
 ;;;
 
+(defvar mew-oauth2-authorizing nil
+  "Non-nil while waiting for the browser.
+Timers and filters of other connections run meanwhile, so another
+authorization could start inside this one and overwrite its state.")
+
 (defun mew-oauth2-get-auth-code (url client-id resource-url redirect-url challenge port)
-  (setq mew-oauth2-state (mew-oauth2-random-string))
-  (let ((url-params
-	 (concat
-	  url
-	  "?response_type=code"
-	  "&client_id=" client-id
-	  "&scope=" (url-hexify-string resource-url)
-	  "&redirect_uri=" (url-hexify-string redirect-url)
-	  "&state=" mew-oauth2-state
-	  "&code_challenge=" challenge
-	  "&code_challenge_method=S256")))
-    (mew-oauth2-cleanup-redirect-handler port)
-    ;; The listening socket has to go even when the user gives up, or
-    ;; the port stays taken for the rest of the session.
-    (unwind-protect
-	(condition-case err
-	    (progn
-	      (mew-oauth2-setup-redirect-handler port)
-	      (browse-url url-params)
-	      (mew-rendezvous (null mew-oauth2-code))
-	      mew-oauth2-code)
-	  (error (message "OAuth2: %s" (error-message-string err)) "")
-	  (quit (message "OAuth2: the authorization was canceled") ""))
-      (mew-oauth2-cleanup-redirect-handler port))))
+  (if mew-oauth2-authorizing
+      (progn
+	(message "OAuth2: another authorization is in progress")
+	"")
+    (let ((mew-oauth2-authorizing t))
+      (setq mew-oauth2-state (mew-oauth2-random-string))
+      (let ((url-params
+	     (concat
+	      url
+	      "?response_type=code"
+	      "&client_id=" client-id
+	      "&scope=" (url-hexify-string resource-url)
+	      "&redirect_uri=" (url-hexify-string redirect-url)
+	      "&state=" mew-oauth2-state
+	      "&code_challenge=" challenge
+	      "&code_challenge_method=S256")))
+	(mew-oauth2-cleanup-redirect-handler port)
+	;; The listening socket has to go even when the user gives up, or
+	;; the port stays taken for the rest of the session.
+	(unwind-protect
+	    (condition-case err
+		(progn
+		  (mew-oauth2-setup-redirect-handler port)
+		  (browse-url url-params)
+		  (mew-rendezvous (null mew-oauth2-code))
+		  mew-oauth2-code)
+	      (error (message "OAuth2: %s" (error-message-string err)) "")
+	      (quit (message "OAuth2: the authorization was canceled") ""))
+	  (mew-oauth2-cleanup-redirect-handler port))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
