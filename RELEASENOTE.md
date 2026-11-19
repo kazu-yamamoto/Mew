@@ -211,6 +211,10 @@ security, and all Lisp files now use lexical binding.
 * OAuth2: an authorization started while another one waits for the
   browser is refused, instead of breaking the first one.
   [#354](https://github.com/kazu-yamamoto/Mew/pull/354)
+* GnuTLS: Mew's TLS parameters and verification level no longer
+  leak into other TLS connections opened while a STARTTLS connection
+  is being set up, and nested connections no longer drop them.
+  [#355](https://github.com/kazu-yamamoto/Mew/pull/355)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
