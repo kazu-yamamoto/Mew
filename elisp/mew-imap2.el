@@ -24,7 +24,8 @@
     "status" "process" "ssh-process" "ssl-process"
     "cnt" "ttl" "literal+"
     ;; parameters used internally and should be initialized
-    "tag" "string" "error" "auth-selected" "authl" "aux" "done"))
+    "tag" "string" "error" "auth-selected" "authl" "aux" "done"
+    "sasl-ir" "xoauth2"))
 
 (defvar mew-imap2-info-list-clean-length 20)
 
@@ -38,6 +39,7 @@
 (defvar mew-imap2-fsm
   '(("greeting"      ("OK" . "capability"))
     ("capability"    ("OK" . "post-capability"))
+    ("xoauth2"       ("OK" . "token-xoauth2") ("NO\\|BAD" . "xoauth2-wpwd"))
     ("auth-xoauth2"  ("OK" .  "next") ("NO" . "xoauth2-wpwd"))
     ("auth-cram-md5" ("OK" . "pwd-cram-md5") ("NO" . "wpwd"))
     ("pwd-cram-md5"  ("OK" . "next") ("NO" . "wpwd"))
@@ -77,6 +79,7 @@
 	(setq literal+ t))
     (mew-imap2-set-authl pnm authl)
     (mew-imap2-set-literal+ pnm literal+)
+    (mew-imap2-set-sasl-ir pnm (and (string-match "\\bSASL-IR\\b" aux) t))
     (mew-imap2-set-status pnm "authentication")
     (mew-imap2-command-authentication pro pnm)))
 
@@ -288,8 +291,20 @@
   (let* ((user (mew-imap2-get-user pnm))
 	 (tag (mew-imap2-passtag pnm))
          (auth-string (mew-xoauth2-auth-string user tag (mew-imap2-get-case pnm))))
-    ;; XXX: need to reset status if token is nil.
-    (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
+    (if (mew-imap2-get-sasl-ir pnm)
+	(progn
+	  (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
+	  (mew-imap2-set-status pnm "auth-xoauth2"))
+      ;; Without SASL-IR (RFC 4959), the token waits for a continuation.
+      ;; It is obtained first so that the server does not wait for the browser.
+      (mew-imap2-set-xoauth2 pnm auth-string)
+      (mew-imap2-process-send-string pro pnm "AUTHENTICATE XOAUTH2")
+      (mew-imap2-set-status pnm "xoauth2"))))
+
+(defun mew-imap2-command-token-xoauth2 (pro pnm)
+  (let ((auth-string (mew-imap2-get-xoauth2 pnm)))
+    (mew-imap2-set-xoauth2 pnm nil)
+    (mew-imap2-process-send-string2 pro auth-string)
     (mew-imap2-set-status pnm "auth-xoauth2")))
 
 (defun mew-imap2-command-xoauth2-wpwd (pro pnm)
@@ -587,7 +602,7 @@ with '*' in the region are handled."
         (setq next (mew-imap2-fsm-next
                     status
                     ;; XOAUTH2 succeeds with a tagged OK.  A continuation
-                    ;; is an error, in JSON or empty without SASL-IR.
+                    ;; after the token is an error in JSON.
                     (if (string= status "auth-xoauth2") "NO" "OK"))))
        ((string-match eos str)
 	(mew-imap2-set-tag pnm nil)
