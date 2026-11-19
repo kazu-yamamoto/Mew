@@ -83,11 +83,24 @@ other values all leave it to `network-security-level'.")
 
 (defconst mew-stunnel-info-prefix "mew-stunnel-info-")
 
-(defun mew-stunnel-info-name (server remoteport localport)
-  (format "%s:%s:%d:%d" mew-stunnel-info-prefix server remoteport localport))
+(defun mew-stunnel-info-name (server remoteport key localport)
+  (format "%s:%s:%d:%s:%d" mew-stunnel-info-prefix server remoteport key localport))
 
-(defun mew-stunnel-info-name-regex (server remoteport)
-  (format "^%s:%s:%d" mew-stunnel-info-prefix server remoteport))
+(defun mew-stunnel-info-name-regex (server remoteport key)
+  (format "^%s:%s:%d:%s:" mew-stunnel-info-prefix (regexp-quote server) remoteport key))
+
+(defun mew-stunnel-key (case tls)
+  "Return a key of the options of CASE and TLS.
+A tunnel is reused only for the same key, not for another case which
+verifies differently."
+  (substring
+   (md5 (format "%S" (list (mew-ssl-verify-level case)
+			   (mew-ssl-cert-directory case)
+			   (mew-prog-ssl-arg case)
+			   (mew-ssl-proxy-server case)
+			   (mew-ssl-proxy-port case)
+			   tls)))
+   0 8))
 
 (defun mew-ssl-pnm-to-lport (pnm)
   (if (string-match ":\\([0-9]+\\)$" pnm) (match-string 1 pnm)))
@@ -160,7 +173,8 @@ A local port number can be obtained the process name after `:'. "
 	   (process-connection-type mew-connection-type2)
 	   (N mew-stunnel-process-exec-cnt)
 	   (pros (process-list))
-	   (regex (mew-stunnel-info-name-regex server remoteport))
+	   (key (mew-stunnel-key case tls))
+	   (regex (mew-stunnel-info-name-regex server remoteport key))
 	   name pnm pro dummy bound opts)
       (catch 'find
 	(dolist (pr pros)
@@ -175,7 +189,7 @@ A local port number can be obtained the process name after `:'. "
 	(setq pro nil)
 	(catch 'loop
 	  (dotimes (_i N) ;; prevent byte-compile warning
-	    (setq name (mew-stunnel-info-name server remoteport localport))
+	    (setq name (mew-stunnel-info-name server remoteport key localport))
 	    (setq opts (mew-stunnel-options case server remoteport localport tls))
 	    (setq pro (apply 'start-process name nil mew-prog-ssl opts))
 	    ;; An error would occur. So, let's exit in the case.
@@ -219,9 +233,11 @@ A local port number can be obtained the process name after `:'. "
 		(message "Creating an SSL/TLS connection...done")
 		(set-process-filter pro 'mew-stunnel-filter3)
 		pro)
-	    ;; verify-failure
 	    (delete-process pro)
-	    (message "Creating an SSL/TLS connection...FAILED (cert verify failure)")
+	    (message "Creating an SSL/TLS connection...FAILED (%s)"
+		     (if (eq (mew-stunnel-get-status pnm) 'tls-failure)
+			 "TLS failure"
+		       "cert verify failure"))
 	    nil)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -263,7 +279,7 @@ A local port number can be obtained the process name after `:'. "
        ((string-match "Negotiated \\| ciphersuite:\\|opened with SSL" string)
 	(mew-stunnel-set-status pnm t))
        ((string-match "Failed to initialize" string)
-	(mew-stunnel-set-status pnm t)) ;; xxx
+	(mew-stunnel-set-status pnm 'tls-failure))
        ((string-match "verify failed" string)
 	(mew-stunnel-set-status pnm 'verify-failure))))))
 
