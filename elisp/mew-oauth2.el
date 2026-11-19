@@ -159,7 +159,7 @@ authorization could start inside this one and overwrite its state.")
 	     (concat
 	      url
 	      "?response_type=code"
-	      "&client_id=" client-id
+	      "&client_id=" (url-hexify-string client-id)
 	      "&scope=" (url-hexify-string resource-url)
 	      "&redirect_uri=" (url-hexify-string redirect-url)
 	      "&state=" mew-oauth2-state
@@ -278,10 +278,12 @@ The refresh token is kept only when the answer carries one, since the
 server does not repeat it on every refresh."
   (let ((access-token (gethash "access_token" json))
 	(refresh-token (gethash "refresh_token" json))
-	(expires-in (gethash "expires_in" json)))
+	;; Some servers give a string, e.g. "3599".
+	(expires-in (let ((e (gethash "expires_in" json)))
+		      (if (stringp e) (string-to-number e) e))))
     (puthash :access_token access-token token)
     (if refresh-token (puthash :refresh_token refresh-token token))
-    (puthash :expire (if expires-in (time-add (- expires-in 100) nil)) token)
+    (puthash :expire (if (numberp expires-in) (time-add (- expires-in 100) nil)) token)
     (puthash :fresh t token)
     access-token))
 
@@ -334,14 +336,19 @@ that case, so that the refresh token is not thrown away."
 (defun mew-xoauth2-get-access-token (token case)
   (let ((access-token (gethash :access_token token))
 	(expire (gethash :expire token)))
-    (if (and access-token expire (time-less-p nil expire))
-	(progn
-	  (puthash :fresh nil token)
-	  access-token)
+    (cond
+     ((and access-token expire (time-less-p nil expire))
+      (puthash :fresh nil token)
+      access-token)
+     ;; Otherwise the browser shows an error and Mew waits until C-g.
+     ((member (mew-oauth2-client-id case) '(nil ""))
+      (message "OAuth2: mew-oauth2-client-id is not set")
+      nil)
+     (t
       ;; A refused refresh token is not the end: ask for a new
       ;; authorization instead of going on without a token.
       (or (mew-xoauth2-refresh token case)
-	  (mew-xoauth2-authorize token case)))))
+	  (mew-xoauth2-authorize token case))))))
 ;;;
 
 ;; RFC 7636 Appendix A
