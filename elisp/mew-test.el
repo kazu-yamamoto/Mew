@@ -850,6 +850,37 @@ Going on without one made Mew send the literal \"Bearer nil\"."
         (mew-xoauth2-auth-string "me@example.org" "tag" nil))
       (should (= saves 1)))))
 
+(ert-deftest mew-test-pop-xoauth2-error-challenge ()
+  "After the XOAUTH2 token, \"+ \" is an error, not +OK.
+An empty response is sent, and the -ERR which follows is a wrong token."
+  (let* ((buf (generate-new-buffer " *mew-test-pop*"))
+         (pro (make-pipe-process :name "mew-pop-info-test" :buffer buf
+                                 :noquery t))
+         (pnm (process-name pro))
+         (sent nil)
+         (called nil))
+    (unwind-protect
+        (cl-letf (((symbol-function 'mew-pop-process-send-string)
+                   (lambda (_pro &rest args)
+                     (setq sent (cons (apply #'format args) sent))))
+                  ((symbol-function 'mew-pop-command-wpwd)
+                   (lambda (&rest _) (setq called 'wpwd)))
+                  ((symbol-function 'mew-pop-command-list)
+                   (lambda (&rest _) (setq called 'list))))
+          (mew-pop-set-status pnm "token-xoauth2")
+          (mew-pop-filter pro "+ eyJzdGF0dXMiOiI0MDAifQ==\r\n")
+          (should (equal (mew-pop-get-status pnm) "xoauth2-error"))
+          (should (equal sent '("")))
+          (mew-pop-filter pro "-ERR [AUTH] Invalid credentials\r\n")
+          (should (eq called 'wpwd))
+          ;; Success is still success.
+          (mew-pop-set-status pnm "token-xoauth2")
+          (mew-pop-filter pro "+OK Welcome\r\n")
+          (should (eq called 'list)))
+      (delete-process pro)
+      (kill-buffer buf)
+      (makunbound (intern pnm)))))
+
 (ert-deftest mew-test-xoauth2-authorize-canceled ()
   "Without an authorization code no token may be requested."
   (let ((posted nil)
