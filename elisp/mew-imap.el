@@ -1787,7 +1787,7 @@
 	(run-hooks 'mew-imap-sentinel-non-biff-hook))
       (run-hooks 'mew-imap-sentinel-hook)
       (when (and mew-auto-flush-queue flush)
-	(mew-smtp-flush-queue mew-case)))))
+	(mew-smtp-flush-queue case)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

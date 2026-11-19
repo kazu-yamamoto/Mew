@@ -360,6 +360,7 @@ Binary search is used for speed reasons."
 	 (buf (mew-local-get-buf pnm))
 	 (virtualp (mew-folder-virtualp bnm))
 	 (mdb (mew-local-get-mdb pnm))
+	 (case (mew-local-get-case pnm))
 	 (flush (mew-local-get-flush pnm)))
     (save-excursion
       (mew-local-debug "SENTINEL" event)
@@ -389,7 +390,7 @@ Binary search is used for speed reasons."
 	 (message "Scanning %s...done" bnm))
        (run-hooks 'mew-scan-sentinel-hook)
        (when (and mew-auto-flush-queue flush)
-	 (mew-smtp-flush-queue mew-case))
+	 (mew-smtp-flush-queue case))
        (mew-remove-buffer buf)))))
 
 (defun mew-virtual-set-cache-time ()

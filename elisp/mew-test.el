@@ -1333,6 +1333,43 @@ Use mew-imap2 if IMAP2.  Return the sent lines in order."
   (should (equal (mew-serv-to-port "587") 587))
   (should (equal (mew-serv-to-port 25) 25)))
 
+(defun mew-test-sentinel-flush (proto)
+  "Run the sentinel of PROTO for a connection of case \"work\" while
+another case is current, and return the case whose queue is flushed."
+  (let* ((pnm (format "mew-%s-info-test" proto))
+         (pro (make-pipe-process :name pnm :noquery t))
+         (bnm "*mew-test-sentinel*")
+         (mew-case "home")
+         (mew-auto-flush-queue t)
+         (flushed 'not-flushed))
+    (unwind-protect
+        (progn
+          (get-buffer-create bnm)
+          (mew-info-clean-up pnm)
+          (funcall (intern (format "mew-%s-set-case" proto)) pnm "work")
+          (funcall (intern (format "mew-%s-set-bnm" proto)) pnm bnm)
+          (funcall (intern (format "mew-%s-set-flush" proto)) pnm t)
+          (funcall (intern (format "mew-%s-set-done" proto)) pnm t)
+          (funcall (intern (format "mew-%s-set-error" proto)) pnm "error")
+          (cl-letf (((symbol-function 'mew-smtp-flush-queue)
+                     (lambda (case &rest _) (setq flushed case)))
+                    ((symbol-function 'mew-summary-mark-recover) #'ignore)
+                    ((symbol-function 'mew-summary-unlock) #'ignore)
+                    ((symbol-function 'mew-net-disp-info-display) #'ignore)
+                    ((symbol-function 'mew-net-status-clear) #'ignore)
+                    ((symbol-function 'mew-expand-file) #'ignore))
+            (funcall (intern (format "mew-%s-sentinel" proto)) pro "finished\n"))
+          flushed)
+      (delete-process pro)
+      (mew-info-clean-up pnm)
+      (kill-buffer bnm))))
+
+(ert-deftest mew-test-sentinel-flush-case ()
+  "The queue flushed after receiving is the one of the receiving case,
+not of the case which happens to be current then."
+  (should (equal (mew-test-sentinel-flush "pop") "work"))
+  (should (equal (mew-test-sentinel-flush "imap") "work")))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; What Mew relies on
