@@ -803,7 +803,8 @@ It used to overwrite the state and the handler of the first one."
 (ert-deftest mew-test-xoauth2-refresh-refused ()
   "A refused refresh token must lead to a new authorization.
 Going on without one made Mew send the literal \"Bearer nil\"."
-  (let ((token (make-hash-table))
+  (let ((mew-oauth2-client-id "client")
+        (token (make-hash-table))
         (authorized nil))
     (puthash :refresh_token "old-refresh" token)
     (cl-letf (((symbol-function 'mew-oauth2-refresh-access-token)
@@ -821,7 +822,8 @@ Going on without one made Mew send the literal \"Bearer nil\"."
 
 (ert-deftest mew-test-xoauth2-refresh-kept ()
   "A refresh which answers without a new refresh token keeps the old one."
-  (let ((token (make-hash-table)))
+  (let ((mew-oauth2-client-id "client")
+        (token (make-hash-table)))
     (puthash :refresh_token "old-refresh" token)
     (cl-letf (((symbol-function 'mew-oauth2-refresh-access-token)
                (lambda (&rest _)
@@ -833,6 +835,33 @@ Going on without one made Mew send the literal \"Bearer nil\"."
       (should (equal (mew-xoauth2-get-access-token token nil) "fresh-access"))
       (should (equal (gethash :refresh_token token) "old-refresh"))
       (should (equal (gethash :access_token token) "fresh-access")))))
+
+(ert-deftest mew-test-xoauth2-without-client-id ()
+  "Without a client id, neither the browser nor the server is asked."
+  (let ((mew-oauth2-client-id nil)
+        (mew-oauth2-code nil)
+        (token (make-hash-table))
+        (asked nil))
+    (puthash :refresh_token "old-refresh" token)
+    (cl-letf (((symbol-function 'mew-oauth2-post)
+               (lambda (&rest _) (setq asked t) nil))
+              ;; Answer at once, or a regression would wait forever.
+              ((symbol-function 'browse-url)
+               (lambda (&rest _) (setq asked t mew-oauth2-code "code")))
+              ((symbol-function 'message) #'ignore))
+      (should-not (mew-xoauth2-get-access-token token nil))
+      (should-not asked)
+      (should (equal (gethash :refresh_token token) "old-refresh")))))
+
+(ert-deftest mew-test-xoauth2-expires-in-string ()
+  "expires_in given as a string is taken as seconds."
+  (let ((token (make-hash-table))
+        (json (make-hash-table :test 'equal)))
+    (puthash "access_token" "access" json)
+    (puthash "expires_in" "3599" json)
+    (should (equal (mew-xoauth2-store token json) "access"))
+    (should (time-less-p (time-add 3000 nil) (gethash :expire token)))
+    (should (time-less-p (gethash :expire token) (time-add 3600 nil)))))
 
 (ert-deftest mew-test-xoauth2-auth-string-without-token ()
   "Without an access token nothing resembling one may be sent."
@@ -849,6 +878,7 @@ Going on without one made Mew send the literal \"Bearer nil\"."
 (ert-deftest mew-test-xoauth2-save-only-new-token ()
   "The password file is saved only when a new token was obtained."
   (let ((mew-passwd-master t)
+        (mew-oauth2-client-id "client")
         (token (make-hash-table))
         (saves 0))
     (puthash :access_token "access" token)
