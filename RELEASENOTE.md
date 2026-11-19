@@ -202,6 +202,9 @@ security, and all Lisp files now use lexical binding.
   token, an IMAP error continuation is no longer taken as success,
   and a canceled authorization no longer requests a token.
   [#351](https://github.com/kazu-yamamoto/Mew/pull/351)
+* With the master password, the password file is saved only when a
+  new OAuth2 token is obtained, not on every connection.
+  [#352](https://github.com/kazu-yamamoto/Mew/pull/352)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
