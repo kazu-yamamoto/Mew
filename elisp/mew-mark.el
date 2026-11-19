@@ -172,13 +172,6 @@ If optional argument NO-MSG is non-nil, no message is displayed."
 ;;; Entire buffer
 ;;;
 
-(defun mew-summary-mark-exist-p (mark-list)
-  "See if this Summary mode has one or more marked messages."
-  (let ((regex (mew-mark-list-regex mark-list)))
-    (save-excursion
-      (goto-char (point-min))
-      (re-search-forward regex nil t))))
-
 (defun mew-summary-mark-collect (mark &optional begin end)
   "This function returns a list of message number."
   (save-excursion
@@ -216,20 +209,6 @@ cons pairs of folder name and message number."
 	(setq ret (cons (list msg mrk) ret))
 	(forward-line))
       (nreverse ret))))
-
-(defun mew-summary-mark-collect5 ()
-  (save-excursion
-    (let ((beg (mew-net-invalid-cache-start))
-	  ret mrk msg)
-      (when beg
-	(goto-char beg)
-	(while (re-search-forward mew-regex-mark nil t)
-	  (setq mrk (mew-sumsyn-mark))
-	  (setq msg (mew-summary-message-number))
-	  (setq msg (number-to-string (string-to-number msg)))
-	  (setq ret (cons (list msg mrk) ret))
-	  (forward-line))
-	(nreverse ret)))))
 
 (defun mew-summary-mark-recover (mdb &optional refdb refs)
   (let ((opos (point))

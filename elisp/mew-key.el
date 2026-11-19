@@ -281,11 +281,6 @@
      ["Kill Sub-Process"     mew-summary-kill-subprocess (mew-summary-case3)]
      )))
 
-(defvar mew-summary-mode-toolbar-menu
-  '("Mew Part Commands"
-    ["Save"  mew-summary-save  t]
-    ["Reply" mew-summary-reply t]))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Message mode
@@ -626,8 +621,6 @@
 
 (defvar mew-icon-directory (mew-which-mew-etc))
 
-(defvar mew-icon-separate nil)
-(defvar mew-icon-blank nil)
 (defvar mew-icon-audio nil)
 (defvar mew-icon-image nil)
 (defvar mew-icon-video nil)
@@ -638,20 +631,6 @@
 (defvar mew-icon-text nil)
 (defvar mew-icon-multipart nil)
 (defvar mew-icon-unknown nil)
-
-(defvar mew-icon-spec
-  '((separate                 . "mew-sep")
-    (text                     . "mew-Text")
-    (multipart                . "mew-Folder")
-    (blank                    . "mew-Blank")
-    (audio                    . "mew-Audio")
-    (image                    . "mew-Image")
-    (video                    . "mew-Video")
-    (application/postscript   . "mew-Postscript")
-    (application/octet-stream . "mew-Octet-Stream")
-    (message/rfc822           . "mew-Rfc822")
-    (message/external-body    . "mew-External")
-    (unknown                  . "mew-Unknown")))
 
 (provide 'mew-key)
 

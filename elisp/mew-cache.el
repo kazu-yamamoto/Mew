@@ -30,11 +30,6 @@
        (time-equal-p (mew-cinfo-get-time) time)
        (eq (mew-cinfo-get-size) size)))
 
-(defun mew-cache-dinfo-get-decode-broken (buf)
-  (when buf
-    (with-current-buffer buf
-      (mew-cinfo-get-decode-broken))))
-
 (defvar mew-xinfo-list
   '("decode-err" "warning" "info" "action" "multi-form" "icon-spec"
     "pri-result" "not-decrypted" "text-body"))

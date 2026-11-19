@@ -13,8 +13,6 @@
 ;;; Customizable variables
 ;;;
 
-(defvar mew-use-sorted-thread t)
-
 (defcustom mew-use-complete-thread t
   "If non-nil, threads are made using two passes.
 

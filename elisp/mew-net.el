@@ -333,15 +333,6 @@
       (rename-file info iwrk 'override)
       t)))
 
-(defun mew-queue-get-next (pnm qfld msgs n func)
-  (let (flushp)
-    (catch 'loop
-      (dolist (msg msgs)
-	(if (mew-queue-insert-file pnm n qfld msg)
-	    (throw 'loop (setq flushp t)))))
-    (if (fboundp func) (funcall func pnm msgs)) ;; set-messages
-    flushp))
-
 (defun mew-queue-backup (work info-suffix) ;; 1.wrk
   (let* ((orig (file-name-sans-extension work)) ;; 1
 	 (back (mew-prepend-prefix orig mew-backup-prefix)) ;; #1

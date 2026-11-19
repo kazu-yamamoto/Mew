@@ -25,7 +25,6 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 (defconst mew-pgp-verg  3)
 (defconst mew-pgp-verg2 4)
 (defconst mew-pgp-list '("PGPv2" "PGPv5" "PGPv6" "GNUPG" "GNUPG2"))
-(defconst mew-pgp-keys '(pgpv2 pgpv5 pgpv6 gnupg gnupg2)) ;; use symbols, cases are string
 
 ;; mew-prog-pgp is used only for version check
 (defvar mew-prog-pgp2  "pgp") ;; "pgp263i", PGP selection
@@ -270,10 +269,6 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 
 (defun mew-pgp-get (list-or-vec)
   (elt list-or-vec mew-pgp-ver))
-
-(defun mew-pgp-set (vec val)
-  (aset vec mew-pgp-ver val))
-
 
 (defun mew-pgp-debug (label string)
   (when (mew-debug 'pgp)
@@ -951,13 +946,6 @@ what happens for a message which is encrypted but not signed."
     ("-seat" "+language=en" "+batchmode=off")
     ("--sign" "--encrypt" "--armor" "--textmode")
     ("--sign" "--encrypt" "--armor" "--textmode")))
-
-(defconst mew-prog-old-pgpe-arg
-  '(("-eat" "+language=en" "+batchmode=on" "+armorlines=0")
-    ("-at" "+language=en" "+batchmode=on" "+armorlines=0")
-    ("-eat" "+language=en" "+batchmode=on" "+armorlines=0")
-    ("--encrypt" "--armor" "--textmode" "--batch")
-    ("--encrypt" "--armor" "--textmode" "--batch")))
 
 (defun mew-old-pgp-encode (type &optional signer)
   (let (mew-inherit-encode-pgp-signer doit syntax ctl ct charset cs)

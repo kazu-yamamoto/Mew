@@ -79,11 +79,6 @@
 (defun mew-unhighlight-region (BEG END)
   (mew-overlay-delete-region BEG END))
 
-(defun mew-unhighlight-header ()
-  (save-restriction
-    (widen)
-    (mew-unhighlight-region (point-min) (mew-header-end))))
-
 (defun mew-highlight-header-region (BEG END)
   "A function to highlight header in Message and Draft mode."
   (when mew-use-highlight-header

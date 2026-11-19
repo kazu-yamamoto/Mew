@@ -252,11 +252,7 @@
 ;;;
 ;;;
 
-(defconst mew-regex-msg-icon  "^\\([0-9]+\\) ")
 (defconst mew-regex-part      "^.... \\([.0-9]+\\) ")
-(defconst mew-regex-part-icon "<\\([.0-9]+\\)>")
-
-(defun mew-regex-jmp-part (part) (format "^.... \\(%s\\) " part))
 
 ;; [\033\200-\377] does not work due to the multibyte
 (defconst mew-regex-esc-or-nonascii "[^\000-\032\034-\177]") ;; \033 = esc
@@ -323,7 +319,6 @@
 (defconst mew-inherit-prefetching nil)
 (defconst mew-inherit-refile-case nil)
 (defconst mew-inherit-refile-proto nil)
-(defconst mew-inherit-grep-cmd nil)
 (defconst mew-inherit-after-marking nil)
 (defconst mew-inherit-pick-tokens nil)
 (defconst mew-inherit-pick-ret nil)

@@ -376,9 +376,6 @@ the next version of Mew.")
 	(eval val)
       val)))
 
-(defun mew-ctdb-icon (attr)
-  (symbol-value (nth 4 attr)))
-
 (defun mew-mime-image-format-name (ct)
   (nth 5 (mew-ctdb-by-ct ct)))
 
@@ -871,9 +868,6 @@ to messages and puts them to your mailbox, configure as follows:
 
 (defun mew-proto-to-go (fld)
   (mew-proto-to-body fld 1))
-
-(defun mew-proto-to-refile (fld)
-  (mew-proto-to-body fld 2))
 
 (defun mew-proto-to-flush (fld)
   (mew-proto-to-body fld 3))

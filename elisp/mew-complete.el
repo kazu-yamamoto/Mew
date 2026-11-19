@@ -99,6 +99,7 @@
 		  'mew-complete-insert-folder-function))
       (display-completion-list all))))
 
+;; Not used in Mew; kept for M-x.
 (defun mew-complete-backscroll ()
   "Backscroll the *Completion* buffer."
   (interactive)

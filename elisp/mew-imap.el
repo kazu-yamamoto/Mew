@@ -1430,7 +1430,6 @@
 	      (progn
 		;;		(mew-imap-set-mdb pnm (mew-summary-mark-collect4))
 		(mew-net-folder-clean))
-	    ;;	    (mew-imap-set-mdb pnm (mew-summary-mark-collect5))
 	    (mew-net-invalid-cache-invisible))
 	  (when (and (string= mailbox mew-imap-inbox-string)
 		     (or (mew-imap-spam-pattern case)

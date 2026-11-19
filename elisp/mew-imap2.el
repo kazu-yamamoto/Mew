@@ -318,9 +318,6 @@
 	(concat name "%" sshsrv)
       name)))
 
-(defun mew-imap2-buffer-name (pnm)
-  (concat mew-buffer-prefix pnm))
-
 (defun mew-imap2-process-send-string (pro pnm &rest args)
   (let ((str (apply 'format args))
 	(tag (mew-imap2-tag)))
@@ -343,12 +340,6 @@
   (let ((server (mew-imap2-get-server pnm))
 	(port (mew-imap2-get-port pnm))
 	(user (mew-imap2-get-user pnm)))
-    (concat user "@" server ":" port)))
-
-(defun mew-imap2-passtag2 (case)
-  (let ((server (mew-imap-server case))
-	(port (mew-imap-port case))
-	(user (mew-imap-user case)))
     (concat user "@" server ":" port)))
 
 (defun mew-imap2-input-passwd (prompt pnm)

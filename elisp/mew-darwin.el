@@ -74,7 +74,6 @@
 ;;; Image
 ;;;
 
-(defvar mew-prog-image/*         'mew-mime-image/*)
 (defvar mew-prog-image/*-ext     mew-darwin-exec)
 
 

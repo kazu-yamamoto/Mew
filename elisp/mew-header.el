@@ -137,19 +137,6 @@
 	  (mew-header-goto-next))
 	(if start (delete-region start (point)))))))
 
-(defun mew-header-replace-lines (fields prefix)
-  (when fields
-    (let ((case-fold-search t)
-	  (regex (mew-make-field-regex fields)))
-      (mew-header-goto-end)
-      (save-restriction
-	(narrow-to-region (point-min) (point))
-	(goto-char (point-min))
-	(while (re-search-forward regex nil t)
-	  (beginning-of-line)
-	  (insert prefix)
-	  (forward-line))))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Header sort
@@ -190,9 +177,6 @@
 (defun mew-draft-header-insert (field value)
   "No encoding. Just insert."
   (if (and value (stringp field)) (insert field " " value "\n")))
-
-(defun mew-draft-header-fill (field value)
-  (unless (mew-header-existp field) (mew-draft-header-insert field value)))
 
 (defun mew-header-insert (key value &optional no-fold)
   (if (and value (stringp key))
@@ -419,9 +403,6 @@
 (defun mew-addrstr-parse-value-list (value)
   (mew-addrstr-parse-syntax-list value ?\; nil))
 
-(defun mew-addrstr-parse-value2 (value)
-  (car (mew-addrstr-parse-syntax-list value ?, nil 1)))
-
 (defun mew-addrstr-parse-value-list2 (value)
   (mew-addrstr-parse-syntax-list value ?, nil nil t))
 
@@ -457,9 +438,6 @@ Remove anonymous addresses."
     (nreverse ret)))
 
 ;;
-
-(defun mew-addrstr-extract-user-list (addr-list)
-  (mapcar 'mew-addrstr-extract-user addr-list))
 
 (defun mew-addrstr-extract-user (addr)
   "Extracts username from ADDR"

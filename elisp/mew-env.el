@@ -72,9 +72,6 @@ requires PTY.")
 ;;; Sticky
 ;;;
 
-(defun mew-front-sticky (beg end)
-  (put-text-property beg end 'front-sticky t))
-
 (defun mew-front-nonsticky (beg end)
   (put-text-property beg end 'front-sticky nil))
 

@@ -232,11 +232,6 @@ to the list itself."
 	    (throw 'loop (cons i a)))
 	(setq i (1+ i))))))
 
-(defun mew-assoc-member (key lol nth)
-  "Return a list member of LoL whose NTH list contains
-a member equal to KEY."
-  (mew-assoc-member-base key lol nth 'member))
-
 (defun mew-assoc-member-case-equal (key lol nth)
   "Return a list member of LoL whose NTH list contains
 a member equal to KEY ignoring case."
@@ -636,11 +631,6 @@ If case is \"default\", it is not prepended."
 
 ;;
 
-(defun mew-local-to-dir (folder)
-  (if (string-match "^[+]" folder)
-      (substring folder 1)
-    folder))
-
 ;;
 
 (defun mew-folder-inboxp (folder)
@@ -1006,11 +996,6 @@ Does not examine containing directories for links."
     (while (setq exp (file-symlink-p ret))
       (setq ret (expand-file-name exp (file-name-directory ret))))
     ret))
-
-(defun mew-file-from-home (str)
-  (if (string-match (expand-file-name mew-home) str)
-      (concat mew-home (substring str (match-end 0)))
-    str))
 
 (defun mew-prepend-prefix (file prefix)
   (if (file-name-absolute-p file)
@@ -1396,9 +1381,6 @@ PRO is killed if it is still alive by then."
     (while (< i len)
       (aset vec i nil)
       (setq i (1+ i)))))
-
-(defun mew-net-get-ssh-process (pnm)
-  (aref (mew-info pnm) 3))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
