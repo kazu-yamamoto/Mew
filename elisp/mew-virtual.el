@@ -50,7 +50,7 @@
   (mew-summary-setup-mode-line)
   (mew-summary-setup-decoration)
   (mew-highlight-cursor-line)
-  (mew-run-mode-hooks 'mew-virtual-mode-hook))
+  (run-mode-hooks 'mew-virtual-mode-hook))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

@@ -409,7 +409,7 @@ it will add an alias."
   (setq mode-name mname)
   (setq mode-line-buffer-identification (mew-mode-line-id))
   (use-local-map mew-addrbook-mode-map)
-  (mew-run-mode-hooks 'mew-addrbook-mode-hook)
+  (run-mode-hooks 'mew-addrbook-mode-hook)
   (setq buffer-undo-list nil))
 
 (defun mew-addrbook-nconc (ent)

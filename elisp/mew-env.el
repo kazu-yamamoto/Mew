@@ -49,8 +49,6 @@ requires PTY.")
 
 (defun mew-timer (sec func) (run-at-time sec sec func))
 
-(defalias 'mew-characterp 'characterp)
-
 (if (fboundp 'mouse-region-match)
     (defalias 'mew-mouse-region-p 'mouse-region-match)
   (defmacro mew-mouse-region-p (&rest _args) nil))
@@ -183,8 +181,6 @@ requires PTY.")
 ;;; Face
 ;;;
 
-(defalias 'mew-face-spec-func 'cons)
-
 (defun mew-face-spec-primitive (col bold)
   (if col
       (if bold
@@ -199,14 +195,9 @@ requires PTY.")
 ;;; Misc
 ;;;
 
-(defalias 'mew-fill-match-adaptive-prefix 'fill-match-adaptive-prefix)
-
 (if (fboundp 'create-animated-image)
     (defalias 'mew-create-image 'create-animated-image)
   (defalias 'mew-create-image 'create-image))
-
-(defun mew-run-mode-hooks (&rest funcs)
-  (apply 'run-mode-hooks funcs))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

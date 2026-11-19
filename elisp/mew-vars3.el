@@ -24,7 +24,7 @@
 (defun mew-face-make-spec (bold &rest spec)
   (let (ret key col)
     (if (and bold (not (member :tty spec)))
-	(setq ret (cons (mew-face-spec-func '((class color) (type tty))
+	(setq ret (cons (cons '((class color) (type tty))
 					    (mew-face-spec-primitive nil t))
 			ret)))
     (while spec
@@ -33,12 +33,12 @@
       (setq col  (car spec))
       (setq spec (cdr spec))
       (setq ret (cons
-		 (mew-face-spec-func
+		 (cons
 		  (list '(class color)
 			(mew-alist-get-value (assoc key mew-face-spec-alist)))
 		  (mew-face-spec-primitive col bold))
 		 ret)))
-    (setq ret (cons (mew-face-spec-func t (mew-face-spec-primitive nil bold))
+    (setq ret (cons (cons t (mew-face-spec-primitive nil bold))
 		    ret))
     (nreverse ret)))
 

@@ -600,7 +600,7 @@ the name exists."
 	(insert WORD)) ;; use car
       (mew-complete-window-delete))
      ;; EXPAND
-     ((and (mew-characterp EXPAND-CHAR)
+     ((and (characterp EXPAND-CHAR)
 	   (char-equal (aref WORD (1- len)) EXPAND-CHAR)
 	   (setq subkey (substring WORD 0 (1- len)))
 	   (funcall fhit subkey ALIST))
@@ -617,7 +617,7 @@ the name exists."
      ((stringp cmp) ;; (length all) > 1
       (insert cmp)
       (mew-complete-window-show all)
-      (if (and (mew-characterp EXPAND-CHAR) (funcall fhit cmp ALIST))
+      (if (and (characterp EXPAND-CHAR) (funcall fhit cmp ALIST))
 	  (message
 	   "To expand '%s', type '%c' then '%s'"
 	   cmp EXPAND-CHAR
