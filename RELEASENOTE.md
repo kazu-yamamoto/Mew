@@ -224,6 +224,8 @@ security, and all Lisp files now use lexical binding.
 * stunnel: a tunnel is reused only by a case with the same options,
   and "Failed to initialize TLS" is a failure instead of a success.
   [#358](https://github.com/kazu-yamamoto/Mew/pull/358)
+* The unused mew-icon-* variables are removed.
+  [#359](https://github.com/kazu-yamamoto/Mew/pull/359)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
