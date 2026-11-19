@@ -38,11 +38,6 @@
 (defun mew-progspec-get-args (def)
   (if (listp def) (nth 1 def)))
 
-(defun mew-progspec-get-async (def)
-  (cond
-   ((stringp def) t)
-   ((listp def) (nth 2 def))))
-
 (defun mew-progsec-args-convert (args arg)
   (let (converted ret)
     (setq ret (mapcar (lambda (x)

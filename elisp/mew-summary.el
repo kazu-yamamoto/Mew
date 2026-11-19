@@ -71,15 +71,6 @@
      (message "Please use this command on a message, not a part"))
     (t ,@body)))
 
-(defmacro mew-summary-part (&rest body)
-  "See if the cursor is on a part."
-  (declare (debug (&rest form)))
-  `(cond
-    ((eobp) (message "No part"))
-    ((not (mew-syntax-number))
-     (message "Please use this command on a part, not a message"))
-    (t ,@body)))
-
 (defmacro mew-summary-multi-msgs (&rest body)
   "Collect messages marked with '*' and set their corresponding
 files to FILES.  FLD-MSG-LIST is bound as well, but only for a BODY
@@ -115,9 +106,6 @@ variable once this file is compiled with lexical binding."
   (or (mew-folder-queuep (mew-summary-folder-name 'ext))
       (mew-folder-postqp (mew-summary-folder-name 'ext))))
 
-(defun mew-summary-pop-p ()
-  (mew-folder-popp (mew-summary-folder-name 'ext)))
-
 (defun mew-summary-case1 ()
   (and (mew-summary-or-virtual-p) (not (mew-summary-draft-p))))
 
@@ -134,14 +122,6 @@ This macro is used to prohibit using a command in Virtual mode."
   `(cond
     ((not (mew-summary-p))
      (message "This command can be used in Summary mode only"))
-    (t ,@body)))
-
-(defmacro mew-virtual-only (&rest body)
-  "See if the mode of this buffer is Virtual mode.
-This macro is used to prohibit using a command in Summary mode."
-  `(cond
-    ((not (mew-virtual-p))
-     (message "This command can be used in Virtual mode only"))
     (t ,@body)))
 
 (defmacro mew-thread-only (&rest body)

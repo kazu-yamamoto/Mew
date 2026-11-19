@@ -1577,11 +1577,6 @@ any query."
   :group 'mew-draft
   :type 'boolean)
 
-(defcustom mew-ask-newsgroups nil
-  "*If *non-nil* and Newsgroups: exists, ask a user to send this really."
-  :group 'mew-draft
-  :type 'boolean)
-
 (defcustom mew-ask-range nil
   "*If *non-nil*, Mew asks range if the cache in Summary mode seems
 invalid. Otherwise, `update' is used for range in the case."
@@ -1987,14 +1982,6 @@ If you cite a message, the citation style of format=flowed is used. "
 ;; Indirect call of propertized-buffer-identification due to XEmacs
 (defun mew-mode-line-id ()
   (propertized-buffer-identification mew-mode-line-id))
-
-(defcustom mew-multipart-icon-position 'right
-  "*Position where multipart icons are displayed.
-If `left', displayed at the left size of the default toolbar.
-If `right', displayed at the right size of the default toolbar.
-Otherwise, not displayed."
-  :group 'mew-summary
-  :type 'symbol)
 
 (defcustom mew-window-home-buffer "*scratch*"
   "*Buffer name to return if window stack is empty."
@@ -3214,8 +3201,6 @@ your public key as well as receivers\\=' one."
 ;;; SSH
 ;;;
 
-(defvar mew-ssh-number-of-password-prompts 3)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Sub-programs
@@ -3304,7 +3289,6 @@ your public key as well as receivers\\=' one."
 
 
 (defvar mew-file-type "MewX")
-(defvar mew-file-creator "EMAx")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

@@ -62,9 +62,6 @@
 ;;; Toolbar functions
 ;;;
 
-(defvar mew-summary-toolbar nil)
-(defvar mew-draft-toolbar nil)
-
 (defun mew-toolbar-make (map alist)
   (let ((tool-bar-map (make-sparse-keymap)) ;; for tool-bar-add-item-from-menu
 	(data-directory mew-icon-directory))
@@ -100,7 +97,6 @@
 (defun mew-summary-toolbar-update ())
 (defun mew-message-toolbar-update ())
 (defun mew-draft-toolbar-update ())
-(defun mew-header-toolbar-update ())
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -313,9 +309,6 @@ with fitting to frame size"
 
 (defun mew-image-get-prog (ent)
   (nth 2 ent))
-
-(defun mew-image-get-prog2 (ent)
-  (nth 3 ent))
 
 (defun mew-mime-image (cache begin end format)
   (message "Loading image...")

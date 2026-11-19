@@ -43,9 +43,6 @@
 ;;
 ;;
 
-(defun mew-syntax-get-key (syntax)
-  (aref syntax 0))
-
 (defun mew-syntax-from-alternative (syntax)
   (listp (aref syntax 1)))
 
@@ -294,16 +291,6 @@
 ;;
 ;;
 
-(defun mew-summary-goto-part (msg part)
-  (let (here)
-    (save-excursion
-      (goto-char (point-min))
-      (when (and (re-search-forward (mew-regex-sumsyn-msg msg) nil t)
-		 (re-search-forward (mew-regex-jmp-part part) nil t))
-	(beginning-of-line)
-	(setq here (point))))
-    (and here (goto-char here))))
-
 (defun mew-summary-goto-message ()
   (if (eobp) (forward-line -1))
   (when (mew-in-decode-syntax-p)
@@ -435,10 +422,6 @@ system."
 (defun mew-summary-message-uid ()
   (when (mew-sumsyn-match mew-regex-sumsyn-long)
     (mew-sumsyn-message-uid)))
-
-(defun mew-summary-message-size ()
-  (when (mew-sumsyn-match mew-regex-sumsyn-long)
-    (mew-sumsyn-message-size)))
 
 (defun mew-syntax-change-message-number (msg)
   (save-excursion

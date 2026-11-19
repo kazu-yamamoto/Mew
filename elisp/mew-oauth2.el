@@ -51,17 +51,6 @@
 ;;(setq mew-oauth2-token-url "https://login.microsoftonline.com/organizations/oauth2/v2.0/token")
 ;;(setq mew-oauth2-resource-url "https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/POP.AccessAsUser.All https://outlook.office.com/SMTP.Send offline_access")
 
-(defun mew-oauth2-debug (label string)
-  (when (mew-debug 'oauth2)
-    (with-current-buffer (get-buffer-create mew-buffer-debug)
-      (goto-char (point-max))
-      (let ((start (point)))
-	(insert (format "\n<%s>\n%s\n" label string))
-	(goto-char start)
-	(mew-crlf-to-lf))
-      (goto-char (point-max)))))
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; HTTP/1.1 server to get "code"
@@ -352,11 +341,8 @@ that case, so that the refresh token is not thrown away."
 
 ;; RFC 7636 Appendix A
 
-(defun mew-numlist-to-string (nums)
-  (apply 'concat (seq-map 'unibyte-string nums)))
-
 ;; (mew-base64-url-without-padding-encode
-;;  (mew-numlist-to-string '(3 236 255 224 193)))
+;;  (apply #'unibyte-string '(3 236 255 224 193)))
 ;; "A-z_4ME"
 (defun mew-base64-url-without-padding-encode (str)
   (base64url-encode-string str t))
@@ -370,7 +356,7 @@ that case, so that the refresh token is not thrown away."
 
 ;; (setq rfc7636-random32 '(116 24 223 180 151 153 224 37 79 250 96 125 216 173 187 186 22 212 37 77 105 214 191 240 91 88 5 88 83 132 141 121))
 ;; (setq rfc7636-verifier (mew-base64-url-without-padding-encode
-;; 			(mew-numlist-to-string rfc7636-random32)))
+;; 			(apply #'unibyte-string rfc7636-random32)))
 ;; "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"
 (defun mew-oauth2-pkce-code-verifier ()
   (mew-oauth2-random-string))

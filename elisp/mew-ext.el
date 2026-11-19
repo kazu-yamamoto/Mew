@@ -32,7 +32,6 @@
 
 (defvar mew-ext-encode-switch
   '(("ftp"         . mew-ext-encode-ftp)
-    ;;    ("tftp"        . mew-ext-encode-tftp)
     ("anon-ftp"    . mew-ext-encode-anon-ftp)
     ("local-file"  . mew-ext-encode-local-file)
     ("mail-server" . mew-ext-encode-mail-server)
@@ -198,10 +197,6 @@
     ret))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun mew-ext-encode-tftp ()
-  ;; xxx not yet
-  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

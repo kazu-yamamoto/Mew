@@ -89,17 +89,6 @@ this variable is set to \='t\=`.")
 	  :host (nth 1 st)
 	  :port (nth 2 st))))
 
-;;; XXX will be revisited.
-(defun mew-passwd-auth-source-parse-key-x (key)
-  (if (string-match "\\([^@]+\\)@\\([^:]+\\):\\(.+\\)" key)
-      (list :user (match-string 1 key)
-	    :host (match-string 2 key)
-	    :port (match-string 3 key))
-    (list  :key key
-	   :user nil
-	   :host nil
-	   :port nil)))
-
 ;;; XXX epg-pinentry-mode is set to 'loopback to avoid GUI pinentry
 ;;; window.  This might not be a recommended way but it works.
 ;;;

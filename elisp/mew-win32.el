@@ -85,7 +85,6 @@
 ;;; Image
 ;;;
 
-(defvar mew-prog-image/*         'mew-mime-image/*)
 (defvar mew-prog-image/*-ext     mew-w32-exec)
 
 

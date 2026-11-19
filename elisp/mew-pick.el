@@ -366,6 +366,7 @@ If you want to change the stored keyword, execute this command with '\\[universa
 
 (defvar mew-pick-macro-alist nil)
 
+;; Not used in Mew; kept for M-x.
 (defun mew-pick-define-macro (str1 str2)
   "Define pick macro."
   (interactive (list (read-string "Pick pattern: ")

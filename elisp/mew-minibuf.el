@@ -886,10 +886,6 @@ it is deleted automatically."
   (mew-mode-input-directory-name
    mew-summary-preserve-dir mew-summary-previous-directory mew-save-dir))
 
-(defun mew-draft-input-directory-name ()
-  (mew-mode-input-directory-name
-   mew-draft-preserve-dir mew-draft-previous-directory mew-copy-dir))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; String

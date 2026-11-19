@@ -119,9 +119,6 @@
 (defun mew-charset-to-cte (charset)
   (mew-ecsdb-get-cte (mew-charset-to-ecsdb charset)))
 
-(defun mew-charset-to-delsp (charset)
-  (mew-ecsdb-get-delsp (mew-charset-to-ecsdb charset)))
-
 ;;
 
 (defvar mew-charset-list
