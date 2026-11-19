@@ -621,17 +621,6 @@
 
 (defvar mew-icon-directory (mew-which-mew-etc))
 
-(defvar mew-icon-audio nil)
-(defvar mew-icon-image nil)
-(defvar mew-icon-video nil)
-(defvar mew-icon-application/postscript nil)
-(defvar mew-icon-application/octet-stream nil)
-(defvar mew-icon-message/rfc822 nil)
-(defvar mew-icon-message/external-body nil)
-(defvar mew-icon-text nil)
-(defvar mew-icon-multipart nil)
-(defvar mew-icon-unknown nil)
-
 (provide 'mew-key)
 
 ;;; Copyright Notice:

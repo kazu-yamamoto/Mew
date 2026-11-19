@@ -289,11 +289,12 @@ in draft buffer.")
   "\\<mew-summary-mode-map>Database for MIME content type.
 This is a list of entries which consist of <content-type>,
 <regular expression of file suffix>, <content-transfer-encoding>,
-<symbol for visualizer>, <symbol for icon>, <auxiliary data>.
+<symbol for visualizer>, <unused (was a symbol for icon)>,
+<auxiliary data>.
 
 Here is an example:
 
-	(\"image/png\" \"\\\\.png$\" mew-b64 mew-prog-image mew-icon-image png)
+	(\"image/png\" \"\\\\.png$\" mew-b64 mew-prog-image nil png)
 
 This database is used both when visualizing and composing. For
 example, when visualizing, a visualizer is chosen according to
