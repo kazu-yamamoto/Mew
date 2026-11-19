@@ -233,6 +233,9 @@ security, and all Lisp files now use lexical binding.
   [#361](https://github.com/kazu-yamamoto/Mew/pull/361)
 * The queue flushed after receiving is the one of the receiving case.
   [#362](https://github.com/kazu-yamamoto/Mew/pull/362)
+* Loading the password file is not nested, and its wait is not ended
+  by another gpg.
+  [#363](https://github.com/kazu-yamamoto/Mew/pull/363)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
