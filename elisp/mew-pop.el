@@ -45,7 +45,8 @@
   '(("greeting"      nil ("\\+OK" . "capa"))
     ("capa"          t   ("\\+OK" . "auth") ("-ERR" . "pswd"))
     ("auth-xoauth2"  nil ("\\+OK" . "token-xoauth2") ("-ERR" . "wpwd"))
-    ("token-xoauth2" nil ("\\+OK" . "list") ("-ERR" . "wpwd"))
+    ("token-xoauth2" nil ("\\+OK" . "list") ("challenge" . "xoauth2-error") ("-ERR" . "wpwd"))
+    ("xoauth2-error" nil ("\\+OK" . "wpwd") ("-ERR" . "wpwd"))
     ("auth-cram-md5" nil ("\\+OK" . "pwd-cram-md5") ("-ERR" . "wpwd"))
     ("pwd-cram-md5"  nil ("\\+OK" . "list") ("-ERR" . "wpwd"))
     ("auth-plain"    nil ("\\+OK" . "pwd-plain") ("-ERR" . "wpwd"))
@@ -537,6 +538,11 @@
          (auth-string (mew-xoauth2-auth-string user tag (mew-pop-get-case pnm))))
     (mew-pop-process-send-string pro "%s" auth-string)))
 
+(defun mew-pop-command-xoauth2-error (pro _pnm)
+  ;; Gmail refuses the token with a challenge carrying an error JSON.
+  ;; An empty response makes the server answer with -ERR.
+  (mew-pop-process-send-string pro ""))
+
 (defun mew-pop-command-auth-cram-md5 (pro pnm)
   (mew-pop-process-send-string pro "AUTH CRAM-MD5")
   (mew-pop-set-status pnm "auth-cram-md5"))
@@ -836,7 +842,14 @@
 		(and (not mulrep)
 		     (goto-char (1- (point-max)))
 		     (looking-at "\n$"))))
-       (setq next (mew-pop-fsm-next status "+OK")))
+       (setq next (mew-pop-fsm-next
+		   status
+		   ;; After the XOAUTH2 token, "+ " is an error challenge.
+		   (if (and (string= status "token-xoauth2")
+			    (not (progn (goto-char (point-min))
+					(looking-at "\\+OK"))))
+		       "challenge"
+		     "+OK"))))
       (t
        (setq stay t)))
      (unless stay
