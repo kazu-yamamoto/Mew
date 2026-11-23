@@ -36,7 +36,11 @@ VCPKGDIR = $(VCPKG_ROOT)\installed\x86-windows-static
 !ERROR Set the environment variable VCPKG_ROOT, or VCPKGDIR.
 !ENDIF
 !ENDIF
+!IF EXIST($(VCPKGDIR)\lib\libzs.lib)
+ZLIBLIB    = $(VCPKGDIR)\lib\libzs.lib
+!ELSE
 ZLIBLIB    = $(VCPKGDIR)\lib\zs.lib
+!ENDIF
 ICONVFLAGS = -DHAVE_ICONV
 ICONVLIB   = $(VCPKGDIR)\lib\iconv.lib
 UTF8PROCFLAGS = -DHAVE_UTF8PROC
