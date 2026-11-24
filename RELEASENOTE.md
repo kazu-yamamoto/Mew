@@ -236,6 +236,10 @@ security, and all Lisp files now use lexical binding.
 * Loading the password file is not nested, and its wait is not ended
   by another gpg.
   [#363](https://github.com/kazu-yamamoto/Mew/pull/363)
+* A test of nested OAuth2 authorizations no longer fails now and then.
+  [#365](https://github.com/kazu-yamamoto/Mew/pull/365)
+* Makefile.w32 links zlib of vcpkg as libzs.lib (zlib 1.4) or zs.lib.
+  [#364](https://github.com/kazu-yamamoto/Mew/pull/364)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
