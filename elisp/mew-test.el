@@ -659,13 +659,20 @@ The output arrives through a pty now, so it ends with CR."
   ;; The key must not match a suffix of another key.
   (should-not (mew-oauth2-query-get "/?scope=x" "ope")))
 
+(defun mew-test-free-ports (n)
+  "Return N distinct TCP ports on localhost which nobody listens on.
+All are held open until the last is taken, or the system may hand out
+a port just closed again."
+  (let ((procs (mapcar (lambda (_)
+                         (make-network-process :name "mew-test-port" :host 'local
+                                               :service t :server t))
+                       (number-sequence 1 n))))
+    (prog1 (mapcar (lambda (p) (process-contact p :service)) procs)
+      (mapc #'delete-process procs))))
+
 (defun mew-test-free-port ()
   "Return a TCP port on localhost which nobody listens on."
-  (let* ((p (make-network-process :name "mew-test-port" :host 'local
-                                  :service t :server t))
-         (port (process-contact p :service)))
-    (delete-process p)
-    port))
+  (car (mew-test-free-ports 1)))
 
 (defun mew-test-oauth2-redirect (state request)
   "Feed REQUEST to `mew-oauth2-redirect-handler-filter' of a handler
@@ -807,10 +814,11 @@ handler of the first one."
 
 (ert-deftest mew-test-oauth2-nested-auth-code-other-port ()
   "Authorizations on different ports do not share their state or code."
-  (let ((outer (mew-test-free-port))
-        (inner (mew-test-free-port))
-        (inner-code 'not-called)
-        (depth 0))
+  (let* ((ports (mew-test-free-ports 2))
+         (outer (nth 0 ports))
+         (inner (nth 1 ports))
+         (inner-code 'not-called)
+         (depth 0))
     (cl-letf (((symbol-function 'browse-url)
                (lambda (&rest _)
                  (setq depth (1+ depth))
