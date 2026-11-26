@@ -2535,6 +2535,172 @@ gpgsm: invalid certification chain: No agent running
     (mew-delete-images)
     (should (equal (buffer-string) "From: kazu\nx\n"))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-mime.el: HTML for a browser
+;;;
+
+(ert-deftest mew-test-html-csp ()
+  "Scripts are always blocked, and remote content only when asked."
+  (let ((base "default-src 'none'; form-action 'none'; base-uri 'none'"))
+    (should (equal (mew-html-csp nil nil)
+		   (concat base "; style-src 'unsafe-inline'"
+			   "; font-src data:; img-src data:")))
+    (should (equal (mew-html-csp t nil)
+		   (concat base "; style-src 'unsafe-inline'"
+			   "; font-src data:; img-src data: https: http:")))
+    (should (equal (mew-html-csp nil t)
+		   (concat base "; style-src 'unsafe-inline' https:"
+			   "; font-src data: https:; img-src data: https: http:")))))
+
+(ert-deftest mew-test-html-neutralize-meta ()
+  "Every <meta> is disabled however its attributes are written."
+  (dolist (tc '(("<meta http-equiv=\"refresh\" content=\"0;url=x\">"
+		 . "<basefont http-equiv=\"refresh\" content=\"0;url=x\">")
+		;; Character references in the attribute value
+		("<meta http-equiv=\"&#114;efresh\" content=\"0\">"
+		 . "<basefont http-equiv=\"&#114;efresh\" content=\"0\">")
+		;; Case, and "/" ending the tag name
+		("<Meta/HTTP-EQUIV=Refresh content=0>"
+		 . "<basefont/HTTP-EQUIV=Refresh content=0>")
+		("<META\tcharset=x>" . "<basefont\tcharset=x>")
+		("<meta>" . "<basefont>")
+		("a<meta" . "a<basefont")
+		;; Other elements are left alone.
+		("<metadata><metal>" . "<metadata><metal>")))
+    (with-temp-buffer
+      (insert (car tc))
+      (mew-html-neutralize-meta)
+      (should (equal (buffer-string) (cdr tc))))))
+
+(defun mew-test-html-head (csp)
+  (concat "\n<meta charset=\"utf-8\">\n"
+	  "<meta http-equiv=\"x-dns-prefetch-control\" content=\"off\">\n"
+	  "<meta http-equiv=\"Content-Security-Policy\" content=\""
+	  csp "\">\n"))
+
+(ert-deftest mew-test-html-insert-head ()
+  "The head goes after <!DOCTYPE>, so that the quirks mode is not used."
+  (let ((head (mew-test-html-head "X")))
+    (dolist (tc `(("<html>" . ,(concat "\ufeff" head "<html>"))
+		  ("<!DOCTYPE html><html>"
+		   . ,(concat "\ufeff<!DOCTYPE html>" head "<html>"))
+		  ;; An old BOM is not doubled.
+		  ("\ufeff<!doctype html>"
+		   . ,(concat "\ufeff<!doctype html>" head))
+		  ("<?xml version=\"1.0\"?>\n<!-- a\n<!DOCTYPE b> -->\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0//EN\">x"
+		   . ,(concat "\ufeff<?xml version=\"1.0\"?>\n<!-- a\n<!DOCTYPE b> -->\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0//EN\">"
+			      head "x"))
+		  ;; An unterminated comment would hide what follows it.
+		  ("<!-- x" . ,(concat "\ufeff" head "<!-- x"))))
+      (with-temp-buffer
+	(insert (car tc))
+	(mew-html-insert-head "X")
+	(should (equal (buffer-string) (cdr tc)))))))
+
+(defmacro mew-test-with-html-file (var &rest body)
+  (declare (indent 1))
+  `(let ((,var (make-temp-file "mew-test-html" nil ".html")))
+     (unwind-protect
+	 (progn ,@body)
+       (delete-file ,var))))
+
+(defun mew-test-file-bytes (file)
+  (with-temp-buffer
+    (set-buffer-multibyte nil)
+    (insert-file-contents-literally file)
+    (buffer-string)))
+
+(ert-deftest mew-test-html-write-safe-file ()
+  "The decoded HTML is written in UTF-8 with the CSP, and <meta> disabled."
+  (let ((html "<html><head><meta charset=\"iso-2022-jp\"></head><body>日本語</body></html>"))
+    (mew-test-with-html-file file
+      (with-temp-buffer
+	(insert html)
+	(let ((mew-html-blocked-images ".")
+	      (mew-html-ext-allow-remote nil))
+	  (mew-html-write-safe-file (point-min) (point-max) file)))
+      (should (equal (mew-test-file-bytes file)
+		     (encode-coding-string
+		      (concat "\ufeff"
+			      (mew-test-html-head (mew-html-csp nil nil))
+			      "<html><head><basefont charset=\"iso-2022-jp\"></head>"
+			      "<body>日本語</body></html>")
+		      'utf-8))))
+    ;; The variables choose the CSP.
+    (dolist (tc '((nil nil . (t nil)) ("." t . (nil t))))
+      (mew-test-with-html-file file
+	(with-temp-buffer
+	  (insert "x")
+	  (let ((mew-html-blocked-images (nth 0 tc))
+		(mew-html-ext-allow-remote (nth 1 tc)))
+	    (mew-html-write-safe-file (point-min) (point-max) file)))
+	(should (string-match-p
+		 (regexp-quote (apply #'mew-html-csp (nthcdr 2 tc)))
+		 (decode-coding-string (mew-test-file-bytes file) 'utf-8)))))))
+
+(defun mew-test-html-ext (sanitize xwidget)
+  "Run `mew-mime-text/html-ext' and return (HOW FILE BYTES)."
+  ;; Defined in mew-unix.el and the like, which are not loaded here.
+  (defvar mew-format-html)
+  (defvar mew-prog-text/html-ext)
+  (let ((mew-html-ext-sanitize sanitize)
+	(mew-prog-text/html-ext '("browser" ("%s") t))
+	(mew-format-html "%s.html")
+	(base (make-temp-file "mew-test-base" t))
+	how file bytes)
+    (unwind-protect
+	(cl-letf (((symbol-function 'mew-make-temp-name)
+		   (lambda (&optional _) (expand-file-name "t" base)))
+		  ((symbol-function 'mew-html-xwidget-p)
+		   (lambda () xwidget))
+		  ((symbol-function 'mew-html-xwidget-open)
+		   (lambda (f) (setq how 'xwidget file f)))
+		  ((symbol-function 'mew-start-process-disp)
+		   (lambda (_name _buf prog &rest args)
+		     (setq how (list prog args) file (car args)))))
+	  (with-temp-buffer
+	    (insert "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-2022-jp\">日本\n")
+	    (mew-mime-text/html-ext (current-buffer) (point-min) (point-max)))
+	  (setq bytes (mew-test-file-bytes file))
+	  (list how file bytes))
+      (delete-directory base t))))
+
+(ert-deftest mew-test-html-ext ()
+  "C-c C-e makes the HTML safe by default, and opens it with xwidget if possible."
+  (let* ((meta " http-equiv=\"Content-Type\" content=\"text/html; charset=iso-2022-jp\">日本\n")
+	 (safe (encode-coding-string (concat "<basefont" meta) 'utf-8))
+	 (raw (encode-coding-string (concat "<meta" meta)
+				    (mew-charset-to-cs "iso-2022-jp"))))
+    (let ((r (mew-test-html-ext t nil)))
+      (should (equal (nth 0 r) (list "browser" (list (nth 1 r)))))
+      (should (equal (file-name-nondirectory (nth 1 r)) "t.html"))
+      (should (string-suffix-p safe (nth 2 r))))
+    (let ((r (mew-test-html-ext t t)))
+      (should (eq (nth 0 r) 'xwidget))
+      (should (string-suffix-p safe (nth 2 r))))
+    ;; If not sanitized, the file is as before, in its own charset.
+    (let ((r (mew-test-html-ext nil nil)))
+      (should (equal (nth 2 r) raw)))
+    (let ((r (mew-test-html-ext nil t)))
+      (should (eq (nth 0 r) 'xwidget))
+      (should (equal (nth 2 r) raw)))))
+
+(ert-deftest mew-test-html-xwidget-p ()
+  "xwidget is not used if the user does not want it."
+  (let ((mew-html-ext-use-xwidget nil))
+    (should-not (mew-html-xwidget-p))))
+
+(ert-deftest mew-test-summary-execute-external-remote ()
+  "The command allows remote content only while it runs."
+  (let ((mew-html-ext-allow-remote nil)
+	seen)
+    (cl-letf (((symbol-function 'mew-summary-execute-external)
+	       (lambda (&optional _) (setq seen mew-html-ext-allow-remote))))
+      (mew-summary-execute-external-remote))
+    (should (eq seen t))
+    (should-not mew-html-ext-allow-remote)))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:

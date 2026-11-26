@@ -21,6 +21,7 @@
    (t
     (require 'mew-unix)))
   (declare-function w3m-region "w3m.el")
+  (declare-function xwidget-webkit-browse-url "xwidget" (url &optional new-session))
   (declare-function w3m-expand-file-name-as-url "w3m.el"))
 
 (defvar mew-process-file-alist nil)
@@ -297,30 +298,140 @@
 	(mew-charset-to-cs (mew-match-string 1))))))
 
 (defun mew-mime-text/html-ext (cache begin end &optional params)
-  (mew-mime-markup-language-ext
-   mew-prog-text/html-ext cache begin end params "HTML" mew-format-html))
+  ;; called in Message buffer
+  (when (> end begin)
+    (let ((file (format mew-format-html (mew-make-temp-name)))
+	  ;; This looks at the selected frame, so do it here.
+	  (xwidget (mew-html-xwidget-p)))
+      (with-current-buffer cache
+	(message "Displaying HTML...")
+	(if mew-html-ext-sanitize
+	    (mew-html-write-safe-file begin end file)
+	  (mew-mime-markup-language-write begin end params file))
+	(if xwidget
+	    (mew-html-xwidget-open file)
+	  (mew-mime-markup-language-start mew-prog-text/html-ext file))
+	(message "Displaying HTML...done")))))
 
 (defun mew-mime-markup-language-ext (program cache begin end params tag form)
   ;; called in Message buffer
   (when (> end begin)
-    (let* ((file (format form (mew-make-temp-name)))
-	   (prog (mew-progspec-get-prog program))
-	   (args (mew-progsec-args-convert (mew-progspec-get-args program) file))
-	   wcs)
+    (let ((file (format form (mew-make-temp-name))))
       (with-current-buffer cache
 	(message "Displaying %s..." tag)
-	;; charset check
-	(setq wcs (mew-text/html-detect-cs begin end))
-	;; note that application/xml may have the charset parameter
-	(unless (mew-coding-system-p wcs)
-	  (setq wcs (mew-charset-to-cs
-		     (mew-syntax-get-param params "charset"))))
-	(unless (mew-coding-system-p wcs)
-	  (setq wcs mew-cs-text-for-write))
-	(mew-frwlet mew-cs-dummy wcs
-	  (write-region begin end file nil 'no-msg)
-	  (apply 'mew-start-process-disp prog nil prog args))
+	(mew-mime-markup-language-write begin end params file)
+	(mew-mime-markup-language-start program file)
 	(message "Displaying %s...done" tag)))))
+
+(defun mew-mime-markup-language-write (begin end params file)
+  "Write the region between BEGIN and END to FILE in its own charset.
+The charset is taken from the document itself or PARAMS."
+  (let ((wcs (mew-text/html-detect-cs begin end)))
+    ;; note that application/xml may have the charset parameter
+    (unless (mew-coding-system-p wcs)
+      (setq wcs (mew-charset-to-cs
+		 (mew-syntax-get-param params "charset"))))
+    (unless (mew-coding-system-p wcs)
+      (setq wcs mew-cs-text-for-write))
+    (mew-frwlet mew-cs-dummy wcs
+      (write-region begin end file nil 'no-msg))))
+
+(defun mew-mime-markup-language-start (program file)
+  "Open FILE with PROGRAM, a program spec such as `mew-prog-text/html-ext'."
+  (let ((prog (mew-progspec-get-prog program))
+	(args (mew-progsec-args-convert (mew-progspec-get-args program) file)))
+    (apply 'mew-start-process-disp prog nil prog args)))
+
+;;;
+;;; Making HTML safe for a browser
+;;;
+
+(defun mew-html-csp (images remote)
+  "Return a Content-Security-Policy for an HTML part of a message.
+Scripts, frames, plugins, form submission and <base> are always
+blocked.  Inline style sheets and data: URLs are allowed.  If
+IMAGES is non-nil, remote images are allowed.  If REMOTE is
+non-nil, remote images, style sheets and fonts are allowed."
+  (let ((rem (if remote " https:" "")))
+    (concat "default-src 'none'; form-action 'none'; base-uri 'none'"
+	    "; style-src 'unsafe-inline'" rem
+	    "; font-src data:" rem
+	    "; img-src data:" (if (or images remote) " https: http:" ""))))
+
+(defun mew-html-neutralize-meta ()
+  "Turn every <meta> element in the current buffer into <basefont>.
+<meta http-equiv=\"refresh\"> moves to another URL without any
+action of the user, and a Content-Security-Policy cannot stop it.
+Since an attribute value can be written with character references
+such as \"&#114;efresh\", attributes are not looked at.  The tag
+name, which cannot be written so, is replaced instead.  <basefont>
+is a void element allowed in <head> like <meta>, so the document
+tree does not change, and modern browsers do nothing for it.
+A tag name ends with a white space, \"/\" or \">\"."
+  (let ((case-fold-search t))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "<meta\\([\t\n\f\r />]\\|\\'\\)" nil t)
+	(replace-match "<basefont\\1" t)))))
+
+(defun mew-html-insert-head (csp)
+  "Put the UTF-8 charset and CSP at the top of the HTML in the current buffer.
+They go after <!DOCTYPE>, since anything else before it would
+put the browser into the quirks mode.  A BOM is put at the very
+beginning, since it wins over any charset declaration."
+  (let ((case-fold-search t))
+    (goto-char (point-min))
+    (when (eq (char-after) ?\ufeff)
+      (delete-char 1))
+    (insert ?\ufeff)
+    ;; White spaces, comments and an XML declaration may come
+    ;; before <!DOCTYPE>.
+    (while (cond
+	    ((looking-at "[ \t\n\f\r]+\\|<\\?[^>]*>")
+	     (goto-char (match-end 0)))
+	    ((looking-at "<!--")
+	     (search-forward "-->" nil t))))
+    (if (looking-at "<!doctype[^>]*>")
+	(goto-char (match-end 0)))
+    (insert "\n<meta charset=\"utf-8\">\n"
+	    "<meta http-equiv=\"x-dns-prefetch-control\" content=\"off\">\n"
+	    "<meta http-equiv=\"Content-Security-Policy\" content=\""
+	    csp "\">\n")))
+
+(defun mew-html-write-safe-file (begin end file)
+  "Write the HTML between BEGIN and END to FILE in UTF-8, made safe.
+The <meta> elements of the message are disabled with
+`mew-html-neutralize-meta', and a Content-Security-Policy made by
+`mew-html-csp' is put.  Remote images are allowed if
+`mew-html-blocked-images' is nil, and remote content is allowed if
+`mew-html-ext-allow-remote' is non-nil."
+  (let ((buf (current-buffer))
+	(csp (mew-html-csp (null mew-html-blocked-images)
+			   mew-html-ext-allow-remote)))
+    (with-temp-buffer
+      (insert-buffer-substring buf begin end)
+      (mew-html-neutralize-meta)
+      (mew-html-insert-head csp)
+      (mew-frwlet mew-cs-dummy mew-cs-m17n
+	(write-region (point-min) (point-max) file nil 'no-msg)))))
+
+;;;
+;;; xwidget-webkit
+;;;
+
+(defun mew-html-xwidget-p ()
+  "Return non-nil if an HTML part should be shown with xwidget-webkit."
+  (and mew-html-ext-use-xwidget
+       (featurep 'xwidget-internal)
+       (fboundp 'xwidget-webkit-browse-url)
+       (display-graphic-p)))
+
+(defun mew-html-xwidget-open (file)
+  "Show FILE with xwidget-webkit in the Message window."
+  (let ((win (get-buffer-window (mew-buffer-message))))
+    (save-selected-window
+      (if win (select-window win))
+      (xwidget-webkit-browse-url (concat "file://" (expand-file-name file))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -764,6 +875,15 @@ See `mew-mime-content-type' to know how actions can be defined."
 	     program ct ctl cache begin end params fname was-apo)))
 	  (mew-summary-display-postscript 'no-hook))
        (select-window win)))))
+
+(defun mew-summary-execute-external-remote ()
+  "Like `mew-summary-execute-external', but an HTML part may fetch
+remote images, style sheets and fonts.  See
+`mew-html-ext-allow-remote'.  Remote content tells the sender that
+you opened the message, so use this only for a message you trust."
+  (interactive)
+  (let ((mew-html-ext-allow-remote t))
+    (mew-summary-execute-external)))
 
 (defun mew-summary-execute-symbol (program ct _ctl cache begin end params fname was-apo)
   (cond
