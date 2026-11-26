@@ -409,7 +409,9 @@ the cursor is inserted."
 (defun mew-circular-complete-from ()
   "Circular complete function for From:."
   (interactive)
-  (mew-circular-complete "from" 'mew-from-list))
+  (mew-circular-complete "from" 'mew-from-list)
+  (if (and mew-case-guess-by-from (mew-draft-or-header-p))
+      (mew-draft-set-case-by-from)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

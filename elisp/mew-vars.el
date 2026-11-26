@@ -2749,6 +2749,22 @@ Otherwise, the old cases are overridden."
   :group 'mew-draft
   :type 'boolean)
 
+(defcustom mew-case-guess-first-match nil
+  "*If *non-nil*, only the first case matched by a guess is used.
+Rules are tried in the order of the alist.  Otherwise, all matched
+cases are used."
+  :group 'mew-draft
+  :type 'boolean)
+
+(defcustom mew-case-guess-by-from nil
+  "*If *non-nil*, the case of a draft follows its From:.
+The case whose From: in `mew-config-alist' has the same address is
+taken when From: is cycled with C-c TAB and when
+the draft is sent.  A From: changed by hand wins over
+`mew-case-guess-when-composed'."
+  :group 'mew-draft
+  :type 'boolean)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Temporary files

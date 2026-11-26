@@ -2023,6 +2023,85 @@ arrives.  Anything else has to be a whole address."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; Choosing a case
+;;;
+
+(defmacro mew-test-with-cases (&rest body)
+  "Run BODY with cases \"default\", \"a\" and \"b\", where \"b\"
+and \"b2\" share an address."
+  `(let ((mew-config-alist '(("default" ("user" "me") ("mail-domain" "d.example.org"))
+                             ("a" ("user" "me") ("mail-domain" "a.example.org"))
+                             ("b" ("user" "me") ("mail-domain" "b.example.com"))
+                             ("b2" ("user" "me") ("mail-domain" "b.example.com"))))
+         (mew-config-cases nil)
+         (mew-config-cases2 nil)
+         (mew-inbox-folders nil)
+         (mew-queue-folders nil)
+         (mew-postq-folders nil)
+         (mew-mail-address-list nil)
+         (mew-mail-domain-list nil)
+         (mew-from-list nil))
+     (mew-config-setup)
+     (mew-regex-setup)
+     ,@body))
+
+(ert-deftest mew-test-case-by-from ()
+  "From: finds the case with the same address."
+  (mew-test-with-cases
+   (should (equal (mew-case-by-from "Me <ME@A.example.org>") "a"))
+   (should (equal (mew-case-by-from "me@b.example.com") "b"))
+   ;; the current case is kept when it has the address too
+   (should (equal (mew-case-by-from "me@b.example.com" "b2") "b2"))
+   (should (equal (mew-case-by-from "me@b.example.com" "default,b2") "default,b2"))
+   (should (equal (mew-case-by-from "me@b.example.com" "a") "b"))
+   (should-not (mew-case-by-from "someone@example.net"))
+   (should-not (mew-case-by-from nil))))
+
+(defun mew-test-case-at-sending (case header)
+  (with-temp-buffer
+    (insert header "\n\nbody\n")
+    (mew-draft-case-at-sending case)))
+
+(ert-deftest mew-test-case-at-sending ()
+  "A From: changed by hand decides the case, and wins over the guess
+when composed.  Otherwise the guess works as before."
+  (mew-test-with-cases
+   (let ((mew-case-guess-alist '(("To:" ("@b\\.example\\.com" . "b"))))
+         (mew-case-guess-when-composed t)
+         (mew-case-guess-addition nil))
+     (let ((mew-case-guess-by-from t))
+       ;; From: of "a" in a draft of "default"
+       (should (equal (mew-test-case-at-sending
+                       "default" "From: me@a.example.org\nTo: x@b.example.com")
+                      "a"))
+       ;; From: as the case put it: the guess is used
+       (should (equal (mew-test-case-at-sending
+                       "default" "From: me@d.example.org\nTo: x@b.example.com")
+                      "b"))
+       ;; an address of no case
+       (should (equal (mew-test-case-at-sending
+                       "default" "From: x@example.net\nTo: y@example.net")
+                      "default")))
+     (let ((mew-case-guess-by-from nil))
+       (should (equal (mew-test-case-at-sending
+                       "default" "From: me@a.example.org\nTo: x@b.example.com")
+                      "b"))))))
+
+(ert-deftest mew-test-case-guess-first-match ()
+  "Only the first matched case is used if asked."
+  (mew-test-with-cases
+   (let ((mew-case-guess-alist '(("To:" ("@a\\.example\\.org" . "a")
+                                       ("@b\\.example\\.com" . "b"))))
+         (header "To: x@b.example.com, y@a.example.org\n\n"))
+     (with-temp-buffer
+       (insert header)
+       (let ((mew-case-guess-first-match nil))
+         (should (equal (mew-draft-get-case-by-guess) "a,b")))
+       (let ((mew-case-guess-first-match t))
+         (should (equal (mew-draft-get-case-by-guess) "a")))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew-draft.el: a read-only body
 ;;;
 
