@@ -291,15 +291,19 @@
   (let* ((user (mew-imap2-get-user pnm))
 	 (tag (mew-imap2-passtag pnm))
          (auth-string (mew-xoauth2-auth-string user tag (mew-imap2-get-case pnm))))
-    (if (mew-imap2-get-sasl-ir pnm)
-	(progn
-	  (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
-	  (mew-imap2-set-status pnm "auth-xoauth2"))
-      ;; Without SASL-IR (RFC 4959), the token waits for a continuation.
-      ;; It is obtained first so that the server does not wait for the browser.
+    (cond
+     ((null auth-string)
+      (mew-imap2-set-error pnm mew-xoauth2-no-token)
+      (mew-imap2-command-logout2 pro pnm))
+     ((mew-imap2-get-sasl-ir pnm)
+      (mew-imap2-process-send-string pro pnm (format "AUTHENTICATE XOAUTH2 %s" auth-string))
+      (mew-imap2-set-status pnm "auth-xoauth2"))
+     ;; Without SASL-IR (RFC 4959), the token waits for a continuation.
+     ;; It is obtained first so that the server does not wait for the browser.
+     (t
       (mew-imap2-set-xoauth2 pnm auth-string)
       (mew-imap2-process-send-string pro pnm "AUTHENTICATE XOAUTH2")
-      (mew-imap2-set-status pnm "xoauth2"))))
+      (mew-imap2-set-status pnm "xoauth2")))))
 
 (defun mew-imap2-command-token-xoauth2 (pro pnm)
   (let ((auth-string (mew-imap2-get-xoauth2 pnm)))

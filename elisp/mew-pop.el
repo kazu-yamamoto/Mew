@@ -32,7 +32,7 @@
     "size" "truncated" "get-body"
     "flush" "no-msg" "msgdb" "done" "dispatched" "error"
     "body-lines" "delete" "case"
-    "virtual-info" "disp-info" "status-buf"))
+    "virtual-info" "disp-info" "status-buf" "xoauth2"))
 
 (mew-info-defun "mew-pop-" mew-pop-info-list)
 
@@ -529,13 +529,21 @@
   ;; MS365 does not accept "AUTH XOAUTH2 <token>" in a single line.
   ;; It requires the SASL continuation exchange: send "AUTH XOAUTH2",
   ;; wait for the "+ " response, then send the token separately.
-  (mew-pop-process-send-string pro "AUTH XOAUTH2")
-  (mew-pop-set-status pnm "auth-xoauth2"))
-
-(defun mew-pop-command-token-xoauth2 (pro pnm)
+  ;; The token is obtained first so that the server does not wait for the browser.
   (let* ((user (mew-pop-get-user pnm))
 	 (tag (mew-pop-passtag pnm))
          (auth-string (mew-xoauth2-auth-string user tag (mew-pop-get-case pnm))))
+    (if (null auth-string)
+	(progn
+	  (mew-pop-message pnm mew-xoauth2-no-token)
+	  (mew-pop-command-quit2 pro pnm))
+      (mew-pop-set-xoauth2 pnm auth-string)
+      (mew-pop-process-send-string pro "AUTH XOAUTH2")
+      (mew-pop-set-status pnm "auth-xoauth2"))))
+
+(defun mew-pop-command-token-xoauth2 (pro pnm)
+  (let ((auth-string (mew-pop-get-xoauth2 pnm)))
+    (mew-pop-set-xoauth2 pnm nil)
     (mew-pop-process-send-string pro "%s" auth-string)))
 
 (defun mew-pop-command-xoauth2-error (pro _pnm)
