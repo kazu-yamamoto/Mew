@@ -149,8 +149,9 @@ that fullwidth and halfwidth forms match their ordinary ones.
 Without utf8proc, or when either side is not valid UTF-8, they are
 compared byte by byte; = and != then ignore the case of ASCII letters
 only.
-The key "head" (the whole header) and the body are compared as they
-are, neither decoded nor normalized.
+With the key "head" the whole header is compared in the same way:
+the encoded-words in every field are decoded first, and a match never
+runs from one field into the next.
 .PP
 A
 .I val

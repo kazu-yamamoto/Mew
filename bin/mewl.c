@@ -185,7 +185,9 @@ private char *unhex(const char *);
 private void set_fld_rng(struct fld_rng *, char *, char *);
 private void dbuf_reserve(struct dbuf *, size_t);
 private void dbuf_append(struct dbuf *, const char *, size_t);
+private void append_unfolded(struct dbuf *, const char *, const char *);
 private char *decode_field(const char *);
+private char *decode_header(char *, char *);
 private int  decode_word(const char *, size_t, struct dbuf *);
 #ifdef HAVE_ICONV
 private int  charset_to_utf8(const char *, const char *, size_t, struct dbuf *);
@@ -736,22 +738,19 @@ search_string(char *key, char *value, int case_sensitive) {
 	char *p = Search_ctx_buf, *limp = p + Search_ctx_lim, tmp;
 
 	if (strcmp(HEAD, key) == 0) {
+		int found;
+
+		if ((dec = decode_header(p, limp)) != NULL) {
+			found = field_match(dec, value, case_sensitive);
+			free(dec);
+			return found;
+		}
 		end = eoh(p, limp);
 		tmp = *end;
 		*end = NUL;
-		if (case_sensitive == YES) {
-			if (strstr(p, value) != NULL) {
-				*end = tmp;
-				return TRUE;
-			}
-		} else {
-			if (mystrcasestr(p, value) != NULL) {
-				*end = tmp;
-				return TRUE;
-			}
-		}
+		found = field_match(p, value, case_sensitive);
 		*end = tmp;
-		return FALSE;
+		return found;
 	}
 		
 	for (;;) {
@@ -826,40 +825,127 @@ dbuf_append(struct dbuf *d, const char *s, size_t n) {
 
 #define IS_LWSP(c)	((c) == SP || (c) == TAB || (c) == CR || (c) == LF)
 
-/* Decode RFC 2047 encoded-words delimited by white space in a field body. */
+/* Append the white space from "start" up to "end", unfolding it. */
+private void
+append_unfolded(struct dbuf *d, const char *start, const char *end) {
+	const char *p;
+
+	for (p = start; p < end; p++) {
+		if (*p != CR && *p != LF)
+			dbuf_append(d, p, 1);
+	}
+}
+
+/*
+ * Decode RFC 2047 encoded-words delimited by white space in a field body.
+ * In a comment, an encoded-word may also be delimited by "(" and ")"
+ * (RFC 2047 5(3)), so these are kept around the decoded text.
+ */
 private char *
 decode_field(const char *str) {
 	struct dbuf ret;
-	const char *p = str, *q, *e;
-	int prev = NO;
+	const char *space = str;	/* the white space before a word */
+	const char *word, *word_end;	/* the word */
+	const char *inner, *inner_end;	/* the word without the "(" at
+					   its start and the ")" at its end */
+	const char *p;
+	int joinable = NO;	/* the previous word was decoded and has
+				   no ")" after it */
+	int adjacent;		/* the word is right after such a word and
+				   has no "(" at its start */
 
 	ret.len = 0;
 	ret.siz = strlen(str) + 1;
 	MALLOC(ret.buf, ret.siz);
 	ret.buf[0] = NUL;
-	while (*p != NUL) {
-		for (q = p; IS_LWSP(*q); q++)	/* white space */
+	while (*space != NUL) {
+		for (p = space; IS_LWSP(*p); p++)
 			;
-		for (e = q; *e != NUL && !IS_LWSP(*e); e++)	/* a word */
+		word = p;
+		for (; *p != NUL && !IS_LWSP(*p); p++)
 			;
-		/* white space between encoded-words is removed */
-		if (prev == YES && q < e && decode_word(q, e - q, &ret) == 0) {
-			p = e;
-			continue;
+		word_end = p;
+		for (p = word; p < word_end && *p == '('; p++)
+			;
+		inner = p;
+		for (p = word_end; p > inner && *(p - 1) == ')'; p--)
+			;
+		inner_end = p;
+		/*
+		 * The white space between encoded-words is removed, so it
+		 * is appended only after the word turns out not to be one.
+		 * decode_word() appends nothing when it fails.
+		 */
+		adjacent = (joinable == YES && inner == word) ? YES : NO;
+		if (adjacent == NO) {
+			append_unfolded(&ret, space, word);
+			dbuf_append(&ret, word, inner - word);	/* "(" */
 		}
-		for (; p < q; p++) {
-			if (*p != CR && *p != LF)	/* unfolding */
-				dbuf_append(&ret, p, 1);
+		if (inner < inner_end &&
+		    decode_word(inner, inner_end - inner, &ret) == 0) {
+			dbuf_append(&ret, inner_end, word_end - inner_end);
+			joinable = (inner_end == word_end) ? YES : NO;
+		} else {
+			if (adjacent == YES)	/* there is no "(" */
+				append_unfolded(&ret, space, word);
+			dbuf_append(&ret, inner, word_end - inner);
+			joinable = NO;
 		}
-		if (prev == NO && q < e && decode_word(q, e - q, &ret) == 0)
-			prev = YES;
-		else {
-			dbuf_append(&ret, q, e - q);
-			prev = NO;
-		}
-		p = e;
+		space = word_end;
 	}
 
+	return ret.buf;
+}
+
+/*
+ * Decode the encoded-words in every field of the header at hdr, for the
+ * key "head".  Each field keeps its name and its terminating newline,
+ * so that a match cannot run from one field into the next, and a field
+ * body without "=?" is copied as it is.  The header ends at the blank
+ * line, or at the end of the buffer when there is none (see eoh()).
+ * Returns a malloc()ed string, or NULL when no field has an
+ * encoded-word, in which case the header is to be compared as it is.
+ */
+private char *
+decode_header(char *hdr, char *lim) {
+	struct dbuf ret;
+	char *p;		/* a field */
+	char *next;		/* the next field, the blank line or lim */
+	char *lf;		/* the LF ending the field */
+	char *colon, *dec, *dummy;
+	int any = NO;
+
+	ret.len = 0;
+	ret.siz = (size_t)(lim - hdr) + 1;
+	MALLOC(ret.buf, ret.siz);
+	ret.buf[0] = NUL;
+	for (p = hdr; p < lim && *p != LF; p = next) {
+		next = nextfield(p, lim, &dummy, NULL, YES);
+		if (next == NULL)	/* the last field */
+			next = lim;
+		colon = NULL;
+		dec = NULL;
+		lf = next - 1;		/* see read_header() */
+		if (lf > p && *lf == LF) {
+			*lf = NUL;
+			colon = strchr(p, ':');
+			if (colon != NULL && strstr(colon + 1, "=?") != NULL)
+				dec = decode_field(colon + 1);
+			*lf = LF;
+		}
+		if (dec != NULL) {
+			dbuf_append(&ret, p, colon + 1 - p);
+			dbuf_append(&ret, dec, strlen(dec));
+			dbuf_append(&ret, "\n", 1);
+			free(dec);
+			any = YES;
+		} else
+			dbuf_append(&ret, p, next - p);
+	}
+	if (any == NO) {
+		free(ret.buf);
+		return NULL;
+	}
 	return ret.buf;
 }
 
