@@ -1551,19 +1551,31 @@ by side-effect."
        (string-to-number (substring s (match-beginning 7) (match-end 7)))
      0))
 
-;; returns seconds
+;; Seconds east of UTC, or nil if missing or unknown.
 (defmacro mew-time-rfc-tmzn ()
-  '(if (match-beginning 9)
-       (let ((tmzn (substring s (match-beginning 9) (match-end 9)))
-	     int)
-	 (cond
-	  ((string-match "^[-+][0-9]+$" tmzn)
-	   (setq int (string-to-number tmzn))
-	   (+ (* (/ int 100) 3600) (* (% int 100) 60)))
-	  ((setq int (mew-time-tmzn-str-to-int tmzn))
-	   (* int 3600))
-	  (t 0)))
-     0))
+  '(when (match-beginning 9)
+     (let ((tmzn (substring s (match-beginning 9) (match-end 9))))
+       (cond
+	((string-match "^[-+][0-9]+$" tmzn)
+	 (let ((int (string-to-number tmzn)))
+	   (+ (* (/ int 100) 3600) (* (% int 100) 60))))
+	((mew-time-tmzn-str-to-int tmzn)
+	 (* (mew-time-tmzn-str-to-int tmzn) 3600))))))
+
+(defun mew-time-rfc-parse (s)
+  "Parse Date: S into (SEC MIN HOUR DAY MON YEAR ZONE), or nil.
+MON is 0 if unknown, and ZONE is nil if missing or unknown."
+  (when (string-match mew-time-rfc-regex s)
+    (let ((year (mew-time-rfc-year)))
+      (list (mew-time-rfc-sec) (mew-time-rfc-min) (mew-time-rfc-hour)
+	    (mew-time-rfc-day) (mew-time-mon-str-to-int (mew-time-rfc-mon))
+	    ;; RFC 5322 4.3: two digits under 50 are 20xx, and anything
+	    ;; else of two or three digits is 19xx.
+	    (cond
+	     ((< year 50) (+ year 2000))
+	     ((< year 1000) (+ year 1900))
+	     (t year))
+	    (mew-time-rfc-tmzn)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1579,28 +1591,31 @@ by side-effect."
 
 ;; "20000726121835"
 (defun mew-time-rfc-to-sortkey (s)
-  (if (string-match mew-time-rfc-regex s)
-      (let ((year (mew-time-rfc-year))
-	    (mon  (mew-time-mon-str-to-int (mew-time-rfc-mon)))
-	    (day  (mew-time-rfc-day))
-	    (hour (mew-time-rfc-hour))
-	    (min  (mew-time-rfc-min))
-	    (sec  (mew-time-rfc-sec))
-	    (tmzn (mew-time-rfc-tmzn)))
-	;; RFC 5322 4.3: two digits under 50 are 20xx, and anything else
-	;; of two or three digits is 19xx.
-	(cond
-	 ((< year 50)
-	  (setq year (+ year 2000)))
-	 ((< year 1000)
-	  (setq year (+ year 1900))))
-	(condition-case nil
-	    ;; This uses local zone which ensures correct behavior
-	    ;; for both sorting and path tracing.
-	    (mew-time-ctz-to-sortkey (encode-time (list sec min hour day mon year nil -1 tmzn)))
-	  (error
-	   ;; invalid data
-	   (mew-time-ctz-to-sortkey-invalid sec min hour day mon year))))))
+  (let ((tm (mew-time-rfc-parse s)))
+    (when tm
+      (condition-case nil
+	  ;; This uses local zone which ensures correct behavior
+	  ;; for both sorting and path tracing.
+	  (mew-time-ctz-to-sortkey
+	   (encode-time (append (butlast tm) (list nil -1 (or (nth 6 tm) 0)))))
+	(error
+	 ;; invalid data
+	 (apply #'mew-time-ctz-to-sortkey-invalid (butlast tm)))))))
+
+;; "26-Jul-2000 21:18:35 +0900", the date-time of IMAP APPEND.
+;; nil unless S is a valid date with a known zone, since a server
+;; may refuse a bad date-time and the message with it.
+(defun mew-time-rfc-to-imap (s)
+  (let ((tm (mew-time-rfc-parse s)))
+    (when (and tm (nth 6 tm) (<= (nth 5 tm) 9999))
+      (condition-case nil
+	  (let* ((zone (nth 6 tm))
+		 (time (encode-time (append (butlast tm) (list nil -1 zone)))))
+	    ;; Feb 31 and the like are normalized by encode-time.
+	    (when (equal (butlast (decode-time time zone) 3) (butlast tm))
+	      (let ((system-time-locale "C"))
+		(format-time-string "%d-%b-%Y %H:%M:%S %z" time zone))))
+	(error nil)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

@@ -177,12 +177,20 @@
       (mew-imap2-set-status pnm "logout")
       (mew-imap2-command-logout pro pnm))))
 
+(defun mew-imap2-append-date-time ()
+  "The date-time argument of APPEND from Date: of this message, or \"\"."
+  (let* ((date (mew-header-get-value mew-date:))
+	 (dtime (and date (mew-time-rfc-to-imap date))))
+    (if dtime (format " \"%s\"" dtime) "")))
+
 (defun mew-imap2-command-append (pro pnm)
   (let ((mailbox (mew-imap2-get-mailbox pnm))
 	(cnt (mew-imap2-get-cnt pnm))
 	(ttl (mew-imap2-get-ttl pnm))
 	(mbx (mew-imap2-get-mailbox pnm))
 	(literal+ (mew-imap2-get-literal+ pnm))
+	;; INTERNALDATE: otherwise the server takes the time of the copy.
+	(dtime (mew-imap2-append-date-time))
 	bytes)
     (setq cnt (1+ cnt))
     (mew-imap2-set-cnt pnm cnt)
@@ -196,9 +204,9 @@
     (set-buffer-modified-p nil)
     (if (not literal+)
 	(mew-imap2-process-send-string
-	 pro pnm "APPEND \"%s\" {%d}" mailbox bytes)
+	 pro pnm "APPEND \"%s\"%s {%d}" mailbox dtime bytes)
       (mew-imap2-process-send-string
-       pro pnm "APPEND \"%s\" {%d+}" mailbox bytes)
+       pro pnm "APPEND \"%s\"%s {%d+}" mailbox dtime bytes)
       (mew-imap2-set-status pnm "post-append")
       (mew-imap2-command-post-append pro pnm))))
 
