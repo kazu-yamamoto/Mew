@@ -244,6 +244,9 @@ security, and all Lisp files now use lexical binding.
   for the browser, and without a token the session ends instead of
   sending "nil".
   [#370](https://github.com/kazu-yamamoto/Mew/pull/370)
+* IMAP: copying a message to an IMAP folder keeps its Date: as
+  INTERNALDATE.
+  [#372](https://github.com/kazu-yamamoto/Mew/pull/372)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
