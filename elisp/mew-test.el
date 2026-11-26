@@ -170,6 +170,61 @@ the local variables below alone."
 ;;; mew-func.el: Date:
 ;;;
 
+(ert-deftest mew-test-time-rfc-to-imap ()
+  "Date: becomes the date-time of IMAP APPEND only if it is valid."
+  (should (equal (mew-time-rfc-to-imap "Wed, 26 Jul 2000 21:18:35 +0900 (JST)")
+                 "26-Jul-2000 21:18:35 +0900"))
+  ;; two-digit year and a zone name of RFC 822
+  (should (equal (mew-time-rfc-to-imap "5 Jan 98 03:04:05 EST")
+                 "05-Jan-1998 03:04:05 -0500"))
+  ;; no seconds, and a negative zone with minutes
+  (should (equal (mew-time-rfc-to-imap "Tue, 1 Apr 2025 10:00 -0130")
+                 "01-Apr-2025 10:00:00 -0130"))
+  ;; no date, an impossible date, an unknown month or zone
+  (dolist (bad '("garbage"
+                 "Mon, 31 Feb 2025 10:00:00 +0000"
+                 "1 Foo 2025 10:00:00 +0000"
+                 "Tue, 1 Apr 2025 10:00:00 JST"
+                 "Tue, 1 Apr 2025 10:00:00"))
+    (should-not (mew-time-rfc-to-imap bad))))
+
+(defun mew-test-imap2-append (message literal+)
+  "Return the APPEND command sent for MESSAGE."
+  (mew-regex-setup) ;; mew-eoh
+  (let* ((pro (make-pipe-process :name "mew-imap2-info-test" :noquery t))
+         (pnm (process-name pro))
+         (sent nil))
+    (unwind-protect
+        (with-temp-buffer
+          (insert message)
+          (cl-letf (((symbol-function 'mew-imap2-process-send-string)
+                     (lambda (_pro _pnm fmt &rest args)
+                       (setq sent (apply #'format fmt args))))
+                    ((symbol-function 'mew-imap2-command-post-append) #'ignore)
+                    ((symbol-function 'message) #'ignore))
+            (mew-info-clean-up pnm)
+            (mew-imap2-set-mailbox pnm "INBOX")
+            (mew-imap2-set-cnt pnm 0)
+            (mew-imap2-set-ttl pnm 1)
+            (mew-imap2-set-literal+ pnm literal+)
+            (mew-imap2-command-append pro pnm)
+            sent))
+      (delete-process pro)
+      (mew-info-clean-up pnm))))
+
+(ert-deftest mew-test-imap2-append-date-time ()
+  "APPEND carries Date: so that the server keeps it as INTERNALDATE."
+  (let ((msg "From: a@example.org\nDate: Wed, 26 Jul 2000 21:18:35 +0900\n\nbody\n"))
+    (should (string-match "\\`APPEND \"INBOX\" \"26-Jul-2000 21:18:35 \\+0900\" {[0-9]+}\\'"
+                          (mew-test-imap2-append msg nil)))
+    (should (string-match "\\`APPEND \"INBOX\" \"26-Jul-2000 21:18:35 \\+0900\" {[0-9]+\\+}\\'"
+                          (mew-test-imap2-append msg t))))
+  ;; Without a usable Date:, APPEND is as before.
+  (dolist (msg '("From: a@example.org\n\nbody\n"
+                 "From: a@example.org\nDate: someday\n\nbody\n"))
+    (should (string-match "\\`APPEND \"INBOX\" {[0-9]+}\\'"
+                          (mew-test-imap2-append msg nil)))))
+
 (ert-deftest mew-test-time-rfc-to-sortkey ()
   ;; The sort key is in the local zone, so it cannot be compared with a
   ;; literal.  What matters is that the same instant gives the same key
