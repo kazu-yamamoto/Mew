@@ -1373,6 +1373,81 @@ Use mew-imap2 if IMAP2.  Return the sent lines in order."
       (delete-process pro)
       (kill-buffer buf))))
 
+(defun mew-test-xoauth2-no-token (proto)
+  "Run the XOAUTH2 command of PROTO without a token.
+Return a cons of the sent lines and the error or message recorded."
+  (let* ((p (format "mew-%s-" proto))
+         (fn (lambda (name) (intern (concat p name))))
+         (pro (make-pipe-process :name (concat p "info-test") :noquery t))
+         (pnm (process-name pro))
+         (sent nil)
+         (msg nil))
+    (unwind-protect
+        (cl-letf (((symbol-function (funcall fn "process-send-string"))
+                   (lambda (_pro &rest args)
+                     ;; IMAP ones take PNM before the format
+                     (let ((args (if (member proto '("imap" "imap2")) (cdr args) args)))
+                       (setq sent (cons (apply #'format args) sent)))))
+                  ((symbol-function 'mew-xoauth2-auth-string) #'ignore)
+                  ((symbol-function 'mew-pop-message)
+                   (lambda (_pnm fmt &rest args)
+                     (setq msg (apply #'format fmt args)))))
+          (mew-info-clean-up pnm)
+          (funcall (funcall fn "command-auth-xoauth2") pro pnm)
+          (cons (nreverse sent)
+                (or msg (and (fboundp (funcall fn "get-error"))
+                             (funcall (funcall fn "get-error") pnm)))))
+      (delete-process pro)
+      (mew-info-clean-up pnm))))
+
+(ert-deftest mew-test-xoauth2-no-token ()
+  "Without a token, nothing but the end of the session is sent.
+The literal \"nil\" used to go to the server as the token."
+  (dolist (proto '("imap" "imap2" "pop" "smtp"))
+    (let ((ret (mew-test-xoauth2-no-token proto)))
+      (should (equal (car ret)
+                     (if (member proto '("imap" "imap2")) '("LOGOUT") '("QUIT"))))
+      (should (equal (cdr ret) mew-xoauth2-no-token)))))
+
+(ert-deftest mew-test-oauth2-wait-quit-in-filter ()
+  "C-g stops waiting for the browser even inside a process filter,
+which runs with `inhibit-quit'."
+  (let ((port (mew-test-free-port))
+        (mew-oauth2-auth-timeout 60)
+        (res 'still-waiting))
+    (cl-letf (((symbol-function 'browse-url) #'ignore)
+              ((symbol-function 'message) #'ignore))
+      (let ((ctl-g (run-at-time 0.2 nil (lambda () (setq quit-flag t))))
+            (give-up (run-at-time 3 nil (lambda ()
+                                          (setq quit-flag nil)
+                                          (throw 'mew-test-give-up nil)))))
+        (unwind-protect
+            (catch 'mew-test-give-up
+              (let ((inhibit-quit t))
+                (setq res (mew-oauth2-get-auth-code
+                           "https://example.org/auth" "id" "scope"
+                           "http://localhost" "challenge" port))))
+          (cancel-timer ctl-g)
+          (cancel-timer give-up)
+          (setq quit-flag nil))))
+    (should (equal res ""))
+    (should-not (process-status (mew-oauth2-redirect-handler-name port)))))
+
+(ert-deftest mew-test-oauth2-wait-timeout ()
+  "A browser which never answers does not keep Mew waiting forever."
+  (let ((port (mew-test-free-port))
+        (mew-oauth2-auth-timeout 0.3)
+        (msg nil))
+    (cl-letf (((symbol-function 'browse-url) #'ignore)
+              ((symbol-function 'message)
+               (lambda (fmt &rest args) (setq msg (apply #'format fmt args)))))
+      (should (equal (mew-oauth2-get-auth-code
+                      "https://example.org/auth" "id" "scope"
+                      "http://localhost" "challenge" port)
+                     ""))
+      (should (string-match "no answer" msg))
+      (should-not (process-status (mew-oauth2-redirect-handler-name port))))))
+
 (ert-deftest mew-test-imap-xoauth2-sasl-ir ()
   "The token goes with AUTHENTICATE only if the server has SASL-IR."
   (dolist (imap2 '(nil t))

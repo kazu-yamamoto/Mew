@@ -146,6 +146,20 @@ It serves http://localhost:PORT and accepts a code with STATE only."
 ;;; Getting authorization code
 ;;;
 
+(defvar mew-oauth2-auth-timeout 300
+  "Seconds to wait for the browser to hand back an authorization code.")
+
+(defun mew-oauth2-wait-auth-code (server)
+  "Wait for the code SERVER gets, or nil if it does not come in time."
+  (let ((limit (+ (float-time) mew-oauth2-auth-timeout))
+	;; We are usually in a process filter, where C-g is ignored.
+	(inhibit-quit nil))
+    (while (and (null (process-get server 'mew-oauth2-code))
+		(< (float-time) limit))
+      (sit-for 0.1)
+      (discard-input))
+    (process-get server 'mew-oauth2-code)))
+
 (defun mew-oauth2-get-auth-code (url client-id resource-url redirect-url challenge port)
   ;; Timers and filters of other connections run while we wait for the
   ;; browser, so another authorization may start inside this one.
@@ -171,8 +185,11 @@ It serves http://localhost:PORT and accepts a code with STATE only."
 	  (condition-case err
 	      (let ((server (mew-oauth2-setup-redirect-handler port state)))
 		(browse-url url-params)
-		(mew-rendezvous (null (process-get server 'mew-oauth2-code)))
-		(process-get server 'mew-oauth2-code))
+		(or (mew-oauth2-wait-auth-code server)
+		    (progn
+		      (message "OAuth2: no answer from the browser in %d seconds"
+			       mew-oauth2-auth-timeout)
+		      "")))
 	    (error (message "OAuth2: %s" (error-message-string err)) "")
 	    (quit (message "OAuth2: the authorization was canceled") ""))
 	(mew-oauth2-cleanup-redirect-handler port)))))
@@ -251,6 +268,9 @@ which does not exist."
 ;;;
 ;;; Interface
 ;;;
+
+(defvar mew-xoauth2-no-token "XOAUTH2: no access token, so not authenticated"
+  "Error of a session which gave up XOAUTH2 without a token.")
 
 (defun mew-xoauth2-auth-string (user tag case)
   ;; Without the password file loaded, a new authorization would start.
