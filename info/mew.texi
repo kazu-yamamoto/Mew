@@ -13677,6 +13677,7 @@ The same as the other commands in Draft mode
 @vindex mew-oauth2-auth-url
 @vindex mew-oauth2-token-url
 @vindex mew-oauth2-resource-url
+@vindex mew-oauth2-auth-timeout
 
 @ifset ja
 gmailなどが、認証の仕組みとしてXOAUTH2を要求するようになりました。Mew
@@ -13705,6 +13706,20 @@ client ID and client secret, set them in the following variables.
 If everything is set up properly, the authorization screen will be
 displayed in your local browser only once when you start using it. The
 issued access token will be saved using Mew's password mechanism.
+@end ifset
+
+@ifset ja
+ブラウザでの認可を待っている間は、C-g で中止できます。
+ブラウザから @samp{mew-oauth2-auth-timeout} 秒（初期値は 300）応答がなければ、
+待つのをやめます。
+認可されなかった場合、Mew はトークンを送らずに接続を終えます。
+@end ifset
+@ifset en
+While Mew waits for the authorization in the browser, type C-g to
+cancel it. If the browser does not answer in
+@samp{mew-oauth2-auth-timeout} seconds (300 by default), Mew stops
+waiting. Without an authorization, Mew ends the connection without
+sending a token.
 @end ifset
 
 @ifset ja
