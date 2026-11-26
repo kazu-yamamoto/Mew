@@ -240,6 +240,10 @@ security, and all Lisp files now use lexical binding.
   [#365](https://github.com/kazu-yamamoto/Mew/pull/365)
 * Makefile.w32 links zlib of vcpkg as libzs.lib (zlib 1.4) or zs.lib.
   [#364](https://github.com/kazu-yamamoto/Mew/pull/364)
+* OAuth2: C-g and `mew-oauth2-auth-timeout` (300 seconds) stop waiting
+  for the browser, and without a token the session ends instead of
+  sending "nil".
+  [#370](https://github.com/kazu-yamamoto/Mew/pull/370)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
