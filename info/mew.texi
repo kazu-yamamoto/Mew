@@ -10466,6 +10466,9 @@ bottom, set as follows:
 @kindex zz (Summary)
 @kindex h (Summary)
 @vindex mew-prog-text/html-ext
+@vindex mew-html-ext-use-xwidget
+@vindex mew-html-ext-sanitize
+@vindex mew-html-ext-allow-remote
 @vindex mew-prog-msword-ext
 @vindex mew-prog-msexcel-ext
 @vindex mew-prog-mspowerpoint-ext
@@ -10598,6 +10601,81 @@ If you want to set it to "firefox", for example, configure like this:
 @lisp
 (setq mew-prog-text/html-ext
       '("firefox" ("-a" "firefox" "-remote" "openFile(%s)") t))
+@end lisp
+
+@ifset ja
+Emacs が xwidgets 付きでビルドされていて、グラフィカルなフレームで動い
+ている場合、@samp{C-cC-e} は HTML を外部のブラウザではなく、Emacs の中
+の xwidget-webkit で Message ウィンドウに表示します。外部のブラウザを使
+いたい場合は、以下のように設定して下さい。
+@end ifset
+@ifset en
+If Emacs is built with xwidgets and runs on a graphical frame,
+@samp{C-cC-e} displays HTML with xwidget-webkit in the Message window
+instead of an external browser.  To use an external browser, configure
+like this:
+@end ifset
+
+@lisp
+(setq mew-html-ext-use-xwidget nil)
+@end lisp
+
+@ifset ja
+@samp{C-cC-e} で表示する HTML は、ブラウザに渡す前に安全な形に変えられま
+す。メッセージ中の <meta> はすべて無効になるので、<meta
+http-equiv="refresh"> で別の URL へ移動することはありません。また先頭に
+Content-Security-Policy が置かれるので、スクリプト、フォームの送信、
+<base> は働かず、外部の画像、スタイルシート、フォントも取得されません。
+外部の画像を取得するのは、shr で表示する場合と同じく
+@code{mew-html-blocked-images} が @code{nil} のときだけです。ファイルは
+UTF-8 で書き出されます。
+
+外部の内容を取得すると、メッセージを開いたこと、その日時、どこから開い
+たかが送信者に伝わります。信頼できるメッセージに限り、外部の画像、スタ
+イルシート、フォントを取得したい場合は、
+@code{mew-summary-execute-external-remote} を使います。このコマンドには
+キーが割り当てられていないので、たとえば以下のように設定して下さい。
+@code{mew-html-ext-allow-remote} を @code{t} にすると、常に取得します。
+どちらでもスクリプトは働きません。
+@end ifset
+@ifset en
+HTML displayed by @samp{C-cC-e} is made safe before it is passed to a
+browser.  All <meta> elements of the message are disabled, so that
+<meta http-equiv="refresh"> cannot move to another URL.  A
+Content-Security-Policy is put at the top, so that scripts, form
+submission and <base> do not work and remote images, style sheets and
+fonts are not fetched.  Remote images are fetched only if
+@code{mew-html-blocked-images} is @code{nil}, as with shr.  The file is
+written in UTF-8.
+
+Fetching remote content tells the sender that you opened the message,
+when and from where.  To fetch remote images, style sheets and fonts
+only for a message you trust, use
+@code{mew-summary-execute-external-remote}.  No key is bound to it, so
+bind one like this, for example.  If @code{mew-html-ext-allow-remote}
+is @code{t}, remote content is always fetched.  Scripts do not work in
+either case.
+@end ifset
+
+@lisp
+(define-key mew-summary-mode-map "\C-cw" 'mew-summary-execute-external-remote)
+@end lisp
+
+@ifset ja
+リンクを押すと、そのページへ移動します。cid: で参照する画像
+(Multipart/Related) は表示されません。HTML を書き換えずにそのままブラウ
+ザに渡したい場合は、以下のように設定して下さい。この場合、ファイルは
+HTML 自身の文字コードで書き出されます。
+@end ifset
+@ifset en
+Clicking a link moves to the page.  Images referred to by cid:
+(Multipart/Related) are not displayed.  To pass HTML to a browser as it
+is, configure like this.  Then the file is written in the charset of
+the HTML.
+@end ifset
+
+@lisp
+(setq mew-html-ext-sanitize nil)
 @end lisp
 
 @ifset ja

@@ -1679,6 +1679,37 @@ not affected.  If nil, all images are fetched."
   :group 'mew-message
   :type '(choice (const :tag "Fetch all" nil) regexp))
 
+(defcustom mew-html-ext-sanitize t
+  "*If non-nil, an HTML part opened by `mew-summary-execute-external'
+is made safe before it is shown.  All <meta> elements of the message
+are disabled, so that <meta http-equiv=\"refresh\"> cannot move to
+another URL, and a Content-Security-Policy is put at the top so that
+scripts, form submission and <base> do not work and remote content
+is not fetched.
+Remote images are fetched only if `mew-html-blocked-images' is nil,
+as with shr.  See also `mew-html-ext-allow-remote'.  The file is
+written in UTF-8.
+If nil, the part is written as it is in its own charset."
+  :group 'mew-message
+  :type 'boolean)
+
+(defcustom mew-html-ext-allow-remote nil
+  "*If non-nil, an HTML part made safe by `mew-html-ext-sanitize' may
+fetch remote images, style sheets and fonts.  Scripts are still
+blocked.  Remote content tells the sender that you opened the
+message, when and from where.  Rather than setting this, use
+`mew-summary-execute-external-remote' for a message you trust."
+  :group 'mew-message
+  :type 'boolean)
+
+(defcustom mew-html-ext-use-xwidget t
+  "*If non-nil, an HTML part opened by `mew-summary-execute-external'
+is shown with xwidget-webkit inside Emacs when Emacs supports it,
+that is, Emacs is built with xwidgets and the frame is graphical.
+Otherwise, the browser in `mew-prog-text/html-ext' is used."
+  :group 'mew-message
+  :type 'boolean)
+
 (defcustom mew-use-text/html-list nil
   "*A list of (KEY VALUE) to define whether or not HTML should be parsed
 for each folder.
