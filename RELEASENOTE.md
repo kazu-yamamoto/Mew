@@ -247,6 +247,9 @@ security, and all Lisp files now use lexical binding.
 * IMAP: copying a message to an IMAP folder keeps its Date: as
   INTERNALDATE.
   [#372](https://github.com/kazu-yamamoto/Mew/pull/372)
+* Pick: encoded-words in parentheses are decoded, and `head=` decodes
+  the encoded-words of every field too.
+  [#371](https://github.com/kazu-yamamoto/Mew/pull/371)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
