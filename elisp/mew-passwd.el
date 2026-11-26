@@ -360,6 +360,7 @@ just obtained, so that the refresh token gets a new one next time."
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
 	      (mew-passwd-rendezvous pro)
+	      (if (process-get pro 'mew-passwd-refused) (throw 'loop nil))
 	      (if (file-exists-p tfile)
 		  (unless mew-passwd-master
 		    (setq mew-passwd-master t)) ;; load success but master password isn't cached
@@ -404,7 +405,8 @@ just obtained, so that the refresh token gets a new one next time."
 	      (set-process-filter   pro 'mew-passwd-filter)
 	      (set-process-sentinel pro 'mew-passwd-sentinel)
 	      (mew-passwd-rendezvous pro)
-	      (if (file-exists-p file) (throw 'loop nil)))
+	      (if (or (file-exists-p file) (process-get pro 'mew-passwd-refused))
+		  (throw 'loop nil)))
 	    (message "Master password is wrong! Passwords not saved")
 	    (mew-let-user-read)))
       ;; There is no backup the first time; the plain text must go anyway.
@@ -428,7 +430,14 @@ just obtained, so that the refresh token gets a new one next time."
        ((string-match "invalid passphrase" string)
 	(mew-warn "Master password mismatch!")
 	(setq mew-passwd-master nil))
-       ((string-match "[bB]ad \\(?:session \\)?key" string)
+       ;; gpg-agent is told "no-allow-loopback-pinentry": trying
+       ;; again or asking for the master password again is useless.
+       ((string-match "Not supported" string)
+	(unless (process-get process 'mew-passwd-refused)
+	  (mew-warn "GnuPG refused loopback pinentry, see mew-use-pgp-loopback-pinentry")
+	  (process-put process 'mew-passwd-refused t)))
+       ((and (string-match "[bB]ad \\(?:session \\)?key" string)
+	     (not (process-get process 'mew-passwd-refused)))
 	(mew-warn "Master password is wrong!")
 	(setq mew-passwd-master nil))
        ((string-match "Enter passphrase:" string)
@@ -473,8 +482,10 @@ just obtained, so that the refresh token gets a new one next time."
 	  (insert "CLEAR_PASSPHRASE " cache-id "\n")
 	  (call-process-region (point-min) (point-max) "gpg-connect-agent"))))))
 
+(defvar mew-use-pgp-loopback-pinentry) ;; mew-pgp.el
+
 (defun mew-passwd-adjust-args (args)
-  (if mew-passwd-agent-hack
+  (if (and mew-passwd-agent-hack mew-use-pgp-loopback-pinentry)
       ;; password is asked just once when encrypting
       (cons "--pinentry-mode" (cons "loopback" args))
     args))

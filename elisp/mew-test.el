@@ -2142,6 +2142,40 @@ apart by whether GnuPG says it considered a key at all."
     ;; GnuPG 1 says nothing of this sort, so the old path keeps its say
     (should-not (check "gpg: skipped \"a@example.org\": secret key not available\n"))))
 
+(ert-deftest mew-test-pgp-sign-check-loopback-refused ()
+  "An agent told no-allow-loopback-pinentry makes GnuPG say the key is
+missing.  Mew points at the real cause instead."
+  (let ((out (concat "gpg: keydb_search failed: Not supported\n"
+                     "[GNUPG:] INV_SGNR 0 me@example.org\n"
+                     "[GNUPG:] FAILURE sign 67108924\n"))
+        (old "gpg: setting pinentry mode 'loopback' failed: Not supported\n"))
+    (cl-flet ((check (status)
+                (with-temp-buffer
+                  (insert status)
+                  (mew-pgp-sign-check-status))))
+      (let ((mew-pgp-ver mew-pgp-verg2))
+        (let ((mew-use-pgp-loopback-pinentry t))
+          (should (equal (check out) mew-pgp-result-loopback))
+          (should (equal (check old) mew-pgp-result-loopback)))
+        ;; without loopback, it is not the cause
+        (let ((mew-use-pgp-loopback-pinentry nil))
+          (should (equal (check out)
+                         (concat mew-pgp-result-seckey ": me@example.org"))))))))
+
+(ert-deftest mew-test-passwd-loopback-option ()
+  "The password file follows `mew-use-pgp-loopback-pinentry' too, so
+that an agent refusing loopback can still ask through mew-pinentry."
+  (let ((mew-passwd-agent-hack t))
+    (let ((mew-use-pgp-loopback-pinentry t))
+      (should (equal (mew-passwd-adjust-args '("-d"))
+                     '("--pinentry-mode" "loopback" "-d"))))
+    (let ((mew-use-pgp-loopback-pinentry nil))
+      (should (equal (mew-passwd-adjust-args '("-d")) '("-d")))))
+  ;; GnuPG 1 and 2.0 never get the option
+  (let ((mew-passwd-agent-hack nil)
+        (mew-use-pgp-loopback-pinentry t))
+    (should (equal (mew-passwd-adjust-args '("-d")) '("-d")))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; mew-auth.el: passwords over an unencrypted connection

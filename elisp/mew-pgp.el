@@ -259,6 +259,8 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 (defvar mew-pgp-result-nousable "No usable public key")
 (defvar mew-pgp-result-seckey-nousable "No usable secret key")
 (defvar mew-pgp-result-other    "PGP failed for some reasons")
+(defvar mew-pgp-result-loopback
+  "GnuPG refused loopback pinentry, see mew-use-pgp-loopback-pinentry")
 (defvar mew-pgp-result-sec-succ "PGP decrypted")
 (defvar mew-pgp-result-dec-fail "PGP NOT decrypted for some reasons")
 (defvar mew-pgp-result-unsup    "PGP unsupported signature")
@@ -325,15 +327,28 @@ Set 1 if 5. Set 2 if 6. Set 3 if GNUPG. Set 4 if GNUPG2.")
 
 (defcustom mew-use-pgp-loopback-pinentry t
   "*If non-nil, Mew asks for the passphrase itself and hands it to
-GnuPG 2 over its command channel.  If nil, GnuPG asks through its own
-pinentry program, which Mew cannot answer.
+GnuPG 2 over its command channel (\"--pinentry-mode loopback\"), both
+for signing and for the password file of `mew-use-master-passwd'.
 
-Set this to nil if gpg-agent is told \"no-allow-loopback-pinentry\",
-where GnuPG refuses to start at all:
+If gpg-agent is told \"no-allow-loopback-pinentry\", GnuPG refuses
+this.  Then set this to nil and let gpg-agent use mew-pinentry, which
+asks on the terminal of GnuPG where Mew can answer.  In
+~/.gnupg/gpg-agent.conf:
 
-	gpg: setting pinentry mode \='loopback\=' failed: Not supported"
+	pinentry-program /usr/local/bin/mew-pinentry
+
+With nil and another pinentry program, that program asks instead of
+Mew."
   :group 'mew-privacy
   :type 'boolean)
+
+(defun mew-pgp-loopback-refused-p ()
+  "Non-nil if the GnuPG output in this buffer says loopback was refused."
+  (and mew-use-pgp-loopback-pinentry
+       (eq mew-pgp-ver mew-pgp-verg2)
+       (save-excursion
+	 (goto-char (point-min))
+	 (re-search-forward "Not supported" nil t))))
 
 (defun mew-pgp-loopback-options (options)
   "Add the loopback pinentry option to OPTIONS for GnuPG 2.
@@ -667,7 +682,11 @@ what happens for a message which is encrypted but not signed."
   "Create error message from GnuPG signing status output."
   (let ((inv-sgnr (mew-split (mew-pgp-status-get "INV_SGNR") ?\s))
 	reason signer)
-    (when inv-sgnr
+    (cond
+     ;; GnuPG then says the key is missing, which is misleading.
+     ((mew-pgp-loopback-refused-p)
+      mew-pgp-result-loopback)
+     (inv-sgnr
       (setq reason (string-to-number (car inv-sgnr)))
       (setq signer (cadr inv-sgnr))
       (concat
@@ -676,7 +695,7 @@ what happens for a message which is encrypted but not signed."
 	((not (mew-pgp-status-get "KEY_CONSIDERED")) mew-pgp-result-seckey) ;; Not Found.
 	((eq reason 9) mew-pgp-result-seckey-nousable) ;; Not self-signed.
 	(t mew-pgp-result-other))
-       ": " signer))))
+       ": " signer)))))
 
 (defun mew-pgp-sign-check ()
   (if (mew-pgp-gnupg-p)
