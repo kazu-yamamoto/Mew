@@ -2569,6 +2569,91 @@ gpgsm: invalid certification chain: No agent running
     (mew-delete-images)
     (should (equal (buffer-string) "From: kazu\nx\n"))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew-imap.el: marks from FLAGS
+;;;
+
+(defun mew-test-imap-summary (lines)
+  "Insert summary LINES, each of which is (MARK MSG), in this order."
+  (dolist (line lines)
+    (insert (format "%c 11/27 kazu   subject\r  %s <id> <par> %s 100\n"
+		    (nth 0 line) (nth 1 line) (nth 1 line)))))
+
+(defun mew-test-imap-marks ()
+  "Return the marks of the summary lines in order."
+  (save-excursion
+    (goto-char (point-min))
+    (let (ret)
+      (while (not (eobp))
+	(setq ret (cons (char-after) ret))
+	(forward-line))
+      (nreverse ret))))
+
+(ert-deftest mew-test-imap-mark-recover ()
+  "Each message listed in MDB gets its mark, whatever the order."
+  (with-temp-buffer
+    ;; The summary may be sorted otherwise than in the UID order of MDB.
+    (mew-test-imap-summary
+     `((,mew-mark-unread "30") (,mew-mark-unread "20") (,mew-mark-unread "10")))
+    (mew-imap-mark-recover
+     `(("10" ,mew-mark-read) ("20" ,mew-mark-review) ("30" ,mew-mark-read)))
+    (should (equal (mew-test-imap-marks)
+		   (list mew-mark-read mew-mark-review mew-mark-read)))))
+
+(ert-deftest mew-test-imap-mark-recover-keep-marks ()
+  "The marks which the user is going to process are kept."
+  (with-temp-buffer
+    (mew-test-imap-summary
+     `((,mew-mark-refile "1") (,mew-mark-delete "2") (,mew-mark-unlink "3")
+       (,mew-mark-unread "4")))
+    (mew-imap-mark-recover
+     (mapcar (lambda (msg) (list msg mew-mark-review)) '("1" "2" "3" "4")))
+    (should (equal (mew-test-imap-marks)
+		   (list mew-mark-refile mew-mark-delete mew-mark-unlink
+			 mew-mark-review)))))
+
+(ert-deftest mew-test-imap-mark-recover-missing ()
+  "Messages which are not in the summary are ignored.
+FLAGS come from the whole mailbox, so most of them can be missing
+after \"last:N\".  A message number must match as a whole."
+  (with-temp-buffer
+    (mew-test-imap-summary `((,mew-mark-unread "12") (,mew-mark-unread "3")))
+    (goto-char (point-max))
+    (let ((opos (point)))
+      (mew-imap-mark-recover
+       `(("1" ,mew-mark-read) ("2" ,mew-mark-read) ("3" ,mew-mark-read)))
+      (should (= (point) opos)))
+    (should (equal (mew-test-imap-marks)
+		   (list mew-mark-unread mew-mark-read)))))
+
+(ert-deftest mew-test-imap-mark-recover-history ()
+  "Recovering marks does not grow the mark history.
+Each new entry is inserted in order by walking the history, which
+made recovering some 100,000 marks take hours.  The caller resets
+the history right after, so it is left as it was."
+  (with-temp-buffer
+    (mew-test-imap-summary `((,mew-mark-unread "1") (,mew-mark-unread "2")))
+    (let ((hist (list (mew-make-mark-hist :msg "9" :mark mew-mark-delete))))
+      (mew-sinfo-set-mark-hist hist)
+      (mew-imap-mark-recover `(("1" ,mew-mark-read) ("2" ,mew-mark-read)))
+      (should (eq (mew-sinfo-get-mark-hist) hist))
+      (should (equal (mew-sinfo-get-mark-hist)
+		     (list (mew-make-mark-hist :msg "9" :mark mew-mark-delete)))))))
+
+(ert-deftest mew-test-imap-mark-clean ()
+  "The marks to clean are replaced, without growing the mark history."
+  (with-temp-buffer
+    (mew-test-imap-summary
+     `((,mew-mark-unread "1") (,mew-mark-review "2") (,mew-mark-refile "3")))
+    (let ((hist (list (mew-make-mark-hist :msg "9" :mark mew-mark-delete)))
+	  (mew-imap-marks-to-clean (list mew-mark-unread mew-mark-review)))
+      (mew-sinfo-set-mark-hist hist)
+      (mew-imap-mark-clean mew-mark-read)
+      (should (eq (mew-sinfo-get-mark-hist) hist)))
+    (should (equal (mew-test-imap-marks)
+		   (list mew-mark-read mew-mark-read mew-mark-refile)))))
+
 (provide 'mew-test)
 
 ;;; Copyright Notice:
