@@ -250,6 +250,11 @@ security, and all Lisp files now use lexical binding.
 * Pick: encoded-words in parentheses are decoded, and `head=` decodes
   the encoded-words of every field too.
   [#371](https://github.com/kazu-yamamoto/Mew/pull/371)
+* GnuPG: when gpg-agent refuses loopback pinentry, Mew says so instead
+  of "No your secret key" or "Master password is wrong!".  The master
+  password file also honors `mew-use-pgp-loopback-pinentry`, so it can
+  be read through mew-pinentry.
+  [#375](https://github.com/kazu-yamamoto/Mew/pull/375)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
