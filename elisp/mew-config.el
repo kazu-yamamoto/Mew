@@ -635,9 +635,54 @@ fields in the header according to the new value."
   "Guess case according to `mew-case-guess-alist'."
   (unless alist (setq alist mew-case-guess-alist))
   (let ((cases (mew-refile-guess-by-alist1 alist)))
-    (if cases
-	(mew-join "," cases)
-      nil)))
+    (cond
+     ((null cases) nil)
+     (mew-case-guess-first-match (car cases))
+     (t (mew-join "," cases)))))
+
+(defun mew-case-by-from (from &optional current)
+  "Return the case whose From: has the address of FROM, or nil.
+CURRENT is kept if one of its cases matches, since cases may share
+an address."
+  (let ((addr (and from (mew-addrstr-parse-address from))))
+    (when addr
+      (let ((match (lambda (case)
+		     (let ((own (mew-addrstr-parse-address (mew-from case))))
+		       (and own (string= (downcase own) (downcase addr)))))))
+	(catch 'found
+	  (dolist (case (if current (mew-split current ?,)))
+	    (if (funcall match case) (throw 'found current)))
+	  (dolist (case mew-config-cases)
+	    (if (funcall match case) (throw 'found case)))
+	  nil)))))
+
+(defun mew-draft-from-value ()
+  (or (mew-header-get-value mew-resent-from:)
+      (mew-header-get-value mew-from:)))
+
+(defun mew-draft-case-at-sending (case)
+  "Return the case to send this draft with, CASE being its case now."
+  (let ((from-case (and mew-case-guess-by-from
+			(mew-case-by-from (mew-draft-from-value) case)))
+	(guessed (and mew-case-guess-when-composed
+		      (mew-draft-get-case-by-guess))))
+    (cond
+     ;; From: was changed by hand.
+     ((and from-case (not (string= from-case case))) from-case)
+     ((null guessed) case)
+     (mew-case-guess-addition (mew-draft-add-case case guessed))
+     (t guessed))))
+
+(defun mew-draft-set-case-by-from ()
+  "Make the case of this draft follow its From:."
+  (let* ((old-case (or (mew-tinfo-get-case) mew-case-default))
+	 (new-case (mew-case-by-from (mew-draft-from-value) old-case)))
+    (when (and new-case (not (string= new-case old-case)))
+      (mew-tinfo-set-case new-case)
+      (mew-tinfo-set-use-flowed (mew-use-format-flowed new-case))
+      (mew-draft-mode-name (mew-tinfo-get-hdr-file))
+      (mew-draft-replace-fields old-case)
+      (mew-highlight-header))))
 
 (defun mew-draft-set-case-by-guess ()
   (let ((case (mew-draft-get-case-by-guess)))

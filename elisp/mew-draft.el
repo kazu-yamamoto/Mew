@@ -818,15 +818,8 @@ Set privacy service which will be effective when \\[mew-draft-make-message]."
 (defun mew-draft-process-message (action &optional privacy signer)
   (if (and (boundp 'visual-line-mode) visual-line-mode) (visual-line-mode -1))
   (run-hooks 'mew-make-message-hook)
-  (let* ((case (or (mew-tinfo-get-case) mew-case-default))
-	 (old-case case)
-	 guessed-case)
-    (when mew-case-guess-when-composed
-      (setq guessed-case (mew-draft-get-case-by-guess))
-      (when guessed-case
-	(if mew-case-guess-addition
-	    (setq case (mew-draft-add-case case guessed-case))
-	  (setq case guessed-case))))
+  (let* ((old-case (or (mew-tinfo-get-case) mew-case-default))
+	 (case (mew-draft-case-at-sending old-case)))
     (unless (string= old-case case)
       (mew-tinfo-set-case case)
       (mew-draft-mode-name (mew-tinfo-get-hdr-file))
