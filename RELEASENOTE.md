@@ -255,6 +255,9 @@ security, and all Lisp files now use lexical binding.
   password file also honors `mew-use-pgp-loopback-pinentry`, so it can
   be read through mew-pinentry.
   [#375](https://github.com/kazu-yamamoto/Mew/pull/375)
+* IMAP: recovering marks after fetching from a large mailbox takes
+  linear time; it used to take hours for some 100,000 messages.
+  [#377](https://github.com/kazu-yamamoto/Mew/pull/377)
 * mew-pinentry accepts passphrases with "%", "\" or leading spaces.
   [#297](https://github.com/kazu-yamamoto/Mew/pull/297)
 * POP3 to Microsoft 365 with XOAUTH2 is documented.
