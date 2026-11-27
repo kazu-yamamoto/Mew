@@ -1602,28 +1602,49 @@
 	   (mew-erase-buffer))))))
 
 (defun mew-imap-mark-clean (mark)
-  (let* ((regex (mew-mark-list-regex mew-imap-marks-to-clean)))
+  "Replace the marks of `mew-imap-marks-to-clean' with MARK.
+The mark history is left as it was, as in `mew-imap-mark-recover'."
+  (let* ((regex (mew-mark-list-regex mew-imap-marks-to-clean))
+	 (hist (mew-sinfo-get-mark-hist)))
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward regex nil t)
+	(mew-sinfo-set-mark-hist nil)
 	(mew-mark-put mark)
-	(forward-line)))))
+	(forward-line)))
+    (mew-sinfo-set-mark-hist hist)))
 
 ;; see also mew-summary-mark-recover
 (defun mew-imap-mark-recover (mdb)
+  "Put the marks of MDB, a list of (MSG MARK), on the summary lines.
+MDB comes from the FLAGS of the whole mailbox, so it can list far
+more messages than the summary has, for example after \"last:N\".
+Searching the buffer for each of them took hours for some 100,000
+messages, so each summary line is looked up in a hash table instead,
+in one pass over the buffer."
   (let ((opos (point))
 	(case-fold-search nil)
-	(msg nil) (mrk nil) omrk)
-    (goto-char (point-min))
+	(marks (make-hash-table :test 'equal :size (length mdb)))
+	(hist (mew-sinfo-get-mark-hist))
+	msg mrk omrk)
     (dolist (ent mdb)
-      (mew-set '(msg mrk) ent)
-      (when (re-search-forward (mew-regex-sumsyn-msg msg) nil t)
+      (unless (gethash (nth 0 ent) marks)
+	(puthash (nth 0 ent) (nth 1 ent) marks)))
+    (goto-char (point-min))
+    (while (re-search-forward mew-regex-sumsyn-short nil t)
+      (setq msg (mew-sumsyn-message-number))
+      (when (setq mrk (gethash msg marks))
+	(remhash msg marks)
 	(setq omrk (mew-summary-get-mark))
 	(unless (and omrk (or (char-equal omrk mew-mark-refile)
 			      (char-equal omrk mew-mark-delete)
 			      (char-equal omrk mew-mark-unlink)))
-	  (mew-mark-put mrk)) ;; hist will be reset
-	(forward-line)))
+	  ;; The caller resets the history, and adding to a long one
+	  ;; walks it each time.  Keep it empty while putting marks.
+	  (mew-sinfo-set-mark-hist nil)
+	  (mew-mark-put mrk)))
+      (forward-line))
+    (mew-sinfo-set-mark-hist hist)
     (goto-char opos)))
 
 (defun mew-imap-sentinel (process event)
